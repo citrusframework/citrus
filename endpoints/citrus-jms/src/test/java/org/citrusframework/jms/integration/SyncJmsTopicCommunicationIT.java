@@ -18,6 +18,7 @@ package org.citrusframework.jms.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.common.TestLoader.SPRING;

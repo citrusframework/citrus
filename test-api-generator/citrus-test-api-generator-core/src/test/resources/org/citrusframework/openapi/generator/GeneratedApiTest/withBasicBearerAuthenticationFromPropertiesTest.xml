@@ -1,0 +1,50 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+    xmlns:extpetstore="http://www.citrusframework.org/citrus-test-schema/extpetstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/http/testcase
+    http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api/extpetstore-api.xsd"
+>
+    <testcase name="withBasicBearerAuthenticationFromPropertiesTest">
+        <actions>
+            <create-variables>
+                <variable name="petId" value="1234"/>
+            </create-variables>
+
+            <extpetstore:send-get-pet-by-id-with-bearer-authentication petId="${petId}" fork="true" allDetails="true"/>
+
+            <http:receive-request server="httpServer">
+                <http:GET path="/api/v3/ext/secure-bearer/pet/${petId}">
+                   <http:headers>
+                        <http:header name="Authorization" value="Bearer ZGVmYXVsdEJlYXJlclRva2Vu"/>
+                    </http:headers>
+                </http:GET>
+            </http:receive-request>
+
+            <http:send-response server="httpServer">
+                <http:headers status="200" reason-phrase="OK">
+                    <http:header name="Content-Type" value="application/json"/>
+                </http:headers>
+                <http:body type="json">
+                    <http:resource file="classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"/>
+                </http:body>
+            </http:send-response>
+
+            <extpetstore:receive-get-pet-by-id-with-bearer-authentication responseCode="200">
+                <http:body>
+                    <http:validate>
+                        <http:json-path expression="$.name" value="@matches('hasso|cutie|fluffy')@"/>
+                    </http:validate>
+                </http:body>
+            </extpetstore:receive-get-pet-by-id-with-bearer-authentication>
+        </actions>
+    </testcase>
+</spring:beans>

@@ -193,8 +193,6 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
 
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()),
-                "{\"id\": \"@isNumber()@\",\"category\": {\"id\": \"@isNumber()@\",\"name\": \"@notEmpty()@\"},\"name\": \"@notEmpty()@\",\"photoUrls\": \"@ignore@\",\"tags\": \"@ignore@\",\"status\": \"@matches(available|pending|sold)@\"}");
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 5L);
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));

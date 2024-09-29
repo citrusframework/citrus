@@ -98,6 +98,10 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
     /** Should handle http cookies */
     private boolean handleCookies = false;
 
+    /** Should handle http semicolon uri content e.g. for matrix encoded path variables  */
+    // TODO: Christoph Deppisch advise whether this is a reasonable approach to support matrix encoded path parameters
+    private boolean handleSemicolonPathContent = false;
+
     /** Default status code returned by http server */
     private int defaultStatusCode = HttpStatus.OK.value();
 
@@ -394,6 +398,24 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      */
     public void setHandleCookies(boolean handleCookies) {
         this.handleCookies = handleCookies;
+    }
+
+    /**
+     * Gets the handleSemicolonPathContent.
+     *
+     * @return
+     */
+    public boolean isHandleSemicolonPathContent() {
+        return handleSemicolonPathContent;
+    }
+
+    /**
+     * Sets the handleSemicolonPathContent.
+     *
+     * @param handleSemicolonPathContent
+     */
+    public void setHandleSemicolonPathContent(boolean handleSemicolonPathContent) {
+        this.handleSemicolonPathContent = handleSemicolonPathContent;
     }
 
     /**

@@ -1,0 +1,18 @@
+{
+  "id": ${petId},
+  "name": "@matches('hasso|cutie|fluffy')@",
+  "category": {
+    "id": ${petId},
+    "name": "@matches('dog|cat|fish')@"
+  },
+  "photoUrls": [
+    "http://localhost:8080/photos/${petId}"
+  ],
+  "tags": [
+    {
+      "id": ${petId},
+      "name": "generated"
+    }
+  ],
+  "status": "@matches('available|pending|sold')@"
+}

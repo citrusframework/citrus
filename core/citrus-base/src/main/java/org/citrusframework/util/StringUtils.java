@@ -16,6 +16,8 @@
 
 package org.citrusframework.util;
 
+import java.util.Locale;
+
 /**
  * Utility helper class for Strings.
  */
@@ -35,10 +37,28 @@ public class StringUtils {
     }
 
     /**
+     * Helper method checks for null or blank String.
+     * @param str
+     * @return
+     */
+    public static boolean hasNoText(String str) {
+        return !hasText(str);
+    }
+
+    /**
      * String helper checking for isEmpty String and adds null check on given parameter.
      */
     public static boolean isEmpty(String str) {
         return str == null || str.isEmpty();
+    }
+
+    /**
+     * String helper checking for isEmpty String and adds null check on given parameter.
+     * @param str
+     * @return
+     */
+    public static boolean isNotEmpty(String str) {
+        return !isEmpty(str);
     }
 
     public static String appendSegmentToUrlPath(String path, String segment) {
@@ -86,6 +106,23 @@ public class StringUtils {
             }
 
             length = builder.length();
+        }
+    }
+
+    /**
+     * Converts the first letter of the given input string to uppercase while leaving
+     * the rest of the string unchanged. If the input string is empty or null,
+     * an empty string is returned.
+     *
+     * @param input The string to be converted to title case. It can be null or empty.
+     * @return the strnig in title case
+     */
+    public static String titleCase(String input) {
+        if (input != null && !"".equals(input)) {
+            String firstLetter = input.substring(0, 1).toUpperCase(Locale.ROOT);
+            return input.length() == 1 ? firstLetter : firstLetter + input.substring(1);
+        } else {
+            return "";
         }
     }
 }

@@ -1,0 +1,72 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+    xmlns:extpetstore="http://www.citrusframework.org/citrus-test-schema/extpetstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/http/testcase
+    http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api/extpetstore-api.xsd"
+>
+    <testcase name="withArrayQueryDataTest">
+        <actions>
+            <create-variables>
+                <variable name="petId" value="1234"/>
+                <variable name="nick1" value="Wind"/>
+                <variable name="nick2" value="Storm"/>
+                <variable name="tag2" value="tag2Value"/>
+            </create-variables>
+
+            <extpetstore:send-update-pet-with-array-query-data petId="${petId}" fork="true" _name="Thunder" status="sold" sampleStringHeader="header1">
+                <extpetstore:tags>tag1</extpetstore:tags>
+                <extpetstore:tags>${tag2}</extpetstore:tags>
+                <extpetstore:nicknames>${nick1}</extpetstore:nicknames>
+                <extpetstore:nicknames>${nick2}</extpetstore:nicknames>
+            </extpetstore:send-update-pet-with-array-query-data>
+
+            <http:receive-request server="httpServer">
+                <http:PUT path="/api/v3/ext/pet/${petId}">
+                    <http:headers accept="@contains('application/json')@"/>
+                    <http:body>
+                        <http:validate>
+                            <http:script type="groovy">
+                                <![CDATA[
+                                import static org.assertj.core.api.Assertions.assertThat
+                                import org.citrusframework.http.message.HttpMessage
+                                import java.util.Map
+                                import java.util.List
+
+                                def queryParams = ((HttpMessage)receivedMessage).getQueryParams();
+
+                                assert receivedMessage.getHeader("sampleStringHeader") == "header1"
+                                assertThat(queryParams).containsExactlyInAnyOrderEntriesOf(
+                                     Map.of(
+                                         "tags", List.of("tag1", "tag2Value"),
+                                         "name", List.of("Thunder"),
+                                         "nicknames", List.of("Wind", "Storm"),
+                                         "status", List.of("sold")
+                                     )
+                                 )
+                                ]]>
+                            </http:script>
+                        </http:validate>
+                    </http:body>
+                </http:PUT>
+            </http:receive-request>
+
+            <http:send-response server="httpServer">
+                <http:headers status="200" reason-phrase="OK">
+                    <http:header name="Content-Type" value="application/json"/>
+                </http:headers>
+            </http:send-response>
+
+            <extpetstore:receive-update-pet-with-array-query-data responseCode="200"/>
+
+        </actions>
+    </testcase>
+</spring:beans>

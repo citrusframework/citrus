@@ -1,0 +1,40 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+    xmlns:petstore="http://www.citrusframework.org/citrus-test-schema/petstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/http/testcase
+    http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/petstore-api
+    http://www.citrusframework.org/citrus-test-schema/petstore-api/petstore-api.xsd"
+>
+    <testcase name="withFormDataTest">
+        <actions>
+            <create-variables>
+                <variable name="petId" value="citrus:randomNumber(10)"/>
+            </create-variables>
+
+            <petstore:send-update-pet-with-form petId="${petId}" fork="true" _name="Tom" status="sold"/>
+
+            <http:receive-request server="httpServer">
+                <http:POST path="/api/v3/pet/${petId}">
+                    <http:param name="name" value="Tom"/>
+                    <http:param name="status" value="sold"/>
+                </http:POST>
+            </http:receive-request>
+
+            <http:send-response server="httpServer">
+                <http:headers status="200">
+                    <http:header name="Content-Type" value="application/json"/>
+                </http:headers>
+            </http:send-response>
+
+            <petstore:receive-update-pet-with-form/>
+        </actions>
+    </testcase>
+</spring:beans>

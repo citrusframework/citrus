@@ -378,6 +378,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         public static Builder send(String messageEndpointUri) {
             Builder builder = new Builder();
             builder.endpoint(messageEndpointUri);
+
             return builder;
         }
 

@@ -428,7 +428,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends ReceiveMessageActionBuilder<ReceiveMessageAction, ReceiveMessageActionBuilderSupport, Builder> {
+    public static class Builder extends ReceiveMessageActionBuilder<ReceiveMessageAction, ReceiveMessageActionBuilderSupport, Builder> {
 
         /**
          * Fluent API action building entry method used in Java DSL.

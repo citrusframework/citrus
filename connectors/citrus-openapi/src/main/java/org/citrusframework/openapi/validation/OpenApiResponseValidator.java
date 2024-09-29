@@ -34,7 +34,6 @@ public class OpenApiResponseValidator extends OpenApiValidator {
 
     public OpenApiResponseValidator(OpenApiSpecification openApiSpecification) {
         super(openApiSpecification);
-        setEnabled(openApiSpecification.getSwaggerOpenApiValidationContext() != null && openApiSpecification.getSwaggerOpenApiValidationContext().isResponseValidationEnabled());
     }
 
     @Override
@@ -44,7 +43,7 @@ public class OpenApiResponseValidator extends OpenApiValidator {
 
     public void validateResponse(OperationPathAdapter operationPathAdapter, HttpMessage httpMessage) {
 
-        if (enabled && openApiInteractionValidator != null) {
+        if (openApiInteractionValidator != null) {
             HttpStatusCode statusCode = httpMessage.getStatusCode();
             Response response = createResponseFromMessage(httpMessage,
                 statusCode != null ? statusCode.value() : null);
@@ -61,7 +60,7 @@ public class OpenApiResponseValidator extends OpenApiValidator {
 
     public ValidationReport validateResponseToReport(OperationPathAdapter operationPathAdapter, HttpMessage httpMessage) {
 
-        if (enabled && openApiInteractionValidator != null) {
+        if (openApiInteractionValidator != null) {
             HttpStatusCode statusCode = httpMessage.getStatusCode();
             Response response = createResponseFromMessage(httpMessage,
                 statusCode != null ? statusCode.value() : null);

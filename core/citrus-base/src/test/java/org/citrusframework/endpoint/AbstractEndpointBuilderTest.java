@@ -22,18 +22,19 @@ import org.citrusframework.annotations.CitrusEndpointAnnotations;
 import org.citrusframework.annotations.CitrusEndpointProperty;
 import org.citrusframework.context.TestContextFactory;
 import org.mockito.Mockito;
-import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertEquals;
 
 public class AbstractEndpointBuilderTest extends UnitTestSupport {
 
     @CitrusEndpoint(
-        name = "fooEndpoint",
-        properties = {
-            @CitrusEndpointProperty(name = "message", value = "Hello from Citrus!"),
-            @CitrusEndpointProperty(name = "number", value = "1", type = int.class),
-            @CitrusEndpointProperty(name = "person", value = "testPerson", type = TestEndpointBuilder.Person.class)
-        }
+            name = "fooEndpoint",
+            properties = {
+                    @CitrusEndpointProperty(name = "message", value = "Hello from Citrus!"),
+                    @CitrusEndpointProperty(name = "number", value = "1", type = int.class),
+                    @CitrusEndpointProperty(name = "person", value = "testPerson", type = TestEndpointBuilder.Person.class)
+            }
     )
     private Endpoint injected;
 
@@ -52,10 +53,10 @@ public class AbstractEndpointBuilderTest extends UnitTestSupport {
     public void buildFromEndpointProperties() {
         CitrusEndpointAnnotations.injectEndpoints(this, context);
 
-        Assert.assertEquals(injected, endpointBuilder.mockEndpoint);
-        Assert.assertEquals(endpointBuilder.message, "Hello from Citrus!");
-        Assert.assertEquals(endpointBuilder.number, 1);
-        Assert.assertEquals(endpointBuilder.person, person);
+        assertEquals(injected, endpointBuilder.mockEndpoint);
+        assertEquals(endpointBuilder.message, "Hello from Citrus!");
+        assertEquals(endpointBuilder.number, 1);
+        assertEquals(endpointBuilder.person, person);
     }
 
     public static final class TestEndpointBuilder extends AbstractEndpointBuilder<Endpoint> {

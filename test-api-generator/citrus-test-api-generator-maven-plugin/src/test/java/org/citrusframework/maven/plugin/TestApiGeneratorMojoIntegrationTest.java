@@ -21,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -31,7 +30,6 @@ import org.assertj.core.api.Assertions;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiConfig;
-import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiType;
 import org.citrusframework.maven.plugin.stubs.CitrusOpenApiGeneratorMavenProjectStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -49,16 +47,14 @@ class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
      * testing scenario.
      */
      private static final String[] STANDARD_FILE_PATH_TEMPLATES = new String[]{
-        "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%INVOKER_FOLDER%/citrus/extension/%CAMEL_PREFIX%NamespaceHandler.java",
-        "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%INVOKER_FOLDER%/citrus/%CAMEL_PREFIX%AbstractTestRequest.java",
-        "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%INVOKER_FOLDER%/citrus/%CAMEL_PREFIX%BeanDefinitionParser.java",
+        "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%INVOKER_FOLDER%/%CAMEL_PREFIX%.java",
+        "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%INVOKER_FOLDER%/spring/%CAMEL_PREFIX%NamespaceHandler.java",
         "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%INVOKER_FOLDER%/spring/%CAMEL_PREFIX%BeanConfiguration.java",
         "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%MODEL_FOLDER%/PingReqType.java",
         "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%MODEL_FOLDER%/PingRespType.java",
         "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%REQUEST_FOLDER%/PingApi.java",
         "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%REQUEST_FOLDER%/PungApi.java",
-        "%TARGET_FOLDER%/%GENERATED_RESOURCES_FOLDER%/%SCHEMA_FOLDER%/%LOWER_PREFIX%-api.xsd",
-        "%TARGET_FOLDER%/%GENERATED_RESOURCES_FOLDER%/%LOWER_PREFIX%-api-model.csv"
+        "%TARGET_FOLDER%/%GENERATED_RESOURCES_FOLDER%/%SCHEMA_FOLDER%/%LOWER_PREFIX%-api.xsd"
     };
 
     /**
@@ -170,7 +166,6 @@ class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
         try {
             assertEndpointName(apiConfig);
             assertTargetNamespace(apiConfig);
-            assertApiType(apiConfig);
             assertSchemasInSpringSchemas(apiConfig);
             assertHandlersInSpringHandlers(apiConfig);
         } catch (IOException e) {
@@ -207,18 +202,6 @@ class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
         assertThat(getContentOfFile(apiConfig, "spring.schemas")).doesNotContain(OTHER_CITRUS_META_FILE_CONTENT);
     }
 
-    private void assertApiType(ApiConfig apiConfig) throws IOException {
-        String text;
-        switch (apiConfig.getType()) {
-            case REST -> text = "HttpClient httpClient";
-            case SOAP -> text = "WebServiceClient wsClient";
-            default -> throw new IllegalArgumentException(String.format("No apiTye set in ApiConfig. Expected one of %s",
-                stream(ApiType.values()).map(ApiType::toString).collect(
-                    Collectors.joining())));
-        }
-        assertThat(getContentOfFile(apiConfig, "AbstractTestRequest.java")).contains(text);
-    }
-
     private void assertTargetNamespace(ApiConfig apiConfig) throws IOException {
         assertThat(getContentOfFile(apiConfig, "-api.xsd")).contains(
             String.format("targetNamespace=\"%s\"",
@@ -226,7 +209,7 @@ class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
     }
 
     private void assertEndpointName(ApiConfig apiConfig) throws IOException {
-        assertThat(getContentOfFile(apiConfig, "AbstractTestRequest")).contains(
+        assertThat(getContentOfFile(apiConfig, "BeanConfiguration")).contains(
             String.format("@Qualifier(\"%s\")", apiConfig.qualifiedEndpoint()));
     }
 

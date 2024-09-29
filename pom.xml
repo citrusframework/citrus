@@ -173,7 +173,7 @@
     <maven.helper.plugin.version>3.4.0</maven.helper.plugin.version>
     <maven.install.plugin.version>3.1.1</maven.install.plugin.version>
     <maven.jar.plugin.version>3.3.0</maven.jar.plugin.version>
-    <maven.javadoc.plugin.version>3.5.0</maven.javadoc.plugin.version>
+    <maven.javadoc.plugin.version>3.10.0</maven.javadoc.plugin.version>
     <maven.nexus-staging.plugin.version>1.6.13</maven.nexus-staging.plugin.version>
     <maven.plugin.plugin.version>3.9.0</maven.plugin.plugin.version>
     <maven.plugin.annotations.version>3.13.1</maven.plugin.annotations.version>
@@ -260,6 +260,7 @@
     <snappy.version>1.1.10.7</snappy.version>
     <snakeyaml.version>2.3</snakeyaml.version>
     <spring.version>6.1.14</spring.version>
+    <spring.boot.version>3.3.1</spring.boot.version>
     <spring.ws.version>4.0.11</spring.ws.version>
     <spring.integration.version>6.3.4</spring.integration.version>
     <spring.restdocs.version>3.0.1</spring.restdocs.version>
