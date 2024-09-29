@@ -1,0 +1,78 @@
+{{!
+
+  Copyright the original author or authors.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+}}
+package {{invokerPackage}}.spring;
+
+import org.citrusframework.openapi.OpenApiSpecification;
+import org.citrusframework.openapi.testapi.SoapApiSendMessageActionBuilder;
+import org.citrusframework.openapi.testapi.SoapApiReceiveMessageActionBuilder;
+{{#apiInfo}}
+{{#apis}}
+import {{package}}.{{classname}};
+{{/apis}}
+{{/apiInfo}}
+import org.citrusframework.openapi.testapi.spring.SoapApiReceiveMessageActionParser;
+import org.citrusframework.openapi.testapi.spring.SoapApiSendMessageActionParser;
+import {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}};
+import org.citrusframework.openapi.testapi.GeneratedApi;
+import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
+
+{{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
+public class {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}NamespaceHandler extends NamespaceHandlerSupport {
+
+    {{#apiInfo}}
+        {{#apis}}
+            {{#-first}}
+    private final OpenApiSpecification openApiSpecification = OpenApiSpecification.from(
+        {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}.{{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Api());
+            {{/-first}}
+        {{/apis}}
+    {{/apiInfo}}
+
+    @Override
+    public void init() {
+        {{#apiInfo}}
+        {{#apis}}
+        {{#operations}}
+        {{#operation}}
+
+            registerOperationParsers({{classname}}.class,"{{#lambda.kebabcase}}{{operationId}}{{/lambda.kebabcase}}",
+                {{classname}}.{{operationIdCamelCase}}SendActionBuilder.class,
+                {{classname}}.{{operationIdCamelCase}}ReceiveActionBuilder.class);
+        {{/operation}}
+        {{/operations}}
+        {{/apis}}
+        {{/apiInfo}}
+    }
+
+    private void registerOperationParsers(Class<? extends GeneratedApi> apiClass, String elementName,
+        Class<? extends SoapApiSendMessageActionBuilder> sendBeanClass,
+        Class<? extends SoapApiReceiveMessageActionBuilder> receiveBeanClass) {
+
+    SoapApiSendMessageActionParser sendParser = new SoapApiSendMessageActionParser(
+            apiClass,
+            sendBeanClass,
+            receiveBeanClass,
+            "{{apiEndpoint}}");
+        registerBeanDefinitionParser("send-"+elementName, sendParser);
+
+        SoapApiReceiveMessageActionParser receiveParser = new SoapApiReceiveMessageActionParser(
+        apiClass, receiveBeanClass, "{{apiEndpoint}}");
+        registerBeanDefinitionParser("receive-"+elementName, receiveParser);
+    }
+
+}

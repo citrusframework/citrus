@@ -44,6 +44,13 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
+        BeanDefinitionBuilder builder = createBeanDefinitionBuilder(
+            element, parserContext);
+        return builder.getBeanDefinition();
+    }
+
+    protected BeanDefinitionBuilder createBeanDefinitionBuilder(Element element,
+        ParserContext parserContext) {
         BeanDefinitionBuilder builder = parseComponent(element, parserContext);
         builder.addPropertyValue("name", "http:" + element.getLocalName());
 
@@ -53,9 +60,7 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
 
         HttpMessage httpMessage = new HttpMessage();
 
-        if (!element.hasAttribute("uri") && !element.hasAttribute("client")) {
-            throw new BeanCreationException("Neither http request uri nor http client endpoint reference is given - invalid test action definition");
-        }
+        validateEndpointConfiguration(element);
 
         if (element.hasAttribute("client")) {
             builder.addPropertyReference("endpoint", element.getAttribute("client"));
@@ -69,7 +74,7 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
             }
         }
 
-        Element requestElement = DomUtils.getChildElements(element).get(0);
+        Element requestElement = getRequestElement(element);
         httpMessage.method(HttpMethod.valueOf(requestElement.getLocalName().toUpperCase()));
         if (requestElement.hasAttribute("path")) {
             httpMessage.path(requestElement.getAttribute("path"));
@@ -81,7 +86,7 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
             httpMessage.queryParam(param.getAttribute("name"), param.getAttribute("value"));
         }
 
-        Element headers = DomUtils.getChildElementByTagName(requestElement, "headers");
+        Element headers = getHeadersElement(requestElement);
         if (headers != null) {
             List<?> headerElements = DomUtils.getChildElementsByTagName(headers, "header");
             for (Object headerElement : headerElements) {
@@ -141,7 +146,8 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
             }
         }
 
-        HttpMessageBuilder httpMessageBuilder = new HttpMessageBuilder(httpMessage);
+        HttpMessageBuilder httpMessageBuilder = createMessageBuilder(
+            httpMessage);
         DefaultMessageBuilder messageContentBuilder = constructMessageBuilder(body, builder);
 
         httpMessageBuilder.setName(messageContentBuilder.getName());
@@ -156,7 +162,42 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
         if (!variableExtractors.isEmpty()) {
             builder.addPropertyValue("variableExtractors", variableExtractors);
         }
+        return builder;
+    }
 
-        return builder.getBeanDefinition();
+    protected Element getRequestElement(Element element) {
+        if (element.hasChildNodes()) {
+            return DomUtils.getChildElements(element).get(0);
+        }
+        throw new BeanCreationException("No request element specified for http send - invalid test action definition");
+    }
+
+    protected Element getHeadersElement(Element requestElement) {
+        Element headers = DomUtils.getChildElementByTagName(requestElement, "headers");
+        return headers;
+    }
+
+    /**
+     * This method is designed to be overridden by subclasses if a custom message builder is required.
+     */
+    protected  HttpMessageBuilder createMessageBuilder(HttpMessage httpMessage) {
+        return new HttpMessageBuilder(httpMessage);
+    }
+
+    /**
+     * Validates the endpoint configuration for the given XML element.
+     * <p>
+     * This method is designed to be overridden by subclasses if custom validation logic is required.
+     * By default, it checks whether the 'uri' or 'client' attributes are present in the element.
+     * If neither is found, it throws a {@link BeanCreationException} indicating an invalid test action definition.
+     * </p>
+     *
+     * @param element the XML element representing the endpoint configuration to validate
+     * @throws BeanCreationException if neither 'uri' nor 'client' attributes are present
+     */
+    protected void validateEndpointConfiguration(Element element) {
+        if (!element.hasAttribute("uri") && !element.hasAttribute("client")) {
+            throw new BeanCreationException("Neither http request uri nor http client endpoint reference is given - invalid test action definition");
+        }
     }
 }

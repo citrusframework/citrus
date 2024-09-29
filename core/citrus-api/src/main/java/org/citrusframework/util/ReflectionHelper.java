@@ -16,6 +16,9 @@
 
 package org.citrusframework.util;
 
+import static java.lang.String.format;
+
+import jakarta.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -224,6 +227,7 @@ public class ReflectionHelper {
         }
     }
 
+    @SuppressWarnings("java:S3011")
     public static void setField(Field f, Object instance, Object value) {
         try {
             if (!Modifier.isPublic(f.getModifiers()) && !f.canAccess(instance)) {
@@ -235,6 +239,7 @@ public class ReflectionHelper {
         }
     }
 
+    @SuppressWarnings("java:S3011")
     public static Object getField(Field f, Object instance) {
         try {
             if ((!Modifier.isPublic(f.getModifiers()) ||
@@ -253,4 +258,31 @@ public class ReflectionHelper {
             return null;
         }
     }
+
+    /**
+     * Copies the values of all declared fields from a source object to a target object for the specified class.
+     */
+    @SuppressWarnings("java:S3011")
+    public static void copyFields(@Nonnull Class<?> clazz, @Nonnull Object source, @Nonnull Object target) {
+        Class<?> currentClass = clazz;
+
+        while (currentClass != null) {
+            Field[] fields = currentClass.getDeclaredFields();
+
+            for (Field field : fields) {
+                try {
+                    field.setAccessible(true);
+                    field.set(target, field.get(source));
+                } catch (IllegalAccessException e) {
+                    throw new CitrusRuntimeException(format(
+                        "Unable to reflectively copy fields from source to target. clazz=%s sourceClass=%s targetClass=%s",
+                        clazz, source.getClass(), target.getClass()));
+                }
+            }
+
+            currentClass = currentClass.getSuperclass();
+        }
+
+    }
+
 }

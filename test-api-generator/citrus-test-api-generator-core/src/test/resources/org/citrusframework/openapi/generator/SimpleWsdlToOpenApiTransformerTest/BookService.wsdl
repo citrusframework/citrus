@@ -64,11 +64,15 @@
         In this case, we are using SOAP.
      -->
     <wsdl:binding name="BookServiceSOAP" type="tns:BookService">
+        <wsdl:documentation>This binding defines the SOAP over HTTP transport for BookService operations.</wsdl:documentation>
         <soap:binding style="document"
             transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="GetBook">
+            <wsdl:documentation>This operation retrieves details for a specific book identified by its ID.</wsdl:documentation>
             <soap:operation
-                soapAction="http://www.citrusframework.com/BookService/GetBook"/>
+                soapAction="http://www.citrusframework.com/BookService/GetBook">
+                <wsdl:documentation>Detailed Soap Operation documentation.</wsdl:documentation>
+            </soap:operation>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>

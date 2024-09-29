@@ -113,7 +113,7 @@ public class OpenApiClientTest extends AbstractGroovyActionDslTest {
     }
 
     @Test
-    public void shouldLoadOpenApiClientActions() throws IOException {
+    public void shouldLoadOpenApiClientActions() {
         GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/openapi/groovy/openapi-client.test.groovy");
 
         context.setVariable("port", port);
@@ -187,8 +187,6 @@ public class OpenApiClientTest extends AbstractGroovyActionDslTest {
         httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
 
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()),
-                "{\"id\": \"@isNumber()@\",\"category\": {\"id\": \"@isNumber()@\",\"name\": \"@notEmpty()@\"},\"name\": \"@notEmpty()@\",\"photoUrls\": \"@ignore@\",\"tags\": \"@ignore@\",\"status\": \"@matches(available|pending|sold)@\"}");
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 5L);
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));

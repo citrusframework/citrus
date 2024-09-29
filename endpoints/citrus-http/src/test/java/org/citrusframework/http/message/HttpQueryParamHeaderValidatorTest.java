@@ -32,13 +32,8 @@ import static org.hamcrest.Matchers.is;
  */
 public class HttpQueryParamHeaderValidatorTest extends AbstractTestNGUnitTest {
 
-    private HttpQueryParamHeaderValidator validator = new HttpQueryParamHeaderValidator();
-    private HeaderValidationContext validationContext = new HeaderValidationContext();
-
-    @Override
-    protected TestContextFactory createTestContextFactory() {
-        return TestContextFactory.newInstance();
-    }
+    private final HttpQueryParamHeaderValidator validator = new HttpQueryParamHeaderValidator();
+    private final HeaderValidationContext validationContext = new HeaderValidationContext();
 
     @Test(dataProvider = "successData")
     public void testValidateHeader(Object receivedValue, Object controlValue) {
@@ -51,6 +46,8 @@ public class HttpQueryParamHeaderValidatorTest extends AbstractTestNGUnitTest {
                 new Object[] { "foobar", "@contains(foo)@" },
                 new Object[] { "foo=fooValue,bar=barValue", "foo=fooValue,bar=barValue" },
                 new Object[] { "foo=,bar=barValue", "foo=,bar=barValue" },
+                new Object[] { "foo=1,foo=2,foo=3,bar=barValue", "foo=1,foo=2,foo=3,bar=barValue" },
+                new Object[] { "foo=1,foo=2,foo=3,bar=barValue", "foo=3,foo=2,foo=1,bar=barValue" },
                 new Object[] { null, null },
                 new Object[] { Collections.singletonMap("key", "value"), Collections.singletonMap("key", "value") },
                 new Object[] { Collections.singletonMap("key", "value"), Collections.singletonMap("key", is("value")) }

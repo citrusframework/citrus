@@ -120,7 +120,7 @@ public class OpenApiSpecificationTest {
 
     private void assertPingApi(OpenApiSpecification specification) {
         assertNotNull(specification);
-        assertNotNull(specification.getSwaggerOpenApiValidationContext());
+        assertNotNull(specification.getOpenApiValidationContext());
         Optional<OperationPathAdapter> pingOperationPathAdapter = specification.getOperation(
             PING_OPERATION_ID,
             testContextMock);
@@ -244,21 +244,21 @@ public class OpenApiSpecificationTest {
 
         // Then (not yet initialized)
         assertFalse(specification.isApiRequestValidationEnabled());
-        assertNull(specification.getSwaggerOpenApiValidationContext());
+        assertNull(specification.getOpenApiValidationContext());
 
         // When (initialize)
         specification.getOpenApiDoc(testContextMock);
 
         // Then
         assertFalse(specification.isApiRequestValidationEnabled());
-        assertNotNull(specification.getSwaggerOpenApiValidationContext());
+        assertNotNull(specification.getOpenApiValidationContext());
 
         // When
         specification.setApiRequestValidationEnabled(true);
 
         // Then
         assertTrue(specification.isApiRequestValidationEnabled());
-        assertTrue(specification.getSwaggerOpenApiValidationContext().isRequestValidationEnabled());
+        assertTrue(specification.getOpenApiValidationContext().isRequestValidationEnabled());
 
     }
 
@@ -290,15 +290,15 @@ public class OpenApiSpecificationTest {
 
         // Then
         assertFalse(specification.isApiResponseValidationEnabled());
-        assertNotNull(specification.getSwaggerOpenApiValidationContext());
-        assertFalse(specification.getSwaggerOpenApiValidationContext().isResponseValidationEnabled());
+        assertNotNull(specification.getOpenApiValidationContext());
+        assertFalse(specification.getOpenApiValidationContext().isResponseValidationEnabled());
 
         // When
         specification.setApiResponseValidationEnabled(true);
 
         // Then
         assertTrue(specification.isApiResponseValidationEnabled());
-        assertTrue(specification.getSwaggerOpenApiValidationContext().isResponseValidationEnabled());
+        assertTrue(specification.getOpenApiValidationContext().isResponseValidationEnabled());
 
     }
 

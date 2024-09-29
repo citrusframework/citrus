@@ -1,0 +1,1230 @@
+openapi: 3.0.2
+info:
+    title: Extended Petstore API
+    description: |
+        This is an extended version of the Petstore API which includes additional operations, 
+        such as updating a pet using form data and managing vaccination records.
+    version: 1.0.0
+servers:
+    -   url: /api/v3/ext
+
+paths:
+    /pet/simple/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in path parameter
+            operationId: getPetWithSimpleStyleArray
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: path
+                    description: IDs of pet to return
+                    required: true
+                    style: simple
+                    explode: false
+                    schema:
+                        type: array
+                        items:
+                            type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/simple/object/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in path parameter
+            operationId: getPetWithSimpleStyleObject
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: path
+                    description: IDs of pet to return
+                    required: true
+                    style: simple
+                    explode: false
+                    schema:
+                        $ref: '#/components/schemas/PetIdentifier'
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/simple/exploded/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in path parameter
+            operationId: getPetWithSimpleStyleArrayExploded
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: path
+                    description: IDs of pet to return
+                    required: true
+                    style: simple
+                    explode: false
+                    schema:
+                        type: array
+                        items:
+                            type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/simple/exploded/object/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in path parameter
+            operationId: getPetWithSimpleStyleObjectExploded
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: path
+                    description: IDs of pet to return
+                    required: true
+                    style: simple
+                    explode: true
+                    schema:
+                        $ref: '#/components/schemas/PetIdentifier'
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/label/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in path parameter
+            operationId: getPetWithLabelStyleArray
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: path
+                    description: IDs of pet to return
+                    required: true
+                    style: label
+                    explode: false
+                    schema:
+                        type: array
+                        items:
+                            type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/label/object/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in path parameter
+            operationId: getPetWithLabelStyleObject
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: path
+                    description: IDs of pet to return
+                    required: true
+                    style: label
+                    explode: false
+                    schema:
+                        $ref: '#/components/schemas/PetIdentifier'
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/label/exploded/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in path parameter
+            operationId: getPetWithLabelStyleArrayExploded
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: path
+                    description: IDs of pet to return
+                    required: true
+                    style: label
+                    explode: true
+                    schema:
+                        type: array
+                        items:
+                            type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/label/exploded/object/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in path parameter
+            operationId: getPetWithLabelStyleObjectExploded
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: path
+                    description: IDs of pet to return
+                    required: true
+                    style: label
+                    explode: true
+                    schema:
+                        $ref: '#/components/schemas/PetIdentifier'
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/matrix/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in path parameter
+            operationId: getPetWithMatrixStyleArray
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: path
+                    description: IDs of pet to return
+                    required: true
+                    style: matrix
+                    explode: false
+                    schema:
+                        type: array
+                        items:
+                            type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/matrix/object/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in path parameter
+            operationId: getPetWithMatrixStyleObject
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: path
+                    description: IDs of pet to return
+                    required: true
+                    style: matrix
+                    explode: false
+                    schema:
+                        $ref: '#/components/schemas/PetIdentifier'
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/matrix/exploded/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in path parameter
+            operationId: getPetWithMatrixStyleArrayExploded
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: path
+                    description: IDs of pet to return
+                    required: true
+                    style: matrix
+                    explode: true
+                    schema:
+                        type: array
+                        items:
+                            type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/matrix/exploded/object/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in path parameter
+            operationId: getPetWithMatrixStyleObjectExploded
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: path
+                    description: IDs of pet to return
+                    required: true
+                    style: matrix
+                    explode: true
+                    schema:
+                        $ref: '#/components/schemas/PetIdentifier'
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/header/simple:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in header parameter
+            operationId: getPetWithSimpleStyleHeader
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: header
+                    description: IDs of pet to return
+                    required: true
+                    style: simple
+                    explode: false
+                    schema:
+                        type: array
+                        items:
+                            type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/header/simple/exploded:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in header parameter
+            operationId: getPetWithSimpleStyleExplodedHeader
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: header
+                    description: IDs of pet to return
+                    required: true
+                    style: simple
+                    explode: true
+                    schema:
+                        type: array
+                        items:
+                            type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/header/simple/object:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in header parameter
+            operationId: getPetWithSimpleStyleObjectHeader
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: header
+                    description: IDs of pet to return
+                    required: true
+                    style: simple
+                    explode: false
+                    schema:
+                        $ref: '#/components/schemas/PetIdentifier'
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/header/simple/exploded/object:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in header parameter
+            operationId: getPetWithSimpleStyleExplodedObjectHeader
+            description: "Returns multiple pets by ID using multiple ids in header parameter."
+            parameters:
+                -   name: petId
+                    in: header
+                    description: IDs of pet to return
+                    required: true
+                    style: simple
+                    explode: true
+                    schema:
+                        $ref: '#/components/schemas/PetIdentifier'
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/query/form:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in header parameter
+            operationId: getPetWithFormStyleQuery
+            description: "Returns multiple pets by ID using multiple ids in query parameter."
+            parameters:
+                -   name: petId
+                    in: query
+                    description: IDs of pet to return
+                    required: true
+                    style: form
+                    explode: false
+                    schema:
+                        type: array
+                        items:
+                            type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/query/form/object:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in header parameter
+            operationId: getPetWithFormStyleObjectQuery
+            description: "Returns multiple pets by ID using multiple ids in query parameter."
+            parameters:
+                -   name: petId
+                    in: query
+                    description: IDs of pet to return
+                    required: true
+                    style: form
+                    explode: false
+                    schema:
+                        $ref: '#/components/schemas/PetIdentifier'
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/query/form/exploded:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in header parameter
+            operationId: getPetWithFormStyleExplodedQuery
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: query
+                    description: IDs of pet to return
+                    required: true
+                    style: form
+                    explode: true
+                    schema:
+                        type: array
+                        items:
+                            type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/query/form/exploded/object:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in header parameter
+            operationId: getPetWithFormStyleExplodedObjectQuery
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: query
+                    description: IDs of pet to return
+                    required: true
+                    style: form
+                    explode: true
+                    schema:
+                        $ref: '#/components/schemas/PetIdentifier'
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/query/deep/object:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in header parameter
+            operationId: getPetWithDeepObjectTypeQuery
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: query
+                    description: IDs of pet to return
+                    required: true
+                    style: deepObject
+                    explode: true
+                    schema:
+                        $ref: '#/components/schemas/PetIdentifier'
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/cookie/form:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in cookie parameter
+            operationId: getPetWithFormStyleCookie
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: cookie
+                    description: IDs of pet to return
+                    required: true
+                    style: form
+                    explode: false
+                    schema:
+                        type: array
+                        items:
+                            type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/cookie/form/object:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in cookie parameter
+            operationId: getPetWithFormObjectStyleCookie
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: petId
+                    in: cookie
+                    description: IDs of pet to return
+                    required: true
+                    style: form
+                    explode: false
+                    schema:
+                        $ref: '#/components/schemas/PetIdentifier'
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/cookie/form/exploded:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id supporting multiple ids in cookie parameter
+            operationId: getPetWithFormExplodedStyleCookie
+            description: "Returns multiple pets by ID using multiple ids in cookie parameter."
+            parameters:
+                -   name: petId
+                    in: cookie
+                    description: IDs of pet to return
+                    required: true
+                    style: form
+                    explode: true
+                    schema:
+                        type: array
+                        items:
+                            type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet using a session cookie
+            operationId: getPetWithCookie
+            description: "Returns a single pet by ID, using a session ID stored in a cookie."
+            parameters:
+                -   name: petId
+                    in: path
+                    description: ID of pet to return
+                    required: true
+                    schema:
+                        type: integer
+                        format: int64
+                -   name: session_id
+                    in: cookie
+                    required: true
+                    schema:
+                        type: string
+                    description: The session ID cookie
+                -   name: opt_trx_id
+                    in: cookie
+                    schema:
+                        type: string
+                    description: The optional transaction ID cookie
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/xml:
+                            schema:
+                                $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                        application/json:
+                            schema:
+                                $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+        put:
+            tags:
+                - extPet
+            summary: Updates a pet in the store with query data.
+            description: "Update the name, status, tags and nicknames of an existing pet using query data."
+            operationId: updatePetWithArrayQueryData
+            parameters:
+                -   name: petId
+                    in: path
+                    required: true
+                    description: ID of the pet that needs to be updated
+                    schema:
+                        type: integer
+                        format: int64
+                -   name: name
+                    in: query
+                    required: true
+                    description: Updated name of the pet
+                    schema:
+                        type: string
+                -   name: status
+                    in: query
+                    required: true
+                    description: Updated status of the pet
+                    schema:
+                        type: string
+                -   name: tags
+                    in: query
+                    required: true
+                    description: Updated tags of the pet
+                    schema:
+                        type: array
+                        items:
+                            type: string
+                -   name: nicknames
+                    in: query
+                    required: true
+                    description: Updated nicknames of the pet
+                    schema:
+                        type: array
+                        items:
+                            type: string
+                -   name: sampleStringHeader
+                    in: header
+                    required: true
+                    description: A sample string header
+                    schema:
+                        type: string
+                -   name: sampleIntHeader
+                    in: header
+                    description: A sample int header
+                    schema:
+                        type: integer
+            responses:
+                '200':
+                    description: Pet successfully updated
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+                '405':
+                    description: Validation exception
+    /pet/form/{petId}:
+        put:
+            tags:
+                - extPet
+            summary: Updates a pet in the store with form data
+            description: "Update the name or status of an existing pet using url encoded form data."
+            operationId: updatePetWithFormUrlEncoded
+            parameters:
+                -   name: petId
+                    in: path
+                    required: true
+                    description: ID of the pet that needs to be updated
+                    schema:
+                        type: integer
+                        format: int64
+            requestBody:
+                required: true
+                content:
+                    application/x-www-form-urlencoded:
+                        schema:
+                            type: object
+                            required: [ "name", "status", "tags", "age" ]
+                            properties:
+                                name:
+                                    description: Updated name of the pet
+                                    type: string
+                                status:
+                                    description: Updated status of the pet
+                                    type: string
+                                age:
+                                    description: The age of the pet in years
+                                    type: integer
+                                owners:
+                                    description: The number of pre owners
+                                    type: integer
+                                tags:
+                                    type: array
+                                    items:
+                                        type: string
+                                nicknames:
+                                    type: array
+                                    items:
+                                        type: string
+            responses:
+                '200':
+                    description: Pet successfully updated
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+                '405':
+                    description: Validation exception
+    /secure-basic/pet/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet via basic authentication
+            description: "Returns a single pet by ID, requiring basic authentication."
+            operationId: getPetByIdWithBasicAuthentication
+            security:
+                -   basicAuth: [ ]
+
+            parameters:
+                -   name: petId
+                    in: path
+                    description: ID of pet to return
+                    required: true
+                    schema:
+                        type: integer
+                        format: int64
+                -   name: allDetails
+                    in: query
+                    description: Requests all details.
+                    required: true
+                    schema:
+                        type: boolean
+                -   name: details
+                    in: query
+                    description: A list with detail specifiers.
+                    schema:
+                        type: array
+                        items:
+                            type: string
+                -   name: requesterInformation
+                    in: query
+                    description: A list of specific requester information.
+                    schema:
+                        type: array
+                        items:
+                            type: string
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/xml:
+                            schema:
+                                $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                        application/json:
+                            schema:
+                                $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /secure-bearer/pet/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet via basic authentication
+            description: "Returns a single pet by ID, requiring basic authentication."
+            operationId: getPetByIdWithBearerAuthentication
+            security:
+                -   bearerAuth: [ ]
+
+            parameters:
+                -   name: petId
+                    in: path
+                    description: ID of pet to return
+                    required: true
+                    schema:
+                        type: integer
+                        format: int64
+                -   name: allDetails
+                    in: query
+                    description: Requests all details.
+                    required: true
+                    schema:
+                        type: boolean
+                -   name: details
+                    in: query
+                    description: A list with detail specifiers.
+                    schema:
+                        type: array
+                        items:
+                            type: string
+                -   name: requesterInformation
+                    in: query
+                    description: A list of specific requester information.
+                    schema:
+                        type: array
+                        items:
+                            type: string
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/xml:
+                            schema:
+                                $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                        application/json:
+                            schema:
+                                $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /secure-api-key/pet/{petId}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet via basic authentication
+            description: "Returns a single pet by ID, requiring basic authentication."
+            operationId: getPetByIdWithApiKeyAuthentication
+            security:
+                -   api_key_header: [ ]
+                -   api_key_query: [ ]
+                -   api_key_cookie: [ ]
+
+            parameters:
+                -   name: petId
+                    in: path
+                    description: ID of pet to return
+                    required: true
+                    schema:
+                        type: integer
+                        format: int64
+                -   name: allDetails
+                    in: query
+                    description: Requests all details.
+                    required: true
+                    schema:
+                        type: boolean
+                -   name: details
+                    in: query
+                    description: A list with detail specifiers.
+                    required: false
+                    schema:
+                        type: array
+                        items:
+                            type: string
+                -   name: requesterInformation
+                    in: query
+                    description: A list of specific requester information.
+                    schema:
+                        type: array
+                        items:
+                            type: string
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/xml:
+                            schema:
+                                $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                        application/json:
+                            schema:
+                                $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
+    /pet/vaccination/{bucket}/{filename}:
+        post:
+            tags:
+                - extPet
+            operationId: postVaccinationDocument
+            summary: Upload a pet vaccination document
+            description: "Uploads a vaccination document for a pet to a specified S3 bucket."
+            parameters:
+                -   name: bucket
+                    description: The name of an existing S3 bucket.
+                    in: path
+                    required: true
+                    schema:
+                        type: string
+                -   name: filename
+                    description: The name under which to store the vaccination document.
+                    in: path
+                    required: true
+                    schema:
+                        type: string
+            responses:
+                '201':
+                    description: Document successfully uploaded
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/VaccinationDocumentResult'
+                '400':
+                    description: Bad Request - Invalid parameters supplied
+                '500':
+                    description: Internal Server Error
+    /pet/vaccination/status-report:
+        post:
+            tags:
+                - extPet
+            operationId: generateVaccinationReport
+            summary: Generate a vaccination status report
+            description: "Generates a vaccination status report in PDF format based on the provided template and data."
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            required: [ 'template', "reqIntVal" ]
+                            properties:
+                                template:
+                                    description: |
+                                        Vaccination report template file.
+                                    type: string
+                                    format: binary
+                                reqIntVal:
+                                    description: |
+                                        A required integer value.
+                                    type: integer
+                                optIntVal:
+                                    description: |
+                                        An optional integer value.
+                                    type: integer
+                                optBoolVal:
+                                    description: |
+                                        An optional boolean value.
+                                    type: boolean
+                                optNumberVal:
+                                    description: |
+                                        An optional number value.
+                                    type: number
+                                optStringVal:
+                                    description: |
+                                        An optional string value.
+                                    type: string
+                                optDateVal:
+                                    description: |
+                                        An optional date value.
+                                    type: string
+                                    format: date
+                                additionalData:
+                                    $ref: '#/components/schemas/HistoricalData'
+                                schema:
+                                    description: |
+                                        An optional JSON schema file to validate the created report against.
+                                    type: string
+                                    format: binary
+            responses:
+                '200':
+                    description: A vaccination report in PDF
+                    content:
+                        application/pdf:
+                            schema:
+                                type: string
+                                format: binary
+                '422':
+                    description: Unprocessable Entity - Validation error in the provided data
+                '500':
+                    description: Internal Server Error
+    /pet/vaccination/form:
+        post:
+            tags:
+                - extPet
+            operationId: postVaccinationFormData
+            summary: Submit vaccination form data
+            description: "Submits vaccination details for a pet."
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                vaccine:
+                                    type: string
+                                    description: The name of the vaccine administered.
+                                isFirstVaccination:
+                                    type: boolean
+                                    description: Indicates if this is the first vaccination or a repetition.
+                                doseNumber:
+                                    type: integer
+                                    description: The dose number of the vaccine (e.g., 1 for first dose, 2 for second dose).
+                                vaccinationDate:
+                                    type: string
+                                    format: date
+                                    description: The date when the vaccination was administered.
+            responses:
+                '201':
+                    description: Form data successfully submitted
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/VaccinationDocumentResult'
+                '400':
+                    description: Bad Request - Invalid form data
+                '500':
+                    description: Internal Server Error
+
+components:
+    securitySchemes:
+        basicAuth:
+            type: http
+            scheme: basic
+        bearerAuth:
+            type: http
+            scheme: bearer    # Specifies Bearer token authentication
+            bearerFormat: JWT # Optional, specifies the format of the bearer token (e.g., JWT)
+        api_key_header:
+            type: apiKey
+            description: Header api key description
+            name: api_key_header
+            in: header
+        api_key_cookie:
+            type: apiKey
+            description: Cookie api key description
+            name: api_key_cookie
+            in: cookie
+        api_key_query:
+            type: apiKey
+            description: Query api key description
+            name: api_key_query
+            in: query
+
+    schemas:
+        HistoricalData:
+            description: |
+                Additional historical data for a vaccination report, not contained in internal storage.
+            type: object
+            properties:
+                lastVaccinationDate:
+                    type: string
+                    format: date
+                    description: The date of the last vaccination.
+                vaccinationCount:
+                    type: integer
+                    description: The number of vaccinations the pet has received.
+        VaccinationDocumentResult:
+            type: object
+            properties:
+                documentId:
+                    type: string
+                    description: The unique ID of the uploaded vaccination document.
+                    example: "abc123"
+        PetIdentifier:
+            type: object
+            properties:
+                name:
+                    type: string
+                alias:
+                    type: string

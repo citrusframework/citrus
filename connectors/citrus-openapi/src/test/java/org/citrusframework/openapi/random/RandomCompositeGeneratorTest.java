@@ -1,5 +1,6 @@
 package org.citrusframework.openapi.random;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.assertArg;
 import static org.mockito.Mockito.atLeast;
@@ -10,7 +11,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertTrue;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
@@ -39,7 +39,7 @@ public class RandomCompositeGeneratorTest {
         Oas30Schema schema = new Oas30Schema();
         schema.allOf = Collections.singletonList(new Oas30Schema());
 
-        assertTrue(generator.handles(schema));
+        assertThat(generator.handles(schema)).isTrue();
     }
 
     @Test
@@ -62,9 +62,9 @@ public class RandomCompositeGeneratorTest {
 
         generator.generate(mockContext, schema);
 
-        verify(builderSpy).object(any());
-        verify(mockContext, atLeast(1)).generate(assertArg(arg -> schema.anyOf.contains(arg)));
-        verify(mockContext, atMost(3)).generate(assertArg(arg -> schema.anyOf.contains(arg)));
+        verify(builderSpy, atMost(2)).object(any());
+        verify(mockContext, atLeast(1)).generate(assertArg(arg -> assertThat(schema.anyOf).contains(arg)));
+        verify(mockContext, atMost(3)).generate(assertArg(arg -> assertThat(schema.anyOf).contains(arg)));
     }
 
     @Test

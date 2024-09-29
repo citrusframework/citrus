@@ -111,6 +111,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
             endpointConfiguration.setHeaderMapper(DefaultHttpHeaderMapper.inboundMapper());
             endpointConfiguration.setHandleAttributeHeaders(httpServer.isHandleAttributeHeaders());
             endpointConfiguration.setHandleCookies(httpServer.isHandleCookies());
+            endpointConfiguration.setHandleSemicolonPathContent(httpServer.isHandleSemicolonPathContent());
             endpointConfiguration.setDefaultStatusCode(httpServer.getDefaultStatusCode());
             messageController.setEndpointConfiguration(endpointConfiguration);
 

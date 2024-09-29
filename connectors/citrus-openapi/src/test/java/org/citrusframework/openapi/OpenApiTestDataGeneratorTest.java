@@ -68,7 +68,7 @@ public class OpenApiTestDataGeneratorTest {
 
         openApiSpecification = OpenApiSpecification.from(
             Resources.fromClasspath("org/citrusframework/openapi/ping/ping-api.yaml"));
-        schemaValidator = openApiSpecification.getSwaggerOpenApiValidationContext()
+        schemaValidator = openApiSpecification.getOpenApiValidationContext()
             .getSchemaValidator();
     }
 
@@ -289,7 +289,7 @@ public class OpenApiTestDataGeneratorTest {
         OasSchema schema = OasModelHelper.getSchemaDefinitions(
             openApiSpecification.getOpenApiDoc(null)).get(schemaType);
 
-        Schema<?> swaggerValidationSchema = openApiSpecification.getSwaggerOpenApiValidationContext()
+        Schema<?> swaggerValidationSchema = openApiSpecification.getOpenApiValidationContext()
             .getSwaggerOpenApi().getComponents().getSchemas().get(schemaType);
 
         assertNotNull(schema);
