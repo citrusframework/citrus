@@ -16,8 +16,6 @@
 
 package org.citrusframework.endpoint.direct.annotation;
 
-import java.util.Map;
-
 import org.citrusframework.TestActor;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusEndpointAnnotations;
@@ -34,6 +32,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.Map;
 
 import static org.mockito.Mockito.when;
 

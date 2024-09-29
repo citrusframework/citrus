@@ -17,17 +17,15 @@
 package org.citrusframework.openapi.util;
 
 import static java.lang.String.format;
+import static org.citrusframework.util.StringUtils.hasText;
 
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import jakarta.annotation.Nonnull;
 import java.util.stream.Collectors;
-import org.citrusframework.http.message.HttpMessage;
-import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.openapi.OpenApiConstants;
 import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.util.StringUtils;
 
 public class OpenApiUtils {
 
@@ -35,26 +33,25 @@ public class OpenApiUtils {
         // Static access only
     }
 
-    public static String getMethodPath(@Nonnull HttpMessage httpMessage) {
-        Object methodHeader = httpMessage.getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD);
-        Object path = httpMessage.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI);
-
-        return getMethodPath(methodHeader != null ? methodHeader.toString().toLowerCase() : "null",
-            path != null ? path.toString() : "null");
-    }
-
     public static String getMethodPath(@Nonnull String method, @Nonnull String path) {
-        if (StringUtils.hasText(path) && path.startsWith("/")) {
+        if (hasText(path) && path.startsWith("/")) {
             path = path.substring(1);
         }
-        return format("/%s/%s", method.toLowerCase(), path);
+        return format("%s_/%s", method.toUpperCase(), path);
     }
 
     /**
      * @return a unique scenario id for the {@link OasOperation}
      */
-    public static String createFullPathOperationIdentifier(String path, OasOperation oasOperation) {
+    public static String createFullPathOperationIdentifier(OasOperation oasOperation, String path) {
         return format("%s_%s", oasOperation.getMethod().toUpperCase(), path);
+    }
+
+    /**
+     * @return a unique scenario id for the {@link OasOperation}
+     */
+    public static String createFullPathOperationIdentifier(String method, String path) {
+        return format("%s_%s", method.toUpperCase(), path);
     }
 
     public static boolean isAnyNumberScheme(OasSchema schema) {

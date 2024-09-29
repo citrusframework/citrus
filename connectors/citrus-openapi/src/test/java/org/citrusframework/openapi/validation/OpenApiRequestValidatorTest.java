@@ -16,9 +16,9 @@
 
 package org.citrusframework.openapi.validation;
 
+import static org.citrusframework.http.message.HttpMessageHeaders.HTTP_REQUEST_URI;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
@@ -37,13 +37,13 @@ import java.util.List;
 import java.util.Map;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.http.message.HttpMessage;
-import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -54,7 +54,7 @@ public class OpenApiRequestValidatorTest {
     private OpenApiSpecification openApiSpecificationMock;
 
     @Mock
-    private SwaggerOpenApiValidationContext swaggerOpenApiValidationContextMock;
+    private OpenApiValidationContext openApiValidationContextMock;
 
     @Mock
     private OpenApiInteractionValidator openApiInteractionValidatorMock;
@@ -76,8 +76,8 @@ public class OpenApiRequestValidatorTest {
     public void beforeMethod() {
         mockCloseable = MockitoAnnotations.openMocks(this);
 
-        doReturn(swaggerOpenApiValidationContextMock).when(openApiSpecificationMock).getSwaggerOpenApiValidationContext();
-        doReturn(openApiInteractionValidatorMock).when(swaggerOpenApiValidationContextMock).getOpenApiInteractionValidator();
+        doReturn(openApiValidationContextMock).when(openApiSpecificationMock).getOpenApiValidationContext();
+        doReturn(openApiInteractionValidatorMock).when(openApiValidationContextMock).getOpenApiInteractionValidator();
 
         openApiRequestValidator = new OpenApiRequestValidator(openApiSpecificationMock);
     }
@@ -88,21 +88,9 @@ public class OpenApiRequestValidatorTest {
     }
 
     @Test
-    public void shouldNotValidateWhenDisabled() {
-        // Given
-        openApiRequestValidator.setEnabled(false);
-        // When
-        openApiRequestValidator.validateRequest(operationPathAdapterMock, httpMessageMock);
-        // Then
-        Assert.assertFalse(openApiRequestValidator.isEnabled());
-        verify(openApiInteractionValidatorMock, never()).validateRequest(any(Request.class));
-    }
-
-    @Test
     public void shouldValidateRequestWithNoErrors() {
         // Given
-        openApiRequestValidator.setEnabled(true);
-        when(httpMessageMock.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI)).thenReturn("/api/test");
+        when(httpMessageMock.getHeader(HTTP_REQUEST_URI)).thenReturn("/api/test");
         when(httpMessageMock.getRequestMethod()).thenReturn(RequestMethod.GET);
         when(openApiInteractionValidatorMock.validateRequest(any(Request.class)))
             .thenReturn(validationReportMock);
@@ -119,8 +107,7 @@ public class OpenApiRequestValidatorTest {
     @Test(expectedExceptions = ValidationException.class)
     public void shouldValidateRequestWithErrors() {
         // Given
-        openApiRequestValidator.setEnabled(true);
-        when(httpMessageMock.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI)).thenReturn("/api/test");
+        when(httpMessageMock.getHeader(HTTP_REQUEST_URI)).thenReturn("/api/test");
         when(httpMessageMock.getRequestMethod()).thenReturn(RequestMethod.GET);
         when(openApiInteractionValidatorMock.validateRequest(any(Request.class)))
             .thenReturn(validationReportMock);
@@ -145,7 +132,7 @@ public class OpenApiRequestValidatorTest {
         headers.put("simple", "s1");
 
         when(httpMessageMock.getHeaders()).thenReturn(headers);
-        when(httpMessageMock.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI)).thenReturn("/api/test");
+        when(httpMessageMock.getHeader(HTTP_REQUEST_URI)).thenReturn("/api/test");
         when(httpMessageMock.getRequestMethod()).thenReturn(RequestMethod.GET);
         when(httpMessageMock.getAccept()).thenReturn("application/json");
         when(operationPathAdapterMock.contextPath()).thenReturn("/api");
@@ -165,6 +152,26 @@ public class OpenApiRequestValidatorTest {
         assertTrue(request.getRequestBody().isPresent());
 
         assertEquals(request.getRequestBody().get().toString(StandardCharsets.UTF_8), "payload");
+    }
+
+    @Test
+    public void shouldCreateFormRequestFromMessage() throws IOException {
+        // Given
+        MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
+        formData.add("name", "John Doe");
+        formData.add("age", 30);
+        formData.add("city", "New York");
+
+        when(httpMessageMock.getPayload()).thenReturn(formData);
+
+        when(httpMessageMock.getHeader(HTTP_REQUEST_URI)).thenReturn("/api/test");
+        when(httpMessageMock.getRequestMethod()).thenReturn(RequestMethod.GET);
+
+        // When
+        Request request = openApiRequestValidator.createRequestFromMessage(operationPathAdapterMock, httpMessageMock);
+
+        // Then
+        assertEquals(request.getRequestBody().get().toString(StandardCharsets.UTF_8), "name=John+Doe&age=30&city=New+York");
     }
 
 }

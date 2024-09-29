@@ -150,6 +150,11 @@ public class HttpServer extends AbstractServer {
     private boolean handleCookies = false;
 
     /**
+     * Should handle matrix encoded path parameters
+     */
+    private boolean handleSemicolonPathContent = false;
+
+    /**
      * Default status code returned by http server
      */
     private int defaultStatusCode = HttpStatus.OK.value();
@@ -644,6 +649,25 @@ public class HttpServer extends AbstractServer {
     public void setHandleCookies(boolean handleCookies) {
         this.handleCookies = handleCookies;
     }
+
+    /**
+     * Gets the handleSemicolonPathContent.
+     *
+     * @return
+     */
+    public boolean isHandleSemicolonPathContent() {
+        return handleSemicolonPathContent;
+    }
+
+    /**
+     * Sets the handleSemicolonPathContent.
+     *
+     * @param handleSemicolonPathContent
+     */
+    public void setHandleSemicolonPathContent(boolean handleSemicolonPathContent) {
+        this.handleSemicolonPathContent = handleSemicolonPathContent;
+    }
+
 
     /**
      * Gets the response cache size.

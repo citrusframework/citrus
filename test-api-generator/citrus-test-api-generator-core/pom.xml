@@ -7,7 +7,7 @@
     <parent>
         <artifactId>citrus-test-api-generator</artifactId>
         <groupId>org.citrusframework</groupId>
-        <version>4.3.0-SNAPSHOT</version>
+        <version>4.4.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -41,11 +41,33 @@
             <groupId>org.citrusframework</groupId>
             <artifactId>citrus-spring</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.citrusframework</groupId>
             <artifactId>citrus-ws</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.citrusframework</groupId>
+            <artifactId>citrus-test-api-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.citrusframework</groupId>
+            <artifactId>citrus-groovy</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.citrusframework</groupId>
+            <artifactId>citrus-validation-groovy</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.citrusframework</groupId>
+            <artifactId>citrus-test-api-spring</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -88,6 +110,12 @@
             <version>${spring.boot.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.5</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -98,7 +126,7 @@
                 <version>${maven.helper.plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>add-generated-specs</id>
+                        <id>add-generated-test-resources</id>
                         <phase>generate-test-resources</phase>
                         <goals>
                             <goal>add-test-resource</goal>
@@ -113,7 +141,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>add-generated-classes</id>
+                        <id>add-generated-test-classes</id>
                         <phase>generate-test-sources</phase>
                         <goals>
                             <goal>add-test-source</goal>
@@ -215,13 +243,30 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/test/resources/apis/petstore.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/test/resources/apis/petstore-v3.yaml</inputSpec>
                             <configOptions>
                                 <invokerPackage>org.citrusframework.openapi.generator.rest.petstore</invokerPackage>
                                 <apiPackage>org.citrusframework.openapi.generator.rest.petstore.request</apiPackage>
                                 <modelPackage>org.citrusframework.openapi.generator.rest.petstore.model</modelPackage>
-                                <prefix>PetStore</prefix>
-                                <apiEndpoint>petStoreEndpoint</apiEndpoint>
+                                <prefix>petStore</prefix>
+                                <apiEndpoint>petstore.endpoint</apiEndpoint>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-openapi-petstore-extended-files</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/test/resources/apis/petstore-extended-v3.yaml</inputSpec>
+                            <configOptions>
+                                <invokerPackage>org.citrusframework.openapi.generator.rest.extpetstore</invokerPackage>
+                                <apiPackage>org.citrusframework.openapi.generator.rest.extpetstore.request</apiPackage>
+                                <modelPackage>org.citrusframework.openapi.generator.rest.extpetstore.model</modelPackage>
+                                <prefix>ExtPetStore</prefix>
+                                <apiEndpoint>extpetstore.endpoint</apiEndpoint>
                             </configOptions>
                         </configuration>
                     </execution>
@@ -232,39 +277,20 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/test/resources/org/citrusframework/openapi/generator/SimpleWsdlToOpenApiTransformerTest/BookService-generated.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/test/resources/apis/BookService-generated.yaml</inputSpec>
                             <configOptions>
                                 <apiType>SOAP</apiType>
                                 <invokerPackage>org.citrusframework.openapi.generator.soap.bookservice</invokerPackage>
                                 <apiPackage>org.citrusframework.openapi.generator.soap.bookservice.request</apiPackage>
                                 <modelPackage>org.citrusframework.openapi.generator.soap.bookservice.model</modelPackage>
-                                <prefix>SoapSample</prefix>
-                                <prefix>OpenApiFromWsdl</prefix>
-                                <apiEndpoint>soapSampleEndpoint</apiEndpoint>
-                            </configOptions>
-                        </configuration>
-                    </execution>
-
-                    <!-- For Multipart test-->
-                    <execution>
-                        <id>generate-openapi-multiparttest-files</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${project.basedir}/src/test/resources/apis/multiparttest-rest-resource.yaml</inputSpec>
-                            <configOptions>
-                                <invokerPackage>org.citrusframework.openapi.generator.rest.multiparttest</invokerPackage>
-                                <apiPackage>org.citrusframework.openapi.generator.rest.multiparttest.request</apiPackage>
-                                <modelPackage>org.citrusframework.openapi.generator.rest.multiparttest.model</modelPackage>
-                                <prefix>MultipartTest</prefix>
-                                <apiEndpoint>multipartTestEndpoint</apiEndpoint>
+                                <prefix>BookService</prefix>
+                                <apiEndpoint>bookstore.endpoint</apiEndpoint>
                             </configOptions>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 </project>

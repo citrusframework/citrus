@@ -17,7 +17,7 @@
 package org.citrusframework.maven.plugin;
 
 import static java.lang.String.format;
-import static org.citrusframework.openapi.generator.JavaCitrusCodegen.CODEGEN_NAME;
+import static org.citrusframework.openapi.generator.CitrusJavaCodegen.CODEGEN_NAME;
 
 import java.io.File;
 import java.util.HashMap;
@@ -25,7 +25,7 @@ import java.util.Map;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
-import org.citrusframework.openapi.generator.JavaCitrusCodegen;
+import org.citrusframework.openapi.generator.CitrusJavaCodegen;
 import org.openapitools.codegen.plugin.CodeGenMojo;
 
 /**
@@ -71,17 +71,17 @@ public class CodeGenMojoWrapper extends CodeGenMojo {
     }
 
     public CodeGenMojoWrapper schemaFolder(String schemaFolder) {
-        configOptionsProperties.put(JavaCitrusCodegen.GENERATED_SCHEMA_FOLDER, schemaFolder);
+        configOptionsProperties.put(CitrusJavaCodegen.GENERATED_SCHEMA_FOLDER, schemaFolder);
         return this;
     }
 
     public CodeGenMojoWrapper resourceFolder(String resourceFolder) {
-        configOptionsProperties.put(JavaCitrusCodegen.RESOURCE_FOLDER, resourceFolder);
+        configOptionsProperties.put(CitrusJavaCodegen.RESOURCE_FOLDER, resourceFolder);
         return this;
     }
 
     public CodeGenMojoWrapper sourceFolder(String sourceFolder) {
-        configOptionsProperties.put(JavaCitrusCodegen.SOURCE_FOLDER, sourceFolder);
+        configOptionsProperties.put(CitrusJavaCodegen.SOURCE_FOLDER, sourceFolder);
         return this;
     }
 

@@ -13,6 +13,6 @@ public class OpenApiMessageTypeTest {
 
     @Test
     public void testToHeaderNameResponse() {
-        assertEquals(OpenApiMessageHeaders.REQUEST_TYPE, OpenApiMessageHeaders.RESPONSE_TYPE);
+        assertEquals(OpenApiMessageType.RESPONSE.toHeaderName(), OpenApiMessageHeaders.RESPONSE_TYPE);
     }
 }

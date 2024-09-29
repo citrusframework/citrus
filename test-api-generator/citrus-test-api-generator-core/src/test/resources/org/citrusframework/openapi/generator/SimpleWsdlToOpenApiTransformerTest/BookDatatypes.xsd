@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsd:schema
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns="http://www.citrusframework.org/datatype"
-    targetNamespace="http://www.citrusframework.org/datatype"
+    xmlns="http://www.citrusframework.org/bookstore/datatypes"
+    targetNamespace="http://www.citrusframework.org/bookstore/datatypes"
 >
     <!--
         The `types` element defines the data types (XML elements)
