@@ -41,8 +41,8 @@ import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.citrusframework.openapi.util.OpenApiUtils;
-import org.citrusframework.openapi.validation.SwaggerOpenApiValidationContext;
-import org.citrusframework.openapi.validation.SwaggerOpenApiValidationContextLoader;
+import org.citrusframework.openapi.validation.OpenApiValidationContext;
+import org.citrusframework.openapi.validation.OpenApiValidationContextLoader;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.StringUtils;
@@ -95,7 +95,7 @@ public class OpenApiSpecification {
 
     private OasDocument openApiDoc;
 
-    private SwaggerOpenApiValidationContext swaggerOpenApiValidationContext;
+    private OpenApiValidationContext openApiValidationContext;
 
     private boolean generateOptionalFields = isGenerateOptionalFieldsGlobally();
 
@@ -140,19 +140,19 @@ public class OpenApiSpecification {
     public static OpenApiSpecification from(URL specUrl) {
         OpenApiSpecification specification = new OpenApiSpecification();
         OasDocument openApiDoc;
-        SwaggerOpenApiValidationContext swaggerOpenApiValidationContext;
+        OpenApiValidationContext openApiValidationContext;
         if (specUrl.getProtocol().startsWith(HTTPS)) {
             openApiDoc = OpenApiResourceLoader.fromSecuredWebResource(specUrl);
-            swaggerOpenApiValidationContext  = SwaggerOpenApiValidationContextLoader.fromSecuredWebResource(specUrl);
+            openApiValidationContext  = OpenApiValidationContextLoader.fromSecuredWebResource(specUrl);
         } else {
             openApiDoc = OpenApiResourceLoader.fromWebResource(specUrl);
-            swaggerOpenApiValidationContext  = SwaggerOpenApiValidationContextLoader.fromWebResource(specUrl);
+            openApiValidationContext  = OpenApiValidationContextLoader.fromWebResource(specUrl);
         }
 
         specification.setSpecUrl(specUrl.toString());
         specification.initPathLookups();
         specification.setOpenApiDoc(openApiDoc);
-        specification.setSwaggerOpenApiValidationContext(swaggerOpenApiValidationContext);
+        specification.setOpenApiValidationContext(openApiValidationContext);
         specification.setRequestUrl(
             String.format("%s://%s%s%s", specUrl.getProtocol(), specUrl.getHost(),
                 specUrl.getPort() > 0 ? ":" + specUrl.getPort() : "",
@@ -166,7 +166,7 @@ public class OpenApiSpecification {
         OasDocument openApiDoc = OpenApiResourceLoader.fromFile(resource);
 
         specification.setOpenApiDoc(openApiDoc);
-        specification.setSwaggerOpenApiValidationContext(SwaggerOpenApiValidationContextLoader.fromFile(resource));
+        specification.setOpenApiValidationContext(OpenApiValidationContextLoader.fromFile(resource));
 
         String schemeToUse = Optional.ofNullable(OasModelHelper.getSchemes(openApiDoc))
             .orElse(Collections.singletonList(HTTP))
@@ -218,10 +218,10 @@ public class OpenApiSpecification {
                     initApiDoc(
                         () -> OpenApiResourceLoader.fromSecuredWebResource(specWebResource));
 
-                    setSwaggerOpenApiValidationContext(SwaggerOpenApiValidationContextLoader.fromSecuredWebResource(specWebResource));
+                    setOpenApiValidationContext(OpenApiValidationContextLoader.fromSecuredWebResource(specWebResource));
                 } else {
                     initApiDoc(() -> OpenApiResourceLoader.fromWebResource(specWebResource));
-                    setSwaggerOpenApiValidationContext(SwaggerOpenApiValidationContextLoader.fromWebResource(specWebResource));
+                    setOpenApiValidationContext(OpenApiValidationContextLoader.fromWebResource(specWebResource));
                 }
 
                 if (requestUrl == null) {
@@ -235,7 +235,7 @@ public class OpenApiSpecification {
                 Resource resource = Resources.create(resolvedSpecUrl);
                 initApiDoc(
                     () -> OpenApiResourceLoader.fromFile(resource));
-                setSwaggerOpenApiValidationContext(SwaggerOpenApiValidationContextLoader.fromFile(resource));
+                setOpenApiValidationContext(OpenApiValidationContextLoader.fromFile(resource));
 
                 if (requestUrl == null) {
                     String schemeToUse = Optional.ofNullable(OasModelHelper.getSchemes(openApiDoc))
@@ -255,8 +255,8 @@ public class OpenApiSpecification {
         return openApiDoc;
     }
 
-    public SwaggerOpenApiValidationContext getSwaggerOpenApiValidationContext() {
-        return swaggerOpenApiValidationContext;
+    public OpenApiValidationContext getOpenApiValidationContext() {
+        return openApiValidationContext;
     }
 
 
@@ -274,10 +274,11 @@ public class OpenApiSpecification {
         initApiDoc(() -> openApiDoc);
     }
 
-    private void setSwaggerOpenApiValidationContext(SwaggerOpenApiValidationContext swaggerOpenApiValidationContext) {
-        this.swaggerOpenApiValidationContext = swaggerOpenApiValidationContext;
-        this.swaggerOpenApiValidationContext.setResponseValidationEnabled(apiResponseValidationEnabled);
-        this.swaggerOpenApiValidationContext.setRequestValidationEnabled(apiRequestValidationEnabled);
+    private void setOpenApiValidationContext(
+        OpenApiValidationContext openApiValidationContext) {
+        this.openApiValidationContext = openApiValidationContext;
+        this.openApiValidationContext.setResponseValidationEnabled(apiResponseValidationEnabled);
+        this.openApiValidationContext.setRequestValidationEnabled(apiRequestValidationEnabled);
     }
 
     private void initApiDoc(Supplier<OasDocument> openApiDocSupplier) {
@@ -323,8 +324,7 @@ public class OpenApiSpecification {
         String basePath = OasModelHelper.getBasePath(openApiDoc);
         String fullOperationPath = StringUtils.appendSegmentToUrlPath(basePath, path);
 
-        String uniqueOperationId = OpenApiUtils.createFullPathOperationIdentifier(fullOperationPath,
-            operation);
+        String uniqueOperationId = OpenApiUtils.createFullPathOperationIdentifier(operation, fullOperationPath);
         operationToUniqueId.put(operation, uniqueOperationId);
 
         OperationPathAdapter operationPathAdapter = new OperationPathAdapter(path, rootContextPath,
@@ -370,8 +370,8 @@ public class OpenApiSpecification {
 
     public void setApiRequestValidationEnabled(boolean enabled) {
         this.apiRequestValidationEnabled = enabled;
-        if (this.swaggerOpenApiValidationContext != null) {
-            this.swaggerOpenApiValidationContext.setRequestValidationEnabled(enabled);
+        if (this.openApiValidationContext != null) {
+            this.openApiValidationContext.setRequestValidationEnabled(enabled);
         }
     }
 
@@ -381,8 +381,8 @@ public class OpenApiSpecification {
 
     public void setApiResponseValidationEnabled(boolean enabled) {
         this.apiResponseValidationEnabled = enabled;
-        if (this.swaggerOpenApiValidationContext != null) {
-            this.swaggerOpenApiValidationContext.setResponseValidationEnabled(enabled);
+        if (this.openApiValidationContext != null) {
+            this.openApiValidationContext.setResponseValidationEnabled(enabled);
         }
     }
 

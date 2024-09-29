@@ -251,6 +251,17 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     /**
+     * Sets the handleCookies property.
+     *
+     * @param flag
+     * @return
+     */
+    public B handleHandleSemicolonPathContent(boolean flag) {
+        endpoint.setHandleSemicolonPathContent(flag);
+        return self;
+    }
+
+    /**
      * Sets the default status code property.
      *
      * @param status

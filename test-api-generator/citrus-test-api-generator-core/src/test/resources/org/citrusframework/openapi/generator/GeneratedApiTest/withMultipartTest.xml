@@ -1,0 +1,76 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+    xmlns:extpetstore="http://www.citrusframework.org/citrus-test-schema/extpetstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/http/testcase
+    http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api/extpetstore-api.xsd"
+>
+    <testcase name="withMultiPartTest">
+        <actions>
+
+            <create-variables>
+                <variable name="templateData" value="citrus:readFile('classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/vaccinationTemplate.bin', 'true')"/>
+                <variable name="additionalData" value="citrus:readFile('classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/vaccinationAdditionalData.json')"/>
+            </create-variables>
+
+            <extpetstore:send-generate-vaccination-report
+                template="${templateData}"
+                reqIntVal="1"
+                additionalData="${additionalData}"
+                optIntVal="100"
+                optBoolVal="true"
+                optDateVal="2024-12-1"
+                optNumberVal="1"
+                optStringVal="a"
+                fork="true">
+            </extpetstore:send-generate-vaccination-report>
+
+            <http:receive-request server="httpServer">
+                <http:POST path="/api/v3/ext/pet/vaccination/status-report">
+                    <http:body>
+                        <http:validate>
+                            <http:script type="groovy">
+                                import static org.assertj.core.api.Assertions.assertThat
+                                import static java.util.Map.of
+                                import static org.citrusframework.openapi.generator.util.MultipartConverter.multipartMessageToMa
+
+                                def multiMap = org.citrusframework.openapi.generator.util.MultipartConverter.multipartMessageToMap((org.citrusframework.http.message.HttpMessage) receivedMessage)
+
+                                org.assertj.core.api.Assertions.assertThat(multiMap)
+                                .containsExactlyInAnyOrderEntriesOf(java.util.Map.of(
+                                    "additionalData", """${additionalData}""",
+                                    "reqIntVal", "1",
+                                    "template", new byte[]{36, 123, 116, 101, 109, 112, 108, 97, 116, 101, 68, 97, 116, 97, 125},
+                                    "optIntVal", "100",
+                                    "optBoolVal","true",
+                                    "optDateVal","2024-12-1",
+                                    "optNumberVal","1",
+                                    "optStringVal","a"));
+                            </http:script>
+                        </http:validate>
+                    </http:body>
+                </http:POST>
+
+            </http:receive-request>
+
+            <http:send-response server="httpServer">
+                <http:headers status="200" reason-phrase="OK">
+                    <http:header name="Content-Type" value="application/pdf"/>
+                </http:headers>
+                <http:body>
+                    <http:resource file="classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/vaccinationReport.pdf"/>
+                </http:body>
+            </http:send-response>
+
+            <extpetstore:receive-generate-vaccination-report responseCode="200"/>
+        </actions>
+    </testcase>
+</spring:beans>

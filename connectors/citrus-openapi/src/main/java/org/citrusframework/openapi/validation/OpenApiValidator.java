@@ -25,24 +25,14 @@ public abstract class OpenApiValidator {
 
     protected final OpenApiInteractionValidator openApiInteractionValidator;
 
-    protected boolean enabled;
-
     protected OpenApiValidator(OpenApiSpecification openApiSpecification) {
-        SwaggerOpenApiValidationContext swaggerOpenApiValidationContext = openApiSpecification.getSwaggerOpenApiValidationContext();
-        if (swaggerOpenApiValidationContext != null) {
-            openApiInteractionValidator = openApiSpecification.getSwaggerOpenApiValidationContext()
+        OpenApiValidationContext openApiValidationContext = openApiSpecification.getOpenApiValidationContext();
+        if (openApiValidationContext != null) {
+            openApiInteractionValidator = openApiSpecification.getOpenApiValidationContext()
                 .getOpenApiInteractionValidator();
         } else {
             openApiInteractionValidator = null;
         }
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
     }
 
     protected abstract String getType();

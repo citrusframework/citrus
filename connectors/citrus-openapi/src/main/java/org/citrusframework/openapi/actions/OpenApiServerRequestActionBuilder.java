@@ -21,6 +21,7 @@ import static org.citrusframework.message.MessageType.JSON;
 import static org.citrusframework.message.MessageType.PLAINTEXT;
 import static org.citrusframework.message.MessageType.XML;
 import static org.citrusframework.openapi.model.OasModelHelper.getRequestContentType;
+import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
 import static org.citrusframework.util.StringUtils.appendSegmentToUrlPath;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
@@ -45,6 +46,8 @@ import org.citrusframework.openapi.OpenApiTestValidationDataGenerator;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.citrusframework.openapi.validation.OpenApiMessageProcessor;
+import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
+import org.citrusframework.openapi.validation.OpenApiValidationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
@@ -59,19 +62,24 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
 
     private final String operationId;
 
-    private boolean oasValidationEnabled = true;
+    /**
+     * Schema validation is enabled by default.
+     */
+    private boolean schemaValidation = true;
 
     /**
      * Default constructor initializes http request message builder.
      */
-    public OpenApiServerRequestActionBuilder(OpenApiSpecificationSource openApiSpecificationSource, String operationId) {
+    public OpenApiServerRequestActionBuilder(OpenApiSpecificationSource openApiSpecificationSource,
+        String operationId) {
         this(new HttpMessage(), openApiSpecificationSource, operationId);
     }
 
     public OpenApiServerRequestActionBuilder(HttpMessage httpMessage,
         OpenApiSpecificationSource openApiSpecificationSource,
         String operationId) {
-        super(new OpenApiServerRequestMessageBuilder(httpMessage, openApiSpecificationSource, operationId),
+        super(new OpenApiServerRequestMessageBuilder(httpMessage, openApiSpecificationSource,
+                operationId),
             httpMessage);
         this.openApiSpecificationSource = openApiSpecificationSource;
         this.operationId = operationId;
@@ -80,18 +88,33 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
     @Override
     public ReceiveMessageAction doBuild() {
 
-        OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(referenceResolver);
-        if (oasValidationEnabled && !messageProcessors.contains(openApiMessageProcessor)) {
+        OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(
+            referenceResolver);
+
+        // Honor default enablement of schema validation
+        OpenApiValidationContext openApiValidationContext = openApiSpecification.getOpenApiValidationContext();
+        if (openApiValidationContext != null && schemaValidation) {
+            schemaValidation = openApiValidationContext.isRequestValidationEnabled();
+        }
+
+        if (schemaValidation && !messageProcessors.contains(openApiMessageProcessor)) {
             openApiMessageProcessor = new OpenApiMessageProcessor(
                 openApiSpecification, operationId, OpenApiMessageType.REQUEST);
             process(openApiMessageProcessor);
         }
 
+        if (schemaValidation && getValidationContexts().stream()
+            .noneMatch(OpenApiMessageValidationContext.class::isInstance)) {
+            validate(openApi(openApiSpecification)
+                .schemaValidation(schemaValidation)
+                .build());
+        }
+
         return super.doBuild();
     }
 
-    public OpenApiServerRequestActionBuilder disableOasValidation(boolean disable) {
-        oasValidationEnabled = !disable;
+    public OpenApiServerRequestActionBuilder schemaValidation(boolean schemaValidation) {
+        this.schemaValidation = schemaValidation;
         return this;
     }
 
@@ -114,17 +137,23 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
         @Override
         public Message build(TestContext context, String messageType) {
 
-            OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(context.getReferenceResolver());
+            OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(
+                context.getReferenceResolver());
 
-            openApiSpecification.getOperation(operationId, context).ifPresentOrElse(operationPathAdapter ->
-                buildMessageFromOperation(openApiSpecification, operationPathAdapter, context), () -> {
-                throw new CitrusRuntimeException("Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(operationId, openApiSpecification.getSpecUrl()));
-            });
+            openApiSpecification.getOperation(operationId, context)
+                .ifPresentOrElse(operationPathAdapter ->
+                        buildMessageFromOperation(openApiSpecification, operationPathAdapter, context),
+                    () -> {
+                        throw new CitrusRuntimeException(
+                            "Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(
+                                operationId, openApiSpecification.getSpecUrl()));
+                    });
 
             return super.build(context, messageType);
         }
 
-        private void buildMessageFromOperation(OpenApiSpecification openApiSpecification, OperationPathAdapter operationPathAdapter, TestContext context) {
+        private void buildMessageFromOperation(OpenApiSpecification openApiSpecification,
+            OperationPathAdapter operationPathAdapter, TestContext context) {
 
             setSpecifiedMessageType(operationPathAdapter);
             setSpecifiedHeaders(context, openApiSpecification, operationPathAdapter);
@@ -142,12 +171,15 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
                     String.format("@startsWith(%s)@", contentType)));
         }
 
-        private void setSpecifiedPath(TestContext context, OpenApiSpecification openApiSpecification, OperationPathAdapter operationPathAdapter) {
-            String randomizedPath = OasModelHelper.getBasePath(openApiSpecification.getOpenApiDoc(context))
-                + operationPathAdapter.apiPath();
+        private void setSpecifiedPath(TestContext context,
+            OpenApiSpecification openApiSpecification, OperationPathAdapter operationPathAdapter) {
+            String randomizedPath =
+                OasModelHelper.getBasePath(openApiSpecification.getOpenApiDoc(context))
+                    + operationPathAdapter.apiPath();
             randomizedPath = randomizedPath.replace("//", "/");
 
-            randomizedPath = appendSegmentToUrlPath(openApiSpecification.getRootContextPath(), randomizedPath);
+            randomizedPath = appendSegmentToUrlPath(openApiSpecification.getRootContextPath(),
+                randomizedPath);
 
             if (operationPathAdapter.operation().parameters != null) {
                 randomizedPath = determinePath(context, operationPathAdapter.operation(),
@@ -157,7 +189,8 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
             httpMessage.path(randomizedPath);
         }
 
-        private void setSpecifiedBody(TestContext context, OpenApiSpecification openApiSpecification, OperationPathAdapter operationPathAdapter) {
+        private void setSpecifiedBody(TestContext context,
+            OpenApiSpecification openApiSpecification, OperationPathAdapter operationPathAdapter) {
             Optional<OasSchema> body = OasModelHelper.getRequestBodySchema(
                 openApiSpecification.getOpenApiDoc(context), operationPathAdapter.operation());
             body.ifPresent(oasSchema -> httpMessage.setPayload(
@@ -195,7 +228,8 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
             return randomizedPath;
         }
 
-        private void setSpecifiedQueryParameters(TestContext context, OpenApiSpecification openApiSpecification,
+        private void setSpecifiedQueryParameters(TestContext context,
+            OpenApiSpecification openApiSpecification,
             OperationPathAdapter operationPathAdapter) {
 
             if (operationPathAdapter.operation().parameters == null) {
@@ -210,13 +244,15 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
                 .forEach(param -> httpMessage.queryParam(param.getName(),
                     OpenApiTestValidationDataGenerator.createValidationExpression(param.getName(),
                         OasModelHelper.getParameterSchema(param).orElse(null),
-                        OasModelHelper.getSchemaDefinitions(openApiSpecification.getOpenApiDoc(context)), false,
+                        OasModelHelper.getSchemaDefinitions(
+                            openApiSpecification.getOpenApiDoc(context)), false,
                         openApiSpecification,
                         context)));
 
         }
 
-        private void setSpecifiedHeaders(TestContext context, OpenApiSpecification openApiSpecification,
+        private void setSpecifiedHeaders(TestContext context,
+            OpenApiSpecification openApiSpecification,
             OperationPathAdapter operationPathAdapter) {
 
             if (operationPathAdapter.operation().parameters == null) {
@@ -231,7 +267,8 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
                 .forEach(param -> httpMessage.setHeader(param.getName(),
                     OpenApiTestValidationDataGenerator.createValidationExpression(param.getName(),
                         OasModelHelper.getParameterSchema(param).orElse(null),
-                        OasModelHelper.getSchemaDefinitions(openApiSpecification.getOpenApiDoc(context)), false,
+                        OasModelHelper.getSchemaDefinitions(
+                            openApiSpecification.getOpenApiDoc(context)), false,
                         openApiSpecification,
                         context)));
         }
@@ -251,7 +288,8 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
         }
 
         private void setSpecifiedMethod(OperationPathAdapter operationPathAdapter) {
-            httpMessage.method(HttpMethod.valueOf(operationPathAdapter.operation().getMethod().toUpperCase()));
+            httpMessage.method(
+                HttpMethod.valueOf(operationPathAdapter.operation().getMethod().toUpperCase()));
         }
     }
 }

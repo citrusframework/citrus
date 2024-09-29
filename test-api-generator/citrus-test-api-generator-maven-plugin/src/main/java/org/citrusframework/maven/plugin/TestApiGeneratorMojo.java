@@ -18,10 +18,10 @@ package org.citrusframework.maven.plugin;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.citrusframework.openapi.generator.JavaCitrusCodegen.API_ENDPOINT;
-import static org.citrusframework.openapi.generator.JavaCitrusCodegen.API_TYPE;
-import static org.citrusframework.openapi.generator.JavaCitrusCodegen.PREFIX;
-import static org.citrusframework.openapi.generator.JavaCitrusCodegen.TARGET_XMLNS_NAMESPACE;
+import static org.citrusframework.openapi.generator.CitrusJavaCodegen.API_ENDPOINT;
+import static org.citrusframework.openapi.generator.CitrusJavaCodegen.API_TYPE;
+import static org.citrusframework.openapi.generator.CitrusJavaCodegen.PREFIX;
+import static org.citrusframework.openapi.generator.CitrusJavaCodegen.TARGET_XMLNS_NAMESPACE;
 
 import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
