@@ -53,6 +53,7 @@ import org.citrusframework.openapi.model.OasAdapter;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.citrusframework.openapi.validation.OpenApiMessageProcessor;
+import org.citrusframework.openapi.validation.OpenApiValidationContext;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -66,7 +67,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
 
     private final String operationId;
 
-    private boolean oasValidationEnabled = true;
+    private boolean schemaValidation = true;
 
     /**
      * Default constructor initializes http response message builder.
@@ -88,17 +89,24 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
     @Override
     public SendMessageAction doBuild() {
         OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(referenceResolver);
-        if (oasValidationEnabled && !messageProcessors.contains(openApiMessageProcessor)) {
-            openApiMessageProcessor = new OpenApiMessageProcessor(
-                openApiSpecification, operationId, OpenApiMessageType.RESPONSE);
+
+        // Honor default enablement of schema validation
+        OpenApiValidationContext openApiValidationContext = openApiSpecification.getOpenApiValidationContext();
+        if (openApiValidationContext != null && schemaValidation) {
+            schemaValidation = openApiValidationContext.isResponseValidationEnabled();
+        }
+
+        if (schemaValidation && !messageProcessors.contains(openApiMessageProcessor)) {
+            openApiMessageProcessor = new OpenApiMessageProcessor(openApiSpecification, operationId,
+                OpenApiMessageType.RESPONSE);
             process(openApiMessageProcessor);
         }
 
         return super.doBuild();
     }
 
-    public OpenApiServerResponseActionBuilder disableOasValidation(boolean disable) {
-        oasValidationEnabled = !disable;
+    public OpenApiServerResponseActionBuilder schemaValidation(boolean schemaValidation) {
+        this.schemaValidation = schemaValidation;
         return this;
     }
 

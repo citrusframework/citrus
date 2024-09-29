@@ -108,7 +108,7 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
     }
 
     @Override
-    protected Class<SendSoapFaultActionFactoryBean> getBeanDefinitionClass() {
+    protected Class<SendSoapFaultActionFactoryBean> getMessageFactoryClass() {
         return SendSoapFaultActionFactoryBean.class;
     }
 
