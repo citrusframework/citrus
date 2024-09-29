@@ -4,6 +4,7 @@ import com.atlassian.oai.validator.report.ValidationReport;
 import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
@@ -15,20 +16,32 @@ import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.citrusframework.openapi.util.OpenApiUtils;
 import org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder;
-import org.citrusframework.validation.MessageValidator;
+import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.SchemaValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OpenApiSchemaValidation implements MessageValidator<OpenApiMessageValidationContext>,
+public class OpenApiSchemaValidation extends AbstractMessageValidator<OpenApiMessageValidationContext> implements
     SchemaValidator<OpenApiMessageValidationContext> {
 
-    private Logger logger = LoggerFactory.getLogger(OpenApiSchemaValidation.class);
+    private static final Set<String> FILTERED_ERROR_MESSAGE_KEYS = Set.of(
+        // Filtered because in general OpenAPI is not required to specify all response codes.
+        // So this should not be considered as validation error.
+        "validation.response.status.unknown"
+    );
+
+    private static final Logger logger = LoggerFactory.getLogger(OpenApiSchemaValidation.class);
 
     @Override
-    public void validateMessage(Message receivedMessage, Message controlMessage,
-        TestContext context, List list) throws ValidationException {
-        validate(receivedMessage, context, new Builder().schemaValidation(true).build());
+    protected Class<OpenApiMessageValidationContext> getRequiredValidationContextType() {
+        return OpenApiMessageValidationContext.class;
+    }
+
+    @Override
+    public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context,
+        OpenApiMessageValidationContext validationContext) {
+        // No control message validation, only schema validation
+        validate(receivedMessage, context, validationContext);
     }
 
     @Override
@@ -43,15 +56,31 @@ public class OpenApiSchemaValidation implements MessageValidator<OpenApiMessageV
         ValidationReportData validationReportData = validate(context, httpMessage,
             findSchemaRepositories(context),
             validationContext);
-        if (validationReportData != null && validationReportData.report.hasErrors()) {
-            if (logger.isErrorEnabled()) {
-                logger.error("Failed to validate Json schema for message:\n{}",
-                    message.getPayload(String.class));
+
+        if (validationReportData != null && validationReportData.report != null) {
+
+            ValidationReport filteredReport = filterIrrelevantMessages(
+                validationReportData);
+            if (filteredReport.hasErrors()) {
+                if (logger.isErrorEnabled()) {
+                    logger.error("Failed to validate Json schema for message:\n{}",
+                        message.getPayload(String.class));
+                }
+                throw new ValidationException(constructErrorMessage(validationReportData));
             }
-            throw new ValidationException(constructErrorMessage(validationReportData));
         }
 
         logger.debug("Json schema validation successful: All values OK");
+    }
+
+    /**
+     * Filter specific messages from the report which are considered irrelevant.
+     * See {@link OpenApiSchemaValidation#FILTERED_ERROR_MESSAGE_KEYS} for more details.
+     */
+    private static ValidationReport filterIrrelevantMessages(ValidationReportData validationReportData) {
+        return ValidationReport.from(
+            validationReportData.report.getMessages().stream()
+                .filter(msg -> !FILTERED_ERROR_MESSAGE_KEYS.contains(msg.getKey())).toList());
     }
 
     @Override

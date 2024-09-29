@@ -33,11 +33,16 @@ import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiClientResponseActionBuilder;
-import org.citrusframework.spi.BindToRegistry;
+import org.citrusframework.openapi.integration.OpenApiClientIT.Config;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.SocketUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
@@ -45,29 +50,19 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
+@Test
+@ContextConfiguration(classes =  {Config.class})
 public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
     public static final String VALID_PET_PATH = "classpath:org/citrusframework/openapi/petstore/pet.json";
+
     public static final String INVALID_PET_PATH = "classpath:org/citrusframework/openapi/petstore/pet_invalid.json";
 
-    private final int port = SocketUtils.findAvailableTcpPort(8080);
+    @Autowired
+    private HttpServer httpServer;
 
-    @BindToRegistry
-    private final HttpServer httpServer = new HttpServerBuilder()
-            .port(port)
-            .timeout(5000L)
-            .autoStart(true)
-            .defaultStatus(HttpStatus.NO_CONTENT)
-            .build();
-
-    @BindToRegistry
-    private final HttpClient httpClient = new HttpClientBuilder()
-            .requestUrl("http://localhost:%d".formatted(port))
-            .build();
-
-    @BindToRegistry
-    private final OpenApiRepository openApiRepository = new OpenApiRepository()
-        .locations(List.of("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
+    @Autowired
+    private HttpClient httpClient;
 
     private final OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
         Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
@@ -75,26 +70,30 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
     private final OpenApiSpecification pingSpec = OpenApiSpecification.from(
         Resources.create("classpath:org/citrusframework/openapi/ping/ping-api.yaml"));
 
+    @BeforeEach
+    void beforeEach() {
+    }
+
     @CitrusTest
     @Test
-    public void shouldExecuteGetPetByIdFromDirectSpec() {
-        shouldExecuteGetPetById(openapi(petstoreSpec), VALID_PET_PATH, true, false);
+    public void shouldExecuteGetPetById() {
+        shouldExecuteGetPetById(openapi(petstoreSpec), VALID_PET_PATH, true, true);
     }
 
     @CitrusTest
     @Test
     public void shouldFailOnMissingNameInResponse() {
-        shouldExecuteGetPetById(openapi(petstoreSpec), INVALID_PET_PATH, false, false);
+        shouldExecuteGetPetById(openapi(petstoreSpec), INVALID_PET_PATH, false, true);
     }
 
     @CitrusTest
     @Test
     public void shouldSucceedOnMissingNameInResponseWithValidationDisabled() {
-        shouldExecuteGetPetById(openapi(petstoreSpec), INVALID_PET_PATH, true, true);
+        shouldExecuteGetPetById(openapi(petstoreSpec), INVALID_PET_PATH, true, false);
     }
 
     private void shouldExecuteGetPetById(OpenApiActionBuilder openapi, String responseFile,
-        boolean valid, boolean disableValidation) {
+        boolean valid, boolean schemaValidation) {
 
         variable("petId", "1001");
 
@@ -119,19 +118,13 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         OpenApiClientResponseActionBuilder clientResponseActionBuilder = openapi
             .client(httpClient).receive("getPetById", HttpStatus.OK)
-            .disableOasValidation(disableValidation);
+            .schemaValidation(schemaValidation);
 
         if (valid) {
             then(clientResponseActionBuilder);
         } else {
             assertThrows(() -> then(clientResponseActionBuilder));
         }
-    }
-
-    @CitrusTest
-    @Test
-    public void shouldProperlyExecuteGetAndAddPetFromDirectSpec() {
-        shouldExecuteGetAndAddPet(openapi(petstoreSpec));
     }
 
     @CitrusTest
@@ -171,7 +164,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
         HttpMessageBuilderSupport addPetBuilder = openapi(petstoreSpec)
             .client(httpClient)
             .send("addPet")
-            .disableOasValidation(true)
+            .schemaValidation(false)
             .message().body(Resources.create(VALID_PET_PATH));
 
         try {
@@ -227,7 +220,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
     @Test(dataProvider = "pingApiOperationDataprovider")
     @CitrusTest
-    @Ignore  // Solve issue with composite schemes
+    @Ignore
     public void shouldPerformRoundtripPingOperation(String pingApiOperation) {
 
         variable("id", 2001);
@@ -251,5 +244,35 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
             .client(httpClient).receive(pingApiOperation, HttpStatus.OK);
 
        then(clientResponseActionBuilder);
+    }
+
+    @Configuration
+    public static class Config {
+
+        private final int port = SocketUtils.findAvailableTcpPort(8080);
+
+        @Bean
+        public HttpServer httpServer() {
+
+            return new HttpServerBuilder()
+                .port(port)
+                .timeout(5000L)
+                .autoStart(true)
+                .defaultStatus(HttpStatus.NO_CONTENT)
+                .build();
+        }
+
+        @Bean
+        public HttpClient httpClient() {
+            return new HttpClientBuilder()
+                .requestUrl("http://localhost:%d".formatted(port))
+                .build();
+        }
+
+        @Bean
+        public OpenApiRepository petstoreOpenApiRepository() {
+            return new OpenApiRepository()
+                .locations(List.of("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
+        }
     }
 }
