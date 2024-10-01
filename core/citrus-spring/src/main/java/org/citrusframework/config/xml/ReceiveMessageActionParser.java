@@ -338,7 +338,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
 
         boolean done = false;
         List<Element> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
-        if (validateElements.size() > 0) {
+        if (!validateElements.isEmpty()) {
             for (Element validateElement : validateElements) {
                 Element scriptElement = DomUtils.getChildElementByTagName(validateElement, "script");
 

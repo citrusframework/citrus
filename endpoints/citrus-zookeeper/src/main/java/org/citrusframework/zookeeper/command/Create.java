@@ -61,7 +61,7 @@ public class Create extends AbstractZooCommand<ZooResponse> {
         String mode = this.getParameter(MODE, context);
         String acl = this.getParameter(ACL, context);
 
-        String newPath = null;
+        String newPath;
         try {
             newPath = zookeeperClient.getZooKeeperClient().create(path, data.getBytes(), lookupAcl(acl), lookupCreateMode(mode));
         } catch (KeeperException | InterruptedException e) {

@@ -92,7 +92,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
      * @return
      */
     public WebServiceServerBuilder connectors(List<Connector> connectors) {
-        endpoint.setConnectors(connectors.toArray(new Connector[connectors.size()]));
+        endpoint.setConnectors(connectors.toArray(new Connector[0]));
         return this;
     }
 

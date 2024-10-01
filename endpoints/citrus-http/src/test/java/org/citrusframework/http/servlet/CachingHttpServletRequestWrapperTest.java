@@ -207,7 +207,7 @@ public class CachingHttpServletRequestWrapperTest {
     /**
      * Utility class to wrap a byte input stream as a servlet input stream
      */
-    class DelegatingServletInputStream extends ServletInputStream {
+    static class DelegatingServletInputStream extends ServletInputStream {
 
         private final InputStream sourceStream;
 

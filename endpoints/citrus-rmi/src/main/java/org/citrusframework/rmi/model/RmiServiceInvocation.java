@@ -109,7 +109,7 @@ public class RmiServiceInvocation {
             }
         }
 
-        return types.toArray(new Class[types.size()]);
+        return types.toArray(new Class[0]);
     }
 
     /**
@@ -161,7 +161,7 @@ public class RmiServiceInvocation {
             throw new CitrusRuntimeException("Failed to construct method arg objects", e);
         }
 
-        return argValues.toArray(new Object[argValues.size()]);
+        return argValues.toArray(new Object[0]);
     }
 
     /**

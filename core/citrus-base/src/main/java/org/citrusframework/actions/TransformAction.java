@@ -90,7 +90,7 @@ public class TransformAction extends AbstractTestAction {
             }
 
             //parse XML document and define XML source for transformation
-            Source xmlSource = null;
+            Source xmlSource;
             if (xmlResourcePath != null) {
                 xmlSource = new StringSource(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(xmlResourcePath, context),
                         Charset.forName(context.replaceDynamicContentInString(xmlResourceCharset)))));
@@ -103,7 +103,7 @@ public class TransformAction extends AbstractTestAction {
             }
 
             //parse XSLT document and define  XSLT source for transformation
-            Source xsltSource = null;
+            Source xsltSource;
             if (xsltResourcePath != null) {
                 xsltSource = new StringSource(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(xsltResourcePath, context),
                         Charset.forName(context.replaceDynamicContentInString(xsltResourceCharset)))));

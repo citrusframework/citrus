@@ -29,7 +29,7 @@ public class FailureStackElement {
     private String testFilePath;
 
     /** Line number in XML test case where error happened */
-    private Long lineNumberStart = 0L;
+    private Long lineNumberStart;
 
     /** Failing action in XML test case ends in this line */
     private Long lineNumberEnd = 0L;
