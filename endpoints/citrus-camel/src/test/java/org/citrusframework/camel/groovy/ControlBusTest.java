@@ -90,7 +90,7 @@ public class ControlBusTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(action.getLanguageExpression(), "${camelContext.getRouteController().getRouteStatus(\"route_3\")}");
         Assert.assertEquals(action.getResult(), "Started");
 
-        action = (CamelControlBusAction) result.getTestAction(actionIndex++);
+        action = (CamelControlBusAction) result.getTestAction(actionIndex);
         Assert.assertNotNull(action.getCamelContext());
         Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
         Assert.assertEquals(action.getLanguageType(), "simple");

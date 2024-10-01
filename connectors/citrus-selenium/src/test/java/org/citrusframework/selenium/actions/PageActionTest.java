@@ -198,7 +198,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
     }
 
-    public class TestPage implements WebPage {
+    public static class TestPage implements WebPage {
         @FindBy(id = "form")
         private WebElement form;
 

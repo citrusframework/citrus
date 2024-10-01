@@ -80,6 +80,6 @@ public class CamelActionBuilderTest {
         verifyNoInteractions(referenceResolverAware);
     }
 
-    private abstract class TestReferenceResolver implements TestActionBuilder, ReferenceResolverAware {
+    private static abstract class TestReferenceResolver implements TestActionBuilder, ReferenceResolverAware {
     }
 }

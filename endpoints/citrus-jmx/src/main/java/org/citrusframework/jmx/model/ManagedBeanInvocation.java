@@ -419,7 +419,7 @@ public class ManagedBeanInvocation {
                 }
             }
 
-            return types.toArray(new String[types.size()]);
+            return types.toArray(new String[0]);
         }
 
         /**
@@ -471,7 +471,7 @@ public class ManagedBeanInvocation {
                 throw new CitrusRuntimeException("Failed to construct method arg objects", e);
             }
 
-            return argValues.toArray(new Object[argValues.size()]);
+            return argValues.toArray(new Object[0]);
         }
 
         /**

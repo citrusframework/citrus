@@ -16,6 +16,7 @@
 
 package org.citrusframework.jbang.commands;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.CitrusJBangMain;
 import org.citrusframework.util.FileUtils;
 import picocli.CommandLine.Command;
@@ -64,8 +65,11 @@ public class Init extends CitrusCommand {
         if (!directory.equals(".")) {
             File dir = new File(directory);
             // ensure target dir is created
-            dir.mkdirs();
+            if (!dir.mkdirs()) {
+                throw new CitrusRuntimeException("Failed creating target directory");
+            }
         }
+
         File target = new File(directory, file);
         content = content.replaceFirst("\\{\\{ \\.Name }}", name);
 

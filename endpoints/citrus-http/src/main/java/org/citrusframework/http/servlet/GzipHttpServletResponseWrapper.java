@@ -108,7 +108,7 @@ public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {
     /**
      * Gzip enabled servlet output stream.
      */
-    private class GzipServletOutputStream extends ServletOutputStream {
+    private static class GzipServletOutputStream extends ServletOutputStream {
 
         private final ByteArrayOutputStream byteArrayOutputStream;
         private final GZIPOutputStream gzipStream;

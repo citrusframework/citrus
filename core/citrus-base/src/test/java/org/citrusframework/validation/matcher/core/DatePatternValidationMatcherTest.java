@@ -16,13 +16,14 @@
 
 package org.citrusframework.validation.matcher.core;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 
 public class DatePatternValidationMatcherTest extends UnitTestSupport {
 
@@ -30,14 +31,14 @@ public class DatePatternValidationMatcherTest extends UnitTestSupport {
 
     @Test
     public void testValidateSuccess() {
-    	matcher.validate("field", "2011-10-10", Arrays.asList("yyyy-MM-dd"), context);
-        matcher.validate("field", "10.10.2011", Arrays.asList("dd.MM.yyyy"), context);
-        matcher.validate("field", "2011-01-01T01:02:03", Arrays.asList("yyyy-MM-dd'T'HH:mm:ss"), context);
+    	matcher.validate("field", "2011-10-10", singletonList("yyyy-MM-dd"), context);
+        matcher.validate("field", "10.10.2011", singletonList("dd.MM.yyyy"), context);
+        matcher.validate("field", "2011-01-01T01:02:03", singletonList("yyyy-MM-dd'T'HH:mm:ss"), context);
     }
 
     @Test
     public void testValidateError() {
-    	assertException("field", "201110-10", Arrays.asList("yy-MM-dd"));
+    	assertException("field", "201110-10", singletonList("yy-MM-dd"));
     }
 
     private void assertException(String fieldName, String value, List<String> control) {

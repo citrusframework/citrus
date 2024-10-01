@@ -128,7 +128,7 @@ public class ManagedBeanDefinition {
             }
         }
 
-        return infoList.toArray(new MBeanOperationInfo[infoList.size()]);
+        return infoList.toArray(new MBeanOperationInfo[0]);
     }
 
     /**
@@ -144,7 +144,7 @@ public class ManagedBeanDefinition {
             }
         }
 
-        return infoList.toArray(new MBeanConstructorInfo[infoList.size()]);
+        return infoList.toArray(new MBeanConstructorInfo[0]);
     }
 
     /**
@@ -195,7 +195,7 @@ public class ManagedBeanDefinition {
             }
         }
 
-        return infoList.toArray(new MBeanAttributeInfo[infoList.size()]);
+        return infoList.toArray(new MBeanAttributeInfo[0]);
     }
 
     /**

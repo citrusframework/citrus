@@ -16,13 +16,14 @@
 
 package org.citrusframework.validation.matcher.core;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 
 public class MatchesValidationMatcherTest extends UnitTestSupport {
 
@@ -36,7 +37,7 @@ public class MatchesValidationMatcherTest extends UnitTestSupport {
         matcher.validate("field", "This is a number: 01234", List.of("This is a number: [0-9]+"), context);
         matcher.validate("field", "This is a number: 01234/999", List.of("This is a number: [0-9]+/[0-9]{3}"), context);
         matcher.validate("field", "https://localhost:12345/", List.of("https://localhost:[0-9]+/"), context);
-        matcher.validate("field", "aaaab", Arrays.asList("a*b"), context);
+        matcher.validate("field", "aaaab", singletonList("a*b"), context);
     }
 
     @Test

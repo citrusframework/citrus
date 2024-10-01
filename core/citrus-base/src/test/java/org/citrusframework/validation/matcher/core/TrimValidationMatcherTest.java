@@ -16,11 +16,11 @@
 
 package org.citrusframework.validation.matcher.core;
 
-import java.util.Arrays;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.testng.annotations.Test;
+
+import static java.util.Collections.singletonList;
 
 public class TrimValidationMatcherTest extends UnitTestSupport {
 
@@ -28,14 +28,14 @@ public class TrimValidationMatcherTest extends UnitTestSupport {
 
     @Test
     public void testValidateSuccess() {
-        matcher.validate("field", "value", Arrays.asList("value"), context);
-        matcher.validate("field", " value ", Arrays.asList("value"), context);
-        matcher.validate("field", "    value    ", Arrays.asList("value"), context);
-        matcher.validate("field", "    value    ", Arrays.asList("value    "), context);
+        matcher.validate("field", "value", singletonList("value"), context);
+        matcher.validate("field", " value ", singletonList("value"), context);
+        matcher.validate("field", "    value    ", singletonList("value"), context);
+        matcher.validate("field", "    value    ", singletonList("value    "), context);
     }
 
     @Test(expectedExceptions = ValidationException.class)
     public void testValidateError() {
-        matcher.validate("field", " value ", Arrays.asList("wrong"), context);
+        matcher.validate("field", " value ", singletonList("wrong"), context);
     }
 }

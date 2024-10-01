@@ -40,7 +40,7 @@ public class SumFunction implements Function {
         double result = 0.0;
 
         for (String token : parameterList) {
-            result += Double.valueOf(token);
+            result += Double.parseDouble(token);
         }
 
         return Double.valueOf(result).toString();
