@@ -16,13 +16,14 @@
 
 package org.citrusframework.validation.matcher.core;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 
 public class EqualsIgnoreCaseValidationMatcherTest extends UnitTestSupport {
 
@@ -30,17 +31,17 @@ public class EqualsIgnoreCaseValidationMatcherTest extends UnitTestSupport {
 
     @Test
     public void testValidateSuccess() {
-        matcher.validate("field", "VALUE", Arrays.asList("value"), context);
-        matcher.validate("field", "VALUE", Arrays.asList("VALUE"), context);
-        matcher.validate("field", "value", Arrays.asList("VALUE"), context);
-        matcher.validate("field", "value", Arrays.asList("value"), context);
-        matcher.validate("field", "$%& value 123", Arrays.asList("$%& VALUE 123"), context);
-        matcher.validate("field", "/() VALUE @&§", Arrays.asList("/() VALUE @&§"), context);
+        matcher.validate("field", "VALUE", singletonList("value"), context);
+        matcher.validate("field", "VALUE", singletonList("VALUE"), context);
+        matcher.validate("field", "value", singletonList("VALUE"), context);
+        matcher.validate("field", "value", singletonList("value"), context);
+        matcher.validate("field", "$%& value 123", singletonList("$%& VALUE 123"), context);
+        matcher.validate("field", "/() VALUE @&§", singletonList("/() VALUE @&§"), context);
     }
 
     @Test
     public void testValidateError() {
-    	assertException("field", "VALUE", Arrays.asList("VAIUE"));
+    	assertException("field", "VALUE", singletonList("VAIUE"));
     }
 
     private void assertException(String fieldName, String value, List<String> control) {

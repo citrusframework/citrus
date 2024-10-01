@@ -95,7 +95,7 @@ public final class FunctionUtils {
 
                 final String value = resolveFunction(variableNameBuf.toString(), context);
 
-                strBuffer.append(newString.substring(startIndex, searchIndex));
+                strBuffer.append(newString, startIndex, searchIndex);
 
                 if (enableQuoting) {
                     strBuffer.append("'" + value + "'");

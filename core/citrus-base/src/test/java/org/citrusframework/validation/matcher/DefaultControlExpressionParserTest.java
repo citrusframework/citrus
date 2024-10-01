@@ -21,8 +21,9 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Collections.singletonList;
 
 /**
  * @since 2.5
@@ -46,17 +47,17 @@ public class DefaultControlExpressionParserTest {
     public Object[][] validControlExpressions() {
         return new Object[][]{
                 // {control-expression, expected-parameter-1, expected-parameter-2, ..}
-                {"'a'", Arrays.asList("a")},
-                {"'a',", Arrays.asList("a")},
-                {"'a','b'", Arrays.asList("a","b")},
-                {"'a','b',", Arrays.asList("a","b")},
-                {"'a,s','b',", Arrays.asList("a,s","b")},
-                {"'a)s','b',", Arrays.asList("a)s","b")},
-                {"'a's','b',", Arrays.asList("a's","b")},
-                {"''", Arrays.asList("")},
-                {"'',", Arrays.asList("")},
-                {"", Arrays.<String>asList()},
-                {null, Arrays.<String>asList()},
+                {"'a'", singletonList("a")},
+                {"'a',", singletonList("a")},
+                {"'a','b'", List.of("a","b")},
+                {"'a','b',", List.of("a","b")},
+                {"'a,s','b',", List.of("a,s","b")},
+                {"'a)s','b',", List.of("a)s","b")},
+                {"'a's','b',", List.of("a's","b")},
+                {"''", singletonList("")},
+                {"'',", singletonList("")},
+                {"", List.<String>of()},
+                {null, List.<String>of()},
         };
     }
 

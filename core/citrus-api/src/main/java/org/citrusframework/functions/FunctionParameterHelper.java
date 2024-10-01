@@ -50,18 +50,18 @@ public final class FunctionParameterHelper {
         for (int i = 0; i < parameterList.size(); i++) {
             int next = i + 1;
 
-            String processed = parameterList.get(i);
+            StringBuilder processed = new StringBuilder(parameterList.get(i));
 
-            if (processed.startsWith("'") && !processed.endsWith("'")) {
+            if (processed.toString().startsWith("'") && !processed.toString().endsWith("'")) {
                 while (next < parameterList.size()) {
                     if (parameterString.contains(processed + ", " + parameterList.get(next))) {
-                        processed += ", " + parameterList.get(next);
+                        processed.append(", ").append(parameterList.get(next));
                     } else if (parameterString.contains(processed + "," + parameterList.get(next))) {
-                        processed += "," + parameterList.get(next);
+                        processed.append(",").append(parameterList.get(next));
                     } else if (parameterString.contains(processed + " , " + parameterList.get(next))) {
-                        processed += " , " + parameterList.get(next);
+                        processed.append(" , ").append(parameterList.get(next));
                     } else {
-                        processed += parameterList.get(next);
+                        processed.append(parameterList.get(next));
                     }
 
                     i++;
@@ -74,7 +74,7 @@ public final class FunctionParameterHelper {
 
             }
 
-            postProcessed.add(cutOffSingleQuotes(processed));
+            postProcessed.add(cutOffSingleQuotes(processed.toString()));
         }
 
         return postProcessed;

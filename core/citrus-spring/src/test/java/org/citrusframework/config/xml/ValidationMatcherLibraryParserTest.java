@@ -16,9 +16,6 @@
 
 package org.citrusframework.config.xml;
 
-import java.util.Arrays;
-import java.util.Map;
-
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
 import org.citrusframework.validation.matcher.CustomValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcherLibrary;
@@ -28,6 +25,10 @@ import org.citrusframework.validation.matcher.core.StartsWithValidationMatcher;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.util.Map;
+
+import static java.util.Collections.singletonList;
 
 /**
  * @since 2.0
@@ -54,7 +55,7 @@ public class ValidationMatcherLibraryParserTest extends AbstractBeanDefinitionPa
         Assert.assertEquals(matcherLibraryBean.getMembers().get("end").getClass(), EndsWithValidationMatcher.class);
         Assert.assertEquals(matcherLibraryBean.getMembers().get("custom").getClass(), CustomValidationMatcher.class);
 
-        matcherLibraryBean.getMembers().get("custom").validate("field", "Hello Citrus!", Arrays.asList("Hello Citrus!"), context);
+        matcherLibraryBean.getMembers().get("custom").validate("field", "Hello Citrus!", singletonList("Hello Citrus!"), context);
 
         matcherLibraryBean = matcherLibraries.get("matcherLib2");
         Assert.assertEquals(matcherLibraryBean.getName(), "matcherLib2");
@@ -63,6 +64,6 @@ public class ValidationMatcherLibraryParserTest extends AbstractBeanDefinitionPa
         Assert.assertEquals(matcherLibraryBean.getMembers().get("isNumber").getClass(), IsNumberValidationMatcher.class);
         Assert.assertEquals(matcherLibraryBean.getMembers().get("custom").getClass(), CustomValidationMatcher.class);
 
-        matcherLibraryBean.getMembers().get("custom").validate("field", "Hello Citrus!", Arrays.asList("Hello Citrus!"), context);
+        matcherLibraryBean.getMembers().get("custom").validate("field", "Hello Citrus!", singletonList("Hello Citrus!"), context);
     }
 }

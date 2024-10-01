@@ -18,14 +18,11 @@ package org.citrusframework.http.actions;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.istack.NotNull;
 import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.util.StringUtils;
 import org.springframework.http.HttpMethod;

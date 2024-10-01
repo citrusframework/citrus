@@ -16,13 +16,14 @@
 
 package org.citrusframework.validation.matcher.core;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 
 public class GreaterThanValidationMatcherTest extends UnitTestSupport {
 
@@ -30,18 +31,18 @@ public class GreaterThanValidationMatcherTest extends UnitTestSupport {
 
     @Test
     public void testValidateSuccess() {
-        matcher.validate("field", "2", Arrays.asList("3"), context);
-        matcher.validate("field", "-1", Arrays.asList("1"), context);
-        matcher.validate("field", "-0.000000001", Arrays.asList("0"), context);
-        matcher.validate("field", "0", Arrays.asList("0.000000001"), context);
+        matcher.validate("field", "2", singletonList("3"), context);
+        matcher.validate("field", "-1", singletonList("1"), context);
+        matcher.validate("field", "-0.000000001", singletonList("0"), context);
+        matcher.validate("field", "0", singletonList("0.000000001"), context);
     }
 
     @Test
     public void testValidateError() {
-    	assertException("field", "NaN", Arrays.asList("2"));
-    	assertException("field", "2", Arrays.asList("NaN"));
-    	assertException("field", "2.0", Arrays.asList("2.0"));
-    	assertException("field", "2.1", Arrays.asList("2.0"));
+    	assertException("field", "NaN", singletonList("2"));
+    	assertException("field", "2", singletonList("NaN"));
+    	assertException("field", "2.0", singletonList("2.0"));
+    	assertException("field", "2.1", singletonList("2.0"));
     }
 
     private void assertException(String fieldName, String value, List<String> control) {

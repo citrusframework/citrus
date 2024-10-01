@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.util.StringUtils;
 
 import static org.citrusframework.util.StringUtils.hasText;
 
@@ -34,7 +33,7 @@ import static org.citrusframework.util.StringUtils.hasText;
 public class MessageSelectorBuilder {
 
     /** Selector string */
-    private String selectorString = "";
+    private String selectorString;
 
     /**
      * Constructor using fields.

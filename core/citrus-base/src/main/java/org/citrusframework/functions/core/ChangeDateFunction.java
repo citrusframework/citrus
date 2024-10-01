@@ -52,7 +52,7 @@ public class ChangeDateFunction extends AbstractDateFunction {
         Calendar calendar = calendarProvider.getInstance();
 
         SimpleDateFormat dateFormat;
-        String result = "";
+        String result;
 
         if (parameterList.size() > 2) {
             dateFormat = new SimpleDateFormat(parameterList.get(2));

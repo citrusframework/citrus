@@ -283,7 +283,7 @@ public class SeleniumTest extends AbstractGroovyActionDslTest {
         Assert.assertNull(clearCacheAction.getBrowser());
         Assert.assertEquals(clearCacheAction.getName(), "selenium:clear-cache");
 
-        StopBrowserAction stopAction = (StopBrowserAction) result.getTestAction(actionIndex++);
+        StopBrowserAction stopAction = (StopBrowserAction) result.getTestAction(actionIndex);
         Assert.assertNotNull(stopAction.getBrowser());
         Assert.assertEquals(stopAction.getName(), "selenium:stop");
     }

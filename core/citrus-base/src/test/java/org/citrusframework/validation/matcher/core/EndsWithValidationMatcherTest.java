@@ -16,13 +16,14 @@
 
 package org.citrusframework.validation.matcher.core;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 
 public class EndsWithValidationMatcherTest extends UnitTestSupport {
 
@@ -30,16 +31,16 @@ public class EndsWithValidationMatcherTest extends UnitTestSupport {
 
     @Test
     public void testValidateSuccess() {
-        matcher.validate("field", "This is a test", Arrays.asList(""), context);
-        matcher.validate("field", "This is a test", Arrays.asList("t"), context);
-        matcher.validate("field", "This is a test", Arrays.asList(" test"), context);
-        matcher.validate("field", "This is a 0815test", Arrays.asList(" is a 0815test"), context);
+        matcher.validate("field", "This is a test", singletonList(""), context);
+        matcher.validate("field", "This is a test", singletonList("t"), context);
+        matcher.validate("field", "This is a test", singletonList(" test"), context);
+        matcher.validate("field", "This is a 0815test", singletonList(" is a 0815test"), context);
     }
 
     @Test
     public void testValidateError() {
-    	assertException("field", "This is a test", Arrays.asList("T"));
-    	assertException("field", "This is a test", Arrays.asList(" Test"));
+    	assertException("field", "This is a test", singletonList("T"));
+    	assertException("field", "This is a test", singletonList(" Test"));
     }
 
     private void assertException(String fieldName, String value, List<String> control) {

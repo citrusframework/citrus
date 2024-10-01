@@ -234,12 +234,12 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator<WsdlXmlTestG
             throw new CitrusRuntimeException("Failed to parse XSD schema", e);
         }
 
-        SchemaTypeSystem schemaTypeSystem = null;
+        SchemaTypeSystem schemaTypeSystem;
         try {
             schemaTypeSystem = XmlBeans.compileXsd(xsd, XmlBeans.getContextTypeLoader(), new XmlOptions());
         } catch (XmlException e) {
-            for (Object error : e.getErrors()) {
-                logger.error("Line " + ((XmlError)error).getLine() + ": " + error.toString());
+            for (XmlError error : e.getErrors()) {
+                logger.error("Line {}: {}", error.getLine(), error);
             }
             throw new CitrusRuntimeException("Failed to compile XSD schema", e);
         } catch (Exception e) {

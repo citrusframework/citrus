@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.fabric8.kubernetes.api.model.KubernetesResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.command.*;
@@ -122,10 +121,7 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
         Map<String, Object> headers = new HashMap<>();
 
         headers.put(KubernetesMessageHeaders.COMMAND, command.getName());
-
-        for (Map.Entry<String, Object> entry : command.getParameters().entrySet()) {
-            headers.put(entry.getKey(), entry.getValue());
-        }
+        headers.putAll(command.getParameters());
 
         return headers;
     }
