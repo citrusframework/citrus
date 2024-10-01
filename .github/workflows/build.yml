@@ -56,5 +56,4 @@ jobs:
           java -version
           ./mvnw -version
       - name: Build Citrus
-        run: |
-          ./mvnw --no-transfer-progress install
+        run: ./mvnw --no-transfer-progress -T1C install
