@@ -16,10 +16,9 @@
 
 package org.citrusframework.docker.command;
 
+import com.github.dockerjava.api.model.ResponseItem;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.client.DockerClient;
-import com.github.dockerjava.api.command.RemoveContainerCmd;
-import com.github.dockerjava.api.model.ResponseItem;
 
 /**
  * @since 2.4
@@ -36,15 +35,15 @@ public class ContainerRemove extends AbstractDockerCommand<ResponseItem> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        RemoveContainerCmd command = dockerClient.getEndpointConfiguration().getDockerClient().removeContainerCmd(getContainerId(context));
+        try (var command = dockerClient.getEndpointConfiguration().getDockerClient().removeContainerCmd(getContainerId(context))) {
+            if (hasParameter("force")) {
+                command.withForce(Boolean.valueOf(getParameter("force", context)));
+            }
 
-        if (hasParameter("force")) {
-            command.withForce(Boolean.valueOf(getParameter("force", context)));
+            command.exec();
+
+            setCommandResult(success());
         }
-
-        command.exec();
-
-        setCommandResult(success());
     }
 
     /**

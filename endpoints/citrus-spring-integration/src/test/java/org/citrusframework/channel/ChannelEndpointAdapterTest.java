@@ -20,11 +20,12 @@ import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.integration.channel.QueueChannel;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 public class ChannelEndpointAdapterTest extends AbstractTestNGUnitTest {
 
@@ -57,13 +58,18 @@ public class ChannelEndpointAdapterTest extends AbstractTestNGUnitTest {
     public void testEndpointAdapter() {
         final Message request = new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>");
 
-        new SimpleAsyncTaskExecutor().execute(() -> {
-            Message receivedMessage = endpointAdapter.getEndpoint().createConsumer().receive(context, endpointConfiguration.getTimeout());
-            Assert.assertNotNull(receivedMessage);
-            Assert.assertEquals(receivedMessage.getPayload(), request.getPayload());
+        var executor = newSingleThreadExecutor();
+        try {
+            executor.execute(() -> {
+                Message receivedMessage = endpointAdapter.getEndpoint().createConsumer().receive(context, endpointConfiguration.getTimeout());
+                Assert.assertNotNull(receivedMessage);
+                Assert.assertEquals(receivedMessage.getPayload(), request.getPayload());
 
-            endpointAdapter.getEndpoint().createProducer().send(new DefaultMessage("OK"), context);
-        });
+                endpointAdapter.getEndpoint().createProducer().send(new DefaultMessage("OK"), context);
+            });
+        } finally {
+            executor.shutdown();
+        }
 
         Message response = endpointAdapter.handleMessage(request);
         Assert.assertNotNull(response);

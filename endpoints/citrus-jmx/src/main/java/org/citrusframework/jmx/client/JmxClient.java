@@ -16,26 +16,6 @@
 
 package org.citrusframework.jmx.client;
 
-import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.util.Collections;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import javax.management.Attribute;
-import javax.management.InstanceNotFoundException;
-import javax.management.JMException;
-import javax.management.MBeanServerConnection;
-import javax.management.MalformedObjectNameException;
-import javax.management.Notification;
-import javax.management.NotificationListener;
-import javax.management.ObjectName;
-import javax.management.openmbean.CompositeData;
-import javax.management.remote.JMXConnectionNotification;
-import javax.management.remote.JMXConnector;
-import javax.management.remote.JMXConnectorFactory;
-import javax.management.remote.JMXServiceURL;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -53,6 +33,26 @@ import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.management.Attribute;
+import javax.management.InstanceNotFoundException;
+import javax.management.JMException;
+import javax.management.MBeanServerConnection;
+import javax.management.MalformedObjectNameException;
+import javax.management.Notification;
+import javax.management.NotificationListener;
+import javax.management.ObjectName;
+import javax.management.openmbean.CompositeData;
+import javax.management.remote.JMXConnectionNotification;
+import javax.management.remote.JMXConnector;
+import javax.management.remote.JMXConnectorFactory;
+import javax.management.remote.JMXServiceURL;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.util.Collections;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @since 2.5
@@ -181,11 +181,12 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
         try {
             JMXServiceURL url = new JMXServiceURL(getEndpointConfiguration().getServerUrl());
             String[] creds = {getEndpointConfiguration().getUsername(), getEndpointConfiguration().getPassword()};
-            JMXConnector networkConnector = JMXConnectorFactory.connect(url, Collections.singletonMap(JMXConnector.CREDENTIALS, creds));
-            connectionId = networkConnector.getConnectionId();
+            try (var networkConnector = JMXConnectorFactory.connect(url, Collections.singletonMap(JMXConnector.CREDENTIALS, creds))) {
+                connectionId = networkConnector.getConnectionId();
 
-            networkConnector.addConnectionNotificationListener(this, null, null);
-            return networkConnector.getMBeanServerConnection();
+                networkConnector.addConnectionNotificationListener(this, null, null);
+                return networkConnector.getMBeanServerConnection();
+            }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to connect to network MBean server '" + getEndpointConfiguration().getServerUrl() + "'", e);
         }
