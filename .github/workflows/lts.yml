@@ -48,5 +48,4 @@ jobs:
           java -version
           ./mvnw -version
       - name: Build Citrus
-        run: |
-          ./mvnw --no-transfer-progress -Djava.version=${{ matrix.version }} install
+        run: ./mvnw --no-transfer-progress -T1C -Djava.version=${{ matrix.version }} install
