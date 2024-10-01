@@ -16,10 +16,7 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import lombok.Builder;
-import lombok.Getter;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.common.ShutdownPhase;
@@ -29,7 +26,6 @@ import java.time.Duration;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Objects.nonNull;
-import static lombok.AccessLevel.PACKAGE;
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderEquals;
 import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
@@ -42,7 +38,6 @@ import static org.citrusframework.util.StringUtils.hasText;
  *
  * @since 2.8
  */
-@Getter(PACKAGE)
 public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
 
     /**
@@ -50,6 +45,10 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
      */
     private @Nullable KafkaProducer kafkaProducer;
     private @Nullable KafkaConsumer kafkaConsumer;
+
+    public static SimpleKafkaEndpointBuilder builder() {
+        return new SimpleKafkaEndpointBuilder();
+    }
 
     /**
      * Default constructor initializing endpoint configuration.
@@ -65,8 +64,7 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
         super(endpointConfiguration);
     }
 
-    @Builder
-    public static @Nonnull KafkaEndpoint newKafkaEndpoint(
+    static KafkaEndpoint newKafkaEndpoint(
             @Nullable org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumer,
             @Nullable org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer,
             @Nullable Boolean randomConsumerGroup,
@@ -99,6 +97,16 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
         }
 
         return kafkaEndpoint;
+    }
+
+    @Nullable
+    KafkaProducer getKafkaProducer() {
+        return kafkaProducer;
+    }
+
+    @Nullable
+    KafkaConsumer getKafkaConsumer() {
+        return kafkaConsumer;
     }
 
     @Override
@@ -140,5 +148,49 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
                                 .build()
                 )
                 .getMessageBuilderSupport();
+    }
+
+    public static class SimpleKafkaEndpointBuilder {
+
+        private org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumer;
+        private org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer;
+        private Boolean randomConsumerGroup;
+        private String server;
+        private Long timeout;
+        private String topic;
+
+        public SimpleKafkaEndpointBuilder kafkaConsumer(org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumer) {
+            this.kafkaConsumer = kafkaConsumer;
+            return this;
+        }
+
+        public SimpleKafkaEndpointBuilder kafkaProducer(org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer) {
+            this.kafkaProducer = kafkaProducer;
+            return this;
+        }
+
+        public SimpleKafkaEndpointBuilder randomConsumerGroup(Boolean randomConsumerGroup) {
+            this.randomConsumerGroup = randomConsumerGroup;
+            return this;
+        }
+
+        public SimpleKafkaEndpointBuilder server(String server) {
+            this.server = server;
+            return this;
+        }
+
+        public SimpleKafkaEndpointBuilder timeout(Long timeout) {
+            this.timeout = timeout;
+            return this;
+        }
+
+        public SimpleKafkaEndpointBuilder topic(String topic) {
+            this.topic = topic;
+            return this;
+        }
+
+        public KafkaEndpoint build() {
+            return KafkaEndpoint.newKafkaEndpoint(kafkaConsumer, kafkaProducer, randomConsumerGroup, server, timeout, topic);
+        }
     }
 }

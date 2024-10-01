@@ -16,11 +16,6 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelector;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory;
@@ -33,14 +28,7 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static lombok.AccessLevel.PACKAGE;
-import static lombok.AccessLevel.PRIVATE;
 
-@Getter(PACKAGE)
-@AllArgsConstructor(access = PRIVATE)
-@RequiredArgsConstructor(access = PRIVATE)
-@Builder(buildMethodName = "buildFilter")
-@ToString(exclude = {"kafkaMessageSelectorFactory"})
 public final class KafkaMessageFilter {
 
     /**
@@ -74,7 +62,6 @@ public final class KafkaMessageFilter {
      * The timeout duration for each poll operation when consuming messages from Kafka. This value determines how long
      * the consumer will wait for new records in each poll cycle.
      */
-    @Builder.Default
     private Duration pollTimeout = Duration.ofMillis(100);
 
     /**
@@ -82,6 +69,10 @@ public final class KafkaMessageFilter {
      * consumed record meets specific criteria defined by the user.
      */
     private KafkaMessageSelector kafkaMessageSelector;
+
+    static KafkaMessageFilterBuilder builder() {
+        return new KafkaMessageFilterBuilder();
+    }
 
     public static KafkaMessageFilterBuilder kafkaMessageFilter() {
         return KafkaMessageFilter.builder()
@@ -93,8 +84,33 @@ public final class KafkaMessageFilter {
     }
 
     static KafkaMessageFilter kafkaMessageFilter(String selector, KafkaMessageSelectorFactory kafkaMessageSelectorFactory) {
-        return new KafkaMessageFilter(kafkaMessageSelectorFactory)
+        return new KafkaMessageFilterBuilder().
+                kafkaMessageSelectorFactory(kafkaMessageSelectorFactory)
+                .buildFilter()
                 .fromSelectorString(selector);
+    }
+
+    private KafkaMessageFilter(KafkaMessageSelectorFactory kafkaMessageSelectorFactory, Duration eventLookbackWindow, Duration pollTimeout, KafkaMessageSelector kafkaMessageSelector) {
+        this.kafkaMessageSelectorFactory = kafkaMessageSelectorFactory;
+        this.eventLookbackWindow = eventLookbackWindow;
+        this.pollTimeout = pollTimeout;
+        this.kafkaMessageSelector = kafkaMessageSelector;
+    }
+
+    KafkaMessageSelectorFactory getKafkaMessageSelectorFactory() {
+        return kafkaMessageSelectorFactory;
+    }
+
+    Duration getEventLookbackWindow() {
+        return eventLookbackWindow;
+    }
+
+    Duration getPollTimeout() {
+        return pollTimeout;
+    }
+
+    KafkaMessageSelector getKafkaMessageSelector() {
+        return kafkaMessageSelector;
     }
 
     private KafkaMessageFilter fromSelectorString(String selector) {
@@ -116,7 +132,7 @@ public final class KafkaMessageFilter {
     }
 
     @SuppressWarnings({"unchecked"})
-    private <T> Map<String, T> asSelector() {
+    <T> Map<String, T> asSelector() {
         Map<String, T> selector = new HashMap<>();
 
         if (nonNull(eventLookbackWindow)) {
@@ -142,19 +158,50 @@ public final class KafkaMessageFilter {
         }
     }
 
-    // Custom builder is compatible with lombok:
-    // * make factory only accessible in package
-    // * custom `build` method returns `Map<String, T>`
+    @Override
+    public String toString() {
+        return "KafkaMessageFilter{" +
+                "kafkaMessageSelectorFactory=" + kafkaMessageSelectorFactory +
+                ", eventLookbackWindow=" + eventLookbackWindow +
+                ", pollTimeout=" + pollTimeout +
+                ", kafkaMessageSelector=" + kafkaMessageSelector +
+                '}';
+    }
+
     public static class KafkaMessageFilterBuilder {
+
+        private KafkaMessageSelectorFactory kafkaMessageSelectorFactory;
+        private Duration eventLookbackWindow;
+        private Duration pollTimeout = Duration.ofMillis(100);
+        private KafkaMessageSelector kafkaMessageSelector;
 
         KafkaMessageFilterBuilder kafkaMessageSelectorFactory(KafkaMessageSelectorFactory kafkaMessageSelectorFactory) {
             this.kafkaMessageSelectorFactory = kafkaMessageSelectorFactory;
             return this;
         }
 
+        public KafkaMessageFilterBuilder eventLookbackWindow(Duration eventLookbackWindow) {
+            this.eventLookbackWindow = eventLookbackWindow;
+            return this;
+        }
+
+        public KafkaMessageFilterBuilder pollTimeout(Duration pollTimeout) {
+            this.pollTimeout = pollTimeout;
+            return this;
+        }
+
+        public KafkaMessageFilterBuilder kafkaMessageSelector(KafkaMessageSelector kafkaMessageSelector) {
+            this.kafkaMessageSelector = kafkaMessageSelector;
+            return this;
+        }
+
         public <T> Map<String, T> build() {
             return buildFilter()
                     .asSelector();
+        }
+
+        public KafkaMessageFilter buildFilter() {
+            return new KafkaMessageFilter(kafkaMessageSelectorFactory, eventLookbackWindow, pollTimeout, kafkaMessageSelector);
         }
     }
 }

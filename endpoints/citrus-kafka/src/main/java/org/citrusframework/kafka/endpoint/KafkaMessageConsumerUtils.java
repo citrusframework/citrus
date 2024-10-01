@@ -16,7 +16,6 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import lombok.NoArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -27,9 +26,6 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 
-import static lombok.AccessLevel.PRIVATE;
-
-@NoArgsConstructor(access = PRIVATE)
 final class KafkaMessageConsumerUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(KafkaMessageConsumerUtils.class);
@@ -66,5 +62,9 @@ final class KafkaMessageConsumerUtils {
         testContext.onInboundMessage(received);
 
         return received;
+    }
+
+    private KafkaMessageConsumerUtils() {
+        // Static utility class
     }
 }

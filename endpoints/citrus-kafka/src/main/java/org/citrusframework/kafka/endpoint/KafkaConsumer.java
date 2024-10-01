@@ -16,8 +16,6 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.AbstractSelectiveMessageConsumer;
@@ -41,8 +39,6 @@ import static org.apache.kafka.clients.consumer.ConsumerConfig.MAX_POLL_RECORDS_
 import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG;
 import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
 
-@Setter
-@Getter
 public class KafkaConsumer extends AbstractSelectiveMessageConsumer {
 
     private static final Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
@@ -55,6 +51,14 @@ public class KafkaConsumer extends AbstractSelectiveMessageConsumer {
     public KafkaConsumer(String name, KafkaEndpointConfiguration endpointConfiguration) {
         super(name, endpointConfiguration);
         this.consumer = createConsumer();
+    }
+
+    public org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> getConsumer() {
+        return consumer;
+    }
+
+    public void setConsumer(org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> consumer) {
+        this.consumer = consumer;
     }
 
     @Override

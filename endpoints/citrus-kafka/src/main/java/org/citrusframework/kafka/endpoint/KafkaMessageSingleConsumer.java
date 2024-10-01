@@ -16,8 +16,8 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import lombok.Builder;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.MessageTimeoutException;
 import org.citrusframework.message.Message;
@@ -38,7 +38,10 @@ class KafkaMessageSingleConsumer extends AbstractMessageConsumer {
 
     private final org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> consumer;
 
-    @Builder
+    public static KafkaMessageSingleConsumerBuilder builder() {
+        return new KafkaMessageSingleConsumerBuilder();
+    }
+
     private KafkaMessageSingleConsumer(
             KafkaEndpointConfiguration endpointConfiguration,
             org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> consumer
@@ -76,5 +79,25 @@ class KafkaMessageSingleConsumer extends AbstractMessageConsumer {
     @Override
     protected KafkaEndpointConfiguration getEndpointConfiguration() {
         return (KafkaEndpointConfiguration) super.getEndpointConfiguration();
+    }
+
+    public static class KafkaMessageSingleConsumerBuilder {
+
+        private KafkaEndpointConfiguration endpointConfiguration;
+        private org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> consumer;
+
+        public KafkaMessageSingleConsumerBuilder endpointConfiguration(KafkaEndpointConfiguration endpointConfiguration) {
+            this.endpointConfiguration = endpointConfiguration;
+            return this;
+        }
+
+        public KafkaMessageSingleConsumerBuilder consumer(KafkaConsumer<Object, Object> consumer) {
+            this.consumer = consumer;
+            return this;
+        }
+
+        public KafkaMessageSingleConsumer build() {
+            return new KafkaMessageSingleConsumer(endpointConfiguration, consumer);
+        }
     }
 }
