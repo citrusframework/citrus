@@ -16,8 +16,6 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -52,7 +50,6 @@ public class KafkaProducer implements Producer {
     /**
      * The producer name.
      */
-    @Getter
     private final String name;
 
     /**
@@ -63,8 +60,6 @@ public class KafkaProducer implements Producer {
     /**
      * Kafka producer.
      */
-    @Getter
-    @Setter
     private org.apache.kafka.clients.producer.KafkaProducer<Object, Object> producer;
 
     /**
@@ -74,6 +69,19 @@ public class KafkaProducer implements Producer {
         this.name = name;
         this.endpointConfiguration = endpointConfiguration;
         this.producer = createKafkaProducer();
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public org.apache.kafka.clients.producer.KafkaProducer<Object, Object> getProducer() {
+        return producer;
+    }
+
+    public void setProducer(org.apache.kafka.clients.producer.KafkaProducer<Object, Object> producer) {
+        this.producer = producer;
     }
 
     @Override

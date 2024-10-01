@@ -17,10 +17,6 @@
 package org.citrusframework.kafka.endpoint.selector;
 
 import jakarta.annotation.Nullable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.header.Header;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -33,8 +29,6 @@ import java.util.Optional;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static lombok.AccessLevel.PACKAGE;
-import static lombok.AccessLevel.PRIVATE;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.ValueMatchingStrategy.CONTAINS;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.ValueMatchingStrategy.EQUALS;
 import static org.citrusframework.util.StringUtils.isEmpty;
@@ -70,10 +64,6 @@ import static org.citrusframework.util.StringUtils.isEmpty;
  *
  * @see ValueMatchingStrategy
  */
-@Builder
-@ToString
-@Getter(PACKAGE)
-@AllArgsConstructor(access = PRIVATE)
 public class KafkaMessageByHeaderSelector implements KafkaMessageSelector {
 
     /**
@@ -106,6 +96,10 @@ public class KafkaMessageByHeaderSelector implements KafkaMessageSelector {
      * Specifies how the {@link KafkaMessageByHeaderSelector#value} should be matched.
      */
     private @Nullable ValueMatchingStrategy valueMatchingStrategy;
+
+    public static KafkaMessageByHeaderSelectorBuilder builder() {
+        return new KafkaMessageByHeaderSelectorBuilder();
+    }
 
     /**
      * Creates a {@link KafkaMessageByHeaderSelector} that checks if a header with the specified key contains the given
@@ -161,6 +155,27 @@ public class KafkaMessageByHeaderSelector implements KafkaMessageSelector {
         return KafkaMessageByHeaderSelector.builder()
                 .key(key)
                 .value(value);
+    }
+
+    private KafkaMessageByHeaderSelector(@Nullable String key, @Nullable String value, @Nullable ValueMatchingStrategy valueMatchingStrategy) {
+        this.key = key;
+        this.value = value;
+        this.valueMatchingStrategy = valueMatchingStrategy;
+    }
+
+    @Nullable
+    String getKey() {
+        return key;
+    }
+
+    @Nullable
+    String getValue() {
+        return value;
+    }
+
+    @Nullable
+    ValueMatchingStrategy getValueMatchingStrategy() {
+        return valueMatchingStrategy;
     }
 
     @Override
@@ -219,6 +234,38 @@ public class KafkaMessageByHeaderSelector implements KafkaMessageSelector {
         ENDS_WITH
     }
 
-    // Lombok will complete this class; declaration required to build the javadocs
-    public static class KafkaMessageByHeaderSelectorBuilder {}
+    @Override
+    public String toString() {
+        return "KafkaMessageByHeaderSelector{" +
+                "key='" + key + '\'' +
+                ", value='" + value + '\'' +
+                ", valueMatchingStrategy=" + valueMatchingStrategy +
+                '}';
+    }
+
+    public static class KafkaMessageByHeaderSelectorBuilder {
+
+        private String key;
+        private String value;
+        private KafkaMessageByHeaderSelector.ValueMatchingStrategy valueMatchingStrategy;
+
+        public KafkaMessageByHeaderSelectorBuilder key(String key) {
+            this.key = key;
+            return this;
+        }
+
+        public KafkaMessageByHeaderSelectorBuilder value(String value) {
+            this.value = value;
+            return this;
+        }
+
+        public KafkaMessageByHeaderSelectorBuilder valueMatchingStrategy(KafkaMessageByHeaderSelector.ValueMatchingStrategy valueMatchingStrategy) {
+            this.valueMatchingStrategy = valueMatchingStrategy;
+            return this;
+        }
+
+        public KafkaMessageByHeaderSelector build() {
+            return new KafkaMessageByHeaderSelector(key, value, valueMatchingStrategy);
+        }
+    }
 }

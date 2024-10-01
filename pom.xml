@@ -1146,13 +1146,6 @@
       <artifactId>slf4j-api</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.34</version>
-      <scope>provided</scope>
-    </dependency>
-
     <!-- Test scoped dependencies -->
     <dependency>
       <groupId>org.assertj</groupId>

@@ -17,9 +17,8 @@
 package org.citrusframework.kafka.endpoint;
 
 import jakarta.annotation.Nullable;
-import lombok.Builder;
-import lombok.Getter;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -63,18 +62,18 @@ import static org.slf4j.LoggerFactory.getLogger;
  *
  * @see KafkaMessageSelector
  */
-@Getter
 class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
 
     private static final Logger logger = getLogger(KafkaMessageFilteringConsumer.class);
-
-    private final ExecutorService executor = newSingleThreadExecutor();
 
     private final org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> consumer;
 
     private KafkaMessageFilter kafkaMessageFilter;
 
-    @Builder
+    public static KafkaMessageFilteringConsumerBuilder builder() {
+        return new KafkaMessageFilteringConsumerBuilder();
+    }
+
     private KafkaMessageFilteringConsumer(
             KafkaEndpointConfiguration endpointConfiguration,
             org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> consumer,
@@ -93,6 +92,14 @@ class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
                     .pollTimeout(pollTimeout)
                     .buildFilter();
         }
+    }
+
+    public KafkaConsumer<Object, Object> getConsumer() {
+        return consumer;
+    }
+
+    public KafkaMessageFilter getKafkaMessageFilter() {
+        return kafkaMessageFilter;
     }
 
     @Override
@@ -115,6 +122,7 @@ class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
         }
 
         var consumerRecords = findMessageWithTimeout(topic, timeout);
+
         if (consumerRecords.isEmpty()) {
             throw new CitrusRuntimeException("Failed to resolve Kafka message using selector: " + selector);
         }
@@ -132,7 +140,8 @@ class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
     private List<ConsumerRecord<Object, Object>> findMessageWithTimeout(String topic, long timeout) {
         logger.trace("Applied timeout is {} ms", timeout);
 
-        final Future<List<ConsumerRecord<Object, Object>>> handler = executor.submit(() -> findMessagesSatisfyingMatcher(topic));
+        ExecutorService executorService = newSingleThreadExecutor();
+        final Future<List<ConsumerRecord<Object, Object>>> handler = executorService.submit(() -> findMessagesSatisfyingMatcher(topic));
 
         try {
             return handler.get(timeout, TimeUnit.MILLISECONDS);
@@ -148,7 +157,7 @@ class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
 
             throw new MessageTimeoutException(timeout, topic, e);
         } finally {
-            executor.shutdownNow();
+            executorService.shutdownNow();
             consumer.unsubscribe();
         }
     }
@@ -222,5 +231,43 @@ class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
             Instant startTime
     ) {
         return consumerRecord.timestamp() < startTime.toEpochMilli();
+    }
+
+    public static class KafkaMessageFilteringConsumerBuilder {
+
+        private KafkaEndpointConfiguration endpointConfiguration;
+        private org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> consumer;
+        private Duration eventLookbackWindow;
+        private Duration pollTimeout;
+        private KafkaMessageSelector kafkaMessageSelector;
+
+        public KafkaMessageFilteringConsumerBuilder endpointConfiguration(KafkaEndpointConfiguration endpointConfiguration) {
+            this.endpointConfiguration = endpointConfiguration;
+            return this;
+        }
+
+        public KafkaMessageFilteringConsumerBuilder consumer(KafkaConsumer<Object, Object> consumer) {
+            this.consumer = consumer;
+            return this;
+        }
+
+        public KafkaMessageFilteringConsumerBuilder eventLookbackWindow(Duration eventLookbackWindow) {
+            this.eventLookbackWindow = eventLookbackWindow;
+            return this;
+        }
+
+        public KafkaMessageFilteringConsumerBuilder pollTimeout(Duration pollTimeout) {
+            this.pollTimeout = pollTimeout;
+            return this;
+        }
+
+        public KafkaMessageFilteringConsumerBuilder kafkaMessageSelector(KafkaMessageSelector kafkaMessageSelector) {
+            this.kafkaMessageSelector = kafkaMessageSelector;
+            return this;
+        }
+
+        public KafkaMessageFilteringConsumer build() {
+            return new KafkaMessageFilteringConsumer(endpointConfiguration, consumer, eventLookbackWindow, pollTimeout, kafkaMessageSelector);
+        }
     }
 }
