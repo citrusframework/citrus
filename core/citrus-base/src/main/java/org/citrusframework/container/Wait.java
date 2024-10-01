@@ -16,15 +16,6 @@
 
 package org.citrusframework.container;
 
-import java.time.Duration;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
@@ -37,6 +28,15 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.Duration;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 /**
  * Pause the test execution until the condition is met or the wait time has been exceeded.
@@ -87,15 +87,16 @@ public class Wait extends AbstractTestAction {
                 logger.debug(String.format("Waiting for condition %s", condition.getName()));
             }
 
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            Future<Boolean> future = executor.submit(callable);
+            var executor = newSingleThreadExecutor();
             long checkStartTime = System.currentTimeMillis();
             try {
+                Future<Boolean> future = executor.submit(callable);
                 conditionSatisfied = future.get(intervalMs, TimeUnit.MILLISECONDS);
             } catch (InterruptedException | TimeoutException | ExecutionException e) {
-                logger.warn(String.format("Condition check interrupted with '%s'", e.getClass().getSimpleName()));
+                logger.warn("Condition check interrupted with '{}'", e.getClass().getSimpleName());
+            } finally {
+                executor.shutdownNow();
             }
-            executor.shutdown();
 
             if (Boolean.TRUE.equals(conditionSatisfied)) {
                 logger.info(condition.getSuccessMessage(context));

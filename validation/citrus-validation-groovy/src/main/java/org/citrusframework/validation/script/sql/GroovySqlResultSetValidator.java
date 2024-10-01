@@ -16,10 +16,6 @@
 
 package org.citrusframework.validation.script.sql;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Map;
-
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import org.citrusframework.context.TestContext;
@@ -35,6 +31,11 @@ import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Groovy script validator capable of validating SQL result sets.
@@ -76,17 +77,20 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
                 if (StringUtils.hasText(validationScript)) {
                     logger.debug("Start groovy SQL result set validation");
 
-                    GroovyClassLoader loader = new GroovyClassLoader(GroovyScriptMessageValidator.class.getClassLoader());
-                    Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
-                                                                .withCode(validationScript)
-                                                                .build());
+                    try (var loader = new GroovyClassLoader(GroovyScriptMessageValidator.class.getClassLoader())) {
+                        Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
+                                .withCode(validationScript)
+                                .build());
 
-                    if (groovyClass == null) {
-                        throw new CitrusRuntimeException("Failed to load groovy validation script resource");
+                        if (groovyClass == null) {
+                            throw new CitrusRuntimeException("Failed to load groovy validation script resource");
+                        }
+
+                        GroovyObject groovyObject = (GroovyObject) groovyClass.getDeclaredConstructor().newInstance();
+                        ((SqlResultSetScriptExecutor) groovyObject).validate(resultSet, context);
+                    } catch (IOException e) {
+                        throw new CitrusRuntimeException("Failed to load groovy validation script resource", e);
                     }
-
-                    GroovyObject groovyObject = (GroovyObject) groovyClass.getDeclaredConstructor().newInstance();
-                    ((SqlResultSetScriptExecutor) groovyObject).validate(resultSet, context);
 
                     logger.debug("Groovy SQL result set validation successful: All values OK");
                 }

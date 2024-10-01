@@ -26,6 +26,8 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
 import org.codehaus.groovy.control.CompilationFailedException;
 
+import java.io.IOException;
+
 public class GroovyScriptPayloadBuilder implements ScriptPayloadBuilder {
 
     /** Default path to script template */
@@ -73,10 +75,8 @@ public class GroovyScriptPayloadBuilder implements ScriptPayloadBuilder {
      * @return
      */
     protected String buildMarkupBuilderScript(String scriptData) {
-        try {
-            ClassLoader parent = GroovyScriptPayloadBuilder.class.getClassLoader();
-            GroovyClassLoader loader = new GroovyClassLoader(parent);
-
+        ClassLoader parent = GroovyScriptPayloadBuilder.class.getClassLoader();
+        try (GroovyClassLoader loader = new GroovyClassLoader(parent))  {
             Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
                     .withCode(scriptData)
                     .build());
@@ -87,7 +87,7 @@ public class GroovyScriptPayloadBuilder implements ScriptPayloadBuilder {
 
             GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
             return (String) groovyObject.invokeMethod("run", new Object[] {});
-        } catch (CompilationFailedException | InstantiationException | IllegalAccessException e) {
+        } catch (CompilationFailedException | IllegalAccessException | InstantiationException | IOException e) {
             throw new CitrusRuntimeException(e);
         }
     }

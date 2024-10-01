@@ -39,7 +39,10 @@ public class Info extends AbstractDockerCommand<com.github.dockerjava.api.model.
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        setCommandResult(dockerClient.getEndpointConfiguration().getDockerClient().infoCmd().exec());
+        try (var infoCmd = dockerClient.getEndpointConfiguration().getDockerClient().infoCmd()) {
+            setCommandResult(infoCmd.exec());
+        }
+
         logger.debug(getCommandResult().toString());
     }
 

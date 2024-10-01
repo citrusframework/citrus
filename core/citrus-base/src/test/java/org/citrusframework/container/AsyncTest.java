@@ -16,12 +16,6 @@
 
 package org.citrusframework.container;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 import org.citrusframework.TestAction;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.FailAction;
@@ -33,6 +27,12 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
@@ -158,14 +158,19 @@ public class AsyncTest extends UnitTestSupport {
 
     private void waitForDone(Async container, TestContext context, long timeout) throws InterruptedException, ExecutionException, TimeoutException {
         CompletableFuture<Boolean> done = new CompletableFuture<>();
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
-            if (container.isDone(context)) {
-                done.complete(true);
-            } else {
-                logger.debug("Async action execution not finished yet ...");
-            }
-        }, 100, timeout / 10, TimeUnit.MILLISECONDS);
+        var executor = newSingleThreadScheduledExecutor();
+        try {
+            executor.scheduleAtFixedRate(() -> {
+                if (container.isDone(context)) {
+                    done.complete(true);
+                } else {
+                    logger.debug("Async action execution not finished yet ...");
+                }
+            }, 100, timeout / 10, TimeUnit.MILLISECONDS);
 
-        done.get(timeout, TimeUnit.MILLISECONDS);
+            done.get(timeout, TimeUnit.MILLISECONDS);
+        } finally {
+            executor.shutdownNow();
+        }
     }
 }
