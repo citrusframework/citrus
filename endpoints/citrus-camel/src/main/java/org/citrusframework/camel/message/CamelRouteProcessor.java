@@ -16,19 +16,19 @@
 
 package org.citrusframework.camel.message;
 
-import java.util.UUID;
-
-import org.citrusframework.camel.dsl.CamelContextAware;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.message.MessageProcessor;
-import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.spi.ReferenceResolverAware;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.OutputDefinition;
 import org.apache.camel.model.RouteDefinition;
+import org.citrusframework.camel.dsl.CamelContextAware;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.message.MessageProcessor;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
+
+import java.util.UUID;
 
 /**
  * Message processor builds new route from given processor definition and delegates to the Apache Camel route.
@@ -135,9 +135,8 @@ public class CamelRouteProcessor extends CamelMessageProcessor {
 
         @Override
         public void process(Exchange exchange) throws Exception {
-            try {
-                routeBuilder.getContext().createProducerTemplate()
-                        .send("direct:" + routeId, exchange);
+            try (var producerTemplate = routeBuilder.getContext().createProducerTemplate()) {
+                producerTemplate.send("direct:" + routeId, exchange);
             } finally {
                 routeBuilder.getContext().removeRoute(routeId);
             }

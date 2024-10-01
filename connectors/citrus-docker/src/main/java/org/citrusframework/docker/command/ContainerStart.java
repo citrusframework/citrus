@@ -16,11 +16,10 @@
 
 package org.citrusframework.docker.command;
 
+import com.github.dockerjava.api.model.ResponseItem;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
-import com.github.dockerjava.api.command.StartContainerCmd;
-import com.github.dockerjava.api.model.ResponseItem;
 
 /**
  * @since 2.4
@@ -37,10 +36,11 @@ public class ContainerStart extends AbstractDockerCommand<ResponseItem> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        StartContainerCmd command = dockerClient.getEndpointConfiguration().getDockerClient().startContainerCmd(getContainerId(context));
-        command.exec();
+        try (var command = dockerClient.getEndpointConfiguration().getDockerClient().startContainerCmd(getContainerId(context))) {
+            command.exec();
 
-        setCommandResult(success());
+            setCommandResult(success());
+        }
     }
 
     /**

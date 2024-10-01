@@ -16,13 +16,13 @@
 
 package org.citrusframework.docker.command;
 
+import com.github.dockerjava.api.command.PullImageCmd;
+import com.github.dockerjava.api.command.PullImageResultCallback;
+import com.github.dockerjava.api.model.PullResponseItem;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import com.github.dockerjava.api.command.PullImageCmd;
-import com.github.dockerjava.api.command.PullImageResultCallback;
-import com.github.dockerjava.api.model.PullResponseItem;
 
 /**
  * @since 2.4
@@ -38,30 +38,29 @@ public class ImagePull extends AbstractDockerCommand<PullResponseItem> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        final PullImageCmd command = dockerClient.getEndpointConfiguration().getDockerClient().pullImageCmd(getImageId(context));
-        PullImageResultCallback imageResult = new PullImageResultCallback() {
-            @Override
-            public void onNext(PullResponseItem item) {
-                setCommandResult(item);
-                super.onNext(item);
+        try (PullImageCmd command = dockerClient.getEndpointConfiguration().getDockerClient().pullImageCmd(getImageId(context))) {
+            PullImageResultCallback imageResult = new PullImageResultCallback() {
+                @Override
+                public void onNext(PullResponseItem item) {
+                    setCommandResult(item);
+                    super.onNext(item);
+                }
+            };
+
+            if (hasParameter("registry")) {
+                command.withRegistry(getParameter("registry", context));
             }
-        };
 
-        if (hasParameter("registry")) {
-            command.withRegistry(getParameter("registry", context));
-        }
+            if (hasParameter("repository")) {
+                command.withRepository(getParameter("repository", context));
+            }
 
-        if (hasParameter("repository")) {
-            command.withRepository(getParameter("repository", context));
-        }
+            if (hasParameter("tag")) {
+                command.withTag(getParameter("tag", context));
+            }
 
-        if (hasParameter("tag")) {
-            command.withTag(getParameter("tag", context));
-        }
+            command.exec(imageResult);
 
-        command.exec(imageResult);
-
-        try {
             imageResult.awaitCompletion();
         } catch (InterruptedException e) {
             throw new CitrusRuntimeException("Failed to wait for command success", e);

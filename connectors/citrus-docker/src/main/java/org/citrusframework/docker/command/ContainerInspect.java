@@ -16,11 +16,10 @@
 
 package org.citrusframework.docker.command;
 
+import com.github.dockerjava.api.command.InspectContainerResponse;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
-import com.github.dockerjava.api.command.InspectContainerCmd;
-import com.github.dockerjava.api.command.InspectContainerResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,12 +40,13 @@ public class ContainerInspect extends AbstractDockerCommand<InspectContainerResp
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        InspectContainerCmd command = dockerClient.getEndpointConfiguration().getDockerClient().inspectContainerCmd(getContainerId(context));
-        InspectContainerResponse response = command.exec();
+        try (var command = dockerClient.getEndpointConfiguration().getDockerClient().inspectContainerCmd(getContainerId(context))) {
+            InspectContainerResponse response = command.exec();
 
-        setCommandResult(response);
+            setCommandResult(response);
 
-        logger.debug(response.toString());
+            logger.debug(response.toString());
+        }
     }
 
     /**

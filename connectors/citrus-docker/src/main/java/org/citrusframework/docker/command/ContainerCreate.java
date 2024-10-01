@@ -16,21 +16,20 @@
 
 package org.citrusframework.docker.command;
 
-import java.util.stream.Stream;
-
-import org.citrusframework.context.TestContext;
-import org.citrusframework.docker.actions.DockerExecuteAction;
-import org.citrusframework.docker.client.DockerClient;
-import org.citrusframework.docker.message.DockerMessageHeaders;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.InspectContainerCmd;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.model.Capability;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.api.model.Volume;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.docker.actions.DockerExecuteAction;
+import org.citrusframework.docker.client.DockerClient;
+import org.citrusframework.docker.message.DockerMessageHeaders;
+
+import java.util.stream.Stream;
 
 import static com.github.dockerjava.api.model.ExposedPort.tcp;
 import static com.github.dockerjava.api.model.ExposedPort.udp;
@@ -51,30 +50,34 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
     }
 
     @Override
-    public void execute(DockerClient dockerClient, TestContext context) {
-        CreateContainerCmd command = dockerClient.getEndpointConfiguration().getDockerClient().createContainerCmd(getImageId(context));
+    public void execute(DockerClient dockerClient, TestContext testContext) {
+        try (var command = dockerClient.getEndpointConfiguration().getDockerClient().createContainerCmd(getImageId(testContext))) {
+            executeDockerCommand(dockerClient, command, testContext);
+        }
+    }
 
+    private void executeDockerCommand(DockerClient dockerClient, CreateContainerCmd command, TestContext testContext) {
         if (hasParameter("name")) {
-            command.withName(getParameter("name", context));
+            command.withName(getParameter("name", testContext));
         }
 
         if (hasParameter("attach-stderr")) {
-            command.withAttachStderr(Boolean.valueOf(getParameter("attach-stderr", context)));
+            command.withAttachStderr(Boolean.valueOf(getParameter("attach-stderr", testContext)));
         }
 
         if (hasParameter("attach-stdin")) {
-            command.withAttachStdin(Boolean.valueOf(getParameter("attach-stdin", context)));
+            command.withAttachStdin(Boolean.valueOf(getParameter("attach-stdin", testContext)));
         }
 
         if (hasParameter("attach-stdout")) {
-            command.withAttachStdout(Boolean.valueOf(getParameter("attach-stdout", context)));
+            command.withAttachStdout(Boolean.valueOf(getParameter("attach-stdout", testContext)));
         }
 
         if (hasParameter("capability-add")) {
             if (getParameters().get("capability-add") instanceof Capability[]) {
                 command.withCapAdd((Capability[]) getParameters().get("capability-add"));
             } else {
-                command.withCapAdd(getCapabilities("capability-add", context));
+                command.withCapAdd(getCapabilities("capability-add", testContext));
             }
         }
 
@@ -82,46 +85,46 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
             if (getParameters().get("capability-drop") instanceof Capability[]) {
                 command.withCapAdd((Capability[]) getParameters().get("capability-drop"));
             } else {
-                command.withCapDrop(getCapabilities("capability-drop", context));
+                command.withCapDrop(getCapabilities("capability-drop", testContext));
             }
         }
 
         if (hasParameter("domain-name")) {
-            command.withDomainName(getParameter("domain-name", context));
+            command.withDomainName(getParameter("domain-name", testContext));
         }
 
         if (hasParameter("cmd")) {
             if (getParameters().get("cmd") instanceof String[]
-            	|| getParameters().get("cmd") instanceof Capability[]) {
+                    || getParameters().get("cmd") instanceof Capability[]) {
                 command.withCmd((String[]) getParameters().get("cmd"));
             } else {
-                command.withCmd(getParameter("cmd", context).split(DELIMITER));
+                command.withCmd(getParameter("cmd", testContext).split(DELIMITER));
             }
         }
 
         if (hasParameter("env")) {
             if (getParameters().get("env") instanceof String[]
-            	|| getParameters().get("env") instanceof Capability[]) {
+                    || getParameters().get("env") instanceof Capability[]) {
                 command.withEnv((String[]) getParameters().get("env"));
             } else {
-                command.withEnv(getParameter("env", context).split(DELIMITER));
+                command.withEnv(getParameter("env", testContext).split(DELIMITER));
             }
         }
 
         if (hasParameter("entrypoint")) {
-            command.withEntrypoint(getParameter("entrypoint", context));
+            command.withEntrypoint(getParameter("entrypoint", testContext));
         }
 
         if (hasParameter("hostname")) {
-            command.withHostName(getParameter("hostname", context));
+            command.withHostName(getParameter("hostname", testContext));
         }
 
         if (hasParameter("port-specs")) {
             if (getParameters().get("port-specs") instanceof String[]
-            	|| getParameters().get("port-specs") instanceof Capability[]) {
+                    || getParameters().get("port-specs") instanceof Capability[]) {
                 command.withPortSpecs((String[]) getParameters().get("port-specs"));
             } else {
-                command.withPortSpecs(getParameter("port-specs", context).split(DELIMITER));
+                command.withPortSpecs(getParameter("port-specs", testContext).split(DELIMITER));
             }
         }
 
@@ -130,7 +133,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
             if (getParameters().get("exposed-ports") instanceof ExposedPort[]) {
                 exposedPorts = (ExposedPort[]) getParameters().get("exposed-ports");
             } else {
-                exposedPorts = getExposedPorts(getParameter("exposed-ports", context), context);
+                exposedPorts = getExposedPorts(getParameter("exposed-ports", testContext), testContext);
             }
             command.withExposedPorts(exposedPorts);
         }
@@ -141,33 +144,34 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
             } if (getParameters().get("port-bindings") instanceof PortBinding[]) {
                 command.withPortBindings((PortBinding[]) getParameters().get("port-bindings"));
             } else {
-                command.withPortBindings(getPortBindings(getParameter("port-bindings", context), exposedPorts, context));
+                command.withPortBindings(getPortBindings(getParameter("port-bindings", testContext), exposedPorts, testContext));
             }
         } else if (exposedPorts.length > 0) {
-            command.withPortBindings(getPortBindings("", exposedPorts, context));
+            command.withPortBindings(getPortBindings("", exposedPorts, testContext));
         }
 
         if (hasParameter("volumes")) {
             if (getParameters().get("volumes") instanceof Volume[]
-            	|| getParameters().get("volumes") instanceof ExposedPort[]) {
+                    || getParameters().get("volumes") instanceof ExposedPort[]) {
                 command.withVolumes((Volume[]) getParameters().get("volumes"));
             } else {
-                command.withVolumes(getVolumes(context));
+                command.withVolumes(getVolumes(testContext));
             }
         }
 
         if (hasParameter("working-dir")) {
-            command.withWorkingDir(getParameter("working-dir", context));
+            command.withWorkingDir(getParameter("working-dir", testContext));
         }
 
         CreateContainerResponse response = command.exec();
-        context.setVariable(DockerMessageHeaders.CONTAINER_ID, response.getId());
+        testContext.setVariable(DockerMessageHeaders.CONTAINER_ID, response.getId());
         setCommandResult(response);
 
         if (!hasParameter("name")) {
-            InspectContainerCmd inspect = dockerClient.getEndpointConfiguration().getDockerClient().inspectContainerCmd(response.getId());
-            InspectContainerResponse inspectResponse = inspect.exec();
-            context.setVariable(DockerMessageHeaders.CONTAINER_NAME, inspectResponse.getName().substring(1));
+            try (var inspect = dockerClient.getEndpointConfiguration().getDockerClient().inspectContainerCmd(response.getId())) {
+                InspectContainerResponse inspectResponse = inspect.exec();
+                testContext.setVariable(DockerMessageHeaders.CONTAINER_NAME, inspectResponse.getName().substring(1));
+            }
         }
     }
 
