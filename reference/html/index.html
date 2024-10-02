@@ -663,8 +663,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 4.3.2,</span>
-<span id="revdate">2024-09-11</span>
+<span id="revnumber">version 4.3.3,</span>
+<span id="revdate">2024-10-02</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -1102,7 +1102,7 @@ $(addBlockSwitches);
 </li>
 <li><a href="#customize-meta-information">41. Customize meta information</a></li>
 <li><a href="#tracing-incoming-outgoing-messages">42. Tracing incoming/outgoing messages</a></li>
-<li><a href="#reporting-and-test-results">43. Reporting and test results</a>
+<li><a href="#reporting-and-test-results">43. Reporting and Test Results</a>
 <ul class="sectlevel2">
 <li><a href="#console-logging">43.1. Console logging</a></li>
 <li><a href="#junit-reports">43.2. JUnit reports</a></li>
@@ -1149,7 +1149,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 4.3.2</strong></p>
+<p><strong>Version: 4.3.3</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1212,7 +1212,10 @@ supports various messaging transports (Http REST, SOAP, JMS, Kafka, TCP/IP, FTP,
 </div>
 <div class="paragraph">
 <p>The Citrus tests use well-known unit test frameworks (JUnit, TestNG, Cucumber) for execution and integrates with build
-tools like Maven or Gradle. In addition, Citrus leverages standard libraries like Spring Framework and Apache Camel.</p>
+tools like Maven or Gradle. In addition, Citrus leverages standard libraries like Quarkus, the Spring Framework or Apache Camel.</p>
+</div>
+<div class="paragraph">
+<p>It is also good to know that Citrus is written purely in Java. Thus, it is also fully compatible with Kotlin.</p>
 </div>
 <div class="sect2">
 <h3 id="overview"><a class="anchor" href="#overview"></a><a class="link" href="#overview">2.1. Overview</a></h3>
@@ -1494,7 +1497,7 @@ the source files to a folder in your project. With the Gradle task execution for
 the Citrus tests like you would do with normal unit tests.</p>
 </div>
 <div class="paragraph">
-<p>The Gradle build configuration goees to the <strong>build.gradle</strong> and <strong>settings.gradle</strong> files. The files define the project name
+<p>The Gradle build configuration goes to the <strong>build.gradle</strong> and <strong>settings.gradle</strong> files. The files define the project name
 and the project version.</p>
 </div>
 <div class="listingblock">
@@ -36809,10 +36812,13 @@ Be aware of adding the Spring <strong>util</strong> XML namespace to the applica
 </div>
 </div>
 <div class="sect1">
-<h2 id="reporting-and-test-results"><a class="anchor" href="#reporting-and-test-results"></a><a class="link" href="#reporting-and-test-results">43. Reporting and test results</a></h2>
+<h2 id="reporting-and-test-results"><a class="anchor" href="#reporting-and-test-results"></a><a class="link" href="#reporting-and-test-results">43. Reporting and Test Results</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The framework generates different reports and results after a test run for you. These report and result pages will help you to get an overview of the test cases that were executed and which one were failing.</p>
+<p>The framework generates different reports and results after a test run for you.
+These report and result pages will help you to get an overview of the test cases that were executed and which one were failing.
+They&#8217;re being generated into <code>target/citrus-reports</code> by default, but that can be changed by setting the <code>citrus.report.directory</code> property to the desired location.
+E.g. it could be set to <code>citrus.report.directory=build/citrus-reports</code> for <a href="#setup-gradle">Gradle</a> builds.</p>
 </div>
 <div class="paragraph">
 <p>In the following chapters, we&#8217;ll provide an overview of the three standard loggers available in Citrus. It&#8217;s important to note that in Spring, you have the flexibility to replace these standard loggers with your own implementations. This can be achieved by registering custom implementations, as demonstrated in the following code snippet:</p>
@@ -36840,7 +36846,8 @@ Be aware of adding the Spring <strong>util</strong> XML namespace to the applica
 </div>
 </div>
 <div class="paragraph">
-<p>Note that you need to allow spring bean overriding to load this configuration as such. It&#8217;s worth noting that bean overriding is not recommended by spring. Thus the following properties are provided to deactivate standard reporters as needed.</p>
+<p>Note that you need to allow spring bean overriding to load this configuration as such. It&#8217;s worth noting that bean overriding is not recommended by Spring.
+Thus the following properties are provided to deactivate standard reporters as needed.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -38589,8 +38596,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 4.3.2<br>
-Last updated 2024-09-11 11:07:39 +0200
+Version 4.3.3<br>
+Last updated 2024-10-02 19:53:05 +0200
 </div>
 </div>
 <style>
