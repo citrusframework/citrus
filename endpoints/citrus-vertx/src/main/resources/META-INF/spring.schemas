@@ -46,4 +46,5 @@ http\://www.citrusframework.org/schema/vertx/config/citrus-vertx-config-4.3.0.xs
 http\://www.citrusframework.org/schema/vertx/config/citrus-vertx-config-4.3.1.xsd=org/citrusframework/schema/citrus-vertx-config-4.3.1.xsd
 http\://www.citrusframework.org/schema/vertx/config/citrus-vertx-config-4.3.2.xsd=org/citrusframework/schema/citrus-vertx-config-4.3.2.xsd
 http\://www.citrusframework.org/schema/vertx/config/citrus-vertx-config-4.3.3.xsd=org/citrusframework/schema/citrus-vertx-config-4.3.3.xsd
+http\://www.citrusframework.org/schema/vertx/config/citrus-vertx-config-4.4.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-vertx-config-4.4.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/vertx/config/citrus-vertx-config.xsd=org/citrusframework/schema/citrus-vertx-config.xsd
