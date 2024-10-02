@@ -16,6 +16,19 @@
 
 package org.citrusframework.report;
 
+import java.time.Duration;
+import java.util.Locale;
+
+import org.citrusframework.DefaultTestCase;
+import org.citrusframework.actions.EchoAction;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ReflectionHelper;
+import org.mockito.Mock;
+import org.slf4j.Logger;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import static java.lang.String.format;
 import static org.citrusframework.TestResult.failed;
 import static org.citrusframework.TestResult.skipped;
@@ -27,18 +40,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.openMocks;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
-
-import java.time.Duration;
-import java.util.Locale;
-import org.citrusframework.DefaultTestCase;
-import org.citrusframework.actions.EchoAction;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.mockito.Mock;
-import org.slf4j.Logger;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 public class LoggingReporterTest {
 
@@ -68,7 +69,7 @@ public class LoggingReporterTest {
         fixture = new LoggingReporter();
 
         // Comment this line if you want to see the logs in stdout
-        setField(fixture, "logger", logger, Logger.class);
+        ReflectionHelper.setField(ReflectionHelper.findField(LoggingReporter.class, "logger"), null, logger);
     }
 
     @Test
