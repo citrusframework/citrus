@@ -33,6 +33,7 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.Resource;
+import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.validation.HeaderValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.ValidationProcessor;
@@ -50,7 +51,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.citrusframework.validation.json.JsonMessageValidationContext.Builder.json;
 import static org.citrusframework.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
@@ -137,7 +137,7 @@ class ReceiveMessageBuilderTest {
         builder.message().name("foo");
 
         //THEN
-		assertTrue(builder.build().getMessageBuilder() instanceof DefaultMessageBuilder);
+        assertInstanceOf(DefaultMessageBuilder.class, builder.build().getMessageBuilder());
 		assertEquals("foo", builder.build().getMessageBuilder().build(context, MessageType.PLAINTEXT.name()).getName());
 	}
 
@@ -780,7 +780,8 @@ class ReceiveMessageBuilderTest {
 		doReturn(validator1).when(referenceResolver).resolve(name1);
 		doReturn(validator2).when(referenceResolver).resolve(name2);
 		doReturn(validator3).when(referenceResolver).resolve(name3);
-		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
+		ReflectionHelper.setField(ReflectionHelper.findField(ReceiveMessageAction.Builder.class, "referenceResolver"),
+				builder, referenceResolver);
 
 		//WHEN
 		builder.validators(name1, name2, name3);
@@ -823,7 +824,8 @@ class ReceiveMessageBuilderTest {
 		doReturn(validator1).when(referenceResolver).resolve(name1);
 		doReturn(validator2).when(referenceResolver).resolve(name2);
 		doReturn(validator3).when(referenceResolver).resolve(name3);
-		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
+		ReflectionHelper.setField(ReflectionHelper.findField(ReceiveMessageAction.Builder.class, "referenceResolver"),
+				builder, referenceResolver);
 
 		//WHEN
 		builder.validators(name1, name2, name3);
@@ -859,7 +861,8 @@ class ReceiveMessageBuilderTest {
 		final DataDictionary<?> dataDictionary = mock(DataDictionary.class);
 		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
 		when(referenceResolver.resolve(name, DataDictionary.class)).thenReturn(dataDictionary);
-		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
+		ReflectionHelper.setField(ReflectionHelper.findField(ReceiveMessageAction.Builder.class, "referenceResolver"),
+				builder, referenceResolver);
 
 		//WHEN
 		builder.message().dictionary(name);
@@ -888,13 +891,15 @@ class ReceiveMessageBuilderTest {
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
-		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
+		ReflectionHelper.setField(ReflectionHelper.findField(ReceiveMessageAction.Builder.class, "referenceResolver"),
+				builder, referenceResolver);
 
 		//WHEN
 		builder.withReferenceResolver(referenceResolver);
 
 		//THEN
-		assertEquals(referenceResolver, ReflectionTestUtils.getField(builder, "referenceResolver"));
+		assertEquals(referenceResolver, ReflectionHelper.getField(
+				ReflectionHelper.findField(ReceiveMessageAction.Builder.class, "referenceResolver"), builder));
 	}
 
     @Test
@@ -927,7 +932,7 @@ class ReceiveMessageBuilderTest {
 
 	private <T> T getFieldFromBuilder(ReceiveMessageAction.Builder builder, final Class<T> targetClass, final String fieldName) {
 		final T validationContext = targetClass.cast(
-				ReflectionTestUtils.getField(builder, fieldName));
+				ReflectionHelper.getField(ReflectionHelper.findField(ReceiveMessageAction.Builder.class, fieldName), builder));
 		assertNotNull(validationContext);
 		return validationContext;
 	}

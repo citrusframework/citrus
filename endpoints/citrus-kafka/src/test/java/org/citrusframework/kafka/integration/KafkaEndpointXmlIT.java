@@ -19,11 +19,9 @@ package org.citrusframework.kafka.integration;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.springframework.test.annotation.DirtiesContext;
 import org.testng.annotations.Test;
 
 @Test
-@DirtiesContext
 public class KafkaEndpointXmlIT extends TestNGCitrusSpringSupport {
 
     @CitrusTestSource(type = TestLoader.SPRING, name = "KafkaEndpointIT_singleMessage")

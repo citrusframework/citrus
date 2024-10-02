@@ -16,6 +16,8 @@
 
 package org.citrusframework.kafka.integration;
 
+import java.time.Duration;
+
 import org.assertj.core.api.ThrowableAssert;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -23,15 +25,9 @@ import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.kafka.endpoint.KafkaEndpoint;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector;
 import org.citrusframework.kafka.message.KafkaMessage;
+import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.Test;
-
-import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
@@ -44,12 +40,13 @@ import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSe
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderEquals;
 
 @Test
-@DirtiesContext
-@ContextConfiguration(classes = {KafkaEndpointJavaIT.KafkaEndpointConfiguration.class})
 public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
 
-    @Autowired
-    private KafkaEndpoint kafkaWithRandomConsumerGroupEndpoint;
+    @BindToRegistry
+    private final KafkaEndpoint kafkaWithRandomConsumerGroupEndpoint = KafkaEndpoint.builder()
+            .randomConsumerGroup(true)
+            .topic("hello")
+            .build();
 
     @Test
     @CitrusTest
@@ -285,15 +282,4 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         );
     }
 
-    @TestConfiguration
-    static class KafkaEndpointConfiguration {
-
-        @Bean
-        public KafkaEndpoint kafkaWithRandomConsumerGroupEndpoint() {
-            return KafkaEndpoint.builder()
-                    .randomConsumerGroup(true)
-                    .topic("hello")
-                    .build();
-        }
-    }
 }

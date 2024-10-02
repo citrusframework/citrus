@@ -16,28 +16,23 @@
 
 package org.citrusframework.sharding;
 
+import java.util.Optional;
+
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.util.SystemProvider;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.Optional;
-
-import static org.citrusframework.sharding.ShardingConfiguration.SHARD_NUMBER_ENV_VAR_NAME;
-import static org.citrusframework.sharding.ShardingConfiguration.SHARD_NUMBER_PROPERTY_NAME;
-import static org.citrusframework.sharding.ShardingConfiguration.SHARD_SEED_ENV_VAR_NAME;
-import static org.citrusframework.sharding.ShardingConfiguration.SHARD_SEED_PROPERTY_NAME;
-import static org.citrusframework.sharding.ShardingConfiguration.TOTAL_SHARD_NUMBER_ENV_VAR_NAME;
-import static org.citrusframework.sharding.ShardingConfiguration.TOTAL_SHARD_NUMBER_PROPERTY_NAME;
+import static org.citrusframework.sharding.ShardingConfiguration.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.openMocks;
-import static org.springframework.test.util.ReflectionTestUtils.getField;
 import static org.testng.Assert.expectThrows;
 
 public class ShardingConfigurationTest {
@@ -58,9 +53,12 @@ public class ShardingConfigurationTest {
     }
 
     private static void assertProperties(ShardingConfiguration fixture, int totalNumberOfShards, int shardNumber, String seed) {
-        assertEquals(totalNumberOfShards, getField(fixture, "totalNumberOfShards"));
-        assertEquals(shardNumber, getField(fixture, "shardNumber"));
-        assertEquals(seed, getField(fixture, "seed"));
+        assertEquals(totalNumberOfShards, ReflectionHelper.getField(
+                ReflectionHelper.findField(ShardingConfiguration.class, "totalNumberOfShards"), fixture));
+        assertEquals(shardNumber, ReflectionHelper.getField(
+                ReflectionHelper.findField(ShardingConfiguration.class, "shardNumber"), fixture));
+        assertEquals(seed, ReflectionHelper.getField(
+                ReflectionHelper.findField(ShardingConfiguration.class, "seed"), fixture));
     }
 
     @Test

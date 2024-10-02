@@ -16,20 +16,20 @@
 
 package org.citrusframework.functions.core;
 
+import java.util.Calendar;
+import java.util.Collections;
+
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.FunctionParameterHelper;
+import org.citrusframework.util.ReflectionHelper;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.Calendar;
-import java.util.Collections;
 
 import static org.mockito.Mockito.doReturn;
 
@@ -50,7 +50,7 @@ public class ChangeDateFunctionTest extends UnitTestSupport {
         mockitoContext = MockitoAnnotations.openMocks(this);
 
         fixture = new ChangeDateFunction();
-        ReflectionTestUtils.setField(fixture, "calendarProvider", calendarProviderMock, ChangeDateFunction.CalendarProvider.class);
+        ReflectionHelper.setField(ReflectionHelper.findField(ChangeDateFunction.class, "calendarProvider"), fixture, calendarProviderMock);
     }
 
     @Test
