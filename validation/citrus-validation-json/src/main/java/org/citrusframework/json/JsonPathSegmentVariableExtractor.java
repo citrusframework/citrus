@@ -24,9 +24,6 @@ import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.variable.SegmentVariableExtractorRegistry;
 import org.citrusframework.variable.VariableExpressionSegmentMatcher;
 
-/**
- * @author Thorsten Schlathoelter
- */
 public class JsonPathSegmentVariableExtractor extends SegmentVariableExtractorRegistry.AbstractSegmentVariableExtractor {
 
     @Override

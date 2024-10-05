@@ -17,6 +17,7 @@
 package org.citrusframework.http.actions;
 
 import jakarta.servlet.http.Cookie;
+import java.util.Optional;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
@@ -25,8 +26,6 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageBuilder;
 import org.citrusframework.message.builder.ReceiveMessageBuilderSupport;
 import org.springframework.http.HttpStatusCode;
-
-import java.util.Optional;
 
 /**
  * @author Christoph Deppisch
@@ -60,9 +59,13 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageAction.Receiv
     @Override
     public HttpMessageBuilderSupport getMessageBuilderSupport() {
         if (messageBuilderSupport == null) {
-            messageBuilderSupport = new HttpMessageBuilderSupport(httpMessage, this);
+            messageBuilderSupport = createHttpMessageBuilderSupport();
         }
         return super.getMessageBuilderSupport();
+    }
+
+    protected HttpMessageBuilderSupport createHttpMessageBuilderSupport() {
+        return new HttpMessageBuilderSupport(httpMessage, this);
     }
 
     public static class HttpMessageBuilderSupport extends ReceiveMessageBuilderSupport<ReceiveMessageAction, HttpClientResponseActionBuilder, HttpMessageBuilderSupport> {

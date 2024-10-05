@@ -1,0 +1,49 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+    xmlns:extpetstore="http://www.citrusframework.org/citrus-test-schema/extpetstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/http/testcase
+    http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api/extpetstore-api.xsd"
+>
+    <testcase name="withApiCookieTest">
+        <actions>
+            <create-variables>
+                <variable name="petId" value="1234"/>
+                <variable name="sessionId" value="cookieValue"/>
+                <variable name="trxId" value="trxId"/>
+            </create-variables>
+
+            <extpetstore:send-get-pet-with-cookie petId="${petId}" fork="true" sessionId="cookieValue" optTrxId="trxId">
+            </extpetstore:send-get-pet-with-cookie>
+
+            <http:receive-request server="httpServer">
+                <http:GET path="/api/v3/ext/pet/${petId}">
+                    <http:headers accept="@contains('application/json')@">
+                        <http:cookie name="session_id" value="${sessionId}"/>
+                        <http:cookie name="opt_trx_id" value="${trxId}"/>
+                    </http:headers>
+                    </http:GET>
+            </http:receive-request>
+
+            <http:send-response server="httpServer">
+                <http:headers status="200" reason-phrase="OK">
+                    <http:header name="Content-Type" value="application/json"/>
+                </http:headers>
+                <http:body type="json">
+                    <http:resource file="classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"/>
+                </http:body>
+            </http:send-response>
+
+            <extpetstore:receive-get-pet-with-cookie responseCode="200"/>
+
+        </actions>
+    </testcase>
+</spring:beans>

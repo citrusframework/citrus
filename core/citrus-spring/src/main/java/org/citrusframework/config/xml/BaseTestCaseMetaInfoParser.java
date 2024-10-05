@@ -35,7 +35,6 @@ import org.citrusframework.TestCaseMetaInfo.Status;
  *
  * @param <T>
  *
- * @author Thorsten Schlathoelter
  */
 public abstract class BaseTestCaseMetaInfoParser<T extends TestCaseMetaInfo> implements BeanDefinitionParser  {
 

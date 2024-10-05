@@ -88,4 +88,16 @@ public interface SchemaValidator<T extends SchemaValidationContext> {
      * @return true if the message/message type can be validated by this validator
      */
     boolean supportsMessageType(String messageType, Message message);
+
+    /**
+     * @param message the message which is subject of validation
+     * @param  schemaValidationEnabled flag to indicate whether schema validation is explicitly enabled
+     * @return true, if the validator can validate the given message
+     */
+    boolean canValidate(Message message, boolean schemaValidationEnabled);
+
+    /**
+     * Validate the message against the given schemaRepository and schema.
+     */
+    void validate(Message message, TestContext context, String schemaRepository, String schema);
 }
