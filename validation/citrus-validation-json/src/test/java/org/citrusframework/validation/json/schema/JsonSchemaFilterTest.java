@@ -189,7 +189,6 @@ public class JsonSchemaFilterTest {
                 .schema("foo")
                 .build();
 
-
         //Setup application validationContext
         when(referenceResolverMock.resolve(validationContext.getSchema(), SimpleJsonSchema.class))
                 .thenThrow(CitrusRuntimeException.class);

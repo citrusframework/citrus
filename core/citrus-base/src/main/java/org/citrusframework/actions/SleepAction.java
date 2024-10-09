@@ -140,7 +140,6 @@ public class SleepAction extends AbstractTestAction {
             return time(String.valueOf(seconds  * 1000L), TimeUnit.MILLISECONDS);
         }
 
-
         public Builder time(Duration duration) {
             milliseconds(duration.toMillis());
             return this;

@@ -93,7 +93,6 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
 
         CamelSyncEndpoint camelEndpoint = new CamelSyncEndpoint(endpointConfiguration);
 
-
         Message replyMessage = new org.citrusframework.message.DefaultMessage("Hello from Citrus!")
                                                 .setHeader("operation", "hello");
 

@@ -16,7 +16,6 @@
 
 package org.citrusframework.server;
 
-
 import org.citrusframework.endpoint.Endpoint;
 
 /**

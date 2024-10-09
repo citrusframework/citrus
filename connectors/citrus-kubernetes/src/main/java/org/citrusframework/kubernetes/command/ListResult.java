@@ -25,7 +25,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import jakarta.validation.constraints.NotNull;
 
-
 /**
  * @since 2.7
  */

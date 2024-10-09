@@ -15,7 +15,6 @@ public class OpenApiClientRequestMessageBuilderTest {
     private final OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
             Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-derivation-for-message-builder-test.json"));
 
-
     @Test
     public void shouldAddRandomDataForOperation() {
         Message message = openapi()

@@ -166,7 +166,6 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 		TestActor testActor = new TestActor();
         testActor.setName("TESTACTOR");
 
-
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 

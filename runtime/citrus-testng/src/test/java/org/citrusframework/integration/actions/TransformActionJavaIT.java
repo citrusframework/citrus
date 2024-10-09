@@ -53,7 +53,6 @@ public class TransformActionJavaIT extends TestNGCitrusSpringSupport {
             .xslt(Resources.fromClasspath("org/citrusframework/integration/actions/transform.xslt"))
             .result("result"));
 
-
         run(echo("${result}"));
     }
 }

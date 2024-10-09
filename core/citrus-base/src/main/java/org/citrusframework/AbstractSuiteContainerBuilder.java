@@ -87,7 +87,6 @@ public abstract class AbstractSuiteContainerBuilder<T extends AbstractSuiteActio
         return self;
     }
 
-
     /**
      * Condition on environment variable with value. The before test logic will only run when this condition matches.
      * @param name

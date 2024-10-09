@@ -269,8 +269,6 @@ public class HttpMessage extends DefaultMessage {
         return this;
     }
 
-
-
     /**
      * Sets request path that is dynamically added to base uri.
      *

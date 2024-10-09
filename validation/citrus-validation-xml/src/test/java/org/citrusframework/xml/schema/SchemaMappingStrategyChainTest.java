@@ -60,7 +60,6 @@ public class SchemaMappingStrategyChainTest {
 
         when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema");
 
-
         Assert.assertEquals(strategy.getSchema(schemas, doc), schemaMock);
 
     }
@@ -94,7 +93,6 @@ public class SchemaMappingStrategyChainTest {
         when(rootNode.getLocalName()).thenReturn("bar");
 
         when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema");
-
 
         Assert.assertEquals(strategy.getSchema(schemas, doc), schemaMock);
 

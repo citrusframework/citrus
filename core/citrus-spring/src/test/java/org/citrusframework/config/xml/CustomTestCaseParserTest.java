@@ -53,13 +53,11 @@ public class CustomTestCaseParserTest extends AbstractActionParserTest<EchoActio
         Assert.assertEquals(((CustomTestCaseMetaInfo)getTestCase().getMetaInfo()).getDescription(), "Foo bar: F#!$§ed up beyond all repair");
     }
 
-
     public static class CustomTestCase extends DefaultTestCase {
     }
 
     public static class CustomTestCaseMetaInfo extends TestCaseMetaInfo {
         private String description;
-
 
         public String getDescription() {
             return description;

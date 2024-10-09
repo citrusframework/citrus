@@ -41,7 +41,6 @@ import static org.mockito.Mockito.when;
 
 public class ServiceClusterIpFunctionTest extends UnitTestSupport {
 
-
     @Mock
     private KubernetesClient k8sClient;
     @Mock

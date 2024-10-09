@@ -29,5 +29,4 @@ public class TestCaseParser extends BaseTestCaseParser<DefaultTestCase> {
         super(DefaultTestCase.class);
     }
 
-
 }

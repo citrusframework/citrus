@@ -62,5 +62,4 @@ public class TestActor {
         this.disabled = disabled;
     }
 
-
 }

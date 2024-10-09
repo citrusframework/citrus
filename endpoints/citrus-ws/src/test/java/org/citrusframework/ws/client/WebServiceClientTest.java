@@ -118,7 +118,6 @@ public class WebServiceClientTest extends AbstractTestNGUnitTest {
 
         reset(webServiceTemplate, soapFaultMessage, soapBody, soapFault);
 
-
         when(soapFaultMessage.getSoapBody()).thenReturn(soapBody);
         when(soapFaultMessage.getFaultReason()).thenReturn("Internal server error");
         when(soapBody.getFault()).thenReturn(soapFault);

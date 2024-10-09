@@ -122,7 +122,6 @@ public class WebServiceEndpointTest {
 
         when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
 
-
         endpoint.invoke(messageContext);
 
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
@@ -178,7 +177,6 @@ public class WebServiceEndpointTest {
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
-
 
         endpoint.invoke(messageContext);
 
@@ -648,7 +646,6 @@ public class WebServiceEndpointTest {
             }
         });
 
-
         StringResult soapResponsePayload = new StringResult();
 
         Set<Attachment> attachments = new HashSet<>();
@@ -807,7 +804,6 @@ public class WebServiceEndpointTest {
             return soapFault;
         }).when(soapBody).addServerOrReceiverFault((String)any(), (Locale)any());
 
-
         endpoint.invoke(messageContext);
 
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
@@ -872,7 +868,6 @@ public class WebServiceEndpointTest {
             Assert.assertEquals(invocation.getArguments()[0], "Invalid request");
             return soapFault;
         }).when(soapBody).addClientOrSenderFault((String)any(), (Locale)any());
-
 
         endpoint.invoke(messageContext);
 
@@ -945,7 +940,6 @@ public class WebServiceEndpointTest {
         when(soapFault.addFaultDetail()).thenReturn(soapFaultDetail);
 
         when(soapFaultDetail.getResult()).thenReturn(soapFaultResult);
-
 
         endpoint.invoke(messageContext);
 
@@ -1020,7 +1014,6 @@ public class WebServiceEndpointTest {
 
         when(soapFaultDetail.getResult()).thenReturn(soapFaultResult);
 
-
         endpoint.invoke(messageContext);
 
         Assert.assertEquals(soapFaultResult.toString(), "<DetailMessage><text>This request was not OK!</text></DetailMessage><Error><text>This request was not OK!</text></Error>");
@@ -1051,7 +1044,6 @@ public class WebServiceEndpointTest {
                 return responseMessage;
             }
         });
-
 
         StringResult soapResponsePayload = new StringResult();
 
@@ -1155,7 +1147,6 @@ public class WebServiceEndpointTest {
             return soapFault;
         }).when(soapResponseBody).addFault((QName)any(), (String)any(), (Locale)any());
 
-
         endpoint.invoke(messageContext);
 
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
@@ -1254,7 +1245,6 @@ public class WebServiceEndpointTest {
                 return responseMessage;
             }
         });
-
 
         StringResult soapResponsePayload = new StringResult();
 

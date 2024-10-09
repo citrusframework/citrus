@@ -103,5 +103,4 @@ public class MarshallingHeaderDataBuilder extends DefaultHeaderDataBuilder {
         return context.replaceDynamicContentInString(result.toString());
     }
 
-
 }

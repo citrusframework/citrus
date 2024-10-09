@@ -220,7 +220,6 @@ public class CachingHttpServletRequestWrapperTest {
             this.sourceStream = sourceStream;
         }
 
-
         public int read() throws IOException {
             return this.sourceStream.read();
         }

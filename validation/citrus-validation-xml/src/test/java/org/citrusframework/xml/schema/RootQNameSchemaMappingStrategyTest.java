@@ -29,7 +29,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-
 public class RootQNameSchemaMappingStrategyTest {
 
     private XsdSchema schemaMock = Mockito.mock(XsdSchema.class);
@@ -50,7 +49,6 @@ public class RootQNameSchemaMappingStrategyTest {
         reset(schemaMock);
 
         when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema");
-
 
         Assert.assertEquals(strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"), schemaMock);
 
@@ -74,7 +72,6 @@ public class RootQNameSchemaMappingStrategyTest {
 
         when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema");
 
-
         Assert.assertEquals(strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"), schemaMock);
 
     }
@@ -95,7 +92,6 @@ public class RootQNameSchemaMappingStrategyTest {
         reset(schemaMock);
 
         when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema");
-
 
         Assert.assertNull(strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"));
 
@@ -118,7 +114,6 @@ public class RootQNameSchemaMappingStrategyTest {
         reset(schemaMock);
 
         when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema/unknown");
-
 
         try {
             strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo");

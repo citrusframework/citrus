@@ -16,7 +16,6 @@
 
 package org.citrusframework.util;
 
-
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.mockito.Mockito;
 import org.testng.Assert;

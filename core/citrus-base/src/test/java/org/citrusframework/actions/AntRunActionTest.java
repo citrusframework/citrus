@@ -50,7 +50,6 @@ public class AntRunActionTest extends UnitTestSupport {
                 })
                 .build();
 
-
 		ant.execute(context);
 	}
 

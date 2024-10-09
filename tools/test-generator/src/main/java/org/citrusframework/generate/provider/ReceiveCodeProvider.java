@@ -39,5 +39,4 @@ public class ReceiveCodeProvider implements CodeProvider<Message> {
         return code.build();
     }
 
-
 }

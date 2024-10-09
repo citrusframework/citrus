@@ -172,7 +172,6 @@ public class ZooExecuteTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getCommand().getClass(), org.citrusframework.zookeeper.command.SetData.class);
     }
 
-
     private Stat prepareStatMock() {
         Stat stat = Mockito.mock(Stat.class);
         when(stat.getAversion()).thenReturn(1);

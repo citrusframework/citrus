@@ -174,7 +174,6 @@ public class DTDValidationTest extends UnitTestSupport {
                             + "</message>"
                         + "</root>"));
 
-
         try {
             ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                     .endpoint(endpoint)
@@ -212,7 +211,6 @@ public class DTDValidationTest extends UnitTestSupport {
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
                         + "</root>"));
-
 
         try {
             ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()

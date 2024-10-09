@@ -119,8 +119,6 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
         throw new UnsupportedOperationException("HttpMessageConverter does not support predefined HttpEntity objects");
     }
 
-
-
     /**
      * Message headers consist of standard HTTP message headers and custom headers.
      * This method assumes that all header entries that were not initially mapped

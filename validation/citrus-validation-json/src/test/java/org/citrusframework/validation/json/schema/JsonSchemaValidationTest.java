@@ -97,7 +97,6 @@ public class JsonSchemaValidationTest {
                   }
                 ]""");
 
-
         GraciousProcessingReport report = fixture.validate(
                 receivedMessage,
                 schemaRepositories,

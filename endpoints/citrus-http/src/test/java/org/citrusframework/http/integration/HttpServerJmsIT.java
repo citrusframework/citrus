@@ -29,5 +29,4 @@ public class HttpServerJmsIT extends TestNGCitrusSpringSupport {
     @CitrusTestSource(type = TestLoader.SPRING, name = "HttpServerJmsIT")
     public void serverJmsIT() {}
 
-
 }

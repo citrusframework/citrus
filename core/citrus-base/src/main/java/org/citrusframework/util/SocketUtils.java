@@ -42,7 +42,6 @@ public class SocketUtils {
 
     private static final Random random = new Random(System.nanoTime());
 
-
     public static int findAvailableTcpPort() {
         return findAvailableTcpPort(PORT_RANGE_MIN);
     }
@@ -64,7 +63,6 @@ public class SocketUtils {
 
         return candidatePort;
     }
-
 
     /**
      * Check if the specified TCP port is currently available on localhost.

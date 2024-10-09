@@ -16,7 +16,6 @@
 
 package org.citrusframework.report;
 
-
 /**
  * Interface for test reporters.
  *

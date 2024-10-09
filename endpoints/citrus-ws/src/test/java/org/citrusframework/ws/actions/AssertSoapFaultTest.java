@@ -254,7 +254,6 @@ public class AssertSoapFaultTest extends UnitTestSupport {
             throw new SoapFaultClientException(faultMessage);
         }).build();
 
-
         AssertSoapFault assertAction = new AssertSoapFault.Builder()
                 .validator(soapFaultValidator)
                 .when(action)
@@ -392,7 +391,6 @@ public class AssertSoapFaultTest extends UnitTestSupport {
 
             throw new SoapFaultClientException(faultMessage);
         }).build();
-
 
         AssertSoapFault assertAction = new AssertSoapFault.Builder()
                 .validator(soapFaultValidator)

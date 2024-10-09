@@ -144,7 +144,6 @@ public class JsonElementValidatorTest extends UnitTestSupport {
         ).toArray(new JsonAssertion[0]);
     }
 
-
     @Test(dataProvider = "invalidJsonPairsOnStrictAndNonStrict")
     public void shouldBeInvalid(JsonAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);

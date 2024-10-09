@@ -35,7 +35,6 @@ import static org.testng.Assert.expectThrows;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
 
-
 public class AbstractDataDictionaryTest {
 
     private static final String KEY = "a";

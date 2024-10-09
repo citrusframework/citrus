@@ -754,7 +754,6 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>");
 
-
         Set<String> ignoreExpressions = new HashSet<>();
         ignoreExpressions.add("//root/element/sub-element1");
 

@@ -33,7 +33,6 @@ import static org.citrusframework.actions.StopServerAction.Builder.stop;
 import static org.citrusframework.container.FinallySequence.Builder.doFinally;
 import static org.citrusframework.container.Wait.Builder.waitFor;
 
-
 @Test
 public class WaitJavaIT extends TestNGCitrusSpringSupport {
 

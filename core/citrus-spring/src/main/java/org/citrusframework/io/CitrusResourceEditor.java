@@ -24,7 +24,6 @@ import org.springframework.core.env.StandardEnvironment;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
-
 /**
  * Editor for {@link Resource} descriptors, to automatically convert String locations e.g. file:C:/myfile.txt
  * or classpath:myfile.txt to {@link Resource} properties instead of using a String location property.

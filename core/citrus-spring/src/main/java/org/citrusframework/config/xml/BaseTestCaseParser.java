@@ -87,7 +87,6 @@ public class BaseTestCaseParser<T extends TestCase> implements BeanDefinitionPar
         return parserContext.getRegistry().getBeanDefinition(testName);
     }
 
-
     /**
      * Parses action elements and adds them to a managed list.
      *

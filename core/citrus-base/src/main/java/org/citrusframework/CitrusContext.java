@@ -181,7 +181,6 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
         this.testListeners.addTestListener(testListener);
     }
 
-
     @Override
     public void addTestActionListener(TestActionListener testActionListener) {
         this.testActionListeners.addTestActionListener(testActionListener);
@@ -226,7 +225,6 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
     public TestListeners getTestListeners() {
         return testListeners;
     }
-
 
     /**
      * Gets the test action listeners in this context.

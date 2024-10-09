@@ -67,7 +67,6 @@ public class SoapRequestMessageCallbackTest extends AbstractTestNGUnitTest {
         when(soapRequest.getSoapBody()).thenReturn(soapBody);
         when(soapBody.getPayloadResult()).thenReturn(soapBodyResult);
 
-
         callback.doWithMessage(soapRequest);
 
         Assert.assertEquals(soapBodyResult.toString(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + requestPayload);
@@ -112,7 +111,6 @@ public class SoapRequestMessageCallbackTest extends AbstractTestNGUnitTest {
 
         when(soapRequest.getSoapHeader()).thenReturn(soapHeader);
         when(soapHeader.getResult()).thenReturn(soapHeaderResult);
-
 
         callback.doWithMessage(soapRequest);
 
@@ -207,7 +205,6 @@ public class SoapRequestMessageCallbackTest extends AbstractTestNGUnitTest {
                                                     .setHeader(SoapMessageHeaders.HTTP_PREFIX + "messageId", "123456789");
 
         SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration(), context);
-
 
         SaajSoapMessage saajSoapRequest = Mockito.mock(SaajSoapMessage.class);
         SoapEnvelope soapEnvelope = Mockito.mock(SoapEnvelope.class);

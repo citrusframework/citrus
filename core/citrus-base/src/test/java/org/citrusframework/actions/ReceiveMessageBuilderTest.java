@@ -258,7 +258,6 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final String data = "hello";
 
-
 		//WHEN
 		builder.message().header(data);
 
@@ -556,7 +555,6 @@ class ReceiveMessageBuilderTest {
 		assertEquals(value2, xmlMessageValidationContext.getXpathExpressions().get(key2));
 		assertEquals(value3, xmlMessageValidationContext.getXpathExpressions().get(key3));
 	}
-
 
 	@Test
 	void validate_jsonMap() {

@@ -55,7 +55,6 @@ public class CatchExceptionTestActionBuilderTest extends UnitTestSupport {
         builder.$(catchException().exception(CitrusRuntimeException.class.getName())
                 .when(echo("${var}")));
 
-
         builder.$(catchException().exception(CitrusRuntimeException.class)
                 .when(echo("${var}"), sleep().milliseconds(100L)));
 

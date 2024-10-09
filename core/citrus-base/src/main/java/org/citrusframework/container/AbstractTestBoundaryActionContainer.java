@@ -117,7 +117,6 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
         return pattern;
     }
 
-
     /**
      * Checks on included test groups if we should execute sequence. Included group list should have
      * at least one entry matching the sequence test groups restriction.

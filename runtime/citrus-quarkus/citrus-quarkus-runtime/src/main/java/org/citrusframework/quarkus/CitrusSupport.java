@@ -32,5 +32,4 @@ import io.quarkus.test.common.QuarkusTestResource;
 @Target(ElementType.TYPE)
 public @interface CitrusSupport {
 
-
 }

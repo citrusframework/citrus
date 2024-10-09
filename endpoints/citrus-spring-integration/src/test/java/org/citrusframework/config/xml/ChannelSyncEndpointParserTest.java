@@ -67,5 +67,4 @@ public class ChannelSyncEndpointParserTest extends AbstractBeanDefinitionParserT
         Assert.assertEquals(channelSyncEndpoint.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
     }
 
-
 }

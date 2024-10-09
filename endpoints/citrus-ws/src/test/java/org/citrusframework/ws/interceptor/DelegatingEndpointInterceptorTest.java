@@ -35,7 +35,6 @@ import java.util.*;
 
 import static org.mockito.Mockito.*;
 
-
 /**
  * @since 1.4.1
  */

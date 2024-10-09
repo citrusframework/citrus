@@ -229,5 +229,4 @@ public class SshClientTest extends AbstractTestNGUnitTest {
         return null;
     }
 
-
 }

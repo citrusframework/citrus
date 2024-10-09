@@ -21,7 +21,6 @@ import java.util.List;
 import org.citrusframework.util.StringUtils;
 import org.springframework.xml.xsd.XsdSchema;
 
-
 /**
  * Mapping strategy checks on target namespaces in schemas to find matching schema
  * instance.

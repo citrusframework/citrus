@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.citrusframework.http.message;
 
 import jakarta.servlet.http.Cookie;

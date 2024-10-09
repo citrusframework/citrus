@@ -179,7 +179,6 @@ public class ClasspathResourceResolver {
         }
     }
 
-
     private void loadResourcesInDirectory(String path, File location, Set<Path> result,
         Predicate<String> filter) {
         File[] files = location.listFiles();

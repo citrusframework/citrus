@@ -120,7 +120,6 @@ public class SoapMessage extends DefaultMessage {
     }
 
 
-
     /**
      * Sets the Http response status code.
      *

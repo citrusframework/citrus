@@ -262,7 +262,6 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator<XsdXmlTestGen
     }
 
 
-
     /**
      * Sets the xsd.
      *

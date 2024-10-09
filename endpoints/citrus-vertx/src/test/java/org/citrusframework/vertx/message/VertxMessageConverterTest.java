@@ -26,7 +26,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
-
 /**
  * @since 2.0
  */

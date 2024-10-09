@@ -317,7 +317,6 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
             }
         });
 
-
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
         jmsSyncProducer.getCorrelationManager().saveCorrelationKey(
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(jmsSyncProducer.getName()),
@@ -383,7 +382,6 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
                 return null;
             }
         });
-
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
         jmsSyncProducer.getCorrelationManager().saveCorrelationKey(

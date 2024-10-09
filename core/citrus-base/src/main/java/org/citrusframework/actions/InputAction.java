@@ -89,7 +89,6 @@ public class InputAction extends AbstractTestAction {
             display = message;
         }
 
-
         try (BufferedReader stdin = getInputReader()) {
             do {
                 logger.info(display);

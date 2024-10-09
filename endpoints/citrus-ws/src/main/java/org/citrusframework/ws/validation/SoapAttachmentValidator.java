@@ -21,7 +21,6 @@ import org.citrusframework.ws.message.SoapMessage;
 
 import java.util.List;
 
-
 /**
  * Interface for SOAP attachment validators.
  *

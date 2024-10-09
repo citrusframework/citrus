@@ -16,7 +16,6 @@
 
 package org.citrusframework.generate.provider.http;
 
-
 import org.citrusframework.http.message.HttpMessage;
 import com.squareup.javapoet.CodeBlock;
 import org.apache.hc.core5.http.HttpStatus;

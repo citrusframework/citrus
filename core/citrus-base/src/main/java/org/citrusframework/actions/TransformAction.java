@@ -34,7 +34,6 @@ import org.citrusframework.xml.StringSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Action transforms a XML document(specified inline or from external file resource)
  * with a XSLT document(specified inline or from external file resource)

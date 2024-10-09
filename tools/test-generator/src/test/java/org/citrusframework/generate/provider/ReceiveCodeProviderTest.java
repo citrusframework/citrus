@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 class ReceiveCodeProviderTest {
 
     private final ReceiveCodeProvider receiveCodeProvider = new ReceiveCodeProvider();

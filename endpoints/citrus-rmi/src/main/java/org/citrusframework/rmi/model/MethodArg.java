@@ -21,11 +21,9 @@
 // Generated on: 2015.12.10 at 10:05:34 AM MEZ
 //
 
-
 package org.citrusframework.rmi.model;
 
 import jakarta.xml.bind.annotation.*;
-
 
 /**
  * <p>Java class for MethodArg complex type.

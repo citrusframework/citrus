@@ -34,7 +34,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-
 /**
  * @since 1.4.1
  */

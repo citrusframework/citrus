@@ -290,7 +290,6 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
                         .message()
                         .body(resource));
 
-
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);

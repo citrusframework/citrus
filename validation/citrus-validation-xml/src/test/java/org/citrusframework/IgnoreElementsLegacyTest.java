@@ -170,7 +170,6 @@ public class IgnoreElementsLegacyTest extends UnitTestSupport {
         ignoreMessageElements.add("root.element.sub-elementA");
         ignoreMessageElements.add("sub-elementB");
 
-
         Map<String, Object> validateElements = new HashMap<>();
         validateElements.put("root.element.sub-elementA", "wrong value");
         validateElements.put("sub-elementB", "wrong value");

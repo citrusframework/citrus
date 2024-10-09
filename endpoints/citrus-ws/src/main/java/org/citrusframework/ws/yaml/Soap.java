@@ -549,7 +549,6 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             this.message = message;
         }
 
-
         public String getAttachmentValidator() {
             return attachmentValidator;
         }
@@ -673,7 +672,6 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         public void setMessage(SoapResponse message) {
             this.message = message;
         }
-
 
         public String getAttachmentValidator() {
             return attachmentValidator;

@@ -43,13 +43,11 @@ public class JavaDslTestGeneratorTest {
     @Test
     public void create_should_pass_with_junit5() throws IOException {
 
-
         //GIVEN
         generatorUnderTest.withName("FooTest")
                 .withDisabled(false)
                 .withFramework(UnitFramework.JUNIT5)
                 .usePackage("org.citrusframework");
-
 
         //WHEN
         generatorUnderTest.create();
@@ -80,7 +78,6 @@ public class JavaDslTestGeneratorTest {
         checkMethodParameter(javaContent, "@CitrusResource TestCaseRunner runner");
         assertContains(javaContent, "runner.run(echo(\"TODO: Code the test FooTest\"));");
     }
-
 
 
     @Test

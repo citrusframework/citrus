@@ -81,7 +81,6 @@ public class CitrusInstanceManager {
         return Optional.ofNullable(citrus);
     }
 
-
     /**
      * Provide access to the current Citrus instance.
      * Create new instance if it has not been initialized yet.

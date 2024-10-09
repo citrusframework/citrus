@@ -24,7 +24,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-
 public class PollingCorrelationManagerTest {
 
     private ObjectStore objectStore = Mockito.mock(ObjectStore.class);

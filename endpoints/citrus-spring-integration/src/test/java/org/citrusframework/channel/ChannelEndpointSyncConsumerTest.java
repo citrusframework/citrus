@@ -247,7 +247,6 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         when(messagingTemplate.receive(channel)).thenReturn(null);
 
-
         try {
             ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
             channelSyncConsumer.receive(context);
