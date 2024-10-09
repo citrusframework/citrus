@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class Timer extends AbstractActionContainer implements StopTimer {

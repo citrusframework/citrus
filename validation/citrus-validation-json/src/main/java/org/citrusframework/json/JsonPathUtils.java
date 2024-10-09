@@ -30,7 +30,6 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.json.JsonPathFunctions;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class JsonPathUtils {

@@ -20,7 +20,6 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.citrusframework.variable.dictionary.xml.NodeMappingDataDictionary;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class XmlDataDictionaryParser extends AbstractDataDictionaryParser {

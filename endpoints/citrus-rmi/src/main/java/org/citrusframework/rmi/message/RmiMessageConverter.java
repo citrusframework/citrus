@@ -28,7 +28,6 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.xml.StringResult;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class RmiMessageConverter implements MessageConverter<RmiServiceInvocation, RmiServiceInvocation, RmiEndpointConfiguration> {

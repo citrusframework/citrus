@@ -33,7 +33,6 @@ import static java.util.UUID.randomUUID;
  * Default message implementation holds message payload and message headers. Also provides access methods for special
  * header elements such as unique message id and creation timestamp.
  *
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class DefaultMessage implements Message {

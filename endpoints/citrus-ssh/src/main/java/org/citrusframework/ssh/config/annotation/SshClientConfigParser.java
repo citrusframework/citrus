@@ -26,7 +26,6 @@ import org.citrusframework.ssh.message.SshMessageConverter;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class SshClientConfigParser implements AnnotationConfigParser<SshClientConfig, SshClient> {

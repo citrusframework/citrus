@@ -25,7 +25,6 @@ import java.util.Map;
 import org.citrusframework.TestSource;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class TestRunConfiguration {

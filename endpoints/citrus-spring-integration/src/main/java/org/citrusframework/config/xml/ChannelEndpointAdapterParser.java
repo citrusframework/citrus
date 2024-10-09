@@ -35,7 +35,6 @@ import org.w3c.dom.Element;
 
 /**
  * Parses endpoint adapter bean definition for channel endpoint adapter.
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class ChannelEndpointAdapterParser extends AbstractBeanDefinitionParser {

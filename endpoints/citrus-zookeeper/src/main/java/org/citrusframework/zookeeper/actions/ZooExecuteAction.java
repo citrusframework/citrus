@@ -57,7 +57,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Executes zookeeper command with given zookeeper client implementation. Possible command result is stored within command object.
  *
- * @author Martin Maher
  * @since 2.5
  */
 public class ZooExecuteAction extends AbstractTestAction {

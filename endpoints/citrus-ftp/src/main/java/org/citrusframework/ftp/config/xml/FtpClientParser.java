@@ -28,7 +28,6 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class FtpClientParser extends AbstractEndpointParser {

@@ -30,9 +30,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class ChannelEndpointProducerTest extends AbstractTestNGUnitTest {
 
     private MessagingTemplate messagingTemplate = Mockito.mock(MessagingTemplate.class);

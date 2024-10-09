@@ -37,9 +37,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 
-/**
- * @author Christoph Deppisch
- */
 public class DispatchingMessageSelectorTest extends UnitTestSupport {
 
     private BeanFactory beanFactory = Mockito.mock(BeanFactory.class);

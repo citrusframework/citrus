@@ -23,7 +23,6 @@ import org.openqa.selenium.WebElement;
 /**
  * Sets value on checkbox form input element.
  *
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class CheckInputAction extends FindElementAction {

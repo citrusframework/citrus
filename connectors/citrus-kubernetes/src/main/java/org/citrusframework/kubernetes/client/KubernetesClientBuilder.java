@@ -22,7 +22,6 @@ import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesClient> {

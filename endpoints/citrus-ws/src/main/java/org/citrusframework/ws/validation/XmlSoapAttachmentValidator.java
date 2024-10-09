@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
  * Soap attachment validator delegating attachment content validation to a {@link MessageValidator}.
  * Through {@link XmlMessageValidationContext} this class supports message validation for XML payload.
  *
- * @author Christoph Deppisch
  */
 public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator implements ReferenceResolverAware {
 

@@ -24,9 +24,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.TestActions;
 
-/**
- * @author Christoph Deppisch
- */
 public class RepeatOnError implements TestActionBuilder<RepeatOnErrorUntilTrue>, ReferenceResolverAware {
 
     private final RepeatOnErrorUntilTrue.Builder builder = new RepeatOnErrorUntilTrue.Builder();

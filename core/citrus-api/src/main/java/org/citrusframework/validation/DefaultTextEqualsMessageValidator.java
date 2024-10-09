@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
  * By default, the validator ignores leading and trailing whitespaces and normalizes the line endings before the validation.
  * Usually this validator implementation is used as a fallback option when no other matching validator implementation could be found.
  *
- * @author Christoph Deppisch
  */
 public class DefaultTextEqualsMessageValidator extends DefaultMessageValidator {
 

@@ -23,9 +23,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class CreateVariablesActionTest extends UnitTestSupport {
 
 	@Test

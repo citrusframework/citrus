@@ -24,7 +24,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class DynamicEndpointUriResolverTest {

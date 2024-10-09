@@ -21,7 +21,6 @@ import org.citrusframework.camel.config.xml.CamelSyncEndpointParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class CitrusCamelConfigNamespaceHandler extends NamespaceHandlerSupport {

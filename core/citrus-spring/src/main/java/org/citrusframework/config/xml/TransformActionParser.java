@@ -28,7 +28,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for transform action in test case.
  *
- * @author Philipp Komninos
  */
 public class TransformActionParser implements BeanDefinitionParser {
 

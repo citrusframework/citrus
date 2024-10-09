@@ -18,9 +18,6 @@ package org.citrusframework;
 
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class TestMetaInfoTest {
 
     @Test

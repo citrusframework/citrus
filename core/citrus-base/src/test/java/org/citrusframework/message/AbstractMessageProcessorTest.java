@@ -21,9 +21,6 @@ import org.citrusframework.context.TestContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class AbstractMessageProcessorTest extends UnitTestSupport {
 
     @Test

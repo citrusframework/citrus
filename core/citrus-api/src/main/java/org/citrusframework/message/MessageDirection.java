@@ -19,7 +19,6 @@ package org.citrusframework.message;
 /**
  * Indicates message direction inbound, outbound or unbounded.
  *
- * @author Christoph Deppisch
  * @since 2.7
  */
 public enum MessageDirection {

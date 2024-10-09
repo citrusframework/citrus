@@ -23,7 +23,6 @@ import org.citrusframework.endpoint.Endpoint;
  * Server representation in Citrus is a runnable instance accepting client
  * connections.
  *
- * @author Christoph Deppisch
  * @since 2007
  *
  */

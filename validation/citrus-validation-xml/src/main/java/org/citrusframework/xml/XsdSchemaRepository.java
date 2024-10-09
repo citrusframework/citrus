@@ -45,7 +45,6 @@ import org.xml.sax.SAXException;
 /**
  * Schema repository holding a set of XML schema resources known in the test scope.
  *
- * @author Christoph Deppisch
  */
 @SuppressWarnings("unused")
 public class XsdSchemaRepository implements Named, InitializingPhase {

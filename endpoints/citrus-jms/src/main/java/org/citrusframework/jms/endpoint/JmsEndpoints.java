@@ -18,9 +18,6 @@ package org.citrusframework.jms.endpoint;
 
 import org.citrusframework.endpoint.builder.AsyncSyncEndpointBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public final class JmsEndpoints extends AsyncSyncEndpointBuilder<JmsEndpointBuilder, JmsSyncEndpointBuilder> {
     /**
      * Private constructor setting the sync and async builder implementation.

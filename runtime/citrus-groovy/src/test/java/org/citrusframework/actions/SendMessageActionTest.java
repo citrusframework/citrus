@@ -39,9 +39,6 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
     private Endpoint endpoint = Mockito.mock(Endpoint.class);

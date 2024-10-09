@@ -32,7 +32,6 @@ import org.citrusframework.server.AbstractServer;
 import org.citrusframework.spi.Resource;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class FtpServer extends AbstractServer {

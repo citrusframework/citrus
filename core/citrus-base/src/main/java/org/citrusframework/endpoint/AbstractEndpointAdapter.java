@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Abstract endpoint adapter adds fallback endpoint adapter in case no response was provided.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public abstract class AbstractEndpointAdapter implements EndpointAdapter {

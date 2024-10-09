@@ -27,7 +27,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class ReadFileResourceFunctionTest extends UnitTestSupport {

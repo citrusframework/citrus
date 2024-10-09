@@ -19,7 +19,6 @@ package org.citrusframework.actions.dsl;
 /**
  * Sample model object mapped to message payload.
  *
- * @author Christoph Deppisch
  */
 public class TestRequest {
 

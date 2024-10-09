@@ -25,9 +25,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.citrusframework.actions.SleepAction.Builder.sleep;
 
-/**
- * @author Christoph Deppisch
- */
 public class DataProviderJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest

@@ -24,9 +24,6 @@ import org.citrusframework.functions.core.CreateCDataSectionFunction;
 import org.citrusframework.functions.core.EscapeXmlFunction;
 import org.citrusframework.functions.core.XpathFunction;
 
-/**
- * @author Christoph Deppisch
- */
 public final class XmlFunctions {
 
     /**

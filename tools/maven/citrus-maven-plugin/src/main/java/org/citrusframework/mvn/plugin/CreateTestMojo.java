@@ -47,7 +47,6 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
  *
  * Mojo offers an interactive mode, where the plugin prompts for parameters during execution.
  *
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 @Mojo(name = "create-test")

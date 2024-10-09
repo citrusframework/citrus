@@ -21,7 +21,6 @@ import jakarta.xml.bind.annotation.*;
 /**
  * POJO encapsulate a SSH response. It is immutable.
  *
- * @author Roland Huss
  * @since 1.3
  */
 @XmlAccessorType(XmlAccessType.FIELD)

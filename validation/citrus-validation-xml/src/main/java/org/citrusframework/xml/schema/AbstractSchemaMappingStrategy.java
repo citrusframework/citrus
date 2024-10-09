@@ -24,7 +24,6 @@ import org.w3c.dom.Document;
  * Abstract schema mapping strategy extracts target namespace and root element name
  * for subclasses.
  *
- * @author Christoph Deppisch
  */
 public abstract class AbstractSchemaMappingStrategy implements XsdSchemaMappingStrategy {
 

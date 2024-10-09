@@ -21,9 +21,6 @@ import org.citrusframework.context.TestContext;
 import groovy.lang.MissingPropertyException;
 import groovy.util.DelegatingScript;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class GroovyScript extends DelegatingScript {
 
     private Citrus citrusFramework;

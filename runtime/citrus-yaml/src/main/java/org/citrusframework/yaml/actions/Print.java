@@ -16,8 +16,5 @@
 
 package org.citrusframework.yaml.actions;
 
-/**
- * @author Christoph Deppisch
- */
 public class Print extends Echo {
 }

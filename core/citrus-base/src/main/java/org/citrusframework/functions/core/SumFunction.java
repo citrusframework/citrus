@@ -25,7 +25,6 @@ import org.citrusframework.functions.Function;
 /**
  * Function to sum up all numeric arguments.
  *
- * @author Christoph Deppisch
  */
 public class SumFunction implements Function {
 

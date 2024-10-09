@@ -24,7 +24,6 @@ import javax.management.*;
 import java.util.Arrays;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class ManagedBeanDefinitionTest {

@@ -29,7 +29,6 @@ import java.io.IOException;
  * Receiver callback invoked by framework on response message. Callback fills an internal message representation with
  * the response information for further message processing.
  *
- * @author Christoph Deppisch
  */
 public class SoapResponseMessageCallback implements WebServiceMessageCallback {
 

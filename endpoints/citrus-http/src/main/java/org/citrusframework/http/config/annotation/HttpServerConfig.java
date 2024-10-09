@@ -25,7 +25,6 @@ import org.citrusframework.annotations.CitrusEndpointConfig;
 import org.springframework.http.HttpStatus;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 @Retention(RetentionPolicy.RUNTIME)

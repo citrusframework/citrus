@@ -24,7 +24,6 @@ import org.citrusframework.spi.Resource;
 import org.w3c.tidy.Tidy;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class XhtmlMessageConverter implements InitializingPhase {

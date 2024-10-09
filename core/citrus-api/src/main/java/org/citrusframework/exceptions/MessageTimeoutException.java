@@ -16,9 +16,6 @@
 
 package org.citrusframework.exceptions;
 
-/**
- * @author Christoph Deppisch
- */
 public class MessageTimeoutException extends ActionTimeoutException {
 
     protected final String endpoint;

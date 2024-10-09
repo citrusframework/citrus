@@ -43,9 +43,6 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.openMocks;
 import static org.testng.Assert.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class MailServerTest {
 
     private AutoCloseable mockitoContext;

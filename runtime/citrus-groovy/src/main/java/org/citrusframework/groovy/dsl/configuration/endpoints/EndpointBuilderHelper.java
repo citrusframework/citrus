@@ -19,9 +19,6 @@ package org.citrusframework.groovy.dsl.configuration.endpoints;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 
-/**
- * @author Christoph Deppisch
- */
 public class EndpointBuilderHelper {
 
     /**

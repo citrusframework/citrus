@@ -25,9 +25,6 @@ import org.junit.experimental.categories.Category;
 
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 
-/**
- * @author Christoph Deppisch
- */
 public class FailJUnit4JavaIT extends JUnit4CitrusSpringSupport {
 
     @Test(expected = TestCaseFailedException.class)

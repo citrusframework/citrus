@@ -26,7 +26,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.6
  */
 public class DefaultHeaderValidatorTest extends UnitTestSupport {

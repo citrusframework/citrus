@@ -21,9 +21,6 @@ import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class UnitTestSupport extends AbstractTestNGUnitTest {
 
     @Override

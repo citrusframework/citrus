@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
  * Abstract suit container actions executed before and after test suite run. Container decides
  * weather to execute according to given suite name and included test groups if any.
  *
- * @author Christoph Deppisch
  * @since 2.0
  */
 public abstract class AbstractSuiteActionContainer extends AbstractActionContainer {

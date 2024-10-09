@@ -39,9 +39,6 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import org.citrusframework.openapi.model.v2.Oas20ModelHelper;
 import org.citrusframework.openapi.model.v3.Oas30ModelHelper;
 
-/**
- * @author Christoph Deppisch
- */
 public final class OasModelHelper {
 
     private OasModelHelper() {

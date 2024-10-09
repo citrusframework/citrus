@@ -21,9 +21,6 @@ import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-/**
- * @author Martin Maher
- */
 @Test
 public class WebSocketEndpointIT extends TestNGCitrusSpringSupport {
 

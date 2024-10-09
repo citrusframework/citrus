@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Simple server implementation used in start/stop server integration test.
- * @author Christoph Deppisch
  * @since 2.2
  */
 public class SimpleServer extends AbstractServer {

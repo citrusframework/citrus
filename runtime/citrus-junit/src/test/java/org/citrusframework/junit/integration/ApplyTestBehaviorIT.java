@@ -26,9 +26,6 @@ import static org.citrusframework.actions.ApplyTestBehaviorAction.Builder.apply;
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.citrusframework.container.Sequence.Builder.sequential;
 
-/**
- * @author Christoph Deppisch
- */
 public class ApplyTestBehaviorIT extends JUnit4CitrusSpringSupport {
 
     @Test

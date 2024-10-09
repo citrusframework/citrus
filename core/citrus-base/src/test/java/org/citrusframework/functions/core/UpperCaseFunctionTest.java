@@ -23,9 +23,6 @@ import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class UpperCaseFunctionTest extends UnitTestSupport {
     UpperCaseFunction function = new UpperCaseFunction();
 

@@ -26,9 +26,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 
-/**
- * @author Christoph Deppisch
- */
 public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
     private CamelActionBuilderWrapper<?> delegate;

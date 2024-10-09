@@ -28,9 +28,6 @@ import java.util.Map;
 import static org.citrusframework.zookeeper.client.ZooClientConfig.ZooKeeperClientConfigBuilder.DEFAULT_TIMEOUT;
 import static org.citrusframework.zookeeper.client.ZooClientConfig.ZooKeeperClientConfigBuilder.DEFAULT_URL;
 
-/**
- * @author Martin Maher
- */
 public class ZooClientParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

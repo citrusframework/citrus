@@ -24,7 +24,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class WatchNamespaces extends AbstractWatchCommand<Namespace, NamespaceList, Resource<Namespace>, WatchNamespaces> {

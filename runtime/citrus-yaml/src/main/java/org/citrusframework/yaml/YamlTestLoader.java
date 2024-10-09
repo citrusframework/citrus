@@ -39,7 +39,6 @@ import org.yaml.snakeyaml.introspector.PropertyUtils;
 
 /**
  * Loads test case from given YAML source.
- * @author Christoph Deppisch
  */
 public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware {
 

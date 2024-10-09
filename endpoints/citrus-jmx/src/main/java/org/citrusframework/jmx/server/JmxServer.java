@@ -32,7 +32,6 @@ import java.rmi.registry.LocateRegistry;
 import java.util.List;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class JmxServer extends AbstractServer {

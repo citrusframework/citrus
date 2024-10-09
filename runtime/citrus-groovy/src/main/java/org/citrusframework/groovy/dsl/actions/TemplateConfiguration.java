@@ -25,9 +25,6 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.container.Template;
 
-/**
- * @author Christoph Deppisch
- */
 public class TemplateConfiguration implements ActionsBuilder {
 
     private final Template.Builder target;

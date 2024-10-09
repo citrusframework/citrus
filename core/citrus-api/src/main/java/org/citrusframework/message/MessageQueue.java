@@ -16,9 +16,6 @@
 
 package org.citrusframework.message;
 
-/**
- * @author Christoph Deppisch
- */
 public interface MessageQueue {
 
     /**

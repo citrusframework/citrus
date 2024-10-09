@@ -30,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class CamelControlBusAction extends AbstractCamelRouteAction {

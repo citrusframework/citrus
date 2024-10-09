@@ -19,7 +19,6 @@ import org.citrusframework.message.MessageHeaders;
 
 /**
  * Citrus mail headers set during mail message processing.
- * @author Christoph Deppisch
  * @since 1.4
  */
 public abstract class CitrusMailMessageHeaders {

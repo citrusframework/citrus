@@ -27,7 +27,6 @@ import static java.lang.Double.parseDouble;
 /**
  * Function returning the average of a set of numeric values.
  *
- * @author Christoph Deppisch
  */
 public class AvgFunction implements Function {
 

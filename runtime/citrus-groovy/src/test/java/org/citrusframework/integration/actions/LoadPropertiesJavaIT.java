@@ -24,9 +24,6 @@ import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.citrusframework.actions.LoadPropertiesAction.Builder.load;
 import static org.citrusframework.script.GroovyAction.Builder.groovy;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class LoadPropertiesJavaIT extends TestNGCitrusSpringSupport {
 

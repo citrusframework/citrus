@@ -24,9 +24,6 @@ import org.citrusframework.ftp.server.FtpServerBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class FtpEndpointsTest {
 
     @Test

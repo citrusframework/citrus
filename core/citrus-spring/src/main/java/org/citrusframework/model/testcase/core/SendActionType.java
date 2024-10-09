@@ -19,7 +19,6 @@ package org.citrusframework.model.testcase.core;
 import org.citrusframework.model.testcase.core.SendModel;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class SendActionType extends SendModel {

@@ -24,9 +24,6 @@ import org.citrusframework.jmx.server.JmxServerBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class JmxEndpointsTest {
 
     @Test

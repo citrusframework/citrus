@@ -19,7 +19,6 @@ package org.citrusframework.message;
 import java.util.Map;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public final class MessageHeaderUtils {

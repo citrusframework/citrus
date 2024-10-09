@@ -26,7 +26,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
  * Endpoint adapter mapping strategy simply holds a map of mapping keys and adapter instances. Searches for available mapping key
  * and returns respective adapter implementation.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class SimpleMappingStrategy implements EndpointAdapterMappingStrategy {

@@ -30,7 +30,6 @@ import java.nio.ByteBuffer;
 /**
  * Message converter able to convert internal and external message representations for web socket messages. Converter
  * converts inbound and outbound messages.
- * @author Martin Maher
  * @since 2.3
  */
 public class WebSocketMessageConverter implements MessageConverter<org.springframework.web.socket.WebSocketMessage, org.springframework.web.socket.WebSocketMessage, WebSocketEndpointConfiguration> {

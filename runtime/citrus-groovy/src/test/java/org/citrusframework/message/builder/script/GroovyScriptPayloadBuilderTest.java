@@ -20,9 +20,6 @@ import org.citrusframework.message.ScriptPayloadBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class GroovyScriptPayloadBuilderTest {
 
     @Test

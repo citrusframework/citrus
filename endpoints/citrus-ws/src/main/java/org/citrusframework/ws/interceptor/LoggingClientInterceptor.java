@@ -29,7 +29,6 @@ import org.springframework.ws.soap.SoapEnvelopeException;
  * Client interceptor implementation logging SOAP requests and responses as well as SOAP faults
  * with logging framework.
  *
- * @author Christoph Deppisch
  */
 public class LoggingClientInterceptor extends LoggingInterceptorSupport implements ClientInterceptor {
 

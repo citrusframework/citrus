@@ -28,7 +28,6 @@ import org.citrusframework.config.util.BeanDefinitionParserUtils;
 /**
  * Bean definition parser for test actor in configuration context.
  *
- * @author Christoph Deppisch
  * @since 1.3
  */
 public class TestActorParser implements BeanDefinitionParser {

@@ -23,7 +23,6 @@ import org.w3c.dom.Element;
 /**
  * Parser for SOAP attachment element in Citrus ws namespace.
  *
- * @author Christoph Deppisch
  */
 public final class SoapAttachmentParser {
     /**

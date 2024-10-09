@@ -24,9 +24,6 @@ import org.citrusframework.websocket.server.WebSocketServerBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class WebSocketEndpointsTest {
 
     @Test

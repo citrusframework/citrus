@@ -20,9 +20,6 @@ import org.codehaus.groovy.runtime.GStringImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class GroovyTypeConverterTest {
 
     private final GroovyTypeConverter converter = GroovyTypeConverter.INSTANCE;

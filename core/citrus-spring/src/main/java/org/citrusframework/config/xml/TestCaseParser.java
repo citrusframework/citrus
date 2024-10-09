@@ -21,7 +21,6 @@ import org.citrusframework.DefaultTestCase;
 /**
  * Bean definition parser for test case.
  *
- * @author Christoph Deppisch
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class TestCaseParser extends BaseTestCaseParser<DefaultTestCase> {

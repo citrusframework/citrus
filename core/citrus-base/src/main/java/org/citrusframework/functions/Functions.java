@@ -35,7 +35,6 @@ import org.citrusframework.functions.core.UrlEncodeFunction;
 import org.citrusframework.functions.core.UnixTimestampFunction;
 
 /**
- * @author Christoph Deppisch
  * @since 2.1
  */
 public final class Functions {

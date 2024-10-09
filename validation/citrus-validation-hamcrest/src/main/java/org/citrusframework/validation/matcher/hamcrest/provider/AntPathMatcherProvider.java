@@ -23,9 +23,6 @@ import org.springframework.util.AntPathMatcher;
 
 import static java.lang.String.format;
 
-/**
- * @author Christoph Deppisch
- */
 public class AntPathMatcherProvider implements HamcrestMatcherProvider {
 
     @Override

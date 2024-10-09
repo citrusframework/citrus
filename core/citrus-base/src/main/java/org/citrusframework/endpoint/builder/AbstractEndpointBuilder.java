@@ -20,7 +20,6 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointBuilder;
 
 /**
- * @author Christoph Deppisch
  * @since 2.8
  */
 public abstract class AbstractEndpointBuilder<B extends EndpointBuilder<? extends Endpoint>> {

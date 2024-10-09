@@ -47,7 +47,6 @@ import org.citrusframework.util.StringUtils;
 /**
  * Ssh client connects to ssh server and sends commands to that server.
  *
- * @author Roland Huss, Christoph Deppisch
  * @since 1.4
  */
 public class SshClient extends AbstractEndpoint implements Producer, ReplyConsumer {

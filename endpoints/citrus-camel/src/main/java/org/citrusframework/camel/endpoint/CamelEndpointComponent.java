@@ -25,7 +25,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class CamelEndpointComponent extends AbstractEndpointComponent {

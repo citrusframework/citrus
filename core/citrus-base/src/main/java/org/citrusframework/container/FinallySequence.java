@@ -23,7 +23,6 @@ import org.citrusframework.TestActionBuilder;
  * Helper sequence to mark actions as finally actions that should be
  * executed in finally block of test case.
  *
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class FinallySequence extends Sequence {

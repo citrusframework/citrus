@@ -29,7 +29,6 @@ import org.citrusframework.CitrusSettings;
  * A simple JAXB stream source representation of a static String content. Can be read many times and uses default encoding
  * set via Citrus settings.
  *
- * @author Christoph Deppisch
  */
 public class StringSource extends StreamSource {
 

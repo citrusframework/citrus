@@ -37,7 +37,6 @@ import org.w3c.dom.ls.LSSerializer;
  * Class is loaded with Spring application context in Citrus. When loaded automatically initializes XML utilities
  * with this XML processing configuration. Configuration is pushed to XML utility classes after properties are set.
  *
- * @author Christoph Deppisch
  * @since 2.6.2
  */
 public class XmlConfigurer implements InitializingPhase {

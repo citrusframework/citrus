@@ -17,7 +17,6 @@
 package org.citrusframework.endpoint;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public interface EndpointConfiguration {

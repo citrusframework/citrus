@@ -36,7 +36,6 @@ import org.citrusframework.util.StringUtils;
  * Action expecting a timeout on a message destination, this means that no message
  * should arrive on the destination.
  *
- * @author Christoph Deppisch
  * @since 2006
  */
 public class ReceiveTimeoutAction extends AbstractTestAction {

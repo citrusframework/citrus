@@ -20,8 +20,5 @@ import org.citrusframework.message.MessageProcessorAdapter;
 import org.citrusframework.validation.ValidationContextAdapter;
 import org.citrusframework.variable.VariableExtractorAdapter;
 
-/**
- * @author Christoph Deppisch
- */
 public interface PathExpressionAdapter extends MessageProcessorAdapter, VariableExtractorAdapter, ValidationContextAdapter {
 }

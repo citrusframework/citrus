@@ -23,9 +23,6 @@ import org.citrusframework.container.FinallySequence;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.ReferenceResolverAware;
 
-/**
- * @author Christoph Deppisch
- */
 public class DefaultTestCaseRunner implements TestCaseRunner {
 
     /** The test case */

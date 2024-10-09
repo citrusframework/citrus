@@ -26,7 +26,6 @@ import io.vertx.core.Vertx;
  * Vert.x instance factory that caches created instances in memory. Ensures that same cluster host and port is
  * instance is created only once.
  *
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class CachingVertxInstanceFactory extends AbstractVertxInstanceFactory {

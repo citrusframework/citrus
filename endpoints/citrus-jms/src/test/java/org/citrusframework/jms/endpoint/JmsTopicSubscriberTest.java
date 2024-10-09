@@ -42,9 +42,6 @@ import java.util.Collections;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
 
     @Mock

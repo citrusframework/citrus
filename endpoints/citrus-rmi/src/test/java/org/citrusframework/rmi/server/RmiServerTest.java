@@ -43,7 +43,6 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class RmiServerTest extends AbstractTestNGUnitTest {

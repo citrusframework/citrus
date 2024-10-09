@@ -25,9 +25,6 @@ import org.citrusframework.yaml.YamlTestLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class SleepTest extends AbstractYamlActionTest {
 
     @Test

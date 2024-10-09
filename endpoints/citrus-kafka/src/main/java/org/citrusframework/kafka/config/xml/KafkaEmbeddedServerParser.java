@@ -27,7 +27,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for embedded Kafka server component.
  *
- * @author Christoph Deppisch
  * @since 2.8
  */
 public class KafkaEmbeddedServerParser extends AbstractBeanDefinitionParser {

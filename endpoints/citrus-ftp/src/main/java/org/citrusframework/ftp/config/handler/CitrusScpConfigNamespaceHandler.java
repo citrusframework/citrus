@@ -20,7 +20,6 @@ import org.citrusframework.ftp.config.xml.ScpClientParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.6
  */
 public class CitrusScpConfigNamespaceHandler extends NamespaceHandlerSupport {

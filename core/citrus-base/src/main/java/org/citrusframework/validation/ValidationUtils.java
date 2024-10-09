@@ -31,7 +31,6 @@ import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 /**
  * Utility class provides helper methods for validation work in Citrus.
  *
- * @author Christoph Deppisch
  * @since 1.3
  */
 public abstract class ValidationUtils {

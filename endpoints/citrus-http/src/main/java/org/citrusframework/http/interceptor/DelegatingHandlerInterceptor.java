@@ -27,7 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * Interceptor implementation delegates to list of other handler interceptors.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class DelegatingHandlerInterceptor implements HandlerInterceptor {

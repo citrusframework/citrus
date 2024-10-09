@@ -28,9 +28,6 @@ import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.citrusframework.camel.dsl.CamelSupport.camel;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
 
-/**
- * @author Christoph Deppisch
- */
 public class CamelTransformIT extends TestNGCitrusSpringSupport {
 
     @Autowired

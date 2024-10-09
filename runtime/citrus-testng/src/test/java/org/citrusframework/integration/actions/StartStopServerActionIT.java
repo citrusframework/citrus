@@ -22,7 +22,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.2
  */
 public class StartStopServerActionIT extends TestNGCitrusSpringSupport {

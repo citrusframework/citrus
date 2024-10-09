@@ -19,9 +19,6 @@ package org.citrusframework.groovy.dsl.test;
 import org.citrusframework.context.TestContext;
 import groovy.lang.GroovyObjectSupport;
 
-/**
- * @author Christoph Deppisch
- */
 public class VariablesConfiguration extends GroovyObjectSupport {
 
     private final TestContext context;

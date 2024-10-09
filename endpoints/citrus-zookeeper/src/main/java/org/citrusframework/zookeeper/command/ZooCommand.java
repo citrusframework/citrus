@@ -22,7 +22,6 @@ import org.citrusframework.zookeeper.client.ZooClient;
 import java.util.Map;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public interface ZooCommand<R> {

@@ -41,7 +41,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class XmlTestMarshaller {

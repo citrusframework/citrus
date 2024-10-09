@@ -47,7 +47,6 @@ import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringEscapeUtils.escapeXml;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class JUnitReporter extends AbstractTestReporter {

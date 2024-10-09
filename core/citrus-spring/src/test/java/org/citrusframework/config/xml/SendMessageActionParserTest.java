@@ -28,9 +28,6 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-/**
- * @author Christoph Deppisch
- */
 public class SendMessageActionParserTest extends AbstractActionParserTest<SendMessageAction> {
 
     @Test

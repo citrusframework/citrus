@@ -19,9 +19,6 @@ package org.citrusframework.testng;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-/**
- * @author Christoph Deppisch
- */
 @Configuration
 @Import(UnitTestConfigImportSelector.class)
 public class UnitTestConfig {

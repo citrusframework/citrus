@@ -26,9 +26,6 @@ import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.LoadPropertiesAction;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "load")
 public class LoadProperties implements TestActionBuilder<LoadPropertiesAction> {
 

@@ -25,7 +25,6 @@ import org.citrusframework.util.ObjectHelper;
 /**
  * Action executes soap server operations such as receiving requests and sending response messsages.
  *
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class SoapServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {

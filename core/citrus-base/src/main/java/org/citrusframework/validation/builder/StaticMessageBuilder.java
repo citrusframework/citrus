@@ -33,7 +33,6 @@ import org.citrusframework.message.builder.DefaultPayloadBuilder;
  * class is primary used in unit tests and Soap message validators as we have other mechanisms there to
  * construct the control message.
  *
- * @author Christoph Deppisch
  */
 public class StaticMessageBuilder extends DefaultMessageBuilder {
 

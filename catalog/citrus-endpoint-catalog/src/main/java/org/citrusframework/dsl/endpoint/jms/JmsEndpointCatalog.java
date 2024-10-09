@@ -20,9 +20,6 @@ import org.citrusframework.jms.endpoint.JmsEndpointBuilder;
 import org.citrusframework.jms.endpoint.JmsEndpoints;
 import org.citrusframework.jms.endpoint.JmsSyncEndpointBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class JmsEndpointCatalog {
 
     /**

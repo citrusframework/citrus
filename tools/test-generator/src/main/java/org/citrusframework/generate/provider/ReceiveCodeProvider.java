@@ -20,7 +20,6 @@ import org.citrusframework.message.Message;
 import com.squareup.javapoet.CodeBlock;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class ReceiveCodeProvider implements CodeProvider<Message> {

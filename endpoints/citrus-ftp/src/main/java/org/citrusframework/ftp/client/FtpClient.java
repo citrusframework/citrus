@@ -66,7 +66,6 @@ import static org.apache.commons.net.ftp.FTP.LOCAL_FILE_TYPE;
 import static org.apache.commons.net.ftp.FTPReply.FILE_ACTION_OK;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsumer, InitializingPhase, ShutdownPhase {

@@ -42,7 +42,6 @@ import static org.eclipse.jetty.util.security.Credential.getCredential;
  * Factory bean constructs a security handler for usage in Jetty servlet container. Security handler
  * holds one to many constraints and a set of users known to a user login service for authentication.
  *
- * @author Christoph Deppisch
  * @since 1.3
  */
 public class SecurityHandlerFactory implements FactoryBean<SecurityHandler>, InitializingPhase {

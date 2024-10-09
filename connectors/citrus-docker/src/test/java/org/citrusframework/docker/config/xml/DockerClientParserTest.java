@@ -24,9 +24,6 @@ import com.github.dockerjava.core.DefaultDockerClientConfig;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class DockerClientParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

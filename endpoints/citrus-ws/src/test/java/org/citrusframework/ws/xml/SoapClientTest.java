@@ -50,9 +50,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.ws.endpoint.builder.WebServiceEndpoints.soap;
 
-/**
- * @author Christoph Deppisch
- */
 public class SoapClientTest extends AbstractXmlActionTest {
 
     private final int port = SocketUtils.findAvailableTcpPort(8080);

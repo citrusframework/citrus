@@ -24,7 +24,6 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class KubernetesEndpointComponent extends AbstractEndpointComponent {

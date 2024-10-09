@@ -35,7 +35,6 @@ import io.vertx.core.eventbus.MessageConsumer;
 import static org.mockito.Mockito.*;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class VertxEndpointTest extends AbstractTestNGUnitTest {

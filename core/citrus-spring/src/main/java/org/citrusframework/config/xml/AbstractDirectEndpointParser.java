@@ -21,9 +21,6 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class AbstractDirectEndpointParser extends AbstractEndpointParser {
 
     @Override

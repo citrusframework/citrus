@@ -40,7 +40,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class AsyncTest extends UnitTestSupport {

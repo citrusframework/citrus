@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class BeanDefinitionParserUtilsTest extends AbstractTestNGUnitTest {
 
     @Test

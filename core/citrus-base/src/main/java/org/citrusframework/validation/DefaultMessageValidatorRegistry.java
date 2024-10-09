@@ -20,7 +20,6 @@ package org.citrusframework.validation;
  * Default registry adds default message validators located via resource path lookup. This adds
  * all validators present on the classpath.
  *
- * @author Christoph Deppisch
  */
 public class DefaultMessageValidatorRegistry extends MessageValidatorRegistry {
 

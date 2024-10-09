@@ -25,9 +25,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.xml.TestActions;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "assert")
 public class Assert implements TestActionBuilder<org.citrusframework.container.Assert>, ReferenceResolverAware {
 

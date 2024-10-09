@@ -20,7 +20,6 @@ import org.citrusframework.json.JsonPathUtils;
 import org.citrusframework.message.Message;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class JsonPayloadMappingKeyExtractor extends AbstractMappingKeyExtractor {

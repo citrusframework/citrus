@@ -19,7 +19,6 @@ package org.citrusframework.kafka.config.handler;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 2.8
  */
 public class CitrusKafkaTestcaseNamespaceHandler extends NamespaceHandlerSupport {

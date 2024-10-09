@@ -37,7 +37,6 @@ import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
 /**
  * Web socket endpoint configuration for client side web socket communication.
- * @author Martin Maher
  * @since 2.3
  */
 public class WebSocketClientEndpointConfiguration extends AbstractWebSocketEndpointConfiguration {

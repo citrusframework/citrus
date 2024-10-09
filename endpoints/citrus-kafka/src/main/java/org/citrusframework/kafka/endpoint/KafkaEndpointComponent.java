@@ -28,7 +28,6 @@ import java.util.Map;
  *
  * Further endpoint parameters such as connectionFactory get passed to the endpoint configuration.
  *
- * @author Christoph Deppisch
  * @since 2.8
  */
 public class KafkaEndpointComponent extends AbstractEndpointComponent {

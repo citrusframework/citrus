@@ -22,7 +22,6 @@ import org.citrusframework.variable.dictionary.AbstractDataDictionary;
 /**
  * Abstract json data dictionary works on json message data. Each value is translated with dictionary.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public abstract class AbstractJsonDataDictionary extends AbstractDataDictionary<String> {

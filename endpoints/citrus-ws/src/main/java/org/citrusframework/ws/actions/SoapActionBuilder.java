@@ -26,7 +26,6 @@ import org.citrusframework.ws.server.WebServiceServer;
 /**
  * Action executes soap client and server operations.
  *
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class SoapActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {

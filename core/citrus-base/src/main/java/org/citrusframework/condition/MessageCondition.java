@@ -25,7 +25,6 @@ import org.citrusframework.context.TestContext;
  *
  * Message to check is identified by its name in the message store.
  *
- * @author Christoph Deppisch
  * @since 2.6.2
  */
 public class MessageCondition extends AbstractCondition {

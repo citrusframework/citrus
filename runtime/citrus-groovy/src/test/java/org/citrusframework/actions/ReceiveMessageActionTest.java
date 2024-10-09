@@ -41,9 +41,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Mock

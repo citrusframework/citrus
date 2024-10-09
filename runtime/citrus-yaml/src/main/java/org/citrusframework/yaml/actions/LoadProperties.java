@@ -19,9 +19,6 @@ package org.citrusframework.yaml.actions;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.LoadPropertiesAction;
 
-/**
- * @author Christoph Deppisch
- */
 public class LoadProperties implements TestActionBuilder<LoadPropertiesAction> {
 
     private final LoadPropertiesAction.Builder builder = new LoadPropertiesAction.Builder();

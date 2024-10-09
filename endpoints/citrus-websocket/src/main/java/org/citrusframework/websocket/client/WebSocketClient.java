@@ -19,7 +19,6 @@ package org.citrusframework.websocket.client;
 import org.citrusframework.websocket.endpoint.WebSocketEndpoint;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class WebSocketClient extends WebSocketEndpoint {

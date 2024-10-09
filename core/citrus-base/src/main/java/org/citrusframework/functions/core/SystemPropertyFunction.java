@@ -27,7 +27,6 @@ import org.citrusframework.functions.Function;
 /**
  * Function returns given string argument in lower case.
  *
- * @author Christoph Deppisch
  */
 public class SystemPropertyFunction implements Function {
 

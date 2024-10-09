@@ -22,7 +22,6 @@ import java.lang.annotation.*;
  * Citrus test framework annotation marking a field or method parameter for object injection. Framework instance is injected
  * as value of annotated field or parameter in Java DSL test cases.
  *
- * @author Christoph Deppisch
  * @since 2.2
  */
 @Retention(RetentionPolicy.RUNTIME)

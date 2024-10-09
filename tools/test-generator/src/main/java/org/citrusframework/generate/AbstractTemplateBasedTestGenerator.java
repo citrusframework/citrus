@@ -30,7 +30,6 @@ import org.citrusframework.util.PropertyUtils;
 /**
  * Generator creating a new test case from a template.
  *
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public abstract class AbstractTemplateBasedTestGenerator<T extends TestGenerator> extends AbstractTestGenerator<T> {

@@ -45,7 +45,6 @@ import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class TestNGEngine extends AbstractTestEngine {

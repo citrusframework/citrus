@@ -22,9 +22,6 @@ import java.util.List;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.TraceVariablesAction;
 
-/**
- * @author Christoph Deppisch
- */
 public class TraceVariables implements TestActionBuilder<TraceVariablesAction> {
 
     private final TraceVariablesAction.Builder builder = new TraceVariablesAction.Builder();

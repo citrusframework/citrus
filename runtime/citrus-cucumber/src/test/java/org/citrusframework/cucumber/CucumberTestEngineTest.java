@@ -25,9 +25,6 @@ import org.citrusframework.main.TestRunConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class CucumberTestEngineTest {
 
     @Test

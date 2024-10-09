@@ -30,9 +30,6 @@ import org.citrusframework.messaging.ReplyConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Christoph Deppisch
- */
 public class DirectSyncProducer extends DirectProducer implements ReplyConsumer {
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(DirectSyncProducer.class);

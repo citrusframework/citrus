@@ -61,9 +61,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 @ContextConfiguration(classes = CitrusSpringConfigTest.CustomConfig.class)
 public class CitrusSpringConfigTest extends TestNGCitrusSpringSupport {
 

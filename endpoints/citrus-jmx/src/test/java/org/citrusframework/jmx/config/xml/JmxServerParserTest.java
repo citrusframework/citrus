@@ -27,7 +27,6 @@ import org.testng.annotations.Test;
 import java.util.Map;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class JmxServerParserTest extends AbstractBeanDefinitionParserTest {

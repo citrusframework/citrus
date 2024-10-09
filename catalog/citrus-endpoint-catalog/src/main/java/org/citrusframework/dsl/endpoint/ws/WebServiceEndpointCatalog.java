@@ -20,9 +20,6 @@ import org.citrusframework.ws.client.WebServiceClientBuilder;
 import org.citrusframework.ws.endpoint.builder.WebServiceEndpoints;
 import org.citrusframework.ws.server.WebServiceServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class WebServiceEndpointCatalog {
 
     /**

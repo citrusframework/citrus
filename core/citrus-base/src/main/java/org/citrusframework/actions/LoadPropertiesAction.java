@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
  * Action reads property files and creates test variables for every property entry. File
  * resource path can define a resource located on classpath or file system.
  *
- * @author Christoph Deppisch
  */
 public class LoadPropertiesAction extends AbstractTestAction {
 

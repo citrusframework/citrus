@@ -26,9 +26,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.actions.ExecutePLSQLAction.Builder.plsql;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class ExecutePLSQLJavaIT extends TestNGCitrusSpringSupport {
 

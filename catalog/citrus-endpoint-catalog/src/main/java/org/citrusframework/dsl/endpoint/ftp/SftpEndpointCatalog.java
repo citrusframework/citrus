@@ -20,9 +20,6 @@ import org.citrusframework.ftp.client.SftpClientBuilder;
 import org.citrusframework.ftp.endpoint.builder.SftpEndpoints;
 import org.citrusframework.ftp.server.SftpServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class SftpEndpointCatalog {
 
     /**

@@ -24,9 +24,6 @@ import org.citrusframework.validation.json.JsonTextMessageValidator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class MessageValidatorTest {
 
     @Test

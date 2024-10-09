@@ -32,7 +32,6 @@ import org.citrusframework.util.StringUtils;
 /**
  * Endpoint adapter always returns a static response message.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class StaticResponseEndpointAdapter extends StaticEndpointAdapter {

@@ -26,9 +26,6 @@ import org.citrusframework.yaml.actions.AbstractYamlActionTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class ConditionalTest extends AbstractYamlActionTest {
 
     @Test

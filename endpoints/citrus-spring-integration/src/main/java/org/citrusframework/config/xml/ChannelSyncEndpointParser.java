@@ -27,7 +27,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for synchronous channel endpoint components.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class ChannelSyncEndpointParser extends AbstractChannelEndpointParser {

@@ -22,9 +22,6 @@ import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 
-/**
- * @author Christoph Deppisch
- */
 public class CamelEndpointBuilder extends AbstractEndpointBuilder<CamelEndpoint> {
 
     /** Endpoint target */

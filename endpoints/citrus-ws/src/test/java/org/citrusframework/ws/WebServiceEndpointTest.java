@@ -59,9 +59,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class WebServiceEndpointTest {
 
     private MessageContext messageContext = Mockito.mock(MessageContext.class);

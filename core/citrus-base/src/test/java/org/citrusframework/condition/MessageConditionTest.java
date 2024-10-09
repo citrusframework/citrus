@@ -28,7 +28,6 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * @author Martin Maher
  * @since 2.6.2
  */
 public class MessageConditionTest {

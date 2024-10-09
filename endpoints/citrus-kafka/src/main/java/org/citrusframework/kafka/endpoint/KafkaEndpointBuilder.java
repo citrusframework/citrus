@@ -25,7 +25,6 @@ import org.citrusframework.kafka.message.KafkaMessageHeaderMapper;
 import java.util.Map;
 
 /**
- * @author Christoph Deppisch
  * @since 2.8
  */
 public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint> {

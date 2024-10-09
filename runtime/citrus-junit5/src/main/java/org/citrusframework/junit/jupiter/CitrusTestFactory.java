@@ -23,9 +23,6 @@ import java.lang.annotation.Target;
 
 import org.junit.jupiter.api.TestFactory;
 
-/**
- * @author Christoph Deppisch
- */
 @Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @TestFactory

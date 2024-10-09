@@ -21,9 +21,6 @@ import org.citrusframework.message.DefaultMessage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class HeaderMappingKeyExtractorTest {
 
     @Test

@@ -23,7 +23,6 @@ import org.springframework.restdocs.config.SnippetConfigurer;
 import java.io.IOException;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class CitrusSnippetConfigurer extends SnippetConfigurer<CitrusRestDocConfigurer, CitrusSnippetConfigurer>

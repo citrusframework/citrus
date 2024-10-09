@@ -20,9 +20,6 @@ import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.endpoint.builder.HttpEndpoints;
 import org.citrusframework.http.server.HttpServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class HttpEndpointCatalog {
 
     /**

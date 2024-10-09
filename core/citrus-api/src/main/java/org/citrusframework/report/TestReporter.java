@@ -20,7 +20,6 @@ package org.citrusframework.report;
 /**
  * Interface for test reporters.
  *
- * @author Christoph Deppisch
  */
 public interface TestReporter {
 

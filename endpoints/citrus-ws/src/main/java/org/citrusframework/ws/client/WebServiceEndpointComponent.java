@@ -26,7 +26,6 @@ import org.citrusframework.message.ErrorHandlingStrategy;
 /**
  * Component creates proper web service client from endpoint uri resource and parameters.
  *
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class WebServiceEndpointComponent extends AbstractEndpointComponent {

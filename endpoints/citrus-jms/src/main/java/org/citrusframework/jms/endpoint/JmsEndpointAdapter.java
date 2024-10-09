@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
  * on reply destination. Provides jms endpoint for clients to connect to destinations in order to provide proper
  * response message.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class JmsEndpointAdapter extends AbstractEndpointAdapter {

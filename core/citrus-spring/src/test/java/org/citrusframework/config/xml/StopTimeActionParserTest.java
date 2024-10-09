@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.actions.StopTimeAction;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class StopTimeActionParserTest extends AbstractActionParserTest<StopTimeAction> {
 
     @Test

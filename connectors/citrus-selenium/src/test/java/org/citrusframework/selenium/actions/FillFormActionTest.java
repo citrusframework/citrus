@@ -29,9 +29,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class FillFormActionTest extends AbstractTestNGUnitTest {
 
     private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();

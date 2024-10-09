@@ -20,7 +20,6 @@ import org.citrusframework.message.MessageHeaders;
 
 /**
  * Special set of web socket related message headers.
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class WebSocketMessageHeaders {

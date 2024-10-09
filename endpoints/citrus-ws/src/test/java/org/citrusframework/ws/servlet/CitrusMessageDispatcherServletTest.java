@@ -40,7 +40,6 @@ import static org.mockito.Mockito.*;
 
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {

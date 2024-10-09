@@ -32,7 +32,6 @@ import org.openqa.selenium.support.PageFactory;
 /**
  * Initialize new page object and run optional validation. Page action is a method on page object that is called via reflection.
  *
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class PageAction extends AbstractSeleniumAction {

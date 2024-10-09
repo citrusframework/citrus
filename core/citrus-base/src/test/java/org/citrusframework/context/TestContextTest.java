@@ -45,9 +45,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.testng.Assert.fail;
 
-/**
- * @author Christoph Deppisch
- */
 public class TestContextTest extends UnitTestSupport {
 
     private final GlobalVariables globalVariables = new GlobalVariables();

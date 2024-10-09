@@ -24,9 +24,6 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class MailMarshallerTest {
 
     private final MailMarshaller mailMarshaller = new MailMarshaller();

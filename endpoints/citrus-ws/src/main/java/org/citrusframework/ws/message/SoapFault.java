@@ -36,7 +36,6 @@ import org.springframework.xml.namespace.QNameEditor;
 import org.springframework.xml.namespace.QNameUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class SoapFault extends SoapMessage {

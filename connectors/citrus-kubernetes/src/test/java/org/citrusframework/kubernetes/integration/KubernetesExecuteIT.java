@@ -23,7 +23,6 @@ import org.testng.annotations.Test;
 /**
  * Only execute integration tests if Kubernetes is available on host system.
  *
- * @author Christoph Deppisch
  * @since 2.7
  */
 @Test

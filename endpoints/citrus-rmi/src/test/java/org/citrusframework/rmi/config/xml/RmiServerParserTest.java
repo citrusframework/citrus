@@ -28,7 +28,6 @@ import java.rmi.registry.Registry;
 import java.util.Map;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class RmiServerParserTest extends AbstractBeanDefinitionParserTest {

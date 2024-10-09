@@ -30,9 +30,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 
-/**
- * @author Christoph Deppisch
- */
 public class RootQNameSchemaMappingStrategyTest {
 
     private XsdSchema schemaMock = Mockito.mock(XsdSchema.class);

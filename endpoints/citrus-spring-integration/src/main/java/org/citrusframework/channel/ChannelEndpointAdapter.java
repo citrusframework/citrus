@@ -30,7 +30,6 @@ import org.springframework.beans.factory.BeanFactory;
  * on reply channel. Provides channel endpoint for clients to connect to message channel in order to provide proper
  * response message.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class ChannelEndpointAdapter extends AbstractEndpointAdapter {

@@ -25,7 +25,6 @@ import java.util.List;
 /**
  * ValidationMatcher based on String.endsWith()
  *
- * @author Christian Wied
  */
 public class EndsWithValidationMatcher implements ValidationMatcher {
 

@@ -25,9 +25,6 @@ import java.lang.annotation.Target;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 
-/**
- * @author Christoph Deppisch
- */
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)

@@ -21,9 +21,6 @@ import java.util.Optional;
 import groovy.lang.GString;
 import org.codehaus.groovy.runtime.GStringImpl;
 
-/**
- * @author Christoph Deppisch
- */
 public final class GroovyTypeConverter extends DefaultTypeConverter {
 
     public static GroovyTypeConverter INSTANCE = new GroovyTypeConverter();

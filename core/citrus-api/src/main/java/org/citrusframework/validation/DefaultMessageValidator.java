@@ -23,7 +23,6 @@ import org.citrusframework.validation.context.ValidationContext;
  * Basic control message validator for all message types. Subclasses only have to add
  * specific logic for message payload validation. This validator is based on a control message.
  *
- * @author Christoph Deppisch
  */
 public class DefaultMessageValidator extends AbstractMessageValidator<ValidationContext> {
 

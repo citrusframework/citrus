@@ -40,7 +40,6 @@ import java.util.*;
  *   <li>the first element of the <b>firstnames</b> property of the property retrieved in the previous step</li>
  * </ol>
  *
- * @author Thorsten Schlathoelter
  */
 public class VariableExpressionIterator implements Iterator<VariableSegment> {
 

@@ -21,9 +21,6 @@ import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.testng.TestNGCitrusSupport;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class FailTestNgRuntimeExceptionIT extends TestNGCitrusSupport {
 
     @Test(groups = "org.citrusframework.ShouldFailGroup", expectedExceptions = TestCaseFailedException.class)

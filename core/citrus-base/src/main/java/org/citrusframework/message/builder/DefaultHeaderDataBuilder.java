@@ -20,9 +20,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.message.MessageHeaderDataBuilder;
 import org.citrusframework.util.TypeConversionUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public class DefaultHeaderDataBuilder implements MessageHeaderDataBuilder {
 
     private final Object headerData;

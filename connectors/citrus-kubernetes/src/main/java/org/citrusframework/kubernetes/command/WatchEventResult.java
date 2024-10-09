@@ -22,7 +22,6 @@ import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.kubernetes.client.WatcherException;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class WatchEventResult<R extends HasMetadata> extends CommandResult<R> {

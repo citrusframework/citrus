@@ -23,7 +23,6 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 /**
- * @author Martin Maher
  * @since 2.4
  */
 public class FileConditionTest extends UnitTestSupport {

@@ -20,7 +20,6 @@ import org.citrusframework.endpoint.AbstractPollableEndpointConfiguration;
 import org.citrusframework.vertx.message.VertxMessageConverter;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class VertxEndpointConfiguration extends AbstractPollableEndpointConfiguration {

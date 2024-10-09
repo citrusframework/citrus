@@ -23,9 +23,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.TestActions;
 
-/**
- * @author Christoph Deppisch
- */
 public class Timer implements TestActionBuilder<org.citrusframework.container.Timer>, ReferenceResolverAware {
 
     private final org.citrusframework.container.Timer.Builder builder = new org.citrusframework.container.Timer.Builder();

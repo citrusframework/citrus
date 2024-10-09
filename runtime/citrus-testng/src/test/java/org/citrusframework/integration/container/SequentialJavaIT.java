@@ -26,9 +26,6 @@ import static org.citrusframework.actions.SleepAction.Builder.sleep;
 import static org.citrusframework.actions.StopTimeAction.Builder.stopTime;
 import static org.citrusframework.container.Sequence.Builder.sequential;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class SequentialJavaIT extends TestNGCitrusSpringSupport {
 

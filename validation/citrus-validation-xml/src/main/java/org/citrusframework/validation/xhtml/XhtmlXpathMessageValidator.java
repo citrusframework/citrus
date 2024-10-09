@@ -27,7 +27,6 @@ import org.citrusframework.validation.xml.XpathMessageValidationContext;
 import org.citrusframework.validation.xml.XpathMessageValidator;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class XhtmlXpathMessageValidator extends XpathMessageValidator implements InitializingPhase {

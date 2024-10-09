@@ -25,7 +25,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.6
  */
 public class ScpClientConfigParser implements AnnotationConfigParser<ScpClientConfig, ScpClient> {

@@ -61,7 +61,6 @@ import org.testng.annotations.Listeners;
  * and {@link GherkinTestActionRunner}. Provides Spring test listener support and
  * loads basic Spring application context for Citrus.
  *
- * @author Christoph Deppisch
  */
 @Listeners( { TestNGCitrusSpringMethodInterceptor.class } )
 @ContextConfiguration(classes =  {CitrusSpringConfig.class})

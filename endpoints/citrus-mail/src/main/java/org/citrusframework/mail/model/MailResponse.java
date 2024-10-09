@@ -23,7 +23,6 @@ import jakarta.xml.bind.annotation.*;
  * message. By default SMTP command is responded with success OK. User can also specify reject message and code
  * in order to abort SMTP mail communication with error.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 @XmlAccessorType(XmlAccessType.FIELD)

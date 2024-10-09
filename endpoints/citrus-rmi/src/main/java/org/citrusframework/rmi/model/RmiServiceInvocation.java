@@ -37,7 +37,6 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.TypeConverter;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 @XmlAccessorType(XmlAccessType.FIELD)

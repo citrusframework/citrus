@@ -40,9 +40,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class PurgeQueuesTest extends AbstractXmlActionTest {
 
     @Mock

@@ -28,7 +28,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 /**
  * Waits until element is visible or hidden.
  *
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class WaitUntilAction extends FindElementAction {

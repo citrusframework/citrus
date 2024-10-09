@@ -17,7 +17,6 @@
 package org.citrusframework.main;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public abstract class AbstractTestEngine implements TestEngine {

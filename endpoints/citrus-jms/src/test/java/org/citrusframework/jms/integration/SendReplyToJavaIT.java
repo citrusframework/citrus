@@ -27,9 +27,6 @@ import static org.citrusframework.container.Parallel.Builder.parallel;
 import static org.citrusframework.container.Sequence.Builder.sequential;
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class SendReplyToJavaIT extends TestNGCitrusSpringSupport {
 

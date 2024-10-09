@@ -20,7 +20,6 @@ package org.citrusframework.log;
  * Modifier masks output that gets printed to an output stream. Usually used
  * to mask sensitive data like passwords and secrets when printed to the logger output.
  *
- * @author Christoph Deppisch
  */
 @FunctionalInterface
 public interface LogModifier {

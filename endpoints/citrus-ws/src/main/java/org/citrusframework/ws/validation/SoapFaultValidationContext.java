@@ -27,7 +27,6 @@ import org.citrusframework.validation.context.ValidationContext;
  * Special validation context holds 1-n {@link SoapFaultDetailValidationContext} instances for
  * 1-n SOAP fault detail elements.
  *
- * @author Christoph Deppisch
  */
 public class SoapFaultValidationContext extends DefaultValidationContext {
 

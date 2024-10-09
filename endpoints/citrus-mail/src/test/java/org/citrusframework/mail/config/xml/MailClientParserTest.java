@@ -26,7 +26,6 @@ import org.testng.annotations.Test;
 import java.util.Map;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class MailClientParserTest extends AbstractBeanDefinitionParserTest {

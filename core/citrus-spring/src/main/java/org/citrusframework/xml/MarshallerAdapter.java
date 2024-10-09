@@ -26,7 +26,6 @@ import org.springframework.oxm.XmlMappingException;
 
 /**
  * Marshaller delegates to given Spring Oxm marshaller.
- * @author Christoph Deppisch
  */
 public class MarshallerAdapter implements org.citrusframework.xml.Marshaller, org.citrusframework.xml.Unmarshaller {
 

@@ -23,9 +23,6 @@ import org.citrusframework.actions.StopServerAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 
-/**
- * @author Christoph Deppisch
- */
 public class Stop implements TestActionBuilder<StopServerAction>, ReferenceResolverAware {
 
     private final StopServerAction.Builder builder = new StopServerAction.Builder();

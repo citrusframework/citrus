@@ -38,7 +38,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for wait action in test case.
  *
- * @author Martin Maher
  * @since 2.4
  */
 public class WaitParser implements BeanDefinitionParser {

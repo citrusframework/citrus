@@ -21,7 +21,6 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.condition.ActionCondition;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class WaitActionConditionBuilder extends WaitConditionBuilder<ActionCondition, WaitActionConditionBuilder> {

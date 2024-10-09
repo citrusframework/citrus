@@ -26,9 +26,6 @@ import java.util.Map;
 
 import static org.testng.Assert.assertTrue;
 
-/**
- * @author Christoph Deppisch
- */
 public class OpenApiActionBuilderTest {
 
     private OpenApiActionBuilder fixture;

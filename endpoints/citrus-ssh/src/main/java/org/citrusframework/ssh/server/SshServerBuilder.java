@@ -22,7 +22,6 @@ import org.citrusframework.ssh.message.SshMessageConverter;
 import org.citrusframework.ssh.model.SshMarshaller;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class SshServerBuilder extends AbstractServerBuilder<SshServer, SshServerBuilder> {

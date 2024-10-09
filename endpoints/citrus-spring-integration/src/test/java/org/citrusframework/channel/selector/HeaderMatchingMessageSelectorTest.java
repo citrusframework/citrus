@@ -23,9 +23,6 @@ import org.springframework.messaging.MessageHeaders;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class HeaderMatchingMessageSelectorTest extends UnitTestSupport {
 
     @Test

@@ -32,7 +32,6 @@ import org.citrusframework.report.TestSuiteListenerAware;
  * Citrus main class initializes a new Citrus runtime environment with a Citrus context. Provides before/after suite action execution
  * and test execution methods.
  *
- * @author Christoph Deppisch
  * @since 2.1
  */
 public final class Citrus implements TestListenerAware, TestSuiteListenerAware, TestReporterAware, MessageListenerAware {

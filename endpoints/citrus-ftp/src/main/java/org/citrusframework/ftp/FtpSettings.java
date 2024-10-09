@@ -18,9 +18,6 @@ package org.citrusframework.ftp;
 
 import org.citrusframework.message.MessageType;
 
-/**
- * @author Christoph Deppisch
- */
 public class FtpSettings {
 
     private static final String FTP_PROPERTY_PREFIX = "citrus.ftp.";

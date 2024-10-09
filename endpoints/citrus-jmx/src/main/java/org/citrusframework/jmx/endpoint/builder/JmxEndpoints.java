@@ -20,9 +20,6 @@ import org.citrusframework.endpoint.builder.ClientServerEndpointBuilder;
 import org.citrusframework.jmx.client.JmxClientBuilder;
 import org.citrusframework.jmx.server.JmxServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public final class JmxEndpoints extends ClientServerEndpointBuilder<JmxClientBuilder, JmxServerBuilder> {
 
     /**

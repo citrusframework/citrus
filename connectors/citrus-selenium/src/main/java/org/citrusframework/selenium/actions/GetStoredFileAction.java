@@ -21,7 +21,6 @@ import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class GetStoredFileAction extends AbstractSeleniumAction {

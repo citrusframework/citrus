@@ -29,7 +29,6 @@ import org.w3c.dom.Element;
 /**
  * Used for parsing server WebSocket endpoints and respective configurations.
  *
- * @author Martin Maher
  * @since 2.3
  */
 public class WebSocketEndpointParser extends AbstractEndpointParser {

@@ -69,7 +69,6 @@ import org.slf4j.LoggerFactory;
  * The received message is validated using a {@link MessageValidator} supporting expected
  * control message payload and header templates.
  *
- * @author Christoph Deppisch
  * @since 2008
  */
 public class ReceiveMessageAction extends AbstractTestAction {

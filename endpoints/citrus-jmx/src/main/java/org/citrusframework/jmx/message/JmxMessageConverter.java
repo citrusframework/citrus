@@ -29,7 +29,6 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.xml.StringResult;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class JmxMessageConverter implements MessageConverter<ManagedBeanInvocation, ManagedBeanInvocation, JmxEndpointConfiguration> {

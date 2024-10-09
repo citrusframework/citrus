@@ -46,9 +46,6 @@ import org.citrusframework.xml.actions.Message;
 import org.citrusframework.xml.actions.Receive;
 import org.citrusframework.xml.actions.Send;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "http")
 public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 

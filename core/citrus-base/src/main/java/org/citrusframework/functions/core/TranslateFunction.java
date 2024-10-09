@@ -26,7 +26,6 @@ import java.util.List;
  * Function searches for occurrences of a given character sequence and replaces all
  * findings with given replacement string.
  *
- * @author Christoph Deppisch
  */
 public class TranslateFunction implements Function {
 

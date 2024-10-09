@@ -23,7 +23,6 @@ import com.github.dockerjava.api.command.RemoveImageCmd;
 import com.github.dockerjava.api.model.ResponseItem;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class ImageRemove extends AbstractDockerCommand<ResponseItem> {

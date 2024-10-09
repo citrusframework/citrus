@@ -24,7 +24,6 @@ import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 @CucumberContextConfiguration

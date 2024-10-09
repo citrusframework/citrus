@@ -19,9 +19,6 @@ package org.citrusframework.message.builder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.MessagePayloadBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class DefaultPayloadBuilder implements MessagePayloadBuilder {
 
     private final Object payload;

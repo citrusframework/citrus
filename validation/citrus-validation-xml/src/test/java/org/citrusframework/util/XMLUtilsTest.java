@@ -35,9 +35,6 @@ import java.util.Map;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class XMLUtilsTest {
 
     @Test

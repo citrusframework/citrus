@@ -33,7 +33,6 @@ import org.springframework.ws.transport.http.MessageDispatcherServlet;
  * Citrus message dispatcher servlet extends Spring's message dispatcher servlet and just
  * adds optional configuration settings for default mapping strategies, interceptors and so on.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class CitrusMessageDispatcherServlet extends MessageDispatcherServlet {

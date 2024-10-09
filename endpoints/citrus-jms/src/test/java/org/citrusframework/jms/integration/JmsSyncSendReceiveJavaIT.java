@@ -25,9 +25,6 @@ import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class JmsSyncSendReceiveJavaIT extends TestNGCitrusSpringSupport {
 

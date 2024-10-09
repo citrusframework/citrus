@@ -26,7 +26,6 @@ import java.util.List;
 import static org.testng.Assert.fail;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class DateRangeValidationMatcherTest {

@@ -39,7 +39,6 @@ import org.w3c.dom.Element;
 /**
  * Parser for SOAP message receiver component in Citrus ws namespace.
  *
- * @author Christoph Deppisch
  */
 public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
 

@@ -18,9 +18,6 @@ package org.citrusframework.endpoint.direct;
 
 import org.citrusframework.endpoint.builder.AsyncSyncEndpointBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class DirectEndpoints extends AsyncSyncEndpointBuilder<DirectEndpointBuilder, DirectSyncEndpointBuilder> {
 
     /**

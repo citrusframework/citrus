@@ -29,7 +29,6 @@ import org.w3c.dom.Element;
 
 /**
  * Creates empty response producing endpoint adapter.
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class EmptyResponseEndpointAdapterParser extends AbstractBeanDefinitionParser {

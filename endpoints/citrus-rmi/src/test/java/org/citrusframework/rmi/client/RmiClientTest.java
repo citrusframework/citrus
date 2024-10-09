@@ -36,7 +36,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class RmiClientTest extends AbstractTestNGUnitTest {

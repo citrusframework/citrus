@@ -24,9 +24,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.xml.TestActions;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "parallel")
 public class Parallel implements TestActionBuilder<org.citrusframework.container.Parallel>, ReferenceResolverAware {
 

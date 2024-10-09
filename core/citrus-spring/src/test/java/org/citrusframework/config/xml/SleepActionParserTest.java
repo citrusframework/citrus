@@ -24,9 +24,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.actions.SleepAction;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class SleepActionParserTest extends AbstractActionParserTest<SleepAction> {
 
     @Test

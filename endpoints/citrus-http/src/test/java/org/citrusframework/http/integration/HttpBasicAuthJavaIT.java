@@ -30,9 +30,6 @@ import static org.citrusframework.http.actions.HttpActionBuilder.http;
 import static org.citrusframework.http.security.HttpAuthentication.basic;
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class HttpBasicAuthJavaIT extends TestNGCitrusSpringSupport {
 

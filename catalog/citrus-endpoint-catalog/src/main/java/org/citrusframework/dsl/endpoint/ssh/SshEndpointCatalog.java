@@ -20,9 +20,6 @@ import org.citrusframework.ssh.client.SshClientBuilder;
 import org.citrusframework.ssh.endpoint.builder.SshEndpoints;
 import org.citrusframework.ssh.server.SshServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class SshEndpointCatalog {
 
     /**

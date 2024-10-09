@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Stop the test execution for a given amount of time.
  *
- * @author Christoph Deppisch
  * @since 2006
  */
 public class SleepAction extends AbstractTestAction {

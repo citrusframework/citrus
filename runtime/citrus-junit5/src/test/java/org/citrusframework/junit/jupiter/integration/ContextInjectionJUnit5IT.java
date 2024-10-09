@@ -25,9 +25,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 
-/**
- * @author Christoph Deppisch
- */
 @CitrusSupport
 public class ContextInjectionJUnit5IT {
 

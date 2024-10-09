@@ -35,7 +35,6 @@ import static java.lang.Integer.parseInt;
 /**
  * Plain text validator using simple String comparison.
  *
- * @author Christoph Deppisch
  */
 public class PlainTextMessageValidator extends DefaultMessageValidator {
 

@@ -23,9 +23,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.TestActions;
 
-/**
- * @author Christoph Deppisch
- */
 public class Conditional implements TestActionBuilder<org.citrusframework.container.Conditional>, ReferenceResolverAware {
 
     private final org.citrusframework.container.Conditional.Builder builder = new org.citrusframework.container.Conditional.Builder();

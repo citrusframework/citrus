@@ -23,7 +23,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class DockerClientConfigParser implements AnnotationConfigParser<DockerClientConfig, DockerClient> {

@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class GroovyActionTest extends AbstractTestNGUnitTest {
 
     @Test

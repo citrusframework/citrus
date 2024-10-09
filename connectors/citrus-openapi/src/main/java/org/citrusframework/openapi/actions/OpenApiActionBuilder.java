@@ -31,7 +31,6 @@ import java.net.URL;
  * Action executes client and server operations using given OpenApi specification.
  * Action creates proper request and response data from given specification rules.
  *
- * @author Christoph Deppisch
  * @since 4.1
  */
 public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {

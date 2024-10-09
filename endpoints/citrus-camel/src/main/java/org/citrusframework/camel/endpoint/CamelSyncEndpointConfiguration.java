@@ -21,7 +21,6 @@ import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.MessageCorrelator;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class CamelSyncEndpointConfiguration extends CamelEndpointConfiguration implements PollableEndpointConfiguration {

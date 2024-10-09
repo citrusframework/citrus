@@ -20,7 +20,6 @@ import org.citrusframework.camel.config.xml.*;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class CitrusCamelTestcaseNamespaceHandler extends NamespaceHandlerSupport {

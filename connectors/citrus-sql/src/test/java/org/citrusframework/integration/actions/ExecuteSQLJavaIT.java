@@ -27,9 +27,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.actions.ExecuteSQLAction.Builder.sql;
 import static org.citrusframework.actions.ExecuteSQLQueryAction.Builder.query;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class ExecuteSQLJavaIT extends TestNGCitrusSpringSupport {
 

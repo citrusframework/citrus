@@ -32,7 +32,6 @@ import org.citrusframework.util.StringUtils;
 
 /**
  * Specialised validation context adds JSON path expressions for message validation.
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class JsonPathMessageValidationContext extends DefaultValidationContext {

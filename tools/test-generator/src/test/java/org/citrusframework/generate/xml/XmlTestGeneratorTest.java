@@ -28,9 +28,6 @@ import org.citrusframework.util.FileUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class XmlTestGeneratorTest {
 
     @Test
@@ -51,7 +48,6 @@ public class XmlTestGeneratorTest {
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
-        Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class SampleIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package org.citrusframework;"));
@@ -81,7 +77,6 @@ public class XmlTestGeneratorTest {
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
-        Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class SampleIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package org.citrusframework;"));
@@ -121,7 +116,6 @@ public class XmlTestGeneratorTest {
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
-        Assert.assertTrue(javaContent.contains("@author Unknown"));
         Assert.assertTrue(javaContent.contains("public class SampleIT"));
         Assert.assertTrue(javaContent.contains("* TODO: Description"));
         Assert.assertTrue(javaContent.contains("package org.citrusframework;"));

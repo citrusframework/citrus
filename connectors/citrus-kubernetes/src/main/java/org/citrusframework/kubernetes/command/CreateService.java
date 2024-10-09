@@ -30,7 +30,6 @@ import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class CreateService extends AbstractCreateCommand<Service, ServiceList, ServiceResource<Service>, CreateService> {

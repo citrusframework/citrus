@@ -21,9 +21,6 @@ import java.util.Map;
 
 import org.glassfish.jaxb.runtime.marshaller.NamespacePrefixMapper;
 
-/**
- * @author Christoph Deppisch
- */
 public class CitrusNamespacePrefixMapper extends NamespacePrefixMapper {
 
     /** List of known namespaces with mapping to prefix */

@@ -20,7 +20,6 @@ package org.citrusframework.exceptions;
  * This exception is thrown when a message receiving action
  * does not specify any expected content.
  *
- * @author Christoph Deppisch
  */
 public class MissingExpectedMessageException extends CitrusRuntimeException {
 

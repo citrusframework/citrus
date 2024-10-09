@@ -23,9 +23,6 @@ import org.citrusframework.xml.XmlTestLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class CreateVariablesTest extends AbstractXmlActionTest {
 
     @Test

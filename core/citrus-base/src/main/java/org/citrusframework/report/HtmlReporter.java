@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Basic logging reporter generating a HTML report with detailed test results.
  *
- * @author Philipp Komninos, Christoph Deppisch
  */
 public class HtmlReporter extends AbstractOutputFileReporter implements TestListener {
 

@@ -25,7 +25,6 @@ import org.springframework.http.HttpStatus;
 import java.util.Optional;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class SendHttpResponseActionProvider implements MessageActionProvider<SendResponseModel, HttpMessage> {

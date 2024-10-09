@@ -21,7 +21,6 @@ import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.ssh.message.SshMessageConverter;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class SshClientBuilder extends AbstractEndpointBuilder<SshClient> {

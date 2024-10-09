@@ -24,9 +24,6 @@ import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.citrusframework.dsl.XmlSupport.xml;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class WebServiceClientJavaIT extends TestNGCitrusSpringSupport {
 

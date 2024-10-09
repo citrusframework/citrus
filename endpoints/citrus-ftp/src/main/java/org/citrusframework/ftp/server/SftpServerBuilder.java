@@ -22,7 +22,6 @@ import org.citrusframework.ftp.client.SftpEndpointConfiguration;
 import org.citrusframework.server.AbstractServerBuilder;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpServerBuilder> {

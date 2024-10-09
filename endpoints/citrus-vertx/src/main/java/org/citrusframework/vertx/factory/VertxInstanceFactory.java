@@ -20,7 +20,6 @@ import org.citrusframework.vertx.endpoint.VertxEndpointConfiguration;
 import io.vertx.core.Vertx;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public interface VertxInstanceFactory {

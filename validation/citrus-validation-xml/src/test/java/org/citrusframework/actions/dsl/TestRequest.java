@@ -25,7 +25,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * Sample model object marshalled to message payload.
  *
- * @author Christoph Deppisch
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {

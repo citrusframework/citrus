@@ -24,7 +24,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 
 /**
  * Simple object registry holding in memory key value store to bind and obtain object references by name.
- * @author Christoph Deppisch
  */
 public class SimpleReferenceResolver implements ReferenceResolver, ReferenceRegistry {
 

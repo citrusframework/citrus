@@ -23,7 +23,6 @@ import java.util.List;
  * The exception receives a list of exceptions and provides detailed to string method for
  * overview of failed exceptions.
  *
- * @author Christoph Deppisch
  */
 public class ParallelContainerException extends CitrusRuntimeException {
 

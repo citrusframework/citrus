@@ -49,9 +49,6 @@ import org.citrusframework.xml.actions.Message;
 import org.citrusframework.xml.actions.Receive;
 import org.citrusframework.xml.actions.Send;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "soap")
 public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 

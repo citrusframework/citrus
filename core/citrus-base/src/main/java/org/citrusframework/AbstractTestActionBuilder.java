@@ -16,9 +16,6 @@
 
 package org.citrusframework;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class AbstractTestActionBuilder<T extends TestAction, S extends TestActionBuilder<T>> implements TestActionBuilder<T> {
 
     protected final S self;

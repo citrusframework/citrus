@@ -27,9 +27,6 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class DefaultTextEqualsMessageValidatorTest extends UnitTestSupport {
 
     private final DefaultTextEqualsMessageValidator validator = new DefaultTextEqualsMessageValidator();

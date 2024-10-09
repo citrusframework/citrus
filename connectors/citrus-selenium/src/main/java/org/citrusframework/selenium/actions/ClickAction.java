@@ -23,7 +23,6 @@ import org.openqa.selenium.WebElement;
 /**
  * Click some element on current page.
  *
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class ClickAction extends FindElementAction {

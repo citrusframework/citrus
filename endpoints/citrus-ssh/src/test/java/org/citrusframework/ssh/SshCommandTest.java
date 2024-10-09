@@ -44,7 +44,6 @@ import static org.mockito.Mockito.when;
 import static org.testng.AssertJUnit.assertEquals;
 
 /**
- * @author Roland Huss
  * @since 05.09.12
  */
 public class SshCommandTest {

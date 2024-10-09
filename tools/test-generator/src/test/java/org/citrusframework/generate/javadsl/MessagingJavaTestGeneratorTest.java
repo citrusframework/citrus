@@ -26,9 +26,6 @@ import org.citrusframework.util.FileUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class MessagingJavaTestGeneratorTest {
 
     @Test
@@ -50,7 +47,6 @@ public class MessagingJavaTestGeneratorTest {
         Assert.assertTrue(javaFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
-        Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class SampleReqResIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package org.citrusframework;"));

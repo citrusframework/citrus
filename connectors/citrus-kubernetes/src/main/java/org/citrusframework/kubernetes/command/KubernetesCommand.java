@@ -27,7 +27,6 @@ import org.citrusframework.kubernetes.client.KubernetesClient;
  * Type parameter:
  * <T> the Kubernetes resource that this command operates with (e.g. Pod, Service, Secret, ...)
  * <O> the command output that may be validated (e.g. Pod, PodList, InfoResult, ...)
- * @author Christoph Deppisch
  * @since 2.7
  */
 public interface KubernetesCommand<T extends HasMetadata, O> {

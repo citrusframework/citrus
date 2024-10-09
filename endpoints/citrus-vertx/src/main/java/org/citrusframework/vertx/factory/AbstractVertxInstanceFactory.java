@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
  * Abstract Vertx instance factory provides basic method for creating a new Vertx instance. By default, waits for
  * instance to start up properly.
  *
- * @author Christoph Deppisch
  * @since 2.0
  */
 public abstract class AbstractVertxInstanceFactory implements VertxInstanceFactory {

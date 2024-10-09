@@ -26,9 +26,6 @@ import org.citrusframework.message.builder.SendMessageBuilderSupport;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class AbstractSendMessageActionFactoryBean<T extends SendMessageAction, M extends SendMessageBuilderSupport<T, B, M>, B extends SendMessageAction.SendMessageActionBuilder<T, M, B>> extends AbstractTestActionFactoryBean<T, B> {
 
     /**

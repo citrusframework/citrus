@@ -23,7 +23,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.common.TestLoader.SPRING;
 
 /**
- * @author Christoph Deppisch
  * @since 2008
  */
 public class SyncJmsTopicCommunicationIT extends TestNGCitrusSpringSupport {

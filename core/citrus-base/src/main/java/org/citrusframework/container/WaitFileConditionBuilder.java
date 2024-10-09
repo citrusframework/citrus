@@ -21,7 +21,6 @@ import java.io.File;
 import org.citrusframework.condition.FileCondition;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class WaitFileConditionBuilder extends WaitConditionBuilder<FileCondition, WaitFileConditionBuilder> {

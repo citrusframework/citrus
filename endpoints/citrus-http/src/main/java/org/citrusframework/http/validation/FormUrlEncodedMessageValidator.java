@@ -49,7 +49,6 @@ import org.springframework.util.MultiValueMap;
 /**
  * Validates x-www-form-urlencoded HTML form data content by marshalling form fields to Xml representation.
  *
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class FormUrlEncodedMessageValidator implements MessageValidator<ValidationContext> {

@@ -25,7 +25,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class MessageValidatorRegistryParserTest extends AbstractBeanDefinitionParserTest {

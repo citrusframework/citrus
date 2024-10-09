@@ -29,7 +29,6 @@ import org.citrusframework.config.util.BeanDefinitionParserUtils;
  * Bean definition parser for special message channel configuration which
  * supports message selection.
  *
- * @author Christoph Deppisch
  */
 public class MessageSelectingQueueChannelParser implements BeanDefinitionParser {
 

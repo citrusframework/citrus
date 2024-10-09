@@ -24,7 +24,6 @@ import java.util.List;
  * Class managing a list of injected test suite listeners. Each event is spread to all
  * managed listeners.
  *
- * @author Christoph Deppisch
  */
 public class TestSuiteListeners implements TestSuiteListenerAware {
 

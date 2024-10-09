@@ -25,7 +25,6 @@ import org.citrusframework.exceptions.NoSuchFunctionLibraryException;
 /**
  * Function registry holding all available function libraries.
  *
- * @author Christoph Deppisch
  */
 public class FunctionRegistry {
 

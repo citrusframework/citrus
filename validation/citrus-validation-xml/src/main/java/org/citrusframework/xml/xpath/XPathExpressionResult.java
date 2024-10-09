@@ -30,7 +30,6 @@ import javax.xml.xpath.XPathConstants;
  * The result type prefix is supposed to be stripped off before expression evaluation 
  * and determines the evaluation result.
  * 
- * @author Christoph Deppisch
  */
 public enum XPathExpressionResult {
     NODE, NODESET, STRING, BOOLEAN, NUMBER, INTEGER;

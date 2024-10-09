@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class VertxConsumer extends AbstractMessageConsumer {

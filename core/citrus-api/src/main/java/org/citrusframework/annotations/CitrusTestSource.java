@@ -25,7 +25,6 @@ import java.lang.annotation.Target;
  * Citrus test case annotation used for Groovy test case definition inside a unit test class.
  * Each method annotated with this annotation will result in a separate test execution.
  *
- * @author Christoph Deppisch
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

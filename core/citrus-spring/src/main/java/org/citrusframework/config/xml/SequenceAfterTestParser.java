@@ -19,7 +19,6 @@ package org.citrusframework.config.xml;
 import org.citrusframework.container.*;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class SequenceAfterTestParser extends AbstractTestBoundaryActionContainerParser {

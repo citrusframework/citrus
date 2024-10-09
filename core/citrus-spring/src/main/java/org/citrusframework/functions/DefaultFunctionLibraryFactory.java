@@ -23,9 +23,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 
-/**
- * @author Christoph Deppisch
- */
 public class DefaultFunctionLibraryFactory implements FactoryBean<DefaultFunctionLibrary>, ApplicationContextAware, EnvironmentAware {
 
     private ApplicationContext applicationContext;

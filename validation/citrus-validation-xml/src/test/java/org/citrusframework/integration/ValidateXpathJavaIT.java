@@ -32,9 +32,6 @@ import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.citrusframework.dsl.XmlSupport.xml;
 import static org.citrusframework.dsl.XpathSupport.xpath;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class ValidateXpathJavaIT extends TestNGCitrusSpringSupport {
 

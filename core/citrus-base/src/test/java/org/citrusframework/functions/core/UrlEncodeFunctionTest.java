@@ -26,9 +26,6 @@ import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class UrlEncodeFunctionTest extends UnitTestSupport {
     private final UrlEncodeFunction function = new UrlEncodeFunction();
 

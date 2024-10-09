@@ -24,7 +24,6 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class SeleniumEndpointComponent extends AbstractEndpointComponent {

@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.MimeMailMessage;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class MailClient extends AbstractEndpoint implements Producer, InitializingPhase {

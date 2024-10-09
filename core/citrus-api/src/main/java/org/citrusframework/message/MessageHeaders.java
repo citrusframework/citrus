@@ -19,7 +19,6 @@ package org.citrusframework.message;
 /**
  * Citrus specific message headers.
  *
- * @author Christoph Deppisch
  */
 public final class MessageHeaders {
 

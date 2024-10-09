@@ -28,7 +28,6 @@ import org.w3c.dom.Element;
 /**
  * Parser for the configuration of an SSH server
  *
- * @author Roland Huss, Christoph Deppisch
  */
 public class SftpServerParser extends SshServerParser {
 

@@ -35,7 +35,6 @@ import org.citrusframework.spi.ResourcePathTypeResolver;
  * The specified file must define the type of {@link TestCaseRunnerProvider} responsible for
  * delivering the custom test case runner.
  *
- * @author Thorsten Schlathoelter
  * @since 4.0
  * @see TestCaseRunnerProvider
  */

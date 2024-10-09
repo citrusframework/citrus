@@ -48,7 +48,6 @@ import org.w3c.dom.Node;
 /**
  * Bean definition parser for kubernetes client action in test case.
  *
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class KubernetesExecuteActionParser<T extends KubernetesCommand<?, ?>> implements BeanDefinitionParser {

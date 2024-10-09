@@ -26,9 +26,6 @@ import static org.citrusframework.actions.FailAction.Builder.fail;
 import static org.citrusframework.container.Assert.Builder.assertException;
 import static org.citrusframework.container.RepeatOnErrorUntilTrue.Builder.repeatOnError;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class RepeatOnErrorJavaIT extends TestNGCitrusSpringSupport {
 

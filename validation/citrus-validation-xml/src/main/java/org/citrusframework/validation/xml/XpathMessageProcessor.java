@@ -41,7 +41,6 @@ import org.w3c.dom.Node;
  * Processor implementation evaluating XPath expressions on message payload during message construction.
  * Class identifies XML elements inside the message payload via XPath expressions in order to overwrite their value.
  *
- * @author Christoph Deppisch
  */
 public class XpathMessageProcessor extends AbstractMessageProcessor {
 

@@ -32,7 +32,6 @@ import static org.citrusframework.util.StringUtils.hasText;
  * optional endIndex may be given as function parameter, too. The parameter usage looks
  * like this: substring(targetString, beginIndex, [endIndex]).
  *
- * @author Christoph Deppisch
  */
 public class SubstringFunction implements Function {
 

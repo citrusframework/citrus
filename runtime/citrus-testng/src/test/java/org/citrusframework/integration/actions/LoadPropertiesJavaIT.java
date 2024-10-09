@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.citrusframework.actions.LoadPropertiesAction.Builder.load;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class LoadPropertiesJavaIT extends TestNGCitrusSpringSupport {
 

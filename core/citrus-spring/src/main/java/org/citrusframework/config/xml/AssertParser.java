@@ -31,7 +31,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for assert action in test case.
  *
- * @author Christoph Deppisch
  */
 public class AssertParser implements BeanDefinitionParser {
 

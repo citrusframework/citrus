@@ -30,7 +30,6 @@ import org.w3c.dom.Element;
  * bean definition. Registers endpoint configuration as bean definition in parser context and adds reference to endpoint
  * bean definition.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public abstract class AbstractEndpointParser extends AbstractBeanDefinitionParser {

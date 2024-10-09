@@ -25,9 +25,6 @@ import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class CreateCDataSectionFunctionTest extends AbstractTestNGUnitTest {
     CreateCDataSectionFunction function = new CreateCDataSectionFunction();
 

@@ -27,9 +27,6 @@ import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHe
 import static org.citrusframework.dsl.XmlSupport.xml;
 import static org.citrusframework.ws.actions.SoapActionBuilder.soap;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport {
 

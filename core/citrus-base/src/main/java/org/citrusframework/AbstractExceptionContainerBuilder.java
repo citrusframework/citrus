@@ -18,9 +18,6 @@ package org.citrusframework;
 
 import org.citrusframework.container.AbstractActionContainer;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class AbstractExceptionContainerBuilder<T extends AbstractActionContainer, S extends AbstractExceptionContainerBuilder<T, S>> extends AbstractTestContainerBuilder<T, S> {
 
     /**

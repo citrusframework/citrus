@@ -21,7 +21,6 @@ import org.citrusframework.kubernetes.config.xml.*;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class CitrusKubernetesTestcaseNamespaceHandler extends NamespaceHandlerSupport {

@@ -31,7 +31,6 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageDeliveryException;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class ChannelProducer implements Producer {

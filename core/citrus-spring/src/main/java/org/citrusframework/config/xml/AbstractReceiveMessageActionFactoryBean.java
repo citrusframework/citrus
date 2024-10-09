@@ -30,9 +30,6 @@ import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class AbstractReceiveMessageActionFactoryBean<T extends ReceiveMessageAction, M extends ReceiveMessageBuilderSupport<T, B, M>, B extends ReceiveMessageAction.ReceiveMessageActionBuilder<T, M, B>> extends AbstractTestActionFactoryBean<T, B> {
 
     /**

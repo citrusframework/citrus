@@ -23,9 +23,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.StopTimeAction;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "stop-time")
 public class StopTime implements TestActionBuilder<StopTimeAction> {
 

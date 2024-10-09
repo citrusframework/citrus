@@ -29,9 +29,6 @@ import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 
-/**
- * @author Christoph Deppisch
- */
 @ExtendWith({CitrusExtension.class, FailJUnit5IT.ShouldFailExtension.class})
 public class FailJUnit5IT {
 

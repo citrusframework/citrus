@@ -21,9 +21,6 @@ import org.citrusframework.message.builder.ObjectMappingPayloadBuilder;
 import org.citrusframework.validation.json.JsonMappingValidationProcessor;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 
-/**
- * @author Christoph Deppisch
- */
 public class JsonSupport {
 
     /**

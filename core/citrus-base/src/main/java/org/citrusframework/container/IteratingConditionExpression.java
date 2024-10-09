@@ -22,7 +22,6 @@ import org.citrusframework.context.TestContext;
  * Interface used when iterating test action containers evaluate
  * the iteration breaking condition.
  *
- * @author Christoph Deppisch
  * @since 2.3
  */
 @FunctionalInterface

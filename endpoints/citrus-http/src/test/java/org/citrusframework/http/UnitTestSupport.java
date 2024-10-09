@@ -21,9 +21,6 @@ import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.validation.xml.DomXmlMessageValidator;
 import org.testng.annotations.BeforeMethod;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class UnitTestSupport {
 
     protected TestContextFactory testContextFactory;

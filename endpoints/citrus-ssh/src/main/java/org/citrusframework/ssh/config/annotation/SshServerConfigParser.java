@@ -26,7 +26,6 @@ import org.citrusframework.ssh.server.SshServerBuilder;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class SshServerConfigParser implements AnnotationConfigParser<SshServerConfig, SshServer> {

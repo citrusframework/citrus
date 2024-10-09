@@ -19,7 +19,6 @@ package org.citrusframework.ws.addressing;
 import org.citrusframework.ws.message.SoapMessageHeaders;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public abstract class WsAddressingMessageHeaders {

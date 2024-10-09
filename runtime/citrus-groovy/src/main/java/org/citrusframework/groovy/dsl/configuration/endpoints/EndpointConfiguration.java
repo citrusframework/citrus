@@ -25,9 +25,6 @@ import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.MissingMethodException;
 
-/**
- * @author Christoph Deppisch
- */
 public class EndpointConfiguration extends GroovyObjectSupport implements Supplier<Endpoint> {
 
     private final String type;

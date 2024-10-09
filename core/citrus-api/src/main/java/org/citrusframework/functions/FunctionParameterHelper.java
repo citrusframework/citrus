@@ -23,7 +23,6 @@ import java.util.StringTokenizer;
 /**
  * Helper class parsing a parameter string and converting the tokens to a parameter list.
  *
- * @author Christoph Deppisch
  */
 public final class FunctionParameterHelper {
 

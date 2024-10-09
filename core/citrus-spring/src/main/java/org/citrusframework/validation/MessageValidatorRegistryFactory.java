@@ -26,7 +26,6 @@ import org.springframework.context.ApplicationContextAware;
  * The validators that are located in the Spring bean application context may overwrite existing default message validators that
  * have the same name.
  *
- * @author Christoph Deppisch
  */
 public class MessageValidatorRegistryFactory implements FactoryBean<MessageValidatorRegistry>, ApplicationContextAware {
 

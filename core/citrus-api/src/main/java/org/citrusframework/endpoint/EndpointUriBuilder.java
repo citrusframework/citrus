@@ -16,9 +16,6 @@
 
 package org.citrusframework.endpoint;
 
-/**
- * @author Christoph Deppisch
- */
 @FunctionalInterface
 public interface EndpointUriBuilder {
 

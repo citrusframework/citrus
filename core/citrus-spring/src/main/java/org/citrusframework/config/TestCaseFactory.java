@@ -25,7 +25,6 @@ import org.springframework.beans.factory.FactoryBean;
 /**
  * Test case factory bean constructs test cases with test actions and test finally block.
  *
- * @author Christoph Deppisch
  */
 public class TestCaseFactory implements FactoryBean<TestCase> {
     /** Result test case object */

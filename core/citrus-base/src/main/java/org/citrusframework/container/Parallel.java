@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
  * Test action will execute nested actions in parallel. Each action is executed in a
  * separate thread. Container joins all threads and waiting for them to end successfully.
  *
- * @author Christoph Deppisch
  */
 public class Parallel extends AbstractActionContainer {
 

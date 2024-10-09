@@ -27,9 +27,6 @@ import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Christoph Deppisch
- */
 public class DirectSyncConsumer extends DirectConsumer implements ReplyProducer {
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(DirectSyncConsumer.class);

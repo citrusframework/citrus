@@ -51,9 +51,6 @@ import org.citrusframework.functions.core.UnixTimestampFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Christoph Deppisch
- */
 public class DefaultFunctionLibrary extends FunctionLibrary {
 
     /** Logger */

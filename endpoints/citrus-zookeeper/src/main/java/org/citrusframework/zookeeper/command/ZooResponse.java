@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class ZooResponse {

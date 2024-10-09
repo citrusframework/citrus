@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
  * Class to provide general file utilities, such as listing all XML files in a directory,
  * or finding certain tests in a directory.
  *
- * @author Christoph Deppisch
  * @since 2007
  */
 public abstract class FileUtils {

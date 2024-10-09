@@ -23,7 +23,6 @@ import org.citrusframework.testng.CitrusParameters;
 import org.testng.annotations.*;
 
 /**
- * @author Christoph Deppisch
  * @since 2011
  */
 public class DataProviderIT extends TestNGCitrusSpringSupport {

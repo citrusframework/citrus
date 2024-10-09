@@ -24,7 +24,6 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.jmx.client.JmxClient;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class JmxEndpointComponent extends AbstractEndpointComponent {

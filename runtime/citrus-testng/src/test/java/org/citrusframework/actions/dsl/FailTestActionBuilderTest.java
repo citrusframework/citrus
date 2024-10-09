@@ -27,7 +27,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.actions.FailAction.Builder.fail;
 
 /**
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class FailTestActionBuilderTest extends UnitTestSupport {

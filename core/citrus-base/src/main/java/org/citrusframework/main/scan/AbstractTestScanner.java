@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public abstract class AbstractTestScanner implements TestScanner {

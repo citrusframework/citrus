@@ -49,7 +49,6 @@ import org.w3c.dom.Node;
 /**
  * Bean definition parser for zookeeper client action in test case.
  *
- * @author Martin Maher
  * @since 2.5
  */
 public class ZooExecuteActionParser implements BeanDefinitionParser {

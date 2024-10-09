@@ -25,7 +25,6 @@ import static java.util.Objects.requireNonNullElse;
 /**
  * Utility class for functions.
  *
- * @author Christoph Deppisch
  */
 public final class FunctionUtils {
 

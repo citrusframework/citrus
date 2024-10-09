@@ -25,7 +25,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 /**
- * @author Christoph Deppisch
  * @since 2.2
  */
 @SuppressWarnings("squid:S2699")

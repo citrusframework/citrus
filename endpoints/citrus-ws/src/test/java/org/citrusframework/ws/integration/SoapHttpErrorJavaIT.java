@@ -28,9 +28,6 @@ import static org.citrusframework.container.Sequence.Builder.sequential;
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
 import static org.citrusframework.dsl.XmlSupport.xml;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class SoapHttpErrorJavaIT extends TestNGCitrusSpringSupport {
 

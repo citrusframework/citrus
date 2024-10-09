@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
  * with a XSLT document(specified inline or from external file resource)
  * and puts the result in the specified variable.
  *
- * @author Philipp Komninos
  * @since 2010
  */
 public class TransformAction extends AbstractTestAction {

@@ -29,9 +29,6 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.xml.container.Template;
 
-/**
- * @author Christoph Deppisch
- */
 public class XmlTemplateLoader implements TemplateLoader, ReferenceResolverAware {
 
     private final JAXBContext jaxbContext;

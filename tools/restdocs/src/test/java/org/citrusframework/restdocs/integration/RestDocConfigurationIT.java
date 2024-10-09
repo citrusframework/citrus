@@ -38,7 +38,6 @@ import static org.citrusframework.restdocs.http.CitrusRestDocsSupport.restDocsCo
 import static org.citrusframework.restdocs.http.CitrusRestDocsSupport.restDocsInterceptor;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class RestDocConfigurationIT extends TestNGCitrusSpringSupport {

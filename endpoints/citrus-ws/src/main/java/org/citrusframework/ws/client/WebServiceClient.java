@@ -49,7 +49,6 @@ import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
 /**
  * Client sends SOAP WebService messages to some server endpoint via Http protocol. Client waits for synchronous
  * SOAP response message.
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class WebServiceClient extends AbstractEndpoint implements Producer, ReplyConsumer {

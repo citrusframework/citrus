@@ -25,7 +25,6 @@ import java.util.Map;
  * Library holding a set of functions. Each library defines a function prefix as namespace, so
  * there will be no naming conflicts when using multiple libraries at a time.
  *
- * @author Christoph Deppisch
  */
 public class FunctionLibrary {
     /** Map of functions in this library */

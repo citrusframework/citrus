@@ -21,7 +21,6 @@ import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.Producer;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class CamelEndpoint extends AbstractEndpoint {

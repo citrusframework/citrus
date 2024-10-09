@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
 /**
  * A command for delegation to a endpoint adapter
  *
- * @author Roland Huss
  * @since 1.3
  */
 public class SshCommand implements Command, Runnable {

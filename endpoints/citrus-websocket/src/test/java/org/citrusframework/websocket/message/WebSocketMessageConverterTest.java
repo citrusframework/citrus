@@ -29,7 +29,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 /**
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class WebSocketMessageConverterTest extends AbstractTestNGUnitTest {

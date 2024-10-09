@@ -24,9 +24,6 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.w3c.dom.Element;
 
-/**
- * @author Christoph Deppisch
- */
 public class XsdSchemaParser extends AbstractBeanDefinitionParser {
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {

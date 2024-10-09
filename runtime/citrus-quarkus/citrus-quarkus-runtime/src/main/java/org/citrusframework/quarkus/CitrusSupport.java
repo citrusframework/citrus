@@ -26,7 +26,6 @@ import io.quarkus.test.common.QuarkusTestResource;
 /**
  * Special Citrus annotation that enables Citrus support on QuarkusTest framework.
  *
- * @author Christoph Deppisch
  */
 @QuarkusTestResource(CitrusTestResource.class)
 @Retention(RetentionPolicy.RUNTIME)

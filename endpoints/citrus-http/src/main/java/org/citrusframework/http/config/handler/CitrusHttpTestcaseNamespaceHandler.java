@@ -20,7 +20,6 @@ import org.citrusframework.http.config.xml.*;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class CitrusHttpTestcaseNamespaceHandler extends NamespaceHandlerSupport {

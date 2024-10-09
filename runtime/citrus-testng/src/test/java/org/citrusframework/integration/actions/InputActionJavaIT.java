@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.citrusframework.actions.InputAction.Builder.input;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class InputActionJavaIT extends TestNGCitrusSpringSupport {
 

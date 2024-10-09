@@ -23,7 +23,6 @@ import org.citrusframework.websocket.message.WebSocketMessageConverter;
 
 /**
  * Abstract endpoint configuration implementation provides basic endpoint properties for web socket endpoints.
- * @author Martin Maher
  * @since 2.3
  */
 public abstract class AbstractWebSocketEndpointConfiguration extends AbstractPollableEndpointConfiguration implements WebSocketEndpointConfiguration {

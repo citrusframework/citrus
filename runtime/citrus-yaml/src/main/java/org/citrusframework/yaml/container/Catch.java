@@ -23,9 +23,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.TestActions;
 
-/**
- * @author Christoph Deppisch
- */
 public class Catch implements TestActionBuilder<org.citrusframework.container.Catch>, ReferenceResolverAware {
 
     private final org.citrusframework.container.Catch.Builder builder = new org.citrusframework.container.Catch.Builder();

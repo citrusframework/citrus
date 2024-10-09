@@ -29,7 +29,6 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
  * Test executing endpoint adapter specialization executes a Java DSL test designer or test runner loaded from
  * Spring application context by bean name mapping.
  *
- * @author Christoph Deppisch
  * @since 1.3.1
  */
 public class TestBehaviorExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapter {

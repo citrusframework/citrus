@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Close opened window by name.
  *
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class CloseWindowAction extends AbstractSeleniumAction implements SeleniumAction {

@@ -19,7 +19,6 @@ package org.citrusframework.exceptions;
 /**
  * Unknown validation matchers cause this exception.
  *
- * @author Christoph Deppisch
  */
 public class NoSuchValidationMatcherException extends CitrusRuntimeException {
 

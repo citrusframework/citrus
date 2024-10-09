@@ -29,7 +29,6 @@ import org.citrusframework.variable.VariableUtils;
 /**
  * Utility class for validation matchers.
  *
- * @author Christian Wied
  */
 public final class ValidationMatcherUtils {
 

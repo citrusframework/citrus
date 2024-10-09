@@ -31,7 +31,6 @@ import static org.testng.Assert.assertTrue;
 /**
  * Test the {@link RandomEnumValueFunction} function.
  *
- * @author Dimo Velev (dimo.velev@gmail.com)
  *
  */
 public class RandomEnumValueFunctionTest extends UnitTestSupport {

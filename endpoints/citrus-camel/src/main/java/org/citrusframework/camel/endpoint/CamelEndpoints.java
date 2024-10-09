@@ -18,9 +18,6 @@ package org.citrusframework.camel.endpoint;
 
 import org.citrusframework.endpoint.builder.AsyncSyncEndpointBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public final class CamelEndpoints extends AsyncSyncEndpointBuilder<CamelEndpointBuilder, CamelSyncEndpointBuilder> {
     /**
      * Private constructor setting the sync and async builder implementation.

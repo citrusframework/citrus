@@ -25,9 +25,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
 
     @Test

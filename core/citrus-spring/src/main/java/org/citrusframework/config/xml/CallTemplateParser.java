@@ -33,7 +33,6 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 /**
  * Bean definition parser for call template action in test case.
  *
- * @author Christoph Deppisch
  */
 public class CallTemplateParser implements BeanDefinitionParser {
 

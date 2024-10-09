@@ -57,9 +57,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class SendMessageActionTest extends UnitTestSupport {
 
     private Endpoint endpoint = mock(Endpoint.class);

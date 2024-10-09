@@ -35,7 +35,6 @@ import org.w3c.dom.Element;
  * Bean definition parser for payload element used in message
  * elements in send and receive action.
  *
- * @author Christoph Deppisch
  */
 public abstract class PayloadElementParser {
 

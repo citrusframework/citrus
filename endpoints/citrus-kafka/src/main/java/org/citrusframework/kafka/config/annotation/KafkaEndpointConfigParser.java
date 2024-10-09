@@ -29,7 +29,6 @@ import org.citrusframework.util.StringUtils;
 import java.util.Map;
 
 /**
- * @author Christoph Deppisch
  * @since 2.8
  */
 public class KafkaEndpointConfigParser implements AnnotationConfigParser<KafkaEndpointConfig, KafkaEndpoint> {

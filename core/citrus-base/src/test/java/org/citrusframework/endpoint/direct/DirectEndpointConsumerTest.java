@@ -39,9 +39,6 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class DirectEndpointConsumerTest {
 
     private MessageQueue queue = Mockito.mock(MessageQueue.class);

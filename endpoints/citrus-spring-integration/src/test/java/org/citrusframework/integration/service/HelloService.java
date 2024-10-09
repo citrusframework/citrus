@@ -20,9 +20,6 @@ import org.citrusframework.integration.service.model.HelloRequest;
 import org.citrusframework.integration.service.model.HelloResponse;
 import org.springframework.messaging.Message;
 
-/**
- * @author Christoph Deppisch
- */
 public interface HelloService {
     /**
      * Handles hello request responding with proper hello response.

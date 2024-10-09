@@ -22,7 +22,6 @@ import org.citrusframework.TestBehavior;
 import org.citrusframework.context.TestContext;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class ApplyTestBehaviorAction extends AbstractTestAction {

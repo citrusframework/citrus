@@ -22,9 +22,6 @@ import org.citrusframework.ws.actions.SendSoapFaultAction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class SendSoapFaultActionParserTest extends AbstractActionParserTest<SendSoapFaultAction> {
 
     @Test

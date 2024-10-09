@@ -36,7 +36,6 @@ import org.citrusframework.util.FileUtils;
  * Message processor automatically converts message payloads to gzipped content. Supports String typed message payloads and
  * payload resources.
  *
- * @author Christoph Deppisch
  */
 public class GzipMessageProcessor extends AbstractMessageProcessor {
 

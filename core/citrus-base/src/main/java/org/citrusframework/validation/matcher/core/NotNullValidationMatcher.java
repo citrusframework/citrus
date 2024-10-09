@@ -21,9 +21,6 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import java.util.List;
 
-/**
- * @author Tamer Erdogan
- */
 public class NotNullValidationMatcher implements ValidationMatcher {
 
     @Override

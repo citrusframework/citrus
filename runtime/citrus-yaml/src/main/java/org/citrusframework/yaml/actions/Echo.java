@@ -19,9 +19,6 @@ package org.citrusframework.yaml.actions;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.EchoAction;
 
-/**
- * @author Christoph Deppisch
- */
 public class Echo implements TestActionBuilder<EchoAction> {
 
     private final EchoAction.Builder builder = new EchoAction.Builder();

@@ -32,9 +32,6 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class CreateTestMojoTest {
 
     private Prompter prompter = Mockito.mock(Prompter.class);

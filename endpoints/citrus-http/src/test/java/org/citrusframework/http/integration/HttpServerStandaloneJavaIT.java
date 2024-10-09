@@ -28,9 +28,6 @@ import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.citrusframework.container.Assert.Builder.assertException;
 import static org.citrusframework.http.actions.HttpActionBuilder.http;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport {
 

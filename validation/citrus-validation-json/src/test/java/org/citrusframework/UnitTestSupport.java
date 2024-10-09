@@ -31,9 +31,6 @@ import org.citrusframework.validation.json.JsonPathMessageValidator;
 import org.citrusframework.validation.json.JsonTextMessageValidator;
 import org.testng.Assert;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class UnitTestSupport extends AbstractTestNGUnitTest {
 
     @Override

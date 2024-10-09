@@ -16,9 +16,6 @@
 
 package org.citrusframework.docs;
 
-/**
- * @author Christoph Deppisch
- */
 public interface TestDocsGenerator {
 
     /**

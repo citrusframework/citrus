@@ -20,7 +20,6 @@ import jakarta.xml.bind.annotation.*;
 
 /**
  * Attachment part adds file name.
- * @author Christoph Deppisch
  * @since 1.4
  */
 @XmlAccessorType(XmlAccessType.FIELD)

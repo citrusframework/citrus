@@ -32,9 +32,6 @@ import org.citrusframework.validation.script.ScriptValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
 
     private PlainTextMessageValidator validator = new PlainTextMessageValidator();

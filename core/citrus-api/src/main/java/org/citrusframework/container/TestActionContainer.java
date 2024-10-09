@@ -24,7 +24,6 @@ import org.citrusframework.TestAction;
  * Container interface describing all test action containers that hold several embedded test actions
  * to execute.
  *
- * @author Christoph Deppisch
  */
 public interface TestActionContainer extends TestAction {
 

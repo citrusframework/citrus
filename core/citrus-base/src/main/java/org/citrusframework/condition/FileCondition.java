@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Tests for the presence of a file and returns true if the file exists
  *
- * @author Martin Maher
  * @since 2.4
  */
 public class FileCondition extends AbstractCondition {

@@ -25,9 +25,6 @@ import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 
-/**
- * @author Christoph Deppisch
- */
 public final class JUnit4ParameterHelper {
 
     /**

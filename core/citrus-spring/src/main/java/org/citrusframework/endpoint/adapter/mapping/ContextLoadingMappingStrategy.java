@@ -28,7 +28,6 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  * Endpoint adapter mapping strategy loads new Spring Application contexts defined by one or more locations
  * and tries to find matching Spring bean with given name or id.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class ContextLoadingMappingStrategy implements EndpointAdapterMappingStrategy {

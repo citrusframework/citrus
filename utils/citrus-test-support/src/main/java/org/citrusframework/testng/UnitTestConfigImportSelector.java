@@ -22,9 +22,6 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.util.ClassUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public class UnitTestConfigImportSelector implements DeferredImportSelector {
     @Override
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {

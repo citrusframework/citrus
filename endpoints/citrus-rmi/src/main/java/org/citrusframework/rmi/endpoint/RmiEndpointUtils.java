@@ -17,7 +17,6 @@
 package org.citrusframework.rmi.endpoint;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public abstract class RmiEndpointUtils {

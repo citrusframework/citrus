@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.actions.AntRunAction.Builder.antrun;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class AntRunActionJavaIT extends TestNGCitrusSpringSupport {
 

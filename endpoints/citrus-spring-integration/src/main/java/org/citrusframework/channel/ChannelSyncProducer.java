@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
  * Reply message is correlated and stored in correlation manager. This way test cases are able to receive synchronous
  * message asynchronously at later time.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class ChannelSyncProducer extends ChannelProducer implements ReplyConsumer {

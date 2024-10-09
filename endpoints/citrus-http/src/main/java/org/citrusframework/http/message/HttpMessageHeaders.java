@@ -18,9 +18,6 @@ package org.citrusframework.http.message;
 
 import org.citrusframework.message.MessageHeaders;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class HttpMessageHeaders {
 
     /**

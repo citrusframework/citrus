@@ -27,7 +27,6 @@ import org.citrusframework.message.MessageCorrelator;
 import org.apache.commons.net.ftp.FTPCmd;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class FtpEndpointConfiguration extends AbstractPollableEndpointConfiguration {

@@ -28,7 +28,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
 /**
- * @author Matthias Beil
  * @since 1.2
  */
 public class ConditionalTest extends UnitTestSupport {

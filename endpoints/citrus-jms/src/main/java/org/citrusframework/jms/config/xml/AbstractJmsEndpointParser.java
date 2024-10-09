@@ -27,7 +27,6 @@ import org.w3c.dom.Element;
  * Abstract base class for JMS endpoint configuration. Parser creates endpoint bean definitions setting
  * properties and property references.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public abstract class AbstractJmsEndpointParser extends AbstractEndpointParser {

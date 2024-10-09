@@ -37,7 +37,6 @@ import static org.citrusframework.dsl.XpathSupport.xpath;
 import static org.citrusframework.http.actions.HttpActionBuilder.http;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport {

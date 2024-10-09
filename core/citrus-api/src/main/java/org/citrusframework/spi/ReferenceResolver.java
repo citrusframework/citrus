@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public interface ReferenceResolver extends ReferenceRegistry {

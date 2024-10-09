@@ -27,7 +27,6 @@ import org.citrusframework.util.StringUtils;
  * Endpoint uri resolver working on message headers. Resolver is searching for a specific header entry which holds the actual
  * target endpoint uri.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class DynamicEndpointUriResolver implements EndpointUriResolver {

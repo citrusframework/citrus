@@ -21,7 +21,6 @@ import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.websocket.message.WebSocketMessageConverter;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class WebSocketClientBuilder extends AbstractEndpointBuilder<WebSocketClient> {

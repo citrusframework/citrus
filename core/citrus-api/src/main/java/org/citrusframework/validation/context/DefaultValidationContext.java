@@ -17,7 +17,6 @@
 package org.citrusframework.validation.context;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class DefaultValidationContext implements ValidationContext {

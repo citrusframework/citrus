@@ -33,7 +33,6 @@ import org.citrusframework.validation.context.ValidationContext;
  * Message validator compares binary streams. Assumes control
  * message payload is convertable to an input stream so we can compare the stream data with buffer read.
  *
- * @author Christoph Deppisch
  */
 public class BinaryMessageValidator extends DefaultMessageValidator {
 

@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)

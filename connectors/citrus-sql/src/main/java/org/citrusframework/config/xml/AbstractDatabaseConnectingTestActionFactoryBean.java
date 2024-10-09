@@ -23,9 +23,6 @@ import org.citrusframework.actions.AbstractDatabaseConnectingTestAction;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class AbstractDatabaseConnectingTestActionFactoryBean<T extends AbstractDatabaseConnectingTestAction, B extends AbstractDatabaseConnectingTestAction.Builder<T, B>> extends AbstractTestActionFactoryBean<T, B> {
 
     /**

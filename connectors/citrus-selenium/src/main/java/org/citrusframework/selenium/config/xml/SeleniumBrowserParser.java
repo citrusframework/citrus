@@ -29,7 +29,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for selenium browser instance.
  *
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class SeleniumBrowserParser extends AbstractEndpointParser {

@@ -28,9 +28,6 @@ import static org.citrusframework.actions.ApplyTestBehaviorAction.Builder.apply;
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.citrusframework.container.Sequence.Builder.sequential;
 
-/**
- * @author Christoph Deppisch
- */
 @ExtendWith(CitrusExtension.class)
 public class ApplyTestBehaviorIT {
 

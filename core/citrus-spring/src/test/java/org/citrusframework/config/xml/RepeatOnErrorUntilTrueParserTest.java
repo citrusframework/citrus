@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.container.RepeatOnErrorUntilTrue;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class RepeatOnErrorUntilTrueParserTest extends AbstractActionParserTest<RepeatOnErrorUntilTrue> {
 
     @Test

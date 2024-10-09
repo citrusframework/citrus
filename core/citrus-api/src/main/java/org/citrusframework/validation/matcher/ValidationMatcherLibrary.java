@@ -25,7 +25,6 @@ import org.citrusframework.exceptions.NoSuchValidationMatcherException;
  * Library holding a set of validation matchers. Each library defines a validation prefix as namespace, so
  * there will be no naming conflicts when using multiple libraries at a time.
  *
- * @author Christian Wied
  */
 public class ValidationMatcherLibrary {
     /** Map of validationMatchers in this library */

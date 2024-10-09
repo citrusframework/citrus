@@ -27,7 +27,6 @@ import org.springframework.messaging.MessageChannel;
  * Channel endpoint component creates synchronous or asynchronous channel endpoint and sets configuration properties
  * accordingly.
  *
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class ChannelEndpointComponent extends AbstractEndpointComponent {

@@ -28,7 +28,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public abstract class AbstractKubernetesCommand<T extends HasMetadata, O, C extends KubernetesCommand<T, O>> implements KubernetesCommand<T, O> {

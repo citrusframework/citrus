@@ -26,7 +26,6 @@ import jakarta.jms.*;
  * Endpoint configuration sets additional synchronous message handling properties such as
  * reply destination and message correlator.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class JmsSyncEndpointConfiguration extends JmsEndpointConfiguration implements PollableEndpointConfiguration {

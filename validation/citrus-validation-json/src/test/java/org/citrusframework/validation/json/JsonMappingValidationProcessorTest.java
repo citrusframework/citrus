@@ -27,9 +27,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.validation.json.JsonMappingValidationProcessor.Builder.validate;
 
-/**
- * @author Christoph Deppisch
- */
 public class JsonMappingValidationProcessorTest extends AbstractTestNGUnitTest {
 
     private final ObjectMapper mapper = new ObjectMapper();

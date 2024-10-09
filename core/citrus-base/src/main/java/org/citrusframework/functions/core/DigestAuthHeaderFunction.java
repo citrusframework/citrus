@@ -36,7 +36,6 @@ import java.util.List;
  * opaque
  * algorithm
  *
- * @author Christoph Deppisch
  */
 public class DigestAuthHeaderFunction implements Function {
 

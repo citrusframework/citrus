@@ -30,7 +30,6 @@ import java.util.zip.GZIPInputStream;
  * Request wrapper wraps gzip input stream with unzipped stream. Read operations on that stream are
  * automatically decompressed with gzip encoding.
  *
- * @author Christoph Deppisch
  * @since 2.7.10
  */
 public class GzipHttpServletRequestWrapper extends HttpServletRequestWrapper {

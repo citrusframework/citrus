@@ -25,9 +25,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.expectThrows;
 
-/**
- * @author Valentin Soldo
- */
 public class KubernetesBadClientParserTest extends AbstractBeanDefinitionParserTest {
 
     @Override

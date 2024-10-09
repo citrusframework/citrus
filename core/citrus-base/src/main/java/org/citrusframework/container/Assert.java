@@ -35,7 +35,6 @@ import static org.citrusframework.validation.matcher.ValidationMatcherUtils.reso
 /**
  * Assert exception to happen in nested test action.
  *
- * @author Christoph Deppisch
  * @since 2009
  */
 public class Assert extends AbstractActionContainer {

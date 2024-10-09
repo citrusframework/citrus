@@ -26,7 +26,6 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class CamelSyncEndpointParser extends CamelEndpointParser {

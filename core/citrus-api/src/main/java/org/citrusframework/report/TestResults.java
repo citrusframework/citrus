@@ -33,7 +33,6 @@ import static java.util.Objects.nonNull;
 /**
  * Multiple {@link org.citrusframework.TestResult} instances combined to a {@link TestResults}.
  *
- * @author Christoph Deppisch
  */
 public class TestResults {
 

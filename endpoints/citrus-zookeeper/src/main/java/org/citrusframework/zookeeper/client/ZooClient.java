@@ -27,7 +27,6 @@ import java.io.IOException;
 /**
  * Zookeeper client used for executing zookeeper commands.
  *
- * @author Martin Maher
  * @since 2.5
  */
 public class ZooClient {

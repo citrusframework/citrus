@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
  * Basic message validator is able to verify empty message payloads. Both received and control message must have
  * empty message payloads otherwise ths validator will raise some exception.
  *
- * @author Christoph Deppisch
  */
 public class DefaultEmptyMessageValidator extends DefaultMessageValidator {
 

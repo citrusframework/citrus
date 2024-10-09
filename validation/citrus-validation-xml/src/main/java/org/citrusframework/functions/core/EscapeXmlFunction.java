@@ -27,7 +27,6 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeXml;
 /**
  * Escapes XML fragment with escaped characters for '<', '>'.
  *
- * @author Christoph Deppisch
  */
 public class EscapeXmlFunction implements Function {
 

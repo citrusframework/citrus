@@ -22,7 +22,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class DateRangeValidationMatcherIT  extends TestNGCitrusSpringSupport {

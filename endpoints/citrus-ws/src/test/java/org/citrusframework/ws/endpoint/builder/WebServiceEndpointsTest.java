@@ -24,9 +24,6 @@ import org.citrusframework.ws.server.WebServiceServerBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class WebServiceEndpointsTest {
 
     @Test

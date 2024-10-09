@@ -40,7 +40,6 @@ import org.citrusframework.util.FileUtils;
  *     <li>Boolean value to indicate that a dynamic replacement should be performed before the content is base64 encoded. Defaults to false.</li>
  * </ol>
  *
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class ReadFileResourceFunction implements Function {

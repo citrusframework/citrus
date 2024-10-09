@@ -27,7 +27,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for generic test action element.
  *
- * @author Christoph Deppisch
  */
 public class ActionParser implements BeanDefinitionParser {
 

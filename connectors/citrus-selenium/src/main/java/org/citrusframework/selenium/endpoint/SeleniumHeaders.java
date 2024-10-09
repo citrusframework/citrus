@@ -17,7 +17,6 @@
 package org.citrusframework.selenium.endpoint;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class SeleniumHeaders {

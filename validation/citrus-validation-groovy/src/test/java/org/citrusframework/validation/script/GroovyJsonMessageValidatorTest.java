@@ -32,9 +32,6 @@ import org.citrusframework.validation.xml.XpathMessageValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author DanielP
- */
 public class GroovyJsonMessageValidatorTest extends AbstractTestNGUnitTest {
 
     private final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();

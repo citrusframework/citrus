@@ -21,7 +21,6 @@ import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 
 /**
  * Basic Selenium action interface marks Selenium related test actions.
- * @author Christoph Deppisch
  * @since 2.7
  */
 public interface SeleniumAction extends TestAction {

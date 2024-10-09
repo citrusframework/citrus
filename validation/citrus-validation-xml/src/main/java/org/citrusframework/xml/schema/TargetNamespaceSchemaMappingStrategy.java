@@ -26,7 +26,6 @@ import org.springframework.xml.xsd.XsdSchema;
  * Mapping strategy checks on target namespaces in schemas to find matching schema
  * instance.
  *
- * @author Christoph Deppisch
  */
 public class TargetNamespaceSchemaMappingStrategy extends AbstractSchemaMappingStrategy {
 

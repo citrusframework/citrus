@@ -27,7 +27,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class RmiServerConfigParser implements AnnotationConfigParser<RmiServerConfig, RmiServer> {

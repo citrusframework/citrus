@@ -29,7 +29,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for jmx client instance.
  *
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class JmxClientParser extends AbstractEndpointParser {

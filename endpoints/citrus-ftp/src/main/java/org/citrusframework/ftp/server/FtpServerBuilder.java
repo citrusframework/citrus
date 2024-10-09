@@ -25,7 +25,6 @@ import org.citrusframework.server.AbstractServerBuilder;
 import org.citrusframework.spi.Resource;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServerBuilder> {

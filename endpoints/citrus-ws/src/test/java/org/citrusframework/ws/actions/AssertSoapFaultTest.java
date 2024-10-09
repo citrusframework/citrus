@@ -42,9 +42,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.DefaultTestActionBuilder.action;
 
-/**
- * @author Christoph Deppisch
- */
 public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Autowired

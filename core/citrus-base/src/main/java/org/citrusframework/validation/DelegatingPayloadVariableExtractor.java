@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
  * Generic extractor implementation delegating to JSONPath or XPath variable extractor based on given expression
  * type. Delegate extractor implementations are referenced through resource path lookup.
  *
- * @author Simon Hofmann
  * @since 2.7.3
  */
 public class DelegatingPayloadVariableExtractor implements VariableExtractor {

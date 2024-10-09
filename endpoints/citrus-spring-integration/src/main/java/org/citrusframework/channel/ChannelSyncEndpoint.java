@@ -20,7 +20,6 @@ import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.SelectiveConsumer;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class ChannelSyncEndpoint extends ChannelEndpoint {

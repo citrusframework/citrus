@@ -27,7 +27,6 @@ import static org.citrusframework.container.FinallySequence.Builder.doFinally;
 import static org.citrusframework.container.Timer.Builder.timer;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 @Test

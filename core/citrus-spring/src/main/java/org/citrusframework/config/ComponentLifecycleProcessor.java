@@ -29,9 +29,6 @@ import org.springframework.beans.factory.config.DestructionAwareBeanPostProcesso
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-/**
- * @author Christoph Deppisch
- */
 public class ComponentLifecycleProcessor implements DestructionAwareBeanPostProcessor, ApplicationContextAware {
 
     private ReferenceResolver referenceResolver;

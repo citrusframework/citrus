@@ -18,9 +18,6 @@ package org.citrusframework.xml;
 
 import javax.xml.transform.Source;
 
-/**
- * @author Christoph Deppisch
- */
 public interface Unmarshaller {
 
     Object unmarshal(Source source) throws Exception;

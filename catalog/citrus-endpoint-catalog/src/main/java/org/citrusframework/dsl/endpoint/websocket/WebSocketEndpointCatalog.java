@@ -20,9 +20,6 @@ import org.citrusframework.websocket.client.WebSocketClientBuilder;
 import org.citrusframework.websocket.endpoint.builder.WebSocketEndpoints;
 import org.citrusframework.websocket.server.WebSocketServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class WebSocketEndpointCatalog {
 
     /**

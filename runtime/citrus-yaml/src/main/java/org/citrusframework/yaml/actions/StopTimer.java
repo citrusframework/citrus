@@ -19,9 +19,6 @@ package org.citrusframework.yaml.actions;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.StopTimerAction;
 
-/**
- * @author Christoph Deppisch
- */
 public class StopTimer implements TestActionBuilder<StopTimerAction> {
 
     private final StopTimerAction.Builder builder = new StopTimerAction.Builder();

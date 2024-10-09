@@ -37,7 +37,6 @@ import java.util.List;
 import static org.citrusframework.util.StringUtils.hasText;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class WebSocketServerConfigParser implements AnnotationConfigParser<WebSocketServerConfig, WebSocketServer> {

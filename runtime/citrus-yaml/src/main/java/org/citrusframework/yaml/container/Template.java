@@ -23,9 +23,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.TestActions;
 
-/**
- * @author Christoph Deppisch
- */
 public class Template implements TestActionBuilder<org.citrusframework.container.Template>, ReferenceResolverAware {
 
     private final org.citrusframework.container.Template.Builder builder = new org.citrusframework.container.Template.Builder();

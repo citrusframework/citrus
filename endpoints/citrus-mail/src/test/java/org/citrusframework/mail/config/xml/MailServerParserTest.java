@@ -27,7 +27,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class MailServerParserTest extends AbstractBeanDefinitionParserTest {

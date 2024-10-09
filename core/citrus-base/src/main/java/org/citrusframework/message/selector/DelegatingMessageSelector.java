@@ -30,7 +30,6 @@ import org.citrusframework.message.MessageSelectorBuilder;
  * Message selector delegates incoming messages to several other selector implementations
  * according to selector names.
  *
- * @author Christoph Deppisch
  * @since 3.0
  */
 public class DelegatingMessageSelector implements MessageSelector {

@@ -23,9 +23,6 @@ import org.citrusframework.functions.FunctionParameterHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class DigestAuthHeaderFunctionTest extends UnitTestSupport {
 
     DigestAuthHeaderFunction function = new DigestAuthHeaderFunction();

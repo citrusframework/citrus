@@ -37,7 +37,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 1.3.1
  */
 @ContextConfiguration(classes = { CitrusSpringConfig.class, TestBehaviorExecutingEndpointAdapterTest.EndpointConfig.class })

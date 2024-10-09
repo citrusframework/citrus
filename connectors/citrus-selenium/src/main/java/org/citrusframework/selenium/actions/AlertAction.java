@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
  * Access current alert dialog. In case no alert is opened action fails.
  * Action supports optional alert text validation.
  *
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class AlertAction extends AbstractSeleniumAction {

@@ -24,9 +24,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.actions.ReceiveTimeoutAction;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class ReceiveTimeoutActionParserTest extends AbstractActionParserTest<ReceiveTimeoutAction> {
 
     @Test

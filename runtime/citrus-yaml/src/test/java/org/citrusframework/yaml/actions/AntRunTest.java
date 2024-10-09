@@ -23,9 +23,6 @@ import org.citrusframework.yaml.YamlTestLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class AntRunTest extends AbstractYamlActionTest {
 
     @Test

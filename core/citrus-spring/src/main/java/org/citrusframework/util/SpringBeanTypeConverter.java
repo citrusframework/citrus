@@ -35,9 +35,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-/**
- * @author Christoph Deppisch
- */
 public final class SpringBeanTypeConverter extends DefaultTypeConverter {
 
     /** Logger */

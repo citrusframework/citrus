@@ -38,9 +38,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-/**
- * @author Christoph Deppisch
- */
 public class TestResultsTest {
 
     private TestResults fixture;

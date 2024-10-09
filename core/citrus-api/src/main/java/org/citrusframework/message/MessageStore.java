@@ -20,7 +20,6 @@ import org.citrusframework.TestAction;
 import org.citrusframework.endpoint.Endpoint;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6.2
  */
 public interface MessageStore {

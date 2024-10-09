@@ -27,7 +27,6 @@ import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.startsWith;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class DefaultMessageHeaderValidatorTest extends AbstractTestNGUnitTest {

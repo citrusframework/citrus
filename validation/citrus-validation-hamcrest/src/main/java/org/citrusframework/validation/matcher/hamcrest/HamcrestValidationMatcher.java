@@ -47,7 +47,6 @@ import org.hamcrest.Matchers;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 @SuppressWarnings("unchecked")

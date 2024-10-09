@@ -44,7 +44,6 @@ import org.w3c.dom.NodeList;
  *
  * Class is abstract to prevent instantiation.
  *
- * @author Christoph Deppisch
  */
 public abstract class XPathUtils {
 

@@ -19,7 +19,6 @@ package org.citrusframework.rmi.message;
 import org.citrusframework.message.MessageHeaders;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public abstract class RmiMessageHeaders {

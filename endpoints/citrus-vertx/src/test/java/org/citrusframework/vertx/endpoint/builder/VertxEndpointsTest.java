@@ -24,9 +24,6 @@ import org.citrusframework.vertx.endpoint.VertxSyncEndpointBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class VertxEndpointsTest {
 
     @Test

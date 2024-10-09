@@ -18,9 +18,6 @@ package org.citrusframework.common;
 
 import org.citrusframework.TestAction;
 
-/**
- * @author Christoph Deppisch
- */
 public interface Described {
 
     /**

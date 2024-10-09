@@ -32,7 +32,6 @@ import org.citrusframework.util.FileUtils;
 import org.citrusframework.xml.StringResult;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class MailMessage extends DefaultMessage {

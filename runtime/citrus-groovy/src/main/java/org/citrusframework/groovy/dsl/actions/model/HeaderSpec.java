@@ -22,9 +22,6 @@ import java.util.function.Supplier;
 
 import groovy.lang.GroovyObjectSupport;
 
-/**
- * @author Christoph Deppisch
- */
 public class HeaderSpec extends GroovyObjectSupport implements Supplier<Map<String, Object>> {
 
     private final Map<String, Object> headers = new LinkedHashMap<>();

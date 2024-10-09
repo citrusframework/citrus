@@ -34,7 +34,6 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6.2
  */
 public class RequestCachingServletFilterTest {

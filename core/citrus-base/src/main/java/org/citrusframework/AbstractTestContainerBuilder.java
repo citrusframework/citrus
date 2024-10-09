@@ -28,7 +28,6 @@ import org.citrusframework.spi.ReferenceResolverAware;
 
 /**
  * Abstract container builder takes care on calling the container runner when actions are placed in the container.
- * @author Christoph Deppisch
  */
 public abstract class AbstractTestContainerBuilder<T extends TestActionContainer, S extends TestActionContainerBuilder<T, S>> extends AbstractTestActionBuilder<T, S> implements TestActionContainerBuilder<T, S>, ReferenceResolverAware {
 

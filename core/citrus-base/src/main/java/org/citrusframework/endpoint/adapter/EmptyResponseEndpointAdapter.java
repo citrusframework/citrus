@@ -22,7 +22,6 @@ import org.citrusframework.message.Message;
 /**
  * Endpoint adapter always returning empty response message.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class EmptyResponseEndpointAdapter extends StaticEndpointAdapter {

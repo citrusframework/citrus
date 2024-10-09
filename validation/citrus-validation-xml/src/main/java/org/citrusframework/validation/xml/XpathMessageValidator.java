@@ -42,7 +42,6 @@ import org.w3c.dom.Node;
 
 /**
  * Message validator evaluates set of XPath expressions on message payload and checks that values are as expected.
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class XpathMessageValidator extends AbstractMessageValidator<XpathMessageValidationContext> {

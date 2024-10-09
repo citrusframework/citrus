@@ -24,9 +24,6 @@ import org.citrusframework.functions.FunctionParameterHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class CurrentDateFunctionTest extends UnitTestSupport {
     CurrentDateFunction function = new CurrentDateFunction();
 

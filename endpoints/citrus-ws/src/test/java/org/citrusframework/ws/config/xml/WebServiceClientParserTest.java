@@ -31,9 +31,6 @@ import org.springframework.ws.soap.SoapMessageFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

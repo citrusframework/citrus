@@ -27,7 +27,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for fail action in test case.
  *
- * @author Christoph Deppisch
  */
 public class FailActionParser implements BeanDefinitionParser {
 

@@ -39,7 +39,6 @@ import static org.citrusframework.container.FinallySequence.Builder.doFinally;
 import static org.citrusframework.container.Sequence.Builder.sequential;
 
 /**
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class ApplyTestBehaviorTest extends UnitTestSupport {

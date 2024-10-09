@@ -26,7 +26,6 @@ import org.citrusframework.util.PropertyUtils;
 /**
  * Reporter creates a summary report as file.
  *
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class SummaryReporter extends AbstractOutputFileReporter {

@@ -60,7 +60,6 @@ import static org.springframework.web.context.WebApplicationContext.ROOT_WEB_APP
  * Simple Http server implementation starting an embedded Jetty server instance with
  * Spring Application context support. Incoming requests are handled with Spring MVC.
  *
- * @author Christoph Deppisch
  * @since 2007
  */
 public class HttpServer extends AbstractServer {

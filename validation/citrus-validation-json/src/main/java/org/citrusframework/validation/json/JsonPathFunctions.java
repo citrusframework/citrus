@@ -27,7 +27,6 @@ import net.minidev.json.JSONObject;
 /**
  * Custom JsonPath function support for size(), keySet() and toString() operations on Json objects and arrays.
  *
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class JsonPathFunctions {

@@ -20,9 +20,6 @@ import org.citrusframework.endpoint.builder.ClientServerEndpointBuilder;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public final class HttpEndpoints extends ClientServerEndpointBuilder<HttpClientBuilder, HttpServerBuilder> {
     /**
      * Private constructor setting the client and server builder implementation.

@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Kubernetes client uses Java kubernetes client implementation for executing kubernetes commands.
  *
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class KubernetesClient extends AbstractEndpoint implements Producer, ReplyConsumer {

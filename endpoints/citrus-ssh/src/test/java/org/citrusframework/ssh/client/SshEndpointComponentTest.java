@@ -25,9 +25,6 @@ import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class SshEndpointComponentTest {
 
     private TestContext context = new TestContext();

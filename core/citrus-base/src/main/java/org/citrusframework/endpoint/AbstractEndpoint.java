@@ -20,7 +20,6 @@ import org.citrusframework.TestActor;
 
 /**
  * Abstract message endpoint handles send/receive timeout setting and test actors.
- * @author Christoph Deppisch
  * @since 1.4
  */
 public abstract class AbstractEndpoint implements Endpoint {

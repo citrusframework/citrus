@@ -73,7 +73,6 @@ import static org.springframework.ws.transport.context.TransportContextHolder.ge
  * SpringWS {@link MessageEndpoint} implementation. Endpoint will delegate message processing to
  * a {@link EndpointAdapter} implementation.
  *
- * @author Christoph Deppisch
  */
 public class WebServiceEndpoint implements MessageEndpoint {
 

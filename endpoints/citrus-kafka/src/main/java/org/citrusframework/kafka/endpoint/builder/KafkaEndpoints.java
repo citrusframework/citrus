@@ -19,9 +19,6 @@ package org.citrusframework.kafka.endpoint.builder;
 import org.citrusframework.endpoint.builder.AsyncSyncEndpointBuilder;
 import org.citrusframework.kafka.endpoint.KafkaEndpointBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public final class KafkaEndpoints extends AsyncSyncEndpointBuilder<KafkaEndpointBuilder, KafkaEndpointBuilder> {
     /**
      * Private constructor setting the sync and async builder implementation.

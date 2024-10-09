@@ -32,7 +32,6 @@ import org.citrusframework.message.MessageConverter;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class KubernetesMessageConverter implements MessageConverter<KubernetesCommand<?, ?>, KubernetesCommand<?, ?>, KubernetesEndpointConfiguration> {

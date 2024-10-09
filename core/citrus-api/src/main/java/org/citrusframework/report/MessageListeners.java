@@ -23,9 +23,6 @@ import java.util.List;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 
-/**
- * @author Christoph Deppisch
- */
 public class MessageListeners implements MessageListenerAware {
 
     /**

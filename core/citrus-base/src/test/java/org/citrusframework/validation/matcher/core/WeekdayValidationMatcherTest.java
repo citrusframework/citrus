@@ -27,9 +27,6 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class WeekdayValidationMatcherTest extends UnitTestSupport {
 
     private WeekdayValidationMatcher matcher = new WeekdayValidationMatcher();

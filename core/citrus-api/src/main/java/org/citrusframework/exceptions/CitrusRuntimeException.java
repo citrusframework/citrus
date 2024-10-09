@@ -25,7 +25,6 @@ import org.citrusframework.report.FailureStackElement;
 /**
  * Basic custom runtime exception for all errors in Citrus
  *
- * @author Christoph Deppisch
  */
 public class CitrusRuntimeException extends RuntimeException {
 

@@ -19,7 +19,6 @@ package org.citrusframework.kafka.message;
 import org.citrusframework.message.MessageHeaders;
 
 /**
- * @author Christoph Deppisch
  * @since 2.8
  */
 public final class KafkaMessageHeaders {

@@ -35,9 +35,6 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class SendSoapFaultActionTest extends UnitTestSupport {
 
     private Endpoint endpoint = Mockito.mock(Endpoint.class);

@@ -38,7 +38,6 @@ import org.citrusframework.util.StringUtils;
  * Action can declare a set of valid answers, so user will be prompted until a valid
  * answer was returned.
  *
- * @author Christoph Deppisch
  */
 public class InputAction extends AbstractTestAction {
 

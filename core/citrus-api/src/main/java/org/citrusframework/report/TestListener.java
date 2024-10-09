@@ -21,7 +21,6 @@ import org.citrusframework.TestCase;
 /**
  * Test listener interface. Listeners invoked on test start, finish, failure, skip, success.
  *
- * @author Christoph Deppisch
  */
 public interface TestListener {
     /**

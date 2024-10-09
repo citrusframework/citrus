@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
  * Available objects inside groovy script are 'receivedMessage' which is the actual {@link Message} object
  * to validate and 'context' the current {@link TestContext}.
  *
- * @author Christoph Deppisch
  */
 public class GroovyScriptMessageValidator extends AbstractMessageValidator<ScriptValidationContext> {
 

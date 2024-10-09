@@ -40,9 +40,6 @@ import org.citrusframework.openapi.model.OasModelHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Christoph Deppisch
- */
 public final class Oas30ModelHelper {
 
     /** Logger */

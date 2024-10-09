@@ -27,7 +27,6 @@ import static org.citrusframework.dsl.JsonPathSupport.jsonPath;
 import static org.citrusframework.zookeeper.actions.ZooExecuteAction.Builder.zookeeper;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class ZooExecuteJavaIT extends TestNGCitrusSpringSupport {

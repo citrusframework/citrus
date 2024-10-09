@@ -38,7 +38,6 @@ import static org.citrusframework.actions.CreateVariablesAction.Builder.createVa
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class ResourceInjectionJavaIT extends TestNGCitrusSpringSupport {

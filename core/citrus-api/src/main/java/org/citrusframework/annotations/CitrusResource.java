@@ -21,7 +21,6 @@ import java.lang.annotation.*;
 /**
  *
  *
- * @author Christoph Deppisch
  * @since 2.3
  */
 @Retention(RetentionPolicy.RUNTIME)

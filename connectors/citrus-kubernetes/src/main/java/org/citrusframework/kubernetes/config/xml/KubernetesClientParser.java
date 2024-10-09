@@ -34,7 +34,6 @@ import static org.citrusframework.kubernetes.config.CredentialValidator.isValid;
 /**
  * Bean definition parser for kubernetes client instance.
  *
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class KubernetesClientParser extends AbstractEndpointParser {

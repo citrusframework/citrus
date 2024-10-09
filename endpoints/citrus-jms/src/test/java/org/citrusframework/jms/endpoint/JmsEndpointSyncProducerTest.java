@@ -43,9 +43,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
     private final ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);

@@ -30,7 +30,6 @@ import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public abstract class AbstractCreateCommand<T extends HasMetadata, L extends KubernetesResourceList<T>, R extends io.fabric8.kubernetes.client.dsl.Resource<T>, C extends KubernetesCommand<T, T>>

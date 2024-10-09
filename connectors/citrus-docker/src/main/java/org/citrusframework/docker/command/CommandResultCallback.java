@@ -19,7 +19,6 @@ package org.citrusframework.docker.command;
 import org.citrusframework.context.TestContext;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public interface CommandResultCallback<R> {

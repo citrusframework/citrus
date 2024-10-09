@@ -39,7 +39,6 @@ import static org.citrusframework.util.TypeConversionUtils.convertIfNecessary;
 import static org.springframework.http.MediaType.valueOf;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class DelegatingHttpEntityMessageConverter extends AbstractHttpMessageConverter<Object> {

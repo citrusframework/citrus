@@ -27,7 +27,6 @@ import java.util.Map;
 /**
  * Test case executing a list of {@link TestAction} in sequence.
  *
- * @author Christoph Deppisch
  * @since 2006
  */
 @SuppressWarnings({"unused", "JavaDoc"})

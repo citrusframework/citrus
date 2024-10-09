@@ -27,9 +27,6 @@ import org.springframework.integration.core.MessagingTemplate;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class ChannelSyncEndpointParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

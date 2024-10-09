@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
  * Endpoint builder interface. All endpoint builder implementations do implement this interface
  * in order to build endpoints using a fluent Java API.
  *
- * @author Christoph Deppisch
  * @since 2.5
  */
 public interface EndpointBuilder<T extends Endpoint> {

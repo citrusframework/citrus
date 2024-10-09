@@ -19,9 +19,6 @@ package org.citrusframework.yaml.actions;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.FailAction;
 
-/**
- * @author Christoph Deppisch
- */
 public class Fail implements TestActionBuilder<FailAction> {
 
     private final FailAction.Builder builder = new FailAction.Builder();

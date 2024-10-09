@@ -31,7 +31,6 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.destination.DestinationResolver;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class JmsEndpointConfigParser implements AnnotationConfigParser<JmsEndpointConfig, JmsEndpoint> {

@@ -20,7 +20,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 @ContextConfiguration(classes = KubernetesServiceConfiguration.class)

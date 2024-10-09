@@ -41,9 +41,6 @@ import org.citrusframework.validation.matcher.core.WeekdayValidationMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Christoph Deppisch
- */
 public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
 
     /** Logger */

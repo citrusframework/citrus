@@ -20,9 +20,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-/**
- * @author Christoph Deppisch
- */
 public final class JBangSettings {
 
     private static final String JBANG_PROPERTY_PREFIX = "citrus.jbang.";

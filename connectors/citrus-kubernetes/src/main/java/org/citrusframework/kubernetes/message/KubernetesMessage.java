@@ -30,7 +30,6 @@ import org.citrusframework.kubernetes.model.KubernetesResponse;
 import org.citrusframework.message.DefaultMessage;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class KubernetesMessage extends DefaultMessage {

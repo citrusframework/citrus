@@ -35,9 +35,6 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
-/**
- * @author Christoph Deppisch
- */
 public class GzipMessageProcessorTest extends UnitTestSupport {
 
     private final GzipMessageProcessor processor = new GzipMessageProcessor();

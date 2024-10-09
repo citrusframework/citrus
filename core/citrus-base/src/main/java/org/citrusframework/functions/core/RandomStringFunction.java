@@ -30,7 +30,6 @@ import static java.lang.Integer.parseInt;
  * Function generating a random string containing alphabetic characters. Arguments specify
  * upper and lower case mode.
  *
- * @author Christoph Deppisch
  */
 public class RandomStringFunction implements Function {
     private static Random generator = new Random(System.currentTimeMillis());

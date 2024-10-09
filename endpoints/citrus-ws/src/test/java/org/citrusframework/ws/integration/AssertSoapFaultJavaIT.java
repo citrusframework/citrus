@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.ws.actions.AssertSoapFault.Builder.assertSoapFault;
 import static org.citrusframework.ws.actions.SoapActionBuilder.soap;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class AssertSoapFaultJavaIT extends TestNGCitrusSpringSupport {
 

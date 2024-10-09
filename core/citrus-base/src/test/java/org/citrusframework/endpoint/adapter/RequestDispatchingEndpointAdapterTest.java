@@ -24,9 +24,6 @@ import org.testng.annotations.Test;
 
 import static java.util.Collections.singletonMap;
 
-/**
- * @author Christoph Deppisch
- */
 public class RequestDispatchingEndpointAdapterTest {
 
     @Test

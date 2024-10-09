@@ -18,9 +18,6 @@ package org.citrusframework.mail;
 
 import org.citrusframework.message.MessageType;
 
-/**
- * @author Christoph Deppisch
- */
 public class MailSettings {
 
     private static final String MAIL_PROPERTY_PREFIX = "citrus.mail.";

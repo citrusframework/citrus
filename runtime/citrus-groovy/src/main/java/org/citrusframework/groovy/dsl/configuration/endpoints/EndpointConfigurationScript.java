@@ -23,9 +23,6 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.groovy.dsl.GroovyShellUtils;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
-/**
- * @author Christoph Deppisch
- */
 public class EndpointConfigurationScript {
 
     private final Citrus citrus;

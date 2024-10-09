@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Action to enable class invocation through java reflection
  *
- * @author Christoph Deppisch
  * @since 2006
  */
 public class JavaAction extends AbstractTestAction {

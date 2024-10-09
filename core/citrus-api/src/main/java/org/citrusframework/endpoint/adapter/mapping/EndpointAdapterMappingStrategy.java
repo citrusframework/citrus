@@ -21,7 +21,6 @@ import org.citrusframework.endpoint.EndpointAdapter;
 /**
  * Strategy finds proper endpoint adapter instance for given mapping key.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public interface EndpointAdapterMappingStrategy {

@@ -27,7 +27,6 @@ import static java.lang.Double.parseDouble;
 /**
  * Function returns the closest integer value to a decimal argument.
  *
- * @author Christoph Deppisch
  */
 public class RoundFunction implements Function {
 

@@ -28,7 +28,6 @@ import java.util.Map;
  * Citrus Kafka header mapper translates internal message headers to Spring integration message headers and
  * vice versa.
  *
- * @author Christoph Deppisch
  * @since 2.8
  */
 public class KafkaMessageHeaderMapper {

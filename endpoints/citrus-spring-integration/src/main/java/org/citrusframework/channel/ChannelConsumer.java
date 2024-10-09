@@ -33,7 +33,6 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.PollableChannel;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class ChannelConsumer extends AbstractSelectiveMessageConsumer {

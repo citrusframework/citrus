@@ -38,7 +38,6 @@ import static org.citrusframework.validation.json.JsonElementValidatorItem.parse
  * control object fields to match. No additional fields in received JSON data structure will be accepted. In soft mode validator
  * allows additional fields in received JSON data structure so the control JSON object can be a partial subset.
  *
- * @author Christoph Deppisch
  */
 public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessageValidationContext> {
 

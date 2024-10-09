@@ -30,9 +30,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class WebServiceClientTest extends AbstractTestNGUnitTest {
 
     private WebServiceTemplate webServiceTemplate = Mockito.mock(WebServiceTemplate.class);

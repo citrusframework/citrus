@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Test action builder.
- * @author Christoph Deppisch
  * @since 2.3
  */
 @FunctionalInterface

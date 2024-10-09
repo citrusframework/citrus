@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Action catches possible exceptions in nested test actions.
  *
- * @author Christoph Deppisch
  */
 public class Catch extends AbstractActionContainer {
     /** Exception type caught */

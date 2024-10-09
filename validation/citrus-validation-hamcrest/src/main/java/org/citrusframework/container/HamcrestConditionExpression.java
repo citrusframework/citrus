@@ -23,7 +23,6 @@ import org.hamcrest.Matcher;
  * Condition expression that evaluates a Hamcrest matcher. The matcher is invoked with given
  * index of iterating test container.
  *
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class HamcrestConditionExpression implements IteratingConditionExpression, ConditionExpression {

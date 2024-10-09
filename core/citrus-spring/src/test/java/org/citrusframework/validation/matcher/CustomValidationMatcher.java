@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.Assert;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class CustomValidationMatcher implements ValidationMatcher {

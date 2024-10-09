@@ -27,7 +27,6 @@ import org.citrusframework.validation.context.ValidationContext;
  * Base abstract implementation for message validators. Calls method to finds a proper validation context
  * in the list of available validation contexts and performs validation.
  *
- * @author Christoph Deppisch
  */
 public abstract class AbstractMessageValidator<T extends ValidationContext> implements MessageValidator<T> {
 

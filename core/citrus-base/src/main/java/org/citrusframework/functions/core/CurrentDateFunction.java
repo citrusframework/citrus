@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
  * Function returning the actual date as formatted string value. User specifies format string
  * as argument. Function also supports additional date offset in order to manipulate result date value.
  *
- * @author Christoph Deppisch
  */
 public class CurrentDateFunction extends AbstractDateFunction {
 

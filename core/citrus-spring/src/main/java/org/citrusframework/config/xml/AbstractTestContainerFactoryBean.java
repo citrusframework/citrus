@@ -23,9 +23,6 @@ import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.container.TestActionContainer;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class AbstractTestContainerFactoryBean<T extends TestActionContainer, B extends AbstractTestContainerBuilder<?, ?>> extends AbstractTestActionFactoryBean<T, B> {
 
     private List<TestAction> actions = new ArrayList<>();

@@ -37,7 +37,6 @@ import org.w3c.dom.Element;
 /**
  * Parser for SOAP message sender component in Citrus ws namespace.
  *
- * @author Christoph Deppisch
  */
 public class SendSoapMessageActionParser extends SendMessageActionParser {
 

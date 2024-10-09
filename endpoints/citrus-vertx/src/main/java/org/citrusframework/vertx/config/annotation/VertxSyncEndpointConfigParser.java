@@ -27,7 +27,6 @@ import org.citrusframework.vertx.factory.VertxInstanceFactory;
 import org.citrusframework.vertx.message.VertxMessageConverter;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class VertxSyncEndpointConfigParser implements AnnotationConfigParser<VertxSyncEndpointConfig, VertxSyncEndpoint> {

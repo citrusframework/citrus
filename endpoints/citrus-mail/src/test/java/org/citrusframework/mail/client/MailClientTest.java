@@ -40,7 +40,6 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 class MailClientTest extends AbstractTestNGUnitTest {

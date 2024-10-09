@@ -20,7 +20,6 @@ import org.citrusframework.selenium.config.xml.SeleniumBrowserParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class SeleniumConfigNamespaceHandler extends NamespaceHandlerSupport {

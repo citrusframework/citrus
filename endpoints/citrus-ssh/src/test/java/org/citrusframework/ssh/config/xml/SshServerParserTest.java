@@ -24,9 +24,6 @@ import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Roland Huss, Christoph Deppisch
- */
 public class SshServerParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

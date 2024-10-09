@@ -29,7 +29,6 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 /**
  * Registers bean definition parser for beans in test case, handled by {@link CitrusTestCaseNamespaceHandler}
  *
- * @author Christoph Deppisch
  * @since 2007
  */
 public final class CitrusNamespaceParserRegistry {

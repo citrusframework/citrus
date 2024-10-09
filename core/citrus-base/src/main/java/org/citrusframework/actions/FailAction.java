@@ -23,7 +23,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 /**
  * Action fails the test explicitly. User can specify a cause message.
  *
- * @author Christoph Deppisch
  */
 public class FailAction extends AbstractTestAction {
     /** User defined cause message to explain the error */

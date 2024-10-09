@@ -20,7 +20,6 @@ import org.citrusframework.container.AbstractSuiteActionContainer;
 import org.citrusframework.container.SequenceAfterSuite;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class SequenceAfterSuiteParser extends AbstractSuiteActionContainerParser {

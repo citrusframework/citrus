@@ -42,7 +42,6 @@ import static org.springframework.util.xml.DomUtils.getChildElementByTagName;
 import static org.springframework.util.xml.DomUtils.getChildElementsByTagName;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser {

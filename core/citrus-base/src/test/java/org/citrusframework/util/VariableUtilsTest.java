@@ -24,9 +24,6 @@ import org.citrusframework.variable.VariableUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Jan Lipphaus
- */
 public class VariableUtilsTest extends UnitTestSupport {
     private String validGroovyScript = "a = 1";
     private String groovyScriptResult = "1";

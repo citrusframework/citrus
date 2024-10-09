@@ -22,9 +22,6 @@ import java.util.concurrent.TimeUnit;
 import org.citrusframework.UnitTestSupport;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class SleepActionTest extends UnitTestSupport {
 
 	@Test

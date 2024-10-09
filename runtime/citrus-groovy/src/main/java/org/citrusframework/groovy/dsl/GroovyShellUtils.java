@@ -28,9 +28,6 @@ import groovy.lang.Script;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
-/**
- * @author Christoph Deppisch
- */
 public class GroovyShellUtils {
 
     private static final Pattern COMMENTS = Pattern.compile("^(?:\\s*//|/\\*|\\s+\\*).*$", Pattern.MULTILINE);

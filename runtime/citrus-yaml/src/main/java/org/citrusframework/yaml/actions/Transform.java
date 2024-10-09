@@ -19,9 +19,6 @@ package org.citrusframework.yaml.actions;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.TransformAction;
 
-/**
- * @author Christoph Deppisch
- */
 public class Transform implements TestActionBuilder<TransformAction> {
 
     private final TransformAction.Builder builder = new TransformAction.Builder();

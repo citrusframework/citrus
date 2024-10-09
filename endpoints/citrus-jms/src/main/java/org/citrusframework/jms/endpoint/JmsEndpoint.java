@@ -31,7 +31,6 @@ import org.citrusframework.spi.ReferenceResolverAware;
  * Jms message endpoint capable of sending/receiving messages from Jms message destination. Either uses a Jms connection factory or
  * a Spring Jms template to connect with Jms destinations.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class JmsEndpoint extends AbstractEndpoint implements InitializingPhase, ShutdownPhase, ReferenceResolverAware {

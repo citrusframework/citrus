@@ -17,7 +17,6 @@
 package org.citrusframework.websocket.config.annotation;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public @interface WebSocketConfig {

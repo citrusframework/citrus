@@ -19,9 +19,6 @@ package org.citrusframework.report;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 
-/**
- * @author Christoph Deppisch
- */
 public interface MessageListener {
 
     /**

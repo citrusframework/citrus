@@ -27,7 +27,6 @@ import org.w3c.dom.Element;
 
 /**
  * Abstract server parser adds endpoint adapter construction and basic server property parsing.
- * @author Christoph Deppisch
  * @since 1.4
  */
 public abstract class AbstractServerParser extends AbstractBeanDefinitionParser {

@@ -22,9 +22,6 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.ChannelInterceptor;
 
-/**
- * @author Christoph Deppisch
- */
 public class LoggingInterceptor implements ChannelInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(LoggingInterceptor.class);
 

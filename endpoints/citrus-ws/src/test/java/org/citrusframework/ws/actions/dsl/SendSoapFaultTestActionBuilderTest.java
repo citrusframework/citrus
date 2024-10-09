@@ -46,9 +46,6 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
 
     public static final String FAULT_STRING = "Something went wrong";

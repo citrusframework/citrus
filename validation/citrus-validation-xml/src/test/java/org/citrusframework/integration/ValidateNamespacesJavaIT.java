@@ -27,9 +27,6 @@ import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.citrusframework.container.Assert.Builder.assertException;
 import static org.citrusframework.dsl.XmlSupport.xml;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport {
 

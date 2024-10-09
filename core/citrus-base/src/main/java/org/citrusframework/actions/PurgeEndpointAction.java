@@ -41,7 +41,6 @@ import static org.citrusframework.util.StringUtils.hasText;
  * Action purges all messages from a message endpoint. Action receives
  * a list of endpoint objects or a list of endpoint names that are resolved dynamically at runtime.
  *
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class PurgeEndpointAction extends AbstractTestAction {

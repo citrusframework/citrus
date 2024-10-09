@@ -24,7 +24,6 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.rmi.client.RmiClient;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class RmiEndpointComponent extends AbstractEndpointComponent {

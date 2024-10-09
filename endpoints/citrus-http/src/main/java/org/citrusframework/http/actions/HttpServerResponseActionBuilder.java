@@ -29,7 +29,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class HttpServerResponseActionBuilder extends SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport, HttpServerResponseActionBuilder> {

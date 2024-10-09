@@ -42,7 +42,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6.2
  */
 public class GzipServletFilterTest {

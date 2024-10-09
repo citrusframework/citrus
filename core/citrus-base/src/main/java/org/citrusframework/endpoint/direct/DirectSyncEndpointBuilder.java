@@ -20,9 +20,6 @@ import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.message.MessageQueue;
 
-/**
- * @author Christoph Deppisch
- */
 public class DirectSyncEndpointBuilder extends AbstractEndpointBuilder<DirectSyncEndpoint> {
 
     /** Endpoint target */

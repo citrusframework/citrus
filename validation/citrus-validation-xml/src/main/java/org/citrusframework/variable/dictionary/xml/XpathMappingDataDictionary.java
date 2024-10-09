@@ -38,7 +38,6 @@ import org.w3c.dom.NodeList;
  * in dictionary value is overwritten accordingly. Namespace context is either evaluated on the fly or by global namespace
  * context builder.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implements InitializingPhase {

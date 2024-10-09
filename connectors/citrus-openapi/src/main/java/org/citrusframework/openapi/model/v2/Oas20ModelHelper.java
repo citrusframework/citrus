@@ -32,9 +32,6 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
 
-/**
- * @author Christoph Deppisch
- */
 public final class Oas20ModelHelper {
 
     private Oas20ModelHelper() {

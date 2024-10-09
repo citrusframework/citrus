@@ -19,7 +19,6 @@ package org.citrusframework.jmx.model;
 import jakarta.xml.bind.annotation.*;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 @XmlAccessorType(XmlAccessType.FIELD)

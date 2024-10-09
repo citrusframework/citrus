@@ -20,7 +20,6 @@ import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {

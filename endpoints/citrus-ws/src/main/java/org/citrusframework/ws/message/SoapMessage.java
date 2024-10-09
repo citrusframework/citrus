@@ -30,7 +30,6 @@ import org.springframework.http.HttpStatus;
  * SOAP message representation holding additional elements like SOAP action, header fragment data and
  * attachments.
  *
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class SoapMessage extends DefaultMessage {

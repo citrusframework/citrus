@@ -33,9 +33,6 @@ import org.citrusframework.actions.CreateVariablesAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.FileUtils;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "create-variables")
 public class CreateVariables implements TestActionBuilder<CreateVariablesAction> {
 

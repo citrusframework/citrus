@@ -18,9 +18,6 @@ package org.citrusframework.validation.xml;
 
 import java.util.Map;
 
-/**
- * @author Christoph Deppisch
- */
 public interface XmlNamespaceAware {
 
     /**

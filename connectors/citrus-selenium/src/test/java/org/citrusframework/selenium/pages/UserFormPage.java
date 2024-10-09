@@ -26,7 +26,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class UserFormPage implements WebPage, PageValidator<UserFormPage> {

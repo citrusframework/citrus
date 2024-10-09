@@ -29,7 +29,6 @@ import org.testng.annotations.Test;
 
 /**
  * Test the {@link MapValueFunction} function.
- * @author Dimo Velev (dimo.velev@gmail.com)
  *
  */
 public class MapValueFunctionTest extends UnitTestSupport {

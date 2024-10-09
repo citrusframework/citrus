@@ -38,7 +38,6 @@ import org.springframework.ws.soap.addressing.version.AddressingVersion;
 /**
  * Ws addressing aware message converter implementation. Adds addressing header information to SOAP header.
  *
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class WsAddressingMessageConverter extends SoapMessageConverter {

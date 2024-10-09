@@ -25,7 +25,6 @@ import java.util.List;
 /**
  * ValidationMatcher ignores all new line characters in value and control value.
  *
- * @author Christoph Deppisch
  * @since 2.7.6
  */
 public class IgnoreNewLineValidationMatcher implements ValidationMatcher {

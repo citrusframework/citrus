@@ -21,7 +21,6 @@ import org.citrusframework.context.TestContext;
 /**
  * Interface for classes being able to build control messages for validation.
  *
- * @author Christoph Deppisch
  */
 @FunctionalInterface
 public interface MessageBuilder {

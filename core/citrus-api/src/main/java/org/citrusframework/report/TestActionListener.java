@@ -22,7 +22,6 @@ import org.citrusframework.TestCase;
 /**
  * Listener invoked on test action execution with success and failure.
  *
- * @author Christoph Deppisch
  * @since 1.3
  */
 public interface TestActionListener {

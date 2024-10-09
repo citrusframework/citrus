@@ -27,7 +27,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public abstract class AbstractDeleteCommand<T extends HasMetadata, L extends KubernetesResourceList<T>, R extends Resource<T>, C extends KubernetesCommand<T, DeleteResult>> extends AbstractClientCommand<T, DeleteResult, L, R, C> {

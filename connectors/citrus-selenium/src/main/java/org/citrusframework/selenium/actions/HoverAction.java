@@ -22,7 +22,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class HoverAction extends FindElementAction {

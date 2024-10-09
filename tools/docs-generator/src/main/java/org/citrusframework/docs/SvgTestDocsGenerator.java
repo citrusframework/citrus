@@ -31,7 +31,6 @@ import java.util.Properties;
 /**
  * Class to automatically generate a visual representation of a {@link org.citrusframework.TestCase} in SVG.
  *
- * @author Christoph Deppisch
  * @since 2007
  */
 public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {

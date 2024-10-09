@@ -28,7 +28,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * @author Martin Maher
  * @since 2.3
  */
 public class WebSocketEndpointComponentTest {

@@ -26,7 +26,6 @@ import org.citrusframework.container.AbstractSuiteActionContainer;
 
 /**
  * Abstract container builder takes care on calling the container runner when actions are placed in the container.
- * @author Christoph Deppisch
  */
 public abstract class AbstractSuiteContainerBuilder<T extends AbstractSuiteActionContainer, S extends AbstractSuiteContainerBuilder<T, S>> extends AbstractTestContainerBuilder<T, S> {
 

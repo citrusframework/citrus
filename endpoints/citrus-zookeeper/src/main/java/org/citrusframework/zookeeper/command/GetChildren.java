@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class GetChildren extends AbstractZooCommand<ZooResponse> {

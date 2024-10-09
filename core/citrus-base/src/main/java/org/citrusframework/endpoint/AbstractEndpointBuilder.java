@@ -23,7 +23,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public abstract class AbstractEndpointBuilder<T extends Endpoint> implements EndpointBuilder<T> {

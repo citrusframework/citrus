@@ -42,9 +42,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
-/**
- * @author Christoph Deppisch
- */
 public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @CitrusEndpoint(name = "k8sClient1")

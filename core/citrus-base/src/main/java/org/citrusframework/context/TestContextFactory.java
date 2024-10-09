@@ -47,7 +47,6 @@ import org.citrusframework.xml.namespace.NamespaceContextBuilder;
  * Factory bean implementation constructs test context instances. Takes care of adding proper default components
  * to the test context such as {@link FunctionRegistry} or {@link GlobalVariables}.
  *
- * @author Christoph Deppisch
  */
 public class TestContextFactory implements ReferenceResolverAware {
 

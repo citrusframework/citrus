@@ -52,7 +52,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Executes kubernetes command with given kubernetes client implementation. Possible command result is stored within command object.
  *
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class KubernetesExecuteAction extends AbstractTestAction {

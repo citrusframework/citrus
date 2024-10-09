@@ -25,9 +25,6 @@ import org.citrusframework.spi.mocks.SingletonFoo;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class ResourcePathTypeResolverTest {
 
     @Test

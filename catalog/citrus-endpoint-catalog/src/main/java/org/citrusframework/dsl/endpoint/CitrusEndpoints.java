@@ -37,7 +37,6 @@ import org.citrusframework.dsl.endpoint.ws.WebServiceEndpointCatalog;
 import org.citrusframework.endpoint.direct.DirectEndpoints;
 
 /**
- * @author Christoph Deppisch
  * @since 3.0
  */
 public abstract class CitrusEndpoints {

@@ -27,7 +27,6 @@ import org.citrusframework.TestCase;
  * Class broadcasting test action events to all available test action listeners
  * injected by Spring's IoC container.
  *
- * @author Christoph Deppisch
  * @since 1.3
  */
 public class TestActionListeners implements TestActionListenerAware {

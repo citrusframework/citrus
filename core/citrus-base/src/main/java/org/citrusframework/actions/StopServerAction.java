@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Action stopping {@link Server} instances.
  *
- * @author Christoph Deppisch
  * @since 2006
  */
 public class StopServerAction extends AbstractTestAction {

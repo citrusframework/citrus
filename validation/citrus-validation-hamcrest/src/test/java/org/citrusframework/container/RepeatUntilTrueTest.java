@@ -29,9 +29,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 
-/**
- * @author Christoph Deppisch
- */
 public class RepeatUntilTrueTest extends AbstractTestNGUnitTest {
 
     private TestAction action = Mockito.mock(TestAction.class);

@@ -28,7 +28,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for selection container in test case.
  *
- * @author Matthias Beil
  * @since 1.2
  */
 public class ConditionalParser implements BeanDefinitionParser {

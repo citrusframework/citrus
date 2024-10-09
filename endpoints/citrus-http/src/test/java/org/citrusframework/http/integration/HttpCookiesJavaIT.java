@@ -25,9 +25,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.http.actions.HttpActionBuilder.http;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class HttpCookiesJavaIT extends TestNGCitrusSpringSupport {
 

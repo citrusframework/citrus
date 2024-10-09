@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class DefaultControlExpressionParserTest {

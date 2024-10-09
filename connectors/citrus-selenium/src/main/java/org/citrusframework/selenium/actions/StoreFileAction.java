@@ -20,7 +20,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 
 /**
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class StoreFileAction extends AbstractSeleniumAction {

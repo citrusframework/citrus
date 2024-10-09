@@ -37,7 +37,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for schema-repository configuration.
  *
- * @author Martin.Maher
  * @since 1.3.1
  */
 public class SchemaRepositoryParser implements BeanDefinitionParser {

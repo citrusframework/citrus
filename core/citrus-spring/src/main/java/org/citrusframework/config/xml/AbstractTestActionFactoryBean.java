@@ -21,9 +21,6 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActor;
 import org.springframework.beans.factory.FactoryBean;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class AbstractTestActionFactoryBean<T extends TestAction, B extends AbstractTestActionBuilder<?, ?>> implements FactoryBean<T> {
 
     /**

@@ -23,9 +23,6 @@ import org.citrusframework.xml.schema.XsdSchemaCollection;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class SchemaCollectionParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

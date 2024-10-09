@@ -24,9 +24,6 @@ import org.citrusframework.ssh.server.SshServerBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class SshEndpointsTest {
 
     @Test

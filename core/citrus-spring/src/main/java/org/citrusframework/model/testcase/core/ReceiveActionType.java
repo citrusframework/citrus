@@ -19,7 +19,6 @@ package org.citrusframework.model.testcase.core;
 import org.citrusframework.model.testcase.core.ReceiveModel;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class ReceiveActionType extends ReceiveModel {

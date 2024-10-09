@@ -20,7 +20,6 @@ import org.citrusframework.config.CitrusSpringConfig;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 @Configuration

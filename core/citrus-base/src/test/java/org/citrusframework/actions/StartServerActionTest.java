@@ -27,9 +27,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class StartServerActionTest extends UnitTestSupport {
 
     @Test

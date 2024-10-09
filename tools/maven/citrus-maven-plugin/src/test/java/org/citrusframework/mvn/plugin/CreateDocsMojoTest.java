@@ -37,9 +37,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class CreateDocsMojoTest {
 
     private Prompter prompter = Mockito.mock(Prompter.class);

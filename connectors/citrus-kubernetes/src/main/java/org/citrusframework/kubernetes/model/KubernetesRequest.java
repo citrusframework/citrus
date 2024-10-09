@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)

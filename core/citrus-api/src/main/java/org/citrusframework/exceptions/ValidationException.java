@@ -20,7 +20,6 @@ package org.citrusframework.exceptions;
  * This exception marks errors during validation in Citrus. Basically this exception is thrown
  * during message validation, exception assertion, SOAP fault and attachment validation and so on.
  *
- * @author Christoph Deppisch
  */
 public class ValidationException extends CitrusRuntimeException {
 

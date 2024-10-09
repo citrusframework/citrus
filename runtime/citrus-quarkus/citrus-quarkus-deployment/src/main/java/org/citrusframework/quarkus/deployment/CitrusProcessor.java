@@ -22,7 +22,6 @@ import io.quarkus.deployment.builditem.IndexDependencyBuildItem;
 
 /**
  * Processor adding build steps to fully index Citrus API and base modules.
- * @author Christoph Deppisch
  */
 public class CitrusProcessor {
 

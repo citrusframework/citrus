@@ -24,7 +24,6 @@ import org.w3c.dom.Document;
 /**
  * Interface for schema mapping strategies used in schema repository.
  *
- * @author Christoph Deppisch
  */
 public interface XsdSchemaMappingStrategy {
 

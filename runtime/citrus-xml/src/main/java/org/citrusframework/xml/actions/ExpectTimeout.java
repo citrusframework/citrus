@@ -30,9 +30,6 @@ import java.util.Map;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReceiveTimeoutAction;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "expect-timeout")
 public class ExpectTimeout implements TestActionBuilder<ReceiveTimeoutAction> {
 

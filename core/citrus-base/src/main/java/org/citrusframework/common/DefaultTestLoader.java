@@ -38,7 +38,6 @@ import static org.citrusframework.TestResult.failed;
  * Default test loader implementation takes case on test names/packages and initializes the test runner if applicable.
  * Also loads the test case and provides it to registered test handlers. This way a test case can be loaded from different sources
  * like Java code, Groovy code, XML, Json, YAML, etc.
- * @author Christoph Deppisch
  */
 public class DefaultTestLoader implements TestLoader {
 

@@ -23,7 +23,6 @@ import org.citrusframework.message.Message;
  * is supposed to read mapping name predicate from request (e.g. via XPath, header value, etc.). Dispatching endpoint adapters
  * may then dispatch message processing according to this mapping name.
  *
- * @author Christoph Deppisch
  */
 public interface MappingKeyExtractor {
 

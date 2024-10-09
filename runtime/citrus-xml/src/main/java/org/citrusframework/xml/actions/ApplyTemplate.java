@@ -31,9 +31,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.xml.XmlTemplateLoader;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "apply-template")
 public class ApplyTemplate implements TestActionBuilder<Template>, ReferenceResolverAware {
 

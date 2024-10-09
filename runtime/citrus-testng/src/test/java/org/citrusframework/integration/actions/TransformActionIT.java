@@ -22,7 +22,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
- * @author Philipp Komninos
  * @since 2010
  */
 public class TransformActionIT extends TestNGCitrusSpringSupport {

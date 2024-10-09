@@ -40,9 +40,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-/**
- * @author Roland Huss
- */
 public class SshServerTest {
 
     private SshServer server;

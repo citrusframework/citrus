@@ -36,7 +36,6 @@ import static org.citrusframework.util.StringUtils.hasText;
  * json object graph. Parses message payload to json object tree. Traverses
  * through json data supporting nested json objects, arrays and values.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {

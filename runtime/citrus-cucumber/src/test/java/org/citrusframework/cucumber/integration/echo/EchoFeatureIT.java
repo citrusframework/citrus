@@ -21,7 +21,6 @@ import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 @RunWith(Cucumber.class)

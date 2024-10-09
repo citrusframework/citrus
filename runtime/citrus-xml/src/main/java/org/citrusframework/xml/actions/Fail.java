@@ -23,9 +23,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.FailAction;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "fail")
 public class Fail implements TestActionBuilder<FailAction> {
 

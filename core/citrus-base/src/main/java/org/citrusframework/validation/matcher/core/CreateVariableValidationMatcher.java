@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Creates new variables from given field. Either uses field name or control value as variable name.
  *
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class CreateVariableValidationMatcher implements ValidationMatcher {

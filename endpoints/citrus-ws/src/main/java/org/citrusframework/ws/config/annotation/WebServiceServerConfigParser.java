@@ -31,7 +31,6 @@ import org.springframework.ws.server.EndpointInterceptor;
 import static org.citrusframework.util.StringUtils.hasText;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class WebServiceServerConfigParser implements AnnotationConfigParser<WebServiceServerConfig, WebServiceServer> {

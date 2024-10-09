@@ -28,7 +28,6 @@ import org.testng.ISuiteListener;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class TestNGEngineTest {

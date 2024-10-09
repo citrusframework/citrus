@@ -22,9 +22,6 @@ import org.apache.camel.converter.stream.InputStreamCache;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class CamelTypeConverterTest {
 
     private final CamelTypeConverter typeConverter = CamelTypeConverter.INSTANCE;

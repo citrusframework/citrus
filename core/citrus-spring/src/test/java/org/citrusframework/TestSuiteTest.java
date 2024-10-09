@@ -53,9 +53,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class TestSuiteTest extends AbstractTestNGUnitTest {
 
     @Mock

@@ -23,7 +23,6 @@ import java.util.GregorianCalendar;
 import org.citrusframework.CitrusSettings;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public abstract class AbstractTestGenerator<T extends TestGenerator> implements TestGenerator<T> {

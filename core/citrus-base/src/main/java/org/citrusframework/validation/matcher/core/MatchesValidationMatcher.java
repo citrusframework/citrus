@@ -26,7 +26,6 @@ import java.util.regex.PatternSyntaxException;
 /**
  * ValidationMatcher based on String.matches()
  *
- * @author Christian Wied
  */
 public class MatchesValidationMatcher implements ValidationMatcher {
 

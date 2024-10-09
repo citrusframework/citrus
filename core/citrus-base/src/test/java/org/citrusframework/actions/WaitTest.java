@@ -28,7 +28,6 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.fail;
 
 /**
- * @author Martin Maher
  * @since 2.4
  */
 public class WaitTest {

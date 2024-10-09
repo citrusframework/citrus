@@ -35,7 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public abstract class AbstractWatchCommand<T extends HasMetadata, L extends KubernetesResourceList<T>, R extends Resource<T>, C extends KubernetesCommand<T, T>> extends AbstractClientCommand<T, T, L, R, C> {

@@ -18,7 +18,6 @@ package org.citrusframework.endpoint;
 
 /**
  * Abstract endpoint configuration provides basic properties such as message listeners.
- * @author Christoph Deppisch
  * @since 1.4
  */
 public abstract class AbstractEndpointConfiguration implements EndpointConfiguration {

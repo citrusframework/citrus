@@ -20,9 +20,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
 
-/**
- * @author Christoph Deppisch
- */
 public class NoopMessageProcessor implements MessageProcessor {
 
     @Override

@@ -42,9 +42,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 import static org.citrusframework.ws.endpoint.builder.WebServiceEndpoints.soap;
 
-/**
- * @author Christoph Deppisch
- */
 public class SendSoapFaultTest extends AbstractYamlActionTest {
 
     private WebServiceServer soapServer;

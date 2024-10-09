@@ -28,9 +28,6 @@ import org.citrusframework.message.MessageTypeAware;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public class FileResourcePayloadBuilder implements MessagePayloadBuilder, MessageTypeAware {
 
     private String messageType;

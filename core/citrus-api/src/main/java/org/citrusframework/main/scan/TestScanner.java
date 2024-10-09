@@ -21,7 +21,6 @@ import java.util.List;
 import org.citrusframework.TestClass;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public interface TestScanner {

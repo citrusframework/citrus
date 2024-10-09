@@ -56,7 +56,6 @@ import static org.citrusframework.util.StringUtils.hasText;
 /**
  * Bean definition parser for receive action in test case.
  *
- * @author Christoph Deppisch
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class ReceiveMessageActionParser extends AbstractMessageActionParser {

@@ -19,9 +19,6 @@ package org.citrusframework.endpoint.direct;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.SelectiveConsumer;
 
-/**
- * @author Christoph Deppisch
- */
 public class DirectSyncEndpoint extends DirectEndpoint {
 
     /** One of producer or consumer for this endpoint */

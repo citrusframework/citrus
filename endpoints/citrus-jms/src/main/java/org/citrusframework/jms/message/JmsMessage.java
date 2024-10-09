@@ -22,7 +22,6 @@ import org.citrusframework.message.Message;
 import jakarta.jms.Destination;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class JmsMessage extends DefaultMessage {

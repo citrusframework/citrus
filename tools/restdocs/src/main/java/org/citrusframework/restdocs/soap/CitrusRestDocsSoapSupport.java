@@ -25,7 +25,6 @@ import org.springframework.restdocs.snippet.Snippet;
 
 /**
  * Support class provides static factory methods for RestDoc configurer and interceptor.
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class CitrusRestDocsSoapSupport {

@@ -23,9 +23,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.TestActions;
 
-/**
- * @author Christoph Deppisch
- */
 public class Async implements TestActionBuilder<org.citrusframework.container.Async>, ReferenceResolverAware {
 
     private final org.citrusframework.container.Async.Builder builder = new org.citrusframework.container.Async.Builder();

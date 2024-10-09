@@ -22,9 +22,6 @@ import org.junit.Test;
 
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 
-/**
- * @author Christoph Deppisch
- */
 public class EchoActionJUnit4JavaIT extends JUnit4CitrusSpringSupport {
 
     @Test

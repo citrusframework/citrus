@@ -24,7 +24,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public abstract class AbstractListCommand<T extends HasMetadata, L extends KubernetesResourceList<T>, R extends Resource<T>, C extends KubernetesCommand<T, ListResult<T>>> extends AbstractClientCommand<T, ListResult<T>, L, R, C> {

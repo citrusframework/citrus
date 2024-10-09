@@ -31,7 +31,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class MessageTracingTestListenerTest extends UnitTestSupport {

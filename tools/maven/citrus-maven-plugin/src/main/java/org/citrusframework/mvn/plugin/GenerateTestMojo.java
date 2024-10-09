@@ -39,7 +39,6 @@ import org.citrusframework.mvn.plugin.config.tests.TestConfiguration;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 @Mojo( name = "generate-tests", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)

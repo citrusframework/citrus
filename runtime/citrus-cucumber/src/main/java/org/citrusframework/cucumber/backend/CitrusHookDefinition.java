@@ -24,9 +24,6 @@ import io.cucumber.core.backend.Lookup;
 import io.cucumber.core.backend.TestCaseState;
 import org.citrusframework.util.ReflectionHelper;
 
-/**
- * @author Christoph Deppisch
- */
 public class CitrusHookDefinition implements HookDefinition {
 
     private final Method method;

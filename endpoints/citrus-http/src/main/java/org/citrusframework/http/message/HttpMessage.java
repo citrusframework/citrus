@@ -43,7 +43,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import static java.lang.Integer.parseInt;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class HttpMessage extends DefaultMessage {

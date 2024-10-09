@@ -16,9 +16,6 @@
 
 package org.citrusframework.common;
 
-/**
- * @author Christoph Deppisch
- */
 @FunctionalInterface
 public interface TestSourceAware {
 

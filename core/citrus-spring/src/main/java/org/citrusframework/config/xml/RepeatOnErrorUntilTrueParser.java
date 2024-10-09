@@ -25,7 +25,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for repeat-on-error-until-true container in test case.
  *
- * @author Christoph Deppisch
  */
 public class RepeatOnErrorUntilTrueParser extends AbstractIterationTestActionParser {
 

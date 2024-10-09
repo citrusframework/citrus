@@ -17,7 +17,6 @@
 package org.citrusframework.generate;
 
 import java.util.Map; /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public interface WsdlTestGenerator<T extends WsdlTestGenerator> extends TestGenerator<T> {

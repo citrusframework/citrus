@@ -26,7 +26,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.actions.LoadPropertiesAction.Builder.load;
 
 /**
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class LoadPropertiesTestActionBuilderTest extends UnitTestSupport {

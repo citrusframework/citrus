@@ -45,7 +45,6 @@ import org.springframework.core.task.TaskExecutor;
  * Special request dispatching endpoint adapter invokes XML test case for each incoming message. Incoming message is
  * passed to test case via normal in memory message queue connection as usual.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointAdapter implements InitializingBean, BeanNameAware, ApplicationContextAware {

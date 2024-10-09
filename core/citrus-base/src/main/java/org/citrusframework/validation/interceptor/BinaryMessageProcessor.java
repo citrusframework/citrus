@@ -31,7 +31,6 @@ import org.citrusframework.util.FileUtils;
  * Message construction processor automatically converts message payloads to binary content. Supports String typed message payloads and
  * payload resources.
  *
- * @author Christoph Deppisch
  */
 public class BinaryMessageProcessor extends AbstractMessageProcessor {
 

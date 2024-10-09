@@ -57,8 +57,6 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * @author Christoph Deppisch
- * @author Christian Guggenmos
  * @since 2.0
  */
 public class MailMessageConverter implements MessageConverter<MimeMailMessage, MimeMailMessage, MailEndpointConfiguration> {

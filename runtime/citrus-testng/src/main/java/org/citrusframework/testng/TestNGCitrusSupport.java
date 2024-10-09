@@ -52,7 +52,6 @@ import org.testng.annotations.Listeners;
  * and resource injection. Users can just extend this class and make use of the action runner methods provided in {@link org.citrusframework.TestActionRunner}
  * and {@link GherkinTestActionRunner}.
  *
- * @author Christoph Deppisch
  */
 @Listeners( { TestNGCitrusMethodInterceptor.class } )
 public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {

@@ -22,7 +22,6 @@ import org.citrusframework.context.TestContext;
  * Interface evaluates a conditional expression to true or false. Usually used in test action containers that need to evaluate
  * condition on test action execution.
  *
- * @author Christoph Deppisch
  * @since 2.3
  */
 @FunctionalInterface

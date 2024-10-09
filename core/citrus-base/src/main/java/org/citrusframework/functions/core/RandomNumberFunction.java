@@ -30,7 +30,6 @@ import static java.lang.Integer.parseInt;
  * Function returning a random numeric value. Argument specifies the number of digits and
  * padding boolean flag.
  *
- * @author Christoph Deppisch
  */
 public class RandomNumberFunction implements Function {
     /** Basic seed generating random number */

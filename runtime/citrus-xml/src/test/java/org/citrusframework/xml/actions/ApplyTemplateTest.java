@@ -25,9 +25,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 
-/**
- * @author Christoph Deppisch
- */
 public class ApplyTemplateTest extends AbstractXmlActionTest {
 
     @Test

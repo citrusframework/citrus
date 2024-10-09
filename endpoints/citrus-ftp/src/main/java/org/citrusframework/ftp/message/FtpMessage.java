@@ -43,7 +43,6 @@ import org.citrusframework.xml.StringResult;
 import org.citrusframework.xml.StringSource;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class FtpMessage extends DefaultMessage {

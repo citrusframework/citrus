@@ -35,7 +35,6 @@ import org.citrusframework.context.TestContext;
  * Quarkus test resource that takes care of injecting Citrus resources
  * such as TestContext, TestCaseRunner, CitrusEndpoints and many more.
  *
- * @author Christoph Deppisch
  */
 public class CitrusTestResource implements QuarkusTestResourceLifecycleManager {
 

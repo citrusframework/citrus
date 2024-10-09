@@ -19,7 +19,6 @@ package org.citrusframework;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class TestClass extends TestSource {

@@ -17,7 +17,6 @@
 package org.citrusframework.jmx.config.annotation;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public @interface MbeanConfig {

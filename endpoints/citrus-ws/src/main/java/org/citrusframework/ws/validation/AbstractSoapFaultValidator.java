@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
  * Abstract soap fault validation implementation offering basic faultCode and faultString validation.
  * Subclasses may add fault detail validation in addition to that.
  *
- * @author Christoph Deppisch
  */
 public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
 

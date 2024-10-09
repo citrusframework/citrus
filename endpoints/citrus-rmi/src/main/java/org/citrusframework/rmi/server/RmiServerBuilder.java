@@ -28,7 +28,6 @@ import org.citrusframework.rmi.model.RmiMarshaller;
 import org.citrusframework.server.AbstractServerBuilder;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServerBuilder> {

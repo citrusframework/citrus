@@ -66,7 +66,6 @@ import static com.gargoylesoftware.htmlunit.BrowserVersion.INTERNET_EXPLORER;
 /**
  * Selenium browser provides access to web driver and initializes Selenium environment from endpoint configuration.
  *
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class SeleniumBrowser extends AbstractEndpoint implements Producer {

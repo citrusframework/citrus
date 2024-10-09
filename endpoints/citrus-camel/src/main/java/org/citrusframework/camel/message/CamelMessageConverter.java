@@ -30,7 +30,6 @@ import org.apache.camel.support.DefaultExchange;
  * Message converter able to read Camel exchange and create proper Spring Integration message
  * for internal use.
  *
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class CamelMessageConverter implements MessageConverter<Exchange, Exchange, CamelEndpointConfiguration> {

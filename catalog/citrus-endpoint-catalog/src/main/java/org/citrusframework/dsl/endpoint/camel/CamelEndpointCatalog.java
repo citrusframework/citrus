@@ -20,9 +20,6 @@ import org.citrusframework.camel.endpoint.CamelEndpointBuilder;
 import org.citrusframework.camel.endpoint.CamelEndpoints;
 import org.citrusframework.camel.endpoint.CamelSyncEndpointBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class CamelEndpointCatalog {
 
     /**

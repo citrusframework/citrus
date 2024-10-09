@@ -33,7 +33,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class SetInputActionTest extends AbstractTestNGUnitTest {

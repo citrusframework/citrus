@@ -34,7 +34,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.mockito.Mockito.doThrow;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class MultiThreadingMessageSelectionTest extends AbstractTestNGUnitTest {

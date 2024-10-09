@@ -20,7 +20,6 @@ package org.citrusframework.message;
  * Message correlator interface for synchronous reply messages. Correlator uses
  * a specific header entry in messages in order to construct a unique message correlation key.
  *
- * @author Christoph Deppisch
  */
 public interface MessageCorrelator {
     /**

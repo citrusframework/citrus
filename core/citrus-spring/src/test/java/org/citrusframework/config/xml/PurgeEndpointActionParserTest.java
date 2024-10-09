@@ -22,9 +22,6 @@ import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class PurgeEndpointActionParserTest extends AbstractActionParserTest<PurgeEndpointAction> {
 
     @Test

@@ -62,9 +62,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
 
-/**
- * @author Christoph Deppisch
- */
 public class OpenApiClientTest extends AbstractXmlActionTest {
 
     @BindToRegistry

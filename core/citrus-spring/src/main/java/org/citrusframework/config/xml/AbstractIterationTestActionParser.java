@@ -28,7 +28,6 @@ import org.citrusframework.config.util.BeanDefinitionParserUtils;
  * Abstract parser implementation for all iterative container actions. Parser takes care of
  * index name, aborting condition, index start value and description
  *
- * @author Christoph Deppisch
  */
 public abstract class AbstractIterationTestActionParser  implements BeanDefinitionParser {
 

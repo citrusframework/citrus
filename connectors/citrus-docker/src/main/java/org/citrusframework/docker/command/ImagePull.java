@@ -25,7 +25,6 @@ import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.model.PullResponseItem;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class ImagePull extends AbstractDockerCommand<PullResponseItem> {

@@ -31,9 +31,6 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-/**
- * @author Christoph Deppisch
- */
 public class CamelActionBuilderTest {
 
     private CamelActionBuilder fixture;

@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class AssertParserTest extends AbstractActionParserTest<org.citrusframework.container.Assert> {
 
     @Test

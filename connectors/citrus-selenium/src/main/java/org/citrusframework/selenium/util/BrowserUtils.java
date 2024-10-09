@@ -17,7 +17,6 @@
 package org.citrusframework.selenium.util;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class BrowserUtils {

@@ -31,7 +31,6 @@ import org.w3c.dom.ls.LSException;
 /**
  * Message selector accepts XML messages according to specified root element QName.
  *
- * @author Christoph Deppisch
  */
 public class RootQNameMessageSelector extends AbstractMessageSelector {
 

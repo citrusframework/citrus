@@ -27,9 +27,6 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class BasicAuthClientRequestFactoryTest extends AbstractTestNGUnitTest {
 
     @Autowired

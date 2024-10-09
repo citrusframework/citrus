@@ -21,7 +21,6 @@ import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.rmi.message.RmiMessageConverter;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class RmiClientBuilder extends AbstractEndpointBuilder<RmiClient> {

@@ -33,9 +33,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.doReturn;
 
-/**
- * @author Christoph Deppisch
- */
 public class ChangeDateFunctionTest extends UnitTestSupport {
 
     @Mock

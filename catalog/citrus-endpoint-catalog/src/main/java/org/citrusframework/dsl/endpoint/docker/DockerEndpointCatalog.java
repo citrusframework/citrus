@@ -19,9 +19,6 @@ package org.citrusframework.dsl.endpoint.docker;
 import org.citrusframework.docker.client.DockerClientBuilder;
 import org.citrusframework.docker.endpoint.builder.DockerEndpoints;
 
-/**
- * @author Christoph Deppisch
- */
 public class DockerEndpointCatalog {
 
     /**

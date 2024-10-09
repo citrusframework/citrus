@@ -28,7 +28,6 @@ import org.springframework.restdocs.operation.RequestConverter;
 
 /**
  * Converts a Http request to RestDoc operation request instance.
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class RestDocRequestConverter implements RequestConverter<CachedBodyHttpRequest> {

@@ -19,9 +19,6 @@ package org.citrusframework.dsl.endpoint.kafka;
 import org.citrusframework.kafka.endpoint.KafkaEndpointBuilder;
 import org.citrusframework.kafka.endpoint.builder.KafkaEndpoints;
 
-/**
- * @author Christoph Deppisch
- */
 public class KafkaEndpointCatalog {
 
     /**

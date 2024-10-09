@@ -22,7 +22,6 @@ import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.client.dsl.*;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class ListNamespaces extends AbstractListCommand<Namespace, NamespaceList, Resource<Namespace>, ListNamespaces> {

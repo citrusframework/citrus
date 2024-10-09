@@ -19,7 +19,6 @@ package org.citrusframework.exceptions;
 /**
  * Thrown in case an element is not found. Usually used in during validation.
  *
- * @author Christoph Deppisch
  */
 public class UnknownElementException extends CitrusRuntimeException {
 

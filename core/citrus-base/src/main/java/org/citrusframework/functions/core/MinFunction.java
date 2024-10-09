@@ -27,7 +27,6 @@ import static java.lang.Double.parseDouble;
 /**
  * Returns the minimum value in a set of numeric arguments.
  *
- * @author Christoph Deppisch
  */
 public class MinFunction implements Function {
 

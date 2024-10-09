@@ -19,9 +19,6 @@ package org.citrusframework;
 import org.citrusframework.container.AbstractIteratingActionContainer;
 import org.citrusframework.container.IteratingConditionExpression;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class AbstractIteratingContainerBuilder<T extends AbstractIteratingActionContainer, S extends AbstractIteratingContainerBuilder<T, S>> extends AbstractTestContainerBuilder<T, S> {
 
     protected String condition;

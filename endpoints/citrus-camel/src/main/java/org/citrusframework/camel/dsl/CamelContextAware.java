@@ -18,9 +18,6 @@ package org.citrusframework.camel.dsl;
 
 import org.apache.camel.CamelContext;
 
-/**
- * @author Christoph Deppisch
- */
 public interface CamelContextAware<T> {
 
     T camelContext(CamelContext camelContext);

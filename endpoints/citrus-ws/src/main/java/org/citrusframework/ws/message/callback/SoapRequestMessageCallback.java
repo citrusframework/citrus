@@ -29,7 +29,6 @@ import java.io.IOException;
  * Sender callback invoked by framework with actual web service request before message is sent.
  * Web service message is filled with content from internal message representation.
  *
- * @author Christoph Deppisch
  */
 public class SoapRequestMessageCallback implements WebServiceMessageCallback {
 

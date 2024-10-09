@@ -18,9 +18,6 @@ package org.citrusframework;
 
 import java.util.Date;
 
-/**
- * @author Christoph Deppisch
- */
 public interface TestCaseBuilder {
 
     /**

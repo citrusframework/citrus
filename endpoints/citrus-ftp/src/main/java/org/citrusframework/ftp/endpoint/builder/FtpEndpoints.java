@@ -20,9 +20,6 @@ import org.citrusframework.endpoint.builder.ClientServerEndpointBuilder;
 import org.citrusframework.ftp.client.FtpClientBuilder;
 import org.citrusframework.ftp.server.FtpServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public final class FtpEndpoints extends ClientServerEndpointBuilder<FtpClientBuilder, FtpServerBuilder> {
     /**
      * Private constructor setting the client and server builder implementation.

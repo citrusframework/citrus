@@ -35,9 +35,6 @@ import static org.citrusframework.DefaultTestActionBuilder.action;
 import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariable;
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 
-/**
- * @author Christoph Deppisch
- */
 @CitrusSupport
 public class ResourceInjectionJUnit5IT {
 

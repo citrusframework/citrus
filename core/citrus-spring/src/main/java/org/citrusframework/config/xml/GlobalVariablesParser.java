@@ -32,7 +32,6 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class GlobalVariablesParser implements BeanDefinitionParser {

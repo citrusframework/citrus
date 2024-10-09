@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Message validator evaluates set of JSONPath expressions on message payload and checks that values are as expected.
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathMessageValidationContext> {

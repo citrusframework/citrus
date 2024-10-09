@@ -29,7 +29,6 @@ import org.springframework.messaging.Message;
  *
  * Syntax is jsonPath:$.root.element
  *
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class JsonPathPayloadMessageSelector extends AbstractMessageSelector {

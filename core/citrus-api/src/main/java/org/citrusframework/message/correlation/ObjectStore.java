@@ -19,7 +19,6 @@ package org.citrusframework.message.correlation;
 /**
  * Interface defines add and remove object methods for storing data.
  *
- * @author Christoph Deppisch
  * @since 2.1
  */
 public interface ObjectStore<T> {

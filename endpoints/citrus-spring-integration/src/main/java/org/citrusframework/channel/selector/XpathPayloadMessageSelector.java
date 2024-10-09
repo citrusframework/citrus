@@ -35,7 +35,6 @@ import java.util.Map;
  *
  * Syntax is xpath://root/element
  *
- * @author Christoph Deppisch
  * @since 1.2
  */
 public class XpathPayloadMessageSelector extends AbstractMessageSelector {

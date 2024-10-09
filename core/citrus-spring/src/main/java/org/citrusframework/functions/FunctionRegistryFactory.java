@@ -26,7 +26,6 @@ import org.springframework.context.ApplicationContextAware;
  * The default function library is also added via Spring bean reference. This is why this registry explicitly doe not use default registry
  * in order to not duplicate the default function library.
  *
- * @author Christoph Deppisch
  */
 public class FunctionRegistryFactory implements FactoryBean<FunctionRegistry>, ApplicationContextAware {
 

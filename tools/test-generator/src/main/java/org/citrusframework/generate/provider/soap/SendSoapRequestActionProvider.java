@@ -24,7 +24,6 @@ import org.citrusframework.model.testcase.ws.SendModel;
 import org.citrusframework.ws.message.SoapMessage;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class SendSoapRequestActionProvider implements MessageActionProvider<SendModel, SoapMessage> {

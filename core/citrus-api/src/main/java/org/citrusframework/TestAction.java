@@ -21,7 +21,6 @@ import org.citrusframework.context.TestContext;
 /**
  * Interface for all test actions.
  *
- * @author Christoph Deppisch
  * @since 2006
  */
 @FunctionalInterface

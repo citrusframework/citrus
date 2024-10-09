@@ -50,9 +50,6 @@ import org.testng.annotations.Test;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class HttpClientTest extends AbstractTestNGUnitTest {
 
     private final String requestBody = "<TestRequest><Message>Hello Citrus!</Message></TestRequest>";

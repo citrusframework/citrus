@@ -30,7 +30,6 @@ import org.citrusframework.util.StringUtils;
 
 /**
  * Specialised Xml validation context adds XPath expression evaluation.
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class XpathMessageValidationContext extends XmlMessageValidationContext {

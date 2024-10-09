@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.actions.ReceiveTimeoutAction.Builder.receiveTimeout;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class ReceiveTimeoutJavaIT extends TestNGCitrusSpringSupport {
 

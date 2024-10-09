@@ -25,9 +25,6 @@ import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public class CamelEndpointConfigParser implements AnnotationConfigParser<CamelEndpointConfig, CamelEndpoint> {
 
     @Override

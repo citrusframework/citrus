@@ -25,7 +25,6 @@ import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class DynamicDestinationNameResolver implements EndpointUriResolver {

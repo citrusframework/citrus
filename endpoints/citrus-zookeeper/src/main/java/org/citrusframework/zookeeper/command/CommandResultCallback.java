@@ -19,7 +19,6 @@ package org.citrusframework.zookeeper.command;
 import org.citrusframework.context.TestContext;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public interface CommandResultCallback<R> {

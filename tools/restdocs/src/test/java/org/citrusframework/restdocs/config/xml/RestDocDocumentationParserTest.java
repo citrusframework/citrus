@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class RestDocDocumentationParserTest extends AbstractBeanDefinitionParserTest {

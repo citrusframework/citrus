@@ -23,7 +23,6 @@ import org.citrusframework.message.Message;
  * Clients can receive request messages from endpoint and provide proper response messages that will be used as
  * adapter response.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public interface EndpointAdapter {

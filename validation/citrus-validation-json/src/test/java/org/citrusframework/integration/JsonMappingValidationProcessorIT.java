@@ -35,7 +35,6 @@ import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
 
 /**
- * @author Christoph Deppisch
  * @since 3.3.1
  */
 public class JsonMappingValidationProcessorIT extends TestNGCitrusSpringSupport {

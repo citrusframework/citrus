@@ -40,9 +40,6 @@ import org.citrusframework.yaml.actions.Receive;
 import org.citrusframework.yaml.actions.Send;
 import org.citrusframework.yaml.actions.Message;
 
-/**
- * @author Christoph Deppisch
- */
 public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
     private TestActionBuilder<?> builder;

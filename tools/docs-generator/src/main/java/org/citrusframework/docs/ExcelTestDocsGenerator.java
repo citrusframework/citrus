@@ -39,7 +39,6 @@ import org.xml.sax.SAXException;
 /**
  * Class to automatically generate a list of all available tests in MS Excel.
  *
- * @author Christoph Deppisch
  * @since 2007
  */
 public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {

@@ -20,7 +20,6 @@ package org.citrusframework.report;
  * Failure stack element provides access to the detailed failure stack message and
  * the location in the test case XML where error happened.
  *
- * @author Christoph Deppisch
  */
 public class FailureStackElement {
     /** The name of the failed action */

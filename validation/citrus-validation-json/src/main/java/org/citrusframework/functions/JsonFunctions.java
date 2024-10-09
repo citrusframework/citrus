@@ -21,9 +21,6 @@ import java.util.Arrays;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.core.JsonPathFunction;
 
-/**
- * @author Christoph Deppisch
- */
 public final class JsonFunctions {
 
     /**

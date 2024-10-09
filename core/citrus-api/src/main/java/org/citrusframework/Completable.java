@@ -23,7 +23,6 @@ import org.citrusframework.context.TestContext;
  * working before closing the test case. Asynchronous test action execution may implement this interface in order to publish the completed state of
  * forked processes.
  *
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public interface Completable {

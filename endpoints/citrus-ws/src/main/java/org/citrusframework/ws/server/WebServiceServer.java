@@ -48,7 +48,6 @@ import static java.util.Objects.nonNull;
  * Jetty server implementation wrapping a {@link Server} with Citrus server behaviour, so
  * server can be started/stopped by Citrus.
  *
- * @author Christoph Deppisch
  */
 public class WebServiceServer extends AbstractServer {
 

@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
  * Default correlation manager implementation works on simple in memory map for storing objects.
  * Correlation key is the map key. Clients can access objects in the store using the correlation key.
  *
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class DefaultCorrelationManager<T> implements CorrelationManager<T> {

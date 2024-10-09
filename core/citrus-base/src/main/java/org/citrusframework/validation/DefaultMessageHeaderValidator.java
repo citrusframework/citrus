@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
  * Basic header message validator provides message header validation. Subclasses only have to add
  * specific logic for message payload validation. This validator is based on a control message.
  *
- * @author Christoph Deppisch
  */
 public class DefaultMessageHeaderValidator extends AbstractMessageValidator<HeaderValidationContext> {
 

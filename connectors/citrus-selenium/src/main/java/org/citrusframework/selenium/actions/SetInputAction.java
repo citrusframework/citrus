@@ -24,7 +24,6 @@ import org.openqa.selenium.support.ui.Select;
 /**
  * Sets new text value for form input element.
  *
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class SetInputAction extends FindElementAction {

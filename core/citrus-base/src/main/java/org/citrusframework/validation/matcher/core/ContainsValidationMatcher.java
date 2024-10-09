@@ -25,7 +25,6 @@ import java.util.List;
 /**
  * ValidationMatcher based on String.contains()
  *
- * @author Christian Wied
  */
 public class ContainsValidationMatcher implements ValidationMatcher {
 

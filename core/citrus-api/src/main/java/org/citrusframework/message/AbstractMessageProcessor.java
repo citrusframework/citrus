@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
  * Abstract message processor is message direction aware and automatically applies message type selector.
  * Subclasses can modify payload and/or headers of the processed message.
  *
- * @author Christoph Deppisch
  */
 public abstract class AbstractMessageProcessor implements MessageProcessor, MessageDirectionAware, MessageTypeSelector {
 

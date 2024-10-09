@@ -28,7 +28,6 @@ import org.citrusframework.exceptions.NoSuchVariableException;
 /**
  * Utility class manipulating test variables.
  *
- * @author Christoph Deppisch
  */
 public final class VariableUtils {
 

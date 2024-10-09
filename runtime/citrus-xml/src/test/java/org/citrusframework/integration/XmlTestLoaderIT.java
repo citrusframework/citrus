@@ -24,7 +24,6 @@ import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.1
  */
 @Test

@@ -30,9 +30,6 @@ import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "selenium")
 public class Selenium implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 

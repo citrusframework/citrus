@@ -23,7 +23,6 @@ import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.model.testcase.core.ReceiveModel;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class ReceiveActionProvider implements MessageActionProvider<ReceiveModel, Message> {

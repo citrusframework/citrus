@@ -47,7 +47,6 @@ import org.springframework.util.CollectionUtils;
  * Factory bean implementation taking care of {@link FunctionRegistry} and {@link GlobalVariables}. Enriches a test context factory delegate with
  * components coming from Spring application context. In addition to that adds application context reference to the test context when building new instances.
  *
- * @author Christoph Deppisch
  */
 public class TestContextFactoryBean extends TestContextFactory implements FactoryBean<TestContext>, InitializingBean, ApplicationContextAware {
 

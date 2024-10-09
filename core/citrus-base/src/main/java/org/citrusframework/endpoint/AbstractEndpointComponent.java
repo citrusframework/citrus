@@ -41,7 +41,6 @@ import org.citrusframework.util.StringUtils;
  * jms:queue.name?connectionFactory=specialConnectionFactory
  * soap:localhost:8080?soapAction=sayHello
  *
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public abstract class AbstractEndpointComponent implements EndpointComponent {

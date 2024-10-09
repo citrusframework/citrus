@@ -29,7 +29,6 @@ import org.springframework.core.env.Environment;
 /**
  * Function to get environment variable settings.
  *
- * @author Christoph Deppisch
  */
 public class EnvironmentPropertyFunction implements Function, EnvironmentAware {
 

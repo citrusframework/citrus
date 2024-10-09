@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
  * Test action that performs in a separate thread. Action execution is not blocking the test execution chain. After
  * action has performed optional validation step is called.
  *
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public abstract class AbstractAsyncTestAction extends AbstractTestAction implements Completable {

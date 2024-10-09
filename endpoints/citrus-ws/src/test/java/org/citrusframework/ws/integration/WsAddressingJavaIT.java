@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.citrusframework.ws.actions.AssertSoapFault.Builder.assertSoapFault;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class WsAddressingJavaIT extends TestNGCitrusSpringSupport {
 

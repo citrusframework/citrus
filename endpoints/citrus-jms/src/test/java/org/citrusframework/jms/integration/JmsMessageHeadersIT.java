@@ -21,9 +21,6 @@ import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class JmsMessageHeadersIT extends TestNGCitrusSpringSupport {
 

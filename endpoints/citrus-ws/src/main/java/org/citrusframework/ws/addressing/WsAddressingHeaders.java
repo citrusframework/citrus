@@ -30,7 +30,6 @@ import org.springframework.ws.soap.addressing.core.EndpointReference;
  * Value object holding ws addressing information which is translated into the message header.
  * Message id is optional - if not set here it is generated automatically.
  *
- * @author Christoph Deppisch
  */
 public class WsAddressingHeaders {
     /** Addressing headers version */

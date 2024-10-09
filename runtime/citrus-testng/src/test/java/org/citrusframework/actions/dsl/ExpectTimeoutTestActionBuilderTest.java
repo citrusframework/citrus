@@ -39,7 +39,6 @@ import static org.citrusframework.actions.ReceiveTimeoutAction.Builder.expectTim
 import static org.mockito.Mockito.*;
 
 /**
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class ExpectTimeoutTestActionBuilderTest extends UnitTestSupport {

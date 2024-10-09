@@ -30,9 +30,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class MarshallingPayloadBuilderTest extends UnitTestSupport {
 
     private final Marshaller marshaller = new Jaxb2Marshaller(TestRequest.class);

@@ -21,7 +21,6 @@ import org.citrusframework.mail.config.xml.MailClientParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class CitrusMailConfigNamespaceHandler extends NamespaceHandlerSupport {

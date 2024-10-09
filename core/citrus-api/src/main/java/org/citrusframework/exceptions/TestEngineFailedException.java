@@ -19,7 +19,6 @@ package org.citrusframework.exceptions;
 /**
  * Custom RuntimeException thrown if test run failed, because some tests were not successful.
  *
- * @author Christoph Deppisch
  * @since 2007
  *
  */

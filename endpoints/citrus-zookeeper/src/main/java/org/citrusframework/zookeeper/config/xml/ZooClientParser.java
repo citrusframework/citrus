@@ -27,7 +27,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for zookeeper client instance.
  *
- * @author Martin Maher
  * @since 2.5
  */
 public class ZooClientParser implements BeanDefinitionParser {

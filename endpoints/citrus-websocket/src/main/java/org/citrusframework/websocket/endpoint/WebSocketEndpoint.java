@@ -23,7 +23,6 @@ import org.citrusframework.messaging.SelectiveConsumer;
 
 /**
  * Endpoint constructs web socket consumer and producer with given endpoint configuration.
- * @author Martin Maher
  * @since 2.3
  */
 public class WebSocketEndpoint extends AbstractEndpoint {

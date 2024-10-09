@@ -21,7 +21,6 @@ import org.citrusframework.vertx.config.xml.VertxSyncEndpointParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class CitrusVertxConfigNamespaceHandler extends NamespaceHandlerSupport {

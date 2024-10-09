@@ -22,9 +22,6 @@ import org.springframework.util.MultiValueMap;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class SpringBeanTypeConverterTest {
 
     private final SpringBeanTypeConverter converter = SpringBeanTypeConverter.INSTANCE;

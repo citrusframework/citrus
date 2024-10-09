@@ -53,7 +53,6 @@ import org.xml.sax.InputSource;
  * xsd schema instances for schema repository. WSDL may contain several schema types which get
  * exposed under a single target namespace (defined on WSDL level).
  *
- * @author Christoph Deppisch
  * @since 1.3
  */
 public class WsdlXsdSchema extends AbstractSchemaCollection {

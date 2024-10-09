@@ -27,9 +27,6 @@ import jakarta.xml.bind.annotation.XmlValue;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.TransformAction;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "transform")
 public class Transform implements TestActionBuilder<TransformAction> {
 

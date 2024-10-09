@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
  * Default message queue implementation. Holds queued messages in memory and adds selective consumption of messages
  * according to a message selector implementation.
  *
- * @author Christoph Deppisch
  */
 public class DefaultMessageQueue implements MessageQueue {
 

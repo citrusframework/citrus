@@ -30,9 +30,6 @@ import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class AbstractMarshallingHelloService implements HelloService {
 
     @Autowired

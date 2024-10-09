@@ -28,7 +28,6 @@ import org.springframework.test.context.support.AbstractTestExecutionListener;
  * tasks before and after the test run. The tasks after are executed as ShutdownHook thread that is added
  * to the JVM runtime.
  *
- * @author Christoph Deppisch
  */
 public class TestSuiteExecutionListener extends AbstractTestExecutionListener {
 

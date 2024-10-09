@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class IgnoreValidationMatcher implements ValidationMatcher {

@@ -35,9 +35,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
 
-/**
- * @author Christoph Deppisch
- */
 public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
 
     private static final String DB_STMT_1 = "DELETE * FROM ERRORS WHERE STATUS='resolved'";

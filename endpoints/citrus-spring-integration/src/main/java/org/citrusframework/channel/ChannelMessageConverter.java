@@ -27,7 +27,6 @@ import org.citrusframework.message.MessageHeaders;
 import org.springframework.messaging.support.MessageBuilder;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class ChannelMessageConverter implements MessageConverter<org.springframework.messaging.Message<?>, org.springframework.messaging.Message<?>, ChannelEndpointConfiguration> {

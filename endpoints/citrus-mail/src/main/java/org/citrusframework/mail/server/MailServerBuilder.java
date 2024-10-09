@@ -26,7 +26,6 @@ import org.citrusframework.mail.model.MailMarshaller;
 import org.citrusframework.server.AbstractServerBuilder;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailServerBuilder> {

@@ -26,9 +26,6 @@ import org.citrusframework.xml.xpath.XPathUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/**
- * @author Christoph Deppisch
- */
 public class InboundXmlDataDictionary extends XpathMappingDataDictionary {
 
     @Override

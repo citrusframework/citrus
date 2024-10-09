@@ -31,7 +31,6 @@ import org.openqa.selenium.remote.Browser;
  * Navigates to new page either by using new absolute page URL or relative page path.
  * Also supports history forward and back navigation as well as page refresh.
  *
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class NavigateAction extends AbstractSeleniumAction {

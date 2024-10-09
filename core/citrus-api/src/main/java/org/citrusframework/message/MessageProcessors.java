@@ -26,7 +26,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 /**
  * List of global message construction processors that modify message payload and message headers. User just has to add
  * processor implementation as bean to the Spring application context.
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class MessageProcessors {

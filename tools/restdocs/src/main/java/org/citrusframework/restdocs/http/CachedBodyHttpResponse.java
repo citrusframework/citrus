@@ -30,7 +30,6 @@ import org.springframework.util.FileCopyUtils;
  * Helper Http response wrapper implementation provides access to the response body for usage
  * in RestDoc converters. Delegates other method calls to original Http response instance.
  *
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class CachedBodyHttpResponse implements ClientHttpResponse {

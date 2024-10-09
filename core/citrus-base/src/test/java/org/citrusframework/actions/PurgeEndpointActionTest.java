@@ -32,9 +32,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class PurgeEndpointActionTest extends UnitTestSupport {
 
     private Endpoint mockEndpoint = Mockito.mock(Endpoint.class);

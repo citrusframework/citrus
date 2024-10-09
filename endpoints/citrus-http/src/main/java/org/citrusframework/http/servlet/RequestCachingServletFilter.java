@@ -30,7 +30,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * For logging and tracing reasons we introduce a servlet request wrapper caching
  * the request data.
  *
- * @author Christoph Deppisch
  * @since 1.2
  */
 public class RequestCachingServletFilter extends OncePerRequestFilter {

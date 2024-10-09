@@ -25,7 +25,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.log.LogMessageModifier;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public interface Message extends Serializable {

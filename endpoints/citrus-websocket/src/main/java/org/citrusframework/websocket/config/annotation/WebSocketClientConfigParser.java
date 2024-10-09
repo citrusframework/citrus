@@ -26,7 +26,6 @@ import org.citrusframework.websocket.client.WebSocketClientBuilder;
 import org.citrusframework.websocket.message.WebSocketMessageConverter;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class WebSocketClientConfigParser implements AnnotationConfigParser<WebSocketClientConfig, WebSocketClient> {

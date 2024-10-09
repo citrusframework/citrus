@@ -25,9 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.citrusframework.util.StringUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public class DirectProducer implements Producer {
 
     /** Logger */

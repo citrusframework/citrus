@@ -23,9 +23,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.TestActions;
 
-/**
- * @author Christoph Deppisch
- */
 public class Sequence implements TestActionBuilder<org.citrusframework.container.Sequence>, ReferenceResolverAware {
 
     private final org.citrusframework.container.Sequence.Builder builder = new org.citrusframework.container.Sequence.Builder();

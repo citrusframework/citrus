@@ -26,9 +26,6 @@ import static org.citrusframework.actions.CreateVariablesAction.Builder.createVa
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.citrusframework.container.Iterate.Builder.iterate;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class IterateJavaIT extends TestNGCitrusSpringSupport {
 

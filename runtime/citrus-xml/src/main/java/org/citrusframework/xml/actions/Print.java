@@ -18,9 +18,6 @@ package org.citrusframework.xml.actions;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "print")
 public class Print extends Echo {
 }

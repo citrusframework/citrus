@@ -32,7 +32,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for ant run action in test case.
  *
- * @author Christoph Deppisch
  * @since 1.3
  */
 public class AntRunActionParser implements BeanDefinitionParser {

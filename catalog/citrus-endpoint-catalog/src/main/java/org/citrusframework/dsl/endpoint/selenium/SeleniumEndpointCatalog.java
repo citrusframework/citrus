@@ -19,9 +19,6 @@ package org.citrusframework.dsl.endpoint.selenium;
 import org.citrusframework.selenium.endpoint.SeleniumBrowserBuilder;
 import org.citrusframework.selenium.endpoint.builder.SeleniumEndpoints;
 
-/**
- * @author Christoph Deppisch
- */
 public class SeleniumEndpointCatalog {
 
     /**

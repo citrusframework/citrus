@@ -21,7 +21,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class CitrusAppTest {

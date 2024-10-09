@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.actions.AntRunAction;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class AntRunActionParserTest extends AbstractActionParserTest<AntRunAction> {
 
     @Test

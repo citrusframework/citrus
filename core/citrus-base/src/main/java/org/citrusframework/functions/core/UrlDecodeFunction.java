@@ -28,7 +28,6 @@ import org.citrusframework.functions.Function;
 /**
  * Decodes URL encoded string to a character sequence.
  *
- * @author Christoph Deppisch
  */
 public class UrlDecodeFunction implements Function {
 

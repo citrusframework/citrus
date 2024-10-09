@@ -37,7 +37,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * for test case and a parent application context. At runtime this class loads the Spring application context and gets
  * test case bean instance from context.
  *
- * @author Christoph Deppisch
  * @since 2.1
  */
 public class SpringXmlTestLoader extends DefaultTestLoader implements TestSourceAware {

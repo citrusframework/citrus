@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.io.PrintStream;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.6
  */
 public class ScpEndpointConfiguration extends SftpEndpointConfiguration {

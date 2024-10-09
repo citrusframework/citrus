@@ -23,7 +23,6 @@ import org.citrusframework.ws.config.xml.*;
 /**
  * Namespace handler for test action components in Citrus ws namespace.
  *
- * @author Christoph Deppisch
  */
 public class CitrusWsTestcaseNamespaceHandler extends NamespaceHandlerSupport {
 

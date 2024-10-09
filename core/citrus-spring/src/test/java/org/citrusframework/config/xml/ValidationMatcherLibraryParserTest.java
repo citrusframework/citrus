@@ -30,7 +30,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class ValidationMatcherLibraryParserTest extends AbstractBeanDefinitionParserTest {

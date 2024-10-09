@@ -27,9 +27,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.jms.actions.PurgeJmsQueuesAction.Builder.purgeQueues;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class PurgeJmsQueuesJavaIT extends TestNGCitrusSpringSupport {
 

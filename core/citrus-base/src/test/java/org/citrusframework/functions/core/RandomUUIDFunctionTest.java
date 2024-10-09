@@ -22,9 +22,6 @@ import org.citrusframework.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class RandomUUIDFunctionTest extends UnitTestSupport {
     RandomUUIDFunction function = new RandomUUIDFunction();
 

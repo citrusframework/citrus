@@ -29,9 +29,6 @@ import static org.citrusframework.container.Iterate.Builder.iterate;
 import static org.citrusframework.container.Parallel.Builder.parallel;
 import static org.citrusframework.container.Sequence.Builder.sequential;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class ParallelJavaIT extends TestNGCitrusSpringSupport {
 

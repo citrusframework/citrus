@@ -20,9 +20,6 @@ import org.citrusframework.context.TestContext;
 import org.hamcrest.Matcher;
 import org.hamcrest.core.IsEqual;
 
-/**
- * @author Christoph Deppisch
- */
 public class HamcrestValueMatcher implements ValueMatcher {
 
     @Override

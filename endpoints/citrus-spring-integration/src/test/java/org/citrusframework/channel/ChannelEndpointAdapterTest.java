@@ -26,9 +26,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class ChannelEndpointAdapterTest extends AbstractTestNGUnitTest {
 
     private QueueChannel channel = new QueueChannel();

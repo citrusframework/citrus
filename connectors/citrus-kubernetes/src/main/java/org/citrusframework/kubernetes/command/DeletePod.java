@@ -24,7 +24,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class DeletePod extends AbstractDeleteCommand<Pod, PodList, PodResource, DeletePod> {

@@ -26,7 +26,6 @@ import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.namespace.CitrusNamespacePrefixMapper;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class TestActionMarshaller implements Marshaller {

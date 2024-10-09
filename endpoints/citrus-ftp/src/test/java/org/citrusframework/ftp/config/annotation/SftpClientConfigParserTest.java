@@ -38,9 +38,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @CitrusEndpoint(name = "sftpClient1")

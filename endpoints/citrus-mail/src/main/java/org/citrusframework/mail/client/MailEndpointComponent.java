@@ -28,7 +28,6 @@ import static java.lang.Integer.parseInt;
 /**
  * Component creates proper mail client from endpoint uri resource and parameters.
  *
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class MailEndpointComponent extends AbstractEndpointComponent {

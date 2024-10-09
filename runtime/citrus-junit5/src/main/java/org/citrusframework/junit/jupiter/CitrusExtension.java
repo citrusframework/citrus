@@ -60,7 +60,6 @@ import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.setCitrus;
  * <p>
  * Extension is based on Citrus Xml test extension that also allows to load test cases from external Spring configuration files.
  *
- * @author Christoph Deppisch
  */
 public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor, AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler, AfterEachCallback {
 

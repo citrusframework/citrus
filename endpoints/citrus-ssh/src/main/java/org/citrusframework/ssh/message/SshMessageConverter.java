@@ -28,7 +28,6 @@ import org.citrusframework.ssh.model.SshMessage;
 import org.citrusframework.xml.StringResult;
 
 /**
- * @author Christoph Deppisch
  * @since 2.1
  */
 public class SshMessageConverter implements MessageConverter<SshMessage, SshMessage, SshEndpointConfiguration> {

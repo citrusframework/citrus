@@ -26,7 +26,6 @@ import org.springframework.context.ApplicationContextAware;
  * The default validation matcher library is also added via Spring bean reference. This is why this registry explicitly doe not use default registry
  * in order to not duplicate the default validation matcher library.
  *
- * @author Christoph Deppisch
  */
 public class ValidationMatcherRegistryFactory implements FactoryBean<ValidationMatcherRegistry>, ApplicationContextAware {
 
