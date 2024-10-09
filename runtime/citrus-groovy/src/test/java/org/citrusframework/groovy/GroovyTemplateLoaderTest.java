@@ -21,9 +21,6 @@ import org.citrusframework.container.Template;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class GroovyTemplateLoaderTest extends UnitTestSupport {
 
     @Test

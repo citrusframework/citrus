@@ -22,7 +22,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class MappingsConfiguration implements Serializable {

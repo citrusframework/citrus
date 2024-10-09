@@ -21,7 +21,6 @@ import org.citrusframework.ftp.config.xml.SftpServerParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class CitrusSftpConfigNamespaceHandler extends NamespaceHandlerSupport {

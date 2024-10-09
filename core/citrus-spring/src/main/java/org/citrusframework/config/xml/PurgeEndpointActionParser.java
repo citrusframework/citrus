@@ -38,7 +38,6 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class PurgeEndpointActionParser implements BeanDefinitionParser {

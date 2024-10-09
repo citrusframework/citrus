@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Registry provides all known {@link SegmentVariableExtractor}s.
  *
- * @author Thorsten Schlathoelter
  */
 public class SegmentVariableExtractorRegistry {
 

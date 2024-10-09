@@ -26,7 +26,6 @@ import org.citrusframework.container.AbstractTestBoundaryActionContainer;
 
 /**
  * Abstract container builder takes care on calling the container runner when actions are placed in the container.
- * @author Christoph Deppisch
  */
 public abstract class AbstractTestBoundaryContainerBuilder<T extends AbstractTestBoundaryActionContainer, S extends AbstractTestBoundaryContainerBuilder<T, S>> extends AbstractTestContainerBuilder<T, S> {
 

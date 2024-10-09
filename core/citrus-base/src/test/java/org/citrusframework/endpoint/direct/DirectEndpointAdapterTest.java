@@ -30,9 +30,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class DirectEndpointAdapterTest {
 
     private MessageQueue queue = new DefaultMessageQueue("testQueue");

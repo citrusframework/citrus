@@ -20,9 +20,6 @@ import org.citrusframework.endpoint.PollableEndpointConfiguration;
 import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.MessageCorrelator;
 
-/**
- * @author Christoph Deppisch
- */
 public class DirectSyncEndpointConfiguration extends DirectEndpointConfiguration implements PollableEndpointConfiguration {
 
     /** Reply message correlator */

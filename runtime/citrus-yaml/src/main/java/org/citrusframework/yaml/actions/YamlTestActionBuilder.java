@@ -25,9 +25,6 @@ import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Christoph Deppisch
- */
 public interface YamlTestActionBuilder {
 
     /** Logger */

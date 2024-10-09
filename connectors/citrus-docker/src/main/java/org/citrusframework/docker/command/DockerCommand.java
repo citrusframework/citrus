@@ -22,7 +22,6 @@ import org.citrusframework.docker.client.DockerClient;
 import java.util.Map;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public interface DockerCommand<R> {

@@ -22,9 +22,6 @@ import org.citrusframework.ws.message.SoapFault;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class XmlSoapFaultValidatorTest extends AbstractTestNGUnitTest {
 
     @Autowired

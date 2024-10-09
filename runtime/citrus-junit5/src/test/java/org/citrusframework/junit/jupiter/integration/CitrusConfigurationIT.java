@@ -38,9 +38,6 @@ import org.junit.jupiter.api.Test;
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
 
-/**
- * @author Christoph Deppisch
- */
 @CitrusSupport
 @CitrusConfiguration(classes = CitrusConfigurationIT.Endpoints.class)
 public class CitrusConfigurationIT {

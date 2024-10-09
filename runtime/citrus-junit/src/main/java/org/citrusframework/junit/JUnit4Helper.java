@@ -37,9 +37,6 @@ import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.util.StringUtils;
 import org.junit.runners.model.FrameworkMethod;
 
-/**
- * @author Christoph Deppisch
- */
 public final class JUnit4Helper {
 
     public static final String BUILDER_ATTRIBUTE = "builder";

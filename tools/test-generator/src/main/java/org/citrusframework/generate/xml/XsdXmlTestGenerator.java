@@ -40,7 +40,6 @@ import org.citrusframework.xml.XmlConfigurer;
 
 /**
  * Test generator creates one to many test cases based on operations defined in a XML schema XSD.
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class XsdXmlTestGenerator extends MessagingXmlTestGenerator<XsdXmlTestGenerator> implements XsdTestGenerator<XsdXmlTestGenerator> {

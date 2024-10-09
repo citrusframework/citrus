@@ -26,7 +26,6 @@ import org.citrusframework.xml.namespace.DefaultNamespaceContext;
 import org.citrusframework.xml.xpath.XPathUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6.2
  */
 public class XpathFunction implements Function {

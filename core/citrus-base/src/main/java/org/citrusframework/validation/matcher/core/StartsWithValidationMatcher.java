@@ -25,7 +25,6 @@ import java.util.List;
 /**
  * ValidationMatcher based on String.startsWith()
  *
- * @author Christian Wied
  */
 public class StartsWithValidationMatcher implements ValidationMatcher {
 

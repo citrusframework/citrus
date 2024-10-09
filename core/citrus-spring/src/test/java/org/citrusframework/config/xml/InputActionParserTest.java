@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.actions.InputAction;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class InputActionParserTest extends AbstractActionParserTest<InputAction> {
 
     @Test

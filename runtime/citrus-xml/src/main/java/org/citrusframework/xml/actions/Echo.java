@@ -23,9 +23,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.EchoAction;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "echo")
 public class Echo implements TestActionBuilder<EchoAction> {
 

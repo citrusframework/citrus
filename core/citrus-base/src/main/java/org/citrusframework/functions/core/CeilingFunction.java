@@ -29,7 +29,6 @@ import static java.lang.Math.ceil;
  * Returns the smallest (closest to negative infinity) double value
  * according to the numeric argument.
  *
- * @author Christoph Deppisch
  */
 public class CeilingFunction implements Function {
 

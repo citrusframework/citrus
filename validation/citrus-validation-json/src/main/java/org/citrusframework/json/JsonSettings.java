@@ -23,9 +23,6 @@ import static net.minidev.json.parser.JSONParser.MODE_PERMISSIVE;
 import static net.minidev.json.parser.JSONParser.MODE_RFC4627;
 import static net.minidev.json.parser.JSONParser.MODE_STRICTEST;
 
-/**
- * @author Christoph Deppisch
- */
 public final class JsonSettings {
 
     private static final String MESSAGE_VALIDATION_STRICT_PROPERTY = "citrus.json.message.validation.strict";

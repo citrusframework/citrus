@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
  * Sequence of test actions executed after a test case. Container execution can be restricted according to test name ,
  * package and test groups.
  *
- * @author Christoph Deppisch
  */
 public class SequenceAfterTest extends AbstractTestBoundaryActionContainer implements AfterTest {
 

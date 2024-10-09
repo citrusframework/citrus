@@ -25,7 +25,6 @@ import org.citrusframework.util.XMLUtils;
 import org.citrusframework.xml.XmlFormattingMessageProcessor;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6.2
  */
 public class SoapFormattingMessageProcessor extends XmlFormattingMessageProcessor {

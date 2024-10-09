@@ -25,7 +25,6 @@ import org.citrusframework.util.MessageUtils;
  * Extended groovy message validator providing specific Json slurper support.
  * With Json slurper the tester can validate the message payload with closures for instance.
  *
- * @author DanielP
  * @since 1.2
  */
 public class GroovyJsonMessageValidator extends GroovyScriptMessageValidator {

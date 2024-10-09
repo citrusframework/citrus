@@ -23,7 +23,6 @@ import org.citrusframework.messaging.Producer;
 
 /**
  * Endpoint interface defines basic send and receive operations on a message endpoint.
- * @author Christoph Deppisch
  * @since 1.4
  */
 public interface Endpoint extends Named {

@@ -35,9 +35,6 @@ import org.citrusframework.validation.interceptor.GzipMessageProcessor;
 import static org.citrusframework.dsl.MessageSupport.MessageBodySupport.fromBody;
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
 
-/**
- * @author Christoph Deppisch
- */
 public final class MessageSupport {
 
     private MessageSupport() {

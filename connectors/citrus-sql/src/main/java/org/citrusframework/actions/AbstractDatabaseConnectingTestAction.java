@@ -40,7 +40,6 @@ import org.springframework.transaction.TransactionDefinition;
  * Abstract base class for database connection test actions. Extends {@link JdbcDaoSupport} providing
  * access to a {@link javax.sql.DataSource}.
  *
- * @author Christoph Deppisch
  */
 public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSupport implements TestAction, Named, Described, TestActorAware {
 

@@ -29,7 +29,6 @@ import org.citrusframework.validation.context.ValidationContext;
  * XML validation context holding validation specific information needed for XML
  * message validation.
  *
- * @author Christoph Deppisch
  */
 public class XmlMessageValidationContext extends DefaultValidationContext implements SchemaValidationContext {
 

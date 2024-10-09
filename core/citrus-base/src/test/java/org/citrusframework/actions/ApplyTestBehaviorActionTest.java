@@ -27,9 +27,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.verify;
 
-/**
- * @author Christoph Deppisch
- */
 public class ApplyTestBehaviorActionTest extends UnitTestSupport {
 
     @Mock

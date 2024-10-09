@@ -44,7 +44,6 @@ import org.citrusframework.endpoint.EndpointUriBuilder;
 
 /**
  * Support class combining all available Apache Camel Java DSL capabilities.
- * @author Christoph Deppisch
  */
 public class CamelSupport {
 

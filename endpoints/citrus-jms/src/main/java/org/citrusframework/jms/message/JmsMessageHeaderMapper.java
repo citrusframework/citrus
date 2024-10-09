@@ -28,7 +28,6 @@ import org.springframework.messaging.MessageHeaders;
  * Citrus JMS header mapper translates internal message headers to Spring integration message headers and
  * vice versa.
  *
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class JmsMessageHeaderMapper extends SimpleJmsHeaderMapper {

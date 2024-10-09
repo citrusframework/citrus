@@ -21,9 +21,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class StaticEndpointAdapterTest {
 
     @Test(expectedExceptions = CitrusRuntimeException.class)

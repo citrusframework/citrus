@@ -31,7 +31,6 @@ import org.springframework.util.StringUtils;
  * with generated random test data according to specification and creates inbound payloads with proper validation expressions to
  * enforce the specification rules.
  *
- * @author Christoph Deppisch
  */
 public class OpenApiTestDataGenerator {
 

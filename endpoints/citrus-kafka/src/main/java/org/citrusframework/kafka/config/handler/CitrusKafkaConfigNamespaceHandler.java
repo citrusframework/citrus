@@ -21,7 +21,6 @@ import org.citrusframework.kafka.config.xml.KafkaEndpointParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 2.8
  */
 public class CitrusKafkaConfigNamespaceHandler extends NamespaceHandlerSupport {

@@ -22,9 +22,6 @@ import java.util.Objects;
 
 import org.citrusframework.yaml.actions.script.ScriptDefinitionType;
 
-/**
- * @author Christoph Deppisch
- */
 public class Message {
     protected String headerIgnoreCase;
     protected List<Header> headers;

@@ -19,7 +19,6 @@ package org.citrusframework.jms.message;
 import org.citrusframework.message.MessageHeaders;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public final class JmsMessageHeaders {

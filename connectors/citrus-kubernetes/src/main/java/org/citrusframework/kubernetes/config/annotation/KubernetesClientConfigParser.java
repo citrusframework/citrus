@@ -27,7 +27,6 @@ import static org.citrusframework.kubernetes.config.CredentialValidator.isValid;
 import static org.citrusframework.util.StringUtils.hasText;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class KubernetesClientConfigParser implements AnnotationConfigParser<KubernetesClientConfig, KubernetesClient> {

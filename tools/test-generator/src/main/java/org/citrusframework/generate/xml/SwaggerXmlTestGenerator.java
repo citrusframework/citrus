@@ -63,7 +63,6 @@ import org.springframework.http.HttpStatus;
 
 /**
  * Test generator creates one to many test cases based on operations defined in a XML schema XSD.
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXmlTestGenerator> implements SwaggerTestGenerator<SwaggerXmlTestGenerator> {

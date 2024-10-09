@@ -42,7 +42,6 @@ import org.citrusframework.message.WithPayloadBuilder;
  * Default message builder delegates to given message header builders and message payload
  * builder.
  *
- * @author Christoph Deppisch
  */
 public class DefaultMessageBuilder implements MessageBuilder, WithPayloadBuilder, WithHeaderBuilder, Named {
 

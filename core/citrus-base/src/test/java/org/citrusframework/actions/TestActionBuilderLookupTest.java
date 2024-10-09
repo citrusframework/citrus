@@ -34,9 +34,6 @@ import org.citrusframework.container.Wait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class TestActionBuilderLookupTest {
 
     @Test

@@ -40,7 +40,6 @@ import org.w3c.dom.Element;
 import static java.lang.Boolean.parseBoolean;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class HttpReceiveRequestActionParser extends ReceiveMessageActionParser {

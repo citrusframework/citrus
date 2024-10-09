@@ -23,9 +23,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.citrusframework.variable.dictionary.AbstractDataDictionary;
 
-/**
- * @author Christoph Deppisch
- */
 public class SimpleMappingDictionary extends AbstractDataDictionary<String> {
 
     private final Map<String, String> mappings;

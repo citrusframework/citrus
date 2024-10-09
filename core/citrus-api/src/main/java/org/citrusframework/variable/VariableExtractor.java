@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
  * Class extracting variables form messages. Implementing classes may read
  * message contents and save those to test variables.
  *
- * @author Christoph Deppisch
  */
 public interface VariableExtractor extends MessageProcessor {
 

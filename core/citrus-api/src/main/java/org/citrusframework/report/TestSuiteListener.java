@@ -18,7 +18,6 @@ package org.citrusframework.report;
 
 /**
  * Listener for events regarding a test suite (start, finish, failure, success)
- * @author Christoph Deppisch
  */
 public interface TestSuiteListener {
 

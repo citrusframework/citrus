@@ -56,7 +56,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class SftpClient extends FtpClient {

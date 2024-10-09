@@ -23,7 +23,6 @@ import org.citrusframework.messaging.SelectiveConsumer;
 /**
  * Direct message endpoint implementation sends and receives message from in memory message queue.
  *
- * @author Christoph Deppisch
  * @since 3.0
  */
 public class DirectEndpoint extends AbstractEndpoint {

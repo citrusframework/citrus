@@ -23,7 +23,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.HttpClientErrorException;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class HttpErrorPropagatingException extends HttpClientErrorException {

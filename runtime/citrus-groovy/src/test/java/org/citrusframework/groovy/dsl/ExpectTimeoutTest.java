@@ -25,7 +25,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class ExpectTimeoutTest extends AbstractGroovyActionDslTest {

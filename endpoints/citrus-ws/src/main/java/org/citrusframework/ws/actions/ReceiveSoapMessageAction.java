@@ -44,7 +44,6 @@ import org.springframework.http.HttpStatus;
  * This special implementation offers SOAP attachment validation in addition to
  * the normal message receiver.
  *
- * @author Christoph Deppisch
  */
 public class ReceiveSoapMessageAction extends ReceiveMessageAction implements TestAction {
     /** Control attachment */

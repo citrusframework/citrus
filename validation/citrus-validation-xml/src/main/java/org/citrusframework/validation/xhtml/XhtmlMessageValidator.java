@@ -30,7 +30,6 @@ import org.citrusframework.validation.xml.XmlMessageValidationContext;
  * XHTML message validator using W3C jtidy to automatically convert HTML content to XHTML fixing most common
  * well-formed errors in HTML markup.
  *
- * @author Christoph Deppisch
  */
 public class XhtmlMessageValidator extends DomXmlMessageValidator implements InitializingPhase {
 

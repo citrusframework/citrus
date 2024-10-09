@@ -25,7 +25,6 @@ import java.util.*;
 /**
  * Bean definition parser for message selector elements of test actions.
  *
- * @author Christoph Deppisch
  */
 public abstract class MessageSelectorParser {
 

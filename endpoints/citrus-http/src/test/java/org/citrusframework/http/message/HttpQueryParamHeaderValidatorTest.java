@@ -28,7 +28,6 @@ import org.testng.annotations.Test;
 import static org.hamcrest.Matchers.is;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.6
  */
 public class HttpQueryParamHeaderValidatorTest extends AbstractTestNGUnitTest {

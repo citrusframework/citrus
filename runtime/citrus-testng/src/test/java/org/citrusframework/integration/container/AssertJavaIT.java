@@ -29,9 +29,6 @@ import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.citrusframework.actions.FailAction.Builder.fail;
 import static org.citrusframework.container.Assert.Builder.assertException;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class AssertJavaIT extends TestNGCitrusSpringSupport {
 

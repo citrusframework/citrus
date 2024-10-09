@@ -22,7 +22,6 @@ import org.citrusframework.http.server.AbstractHttpServerBuilder;
 import org.citrusframework.websocket.endpoint.WebSocketEndpoint;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class WebSocketServerBuilder extends AbstractHttpServerBuilder<WebSocketServer, WebSocketServerBuilder> {

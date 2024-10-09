@@ -47,7 +47,6 @@ import org.w3c.dom.Node;
  * Class reads message elements via XPath expressions and saves the text values as new test variables.
  * Implementation parsed the message payload as DOM document, so XML message payload is needed here.
  *
- * @author Christoph Deppisch
  */
 public class XpathPayloadVariableExtractor implements VariableExtractor {
     /** Logger */

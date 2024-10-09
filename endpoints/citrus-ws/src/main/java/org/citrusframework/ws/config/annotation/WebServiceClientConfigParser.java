@@ -35,7 +35,6 @@ import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class WebServiceClientConfigParser implements AnnotationConfigParser<WebServiceClientConfig, WebServiceClient> {

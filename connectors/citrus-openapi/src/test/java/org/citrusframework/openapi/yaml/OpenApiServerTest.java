@@ -48,9 +48,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
 
-/**
- * @author Christoph Deppisch
- */
 public class OpenApiServerTest extends AbstractYamlActionTest {
 
     @BindToRegistry

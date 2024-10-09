@@ -26,9 +26,6 @@ import org.citrusframework.actions.PurgeEndpointAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 
-/**
- * @author Christoph Deppisch
- */
 public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, ReferenceResolverAware {
 
     private final PurgeEndpointAction.Builder builder = new PurgeEndpointAction.Builder();

@@ -21,7 +21,6 @@ import java.util.Arrays;
 /**
  * User model object for easy instantiation in Spring application context.
  *
- * @author Christoph Deppisch
  * @since 1.3
  */
 public class User {

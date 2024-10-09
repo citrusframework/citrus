@@ -29,7 +29,6 @@ import io.cucumber.core.backend.StepDefinition;
 
 /**
  * Special step definition that runs a XML step definition template on execution.
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class XmlStepDefinition implements StepDefinition {

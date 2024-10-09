@@ -26,7 +26,6 @@ import org.testng.annotations.Test;
  * A Zookeeper server must be running for this test to succeed. The zookeeper maven
  * plugin can be used for starting and stopping the server on demand.
  *
- * @author Martin Maher
  * @since 2.5
  */
 @Test

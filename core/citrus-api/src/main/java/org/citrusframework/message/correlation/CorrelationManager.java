@@ -23,7 +23,6 @@ import org.citrusframework.context.TestContext;
  * some time later with same correlation key. This mechanism is used in synchronous communication where
  * request and response messages are stored for correlating consumer and producer components.
  *
- * @author Christoph Deppisch
  * @since 2.0
  */
 public interface CorrelationManager<T> {

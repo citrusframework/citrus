@@ -43,7 +43,6 @@ import org.springframework.ws.transport.context.TransportContextHolder;
 
 /**
  * Converts a Http request to RestDoc operation request instance.
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class RestDocSoapRequestConverter implements RequestConverter<MessageContext> {

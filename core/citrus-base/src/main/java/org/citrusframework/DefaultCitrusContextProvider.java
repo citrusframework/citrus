@@ -20,7 +20,6 @@ package org.citrusframework;
  * Default implementation of CitrusContext provider. Works with default CitrusContext and creates new instances based on
  * a given strategy. Either creates a new instance for each provider call or always returns a singleton context instance.
  *
- * @author Christoph Deppisch
  */
 public class DefaultCitrusContextProvider implements CitrusContextProvider {
 

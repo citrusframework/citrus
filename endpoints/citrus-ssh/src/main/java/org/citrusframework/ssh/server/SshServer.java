@@ -71,7 +71,6 @@ import org.citrusframework.util.StringUtils;
  *   <stderr>warning: no tty</stderr>
  * </ssh-response>
  *
- * @author Roland Huss
  * @since 04.09.12
  */
 public class SshServer extends AbstractServer {

@@ -35,7 +35,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * JUnit runner reads Citrus test annotation for XML test cases and prepares test execution within proper Citrus
  * test context boundaries. Supports package scan as well as multiple test method annotations within one single class.
  *
- * @author Christoph Deppisch
  * @since 2.2
  */
 public class CitrusSpringJUnit4Runner extends SpringJUnit4ClassRunner {

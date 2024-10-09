@@ -29,9 +29,6 @@ import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.citrusframework.validation.interceptor.BinaryMessageProcessor.Builder.toBinary;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class JmsByteMessageJavaIT extends TestNGCitrusSpringSupport {
 

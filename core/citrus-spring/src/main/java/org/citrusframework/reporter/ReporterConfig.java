@@ -22,9 +22,6 @@ import org.citrusframework.report.LoggingReporter;
 import org.springframework.context.annotation.*;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
-/**
- * @author Christoph Deppisch
- */
 @Configuration
 public class ReporterConfig {
 

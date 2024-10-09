@@ -54,7 +54,6 @@ import static java.util.Objects.isNull;
  * In case of incoming multipart mail messages the server is able to split the body parts into separate XML messages
  * handled by the endpoint adapter.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class MailServer extends AbstractServer {

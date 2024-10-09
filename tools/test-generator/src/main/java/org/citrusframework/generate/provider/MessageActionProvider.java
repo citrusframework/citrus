@@ -19,7 +19,6 @@ package org.citrusframework.generate.provider;
 import org.citrusframework.message.Message;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public interface MessageActionProvider<T, M extends Message> {

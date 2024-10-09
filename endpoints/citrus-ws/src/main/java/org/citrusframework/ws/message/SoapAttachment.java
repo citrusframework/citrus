@@ -41,7 +41,6 @@ import org.springframework.ws.mime.Attachment;
 /**
  * Citrus SOAP attachment implementation.
  *
- * @author Christoph Deppisch
  */
 public class SoapAttachment implements Attachment, Serializable {
 

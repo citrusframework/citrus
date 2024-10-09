@@ -26,7 +26,6 @@ import org.w3c.dom.Element;
 /**
  * Helper for parsing message validation elements.
  *
- * @author Martin Maher
  * @since 2.5
  */
 public class ValidateMessageParserUtil {

@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
  *
  * Between the iterations container can sleep automatically a given amount of time.
  *
- * @author Christoph Deppisch
  */
 public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
     /** Auto sleep in milliseconds */

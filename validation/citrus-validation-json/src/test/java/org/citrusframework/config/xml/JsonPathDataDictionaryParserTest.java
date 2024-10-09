@@ -26,7 +26,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class JsonPathDataDictionaryParserTest extends AbstractBeanDefinitionParserTest {

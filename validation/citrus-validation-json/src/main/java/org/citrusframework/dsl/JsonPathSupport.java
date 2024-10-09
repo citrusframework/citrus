@@ -28,9 +28,6 @@ import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.json.JsonPathVariableExtractor;
 import org.citrusframework.variable.VariableExtractor;
 
-/**
- * @author Christoph Deppisch
- */
 public class JsonPathSupport implements WithExpressions<JsonPathSupport>, PathExpressionAdapter {
 
     private final Map<String, Object> expressions = new LinkedHashMap<>();

@@ -34,7 +34,6 @@ import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {

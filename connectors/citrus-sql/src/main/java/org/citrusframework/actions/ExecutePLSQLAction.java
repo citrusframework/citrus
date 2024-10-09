@@ -36,7 +36,6 @@ import org.springframework.transaction.support.TransactionTemplate;
  * Class executes PLSQL statements either declared inline as PLSQL statements or given by an
  * external file resource.
  *
- * @author Christoph Deppisch
  * @since 2008
  */
 public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {

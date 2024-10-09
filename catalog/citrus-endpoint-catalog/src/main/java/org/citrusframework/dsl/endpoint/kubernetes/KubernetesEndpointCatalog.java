@@ -19,9 +19,6 @@ package org.citrusframework.dsl.endpoint.kubernetes;
 import org.citrusframework.kubernetes.client.KubernetesClientBuilder;
 import org.citrusframework.kubernetes.endpoint.builder.KubernetesEndpoints;
 
-/**
- * @author Christoph Deppisch
- */
 public class KubernetesEndpointCatalog {
 
     /**

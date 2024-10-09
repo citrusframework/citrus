@@ -22,9 +22,6 @@ import org.citrusframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class TransformActionParserTest extends AbstractActionParserTest<TransformAction> {
 
     @Test

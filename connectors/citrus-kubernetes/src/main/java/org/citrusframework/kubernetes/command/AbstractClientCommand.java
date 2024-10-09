@@ -26,7 +26,6 @@ import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public abstract class AbstractClientCommand<T extends HasMetadata, O, L extends KubernetesResourceList<T>, R extends Resource<T>, C extends KubernetesCommand<T, O>> extends AbstractKubernetesCommand<T, O, C> {

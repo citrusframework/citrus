@@ -28,9 +28,6 @@ import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class XsdSchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

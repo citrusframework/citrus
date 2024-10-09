@@ -24,9 +24,6 @@ import org.citrusframework.yaml.actions.YamlTestActionBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class GroovyTest extends AbstractYamlActionTest {
 
     @Test

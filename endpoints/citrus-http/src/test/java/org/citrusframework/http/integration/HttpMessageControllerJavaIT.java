@@ -28,9 +28,6 @@ import static org.citrusframework.container.Parallel.Builder.parallel;
 import static org.citrusframework.container.Sequence.Builder.sequential;
 import static org.citrusframework.http.actions.HttpActionBuilder.http;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport {
 

@@ -21,9 +21,6 @@ import org.testng.annotations.Test;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 
-/**
- * @author Christoph Deppisch
- */
 public class BooleanExpressionParserTest {
 
     @Test

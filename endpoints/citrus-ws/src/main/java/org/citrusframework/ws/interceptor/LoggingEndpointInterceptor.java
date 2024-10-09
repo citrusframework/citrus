@@ -27,7 +27,6 @@ import org.springframework.ws.server.EndpointInterceptor;
  * WebService requests (other than SOAP) the content is logged via {@link java.io.ByteArrayOutputStream}
  * which is much more expensive as whole message is loaded to internal memory.
  *
- * @author Christoph Deppisch
  */
 public class LoggingEndpointInterceptor extends LoggingInterceptorSupport implements EndpointInterceptor {
 

@@ -26,9 +26,6 @@ import org.citrusframework.xml.Jaxb2Marshaller;
 import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.Unmarshaller;
 
-/**
- * @author Christoph Deppisch
- */
 public class FormMarshaller implements Marshaller, Unmarshaller {
 
     private final Jaxb2Marshaller marshaller;

@@ -26,9 +26,6 @@ import org.citrusframework.actions.CreateVariablesAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.FileUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public class CreateVariables implements TestActionBuilder<CreateVariablesAction> {
 
     private final CreateVariablesAction.Builder builder = new CreateVariablesAction.Builder();

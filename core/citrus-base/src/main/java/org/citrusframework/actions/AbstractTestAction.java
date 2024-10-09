@@ -28,7 +28,6 @@ import org.citrusframework.context.TestContext;
 
 /**
  * Abstract base class for test actions. Class provides a default name and description.
- * @author Christoph Deppisch
  */
 public abstract class AbstractTestAction implements TestAction, Named, Described, TestActorAware {
 

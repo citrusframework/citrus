@@ -26,7 +26,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class WsdlXmlTestGeneratorTest {
@@ -59,7 +58,6 @@ public class WsdlXmlTestGeneratorTest {
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
-        Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class " + name));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package org.citrusframework;"));

@@ -25,9 +25,6 @@ import org.citrusframework.groovy.dsl.test.VariablesConfiguration;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 
-/**
- * @author Christoph Deppisch
- */
 public class ActionsConfiguration implements ActionsBuilder {
 
     private final TestActionRunner runner;

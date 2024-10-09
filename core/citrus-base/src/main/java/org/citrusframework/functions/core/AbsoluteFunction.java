@@ -29,7 +29,6 @@ import static java.lang.Math.abs;
 /**
  * Function returning the absolute value of a decimal number.
  *
- * @author Christoph Deppisch
  */
 public class AbsoluteFunction implements Function {
 

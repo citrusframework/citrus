@@ -23,9 +23,6 @@ import org.citrusframework.testng.TestNGEngine;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class TestEngineLookupTest {
 
     @Test

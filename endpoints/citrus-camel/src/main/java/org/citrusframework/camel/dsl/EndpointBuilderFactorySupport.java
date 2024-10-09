@@ -18,8 +18,5 @@ package org.citrusframework.camel.dsl;
 
 import org.apache.camel.builder.endpoint.EndpointBuilderFactory;
 
-/**
- * @author Christoph Deppisch
- */
 public class EndpointBuilderFactorySupport implements EndpointBuilderFactory {
 }

@@ -20,7 +20,6 @@ import org.citrusframework.cucumber.config.xml.StepTemplateParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class CucumberTestcaseNamespaceHandler extends NamespaceHandlerSupport {

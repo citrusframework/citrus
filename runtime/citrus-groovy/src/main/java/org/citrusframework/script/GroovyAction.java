@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Action executes groovy scripts either specified inline or from external file resource.
  *
- * @author Christoph Deppisch
  * @since 2006
  */
 public class GroovyAction extends AbstractTestAction {

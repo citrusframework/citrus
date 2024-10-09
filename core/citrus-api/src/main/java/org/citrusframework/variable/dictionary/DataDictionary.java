@@ -28,7 +28,6 @@ import org.citrusframework.message.MessageProcessor;
  * in Spring application context so user just has to add dictionary implementation to application context.
  *
  * Dictionary takes part in message construction for inbound and outbound messages in Citrus.
- * @author Christoph Deppisch
  * @since 1.4
  */
 public interface DataDictionary<T> extends MessageProcessor, MessageDirectionAware, Scoped, InitializingPhase {

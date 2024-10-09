@@ -24,7 +24,6 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class SftpEndpointComponent extends AbstractEndpointComponent {

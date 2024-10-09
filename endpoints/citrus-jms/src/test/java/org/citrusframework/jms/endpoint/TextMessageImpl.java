@@ -23,9 +23,6 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.Vector;
 
-/**
- * @author Christoph Deppisch
- */
 public class TextMessageImpl implements TextMessage {
     private String payload;
 

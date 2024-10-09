@@ -26,7 +26,6 @@ import org.citrusframework.context.TestContext;
  * Index is incremented each iteration and stored as test variable accessible in the nested test actions
  * as normal variable. Index starts with 1 by default.
  *
- * @author Christoph Deppisch
  */
 public class RepeatUntilTrue extends AbstractIteratingActionContainer {
 

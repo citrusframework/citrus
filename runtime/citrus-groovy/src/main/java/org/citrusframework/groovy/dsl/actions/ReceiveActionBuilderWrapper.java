@@ -26,9 +26,6 @@ import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.message.builder.ReceiveMessageBuilderSupport;
 import org.citrusframework.util.FileUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public class ReceiveActionBuilderWrapper extends ReceiveMessageAction.ReceiveMessageActionBuilder<ReceiveMessageAction, ReceiveActionBuilderWrapper.ReceiveMessageActionBuilderSupport, ReceiveActionBuilderWrapper> {
 
     public ReceiveMessageActionBuilderSupport message(Closure<?> callable) {

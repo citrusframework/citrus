@@ -31,9 +31,6 @@ import org.w3c.dom.Element;
 
 import java.io.*;
 
-/**
- * @author Thorsten Schlatoelter
- */
 public class CustomTestCaseParserTest extends AbstractActionParserTest<EchoAction> {
 
     @BeforeClass

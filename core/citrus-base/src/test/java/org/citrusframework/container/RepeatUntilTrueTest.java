@@ -28,9 +28,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 
-/**
- * @author Christoph Deppisch
- */
 public class RepeatUntilTrueTest extends UnitTestSupport {
 
     private TestAction action = Mockito.mock(TestAction.class);

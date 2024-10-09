@@ -18,9 +18,6 @@ package org.citrusframework.validation;
 
 import org.citrusframework.context.TestContext;
 
-/**
- * @author Christoph Deppisch
- */
 public class FooValueMatcher implements ValueMatcher {
     @Override
     public boolean supports(Class<?> controlType) {

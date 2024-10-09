@@ -24,7 +24,6 @@ import org.citrusframework.endpoint.EndpointConfiguration;
 /**
  * Channel endpoint parser.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class ChannelEndpointParser extends AbstractChannelEndpointParser {

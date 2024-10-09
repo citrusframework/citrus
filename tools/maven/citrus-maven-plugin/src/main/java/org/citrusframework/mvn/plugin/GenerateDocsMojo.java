@@ -28,7 +28,6 @@ import java.util.Optional;
  * contains a list of all available tests with meta information. Excel documentation creates a table of all available tests with
  * meta information such as name, author, status and so on.
  *
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 @Mojo(name = "generate-docs", defaultPhase = LifecyclePhase.PROCESS_TEST_RESOURCES)

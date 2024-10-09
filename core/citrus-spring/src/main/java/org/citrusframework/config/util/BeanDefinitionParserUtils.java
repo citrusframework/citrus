@@ -27,7 +27,6 @@ import org.springframework.beans.factory.xml.ParserContext;
 /**
  * Provides shared utility methods for bean definition parsing.
  *
- * @author Christoph Deppisch
  */
 public abstract class BeanDefinitionParserUtils {
 

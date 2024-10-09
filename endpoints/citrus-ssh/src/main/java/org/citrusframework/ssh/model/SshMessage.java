@@ -17,7 +17,6 @@
 package org.citrusframework.ssh.model;
 
 /**
- * @author Christoph Deppisch
  * @since 2.1
  */
 public interface SshMessage {

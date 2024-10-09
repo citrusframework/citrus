@@ -33,7 +33,6 @@ import static org.citrusframework.TestResult.RESULT.SUCCESS;
 /**
  * Class representing test results (failed, successful, skipped)
  *
- * @author Christoph Deppisch
  */
 public final class TestResult {
 

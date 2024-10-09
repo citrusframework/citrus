@@ -33,7 +33,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class StartBrowserActionTest extends AbstractTestNGUnitTest {

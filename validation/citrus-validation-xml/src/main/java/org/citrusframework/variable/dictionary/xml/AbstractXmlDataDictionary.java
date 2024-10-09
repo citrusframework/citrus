@@ -40,7 +40,6 @@ import org.w3c.dom.traversal.NodeFilter;
  * Abstract data dictionary works on XML message payloads only with parsing the document and translating each element
  * and attribute with respective value in dictionary.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary<Node> {

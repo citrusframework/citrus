@@ -21,7 +21,6 @@ import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class FtpServerTest extends AbstractTestNGUnitTest {

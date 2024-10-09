@@ -42,9 +42,6 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 

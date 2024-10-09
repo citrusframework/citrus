@@ -22,7 +22,6 @@ import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.client.dsl.*;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class ListNodes extends AbstractListCommand<Node, NodeList, Resource<Node>, ListNodes> {

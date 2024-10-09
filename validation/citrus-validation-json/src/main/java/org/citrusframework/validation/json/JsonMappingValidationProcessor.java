@@ -33,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public abstract class JsonMappingValidationProcessor<T> extends AbstractValidationProcessor<T> {

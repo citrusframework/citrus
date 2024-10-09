@@ -17,7 +17,6 @@
 package org.citrusframework.restdocs.util;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public final class RestDocTestNameFormatter {

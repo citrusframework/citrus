@@ -29,7 +29,6 @@ import static java.lang.Math.floor;
  * Returns the largest (closest to positive infinity) double value according to numeric argument
  * value.
  *
- * @author Christoph Deppisch
  */
 public class FloorFunction implements Function {
 

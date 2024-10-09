@@ -24,7 +24,6 @@ import org.citrusframework.vertx.endpoint.VertxEndpointConfiguration;
  * Message converter implementation converts inbound Vert.x messages to internal message representation. Outbound message conversion is not supported
  * as the Vert.x message transport encapsulates message conversion by default.
  *
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class VertxMessageConverter implements MessageConverter<io.vertx.core.eventbus.Message, io.vertx.core.eventbus.Message, VertxEndpointConfiguration> {

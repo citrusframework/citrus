@@ -23,9 +23,6 @@ import org.citrusframework.kubernetes.client.KubernetesClientBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class KubernetesEndpointsTest {
 
     @Test

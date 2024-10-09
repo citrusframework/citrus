@@ -23,7 +23,6 @@ import org.citrusframework.mail.message.MailMessageConverter;
 import org.citrusframework.mail.model.MailMarshaller;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {

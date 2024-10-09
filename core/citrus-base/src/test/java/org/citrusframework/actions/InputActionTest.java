@@ -28,9 +28,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 
-/**
- * @author Christoph Deppisch
- */
 public class InputActionTest extends UnitTestSupport {
 
     private BufferedReader inputReader = Mockito.mock(BufferedReader.class);

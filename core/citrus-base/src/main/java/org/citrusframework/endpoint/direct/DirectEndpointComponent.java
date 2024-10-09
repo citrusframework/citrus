@@ -27,7 +27,6 @@ import org.citrusframework.message.DefaultMessageQueue;
  * Direct endpoint component creates synchronous or asynchronous channel endpoint and sets configuration properties
  * accordingly.
  *
- * @author Christoph Deppisch
  * @since 3.0
  */
 public class DirectEndpointComponent extends AbstractEndpointComponent {

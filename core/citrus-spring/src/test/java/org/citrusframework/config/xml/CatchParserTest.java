@@ -24,9 +24,6 @@ import org.citrusframework.actions.FailAction;
 import org.citrusframework.container.Catch;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class CatchParserTest extends AbstractActionParserTest<Catch> {
 
     @Test

@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
  * endpoint uri values. Creates endpoint instance by parsing the dynamic endpoint uri with special properties and parameters. Creates proper endpoint
  * configuration instance on the fly.
  *
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public interface EndpointComponent {

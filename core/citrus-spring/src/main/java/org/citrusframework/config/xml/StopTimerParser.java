@@ -27,7 +27,6 @@ import org.w3c.dom.Element;
 /**
  * Parses the Stop-Timer bean definition.
  *
- * @author Martin Maher
  * @since 2.5
  */
 public class StopTimerParser implements BeanDefinitionParser {

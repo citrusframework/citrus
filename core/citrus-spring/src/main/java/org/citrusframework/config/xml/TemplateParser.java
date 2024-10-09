@@ -32,7 +32,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for template definition in test case.
  *
- * @author Christoph Deppisch
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class TemplateParser implements BeanDefinitionParser {

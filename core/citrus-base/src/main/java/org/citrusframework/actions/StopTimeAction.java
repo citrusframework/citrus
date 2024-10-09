@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
  * Action used for time measurement during test. User can define a time line that is followed
  * during the test case. Action can print out the watched time to the console/logger.
  *
- * @author Christoph Deppisch
  * @since 2006
  */
 public class StopTimeAction extends AbstractTestAction {

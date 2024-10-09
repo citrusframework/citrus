@@ -20,7 +20,6 @@ import java.lang.annotation.*;
 
 /**
  * Marks field or parameter for endpoint injection.
- * @author Christoph Deppisch
  * @since 2.3
  */
 @Retention(RetentionPolicy.RUNTIME)

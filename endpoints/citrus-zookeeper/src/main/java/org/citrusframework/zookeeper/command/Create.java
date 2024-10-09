@@ -31,7 +31,6 @@ import java.util.List;
 import static java.lang.String.format;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class Create extends AbstractZooCommand<ZooResponse> {

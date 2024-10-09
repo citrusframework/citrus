@@ -33,7 +33,6 @@ import org.springframework.ws.mime.Attachment;
  * Validator will create a {@link SoapAttachment} and automatically handle contentId and
  * contentType validation. Content body validation is delegated to subclasses.
  *
- * @author Christoph Deppisch
  */
 public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentValidator {
     /**

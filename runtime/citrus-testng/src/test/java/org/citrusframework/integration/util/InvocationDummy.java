@@ -24,7 +24,6 @@ import org.citrusframework.variable.VariableUtils;
 
 /**
  * Test class only used to explain the usage of java reflection in test examples
- * @author Christoph Deppisch
  * @since 2006
  */
 public class InvocationDummy {

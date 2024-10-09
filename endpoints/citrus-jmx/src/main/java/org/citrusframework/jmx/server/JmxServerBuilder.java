@@ -29,7 +29,6 @@ import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.server.AbstractServerBuilder;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class JmxServerBuilder extends AbstractServerBuilder<JmxServer, JmxServerBuilder> {

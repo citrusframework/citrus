@@ -28,7 +28,6 @@ import java.util.Map;
  * Special Http request wrapper holding RestDoc configuration and context. Usually configurer interceptor creates this request wrapper
  * when providing RestDoc configuration. Next RestDoc generating interceptor in line reads configuration from this wrapper.
  *
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class RestDocConfiguredHttpRequest implements HttpRequest {

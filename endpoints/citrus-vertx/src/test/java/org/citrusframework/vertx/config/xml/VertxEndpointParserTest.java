@@ -24,9 +24,6 @@ import org.testng.annotations.Test;
 
 import java.util.Map;
 
-/**
- * @author Christoph Deppisch
- */
 public class VertxEndpointParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

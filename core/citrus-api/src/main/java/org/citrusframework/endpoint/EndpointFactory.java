@@ -28,7 +28,6 @@ import org.citrusframework.context.TestContext;
  * If Spring application context is given searches for matching endpoint component bean and delegates to component for
  * endpoint creation.
  *
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public interface EndpointFactory {

@@ -24,9 +24,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.apache.camel.CamelContext;
 
-/**
- * @author Christoph Deppisch
- */
 public class CamelReferenceResolver implements ReferenceResolver {
 
     private CamelContext camelContext;

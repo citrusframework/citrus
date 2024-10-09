@@ -22,7 +22,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 import java.io.Serializable;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class TestConfiguration implements Serializable {

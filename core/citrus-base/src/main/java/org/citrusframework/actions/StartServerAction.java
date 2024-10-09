@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Action starting a {@link Server} instance.
  *
- * @author Christoph Deppisch
  * @since 2006
  */
 public class StartServerAction extends AbstractTestAction {

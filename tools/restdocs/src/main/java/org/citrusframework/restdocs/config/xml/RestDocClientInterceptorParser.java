@@ -31,7 +31,6 @@ import org.springframework.restdocs.generate.RestDocumentationGenerator;
 import org.w3c.dom.Element;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class RestDocClientInterceptorParser extends AbstractBeanDefinitionParser {

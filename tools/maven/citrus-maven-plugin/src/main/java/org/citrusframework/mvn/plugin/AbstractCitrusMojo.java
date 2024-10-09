@@ -27,7 +27,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 import java.util.List;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public abstract class AbstractCitrusMojo extends AbstractMojo {

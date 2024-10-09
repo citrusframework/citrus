@@ -34,7 +34,6 @@ import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class ManagedBeanDefinition {

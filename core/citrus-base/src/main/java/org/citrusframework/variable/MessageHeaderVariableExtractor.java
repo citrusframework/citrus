@@ -30,7 +30,6 @@ import static java.lang.String.format;
 /**
  * Variable extractor reading message headers and saves them to new test variables.
  *
- * @author Christoph Deppisch
  */
 public class MessageHeaderVariableExtractor implements VariableExtractor {
 

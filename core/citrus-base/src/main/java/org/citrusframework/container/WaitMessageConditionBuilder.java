@@ -19,7 +19,6 @@ package org.citrusframework.container;
 import org.citrusframework.condition.MessageCondition;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class WaitMessageConditionBuilder extends WaitConditionBuilder<MessageCondition, WaitMessageConditionBuilder> {

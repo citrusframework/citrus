@@ -20,9 +20,6 @@ import org.citrusframework.endpoint.builder.ClientServerEndpointBuilder;
 import org.citrusframework.websocket.client.WebSocketClientBuilder;
 import org.citrusframework.websocket.server.WebSocketServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public final class WebSocketEndpoints extends ClientServerEndpointBuilder<WebSocketClientBuilder, WebSocketServerBuilder> {
     /**
      * Private constructor setting the client and server builder implementation.

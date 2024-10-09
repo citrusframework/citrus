@@ -50,7 +50,6 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 
 /**
- * @author Roland Huss
  * @since 12.09.12
  */
 public class SshClientTest extends AbstractTestNGUnitTest {

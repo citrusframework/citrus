@@ -28,7 +28,6 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.6
  */
 public class ChannelSyncEndpointConfigParser implements AnnotationConfigParser<ChannelSyncEndpointConfig, ChannelSyncEndpoint> {

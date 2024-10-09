@@ -29,7 +29,6 @@ import java.util.List;
  * Function gets the local host address. Usually some IP address (e.g. 192.168.2.100).
  * This enables us to access the localhost dynamically in tests.
  *
- * @author Christoph Deppisch
  */
 public class LocalHostAddressFunction implements Function {
 

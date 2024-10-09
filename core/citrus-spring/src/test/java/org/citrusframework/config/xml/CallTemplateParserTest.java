@@ -24,9 +24,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.container.Template;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class CallTemplateParserTest extends AbstractActionParserTest<Template> {
 
     @Test

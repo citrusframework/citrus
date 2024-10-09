@@ -28,7 +28,6 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 /**
- * @author Georgi Todorov
  * @since 2.7.5
  */
 public abstract class AbstractFtpClientTest extends AbstractTestNGUnitTest {

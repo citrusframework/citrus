@@ -66,7 +66,6 @@ import java.util.stream.Collectors;
  * Embedded Kafka server with reference to embedded Zookeeper cluster for testing purpose. Starts single Zookeeper instance with logs in Java temp directory. Starts single Kafka server
  * and automatically creates given topics with admin client.
  *
- * @author Christoph Deppisch
  * @since 2.8
  */
 public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {

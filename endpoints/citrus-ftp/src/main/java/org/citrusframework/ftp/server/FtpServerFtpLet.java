@@ -47,7 +47,6 @@ import static java.lang.Integer.parseInt;
  *
  * Test case can manage the Ftp command result by providing a Ftp result message.
  *
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class FtpServerFtpLet implements Ftplet {

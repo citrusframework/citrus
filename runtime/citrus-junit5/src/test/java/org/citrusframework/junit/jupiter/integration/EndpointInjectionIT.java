@@ -47,9 +47,6 @@ import org.testng.Assert;
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
 
-/**
- * @author Christoph Deppisch
- */
 @CitrusSupport
 public class EndpointInjectionIT implements CitrusExtension.TestListener {
 

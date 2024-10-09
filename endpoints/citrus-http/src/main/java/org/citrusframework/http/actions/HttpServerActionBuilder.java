@@ -37,7 +37,6 @@ import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 /**
  * Action executes http server operations such as receiving requests and sending response messages.
  *
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {

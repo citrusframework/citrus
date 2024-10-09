@@ -30,7 +30,6 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * @author Martin Maher
  * @since 2.4
  */
 public class HttpConditionTest extends UnitTestSupport {

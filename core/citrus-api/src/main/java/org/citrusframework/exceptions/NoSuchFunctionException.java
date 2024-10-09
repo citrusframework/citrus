@@ -19,7 +19,6 @@ package org.citrusframework.exceptions;
 /**
  * Unknown functions cause this exception.
  *
- * @author Christoph Deppisch
  */
 public class NoSuchFunctionException extends CitrusRuntimeException {
 

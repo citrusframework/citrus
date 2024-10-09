@@ -56,7 +56,6 @@ import org.slf4j.LoggerFactory;
  * users can create a local test context by setting globalContext to false. Templates then will
  * have no affect on the variables used in the test case.
  *
- * @author Christoph Deppisch
  * @since 2007
  */
 public class Template extends AbstractTestAction {

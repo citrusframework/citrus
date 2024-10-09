@@ -26,9 +26,6 @@ import java.util.*;
 
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class SchemaMappingStrategyChainTest {
 
     private XsdSchema schemaMock = Mockito.mock(XsdSchema.class);

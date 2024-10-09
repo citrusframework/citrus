@@ -40,7 +40,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for purge-channel action in test case.
  *
- * @author Christoph Deppisch
  */
 public class PurgeMessageChannelActionParser implements BeanDefinitionParser {
 

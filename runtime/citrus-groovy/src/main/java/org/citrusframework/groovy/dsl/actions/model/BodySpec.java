@@ -19,9 +19,6 @@ package org.citrusframework.groovy.dsl.actions.model;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.MissingMethodException;
 
-/**
- * @author Christoph Deppisch
- */
 public class BodySpec extends GroovyObjectSupport {
 
     private BodySpec delegate;

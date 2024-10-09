@@ -33,9 +33,6 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.expectThrows;
 
-/**
- * @author Valentin Soldo
- */
 public class KubernetesBadClientConfigParserTest extends AbstractTestNGUnitTest {
 
     // Endpoint badly configured with missing password

@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
  * Validator working on SQL result sets. Scripts get the actual test context
  * and a SQL result set representation for validation.
  *
- * @author Christoph Deppisch
  */
 public interface SqlResultSetScriptValidator {
 

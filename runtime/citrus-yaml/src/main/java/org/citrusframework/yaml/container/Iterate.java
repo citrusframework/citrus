@@ -23,9 +23,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.TestActions;
 
-/**
- * @author Christoph Deppisch
- */
 public class Iterate implements TestActionBuilder<org.citrusframework.container.Iterate>, ReferenceResolverAware {
 
     private final org.citrusframework.container.Iterate.Builder builder = new org.citrusframework.container.Iterate.Builder();

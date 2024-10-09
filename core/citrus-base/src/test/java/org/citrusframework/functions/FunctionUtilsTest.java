@@ -26,9 +26,6 @@ import org.citrusframework.functions.core.CurrentDateFunction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class FunctionUtilsTest extends UnitTestSupport {
 
     @Test

@@ -20,9 +20,6 @@ import org.citrusframework.mail.client.MailClientBuilder;
 import org.citrusframework.mail.endpoint.builder.MailEndpoints;
 import org.citrusframework.mail.server.MailServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class MailEndpointCatalog {
 
     /**

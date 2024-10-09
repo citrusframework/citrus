@@ -32,9 +32,6 @@ import static org.citrusframework.container.FinallySequence.Builder.doFinally;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
 
-/**
- * @author Christoph Deppisch
- */
 public class CamelRouteActionIT extends TestNGCitrusSpringSupport {
 
     @Autowired

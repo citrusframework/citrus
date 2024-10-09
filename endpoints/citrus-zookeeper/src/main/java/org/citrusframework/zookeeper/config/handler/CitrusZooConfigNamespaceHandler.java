@@ -20,7 +20,6 @@ import org.citrusframework.zookeeper.config.xml.ZooClientParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class CitrusZooConfigNamespaceHandler extends NamespaceHandlerSupport {

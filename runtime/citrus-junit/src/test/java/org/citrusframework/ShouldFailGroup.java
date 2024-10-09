@@ -23,7 +23,6 @@ package org.citrusframework;
  * This group is used in both JUnit and TestNG test suites where JUnit uses the class itself as a {@link org.junit.experimental.categories.Category} and
  * TestNG uses the class name as test group name in {@link org.testng.annotations.Test}.
  *
- * @author Christoph Deppisch
  */
 public final class ShouldFailGroup {
 

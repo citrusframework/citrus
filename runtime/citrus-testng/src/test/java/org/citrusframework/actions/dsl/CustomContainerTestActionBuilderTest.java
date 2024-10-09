@@ -30,7 +30,6 @@ import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.testng.Assert.assertEquals;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class CustomContainerTestActionBuilderTest extends UnitTestSupport {

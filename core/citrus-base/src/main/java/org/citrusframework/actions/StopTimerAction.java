@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class StopTimerAction extends AbstractTestAction {

@@ -39,7 +39,6 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {

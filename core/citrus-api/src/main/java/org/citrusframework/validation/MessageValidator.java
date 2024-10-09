@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
  * control messages or validation scripts. These validation specific information is
  * stored in a validation context, which is passed to the validation method.
  *
- * @author Christoph Deppisch
  */
 public interface MessageValidator<T extends ValidationContext> {
 

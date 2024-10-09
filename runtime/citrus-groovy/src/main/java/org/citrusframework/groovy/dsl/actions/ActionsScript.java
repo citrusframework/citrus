@@ -22,9 +22,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.groovy.dsl.GroovyShellUtils;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
-/**
- * @author Christoph Deppisch
- */
 public class ActionsScript {
 
     private final String script;

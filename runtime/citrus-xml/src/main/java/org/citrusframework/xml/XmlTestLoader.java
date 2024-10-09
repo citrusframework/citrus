@@ -36,7 +36,6 @@ import org.citrusframework.util.StringUtils;
  * for test case and a parent application context. At runtime this class loads the Spring application context and gets
  * test case bean instance from context.
  *
- * @author Christoph Deppisch
  */
 public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware {
 

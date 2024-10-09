@@ -21,7 +21,6 @@ import java.util.List;
 import org.citrusframework.container.TestActionContainer;
 
 /**
- * @author Christoph Deppisch
  * @since 2.3
  */
 public interface TestActionContainerBuilder<T extends TestActionContainer, S extends TestActionContainerBuilder<T, S>> extends TestActionBuilder<T> {

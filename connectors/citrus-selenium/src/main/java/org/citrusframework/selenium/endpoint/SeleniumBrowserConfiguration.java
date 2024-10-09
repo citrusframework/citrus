@@ -26,7 +26,6 @@ import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.support.events.WebDriverListener;
 
 /**
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class SeleniumBrowserConfiguration extends AbstractEndpointConfiguration {

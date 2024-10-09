@@ -36,7 +36,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Loads properties from an external property file and creates global test variables.
  *
- * @author Christoph Deppisch
  */
 public class GlobalVariablesPropertyLoader implements InitializingBean {
 

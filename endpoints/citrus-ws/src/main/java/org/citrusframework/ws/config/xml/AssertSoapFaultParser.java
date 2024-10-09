@@ -41,7 +41,6 @@ import org.w3c.dom.Element;
 /**
  * Parser for SOAP fault assert action.
  *
- * @author Christoph Deppisch
  */
 public class AssertSoapFaultParser implements BeanDefinitionParser {
 

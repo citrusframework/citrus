@@ -65,9 +65,6 @@ import static org.mockito.MockitoAnnotations.openMocks;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.expectThrows;
 
-/**
- * @author Christoph Deppisch
- */
 public class ReceiveMessageActionTest extends UnitTestSupport {
 
     @Mock

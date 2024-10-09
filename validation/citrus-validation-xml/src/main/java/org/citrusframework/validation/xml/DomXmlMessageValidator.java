@@ -54,7 +54,6 @@ import static org.citrusframework.util.StringUtils.hasText;
  * Default message validator implementation. Working on XML messages
  * providing message payload, header and namespace validation.
  *
- * @author Christoph Deppisch
  * @since 2007
  */
 public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageValidationContext> {

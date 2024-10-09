@@ -28,7 +28,6 @@ import org.citrusframework.functions.Function;
 /**
  * Decodes base64 binary data to a character sequence.
  *
- * @author Christoph Deppisch
  */
 public class DecodeBase64Function implements Function {
 

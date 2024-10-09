@@ -43,9 +43,6 @@ import org.citrusframework.yaml.actions.Message;
 import org.citrusframework.yaml.actions.Receive;
 import org.citrusframework.yaml.actions.Send;
 
-/**
- * @author Christoph Deppisch
- */
 public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
     private TestActionBuilder<?> builder;

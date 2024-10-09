@@ -45,9 +45,6 @@ import org.citrusframework.xml.container.Timer;
 import org.citrusframework.xml.container.WaitFor;
 import org.w3c.dom.Node;
 
-/**
- * @author Christoph Deppisch
- */
 public class TestActions {
 
     /** Unmarshaller cache filled with instances created for custom action Xml element refs */

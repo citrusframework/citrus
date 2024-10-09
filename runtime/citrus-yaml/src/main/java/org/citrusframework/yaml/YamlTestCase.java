@@ -29,9 +29,6 @@ import org.citrusframework.util.FileUtils;
 import org.citrusframework.variable.VariableUtils;
 import org.citrusframework.yaml.actions.script.ScriptDefinitionType;
 
-/**
- * @author Christoph Deppisch
- */
 public class YamlTestCase {
 
     private final DefaultTestCase delegate = new DefaultTestCase();

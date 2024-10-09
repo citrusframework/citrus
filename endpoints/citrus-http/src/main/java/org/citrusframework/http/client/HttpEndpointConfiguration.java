@@ -43,7 +43,6 @@ import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class HttpEndpointConfiguration extends AbstractPollableEndpointConfiguration {

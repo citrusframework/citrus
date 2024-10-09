@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class EchoActionJavaIT extends TestNGCitrusSpringSupport {
 

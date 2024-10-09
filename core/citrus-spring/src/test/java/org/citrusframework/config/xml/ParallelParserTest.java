@@ -23,9 +23,6 @@ import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.Parallel;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class ParallelParserTest extends AbstractActionParserTest<Parallel> {
 
     @Test

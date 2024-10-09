@@ -37,7 +37,6 @@ import static com.github.dockerjava.api.model.ExposedPort.udp;
 import static java.lang.Integer.parseInt;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class ContainerCreate extends AbstractDockerCommand<CreateContainerResponse> {

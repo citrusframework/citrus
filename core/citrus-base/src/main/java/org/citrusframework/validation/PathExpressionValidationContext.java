@@ -26,9 +26,6 @@ import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.xml.XpathMessageValidationContext;
 
-/**
- * @author Christoph Deppisch
- */
 public class PathExpressionValidationContext {
 
     /**

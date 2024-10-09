@@ -21,9 +21,6 @@ import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.MarshallerAdapter;
 import org.springframework.oxm.Unmarshaller;
 
-/**
- * @author Christoph Deppisch
- */
 public class MarshallerAliasResolver implements TypeAliasResolver<Marshaller, org.springframework.oxm.Marshaller> {
 
     @Override

@@ -22,9 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class DefaultFunctionLibraryFactoryTest extends UnitTestSupport {
 
     @Autowired

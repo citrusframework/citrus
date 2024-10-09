@@ -24,9 +24,6 @@ import org.citrusframework.groovy.GroovyTestLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class FailTest extends AbstractGroovyActionDslTest {
 
     @Test

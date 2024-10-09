@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
  * Default test case implementation holding a list of test actions to execute. Test case also holds variable definitions and
  * performs the test lifecycle such as start, finish, before and after test.
  *
- * @author Christoph Deppisch
  */
 public class DefaultTestCase extends AbstractActionContainer implements TestCase, TestGroupAware, TestParameterAware {
 

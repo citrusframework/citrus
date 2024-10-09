@@ -28,9 +28,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class ObjectMappingPayloadBuilderTest extends UnitTestSupport {
 
     private final ObjectMapper mapper = new ObjectMapper();

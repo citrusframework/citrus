@@ -19,7 +19,6 @@ package org.citrusframework.annotations;
 import java.lang.annotation.*;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 @Retention(RetentionPolicy.RUNTIME)

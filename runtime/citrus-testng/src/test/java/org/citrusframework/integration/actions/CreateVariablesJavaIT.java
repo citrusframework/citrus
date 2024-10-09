@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariable;
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class CreateVariablesJavaIT extends TestNGCitrusSpringSupport {
 

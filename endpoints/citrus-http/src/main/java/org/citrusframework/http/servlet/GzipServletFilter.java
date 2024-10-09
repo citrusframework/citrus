@@ -30,7 +30,6 @@ import java.io.IOException;
  * and compression on response body when applicable. Only applies gzip request decompression on requests with Content-Encoding="gzip".
  * Only applies gzip response compression on requests with Accept-Encoding="gzip".
  *
- * @author Christoph Deppisch
  * @since 2.6.2
  */
 public class GzipServletFilter extends OncePerRequestFilter {

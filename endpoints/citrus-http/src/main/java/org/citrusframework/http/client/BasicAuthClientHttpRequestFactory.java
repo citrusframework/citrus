@@ -40,7 +40,6 @@ import static org.citrusframework.util.ObjectHelper.assertNotNull;
  * Factory bean constructing a client request factory with
  * user credentials for basic authentication.
  *
- * @author Christoph Deppisch
  * @since 1.2
  */
 public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpComponentsClientHttpRequestFactory>, InitializingPhase {

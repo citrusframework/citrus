@@ -23,7 +23,6 @@ import org.citrusframework.container.Conditional;
 import org.citrusframework.testng.AbstractActionParserTest;
 
 /**
- * @author Matthias Beil
  * @since 1.2
  */
 public class ConditionalParserTest extends AbstractActionParserTest<Conditional> {

@@ -25,7 +25,6 @@ import org.w3c.dom.Document;
  * Special schema mapping strategy delegating to several other strategies in
  * a mapping chain. The first mapping strategy finding a proper schema wins.
  *
- * @author Christoph Deppisch
  */
 public class SchemaMappingStrategyChain implements XsdSchemaMappingStrategy {
 

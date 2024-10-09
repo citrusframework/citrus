@@ -20,9 +20,6 @@ import org.citrusframework.endpoint.builder.AsyncSyncEndpointBuilder;
 import org.citrusframework.vertx.endpoint.VertxEndpointBuilder;
 import org.citrusframework.vertx.endpoint.VertxSyncEndpointBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public final class VertxEndpoints extends AsyncSyncEndpointBuilder<VertxEndpointBuilder, VertxSyncEndpointBuilder> {
     /**
      * Private constructor setting the sync and async builder implementation.

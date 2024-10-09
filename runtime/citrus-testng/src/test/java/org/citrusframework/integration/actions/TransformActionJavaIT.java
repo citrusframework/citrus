@@ -24,9 +24,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.citrusframework.actions.TransformAction.Builder.transform;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class TransformActionJavaIT extends TestNGCitrusSpringSupport {
 

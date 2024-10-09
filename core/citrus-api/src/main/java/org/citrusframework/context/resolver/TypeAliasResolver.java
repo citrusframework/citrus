@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
  * Type resolver able to adapt an alias type to a given source type. Used in {@link org.citrusframework.spi.ReferenceResolver} to
  * auto resolve types that can act as an alias interchangeably to a given type.
  *
- * @author Christoph Deppisch
  */
 public interface TypeAliasResolver<S, A> {
 

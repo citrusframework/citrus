@@ -27,7 +27,6 @@ import org.w3c.dom.Element;
 /**
  * Parser for Http server implementation in Citrus http namespace.
  *
- * @author Christoph Deppisch
  */
 public class HttpServerParser extends AbstractServerParser {
 

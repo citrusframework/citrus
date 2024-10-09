@@ -28,9 +28,6 @@ import org.citrusframework.validation.PathExpressionValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 
-/**
- * @author Christoph Deppisch
- */
 public class PathExpressionSupport implements WithExpressions<PathExpressionSupport>, PathExpressionAdapter {
 
     private final Map<String, Object> expressions = new LinkedHashMap<>();

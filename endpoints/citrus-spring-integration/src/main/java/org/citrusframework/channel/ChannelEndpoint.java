@@ -28,7 +28,6 @@ import org.springframework.beans.factory.BeanFactoryAware;
  * implement {@link org.springframework.messaging.PollableChannel} interface. When using message selector channel
  * must be of type {@link org.citrusframework.channel.MessageSelectingQueueChannel}.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class ChannelEndpoint extends AbstractEndpoint implements BeanFactoryAware {

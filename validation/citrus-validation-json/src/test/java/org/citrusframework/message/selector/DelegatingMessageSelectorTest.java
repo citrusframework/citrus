@@ -21,9 +21,6 @@ import org.citrusframework.message.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class DelegatingMessageSelectorTest extends UnitTestSupport {
 
     @Test

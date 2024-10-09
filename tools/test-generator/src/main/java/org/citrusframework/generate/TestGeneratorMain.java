@@ -28,7 +28,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class TestGeneratorMain {

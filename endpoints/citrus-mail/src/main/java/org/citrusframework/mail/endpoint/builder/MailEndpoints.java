@@ -20,9 +20,6 @@ import org.citrusframework.endpoint.builder.ClientServerEndpointBuilder;
 import org.citrusframework.mail.client.MailClientBuilder;
 import org.citrusframework.mail.server.MailServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public final class MailEndpoints extends ClientServerEndpointBuilder<MailClientBuilder, MailServerBuilder> {
     /**
      * Private constructor setting the client and server builder implementation.

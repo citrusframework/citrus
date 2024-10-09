@@ -19,7 +19,6 @@ package org.citrusframework.zookeeper.command;
 import org.apache.zookeeper.data.Stat;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class CommandHelper {

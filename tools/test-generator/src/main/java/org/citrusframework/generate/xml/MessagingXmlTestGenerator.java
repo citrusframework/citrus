@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class MessagingXmlTestGenerator<T extends MessagingXmlTestGenerator> extends XmlTestGenerator<T> {

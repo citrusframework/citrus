@@ -75,9 +75,6 @@ import static org.citrusframework.dsl.XmlSupport.xml;
 import static org.citrusframework.dsl.XpathSupport.xpath;
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
     @Mock

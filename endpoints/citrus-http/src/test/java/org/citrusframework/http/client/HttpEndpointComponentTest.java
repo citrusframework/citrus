@@ -37,9 +37,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 
-/**
- * @author Christoph Deppisch
- */
 public class HttpEndpointComponentTest {
 
     private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);

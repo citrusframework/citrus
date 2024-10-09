@@ -46,7 +46,6 @@ import org.springframework.web.util.UrlPathHelper;
  * Message controller implementation handling all incoming requests by forwarding to a message
  * handler for further processing.
  *
- * @author Christoph Deppisch
  */
 @Controller
 @RequestMapping("/*")

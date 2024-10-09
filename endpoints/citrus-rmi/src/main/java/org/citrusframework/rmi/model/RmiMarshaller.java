@@ -27,7 +27,6 @@ import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.Unmarshaller;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class RmiMarshaller implements Marshaller, Unmarshaller {

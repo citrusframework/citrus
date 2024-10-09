@@ -26,7 +26,6 @@ import org.citrusframework.util.MessageUtils;
  * With XML slurper the tester can validate the message payload with closures and without having
  * to deal with XPath for instance.
  *
- * @author Christoph Deppisch
  */
 public class GroovyXmlMessageValidator extends GroovyScriptMessageValidator {
 

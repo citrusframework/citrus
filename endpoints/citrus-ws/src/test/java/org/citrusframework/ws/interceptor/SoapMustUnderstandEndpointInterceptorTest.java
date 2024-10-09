@@ -29,9 +29,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class SoapMustUnderstandEndpointInterceptorTest {
 
     @Test

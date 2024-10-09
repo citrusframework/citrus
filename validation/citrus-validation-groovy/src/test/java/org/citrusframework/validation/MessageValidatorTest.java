@@ -25,9 +25,6 @@ import org.citrusframework.validation.script.GroovyXmlMessageValidator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class MessageValidatorTest {
 
     @Test

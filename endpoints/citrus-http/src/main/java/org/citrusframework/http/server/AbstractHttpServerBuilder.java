@@ -31,9 +31,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Christoph Deppisch
- */
 public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractHttpServerBuilder<T, B>> extends AbstractServerBuilder<T, B> {
 
     /**

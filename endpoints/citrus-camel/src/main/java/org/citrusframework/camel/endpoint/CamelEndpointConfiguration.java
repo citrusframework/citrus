@@ -21,7 +21,6 @@ import org.citrusframework.endpoint.AbstractEndpointConfiguration;
 import org.apache.camel.*;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class CamelEndpointConfiguration extends AbstractEndpointConfiguration {

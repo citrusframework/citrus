@@ -27,7 +27,6 @@ import static java.lang.Integer.parseInt;
 /**
  * Abstract date value handling function provides base date value manipulation helpers.
  *
- * @author Christoph Deppisch
  * @since 1.3.1
  */
 public abstract class AbstractDateFunction implements Function {

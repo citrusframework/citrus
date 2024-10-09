@@ -26,7 +26,6 @@ import org.citrusframework.xml.xpath.XPathUtils;
 /**
  * Extracts predicate from message payload via XPath expression evaluation.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class XPathPayloadMappingKeyExtractor extends AbstractMappingKeyExtractor {

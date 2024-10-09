@@ -19,9 +19,6 @@ package org.citrusframework.endpoint.direct;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.MessageQueue;
 
-/**
- * @author Christoph Deppisch
- */
 public class DirectEndpointBuilder extends AbstractEndpointBuilder<DirectEndpoint> {
 
     /** Endpoint target */

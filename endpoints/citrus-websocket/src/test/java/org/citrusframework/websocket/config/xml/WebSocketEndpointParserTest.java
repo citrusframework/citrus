@@ -25,9 +25,6 @@ import org.testng.annotations.Test;
 
 import java.util.Map;
 
-/**
- * @author Christoph Deppisch
- */
 public class WebSocketEndpointParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

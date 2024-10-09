@@ -19,7 +19,6 @@ package org.citrusframework.endpoint;
 /**
  * Extends endpoint configuration by adding polling interval settings.
  *
- * @author Christoph Deppisch
  * @since 2.1
  */
 public interface PollableEndpointConfiguration extends EndpointConfiguration {

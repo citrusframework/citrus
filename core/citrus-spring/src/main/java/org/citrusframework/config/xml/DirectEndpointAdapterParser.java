@@ -32,7 +32,6 @@ import org.w3c.dom.Element;
 
 /**
  * Parses endpoint adapter bean definition for direct endpoint adapter.
- * @author Christoph Deppisch
  * @since 3.0
  */
 public class DirectEndpointAdapterParser extends AbstractBeanDefinitionParser {

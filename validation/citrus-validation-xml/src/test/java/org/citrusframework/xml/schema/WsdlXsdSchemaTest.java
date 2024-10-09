@@ -28,9 +28,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
-/**
- * @author Christoph Deppisch
- */
 public class WsdlXsdSchemaTest {
 
     @Test

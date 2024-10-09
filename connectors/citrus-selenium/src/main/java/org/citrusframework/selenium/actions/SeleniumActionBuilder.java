@@ -30,7 +30,6 @@ import org.citrusframework.util.ObjectHelper;
 /**
  * Action builds selenium related actions.
  *
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<SeleniumAction> {

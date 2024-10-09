@@ -21,9 +21,6 @@ import org.citrusframework.integration.service.model.HelloResponse;
 import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class HelloServiceImpl extends AbstractMarshallingHelloService {
 
     public Message<HelloResponse> sayHello(Message<HelloRequest> request) {

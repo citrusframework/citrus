@@ -42,9 +42,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
 
     private org.springframework.ws.soap.SoapMessage soapResponse = Mockito.mock(org.springframework.ws.soap.SoapMessage.class);

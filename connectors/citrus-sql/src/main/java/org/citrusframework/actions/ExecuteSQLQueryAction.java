@@ -53,7 +53,6 @@ import static java.lang.Integer.parseInt;
  * The class enables you to query data result sets from a
  * database. Validation will happen on column basis inside the result set.
  *
- * @author Christoph Deppisch, Jan Zahalka
  * @since 2008
  */
 public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction {

@@ -23,7 +23,6 @@ import org.citrusframework.exceptions.ValidationException;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.6
  */
 public class StringLengthValidationMatcherTest extends UnitTestSupport {

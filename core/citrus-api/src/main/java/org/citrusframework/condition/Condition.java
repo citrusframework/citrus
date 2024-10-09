@@ -21,7 +21,6 @@ import org.citrusframework.context.TestContext;
 /**
  * Tests whether a condition is satisfied.
  *
- * @author Martin Maher
  * @since 2.4
  */
 public interface Condition {

@@ -20,7 +20,6 @@ import org.citrusframework.context.TestContext;
 import org.springframework.integration.core.MessageSelector;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public interface MessageSelectorFactory<T extends MessageSelector> {

@@ -19,7 +19,6 @@ package org.citrusframework.kubernetes.command;
 import org.citrusframework.context.TestContext;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public interface CommandResultCallback<T> {

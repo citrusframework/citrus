@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.script.GroovyAction.Builder.groovy;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class CreateVariablesJavaIT extends TestNGCitrusSpringSupport {
 

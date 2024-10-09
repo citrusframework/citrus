@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
  * Extractor implementation reads message elements via JSONPath expressions and saves the
  * values as new test variables. JSONObject and JSONArray items will be saved as String representation.
  *
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class JsonPathVariableExtractor implements VariableExtractor {

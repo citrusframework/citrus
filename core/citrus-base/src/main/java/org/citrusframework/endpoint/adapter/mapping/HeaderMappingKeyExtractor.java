@@ -22,7 +22,6 @@ import org.citrusframework.message.Message;
 /**
  * Extractor searches for header name in request headers for mapping name identification.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class HeaderMappingKeyExtractor extends AbstractMappingKeyExtractor {

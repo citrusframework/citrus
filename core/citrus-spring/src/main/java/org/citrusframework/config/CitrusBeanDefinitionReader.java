@@ -22,7 +22,6 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class CitrusBeanDefinitionReader extends XmlBeanDefinitionReader {

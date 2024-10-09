@@ -20,7 +20,6 @@ import org.citrusframework.config.xml.PurgeMessageChannelActionParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 3.0
  */
 public class CitrusSpringIntegrationTestcaseNamespaceHandler extends NamespaceHandlerSupport {

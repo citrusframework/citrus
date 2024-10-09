@@ -27,7 +27,6 @@ import org.citrusframework.context.TestContext;
  * test actions as normal test variable. Iteration starts with index=1 and increments with a
  * default step=1.
  *
- * @author Christoph Deppisch
  */
 public class Iterate extends AbstractIteratingActionContainer {
     /** Index increment step */

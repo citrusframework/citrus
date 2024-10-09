@@ -23,7 +23,6 @@ import org.citrusframework.websocket.message.WebSocketMessageConverter;
 
 /**
  * Web socket endpoint configuration interface defines set of properties all web socket endpoints should have.
- * @author Christoph Deppisch
  * @since 2.3
  */
 public interface WebSocketEndpointConfiguration extends PollableEndpointConfiguration {

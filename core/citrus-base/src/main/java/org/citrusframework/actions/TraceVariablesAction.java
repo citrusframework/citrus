@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
  * Action that prints variable values to the console/logger. Action requires a list of variable
  * names. Tries to find the variables in the test context and print its values.
  *
- * @author Christoph Deppisch
  * @since 2006
  */
 public class TraceVariablesAction extends AbstractTestAction {

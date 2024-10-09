@@ -26,7 +26,6 @@ import static java.lang.Boolean.parseBoolean;
 /**
  * Message representing web socket message data.
  *
- * @author Martin Maher
  * @since 2.3
  */
 public class WebSocketMessage extends DefaultMessage {

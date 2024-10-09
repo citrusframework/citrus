@@ -26,7 +26,6 @@ import com.github.dockerjava.api.model.ResponseItem;
 import org.citrusframework.util.ReflectionHelper;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public abstract class AbstractDockerCommand<R> implements DockerCommand<R> {

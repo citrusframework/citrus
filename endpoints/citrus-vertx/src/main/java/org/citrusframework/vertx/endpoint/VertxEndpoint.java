@@ -22,7 +22,6 @@ import org.citrusframework.messaging.Producer;
 import org.citrusframework.vertx.factory.VertxInstanceFactory;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class VertxEndpoint extends AbstractEndpoint {

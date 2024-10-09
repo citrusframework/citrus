@@ -23,7 +23,6 @@ import org.citrusframework.ws.message.SoapFault;
 /**
  * Interface for soap fault validation.
  *
- * @author Christoph Deppisch
  */
 public interface SoapFaultValidator {
 

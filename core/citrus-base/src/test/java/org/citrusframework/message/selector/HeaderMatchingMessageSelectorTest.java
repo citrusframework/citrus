@@ -22,9 +22,6 @@ import org.citrusframework.message.MessageHeaders;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class HeaderMatchingMessageSelectorTest extends UnitTestSupport {
 
     @Test

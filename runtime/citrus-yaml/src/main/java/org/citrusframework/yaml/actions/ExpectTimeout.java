@@ -24,9 +24,6 @@ import java.util.Map;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReceiveTimeoutAction;
 
-/**
- * @author Christoph Deppisch
- */
 public class ExpectTimeout implements TestActionBuilder<ReceiveTimeoutAction> {
 
     private final ReceiveTimeoutAction.Builder builder = new ReceiveTimeoutAction.Builder();

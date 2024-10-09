@@ -30,7 +30,6 @@ import java.util.List;
  *
  * When executing SQL query statements (SELECT) see {@link ExecuteSQLQueryAction}.
  *
- * @author Christoph Deppisch, Jan Szczepanski
  * @since 2006
  */
 public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {

@@ -25,7 +25,6 @@ import org.citrusframework.validation.matcher.ValidationMatcher;
 /**
  * ValidationMatcher checks string length of given field.
  *
- * @author Christoph Deppisch
  */
 public class StringLengthValidationMatcher implements ValidationMatcher {
 

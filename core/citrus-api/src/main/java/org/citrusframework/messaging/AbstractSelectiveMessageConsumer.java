@@ -21,7 +21,6 @@ import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.message.Message;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public abstract class AbstractSelectiveMessageConsumer extends AbstractMessageConsumer implements SelectiveConsumer {

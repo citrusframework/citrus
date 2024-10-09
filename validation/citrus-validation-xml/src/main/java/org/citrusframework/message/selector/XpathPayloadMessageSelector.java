@@ -35,7 +35,6 @@ import org.w3c.dom.ls.LSException;
  *
  * Syntax is xpath://root/element
  *
- * @author Christoph Deppisch
  * @since 3.0
  */
 public class XpathPayloadMessageSelector extends AbstractMessageSelector {

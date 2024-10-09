@@ -28,7 +28,6 @@ import org.testng.annotations.BeforeSuite;
  * Abstract base testng test implementation for Citrus unit testing. Provides access to
  * a test context and injected function registry as well as global variables.
  *
- * @author Christoph Deppisch
  */
 @ContextConfiguration(classes = UnitTestConfig.class)
 public abstract class AbstractTestNGUnitTest extends AbstractTestNGSpringContextTests {

@@ -20,7 +20,6 @@ package org.citrusframework.spi;
  * Bind objects to registry for later reference. Objects declared in registry can be injected in various ways (e.g. annotations).
  * Usually used in combination with {@link org.citrusframework.spi.ReferenceResolver}.
  *
- * @author Christoph Deppisch
  */
 @FunctionalInterface
 public interface ReferenceRegistry {

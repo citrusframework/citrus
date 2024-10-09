@@ -29,9 +29,6 @@ import jakarta.xml.bind.annotation.XmlValue;
 
 import org.citrusframework.xml.actions.script.ScriptDefinitionType;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
         "headers",

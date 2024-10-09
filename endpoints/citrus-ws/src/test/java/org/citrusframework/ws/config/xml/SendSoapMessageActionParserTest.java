@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.testng.AbstractActionParserTest;
 import org.citrusframework.ws.actions.SendSoapMessageAction;
 
-/**
- * @author Christoph Deppisch
- */
 public class SendSoapMessageActionParserTest extends AbstractActionParserTest<SendSoapMessageAction> {
 
     @Test

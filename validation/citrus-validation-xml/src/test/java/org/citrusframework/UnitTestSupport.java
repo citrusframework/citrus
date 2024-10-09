@@ -33,9 +33,6 @@ import org.citrusframework.validation.xml.DomXmlMessageValidator;
 import org.citrusframework.validation.xml.XpathMessageValidator;
 import org.testng.Assert;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class UnitTestSupport extends AbstractTestNGUnitTest {
 
     @Override

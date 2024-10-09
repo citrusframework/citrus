@@ -36,7 +36,6 @@ import org.citrusframework.util.FileUtils;
 import org.citrusframework.xml.StringResult;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class XmlTestGenerator<T extends XmlTestGenerator> extends AbstractTemplateBasedTestGenerator<T> {

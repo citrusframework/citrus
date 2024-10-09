@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
  * Sequence of Citrus test actions that get executed before a test suite run. Sequence should
  * decide weather to execute according to given suite name and included test groups if any.
  *
- * @author Christoph Deppisch
  */
 public class SequenceBeforeSuite extends AbstractSuiteActionContainer implements BeforeSuite {
 

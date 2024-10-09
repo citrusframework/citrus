@@ -18,9 +18,6 @@ package org.citrusframework.message;
 
 import java.util.List;
 
-/**
- * @author Christoph Deppisch
- */
 public interface WithHeaderBuilder {
 
     /**

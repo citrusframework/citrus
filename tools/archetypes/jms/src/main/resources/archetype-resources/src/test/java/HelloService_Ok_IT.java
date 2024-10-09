@@ -8,7 +8,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 
 /**
  * This is a sample Citrus integration test using SOAP client and server.
- * @author Citrus
  */
 @Test
 public class HelloService_Ok_IT extends TestNGCitrusSpringSupport {

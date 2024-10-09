@@ -43,9 +43,6 @@ import org.junit.Test;
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
 
-/**
- * @author Christoph Deppisch
- */
 public class EndpointInjectionIT extends JUnit4CitrusSpringSupport {
 
     @CitrusFramework

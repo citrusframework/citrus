@@ -26,7 +26,6 @@ import org.citrusframework.spi.Resource;
  * Utility class supporting property replacement in template files.
  * For usage see doc generators and test case creator.
  *
- * @author Christoph Deppisch
  * @since 2009
  */
 public final class PropertyUtils {

@@ -33,7 +33,6 @@ import static org.citrusframework.validation.ValidationUtils.buildValueToBeInCol
 import static org.testng.Assert.assertEquals;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class ValidationUtilsTest extends UnitTestSupport {

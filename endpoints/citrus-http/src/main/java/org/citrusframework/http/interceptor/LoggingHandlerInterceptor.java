@@ -42,7 +42,6 @@ import static java.lang.System.lineSeparator;
  * Interceptor is capable of informing message tracing test listener on the request and response
  * messages arriving and leaving Citrus.
  *
- * @author Christoph Deppisch
  * @since 1.2
  */
 public class LoggingHandlerInterceptor implements HandlerInterceptor {

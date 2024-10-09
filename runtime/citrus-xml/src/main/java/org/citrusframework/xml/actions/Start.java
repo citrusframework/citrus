@@ -31,9 +31,6 @@ import org.citrusframework.server.Server;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "start")
 public class Start implements TestActionBuilder<StartServerAction>, ReferenceResolverAware {
 

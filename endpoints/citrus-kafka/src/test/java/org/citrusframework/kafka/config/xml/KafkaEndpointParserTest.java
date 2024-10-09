@@ -41,9 +41,6 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
-/**
- * @author Christoph Deppisch
- */
 public class KafkaEndpointParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

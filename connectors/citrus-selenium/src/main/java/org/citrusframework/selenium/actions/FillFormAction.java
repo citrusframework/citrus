@@ -29,7 +29,6 @@ import org.openqa.selenium.json.Json;
  * Sets field values with set input action that supports both input and select form controls.
  * Supports to submit the form after all fields are set.
  *
- * @author Christoph Deppisch
  */
 public class FillFormAction extends AbstractSeleniumAction {
 

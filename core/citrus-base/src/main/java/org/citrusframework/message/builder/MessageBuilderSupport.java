@@ -51,9 +51,6 @@ import static java.util.Collections.singletonMap;
 import static org.citrusframework.util.FileUtils.getDefaultCharset;
 import static org.citrusframework.util.FileUtils.readToString;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class MessageBuilderSupport<T extends TestAction, B extends MessageBuilderSupport.MessageActionBuilder<T, S, B>, S extends MessageBuilderSupport<T, B, S>>
         implements TestActionBuilder<T>, ReferenceResolverAware {
     protected final S self;

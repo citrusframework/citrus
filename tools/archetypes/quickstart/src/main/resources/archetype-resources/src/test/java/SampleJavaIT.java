@@ -10,7 +10,6 @@ import static org.citrusframework.actions.EchoAction.Builder.echo;
 /**
  * This is a sample Java DSL Citrus integration test.
  *
- * @author Citrus
  */
 @Test
 public class SampleJavaIT extends TestNGCitrusSpringSupport {

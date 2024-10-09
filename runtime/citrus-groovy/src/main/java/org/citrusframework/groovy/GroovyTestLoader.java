@@ -28,9 +28,6 @@ import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
-/**
- * @author Christoph Deppisch
- */
 public class GroovyTestLoader extends DefaultTestLoader implements TestSourceAware {
 
     private String source;

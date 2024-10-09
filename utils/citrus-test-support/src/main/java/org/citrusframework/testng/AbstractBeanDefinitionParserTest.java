@@ -24,7 +24,6 @@ import org.testng.annotations.BeforeClass;
  * Abstract base testng test for Citrus bean definition parser unit testing. Provides access to
  * an application context holding bean definitions parsed from Citrus bean definition parsers.
  *
- * @author Christoph Deppisch
  */
 public abstract class AbstractBeanDefinitionParserTest extends AbstractTestNGUnitTest {
 

@@ -33,7 +33,6 @@ import org.springframework.util.StringUtils;
  * Delegates to a {@link Resources} to do the {@link Resource} creation. The implementation follows the
  * implementation of {@link org.springframework.core.io.ResourceEditor}.
  *
- * @author Thorsten Schlathoelter
  * @since 4.0
  */
 public class CitrusResourceEditor extends PropertyEditorSupport {

@@ -29,7 +29,6 @@ import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.6
  */
 public class HttpQueryParamHeaderValidator extends DefaultHeaderValidator {

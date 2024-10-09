@@ -28,9 +28,6 @@ import java.util.List;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.TraceVariablesAction;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "trace-variables")
 public class TraceVariables implements TestActionBuilder<TraceVariablesAction> {
 

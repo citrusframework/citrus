@@ -53,9 +53,6 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
 
     private final WebServiceClient soapClient = Mockito.mock(WebServiceClient.class);

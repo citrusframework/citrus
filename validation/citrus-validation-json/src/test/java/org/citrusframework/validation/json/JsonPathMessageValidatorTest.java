@@ -45,7 +45,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.startsWith;
 
 /**
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class JsonPathMessageValidatorTest extends UnitTestSupport {

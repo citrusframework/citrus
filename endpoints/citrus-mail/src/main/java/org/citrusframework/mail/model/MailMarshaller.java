@@ -38,7 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Christoph Deppisch
  * @since 2.1
  */
 public class MailMarshaller implements Marshaller, Unmarshaller {

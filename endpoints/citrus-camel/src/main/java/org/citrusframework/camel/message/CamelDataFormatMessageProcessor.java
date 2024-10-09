@@ -36,7 +36,6 @@ import org.citrusframework.util.StringUtils;
 /**
  * Camel message processor working with data formats to marshal/unmarshal the message body.
  *
- * @author Christoph Deppisch
  */
 public class CamelDataFormatMessageProcessor extends CamelMessageProcessor {
 

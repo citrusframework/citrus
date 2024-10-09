@@ -20,7 +20,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public interface HelloService extends Remote {

@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.citrusframework.container.RepeatUntilTrue.Builder.repeat;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class RepeatUntilTrueJavaIT extends TestNGCitrusSpringSupport {
 

@@ -29,7 +29,6 @@ import org.citrusframework.util.StringUtils;
  * Function loads message from test context message store. Incoming and sent messages get automatically
  * stored to the message store. Messages are identified by their name.
  *
- * @author Christoph Deppisch
  * @since 2.6.2
  */
 public class LoadMessageFunction implements Function {

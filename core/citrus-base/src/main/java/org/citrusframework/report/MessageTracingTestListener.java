@@ -41,7 +41,6 @@ import org.slf4j.LoggerFactory;
  * Note: This class is not thread safe! Parallel test execution leads to behaviour that messages get mixed.
  * Proper correlation to test case is not possible here.
  *
- * @author Christoph Deppisch
  * @since 1.2
  */
 public class MessageTracingTestListener extends AbstractTestListener implements MessageListener {

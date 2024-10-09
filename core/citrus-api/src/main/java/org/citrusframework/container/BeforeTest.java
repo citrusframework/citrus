@@ -16,9 +16,6 @@
 
 package org.citrusframework.container;
 
-/**
- * @author Christoph Deppisch
- */
 public interface BeforeTest extends TestActionContainer {
 
     /**

@@ -28,7 +28,6 @@ import org.springframework.xml.xsd.XsdSchema;
  * Mapping strategy uses the root element local name to find matching schema
  * instance.
  *
- * @author Christoph Deppisch
  */
 public class RootQNameSchemaMappingStrategy extends AbstractSchemaMappingStrategy {
 

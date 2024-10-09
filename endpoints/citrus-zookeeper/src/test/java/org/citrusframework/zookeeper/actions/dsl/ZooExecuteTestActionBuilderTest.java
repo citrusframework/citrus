@@ -39,7 +39,6 @@ import static org.citrusframework.zookeeper.actions.ZooExecuteAction.Builder.zoo
 import static org.mockito.Mockito.*;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class ZooExecuteTestActionBuilderTest extends UnitTestSupport {

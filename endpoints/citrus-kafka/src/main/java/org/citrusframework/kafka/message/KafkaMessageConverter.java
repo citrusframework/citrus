@@ -34,7 +34,6 @@ import java.util.Optional;
  * messages and vice versa. Converter combines message converting logic and header mapping.
  * Usually the message's payload is extracted to the Kafka message payload and default Kafka headers are mapped.
  *
- * @author Christoph Deppisch
  * @since 2.8
  */
 public class KafkaMessageConverter implements MessageConverter<ConsumerRecord<Object, Object>, ProducerRecord<Object, Object>, KafkaEndpointConfiguration> {

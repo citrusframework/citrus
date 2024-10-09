@@ -26,7 +26,6 @@ import org.citrusframework.util.ObjectHelper;
 /**
  * Action executes http client and server operations.
  *
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class HttpActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {

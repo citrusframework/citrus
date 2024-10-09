@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
  * Function changes given date value by adding/subtracting day/month/year/hour/minute
  * offset values. Class uses special date format to parse date string to Calendar instance.
  *
- * @author Christoph Deppisch
  * @since 1.3.1
  */
 public class ChangeDateFunction extends AbstractDateFunction {

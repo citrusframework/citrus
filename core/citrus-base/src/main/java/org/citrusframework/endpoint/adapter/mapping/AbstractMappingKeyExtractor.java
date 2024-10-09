@@ -23,7 +23,6 @@ import org.citrusframework.message.Message;
  * Subclasses do evaluate mapping key from incoming request message and optional prefix and/or suffix are
  * automatically added to resulting mapping key.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public abstract class AbstractMappingKeyExtractor implements MappingKeyExtractor {

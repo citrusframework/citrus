@@ -34,7 +34,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.camel.dsl.CamelSupport.camel;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class CamelRouteTestActionRunnerTest extends UnitTestSupport {

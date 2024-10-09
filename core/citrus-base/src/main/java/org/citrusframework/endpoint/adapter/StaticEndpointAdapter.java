@@ -25,7 +25,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
  * Static endpoint adapter always responds with static response message. No endpoint is provided as this is a
  * static endpoint adapter. Clients trying to get endpoint for interaction will receive runtime exception.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public abstract class StaticEndpointAdapter extends AbstractEndpointAdapter {

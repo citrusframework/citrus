@@ -22,7 +22,6 @@ import org.citrusframework.TestCase;
  * Basic implementation of {@link TestListener} interface so that subclasses must not implement
  * all methods but only overwrite some listener methods.
  *
- * @author Christoph Deppisch
  */
 public abstract class AbstractTestListener implements TestListener {
 

@@ -21,7 +21,6 @@ import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.context.TestContext;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class TestRunnerSteps {

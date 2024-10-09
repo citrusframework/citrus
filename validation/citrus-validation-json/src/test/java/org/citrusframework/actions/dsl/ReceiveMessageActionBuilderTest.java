@@ -67,9 +67,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
     private final Endpoint messageEndpoint = Mockito.mock(Endpoint.class);

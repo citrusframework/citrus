@@ -30,7 +30,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for selenium client action in test case.
  *
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public abstract class AbstractBrowserActionParser implements BeanDefinitionParser {

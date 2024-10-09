@@ -20,9 +20,6 @@ import java.util.Optional;
 
 import org.citrusframework.message.Message;
 
-/**
- * @author Christoph Deppisch
- */
 public class MessageUtils {
 
     /**

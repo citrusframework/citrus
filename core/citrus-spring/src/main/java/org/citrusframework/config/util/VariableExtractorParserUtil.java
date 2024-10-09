@@ -28,7 +28,6 @@ import org.w3c.dom.Element;
 /**
  * Helper for parsing 'extract' elements containing nested xpath or json variable-extractors.
  *
- * @author Martin Maher
  * @since 2.5
  */
 public class VariableExtractorParserUtil {

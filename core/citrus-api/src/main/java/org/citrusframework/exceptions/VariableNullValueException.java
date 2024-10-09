@@ -19,7 +19,6 @@ package org.citrusframework.exceptions;
 /**
  * Variable value evaluates to null.
  *
- * @author Christoph Deppisch
  */
 public class VariableNullValueException extends CitrusRuntimeException {
 

@@ -23,9 +23,6 @@ import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class AbstractDockerCommandBuilder<R, T extends AbstractDockerCommand<R>, S extends AbstractDockerCommandBuilder<R, T, S>> implements TestActionBuilder<DockerExecuteAction> {
 
     protected final S self;

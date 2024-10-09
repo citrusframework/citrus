@@ -26,7 +26,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class SystemPropertyFunctionTest extends UnitTestSupport {

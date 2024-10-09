@@ -36,7 +36,6 @@ import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.citrusframework.dsl.JsonPathSupport.jsonPath;
 
 /**
- * @author Christoph Deppisch
  * @since 3.3.1
  */
 public class JsonPathVariableExtractorIT extends TestNGCitrusSpringSupport {

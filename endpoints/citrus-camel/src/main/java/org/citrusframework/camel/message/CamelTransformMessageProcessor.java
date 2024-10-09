@@ -23,7 +23,6 @@ import org.apache.camel.processor.TransformProcessor;
 /**
  * Camel message processor performs transformation on message headers and body.
  *
- * @author Christoph Deppisch
  */
 public class CamelTransformMessageProcessor extends CamelMessageProcessor {
 

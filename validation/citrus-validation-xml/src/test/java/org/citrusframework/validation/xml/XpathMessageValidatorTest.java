@@ -40,7 +40,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 
 /**
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class XpathMessageValidatorTest extends UnitTestSupport {

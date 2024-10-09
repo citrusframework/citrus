@@ -25,7 +25,6 @@ import com.github.dockerjava.api.command.WaitContainerResultCallback;
 import com.github.dockerjava.api.model.WaitResponse;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class ContainerWait extends AbstractDockerCommand<WaitResponse> {

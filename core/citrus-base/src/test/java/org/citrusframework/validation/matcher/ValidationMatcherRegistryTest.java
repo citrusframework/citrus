@@ -27,9 +27,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class ValidationMatcherRegistryTest extends UnitTestSupport {
 
     private ValidationMatcherLibrary validationMatcherLibrary = new ValidationMatcherLibrary();

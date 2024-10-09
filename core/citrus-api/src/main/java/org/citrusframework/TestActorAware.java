@@ -16,9 +16,6 @@
 
 package org.citrusframework;
 
-/**
- * @author Christoph Deppisch
- */
 public interface TestActorAware {
 
     /**

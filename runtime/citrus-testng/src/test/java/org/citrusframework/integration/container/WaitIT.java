@@ -29,7 +29,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class WaitIT extends TestNGCitrusSpringSupport {

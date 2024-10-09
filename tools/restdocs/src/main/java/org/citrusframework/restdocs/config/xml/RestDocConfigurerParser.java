@@ -27,7 +27,6 @@ import org.springframework.restdocs.ManualRestDocumentation;
 import org.w3c.dom.Element;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class RestDocConfigurerParser extends AbstractBeanDefinitionParser {

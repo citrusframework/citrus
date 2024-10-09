@@ -39,7 +39,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class CamelEndpointTest extends AbstractTestNGUnitTest {

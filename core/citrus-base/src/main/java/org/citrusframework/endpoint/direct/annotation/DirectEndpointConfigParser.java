@@ -24,9 +24,6 @@ import org.citrusframework.message.MessageQueue;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public class DirectEndpointConfigParser implements AnnotationConfigParser<DirectEndpointConfig, DirectEndpoint> {
 
     @Override

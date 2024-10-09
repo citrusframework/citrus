@@ -27,7 +27,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import static java.lang.String.format;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class CitrusLifecycleHooks {

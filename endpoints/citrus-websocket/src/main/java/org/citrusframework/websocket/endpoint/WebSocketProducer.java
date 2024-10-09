@@ -26,7 +26,6 @@ import org.springframework.web.socket.WebSocketMessage;
 
 /**
  * Producer sends web socket messages to all open sessions known to the web socket handler.
- * @author Martin Maher
  * @since 2.3
  */
 public class WebSocketProducer implements Producer {

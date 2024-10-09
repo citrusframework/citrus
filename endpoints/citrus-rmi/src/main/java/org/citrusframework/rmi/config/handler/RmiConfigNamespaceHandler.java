@@ -21,7 +21,6 @@ import org.citrusframework.rmi.config.xml.RmiServerParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class RmiConfigNamespaceHandler extends NamespaceHandlerSupport {

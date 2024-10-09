@@ -20,7 +20,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public interface Consumer {

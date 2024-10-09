@@ -19,7 +19,6 @@ package org.citrusframework.ftp.client;
 import java.util.*;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class SftpEndpointConfiguration extends FtpEndpointConfiguration {

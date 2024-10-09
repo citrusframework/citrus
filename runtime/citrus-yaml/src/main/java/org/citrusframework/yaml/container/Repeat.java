@@ -24,9 +24,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.TestActions;
 
-/**
- * @author Christoph Deppisch
- */
 public class Repeat implements TestActionBuilder<RepeatUntilTrue>, ReferenceResolverAware {
 
     private final RepeatUntilTrue.Builder builder = new RepeatUntilTrue.Builder();

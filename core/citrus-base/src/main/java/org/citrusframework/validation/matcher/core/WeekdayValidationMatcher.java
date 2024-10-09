@@ -39,7 +39,6 @@ import java.util.regex.PatternSyntaxException;
  * In addition to that user can specify the date format to parse:
  * MONDAY(YYYY-MM-DD)
  *
- * @author Christoph Deppisch
  * @since 1.3.1
  */
 public class WeekdayValidationMatcher implements ValidationMatcher, ControlExpressionParser {

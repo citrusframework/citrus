@@ -30,7 +30,6 @@ import static org.citrusframework.actions.TraceVariablesAction.Builder.traceVari
 import static org.citrusframework.container.Async.Builder.async;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class AsyncJavaIT extends TestNGCitrusSpringSupport {

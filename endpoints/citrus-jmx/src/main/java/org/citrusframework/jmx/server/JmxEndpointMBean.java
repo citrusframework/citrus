@@ -47,7 +47,6 @@ import org.slf4j.LoggerFactory;
  *
  * This class supports managed bean operation invocation as well as read and write access to managed bean attributes.
  *
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class JmxEndpointMBean implements DynamicMBean {

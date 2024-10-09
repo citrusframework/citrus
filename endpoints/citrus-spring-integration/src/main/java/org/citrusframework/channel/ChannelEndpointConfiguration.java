@@ -24,7 +24,6 @@ import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.core.DestinationResolver;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class ChannelEndpointConfiguration extends AbstractEndpointConfiguration {

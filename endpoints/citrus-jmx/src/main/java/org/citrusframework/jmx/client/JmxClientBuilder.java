@@ -23,7 +23,6 @@ import org.citrusframework.message.MessageCorrelator;
 import javax.management.NotificationFilter;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class JmxClientBuilder extends AbstractEndpointBuilder<JmxClient> {

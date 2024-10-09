@@ -52,7 +52,6 @@ import org.citrusframework.util.StringUtils;
  * a {@link org.citrusframework.endpoint.Endpoint}, which is capable of the message transport implementation. So action is
  * independent of the message transport configuration.
  *
- * @author Christoph Deppisch
  * @since 2008
  */
 public class SendMessageAction extends AbstractTestAction implements Completable {

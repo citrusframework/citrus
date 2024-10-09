@@ -27,7 +27,6 @@ import static java.lang.Double.parseDouble;
 /**
  * Function returns the maximum numeric value in a set of numeric arguments.
  *
- * @author Christoph Deppisch
  */
 public class MaxFunction implements Function {
 

@@ -30,9 +30,6 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import groovy.lang.GroovyObjectSupport;
 
-/**
- * @author Christoph Deppisch
- */
 public class TestCaseScript extends GroovyObjectSupport implements ActionsBuilder {
 
     private final Citrus citrus;

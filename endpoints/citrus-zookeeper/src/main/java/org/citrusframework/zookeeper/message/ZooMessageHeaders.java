@@ -19,7 +19,6 @@ package org.citrusframework.zookeeper.message;
 import org.citrusframework.message.MessageHeaders;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class ZooMessageHeaders {

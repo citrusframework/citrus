@@ -33,7 +33,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.when;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class EnvironmentPropertyFunctionTest extends AbstractTestNGUnitTest {

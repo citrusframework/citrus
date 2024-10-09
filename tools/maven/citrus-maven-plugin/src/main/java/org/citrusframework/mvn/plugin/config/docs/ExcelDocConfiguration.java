@@ -19,7 +19,6 @@ package org.citrusframework.mvn.plugin.config.docs;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class ExcelDocConfiguration {

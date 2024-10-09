@@ -26,7 +26,6 @@ import org.citrusframework.functions.Function;
  * Function concatenating multiple tokens to a single string. Tokens can be either
  * static string values or dynamic variables or functions.
  *
- * @author Christoph Deppisch
  */
 public class ConcatFunction implements Function {
 

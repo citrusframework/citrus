@@ -31,9 +31,6 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
-/**
- * @author Christoph Deppisch
- */
 public class ContextConfiguration {
 
     private final Citrus citrus;

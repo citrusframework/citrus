@@ -18,9 +18,6 @@ package org.citrusframework.groovy.dsl.actions.model;
 
 import groovy.json.JsonBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class JsonBodySpec extends BodySpec {
 
     private JsonBuilder jsonBuilder;

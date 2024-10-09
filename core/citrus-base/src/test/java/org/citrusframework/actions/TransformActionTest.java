@@ -20,9 +20,6 @@ import org.citrusframework.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Philipp Komninos
- */
 public class TransformActionTest extends UnitTestSupport {
 
 	@Test

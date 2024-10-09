@@ -20,7 +20,6 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.citrusframework.variable.dictionary.xml.XpathMappingDataDictionary;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class XpathDataDictionaryParser extends AbstractDataDictionaryParser {

@@ -17,7 +17,6 @@
 package org.citrusframework.selenium.model;
 
 /**
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public interface WebPage {

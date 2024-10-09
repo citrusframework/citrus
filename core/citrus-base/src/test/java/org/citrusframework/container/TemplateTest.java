@@ -31,9 +31,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
 
-/**
- * @author Christoph Deppisch
- */
 public class TemplateTest extends UnitTestSupport {
 
     private final TestAction action = Mockito.mock(TestAction.class);

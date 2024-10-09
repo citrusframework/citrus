@@ -40,7 +40,6 @@ import org.springframework.http.MediaType;
 
 /**
  * Loads Open API specifications from different locations like file resource or web resource.
- * @author Christoph Deppisch
  */
 public final class OpenApiResourceLoader {
 

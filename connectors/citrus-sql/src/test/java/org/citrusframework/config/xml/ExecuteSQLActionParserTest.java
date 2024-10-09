@@ -24,9 +24,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class ExecuteSQLActionParserTest extends AbstractActionParserTest<ExecuteSQLAction> {
 
     @Test

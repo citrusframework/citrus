@@ -30,7 +30,6 @@ import org.w3c.dom.Element;
 /**
  * Parser configures web service client bean definition.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class WebServiceClientParser extends AbstractEndpointParser {

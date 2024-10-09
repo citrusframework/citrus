@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Abstract base class for all containers holding several embedded test actions.
  *
- * @author Christoph Deppisch
  */
 public abstract class AbstractActionContainer extends AbstractTestAction implements TestActionContainer, Completable {
 

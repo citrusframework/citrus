@@ -27,9 +27,6 @@ import org.citrusframework.endpoint.EndpointBuilder;
 import groovy.lang.MissingPropertyException;
 import org.citrusframework.util.ReflectionHelper;
 
-/**
- * @author Christoph Deppisch
- */
 public class EndpointBuilderConfiguration<T extends Endpoint> implements Supplier<T> {
 
     private final EndpointBuilder<T> builder;

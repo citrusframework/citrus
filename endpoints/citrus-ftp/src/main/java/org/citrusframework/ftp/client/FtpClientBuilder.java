@@ -21,7 +21,6 @@ import org.citrusframework.message.ErrorHandlingStrategy;
 import org.citrusframework.message.MessageCorrelator;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {

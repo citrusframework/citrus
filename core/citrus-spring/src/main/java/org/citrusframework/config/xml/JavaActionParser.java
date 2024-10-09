@@ -38,7 +38,6 @@ import static java.lang.Long.parseLong;
 /**
  * Bean definition parser for java action in test case.
  *
- * @author Christoph Deppisch
  */
 public class JavaActionParser implements BeanDefinitionParser {
 

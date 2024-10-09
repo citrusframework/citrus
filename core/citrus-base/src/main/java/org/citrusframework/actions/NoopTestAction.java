@@ -24,7 +24,6 @@ import org.citrusframework.context.TestContext;
  * that needs to return a test action but this should not be included or executed during the test run. See test behavior applying
  * test actions.
  *
- * @author Christoph Deppisch
  */
 public class NoopTestAction implements TestAction {
 

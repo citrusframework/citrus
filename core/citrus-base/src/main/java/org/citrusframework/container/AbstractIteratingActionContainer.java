@@ -24,9 +24,6 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.util.BooleanExpressionParser;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class AbstractIteratingActionContainer extends AbstractActionContainer {
     /** Boolean expression string */
     protected final String condition;

@@ -23,7 +23,6 @@ import org.citrusframework.message.MessageSelector;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 3.0
  */
 public abstract class AbstractMessageSelector implements MessageSelector {

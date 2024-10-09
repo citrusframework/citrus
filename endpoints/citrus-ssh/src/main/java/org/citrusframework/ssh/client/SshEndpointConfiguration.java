@@ -23,7 +23,6 @@ import org.citrusframework.ssh.message.SshMessageConverter;
 import org.citrusframework.ssh.model.SshMarshaller;
 
 /**
- * @author Roland Huss, Christoph Deppisch
  * @since 1.4
  */
 public class SshEndpointConfiguration extends AbstractPollableEndpointConfiguration {

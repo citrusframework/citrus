@@ -25,7 +25,6 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.xml.StringResult;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class JmxMessage extends DefaultMessage {

@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Dependency injection support for {@link CitrusEndpoint} endpoint annotations.
  *
- * @author Christoph Deppisch
  */
 public abstract class CitrusEndpointAnnotations {
 

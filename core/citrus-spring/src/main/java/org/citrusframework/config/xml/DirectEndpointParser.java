@@ -24,7 +24,6 @@ import org.citrusframework.endpoint.direct.DirectEndpointConfiguration;
 /**
  * Simple endpoint parser.
  *
- * @author Christoph Deppisch
  * @since 3.0
  */
 public class DirectEndpointParser extends AbstractDirectEndpointParser {

@@ -26,7 +26,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 
 /**
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class EchoTestActionBuilderTest extends UnitTestSupport {

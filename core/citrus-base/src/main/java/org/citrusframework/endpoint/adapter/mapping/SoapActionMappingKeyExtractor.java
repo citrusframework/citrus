@@ -18,7 +18,6 @@ package org.citrusframework.endpoint.adapter.mapping;
 
 /**
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class SoapActionMappingKeyExtractor extends HeaderMappingKeyExtractor {

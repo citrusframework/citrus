@@ -27,9 +27,6 @@ import org.testng.annotations.Test;
 import javax.management.NotificationFilter;
 import java.util.Map;
 
-/**
- * @author Christoph Deppisch
- */
 public class JmxClientParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

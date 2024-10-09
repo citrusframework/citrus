@@ -26,7 +26,6 @@ import java.util.*;
  * matching header elements are present in message header and its value matches the expected value
  * the message is accepted.
  *
- * @author Christoph Deppisch
  */
 public class HeaderMatchingMessageSelector extends AbstractMessageSelector {
 

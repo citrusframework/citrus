@@ -23,7 +23,6 @@ import org.citrusframework.endpoint.EndpointConfiguration;
  * Message converter interface describes methods for converting a external message type T to the internal message
  * representation and vice versa.
  *
- * @author Christoph Deppisch
  * @since 2.0
  */
 public interface MessageConverter<I, O, C extends EndpointConfiguration> {

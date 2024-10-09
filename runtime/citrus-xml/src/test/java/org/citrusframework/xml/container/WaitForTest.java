@@ -33,9 +33,6 @@ import org.citrusframework.xml.actions.AbstractXmlActionTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class WaitForTest extends AbstractXmlActionTest {
 
     private static final String DEFAULT_WAIT_TIME = "5000";

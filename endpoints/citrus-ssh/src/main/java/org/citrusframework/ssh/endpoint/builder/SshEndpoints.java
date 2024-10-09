@@ -20,9 +20,6 @@ import org.citrusframework.endpoint.builder.ClientServerEndpointBuilder;
 import org.citrusframework.ssh.client.SshClientBuilder;
 import org.citrusframework.ssh.server.SshServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public final class SshEndpoints extends ClientServerEndpointBuilder<SshClientBuilder, SshServerBuilder> {
     /**
      * Private constructor setting the client and server builder implementation.

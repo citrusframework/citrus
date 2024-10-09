@@ -24,9 +24,6 @@ import java.util.List;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Objects.nonNull;
 
-/**
- * @author Christoph Deppisch
- */
 public class TestReporters implements TestListener, TestSuiteListener, TestReporterAware {
 
     /**

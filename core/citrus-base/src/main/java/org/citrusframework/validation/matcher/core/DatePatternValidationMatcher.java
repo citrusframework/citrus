@@ -28,7 +28,6 @@ import java.util.regex.PatternSyntaxException;
 /**
  * ValidationMatcher checking for valid date format.
  *
- * @author Christian Wied
  */
 public class DatePatternValidationMatcher implements ValidationMatcher {
 

@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
  * Abstract test action container describes methods to enable/disable container execution based on given test name, package
  * and test groups. This action container is typically used by before and after test action containers.
  *
- * @author Christoph Deppisch
  * @since 2.0
  */
 public abstract class AbstractTestBoundaryActionContainer extends AbstractActionContainer {

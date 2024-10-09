@@ -27,9 +27,6 @@ import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Christoph Deppisch
- */
 public interface ValueMatcher {
 
     /** Logger */

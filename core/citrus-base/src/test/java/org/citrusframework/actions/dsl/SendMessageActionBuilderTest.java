@@ -59,9 +59,6 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class SendMessageActionBuilderTest extends UnitTestSupport {
 
     private final ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);

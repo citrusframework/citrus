@@ -29,7 +29,6 @@ import org.citrusframework.endpoint.Endpoint;
  *
  * Further endpoint parameters such as connectionFactory get passed to the endpoint configuration.
  *
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class JmsEndpointComponent extends AbstractEndpointComponent {

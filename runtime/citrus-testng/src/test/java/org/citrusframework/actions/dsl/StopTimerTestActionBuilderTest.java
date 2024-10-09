@@ -26,7 +26,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.actions.StopTimerAction.Builder.stopTimer;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class StopTimerTestActionBuilderTest extends UnitTestSupport {

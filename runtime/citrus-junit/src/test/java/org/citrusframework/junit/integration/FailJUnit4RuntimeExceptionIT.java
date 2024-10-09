@@ -23,9 +23,6 @@ import org.citrusframework.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-/**
- * @author Christoph Deppisch
- */
 public class FailJUnit4RuntimeExceptionIT extends JUnit4CitrusSpringSupport {
 
     @Test(expected = TestCaseFailedException.class)

@@ -21,7 +21,6 @@ import java.util.List;
 /**
  * Control expression parser for extracting the individual control values from a control expression.
  *
- * @author Martin Maher
  * @since 2.5
  */
 public interface ControlExpressionParser {

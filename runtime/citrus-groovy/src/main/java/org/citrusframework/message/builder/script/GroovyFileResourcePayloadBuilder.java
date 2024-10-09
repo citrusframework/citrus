@@ -20,9 +20,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.message.builder.FileResourcePayloadBuilder;
 import org.citrusframework.spi.Resource;
 
-/**
- * @author Christoph Deppisch
- */
 public class GroovyFileResourcePayloadBuilder extends FileResourcePayloadBuilder {
 
     /**

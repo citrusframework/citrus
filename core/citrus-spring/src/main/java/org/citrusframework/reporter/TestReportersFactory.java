@@ -28,7 +28,6 @@ import org.springframework.context.ApplicationContextAware;
  * The default test reporters get also added via Spring bean reference. This is why this registry explicitly does not use default reporter
  * in order to not duplicate those.
  *
- * @author Christoph Deppisch
  */
 public class TestReportersFactory implements FactoryBean<TestReporters>, ApplicationContextAware {
 

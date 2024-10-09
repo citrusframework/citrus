@@ -38,7 +38,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class CamelMessageConverterTest extends AbstractTestNGUnitTest {

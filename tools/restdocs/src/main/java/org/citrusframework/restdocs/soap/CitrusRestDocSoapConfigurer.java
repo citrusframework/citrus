@@ -33,7 +33,6 @@ import java.util.Map;
  * the interceptor uses a special Http request wrapper for next interceptors in line. These interceptors can then read the
  * RestDoc configuration and context from the request wrapper implementation.
  *
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class CitrusRestDocSoapConfigurer extends RestDocumentationConfigurer<CitrusSnippetConfigurer, CitrusSnippetConfigurer, CitrusRestDocSoapConfigurer>

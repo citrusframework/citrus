@@ -32,7 +32,6 @@ import java.util.Optional;
  * Creates test documentation in interactive mode. Either uses mode excel for MS Excel output or
  * html for HTML web page output.
  *
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 @Mojo(name = "create-docs")

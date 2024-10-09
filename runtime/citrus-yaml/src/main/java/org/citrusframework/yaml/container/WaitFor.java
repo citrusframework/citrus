@@ -28,9 +28,6 @@ import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.TestActions;
 
-/**
- * @author Christoph Deppisch
- */
 public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware {
 
     private final Wait.Builder<Condition> builder = new Wait.Builder<>();

@@ -32,7 +32,6 @@ import org.w3c.dom.Element;
 
 /**
  * Bean definition parser creates JMS endpoint adapter component.
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class JmsEndpointAdapterParser extends AbstractBeanDefinitionParser {

@@ -23,7 +23,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public abstract class AbstractZooCommand<R> implements ZooCommand {

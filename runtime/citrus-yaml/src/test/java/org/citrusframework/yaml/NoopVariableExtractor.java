@@ -22,9 +22,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.citrusframework.variable.VariableExtractor;
 
-/**
- * @author Christoph Deppisch
- */
 public class NoopVariableExtractor implements VariableExtractor {
     @Override
     public void extractVariables(Message message, TestContext context) {

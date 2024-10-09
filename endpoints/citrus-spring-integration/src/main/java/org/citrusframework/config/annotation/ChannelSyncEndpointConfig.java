@@ -24,7 +24,6 @@ import java.lang.annotation.Target;
 import org.citrusframework.annotations.CitrusEndpointConfig;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.6
  */
 @Retention(RetentionPolicy.RUNTIME)

@@ -39,7 +39,6 @@ import org.w3c.dom.Node;
 /**
  * Bean definition parser for docker client action in test case.
  *
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class DockerExecuteActionParser implements BeanDefinitionParser {

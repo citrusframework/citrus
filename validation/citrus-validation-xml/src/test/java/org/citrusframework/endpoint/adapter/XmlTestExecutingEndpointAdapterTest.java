@@ -45,7 +45,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 @ContextConfiguration(classes = { CitrusSpringConfig.class, XmlTestExecutingEndpointAdapterTest.EndpointConfig.class })

@@ -21,9 +21,6 @@ import java.util.concurrent.TimeUnit;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.SleepAction;
 
-/**
- * @author Christoph Deppisch
- */
 public class Sleep implements TestActionBuilder<SleepAction> {
 
     private final SleepAction.Builder builder = new SleepAction.Builder();

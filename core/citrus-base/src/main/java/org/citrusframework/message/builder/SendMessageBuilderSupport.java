@@ -19,9 +19,6 @@ package org.citrusframework.message.builder;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.message.MessageProcessor;
 
-/**
- * @author Christoph Deppisch
- */
 public class SendMessageBuilderSupport<T extends SendMessageAction, B extends SendMessageAction.SendMessageActionBuilder<T, S, B>, S extends SendMessageBuilderSupport<T, B, S>>
         extends MessageBuilderSupport<T, B, S> {
 

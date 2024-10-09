@@ -20,7 +20,6 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.citrusframework.variable.dictionary.json.JsonMappingDataDictionary;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class JsonDataDictionaryParser extends AbstractDataDictionaryParser {

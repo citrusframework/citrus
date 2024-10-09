@@ -22,7 +22,6 @@ import java.io.Serial;
  * Base exception marking failure of test case. Used to force failure of TestNG and JUnit
  * test case.
  *
- * @author Christoph Deppisch
  */
 public class TestCaseFailedException extends CitrusRuntimeException {
 

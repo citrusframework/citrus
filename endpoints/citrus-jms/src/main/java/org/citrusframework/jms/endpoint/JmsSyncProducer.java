@@ -36,7 +36,6 @@ import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {

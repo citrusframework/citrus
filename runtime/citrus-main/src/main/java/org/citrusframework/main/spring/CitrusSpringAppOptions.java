@@ -18,8 +18,5 @@ package org.citrusframework.main.spring;
 
 import org.citrusframework.main.CitrusAppOptions;
 
-/**
- * @author Christoph Deppisch
- */
 public class CitrusSpringAppOptions extends CitrusAppOptions<CitrusSpringAppConfiguration> {
 }

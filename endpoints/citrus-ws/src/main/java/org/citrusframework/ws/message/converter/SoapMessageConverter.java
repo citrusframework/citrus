@@ -69,7 +69,6 @@ import org.w3c.dom.Node;
  * Default converter implementation for SOAP messages. By default strips away the SOAP envelope and constructs internal message representation
  * from incoming SOAP request messages. Response messages are created from internal message representation accordingly.
  *
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class SoapMessageConverter implements WebServiceMessageConverter {

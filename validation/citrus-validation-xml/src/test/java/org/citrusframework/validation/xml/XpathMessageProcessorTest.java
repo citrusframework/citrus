@@ -27,9 +27,6 @@ import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
 
     private final Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text>Hello World!</Text></TestMessage>");

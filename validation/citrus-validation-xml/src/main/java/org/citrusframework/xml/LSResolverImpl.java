@@ -25,7 +25,6 @@ import org.w3c.dom.ls.LSResourceResolver;
 /**
  * Very basic LSResolver implementation for resolving dtd resources by their systemId.
  *
- * @author Christoph Deppisch
  */
 public class LSResolverImpl implements LSResourceResolver {
     /** DOM implementation */

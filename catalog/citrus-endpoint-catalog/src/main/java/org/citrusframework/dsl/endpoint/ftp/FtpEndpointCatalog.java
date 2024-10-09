@@ -20,9 +20,6 @@ import org.citrusframework.ftp.client.FtpClientBuilder;
 import org.citrusframework.ftp.endpoint.builder.FtpEndpoints;
 import org.citrusframework.ftp.server.FtpServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class FtpEndpointCatalog {
 
     /**

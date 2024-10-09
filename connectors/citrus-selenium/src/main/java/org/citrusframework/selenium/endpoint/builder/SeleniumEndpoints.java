@@ -22,7 +22,6 @@ import org.citrusframework.selenium.endpoint.SeleniumBrowserBuilder;
 /**
  * Selenium browser endpoint builder wrapper.
  *
- * @author Christoph Deppisch
  * @since 2.7
  */
 public final class SeleniumEndpoints extends AbstractEndpointBuilder<SeleniumBrowserBuilder> {

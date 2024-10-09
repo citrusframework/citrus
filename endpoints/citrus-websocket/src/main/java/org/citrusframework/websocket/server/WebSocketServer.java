@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class WebSocketServer extends HttpServer {

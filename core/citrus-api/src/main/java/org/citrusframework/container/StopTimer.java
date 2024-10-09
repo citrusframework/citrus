@@ -18,7 +18,6 @@ package org.citrusframework.container;
 
 /**
  * Interface for stopping a timer.
- * @author Martin Maher
  * @since 2.5
  */
 public interface StopTimer {

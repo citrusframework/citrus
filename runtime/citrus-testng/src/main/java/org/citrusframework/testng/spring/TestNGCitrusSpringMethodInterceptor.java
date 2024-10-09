@@ -38,7 +38,6 @@ import org.testng.internal.MethodInstance;
  * Citrus annotated test method. So TestNG test is executed multiple times respectively for each Citrus test
  * constructed by method annotation.
  *
- * @author Christoph Deppisch
  * @since 1.3.1
  */
 public class TestNGCitrusSpringMethodInterceptor implements IMethodInterceptor {

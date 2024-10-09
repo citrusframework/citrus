@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Web socket endpoint configuration for server side web socket communication.
- * @author Martin Maher
  * @since 2.3
  */
 public class WebSocketServerEndpointConfiguration extends AbstractWebSocketEndpointConfiguration {

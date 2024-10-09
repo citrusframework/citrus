@@ -26,7 +26,6 @@ import org.springframework.web.servlet.handler.MappedInterceptor;
  * Adapter for {@link org.springframework.web.servlet.handler.MappedInterceptor} conditionally applies interceptor
  * based on request url and path matcher.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class MappedInterceptorAdapter implements HandlerInterceptor {

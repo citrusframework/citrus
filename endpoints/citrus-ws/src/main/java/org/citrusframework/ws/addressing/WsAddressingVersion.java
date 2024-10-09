@@ -19,7 +19,6 @@ package org.citrusframework.ws.addressing;
 /**
  * Ws addressing versions supported in framework.
  *
- * @author Christoph Deppisch
  */
 public enum WsAddressingVersion {
     VERSION10,

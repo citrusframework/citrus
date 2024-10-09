@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.actions.LoadPropertiesAction;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class LoadPropertiesActionParserTest extends AbstractActionParserTest<LoadPropertiesAction> {
 
     @Test

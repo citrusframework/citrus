@@ -26,9 +26,6 @@ import org.testng.annotations.Test;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * @author Christoph Deppisch
- */
 public class MessageSelectingQueueChannelTest extends AbstractTestNGUnitTest {
 
     @Test

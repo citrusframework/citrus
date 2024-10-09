@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Sequence container executing a set of nested test actions in simple sequence.
  *
- * @author Christoph Deppisch
  * @since 2007
  */
 public class Sequence extends AbstractActionContainer {

@@ -23,7 +23,6 @@ import org.citrusframework.main.CitrusApp;
  * Command line options are passed to the application for optional arguments. Application will run until the
  * duration time option has passed by or until the JVM terminates.
  *
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class CitrusSpringApp extends CitrusApp {

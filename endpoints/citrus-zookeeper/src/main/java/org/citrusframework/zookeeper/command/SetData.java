@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import static java.lang.Integer.parseInt;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class SetData extends AbstractZooCommand<ZooResponse> {

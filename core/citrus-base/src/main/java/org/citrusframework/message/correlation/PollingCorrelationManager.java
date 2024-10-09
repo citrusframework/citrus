@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
  * In case object is not found in store retry is automatically performed. Polling interval and overall retry timeout
  * is usually defined in endpoint configuration.
  *
- * @author Christoph Deppisch
  * @since 2.1
  */
 public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {

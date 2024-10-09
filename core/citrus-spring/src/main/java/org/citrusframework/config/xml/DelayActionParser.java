@@ -25,7 +25,6 @@ import org.w3c.dom.Element;
  * Bean definition parser for delay action in test case.
  * Delegates to sleep action parser.
  *
- * @author Christoph Deppisch
  */
 public class DelayActionParser implements BeanDefinitionParser {
 

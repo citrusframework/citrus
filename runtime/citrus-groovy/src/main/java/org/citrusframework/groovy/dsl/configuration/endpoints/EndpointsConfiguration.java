@@ -28,9 +28,6 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import groovy.lang.GroovyObjectSupport;
 
-/**
- * @author Christoph Deppisch
- */
 public class EndpointsConfiguration extends GroovyObjectSupport {
 
     private final Set<Supplier<Endpoint>> endpoints = new HashSet<>();

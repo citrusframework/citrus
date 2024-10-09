@@ -30,7 +30,6 @@ import static java.lang.Integer.parseInt;
 /**
  * Class to automatically generate a list of all available tests in HTML.
  *
- * @author Christoph Deppisch
  * @since 2007
  */
 public class HtmlTestDocsGenerator extends AbstractTestDocsGenerator {

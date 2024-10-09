@@ -21,7 +21,6 @@ import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.MessageCorrelator;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class ChannelSyncEndpointConfiguration extends ChannelEndpointConfiguration implements PollableEndpointConfiguration {

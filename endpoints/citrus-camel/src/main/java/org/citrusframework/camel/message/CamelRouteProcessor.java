@@ -34,7 +34,6 @@ import org.apache.camel.model.RouteDefinition;
  * Message processor builds new route from given processor definition and delegates to the Apache Camel route.
  * Sets the message header and body from the processed Camel exchange.
  *
- * @author Christoph Deppisch
  */
 public class CamelRouteProcessor extends CamelMessageProcessor {
 

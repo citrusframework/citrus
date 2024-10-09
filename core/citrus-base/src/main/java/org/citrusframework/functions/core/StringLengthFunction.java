@@ -25,7 +25,6 @@ import org.citrusframework.functions.Function;
 /**
  * Returning the length of a given string argument.
  *
- * @author Christoph Deppisch
  */
 public class StringLengthFunction implements Function {
 

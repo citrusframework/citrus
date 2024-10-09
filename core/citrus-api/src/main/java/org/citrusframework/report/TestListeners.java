@@ -25,7 +25,6 @@ import org.citrusframework.TestCase;
  * Class that spreads test events to all available test listeners
  * injected by Spring's IoC container.
  *
- * @author Christoph Deppisch
  */
 public class TestListeners implements TestListenerAware {
 

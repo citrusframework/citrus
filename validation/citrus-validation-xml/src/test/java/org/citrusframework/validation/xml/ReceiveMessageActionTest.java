@@ -51,9 +51,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-/**
- * @author Christoph Deppisch
- */
 public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Mock

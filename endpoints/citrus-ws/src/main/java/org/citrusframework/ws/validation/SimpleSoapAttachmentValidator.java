@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
  * Simple implementation of a {@link AbstractSoapAttachmentValidator}.
  * Attachment content body is validated through simple string equals assertion.
  *
- * @author Christoph Deppisch
  */
 public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidator {
 

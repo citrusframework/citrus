@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
  * Simple soap fault validator implementation just performing String equals on soap fault detail
  * as validation algorithm.
  *
- * @author Christoph Deppisch
  */
 public class SimpleSoapFaultValidator extends AbstractFaultDetailValidator {
 

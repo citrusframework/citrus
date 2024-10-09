@@ -19,9 +19,6 @@ package org.citrusframework.config.xml.parser;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class GroovyScriptMessageBuilderParserTest {
 
     @Test

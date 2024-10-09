@@ -40,7 +40,6 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapMessageFactory;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class HelloSoapServiceImpl {

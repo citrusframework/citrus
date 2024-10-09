@@ -24,7 +24,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 @Retention(RetentionPolicy.RUNTIME)

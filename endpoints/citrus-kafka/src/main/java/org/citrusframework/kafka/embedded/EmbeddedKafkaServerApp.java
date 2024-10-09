@@ -25,7 +25,6 @@ import org.springframework.context.annotation.PropertySource;
  * Standalone application provides a main cli entry for running an embedded Kafka server with embedded Zookeeper.
  * Kafka server properties can be set via property file or system properties.
  *
- * @author Christoph Deppisch
  * @since 2.8
  */
 @PropertySource(value = "classpath:${citrus.kafka.server.properties.file:citrus-kafka-server.properties}", ignoreResourceNotFound = true)

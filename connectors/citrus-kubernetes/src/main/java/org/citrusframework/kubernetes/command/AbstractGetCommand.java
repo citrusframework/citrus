@@ -23,7 +23,6 @@ import io.fabric8.kubernetes.client.dsl.Resource;
 import org.citrusframework.context.TestContext;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public abstract class AbstractGetCommand<T extends HasMetadata, L extends KubernetesResourceList<T>, R extends Resource<T>, C extends KubernetesCommand<T, T>> extends AbstractClientCommand<T, T, L, R, C> {

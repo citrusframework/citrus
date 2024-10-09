@@ -23,9 +23,6 @@ import org.citrusframework.endpoint.EndpointBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class DockerEndpointsTest {
 
     @Test

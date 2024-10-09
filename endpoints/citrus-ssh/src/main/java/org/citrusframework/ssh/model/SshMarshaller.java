@@ -27,7 +27,6 @@ import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.Unmarshaller;
 
 /**
- * @author Christoph Deppisch
  * @since 2.1
  */
 public class SshMarshaller implements Marshaller, Unmarshaller {

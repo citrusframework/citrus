@@ -16,9 +16,6 @@
 
 package org.citrusframework.http.server;
 
-/**
- * @author Christoph Deppisch
- */
 public class HttpServerSettings {
 
     private static final String RESPONSE_CACHE_SIZE_PROPERTY = "citrus.http.server.response.cache.size";

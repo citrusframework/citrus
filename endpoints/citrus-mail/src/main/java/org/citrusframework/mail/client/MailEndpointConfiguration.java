@@ -25,7 +25,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class MailEndpointConfiguration extends AbstractEndpointConfiguration {

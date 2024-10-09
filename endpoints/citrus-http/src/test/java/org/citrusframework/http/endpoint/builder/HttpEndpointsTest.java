@@ -24,9 +24,6 @@ import org.citrusframework.http.server.HttpServerBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class HttpEndpointsTest {
 
     @Test

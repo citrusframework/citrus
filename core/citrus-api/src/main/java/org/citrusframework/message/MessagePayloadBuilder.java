@@ -18,9 +18,6 @@ package org.citrusframework.message;
 
 import org.citrusframework.context.TestContext;
 
-/**
- * @author Christoph Deppisch
- */
 @FunctionalInterface
 public interface MessagePayloadBuilder {
 

@@ -35,7 +35,6 @@ import java.util.concurrent.TimeoutException;
  * Utility class for test cases providing several utility
  * methods regarding Citrus test cases.
  *
- * @author Christoph Deppisch
  */
 public abstract class TestUtils {
 

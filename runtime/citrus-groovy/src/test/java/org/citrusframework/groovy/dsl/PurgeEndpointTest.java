@@ -28,9 +28,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 
-/**
- * @author Christoph Deppisch
- */
 public class PurgeEndpointTest extends AbstractGroovyActionDslTest {
 
     @Test

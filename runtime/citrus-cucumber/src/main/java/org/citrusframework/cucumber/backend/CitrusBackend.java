@@ -31,7 +31,6 @@ import org.citrusframework.cucumber.CitrusLifecycleHooks;
 import org.citrusframework.cucumber.CitrusReporter;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class CitrusBackend implements Backend {

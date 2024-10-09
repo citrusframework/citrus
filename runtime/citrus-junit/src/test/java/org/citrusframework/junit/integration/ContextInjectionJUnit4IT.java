@@ -26,7 +26,6 @@ import org.junit.Test;
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class ContextInjectionJUnit4IT extends JUnit4CitrusSpringSupport {

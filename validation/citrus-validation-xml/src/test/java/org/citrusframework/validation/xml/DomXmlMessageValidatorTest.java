@@ -55,9 +55,6 @@ import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertNotNull;
 import static org.testng.AssertJUnit.assertTrue;
 
-/**
- * @author Christoph Deppisch
- */
 public class DomXmlMessageValidatorTest extends UnitTestSupport {
 
     private final DomXmlMessageValidator validator = new DomXmlMessageValidator();

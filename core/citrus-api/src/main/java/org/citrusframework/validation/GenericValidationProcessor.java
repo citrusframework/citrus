@@ -20,9 +20,6 @@ import java.util.Map;
 
 import org.citrusframework.context.TestContext;
 
-/**
- * @author Christoph Deppisch
- */
 @FunctionalInterface
 public interface GenericValidationProcessor<T> {
 

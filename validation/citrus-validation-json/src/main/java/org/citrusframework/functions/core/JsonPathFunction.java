@@ -24,7 +24,6 @@ import org.citrusframework.functions.Function;
 import org.citrusframework.json.JsonPathUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6.2
  */
 public class JsonPathFunction implements Function {

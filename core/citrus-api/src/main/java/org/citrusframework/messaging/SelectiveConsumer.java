@@ -23,7 +23,6 @@ import org.citrusframework.message.Message;
  * Consumer implementation able to select messages available on a message destination. Selection is done via one to many
  * selection key-value pairs usually on the message header.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public interface SelectiveConsumer extends Consumer {

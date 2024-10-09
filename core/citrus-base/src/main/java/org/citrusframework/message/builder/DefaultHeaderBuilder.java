@@ -21,9 +21,6 @@ import java.util.Map;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.MessageHeaderBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class DefaultHeaderBuilder implements MessageHeaderBuilder {
 
     private final Map<String, Object> headers;

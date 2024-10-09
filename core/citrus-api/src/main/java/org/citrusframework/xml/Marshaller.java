@@ -18,9 +18,6 @@ package org.citrusframework.xml;
 
 import javax.xml.transform.Result;
 
-/**
- * @author Christoph Deppisch
- */
 public interface Marshaller {
 
     void marshal(Object graph, Result result) throws Exception;

@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class SimpleMappingStrategyTest {

@@ -24,9 +24,6 @@ import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapMessage;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class SimpleSoapAttachmentValidatorTest {
 
     @Test

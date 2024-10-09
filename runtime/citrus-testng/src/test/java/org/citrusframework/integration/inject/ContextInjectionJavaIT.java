@@ -29,7 +29,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class ContextInjectionJavaIT extends TestNGCitrusSpringSupport {

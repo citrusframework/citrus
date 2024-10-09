@@ -20,9 +20,6 @@ import org.citrusframework.rmi.client.RmiClientBuilder;
 import org.citrusframework.rmi.endpoint.builder.RmiEndpoints;
 import org.citrusframework.rmi.server.RmiServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class RmiEndpointCatalog {
 
     /**

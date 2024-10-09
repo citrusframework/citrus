@@ -22,9 +22,6 @@ import org.citrusframework.ws.validation.SoapFaultDetailValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSoapFault> {
 
     @Test

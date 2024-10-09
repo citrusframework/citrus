@@ -27,9 +27,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class DefaultEmptyMessageValidatorTest {
 
     @Mock

@@ -23,7 +23,6 @@ import org.citrusframework.message.MessageCorrelator;
 import java.util.Map;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class SftpClientBuilder extends AbstractEndpointBuilder<SftpClient> {

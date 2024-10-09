@@ -29,9 +29,6 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ContextConfiguration;
 
-/**
- * @author Christoph Deppisch
- */
 @CitrusSpringSupport
 @ContextConfiguration(classes = {CitrusSpringConfig.class})
 class SpringBeanXml_IT {

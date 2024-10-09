@@ -54,7 +54,6 @@ import org.w3c.dom.Element;
 /**
  * Parser providing basic message element configurations used in send and receive actions.
  *
- * @author Christoph Deppisch
  */
 public abstract class AbstractMessageActionParser implements BeanDefinitionParser {
 

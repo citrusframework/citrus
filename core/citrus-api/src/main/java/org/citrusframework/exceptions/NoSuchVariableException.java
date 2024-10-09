@@ -19,7 +19,6 @@ package org.citrusframework.exceptions;
 /**
  * Throw this exception in case an unknown variable is read from test context.
  *
- * @author Christoph Deppisch
  * @since 2009
  *
  */

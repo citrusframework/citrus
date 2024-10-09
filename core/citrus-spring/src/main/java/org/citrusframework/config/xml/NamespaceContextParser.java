@@ -27,7 +27,6 @@ import org.w3c.dom.Element;
 import java.util.*;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class NamespaceContextParser implements BeanDefinitionParser {

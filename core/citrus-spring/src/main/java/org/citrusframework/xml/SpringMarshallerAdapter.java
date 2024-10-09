@@ -26,7 +26,6 @@ import org.springframework.oxm.XmlMappingException;
 
 /**
  * Spring Oxm marshaller delegates to given internal marshaller.
- * @author Christoph Deppisch
  */
 public class SpringMarshallerAdapter implements org.springframework.oxm.Marshaller, org.springframework.oxm.Unmarshaller {
 

@@ -24,7 +24,6 @@ import java.util.List;
 /**
  * Function returning the actual timestamp.
  *
- * @author Alexandr Kuznecov
  */
 public class UnixTimestampFunction extends AbstractDateFunction {
     public String execute(List<String> parameterList, TestContext context) {

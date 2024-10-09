@@ -51,7 +51,6 @@ import org.springframework.ws.soap.client.SoapFaultClientException;
  * Class constructs a control soap fault detail with given expected information (faultCode, faultString and faultDetail)
  * and delegates validation to {@link SoapFaultValidator} instance.
  *
- * @author Christoph Deppisch
  * @since 2009
  */
 public class AssertSoapFault extends AbstractActionContainer {

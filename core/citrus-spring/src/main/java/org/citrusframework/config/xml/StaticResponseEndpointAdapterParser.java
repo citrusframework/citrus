@@ -38,7 +38,6 @@ import org.w3c.dom.Element;
 
 /**
  * Endpoint adapter parser configures bean definition for static response producing component.
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class StaticResponseEndpointAdapterParser extends AbstractBeanDefinitionParser {

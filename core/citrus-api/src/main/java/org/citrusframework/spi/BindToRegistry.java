@@ -28,7 +28,6 @@ import java.lang.annotation.Target;
  * Object is bound with given name. In case no explicit name is given the registry will auto compute the name from given
  * Class name, method name or field name.
  *
- * @author Christoph Deppisch
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

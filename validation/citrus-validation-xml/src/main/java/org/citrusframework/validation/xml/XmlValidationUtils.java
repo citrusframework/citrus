@@ -29,7 +29,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * @author Christoph Deppisch
  * @since 2.3
  */
 public abstract class XmlValidationUtils {

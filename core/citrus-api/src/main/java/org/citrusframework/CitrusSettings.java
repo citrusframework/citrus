@@ -40,9 +40,6 @@ import static org.citrusframework.common.TestLoader.GROOVY;
 import static org.citrusframework.common.TestLoader.SPRING;
 import static org.citrusframework.common.TestLoader.YAML;
 
-/**
- * @author Christoph Deppisch
- */
 public final class CitrusSettings {
 
     /**

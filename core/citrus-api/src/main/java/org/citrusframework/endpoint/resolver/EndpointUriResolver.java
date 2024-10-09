@@ -23,7 +23,6 @@ import org.citrusframework.message.MessageHeaders;
  * Resolves endpoint uri so we can send messages to dynamic endpoints. Resolver works on request message and
  * chooses the target message endpoint according to message headers or payload.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public interface EndpointUriResolver {

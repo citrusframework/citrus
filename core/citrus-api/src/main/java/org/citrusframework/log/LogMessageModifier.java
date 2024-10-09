@@ -28,7 +28,6 @@ import org.citrusframework.message.Message;
 /**
  * Special modifier adds message related modifications on logger output on headers and body.
  *
- * @author Christoph Deppisch
  */
 @FunctionalInterface
 public interface LogMessageModifier extends LogModifier {

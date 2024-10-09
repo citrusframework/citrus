@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 
 import java.util.Map;
 
-/**
- * @author Christoph Deppisch
- */
 public class MessageSelectingQueueChannelParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

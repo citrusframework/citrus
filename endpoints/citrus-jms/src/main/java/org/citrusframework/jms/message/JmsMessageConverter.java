@@ -41,7 +41,6 @@ import org.springframework.messaging.MessageHeaders;
  * messages and vice versa. Converter combines message converting logic and header mapping.
  * Usually the message's payload is extracted to the JMS message payload and default JMS headers are mapped.
  *
- * @author Christoph Deppisch
  */
 public class JmsMessageConverter implements MessageConverter<jakarta.jms.Message, jakarta.jms.Message, JmsEndpointConfiguration> {
 

@@ -17,7 +17,6 @@
 package org.citrusframework.generate;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public interface TestGenerator<T extends TestGenerator> {

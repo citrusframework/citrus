@@ -20,9 +20,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.message.MessagePayloadBuilder;
 import org.citrusframework.util.FileUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public class BinaryFileResourcePayloadBuilder implements MessagePayloadBuilder {
 
     private final String resourcePath;

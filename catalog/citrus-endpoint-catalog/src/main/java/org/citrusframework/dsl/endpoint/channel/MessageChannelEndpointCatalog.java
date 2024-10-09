@@ -20,9 +20,6 @@ import org.citrusframework.channel.ChannelEndpointBuilder;
 import org.citrusframework.channel.ChannelSyncEndpointBuilder;
 import org.citrusframework.channel.endpoint.builder.MessageChannelEndpoints;
 
-/**
- * @author Christoph Deppisch
- */
 public class MessageChannelEndpointCatalog {
 
     /**

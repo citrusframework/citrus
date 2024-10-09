@@ -37,7 +37,6 @@ import static org.citrusframework.config.xml.DescriptionElementParser.doParse;
 import static org.citrusframework.util.StringUtils.hasText;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class HttpSendResponseActionParser extends SendMessageActionParser {

@@ -59,7 +59,6 @@ import org.citrusframework.functions.Function;
  * </pre>
  * </code>
  *
- * @author Dimo Velev (dimo.velev@gmail.com)
  *
  */
 public class MapValueFunction implements Function, InitializingPhase {

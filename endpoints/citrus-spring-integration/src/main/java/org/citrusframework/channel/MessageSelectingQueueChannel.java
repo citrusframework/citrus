@@ -28,7 +28,6 @@ import org.springframework.util.Assert;
 /**
  * Added selective consumption of messages according to a message selector implementation.
  *
- * @author Christoph Deppisch
  */
 public class MessageSelectingQueueChannel extends QueueChannel {
     /** Logger */

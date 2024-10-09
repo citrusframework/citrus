@@ -22,7 +22,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
  * Enumeration for supported message header types. Header values are able to define a type. In this case they
  * are typed header values. Message sender/receiver will try to set typed header values according to this.
  *
- * @author Christoph Deppisch
  */
 public enum MessageHeaderType {
     INTEGER("integer", Integer.class),

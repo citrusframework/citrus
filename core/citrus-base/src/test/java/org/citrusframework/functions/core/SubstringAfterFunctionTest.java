@@ -26,9 +26,6 @@ import org.testng.annotations.Test;
 
 import static java.util.Collections.emptyList;
 
-/**
- * @author Christoph Deppisch
- */
 public class SubstringAfterFunctionTest extends UnitTestSupport {
     SubstringAfterFunction function = new SubstringAfterFunction();
 

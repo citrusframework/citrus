@@ -25,7 +25,6 @@ import java.util.List;
 /**
  * ValidationMatcher based on Double > Double.
  *
- * @author Christian Wied
  */
 public class GreaterThanValidationMatcher implements ValidationMatcher {
 

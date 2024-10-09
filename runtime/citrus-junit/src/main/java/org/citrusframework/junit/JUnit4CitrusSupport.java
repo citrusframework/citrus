@@ -36,7 +36,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.junit.runner.RunWith;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 @RunWith(CitrusJUnit4Runner.class)

@@ -33,9 +33,6 @@ import static org.apache.camel.builder.Builder.jsonpath;
 import static org.apache.camel.builder.Builder.simple;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
 
-/**
- * @author Christoph Deppisch
- */
 public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport {
 
     @Autowired

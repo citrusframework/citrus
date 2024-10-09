@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
  *
  * Build logging output is forwarded to test run logger.
  *
- * @author Christoph Deppisch
  * @since 1.3
  */
 public class AntRunAction extends AbstractTestAction {

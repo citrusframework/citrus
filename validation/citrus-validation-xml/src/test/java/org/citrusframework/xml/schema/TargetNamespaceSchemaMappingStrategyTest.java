@@ -26,9 +26,6 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 
-/**
- * @author Christoph Deppisch
- */
 public class TargetNamespaceSchemaMappingStrategyTest {
     
     private XsdSchema schemaMock = Mockito.mock(XsdSchema.class);

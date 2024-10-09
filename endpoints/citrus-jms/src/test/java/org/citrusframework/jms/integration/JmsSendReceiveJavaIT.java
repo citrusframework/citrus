@@ -28,9 +28,6 @@ import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.citrusframework.container.Assert.Builder.assertException;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class JmsSendReceiveJavaIT extends TestNGCitrusSpringSupport {
 

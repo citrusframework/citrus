@@ -25,9 +25,6 @@ import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class RequestDispatchingEndpointAdapterParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

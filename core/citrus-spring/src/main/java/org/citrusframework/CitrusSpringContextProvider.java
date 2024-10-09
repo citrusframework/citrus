@@ -28,7 +28,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  * that has created a context. When very same application context creates another CitrusContext use the cached instance. This
  * caching should give us some performance improvements and less instance duplications.
  *
- * @author Christoph Deppisch
  */
 public class CitrusSpringContextProvider implements CitrusContextProvider {
 

@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import io.vertx.core.Vertx;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class VertxProducer implements Producer {

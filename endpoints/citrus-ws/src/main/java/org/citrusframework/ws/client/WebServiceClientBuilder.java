@@ -29,7 +29,6 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 import java.util.List;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceClient> {

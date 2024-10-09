@@ -18,9 +18,6 @@ package org.citrusframework.endpoint.direct;
 
 import org.citrusframework.message.MessageHeaders;
 
-/**
- * @author Christoph Deppisch
- */
 public class DirectMessageHeaders {
 
     /** Message reply queue name header */

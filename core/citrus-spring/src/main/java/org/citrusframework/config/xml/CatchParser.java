@@ -27,7 +27,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for catch action in test case.
  *
- * @author Christoph Deppisch
  */
 public class CatchParser implements BeanDefinitionParser {
 

@@ -42,7 +42,6 @@ import static java.lang.System.lineSeparator;
 /**
  * Simple logging interceptor writes Http request and response messages to the console.
  *
- * @author Christoph Deppisch
  * @since 1.2
  */
 public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {

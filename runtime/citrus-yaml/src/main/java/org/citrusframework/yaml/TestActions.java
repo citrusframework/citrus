@@ -32,9 +32,6 @@ import org.citrusframework.yaml.container.Sequence;
 import org.citrusframework.yaml.container.Timer;
 import org.citrusframework.yaml.container.WaitFor;
 
-/**
- * @author Christoph Deppisch
- */
 public class TestActions implements Supplier<TestActionBuilder<?>> {
 
     private TestActionBuilder<?> builder;

@@ -25,7 +25,6 @@ import org.citrusframework.validation.matcher.ValidationMatcher;
 /**
  * ValidationMatcher based on String.toLowerCase().contains()
  *
- * @author Christian Wied
  */
 public class ContainsIgnoreCaseValidationMatcher implements ValidationMatcher {
 

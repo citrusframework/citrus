@@ -52,7 +52,6 @@ import static org.apache.commons.net.ftp.FTPReply.FILE_STATUS_OK;
 import static org.testng.Assert.assertTrue;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class SftpClientTest extends AbstractFtpClientTest {

@@ -28,7 +28,6 @@ import org.citrusframework.functions.Function;
  * nested CDATA sections are not allowed. This function adds the CDATA section tags
  * at runtime.
  *
- * @author Christoph Deppisch
  */
 public class CreateCDataSectionFunction implements Function {
 

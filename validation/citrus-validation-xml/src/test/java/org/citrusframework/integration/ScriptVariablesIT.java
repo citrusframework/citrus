@@ -22,7 +22,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
- * @author Jan Lipphaus
  * @since 2010
  */
 public class ScriptVariablesIT extends TestNGCitrusSpringSupport {

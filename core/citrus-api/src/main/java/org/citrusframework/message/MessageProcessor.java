@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Processor performs operations on the given message. The processor is able to change message content such as payload and headers.
- * @author Christoph Deppisch
  */
 @FunctionalInterface
 public interface MessageProcessor extends MessageTransformer {

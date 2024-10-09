@@ -23,7 +23,6 @@ import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.Message;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public abstract class AbstractMessageSelector implements MessageSelector {

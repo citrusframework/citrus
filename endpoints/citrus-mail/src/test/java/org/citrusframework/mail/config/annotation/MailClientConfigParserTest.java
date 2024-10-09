@@ -39,9 +39,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class MailClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @CitrusEndpoint(name = "mailClient1")

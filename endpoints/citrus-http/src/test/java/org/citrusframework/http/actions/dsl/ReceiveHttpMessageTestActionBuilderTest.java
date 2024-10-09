@@ -46,9 +46,6 @@ import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport {
 
     private final SelectiveConsumer messageConsumer = Mockito.mock(SelectiveConsumer.class);

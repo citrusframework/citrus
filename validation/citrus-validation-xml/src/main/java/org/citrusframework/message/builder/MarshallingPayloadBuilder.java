@@ -24,9 +24,6 @@ import org.citrusframework.message.MessagePayloadBuilder;
 import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.StringResult;
 
-/**
- * @author Christoph Deppisch
- */
 public class MarshallingPayloadBuilder extends DefaultPayloadBuilder {
 
     private final Marshaller marshaller;

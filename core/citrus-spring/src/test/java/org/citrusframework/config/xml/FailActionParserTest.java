@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.actions.FailAction;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class FailActionParserTest extends AbstractActionParserTest<FailAction> {
 
     @Test

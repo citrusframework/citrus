@@ -33,7 +33,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class TimerTest extends UnitTestSupport {

@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
  * on reply queue. Provides simple endpoint for clients to connect to message queue in order to provide proper
  * response message.
  *
- * @author Christoph Deppisch
  * @since 3.0
  */
 public class DirectEndpointAdapter extends AbstractEndpointAdapter {

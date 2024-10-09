@@ -24,7 +24,6 @@ import org.citrusframework.messaging.SelectiveConsumer;
  * Synchronous Jms message endpoint. When sending messages endpoint sets replyTo message header and waits for synchronous response.
  * When receiving messages endpoint reads replyTo header from incoming request and sends synchronous response back.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class JmsSyncEndpoint extends JmsEndpoint implements ShutdownPhase {

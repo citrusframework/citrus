@@ -19,7 +19,6 @@ package org.citrusframework.jmx.config.handler;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class CitrusJmxTestcaseNamespaceHandler extends NamespaceHandlerSupport {

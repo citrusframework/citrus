@@ -24,7 +24,6 @@ import org.citrusframework.message.MessageProcessor;
  * Callback called by receive message action for validation purpose. Implementations
  * to validate the received message with Java code.
  *
- * @author Christoph Deppisch
  */
 @FunctionalInterface
 public interface ValidationProcessor extends MessageProcessor {

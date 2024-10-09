@@ -34,9 +34,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class AbstractGroovyActionDslTest extends AbstractTestNGUnitTest {
 
     protected Citrus citrus;

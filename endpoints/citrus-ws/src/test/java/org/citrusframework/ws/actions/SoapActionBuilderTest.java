@@ -26,9 +26,6 @@ import java.util.Map;
 
 import static org.testng.Assert.assertTrue;
 
-/**
- * @author Christoph Deppisch
- */
 public class SoapActionBuilderTest {
 
     private SoapActionBuilder fixture;

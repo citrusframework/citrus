@@ -30,7 +30,6 @@ import org.citrusframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class SendHttpRequestActionProvider implements MessageActionProvider<SendRequestModel, HttpMessage> {

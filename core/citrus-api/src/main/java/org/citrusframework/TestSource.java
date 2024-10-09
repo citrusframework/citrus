@@ -17,7 +17,6 @@
 package org.citrusframework;
 
 /**
- * @author Christoph Deppisch
  * @since 4.0
  */
 public class TestSource {

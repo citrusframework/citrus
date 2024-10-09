@@ -27,7 +27,6 @@ import org.springframework.http.HttpStatus;
 /**
  * Action executes http client operations such as sending requests and receiving responses.
  *
- * @author Christoph Deppisch
  * @since 4.1
  */
 public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {

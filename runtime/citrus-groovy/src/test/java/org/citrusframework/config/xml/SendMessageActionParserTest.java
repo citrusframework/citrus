@@ -25,9 +25,6 @@ import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class SendMessageActionParserTest extends AbstractActionParserTest<SendMessageAction> {
 
     @Test

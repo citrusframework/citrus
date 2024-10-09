@@ -25,9 +25,6 @@ import org.citrusframework.validation.text.PlainTextMessageValidator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class MessageValidatorTest {
 
     @Test

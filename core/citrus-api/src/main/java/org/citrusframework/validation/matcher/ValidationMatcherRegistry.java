@@ -25,7 +25,6 @@ import org.citrusframework.exceptions.NoSuchValidationMatcherLibraryException;
 /**
  * ValidationMatcher registry holding all available validation matcher libraries.
  *
- * @author Christian Wied
  */
 public class ValidationMatcherRegistry {
     /** list of libraries providing custom validation matchers */

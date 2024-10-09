@@ -49,7 +49,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 @Configuration

@@ -24,7 +24,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class DeleteService extends AbstractDeleteCommand<Service, ServiceList, ServiceResource<Service>, DeleteService> {

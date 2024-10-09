@@ -31,7 +31,6 @@ import org.testng.ITestResult;
 import org.testng.annotations.BeforeSuite;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class AbstractDockerIT extends TestNGCitrusSpringSupport {

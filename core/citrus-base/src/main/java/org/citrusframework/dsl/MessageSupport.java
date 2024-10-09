@@ -21,7 +21,6 @@ import org.citrusframework.variable.MessageHeaderVariableExtractor;
 
 /**
  * Message Java DSL helper.
- * @author Christoph Deppisch
  */
 public class MessageSupport {
 

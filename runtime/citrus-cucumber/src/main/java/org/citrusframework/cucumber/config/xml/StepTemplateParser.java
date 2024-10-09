@@ -33,7 +33,6 @@ import org.w3c.dom.Element;
 
 /**
  * Parser configures a step template with pattern and parameter names.
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class StepTemplateParser implements BeanDefinitionParser {

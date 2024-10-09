@@ -18,7 +18,6 @@ package org.citrusframework.functions;
 
 /**
  * Default registry automatically adds default function library.
- * @author Christoph Deppisch
  */
 public class DefaultFunctionRegistry extends FunctionRegistry {
 

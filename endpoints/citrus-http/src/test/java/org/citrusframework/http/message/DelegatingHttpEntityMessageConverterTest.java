@@ -30,7 +30,6 @@ import java.util.function.Consumer;
 import static org.mockito.Mockito.when;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class DelegatingHttpEntityMessageConverterTest {

@@ -24,7 +24,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.client.*;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class KubernetesEndpointConfiguration extends AbstractPollableEndpointConfiguration {

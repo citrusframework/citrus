@@ -26,7 +26,6 @@ import org.citrusframework.websocket.client.WebSocketClientEndpointConfiguration
 /**
  * Web Socket endpoint component is able to create Web Socket client endpoint from endpoint uri with parameters.
  *
- * @author Martin Maher
  * @since 2.3
  */
 public class WebSocketEndpointComponent extends AbstractEndpointComponent {

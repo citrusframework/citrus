@@ -25,7 +25,6 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class RestDocDocumentationParser extends AbstractBeanDefinitionParser {

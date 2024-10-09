@@ -20,7 +20,6 @@ import java.util.Map;
 
 /**
  * Interface marks test case to support test parameters.
- * @author Christoph Deppisch
  */
 public interface TestParameterAware {
 

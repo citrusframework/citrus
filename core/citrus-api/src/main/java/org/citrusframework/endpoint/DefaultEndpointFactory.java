@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
  * Default endpoint components are listed in property file reference where key is the component name and value is the fully qualified class name
  * of the implementing endpoint component class.
  *
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class DefaultEndpointFactory implements EndpointFactory {

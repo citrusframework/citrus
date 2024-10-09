@@ -46,9 +46,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class SoapRequestMessageCallbackTest extends AbstractTestNGUnitTest {
 
     private final SoapMessage soapRequest = Mockito.mock(SoapMessage.class);

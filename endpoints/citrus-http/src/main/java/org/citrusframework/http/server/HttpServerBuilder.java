@@ -17,7 +17,6 @@
 package org.citrusframework.http.server;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class HttpServerBuilder extends AbstractHttpServerBuilder<HttpServer, HttpServerBuilder> {

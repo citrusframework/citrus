@@ -24,7 +24,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class ValidationUtilsTest extends AbstractTestNGUnitTest {

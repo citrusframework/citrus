@@ -21,7 +21,6 @@ import org.citrusframework.jmx.config.xml.JmxServerParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class CitrusJmxConfigNamespaceHandler extends NamespaceHandlerSupport {

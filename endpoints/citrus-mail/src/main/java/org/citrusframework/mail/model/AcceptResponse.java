@@ -22,7 +22,6 @@ import jakarta.xml.bind.annotation.*;
  * Response outcome for accept requests. Just says whether accept request is accepted or declined according
  * to boolean response outcome.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 @XmlAccessorType(XmlAccessType.FIELD)

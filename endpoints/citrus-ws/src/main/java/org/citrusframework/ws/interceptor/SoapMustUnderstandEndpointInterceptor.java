@@ -27,7 +27,6 @@ import org.springframework.ws.soap.server.SoapEndpointInterceptor;
  * Handles and accepts must understand header entries in SOAP requests. The supported header entries are configured
  * via simple HashMap where key is the namespace uri and value the header name (local part).
  *
- * @author Christoph Deppisch
  */
 public class SoapMustUnderstandEndpointInterceptor implements SoapEndpointInterceptor {
 

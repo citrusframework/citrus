@@ -28,7 +28,6 @@ import org.springframework.http.HttpStatusCode;
 /**
  * Action executes http client operations such as sending requests and receiving responses.
  *
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class HttpClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {

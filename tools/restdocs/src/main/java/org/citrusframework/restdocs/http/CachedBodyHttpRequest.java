@@ -26,7 +26,6 @@ import java.net.URI;
  * Helper Http request wrapper implementation provides access to the request body for usage
  * in RestDoc converters. Delegates other method calls to original Http request instance.
  *
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class CachedBodyHttpRequest implements HttpRequest {

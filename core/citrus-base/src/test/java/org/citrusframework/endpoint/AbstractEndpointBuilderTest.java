@@ -25,9 +25,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class AbstractEndpointBuilderTest extends UnitTestSupport {
 
     @CitrusEndpoint(

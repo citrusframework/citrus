@@ -34,7 +34,6 @@ import java.util.*;
  * By default uses {@link HeaderMatchingMessageSelector} and supports {@link RootQNameMessageSelector} and
  * {@link XpathPayloadMessageSelector}.
  *
- * @author Christoph Deppisch
  * @since 1.2
  */
 public class DispatchingMessageSelector implements MessageSelector {

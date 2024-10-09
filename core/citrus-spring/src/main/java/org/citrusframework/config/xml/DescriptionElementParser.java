@@ -23,7 +23,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for description elements of test actions.
  *
- * @author Christoph Deppisch
  */
 public abstract class DescriptionElementParser {
 

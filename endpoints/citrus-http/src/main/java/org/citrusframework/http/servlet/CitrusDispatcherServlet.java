@@ -43,7 +43,6 @@ import java.util.List;
  * Citrus dispatcher servlet extends Spring's message dispatcher servlet and just
  * adds optional configuration settings for default mapping strategies and so on.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class CitrusDispatcherServlet extends DispatcherServlet {

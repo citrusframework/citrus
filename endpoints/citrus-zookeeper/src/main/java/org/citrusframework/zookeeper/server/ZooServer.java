@@ -30,7 +30,6 @@ import org.apache.zookeeper.server.persistence.FileTxnSnapLog;
 /**
  * Simple ZooKeeper server standalone instance.
  *
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class ZooServer extends AbstractServer {

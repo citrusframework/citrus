@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.container.Iterate;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class IterateParserTest extends AbstractActionParserTest<Iterate> {
 
     @Test

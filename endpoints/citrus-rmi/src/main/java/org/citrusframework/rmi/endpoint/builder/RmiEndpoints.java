@@ -20,9 +20,6 @@ import org.citrusframework.endpoint.builder.ClientServerEndpointBuilder;
 import org.citrusframework.rmi.client.RmiClientBuilder;
 import org.citrusframework.rmi.server.RmiServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public final class RmiEndpoints extends ClientServerEndpointBuilder<RmiClientBuilder, RmiServerBuilder> {
     /**
      * Private constructor setting the client and server builder implementation.

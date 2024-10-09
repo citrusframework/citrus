@@ -23,7 +23,6 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 /**
  * Namespace handler implementation for components in Citrus SSH namespace.
  * 
- * @author Roland Huss
  */
 public class CitrusSshConfigNamespaceHandler extends NamespaceHandlerSupport {
 

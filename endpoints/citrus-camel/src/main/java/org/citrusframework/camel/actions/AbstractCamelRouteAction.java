@@ -23,7 +23,6 @@ import java.util.List;
 import org.apache.camel.CamelContext;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public abstract class AbstractCamelRouteAction extends AbstractCamelAction {

@@ -22,7 +22,6 @@ import io.fabric8.kubernetes.api.model.*;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)

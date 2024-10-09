@@ -21,7 +21,6 @@ import jakarta.xml.bind.annotation.*;
  * Mail message model object representing mail content with sender and recipient information. Body can be text, binary
  * or multipart nature.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 @XmlAccessorType(XmlAccessType.FIELD)

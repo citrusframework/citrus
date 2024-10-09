@@ -20,7 +20,6 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.citrusframework.variable.dictionary.json.JsonPathMappingDataDictionary;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class JsonPathDataDictionaryParser extends AbstractDataDictionaryParser {

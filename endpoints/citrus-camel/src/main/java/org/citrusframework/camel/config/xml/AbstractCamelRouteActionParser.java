@@ -31,7 +31,6 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public abstract class AbstractCamelRouteActionParser implements BeanDefinitionParser {

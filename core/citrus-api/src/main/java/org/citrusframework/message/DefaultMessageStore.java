@@ -22,7 +22,6 @@ import org.citrusframework.endpoint.Endpoint;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6.2
  */
 public class DefaultMessageStore extends ConcurrentHashMap<String, Message> implements MessageStore {

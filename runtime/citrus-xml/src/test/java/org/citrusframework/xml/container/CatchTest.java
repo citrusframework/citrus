@@ -26,9 +26,6 @@ import org.citrusframework.xml.actions.AbstractXmlActionTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class CatchTest extends AbstractXmlActionTest {
 
     @Test

@@ -26,9 +26,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class BinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest {
 
     private BinaryBase64MessageValidator validator = new BinaryBase64MessageValidator();

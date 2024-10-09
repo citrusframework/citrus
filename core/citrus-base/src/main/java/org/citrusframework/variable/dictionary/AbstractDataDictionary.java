@@ -30,7 +30,6 @@ import static org.citrusframework.spi.PropertiesLoader.loadProperties;
 
 /**
  * Abstract data dictionary implementation provides global scope handling.
- * @author Christoph Deppisch
  */
 public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor implements DataDictionary<T> {
 

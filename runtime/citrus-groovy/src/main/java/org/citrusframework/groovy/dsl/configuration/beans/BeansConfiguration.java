@@ -27,9 +27,6 @@ import org.citrusframework.Citrus;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessageQueue;
 
-/**
- * @author Christoph Deppisch
- */
 public class BeansConfiguration extends GroovyObjectSupport {
 
     private final Citrus citrus;

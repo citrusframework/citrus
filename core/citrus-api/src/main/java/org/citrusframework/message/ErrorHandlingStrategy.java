@@ -20,7 +20,6 @@ package org.citrusframework.message;
  * Enumeration representing the different error handling strategies in synchronous communication
  * with client server interaction where the client receives an error message as response.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public enum ErrorHandlingStrategy {

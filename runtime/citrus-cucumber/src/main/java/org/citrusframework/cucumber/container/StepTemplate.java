@@ -29,7 +29,6 @@ import org.citrusframework.container.Template;
  * optional parameter names for step arguments. By default this template is non global meaning that all parameter test variables
  * are only visible within the template.
  *
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class StepTemplate extends Template {

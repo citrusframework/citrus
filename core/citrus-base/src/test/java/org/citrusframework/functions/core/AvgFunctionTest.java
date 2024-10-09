@@ -25,9 +25,6 @@ import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class AvgFunctionTest extends UnitTestSupport {
     AvgFunction function = new AvgFunction();
 

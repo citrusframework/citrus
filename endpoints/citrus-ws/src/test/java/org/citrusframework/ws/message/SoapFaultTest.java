@@ -19,9 +19,6 @@ package org.citrusframework.ws.message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class SoapFaultTest {
 
     @Test

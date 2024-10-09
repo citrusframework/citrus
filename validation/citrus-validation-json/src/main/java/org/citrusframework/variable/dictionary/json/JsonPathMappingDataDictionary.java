@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
  * Json data dictionary implementation maps elements via JsonPath expressions. When element is identified by some expression
  * in dictionary value is overwritten accordingly.
  *
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class JsonPathMappingDataDictionary extends AbstractJsonDataDictionary {

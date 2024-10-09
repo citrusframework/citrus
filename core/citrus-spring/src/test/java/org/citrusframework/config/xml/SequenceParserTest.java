@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.container.Sequence;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class SequenceParserTest extends AbstractActionParserTest<Sequence> {
 
     @Test

@@ -20,9 +20,6 @@ import org.citrusframework.util.DefaultTypeConverter;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.engine.SimpleCamelContext;
 
-/**
- * @author Christoph Deppisch
- */
 public class CamelTypeConverter extends DefaultTypeConverter {
 
     public static CamelTypeConverter INSTANCE = new CamelTypeConverter();

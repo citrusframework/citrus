@@ -27,7 +27,6 @@ import org.citrusframework.rmi.model.RmiServiceResult;
 import org.citrusframework.xml.StringResult;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class RmiMessage extends DefaultMessage {

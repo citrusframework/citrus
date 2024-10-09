@@ -27,7 +27,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.reset;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class StoreFileActionTest extends AbstractTestNGUnitTest {

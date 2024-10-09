@@ -29,7 +29,6 @@ import org.w3c.dom.Element;
 /**
  * Parse for SSH-client configuration
  *
- * @author Roland Huss, Christoph Deppisch
  * @since 1.3
  */
 public class SshClientParser extends AbstractEndpointParser {

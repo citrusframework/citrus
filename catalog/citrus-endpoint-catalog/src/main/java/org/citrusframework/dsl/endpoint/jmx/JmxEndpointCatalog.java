@@ -20,9 +20,6 @@ import org.citrusframework.jmx.client.JmxClientBuilder;
 import org.citrusframework.jmx.endpoint.builder.JmxEndpoints;
 import org.citrusframework.jmx.server.JmxServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class JmxEndpointCatalog {
 
     /**

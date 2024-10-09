@@ -49,7 +49,6 @@ import org.springframework.jms.support.destination.DynamicDestinationResolver;
  * Consumer will continue to receive messages until message receive timeout is reached,
  * so no messages are left.
  *
- * @author Christoph Deppisch
  * @since 2007
  */
 public class PurgeJmsQueuesAction extends AbstractTestAction {

@@ -40,9 +40,6 @@ import static net.minidev.json.parser.JSONParser.MODE_RFC4627;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class JsonTextMessageValidatorTest extends UnitTestSupport {
 
     private JsonTextMessageValidator fixture;

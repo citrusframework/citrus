@@ -20,9 +20,6 @@ import org.citrusframework.endpoint.builder.ClientServerEndpointBuilder;
 import org.citrusframework.ftp.client.ScpClientBuilder;
 import org.citrusframework.ftp.server.SftpServerBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public final class ScpEndpoints extends ClientServerEndpointBuilder<ScpClientBuilder, SftpServerBuilder> {
     /**
      * Private constructor setting the client and server builder implementation.

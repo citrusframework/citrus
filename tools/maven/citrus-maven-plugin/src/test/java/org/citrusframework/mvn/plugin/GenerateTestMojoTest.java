@@ -31,9 +31,6 @@ import java.util.Collections;
 
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class GenerateTestMojoTest {
 
     private XmlTestGenerator xmlTestGenerator = Mockito.mock(XmlTestGenerator.class);

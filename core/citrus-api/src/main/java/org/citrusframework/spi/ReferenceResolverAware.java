@@ -16,9 +16,6 @@
 
 package org.citrusframework.spi;
 
-/**
- * @author Christoph Deppisch
- */
 @FunctionalInterface
 public interface ReferenceResolverAware {
 

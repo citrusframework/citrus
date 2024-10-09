@@ -22,7 +22,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class JsonPayloadMappingKeyExtractorTest {

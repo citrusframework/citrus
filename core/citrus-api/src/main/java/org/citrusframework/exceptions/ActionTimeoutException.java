@@ -20,7 +20,6 @@ package org.citrusframework.exceptions;
  * Throw this exception in case you did not receive a message on a destination in time.
  * Used in message receivers to state that expected message did not arrive.
  *
- * @author Christoph Deppisch
  */
 public class ActionTimeoutException extends CitrusRuntimeException {
 

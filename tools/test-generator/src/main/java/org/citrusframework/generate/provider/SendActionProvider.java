@@ -23,7 +23,6 @@ import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.model.testcase.core.SendModel;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class SendActionProvider implements MessageActionProvider<SendModel, Message> {

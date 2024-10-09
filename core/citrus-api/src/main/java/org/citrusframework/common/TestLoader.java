@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Test loader interface.
- * @author Christoph Deppisch
  * @since 2.1
  */
 public interface TestLoader {

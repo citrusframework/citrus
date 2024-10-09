@@ -19,7 +19,6 @@ package org.citrusframework.exceptions;
 /**
  * Use this exception in case a function is called with invalid parameters.
  * 
- * @author Christoph Deppisch
  */
 public class InvalidFunctionUsageException extends CitrusRuntimeException {
 

@@ -20,9 +20,6 @@ import java.io.StringWriter;
 
 import groovy.xml.MarkupBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class XmlBodySpec extends BodySpec {
 
     private MarkupBuilder markupBuilder;

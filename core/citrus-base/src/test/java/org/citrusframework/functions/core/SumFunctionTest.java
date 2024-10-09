@@ -27,9 +27,6 @@ import org.testng.annotations.Test;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
-/**
- * @author Christoph Deppisch
- */
 public class SumFunctionTest extends UnitTestSupport {
     SumFunction function = new SumFunction();
 

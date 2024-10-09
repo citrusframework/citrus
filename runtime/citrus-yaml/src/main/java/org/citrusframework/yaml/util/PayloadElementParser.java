@@ -34,7 +34,6 @@ import org.w3c.dom.Element;
 /**
  * Payload element parser used in send and receive actions is able to serialize XML body elements.
  *
- * @author Christoph Deppisch
  */
 public abstract class PayloadElementParser {
 

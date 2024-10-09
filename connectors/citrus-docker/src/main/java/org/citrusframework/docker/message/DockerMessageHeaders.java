@@ -19,7 +19,6 @@ package org.citrusframework.docker.message;
 import org.citrusframework.message.MessageHeaders;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class DockerMessageHeaders {

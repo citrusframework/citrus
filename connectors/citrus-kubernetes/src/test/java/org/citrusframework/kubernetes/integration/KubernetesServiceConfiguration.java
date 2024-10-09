@@ -31,9 +31,6 @@ import org.springframework.context.annotation.DependsOn;
 
 import static org.citrusframework.kubernetes.actions.KubernetesExecuteAction.Builder.kubernetes;
 
-/**
- * @author Christoph Deppisch
- */
 @Configuration
 public class KubernetesServiceConfiguration {
 

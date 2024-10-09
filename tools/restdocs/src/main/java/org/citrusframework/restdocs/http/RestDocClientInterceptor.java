@@ -31,7 +31,6 @@ import java.util.Map;
  * Http request wrapper for later usage in converter. Optional RestDoc configuration is read from special request wrapper implementation
  * if present. Optional RestDoc configurer interceptor may have created this wrapper in prior to this interceptor execution.
  *
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class RestDocClientInterceptor implements ClientHttpRequestInterceptor {

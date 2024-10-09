@@ -19,9 +19,6 @@ package org.citrusframework;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.context.TestContext;
 
-/**
- * @author Christoph Deppisch
- */
 public class DefaultTestActionBuilder extends AbstractTestActionBuilder<AbstractTestAction, AbstractTestActionBuilder<AbstractTestAction, ?>> {
 
     private final TestAction delegate;

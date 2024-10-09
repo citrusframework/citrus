@@ -19,9 +19,6 @@ package org.citrusframework.endpoint.direct;
 import org.citrusframework.endpoint.AbstractEndpointConfiguration;
 import org.citrusframework.message.MessageQueue;
 
-/**
- * @author Christoph Deppisch
- */
 public class DirectEndpointConfiguration extends AbstractEndpointConfiguration {
 
     /** Destination queue */

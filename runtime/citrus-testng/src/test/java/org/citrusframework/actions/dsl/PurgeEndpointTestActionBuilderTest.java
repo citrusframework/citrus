@@ -39,7 +39,6 @@ import static org.citrusframework.actions.PurgeEndpointAction.Builder.purgeEndpo
 import static org.mockito.Mockito.*;
 
 /**
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class PurgeEndpointTestActionBuilderTest extends UnitTestSupport {

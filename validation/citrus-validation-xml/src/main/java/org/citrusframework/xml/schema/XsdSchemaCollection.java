@@ -32,7 +32,6 @@ import org.citrusframework.util.StringUtils;
  * Schema combines multiple file resources usually with exactly the same target namespace to
  * one single schema instance.
  *
- * @author Christoph Deppisch
  */
 public class XsdSchemaCollection extends AbstractSchemaCollection {
 

@@ -22,9 +22,6 @@ import java.util.Collection;
 import io.cucumber.core.backend.TestCaseState;
 import io.cucumber.java.Status;
 
-/**
- * @author Christoph Deppisch
- */
 public final class Scenario {
 
     private final TestCaseState delegate;

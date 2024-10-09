@@ -24,7 +24,6 @@ import org.testng.annotations.Test;
 import java.util.Map;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class KafkaEmbeddedServerParserTest extends AbstractBeanDefinitionParserTest {

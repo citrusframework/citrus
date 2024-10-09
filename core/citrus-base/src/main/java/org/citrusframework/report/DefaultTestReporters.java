@@ -21,7 +21,6 @@ import java.util.List;
 
 /**
  *
- * @author Christoph Deppisch
  */
 public class DefaultTestReporters extends TestReporters {
 

@@ -17,7 +17,6 @@
 package org.citrusframework.zookeeper.client;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class ZooClientConfig {

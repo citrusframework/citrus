@@ -22,7 +22,6 @@ import java.util.List;
 import org.citrusframework.validation.HeaderValidator;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.6
  */
 public class HeaderValidationContext implements ValidationContext {

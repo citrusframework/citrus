@@ -25,7 +25,6 @@ import java.util.List;
 /**
  * ValidationMatcher based on String.equalsIgnoreCase()
  *
- * @author Christian Wied
  */
 public class EqualsIgnoreCaseValidationMatcher implements ValidationMatcher {
 

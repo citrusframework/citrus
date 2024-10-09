@@ -19,7 +19,6 @@ package org.citrusframework.exceptions;
 /**
  * In case no function library exists for a given prefix this exception is thrown.
  *
- * @author Christoph Deppisch
  */
 public class NoSuchValidationMatcherLibraryException extends CitrusRuntimeException {
 

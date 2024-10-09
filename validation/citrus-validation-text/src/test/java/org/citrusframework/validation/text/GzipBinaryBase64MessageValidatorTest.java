@@ -34,9 +34,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class GzipBinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest {
 
     private final GzipBinaryBase64MessageValidator validator = new GzipBinaryBase64MessageValidator();

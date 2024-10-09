@@ -34,7 +34,6 @@ import java.util.List;
  * the validation: <br />
  * from-date >= date-to-validate <= to-date
  *
- * @author Martin Maher
  * @since 2.5
  */
 public class DateRangeValidationMatcher implements ValidationMatcher {

@@ -41,9 +41,6 @@ import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class VariableSupportTest extends UnitTestSupport {
     private Endpoint endpoint = Mockito.mock(Endpoint.class);
     private Consumer consumer = Mockito.mock(Consumer.class);

@@ -18,9 +18,6 @@ package org.citrusframework.http.model;
 
 import jakarta.xml.bind.annotation.*;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
         "value"

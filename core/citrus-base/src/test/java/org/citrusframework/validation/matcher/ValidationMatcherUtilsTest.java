@@ -29,9 +29,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-/**
- * @author Christoph Deppisch
- */
 public class ValidationMatcherUtilsTest extends UnitTestSupport {
 
     private ValidationMatcherLibrary validationMatcherLibrary = new ValidationMatcherLibrary();

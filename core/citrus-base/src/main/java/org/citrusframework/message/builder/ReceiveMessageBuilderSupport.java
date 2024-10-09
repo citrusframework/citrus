@@ -30,9 +30,6 @@ import org.citrusframework.validation.ValidationProcessor;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 
-/**
- * @author Christoph Deppisch
- */
 public class ReceiveMessageBuilderSupport<T extends ReceiveMessageAction, B extends ReceiveMessageAction.ReceiveMessageActionBuilder<T, S, B>, S extends ReceiveMessageBuilderSupport<T, B, S>>
         extends MessageBuilderSupport<T, B, S> {
 

@@ -28,7 +28,6 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class JavaDslTestGenerator<T extends JavaDslTestGenerator<T>> extends JavaTestGenerator<T> {

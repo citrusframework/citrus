@@ -25,7 +25,6 @@ import org.w3c.dom.Element;
  * Bean definition parser for print action in test case.
  * Delegates to echo action parser.
  *
- * @author Christoph Deppisch
  */
 public class PrintActionParser implements BeanDefinitionParser {
 

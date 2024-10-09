@@ -25,9 +25,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.xml.TestActions;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "repeat-on-error")
 public class RepeatOnError implements TestActionBuilder<org.citrusframework.container.RepeatOnErrorUntilTrue>, ReferenceResolverAware {
 

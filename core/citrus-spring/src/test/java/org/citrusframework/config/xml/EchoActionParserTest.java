@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class EchoActionParserTest extends AbstractActionParserTest<EchoAction> {
 
     @Test

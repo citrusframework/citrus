@@ -31,7 +31,6 @@ import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 @Test

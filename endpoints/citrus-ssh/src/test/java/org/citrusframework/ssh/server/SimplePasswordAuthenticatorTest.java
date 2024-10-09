@@ -22,7 +22,6 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 /**
- * @author Roland Huss
  * @since 05.09.12
  */
 public class SimplePasswordAuthenticatorTest {

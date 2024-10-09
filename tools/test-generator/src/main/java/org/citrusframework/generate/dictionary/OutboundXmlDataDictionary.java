@@ -20,9 +20,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.variable.dictionary.xml.XpathMappingDataDictionary;
 import org.w3c.dom.Node;
 
-/**
- * @author Christoph Deppisch
- */
 public class OutboundXmlDataDictionary extends XpathMappingDataDictionary {
 
     @Override

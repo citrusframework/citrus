@@ -27,7 +27,6 @@ import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.citrusframework.container.Timer.Builder.timer;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class TimerTestActionBuilderTest extends UnitTestSupport {

@@ -24,7 +24,6 @@ import io.vertx.core.Vertx;
 /**
  * Vertx instance factory creates a new instance only once and holds reuses this single instance all the time.
  *
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class SingleVertxInstanceFactory extends AbstractVertxInstanceFactory {

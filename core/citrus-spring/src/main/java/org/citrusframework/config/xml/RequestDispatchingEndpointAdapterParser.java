@@ -33,7 +33,6 @@ import org.w3c.dom.Element;
 
 /**
  * Parses dispatching endpoint adapter components.
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class RequestDispatchingEndpointAdapterParser extends AbstractBeanDefinitionParser {

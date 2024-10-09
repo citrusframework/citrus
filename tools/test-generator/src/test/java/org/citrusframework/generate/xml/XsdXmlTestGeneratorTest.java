@@ -28,7 +28,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class XsdXmlTestGeneratorTest {
@@ -55,7 +54,6 @@ public class XsdXmlTestGeneratorTest {
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
-        Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class HelloIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package org.citrusframework;"));
@@ -104,7 +102,6 @@ public class XsdXmlTestGeneratorTest {
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
-        Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class HelloIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package org.citrusframework;"));

@@ -30,9 +30,6 @@ import org.citrusframework.actions.AntRunAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "ant")
 public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolverAware {
 

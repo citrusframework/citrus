@@ -17,7 +17,6 @@
 package org.citrusframework.condition;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public abstract class AbstractCondition implements Condition {

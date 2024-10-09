@@ -21,7 +21,6 @@ import java.util.Date;
 /**
  * Test case meta information.
  *
- * @author Christoph Deppisch
  */
 public class TestCaseMetaInfo {
     /** Author of testcase */

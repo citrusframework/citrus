@@ -26,7 +26,6 @@ import static org.citrusframework.actions.ReceiveTimeoutAction.Builder.receiveTi
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
 
 /**
- * @author Christoph Deppisch
  * @since 2.3
  */
 public class CamelRouteIT extends TestNGCitrusSupport {

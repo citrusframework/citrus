@@ -32,9 +32,6 @@ import org.citrusframework.actions.PurgeEndpointAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "purge-endpoint")
 public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, ReferenceResolverAware {
 

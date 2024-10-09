@@ -23,7 +23,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 
 /**
  * Default implementation of control expression parser.
- * @author Martin Maher
  * @since 2.5
  */
 public class DefaultControlExpressionParser implements ControlExpressionParser {

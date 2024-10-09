@@ -28,7 +28,6 @@ import org.citrusframework.util.FileUtils;
  * Script builder builds a script with custom code body. Script header and tail come from static
  * script template.
  *
- * @author Christoph Deppisch
  */
 public final class TemplateBasedScriptBuilder {
 

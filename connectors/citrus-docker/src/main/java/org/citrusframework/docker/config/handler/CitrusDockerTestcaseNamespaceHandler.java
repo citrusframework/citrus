@@ -21,7 +21,6 @@ import org.citrusframework.docker.config.xml.DockerExecuteActionParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class CitrusDockerTestcaseNamespaceHandler extends NamespaceHandlerSupport {

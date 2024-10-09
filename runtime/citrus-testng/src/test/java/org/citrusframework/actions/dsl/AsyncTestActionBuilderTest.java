@@ -40,7 +40,6 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class AsyncTestActionBuilderTest extends UnitTestSupport {

@@ -22,7 +22,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * @author Martin Maher
  * @since 2.5
  */
 public class StopTimerParserTest extends AbstractActionParserTest<StopTimerAction> {

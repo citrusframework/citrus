@@ -30,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint> {

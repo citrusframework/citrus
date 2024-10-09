@@ -27,7 +27,6 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * Body part representation holds content as String and optional attachment parts.
- * @author Christoph Deppisch
  * @since 1.4
  */
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -22,7 +22,6 @@ import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.context.MessageContext;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class CitrusSnippetConfigurer extends SnippetConfigurer<CitrusRestDocSoapConfigurer, CitrusSnippetConfigurer>

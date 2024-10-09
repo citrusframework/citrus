@@ -28,9 +28,6 @@ import org.citrusframework.validation.xml.XpathMessageValidationContext;
 import org.citrusframework.validation.xml.XpathPayloadVariableExtractor;
 import org.citrusframework.variable.VariableExtractor;
 
-/**
- * @author Christoph Deppisch
- */
 public class XpathSupport implements WithExpressions<XpathSupport>, PathExpressionAdapter {
 
     private final Map<String, Object> expressions = new LinkedHashMap<>();

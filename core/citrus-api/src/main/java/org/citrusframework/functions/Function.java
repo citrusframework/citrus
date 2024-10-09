@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 /**
  * General function interface.
  *
- * @author Christoph Deppisch
  */
 public interface Function {
 

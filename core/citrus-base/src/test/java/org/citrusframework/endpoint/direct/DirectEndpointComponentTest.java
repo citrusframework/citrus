@@ -27,9 +27,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 
-/**
- * @author Christoph Deppisch
- */
 public class DirectEndpointComponentTest {
 
     private TestContext context;

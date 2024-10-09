@@ -33,7 +33,6 @@ import org.openqa.selenium.support.ui.Select;
 /**
  * Selects dropdown option(s) on form input.
  *
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class DropDownSelectAction extends FindElementAction {

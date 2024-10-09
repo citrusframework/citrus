@@ -33,9 +33,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
-/**
- * @author Christoph Deppisch
- */
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 public class UnitTestSupport extends AbstractTestNGUnitTest {
 

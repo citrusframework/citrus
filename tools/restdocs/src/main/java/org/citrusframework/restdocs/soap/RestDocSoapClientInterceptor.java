@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class RestDocSoapClientInterceptor implements ClientInterceptor {

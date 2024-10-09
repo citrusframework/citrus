@@ -20,7 +20,6 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointBuilder;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class ClientServerEndpointBuilder<C extends EndpointBuilder<? extends Endpoint>, S extends EndpointBuilder<? extends Endpoint>> {

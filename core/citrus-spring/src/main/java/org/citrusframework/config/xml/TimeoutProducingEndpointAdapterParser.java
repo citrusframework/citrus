@@ -29,7 +29,6 @@ import org.w3c.dom.Element;
 
 /**
  * Timeout producing endpoint adapter bean definition parser.
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class TimeoutProducingEndpointAdapterParser extends AbstractBeanDefinitionParser {

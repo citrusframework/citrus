@@ -25,7 +25,6 @@ import io.cucumber.plugin.event.EventPublisher;
 import io.cucumber.plugin.event.TestRunFinished;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class CitrusReporter implements SummaryPrinter, ColorAware, ConcurrentEventListener {

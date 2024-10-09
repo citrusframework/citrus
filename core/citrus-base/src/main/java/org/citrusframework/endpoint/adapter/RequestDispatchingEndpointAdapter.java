@@ -25,7 +25,6 @@ import org.citrusframework.message.Message;
  * a endpoint adapter mapping. Once adapter mapping identified proper endpoint adapter implementation the incoming request is forwarded
  * to this adapter for further processing steps.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class RequestDispatchingEndpointAdapter extends StaticEndpointAdapter {

@@ -23,9 +23,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.StringResult;
 
-/**
- * @author Christoph Deppisch
- */
 public class MarshallingHeaderDataBuilder extends DefaultHeaderDataBuilder {
 
     private final Marshaller marshaller;

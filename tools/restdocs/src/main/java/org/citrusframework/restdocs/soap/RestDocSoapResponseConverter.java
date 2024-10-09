@@ -28,7 +28,6 @@ import java.io.IOException;
 
 /**
  * Converts a Http response to RestDoc operation response instance.
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class RestDocSoapResponseConverter implements ResponseConverter<WebServiceMessage> {

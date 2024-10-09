@@ -28,7 +28,6 @@ import static org.mockito.Mockito.*;
 
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class VertxMessageConverterTest extends AbstractTestNGUnitTest {

@@ -55,9 +55,6 @@ import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.dsl.MessageSupport.message;
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport {
 
     private final Endpoint messageEndpoint = Mockito.mock(Endpoint.class);

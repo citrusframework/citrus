@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Groovy script validator capable of validating SQL result sets.
  *
- * @author Christoph Deppisch
  */
 public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator {
 

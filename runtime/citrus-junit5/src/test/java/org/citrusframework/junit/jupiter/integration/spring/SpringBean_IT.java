@@ -42,9 +42,6 @@ import org.springframework.util.Assert;
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
 
-/**
- * @author Christoph Deppisch
- */
 @CitrusSpringSupport
 @ContextConfiguration(classes = {CitrusSpringConfig.class, SpringBean_IT.EndpointConfig.class})
 class SpringBean_IT {

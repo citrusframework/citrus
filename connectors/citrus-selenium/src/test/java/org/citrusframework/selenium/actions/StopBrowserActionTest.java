@@ -30,7 +30,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class StopBrowserActionTest extends AbstractTestNGUnitTest {

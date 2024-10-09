@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 /**
  * General validation matcher interface.
  *
- * @author Christian Wied
  */
 @FunctionalInterface
 public interface ValidationMatcher {

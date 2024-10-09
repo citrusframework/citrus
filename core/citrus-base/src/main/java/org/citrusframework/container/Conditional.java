@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Class executes nested test actions if condition expression evaluates to true.
  *
- * @author Matthias Beil, Christoph Deppisch
  * @since 1.2
  */
 public class Conditional extends AbstractActionContainer {

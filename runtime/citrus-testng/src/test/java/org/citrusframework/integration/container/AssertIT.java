@@ -22,7 +22,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2009
  */
 public class AssertIT extends TestNGCitrusSpringSupport {

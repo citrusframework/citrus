@@ -25,7 +25,6 @@ import org.citrusframework.validation.matcher.ValidationMatcher;
 /**
  * ValidationMatcher trims leading and trailing whitespaces in value and control value.
  *
- * @author Christoph Deppisch
  * @since 2.7.6
  */
 public class TrimAllWhitespacesValidationMatcher implements ValidationMatcher {

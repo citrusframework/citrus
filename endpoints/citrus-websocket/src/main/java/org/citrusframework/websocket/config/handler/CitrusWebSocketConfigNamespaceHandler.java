@@ -22,7 +22,6 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 /**
  * Namespace handler implementation for components in Citrus http namespace.
  *
- * @author Christoph Deppisch
  */
 public class CitrusWebSocketConfigNamespaceHandler extends NamespaceHandlerSupport {
 

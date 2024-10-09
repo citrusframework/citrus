@@ -22,7 +22,6 @@ import java.lang.annotation.*;
  * Parameter annotation provides parameter names that are passed to the test case test context
  * as variables. Variable values are provided by TestNG data provider.
  *
- * @author Christoph Deppisch
  * @since 1.3.1
  */
 @Retention(RetentionPolicy.RUNTIME)

@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Prints messages to the console/logger during test execution.
  *
- * @author Christoph Deppisch
  * @since 2006
  */
 public class EchoAction extends AbstractTestAction {

@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Executes javascript code on current page and validates errors.
  *
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class JavaScriptAction extends AbstractSeleniumAction {

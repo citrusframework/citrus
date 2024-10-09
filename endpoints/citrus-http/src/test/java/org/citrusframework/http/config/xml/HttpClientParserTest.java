@@ -33,9 +33,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

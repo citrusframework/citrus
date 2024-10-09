@@ -23,7 +23,6 @@ import java.io.*;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class OutputStreamReporter extends LoggingReporter {

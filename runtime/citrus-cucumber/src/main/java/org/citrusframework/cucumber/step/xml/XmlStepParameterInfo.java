@@ -21,9 +21,6 @@ import java.lang.reflect.Type;
 import io.cucumber.core.backend.ParameterInfo;
 import io.cucumber.core.backend.TypeResolver;
 
-/**
- * @author Christoph Deppisch
- */
 public class XmlStepParameterInfo implements ParameterInfo {
 
     private final Type type;

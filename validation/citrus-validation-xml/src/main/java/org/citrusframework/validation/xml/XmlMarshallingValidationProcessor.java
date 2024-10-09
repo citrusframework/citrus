@@ -39,7 +39,6 @@ import org.w3c.dom.Document;
  * Validation callback automatically unmarshalling message payload so we work with
  * Java objects for validation.
  *
- * @author Christoph Deppisch
  */
 public abstract class XmlMarshallingValidationProcessor<T> extends AbstractValidationProcessor<T> {
 

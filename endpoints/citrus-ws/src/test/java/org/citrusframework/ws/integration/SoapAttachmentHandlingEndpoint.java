@@ -25,9 +25,6 @@ import org.springframework.ws.soap.SoapMessage;
 
 import java.util.Iterator;
 
-/**
- * @author Christoph Deppisch
- */
 public class SoapAttachmentHandlingEndpoint implements MessageEndpoint {
 
     /**

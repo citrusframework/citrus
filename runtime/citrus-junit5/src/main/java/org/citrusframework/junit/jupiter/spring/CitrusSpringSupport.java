@@ -26,9 +26,6 @@ import java.lang.annotation.Target;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-/**
- * @author Christoph Deppisch
- */
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)

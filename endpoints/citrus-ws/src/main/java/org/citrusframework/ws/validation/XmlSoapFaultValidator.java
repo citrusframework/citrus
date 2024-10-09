@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
  * Soap fault validator implementation that delegates soap fault detail validation to default XML message validator
  * in order to support XML fault detail content validation.
  *
- * @author Christoph Deppisch
  */
 public class XmlSoapFaultValidator extends AbstractFaultDetailValidator {
 

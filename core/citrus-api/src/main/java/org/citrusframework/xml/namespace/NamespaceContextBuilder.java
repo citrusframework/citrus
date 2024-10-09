@@ -31,7 +31,6 @@ import org.citrusframework.message.Message;
  * Namespace mappings are defined as key value pairs where key is definded as namespace prefix and value is the
  * actual namespace uri.
  *
- * @author Christoph Deppisch
  */
 public class NamespaceContextBuilder {
 

@@ -33,7 +33,6 @@ import java.util.zip.GZIPOutputStream;
  * Response wrapper wraps response output stream with gzip output stream. Write operations on that stream are
  * automatically compressed with gzip encoding.
  *
- * @author Christoph Deppisch
  * @since 2.6.2
  */
 public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {

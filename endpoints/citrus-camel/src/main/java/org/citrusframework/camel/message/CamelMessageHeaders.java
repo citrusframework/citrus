@@ -19,7 +19,6 @@ package org.citrusframework.camel.message;
 import org.citrusframework.message.MessageHeaders;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public abstract class CamelMessageHeaders {

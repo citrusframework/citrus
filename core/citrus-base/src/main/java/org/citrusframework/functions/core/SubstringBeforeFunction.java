@@ -25,7 +25,6 @@ import java.util.List;
 /**
  * Function implements substring before functionality.
  *
- * @author Christoph Deppisch
  */
 public class SubstringBeforeFunction implements Function {
 

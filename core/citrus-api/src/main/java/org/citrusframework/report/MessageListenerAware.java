@@ -16,9 +16,6 @@
 
 package org.citrusframework.report;
 
-/**
- * @author Christoph Deppisch
- */
 public interface MessageListenerAware {
 
     /**

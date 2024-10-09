@@ -41,7 +41,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Pause the test execution until the condition is met or the wait time has been exceeded.
  *
- * @author Martin Maher
  * @since 2.4
  */
 public class Wait extends AbstractTestAction {

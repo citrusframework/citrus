@@ -28,9 +28,6 @@ import static java.lang.Integer.parseInt;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
-/**
- * @author Christoph Deppisch
- */
 public class RandomNumberFunctionTest extends UnitTestSupport {
     private final RandomNumberFunction function = new RandomNumberFunction();
 

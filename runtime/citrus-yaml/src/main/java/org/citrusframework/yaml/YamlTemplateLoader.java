@@ -29,9 +29,6 @@ import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
-/**
- * @author Christoph Deppisch
- */
 public class YamlTemplateLoader implements ReferenceResolverAware, TemplateLoader {
 
     private final Yaml yaml;

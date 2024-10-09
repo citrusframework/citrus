@@ -49,9 +49,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class ExecuteSQLQueryActionTest extends UnitTestSupport {
 
     private static final String DB_STMT_1 = "select ORDERTYPE, STATUS from orders where ID = 5";

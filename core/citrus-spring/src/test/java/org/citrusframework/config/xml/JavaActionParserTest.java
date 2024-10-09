@@ -24,9 +24,6 @@ import org.citrusframework.actions.JavaAction;
 import org.citrusframework.testng.AbstractActionParserTest;
 import org.citrusframework.util.InvocationDummy;
 
-/**
- * @author Christoph Deppisch
- */
 public class JavaActionParserTest extends AbstractActionParserTest<JavaAction> {
 
     @Test

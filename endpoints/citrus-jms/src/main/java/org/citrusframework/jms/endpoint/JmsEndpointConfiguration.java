@@ -35,7 +35,6 @@ import org.springframework.jms.support.JmsHeaderMapper;
 import org.springframework.jms.support.destination.DestinationResolver;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class JmsEndpointConfiguration extends AbstractPollableEndpointConfiguration {

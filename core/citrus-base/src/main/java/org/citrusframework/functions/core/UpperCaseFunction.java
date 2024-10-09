@@ -25,7 +25,6 @@ import org.citrusframework.functions.Function;
 /**
  * Returns given string argument in upper case letters.
  *
- * @author Christoph Deppisch
  */
 public class UpperCaseFunction implements Function {
 

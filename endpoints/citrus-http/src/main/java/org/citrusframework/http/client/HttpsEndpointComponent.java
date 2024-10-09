@@ -19,7 +19,6 @@ package org.citrusframework.http.client;
 /**
  * Component creates proper HTTP client endpoint from endpoint uri resource and parameters.
  *
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class HttpsEndpointComponent extends HttpEndpointComponent {

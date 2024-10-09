@@ -24,7 +24,6 @@ import org.citrusframework.validation.context.HeaderValidationContext;
 import org.testng.annotations.Test;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class DefaultMessageHeaderValidatorTest extends UnitTestSupport {

@@ -29,7 +29,6 @@ import java.util.Map;
  * Enriches the Web Socket session with the Web Socket ID and PATH as defined in the http-server
  * citrus context.
  *
- * @author Martin Maher
  * @since 2.3
  */
 public class SessionEnricherHandshakeInterceptor implements HandshakeInterceptor {

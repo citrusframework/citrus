@@ -23,9 +23,6 @@ import java.util.Map;
 import org.citrusframework.UnitTestSupport;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class DefaultMessageTest extends UnitTestSupport {
 
     @Test

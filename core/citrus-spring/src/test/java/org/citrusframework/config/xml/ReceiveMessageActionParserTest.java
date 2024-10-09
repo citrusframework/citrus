@@ -36,9 +36,6 @@ import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class ReceiveMessageActionParserTest extends AbstractActionParserTest<ReceiveMessageAction> {
 
     @Test

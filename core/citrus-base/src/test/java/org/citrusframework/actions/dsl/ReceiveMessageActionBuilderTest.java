@@ -65,9 +65,6 @@ import static org.citrusframework.dsl.MessageSupport.message;
 import static org.citrusframework.validation.xml.XmlMessageValidationContext.Builder.xml;
 import static org.mockito.Mockito.*;
 
-/**
- * @author Christoph Deppisch
- */
 public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
     @Mock

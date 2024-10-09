@@ -24,7 +24,6 @@ import java.lang.annotation.Target;
 /**
  * Xml test loader annotation used to configure parsers in {@link org.citrusframework.config.handler.CitrusTestCaseNamespaceHandler}
  *
- * @author T. Schlathoelter
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

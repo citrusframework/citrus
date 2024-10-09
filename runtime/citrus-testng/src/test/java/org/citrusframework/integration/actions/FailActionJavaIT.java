@@ -25,9 +25,6 @@ import static org.citrusframework.actions.FailAction.Builder.fail;
 import static org.citrusframework.actions.SleepAction.Builder.sleep;
 import static org.citrusframework.container.Assert.Builder.assertException;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class FailActionJavaIT extends TestNGCitrusSpringSupport {
 

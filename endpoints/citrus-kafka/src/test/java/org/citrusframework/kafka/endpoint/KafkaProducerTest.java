@@ -42,9 +42,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class KafkaProducerTest extends AbstractTestNGUnitTest {
 
     private final KafkaProducer kafkaProducer = Mockito.mock(KafkaProducer.class);

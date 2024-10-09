@@ -32,7 +32,6 @@ import org.citrusframework.validation.context.ValidationContext;
  * Basic script validation context providing the validation code either from file resource or
  * from direct script string.
  *
- * @author Christoph Deppisch
  */
 public class ScriptValidationContext extends DefaultValidationContext {
 

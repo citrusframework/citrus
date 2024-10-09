@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.actions.SleepAction.Builder.sleep;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class SleepActionJavaIT extends TestNGCitrusSpringSupport {
 

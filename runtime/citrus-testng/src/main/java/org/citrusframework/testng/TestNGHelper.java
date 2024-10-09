@@ -46,9 +46,6 @@ import org.slf4j.LoggerFactory;
 import org.testng.IHookCallBack;
 import org.testng.ITestResult;
 
-/**
- * @author Christoph Deppisch
- */
 public final class TestNGHelper {
 
     public static final String BUILDER_ATTRIBUTE = "builder";

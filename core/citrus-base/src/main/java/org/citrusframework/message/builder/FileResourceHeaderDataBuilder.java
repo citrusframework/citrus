@@ -25,9 +25,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.MessageHeaderDataBuilder;
 import org.citrusframework.util.FileUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public class FileResourceHeaderDataBuilder implements MessageHeaderDataBuilder {
 
     private final String charsetName;

@@ -29,7 +29,6 @@ import org.citrusframework.util.StringUtils;
  *
  * Syntax is jsonPath:$.root.element
  *
- * @author Christoph Deppisch
  * @since 3.0
  */
 public class JsonPathPayloadMessageSelector extends AbstractMessageSelector {

@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Docker client uses Java docker client implementation for executing docker commands.
  *
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class DockerClient extends AbstractEndpoint implements Producer, ReplyConsumer {

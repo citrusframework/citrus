@@ -19,9 +19,6 @@ package org.citrusframework.server;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.EndpointAdapter;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class AbstractServerBuilder<T extends AbstractServer, B extends AbstractServerBuilder<T, B>> extends AbstractEndpointBuilder<T> {
 
     private final B self;

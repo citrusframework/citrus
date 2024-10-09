@@ -22,9 +22,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.actions.TraceVariablesAction;
 import org.citrusframework.testng.AbstractActionParserTest;
 
-/**
- * @author Christoph Deppisch
- */
 public class TraceVariablesActionParserTest extends AbstractActionParserTest<TraceVariablesAction> {
 
     @Test

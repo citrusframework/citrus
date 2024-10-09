@@ -17,7 +17,6 @@
 package org.citrusframework.junit;
 
 /**
- * @author Christoph Deppisch
  * @since 2.2
  */
 public final class TestSuiteState {

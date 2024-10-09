@@ -25,7 +25,6 @@ import com.github.dockerjava.core.DockerClientImpl;
 import com.github.dockerjava.okhttp.OkDockerHttpClient;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class DockerEndpointConfiguration extends AbstractPollableEndpointConfiguration {

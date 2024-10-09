@@ -29,9 +29,6 @@ import static org.citrusframework.actions.ExecuteSQLAction.Builder.sql;
 import static org.citrusframework.actions.ExecuteSQLQueryAction.Builder.query;
 import static org.citrusframework.container.FinallySequence.Builder.doFinally;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class FinallyBlockJavaIT extends TestNGCitrusSpringSupport {
 

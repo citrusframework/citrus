@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
  * Abstract implementation of {@link SoapFaultValidator} converting soap fault detail objects to simple String content for
  * further validation.
  *
- * @author Christoph Deppisch
  */
 public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultValidator {
 

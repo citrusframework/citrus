@@ -20,9 +20,6 @@ import org.citrusframework.validation.GenericValidationProcessor;
 import org.citrusframework.validation.xml.XmlMarshallingValidationProcessor;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 
-/**
- * @author Christoph Deppisch
- */
 public class XmlSupport {
 
     /**

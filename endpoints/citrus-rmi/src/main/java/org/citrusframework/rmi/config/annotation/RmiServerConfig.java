@@ -26,7 +26,6 @@ import java.rmi.registry.Registry;
 import org.citrusframework.annotations.CitrusEndpointConfig;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 @Retention(RetentionPolicy.RUNTIME)

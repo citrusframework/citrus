@@ -20,7 +20,6 @@ import org.citrusframework.container.AbstractTestBoundaryActionContainer;
 import org.citrusframework.container.SequenceBeforeTest;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class SequenceBeforeTestParser extends AbstractTestBoundaryActionContainerParser {

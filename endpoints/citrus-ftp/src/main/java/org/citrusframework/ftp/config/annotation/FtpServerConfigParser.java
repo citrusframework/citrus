@@ -27,7 +27,6 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.util.StringUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class FtpServerConfigParser implements AnnotationConfigParser<FtpServerConfig, FtpServer> {

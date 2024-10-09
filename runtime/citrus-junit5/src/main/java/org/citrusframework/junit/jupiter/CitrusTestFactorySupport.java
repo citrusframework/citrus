@@ -34,9 +34,6 @@ import org.citrusframework.spi.ClasspathResourceResolver;
 import org.citrusframework.util.FileUtils;
 import org.junit.jupiter.api.DynamicTest;
 
-/**
- * @author Christoph Deppisch
- */
 public final class CitrusTestFactorySupport {
 
     private final String type;

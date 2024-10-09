@@ -46,7 +46,6 @@ import static org.mockito.Mockito.when;
 
 /**
  * Simple unit test for HttpServer
- * @author jza
  */
 public class HttpServerTest extends AbstractTestNGUnitTest {
 

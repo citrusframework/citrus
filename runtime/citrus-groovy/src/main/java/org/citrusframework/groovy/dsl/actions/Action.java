@@ -22,9 +22,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 
-/**
- * @author Christoph Deppisch
- */
 public class Action implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
     private String reference;

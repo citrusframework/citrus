@@ -19,7 +19,6 @@ package org.citrusframework.message;
 /**
  * Enumeration for message protocol types used in test cases.
  *
- * @author Christoph Deppisch
  */
 public enum MessageType {
     UNSPECIFIED,

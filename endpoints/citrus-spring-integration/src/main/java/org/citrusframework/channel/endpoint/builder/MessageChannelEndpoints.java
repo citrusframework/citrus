@@ -20,9 +20,6 @@ import org.citrusframework.channel.ChannelEndpointBuilder;
 import org.citrusframework.channel.ChannelSyncEndpointBuilder;
 import org.citrusframework.endpoint.builder.AsyncSyncEndpointBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public final class MessageChannelEndpoints extends AsyncSyncEndpointBuilder<ChannelEndpointBuilder, ChannelSyncEndpointBuilder> {
 
     /**

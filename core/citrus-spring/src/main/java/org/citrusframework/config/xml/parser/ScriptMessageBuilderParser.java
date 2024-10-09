@@ -20,9 +20,6 @@ import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-/**
- * @author Christoph Deppisch
- */
 public interface ScriptMessageBuilderParser {
 
     /**

@@ -23,7 +23,6 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
- * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class OpenWindowActionParser extends AbstractBrowserActionParser {

@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
  *
  * Registry tries to find a matching validator for the message.
  *
- * @author Christoph Deppisch
  */
 public class MessageValidatorRegistry {
 

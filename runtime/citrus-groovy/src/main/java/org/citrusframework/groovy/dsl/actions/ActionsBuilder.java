@@ -30,9 +30,6 @@ import org.citrusframework.util.ReflectionHelper;
 
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 
-/**
- * @author Christoph Deppisch
- */
 public interface ActionsBuilder {
 
     /**

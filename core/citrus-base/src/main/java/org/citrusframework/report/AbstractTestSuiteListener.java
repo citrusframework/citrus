@@ -20,7 +20,6 @@ package org.citrusframework.report;
  * Basic implementation of {@link TestSuiteListener} interface so that subclasses must not implement
  * all methods but only overwrite some listener methods.
  *
- * @author Christoph Deppisch
  */
 public abstract class AbstractTestSuiteListener implements TestSuiteListener {
 

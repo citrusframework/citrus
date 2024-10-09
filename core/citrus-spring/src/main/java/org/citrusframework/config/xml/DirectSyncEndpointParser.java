@@ -28,7 +28,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for synchronous message queue endpoint components.
  *
- * @author Christoph Deppisch
  * @since 3.0
  */
 public class DirectSyncEndpointParser extends AbstractDirectEndpointParser {

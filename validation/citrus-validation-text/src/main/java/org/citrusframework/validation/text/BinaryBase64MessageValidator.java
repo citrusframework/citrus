@@ -27,7 +27,6 @@ import org.apache.commons.codec.binary.Base64;
  * Message validator automatically converts received binary data message payload to base64 String. Assumes control
  * message payload is also base64 encoded String so we can compare the text data with normal plain text validation.
  *
- * @author Christoph Deppisch
  */
 public class BinaryBase64MessageValidator extends PlainTextMessageValidator {
 

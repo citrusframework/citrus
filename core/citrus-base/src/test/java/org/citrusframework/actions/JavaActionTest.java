@@ -24,9 +24,6 @@ import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class JavaActionTest extends UnitTestSupport {
 
 	@Test

@@ -24,9 +24,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class DefaultMessageQueueTest {
 
     private TestContext context;

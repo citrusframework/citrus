@@ -24,9 +24,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.actions.FailAction.Builder.fail;
 import static org.citrusframework.container.Catch.Builder.catchException;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class CatchJavaIT extends TestNGCitrusSpringSupport {
 

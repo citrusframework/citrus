@@ -22,9 +22,6 @@ import java.util.Map;
 
 import io.cucumber.core.backend.Snippet;
 
-/**
- * @author Christoph Deppisch
- */
 public class NoopSnippet implements Snippet {
     @Override
     public MessageFormat template() {

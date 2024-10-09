@@ -26,7 +26,6 @@ import org.citrusframework.CitrusSettings;
  * Default modifier implementation uses regular expressions to mask logger output.
  * Regular expressions match on default keywords.
  *
- * @author Christoph Deppisch
  */
 public class DefaultLogModifier implements LogMessageModifier {
 

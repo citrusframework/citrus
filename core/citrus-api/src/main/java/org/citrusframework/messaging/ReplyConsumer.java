@@ -19,7 +19,6 @@ package org.citrusframework.messaging;
 /**
  * Consumer that explicitly receives reply messages synchronously.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public interface ReplyConsumer extends SelectiveConsumer {

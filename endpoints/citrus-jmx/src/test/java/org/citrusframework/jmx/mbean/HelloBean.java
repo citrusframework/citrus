@@ -17,7 +17,6 @@
 package org.citrusframework.jmx.mbean;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public interface HelloBean {

@@ -20,7 +20,6 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.5
  */
 public final class HttpMessageUtils {

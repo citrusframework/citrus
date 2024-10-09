@@ -25,7 +25,6 @@ import org.citrusframework.annotations.CitrusEndpointConfig;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 @Retention(RetentionPolicy.RUNTIME)

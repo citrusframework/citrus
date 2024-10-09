@@ -46,9 +46,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.Resources;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "camel")
 public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 

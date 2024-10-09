@@ -32,7 +32,6 @@ import org.springframework.context.annotation.Configuration;
  * Configuration loads message validator registry via factory bean and automatically adds all validators as Spring beans
  * in factory post processor.
  *
- * @author Christoph Deppisch
  * @since 2.0
  */
 @Configuration

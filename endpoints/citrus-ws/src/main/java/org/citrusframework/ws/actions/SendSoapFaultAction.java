@@ -35,7 +35,6 @@ import org.citrusframework.ws.message.SoapMessage;
 import org.springframework.http.HttpStatus;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class SendSoapFaultAction extends SendSoapMessageAction {

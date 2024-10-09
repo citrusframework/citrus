@@ -23,9 +23,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.xml.XsdSchemaRepository;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 
-/**
- * @author Christoph Deppisch
- */
 public class XmlValidationHelper {
 
     private static final NamespaceContextBuilder NAMESPACE_CONTEXT_BUILDER = new NamespaceContextBuilder();

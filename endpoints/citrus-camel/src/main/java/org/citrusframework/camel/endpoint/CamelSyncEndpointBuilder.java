@@ -23,7 +23,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class CamelSyncEndpointBuilder extends AbstractEndpointBuilder<CamelSyncEndpoint> {

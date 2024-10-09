@@ -41,7 +41,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
 /**
- * @author Christoph Deppisch
  * @since 4.1
  */
 public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBuilder {

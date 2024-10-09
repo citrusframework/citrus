@@ -26,7 +26,6 @@ import org.citrusframework.message.ErrorHandlingStrategy;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * @author Christoph Deppisch
  * @since 2.5
  */
 @Retention(RetentionPolicy.RUNTIME)

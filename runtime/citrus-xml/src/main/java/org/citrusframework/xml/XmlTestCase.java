@@ -36,9 +36,6 @@ import org.citrusframework.util.FileUtils;
 import org.citrusframework.variable.VariableUtils;
 import org.citrusframework.xml.actions.script.ScriptDefinitionType;
 
-/**
- * @author Christoph Deppisch
- */
 @XmlRootElement(name = "test")
 public class XmlTestCase {
 

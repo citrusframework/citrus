@@ -21,7 +21,6 @@ package org.citrusframework.script;
  * use enumeration here because people out there need to have the opportunity to add new script types
  * in test cases without having to change the enumeration.
  *
- * @author Christoph Deppisch
  */
 public abstract class ScriptTypes {
 

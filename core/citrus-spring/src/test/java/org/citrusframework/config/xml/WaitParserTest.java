@@ -24,7 +24,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * @author Martin Maher
  * @since 2.4
  */
 public class WaitParserTest extends AbstractActionParserTest<Wait> {

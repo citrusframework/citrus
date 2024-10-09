@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Executes docker command with given docker client implementation. Possible command result is stored within command object.
  *
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class DockerExecuteAction extends AbstractTestAction {

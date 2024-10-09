@@ -31,9 +31,6 @@ import static org.citrusframework.container.Parallel.Builder.parallel;
 import static org.citrusframework.container.RepeatOnErrorUntilTrue.Builder.repeatOnError;
 import static org.citrusframework.container.Sequence.Builder.sequential;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class QueryDatabaseRetriesJavaIT extends TestNGCitrusSpringSupport {
 

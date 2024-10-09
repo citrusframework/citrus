@@ -20,9 +20,6 @@ import org.citrusframework.CitrusSettings;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class DefaultLogModifierTest {
 
     @Test

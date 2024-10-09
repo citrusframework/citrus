@@ -20,9 +20,6 @@ import org.citrusframework.common.TestLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class TestLoaderTest {
 
     @Test

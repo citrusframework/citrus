@@ -21,7 +21,6 @@ import org.citrusframework.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.Version;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class Info extends AbstractKubernetesCommand<InfoResult, InfoResult, Info> {

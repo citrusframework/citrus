@@ -24,7 +24,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 
 /**
  * Step executes a XML template on test designer. The template is provided with step arguments as test template parameters.
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class XmlSteps {

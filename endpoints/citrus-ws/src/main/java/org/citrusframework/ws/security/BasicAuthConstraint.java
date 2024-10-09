@@ -28,7 +28,6 @@ import static org.eclipse.jetty.security.Constraint.Transport.INHERIT;
 /**
  * Convenient constraint instantiation for basic authentication and multiple user roles.
  *
- * @author Christoph Deppisch
  * @since 1.3
  */
 public class BasicAuthConstraint implements Constraint {

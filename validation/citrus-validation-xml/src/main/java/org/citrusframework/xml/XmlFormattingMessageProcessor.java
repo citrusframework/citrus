@@ -23,7 +23,6 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.util.XMLUtils;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6.2
  */
 public class XmlFormattingMessageProcessor extends AbstractMessageProcessor {

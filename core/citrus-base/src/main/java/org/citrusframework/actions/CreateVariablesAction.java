@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
  * Action creating new test variables during a test. Existing test variables are overwritten
  * by new values.
  *
- * @author Christoph Deppisch
  * @since 2006
  */
 public class CreateVariablesAction extends AbstractTestAction {

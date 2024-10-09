@@ -26,9 +26,6 @@ import org.citrusframework.message.builder.SendMessageBuilderSupport;
 import groovy.lang.Closure;
 import org.citrusframework.util.FileUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public class SendActionBuilderWrapper extends SendMessageAction.SendMessageActionBuilder<SendMessageAction, SendActionBuilderWrapper.SendMessageActionBuilderSupport, SendActionBuilderWrapper> {
 
     public SendMessageActionBuilderSupport message(Closure<?> callable) {

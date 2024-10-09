@@ -25,7 +25,6 @@ import org.citrusframework.spi.ReferenceResolverAware;
  * Validation callback automatically extracts message payload and headers so we work with
  * Java code for validation.
  *
- * @author Christoph Deppisch
  */
 public abstract class AbstractValidationProcessor<T> implements ValidationProcessor, GenericValidationProcessor<T>, ReferenceResolverAware {
 

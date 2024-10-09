@@ -17,7 +17,6 @@
 package org.citrusframework.messaging;
 
 /**
- * @author Christoph Deppisch
  * @since 1.4
  */
 public interface ReplyProducer extends Producer {

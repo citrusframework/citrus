@@ -40,7 +40,6 @@ import org.springframework.messaging.core.DestinationResolver;
  * of type {@link org.springframework.integration.channel.QueueChannel}. Action receives
  * a list of channel objects or a list of channel names that are resolved dynamically at runtime.
  *
- * @author Christoph Deppisch
  */
 public class PurgeMessageChannelAction extends AbstractTestAction {
     /** List of channel names to be purged */

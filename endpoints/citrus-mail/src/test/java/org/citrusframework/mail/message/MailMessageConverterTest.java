@@ -25,7 +25,6 @@ import static org.citrusframework.mail.message.MailMessageConverter.parseCharset
 import static org.testng.Assert.assertEquals;
 
 /**
- * @author Christian Guggenmos
  * @since 2.7.3
  */
 public class MailMessageConverterTest {

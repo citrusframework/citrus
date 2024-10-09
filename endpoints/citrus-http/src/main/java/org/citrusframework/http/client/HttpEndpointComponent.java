@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * Component creates proper HTTP client endpoint from endpoint uri resource and parameters.
  *
- * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class HttpEndpointComponent extends AbstractEndpointComponent {

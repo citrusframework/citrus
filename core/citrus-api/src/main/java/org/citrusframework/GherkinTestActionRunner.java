@@ -18,7 +18,6 @@ package org.citrusframework;
 
 /**
  * Runner adds default alias methods using Gherkin behavior driven development style (GIVEN, WHEN, THEN).
- * @author Christoph Deppisch
  */
 public interface GherkinTestActionRunner extends TestActionRunner {
 

@@ -20,7 +20,6 @@ package org.citrusframework.context;
  * Static test context factory always returns a single test context instance.
  * Mainly used for unit testing.
  *
- * @author Christoph Deppisch
  */
 public class StaticTestContextFactory extends TestContextFactory {
 

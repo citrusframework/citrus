@@ -29,7 +29,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.util.MultiValueMap;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class HttpClientRequestActionBuilder extends SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {

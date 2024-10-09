@@ -41,7 +41,6 @@ import org.w3c.dom.ls.LSSerializer;
 /**
  * Class providing several utility methods for XML processing.
  *
- * @author Jan Szczepanski, Christoph Deppisch
  * @since 2006
  *
  */

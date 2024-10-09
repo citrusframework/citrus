@@ -23,9 +23,6 @@ import org.citrusframework.actions.AntRunAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 
-/**
- * @author Christoph Deppisch
- */
 public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolverAware {
 
     private final AntRunAction.Builder builder = new AntRunAction.Builder();

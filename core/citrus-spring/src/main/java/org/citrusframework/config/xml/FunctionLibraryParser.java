@@ -27,7 +27,6 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class FunctionLibraryParser implements BeanDefinitionParser {

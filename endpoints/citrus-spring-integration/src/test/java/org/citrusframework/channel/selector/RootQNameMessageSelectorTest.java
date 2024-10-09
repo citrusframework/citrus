@@ -22,9 +22,6 @@ import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class RootQNameMessageSelectorTest extends UnitTestSupport {
 
     @Test

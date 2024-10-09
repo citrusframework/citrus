@@ -28,7 +28,6 @@ import java.util.List;
 /**
  * Interceptor implementation delegates to list of other endpoint interceptors.
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class DelegatingEndpointInterceptor implements SmartEndpointInterceptor, SoapEndpointInterceptor {

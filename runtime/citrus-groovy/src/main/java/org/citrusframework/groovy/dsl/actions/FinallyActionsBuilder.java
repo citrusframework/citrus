@@ -23,9 +23,6 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.container.FinallySequence;
 
-/**
- * @author Christoph Deppisch
- */
 public class FinallyActionsBuilder extends GroovyObjectSupport implements ActionsBuilder, Supplier<FinallySequence.Builder> {
 
     private final FinallySequence.Builder builder = new FinallySequence.Builder();

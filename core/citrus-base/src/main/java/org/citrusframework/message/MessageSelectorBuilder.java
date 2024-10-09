@@ -30,7 +30,6 @@ import static org.citrusframework.util.StringUtils.hasText;
  * Constructs message selectors either from string value or from key value maps. Currently only AND logical combination
  * of multiple expressions is supported.
  *
- * @author Christoph Deppisch
  */
 public class MessageSelectorBuilder {
 

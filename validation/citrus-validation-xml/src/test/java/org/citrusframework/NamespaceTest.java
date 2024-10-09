@@ -40,9 +40,6 @@ import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Christoph Deppisch
- */
 public class NamespaceTest extends UnitTestSupport {
     private final Endpoint endpoint = Mockito.mock(Endpoint.class);
     private final Consumer consumer = Mockito.mock(Consumer.class);

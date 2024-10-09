@@ -16,9 +16,6 @@
 
 package org.citrusframework.exceptions;
 
-/**
- * @author Christoph Deppisch
- */
 public class ReplyMessageTimeoutException extends MessageTimeoutException {
 
     private static final long serialVersionUID = 1L;

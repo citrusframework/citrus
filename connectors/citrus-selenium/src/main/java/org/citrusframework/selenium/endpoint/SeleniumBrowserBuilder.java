@@ -24,7 +24,6 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.support.events.WebDriverListener;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrowser> {

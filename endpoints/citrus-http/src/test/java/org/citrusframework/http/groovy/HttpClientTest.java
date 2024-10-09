@@ -60,9 +60,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
 
-/**
- * @author Christoph Deppisch
- */
 public class HttpClientTest extends AbstractGroovyActionDslTest {
 
     @BindToRegistry

@@ -39,7 +39,6 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 /**
  * Abstract logging support class offers basic logger methods for SOAP messages.
  *
- * @author Christoph Deppisch
  */
 public abstract class LoggingInterceptorSupport extends TransformerObjectSupport {
 

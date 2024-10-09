@@ -19,9 +19,6 @@ package org.citrusframework.groovy.dsl.configuration.beans;
 import org.citrusframework.Citrus;
 import org.citrusframework.message.DefaultMessageQueue;
 
-/**
- * @author Christoph Deppisch
- */
 public class QueueConfiguration {
 
     private final Citrus citrus;

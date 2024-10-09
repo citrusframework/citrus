@@ -22,7 +22,6 @@ import org.springframework.context.annotation.DeferredImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class CitrusConfigImport implements DeferredImportSelector {

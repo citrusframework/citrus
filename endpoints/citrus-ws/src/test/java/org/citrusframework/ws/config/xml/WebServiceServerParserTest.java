@@ -24,9 +24,6 @@ import org.testng.annotations.Test;
 
 import java.util.Iterator;
 
-/**
- * @author Christoph Deppisch
- */
 public class WebServiceServerParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

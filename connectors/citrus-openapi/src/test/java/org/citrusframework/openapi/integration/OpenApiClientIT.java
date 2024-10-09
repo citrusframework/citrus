@@ -32,9 +32,6 @@ import org.testng.annotations.Test;
 import static org.citrusframework.http.actions.HttpActionBuilder.http;
 import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 

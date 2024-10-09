@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Message send action able to add SOAP attachment support to normal message sending action.
  *
- * @author Christoph Deppisch
  */
 public class SendSoapMessageAction extends SendMessageAction implements TestAction {
 

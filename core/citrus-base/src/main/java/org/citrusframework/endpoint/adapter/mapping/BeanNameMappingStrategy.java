@@ -24,7 +24,6 @@ import org.citrusframework.spi.ReferenceResolver;
  * for the given mapping key. Bean id or name has to match the given mapping key and bean must be of type
  * {@link org.citrusframework.endpoint.EndpointAdapter}
  *
- * @author Christoph Deppisch
  * @since 1.4
  */
 public class BeanNameMappingStrategy implements EndpointAdapterMappingStrategy {

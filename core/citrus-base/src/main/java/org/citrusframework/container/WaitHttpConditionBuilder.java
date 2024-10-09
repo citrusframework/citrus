@@ -19,7 +19,6 @@ package org.citrusframework.container;
 import org.citrusframework.condition.HttpCondition;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class WaitHttpConditionBuilder extends WaitConditionBuilder<HttpCondition, WaitHttpConditionBuilder> {

@@ -59,7 +59,6 @@ import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 /**
  * Default Citrus context implementation holds basic components used in Citrus.
  *
- * @author Christoph Deppisch
  */
 public class CitrusContext implements TestListenerAware, TestActionListenerAware,
         TestSuiteListenerAware, TestReporterAware, MessageListenerAware, ReferenceRegistry {

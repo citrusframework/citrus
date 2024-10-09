@@ -33,9 +33,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.camel.message.CamelTransformMessageProcessor.Builder.transform;
 
-/**
- * @author Christoph Deppisch
- */
 public class CamelTransformMessageProcessorTest extends AbstractTestNGUnitTest {
 
     private final CamelContext camelContext = new DefaultCamelContext();

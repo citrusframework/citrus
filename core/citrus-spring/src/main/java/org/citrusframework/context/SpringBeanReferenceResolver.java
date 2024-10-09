@@ -37,7 +37,6 @@ import org.springframework.context.ApplicationContextAware;
 /**
  * Spring bean reference resolver operates on given application context to resolve bean references.
  *
- * @author Christoph Deppisch
  * @since 2.5
  */
 public class SpringBeanReferenceResolver implements ReferenceResolver, ApplicationContextAware {

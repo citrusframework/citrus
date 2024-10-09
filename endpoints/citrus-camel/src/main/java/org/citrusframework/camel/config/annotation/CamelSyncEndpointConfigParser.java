@@ -26,9 +26,6 @@ import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public class CamelSyncEndpointConfigParser implements AnnotationConfigParser<CamelSyncEndpointConfig, CamelSyncEndpoint> {
 
     @Override

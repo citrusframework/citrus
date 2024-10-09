@@ -25,7 +25,6 @@ import java.util.UUID;
 /**
  * Creates a random Java UUID.
  *
- * @author Christoph Deppisch
  */
 public class RandomUUIDFunction  implements Function {
 

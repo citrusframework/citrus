@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class CitrusSpringObjectFactory implements ObjectFactory {

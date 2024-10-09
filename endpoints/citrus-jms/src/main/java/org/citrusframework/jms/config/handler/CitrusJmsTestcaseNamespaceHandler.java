@@ -20,7 +20,6 @@ import org.citrusframework.jms.config.xml.PurgeJmsQueuesActionParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class CitrusJmsTestcaseNamespaceHandler extends NamespaceHandlerSupport {

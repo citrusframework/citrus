@@ -20,7 +20,6 @@ import org.citrusframework.context.TestContext;
 
 /**
  * Transformer is able to completely change a given message.
- * @author Christoph Deppisch
  */
 @FunctionalInterface
 public interface MessageTransformer {

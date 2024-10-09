@@ -25,7 +25,6 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 /**
  * Namespace handler for components in Citrus configuration.
  *
- * @author Christoph Deppisch
  */
 public class CitrusSpringIntegrationConfigNamespaceHandler extends NamespaceHandlerSupport {
 

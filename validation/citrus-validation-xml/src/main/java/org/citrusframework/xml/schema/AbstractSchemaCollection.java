@@ -49,7 +49,6 @@ import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.xml.sax.SAXException;
 
 /**
- * @author Christoph Deppisch
  * @since 2.4
  */
 public abstract class AbstractSchemaCollection extends SimpleXsdSchema implements InitializingPhase {

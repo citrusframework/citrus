@@ -36,7 +36,6 @@ import org.apache.camel.support.DefaultExchange;
  * Message processor delegates to Apache Camel processor and sets the message header and body from the processed Camel
  * exchange.
  *
- * @author Christoph Deppisch
  */
 public class CamelMessageProcessor implements MessageProcessor {
 

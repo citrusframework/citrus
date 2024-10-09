@@ -20,7 +20,6 @@ package org.citrusframework.validation.context;
 /**
  * Basic validation context holding validation specific information.
  *
- * @author Christoph Deppisch
  */
 public interface ValidationContext {
 

@@ -28,7 +28,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for starting Camel routes action in test case.
  *
- * @author Christoph Deppisch
  * @since 2.4
  */
 public class RemoveCamelRouteActionParser extends AbstractCamelRouteActionParser {

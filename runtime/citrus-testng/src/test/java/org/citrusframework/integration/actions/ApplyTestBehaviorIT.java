@@ -33,9 +33,6 @@ import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.citrusframework.container.FinallySequence.Builder.doFinally;
 import static org.citrusframework.container.Sequence.Builder.sequential;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class ApplyTestBehaviorIT extends TestNGCitrusSpringSupport {
 

@@ -28,7 +28,6 @@ import org.w3c.dom.Element;
 /**
  * Bean definition parser for groovy action in test case.
  *
- * @author Christoph Deppisch
  */
 public class GroovyActionParser implements BeanDefinitionParser {
 

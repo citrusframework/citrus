@@ -26,9 +26,6 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
 import org.codehaus.groovy.control.CompilationFailedException;
 
-/**
- * @author Christoph Deppisch
- */
 public class GroovyScriptPayloadBuilder implements ScriptPayloadBuilder {
 
     /** Default path to script template */

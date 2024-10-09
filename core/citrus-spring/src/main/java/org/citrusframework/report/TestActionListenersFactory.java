@@ -24,7 +24,6 @@ import org.springframework.context.ApplicationContextAware;
 /**
  * Factory bean automatically adds all test action listeners that live in the Spring bean application context.
  *
- * @author Christoph Deppisch
  */
 public class TestActionListenersFactory implements FactoryBean<TestActionListeners>, ApplicationContextAware {
 

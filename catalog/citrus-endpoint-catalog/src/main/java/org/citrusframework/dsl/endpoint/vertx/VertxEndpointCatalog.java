@@ -20,9 +20,6 @@ import org.citrusframework.vertx.endpoint.VertxEndpointBuilder;
 import org.citrusframework.vertx.endpoint.VertxSyncEndpointBuilder;
 import org.citrusframework.vertx.endpoint.builder.VertxEndpoints;
 
-/**
- * @author Christoph Deppisch
- */
 public class VertxEndpointCatalog {
 
     /**

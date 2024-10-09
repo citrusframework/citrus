@@ -24,7 +24,6 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7
  */
 public class HttpResponseErrorHandler extends DefaultResponseErrorHandler {

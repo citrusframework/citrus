@@ -39,7 +39,6 @@ import org.w3c.dom.Element;
  *
  *  @param <T>
  *
- *  @author Christop Deppisch, Thorsten Schlathoelter
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class BaseTestCaseParser<T extends TestCase> implements BeanDefinitionParser {

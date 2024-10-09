@@ -18,7 +18,6 @@ package org.citrusframework.validation.matcher;
 
 /**
  * Default registry automatically adds default validation matcher library.
- * @author Christoph Deppisch
  */
 public class DefaultValidationMatcherRegistry extends ValidationMatcherRegistry {
 
