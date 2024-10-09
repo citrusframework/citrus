@@ -91,7 +91,6 @@ public final class Shard {
         return createShard(testCases, shardingConfiguration, false);
     }
 
-
     /**
      * Creates a sharded stream from the input stream using the provided sharding configuration and a flag to determine
      * whether the stream should be parallel.

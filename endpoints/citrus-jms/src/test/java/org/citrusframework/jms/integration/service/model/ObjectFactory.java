@@ -18,7 +18,6 @@ package org.citrusframework.jms.integration.service.model;
 
 import jakarta.xml.bind.annotation.XmlRegistry;
 
-
 /**
  * This object contains factory methods for each
  * Java content interface and Java element interface
@@ -35,7 +34,6 @@ import jakarta.xml.bind.annotation.XmlRegistry;
  */
 @XmlRegistry
 public class ObjectFactory {
-
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.citrusframework.demo.model

@@ -79,7 +79,6 @@ public @interface WebServiceClientConfig {
      */
     int pollingInterval() default 500;
 
-
     /**
      * Fault handling strategy.
      * @return

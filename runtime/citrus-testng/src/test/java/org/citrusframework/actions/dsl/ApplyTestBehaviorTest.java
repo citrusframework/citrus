@@ -118,7 +118,6 @@ public class ApplyTestBehaviorTest extends UnitTestSupport {
         Sequence sequence = (Sequence) test.getActions().get(0);
         Assert.assertEquals(sequence.getActionCount(), 3);
 
-
         Assert.assertEquals(sequence.getActions().get(0).getClass(), EchoAction.class);
         Assert.assertEquals(((EchoAction)sequence.getActions().get(0)).getMessage(), "before");
 

@@ -79,7 +79,6 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
 
         when(soapResponse.getSoapAction()).thenReturn("");
 
-
         callback.doWithMessage(soapResponse);
 
         Message responseMessage = callback.getResponse();
@@ -109,7 +108,6 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
         when(soapResponse.getSoapAction()).thenReturn("soapOperation");
 
         when(soapResponse.getAttachments()).thenReturn(soapAttachments.iterator());
-
 
         callback.doWithMessage(soapResponse);
 
@@ -145,7 +143,6 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
         when(soapResponse.getSoapAction()).thenReturn("\"\"");
 
         when(soapResponse.getAttachments()).thenReturn(soapAttachments.iterator());
-
 
         callback.doWithMessage(soapResponse);
 
@@ -185,7 +182,6 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
 
         when(soapResponse.getAttachments()).thenReturn(soapAttachments.iterator());
 
-
         callback.doWithMessage(soapResponse);
 
         Message responseMessage = callback.getResponse();
@@ -222,7 +218,6 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
         when(soapResponse.getSoapAction()).thenReturn("soapOperation");
 
         when(soapResponse.getAttachments()).thenReturn(soapAttachments.iterator());
-
 
         callback.doWithMessage(soapResponse);
 

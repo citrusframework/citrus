@@ -214,7 +214,6 @@ public class DirectEndpointSyncConsumerTest {
 
         when(queue.receive(5000L)).thenReturn(null);
 
-
         try {
             DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
             channelSyncConsumer.receive(context);

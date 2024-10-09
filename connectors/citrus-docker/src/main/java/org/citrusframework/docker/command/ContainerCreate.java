@@ -412,7 +412,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         return this;
     }
 
-
     /**
      * Adds volumes variables as command parameter.
      * @param volumes
@@ -601,7 +600,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
             command.portBindings(portBindings);
             return this;
         }
-
 
         /**
          * Adds volumes variables as command parameter.

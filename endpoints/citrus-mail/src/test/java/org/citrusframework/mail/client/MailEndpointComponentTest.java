@@ -32,7 +32,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-
 public class MailEndpointComponentTest {
 
     private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);

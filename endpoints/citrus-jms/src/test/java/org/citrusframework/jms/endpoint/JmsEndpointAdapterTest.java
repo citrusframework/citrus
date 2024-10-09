@@ -86,7 +86,6 @@ public class JmsEndpointAdapterTest extends AbstractTestNGUnitTest {
         when(session.createTextMessage("<TestMessage><text>Hi!</text></TestMessage>")).thenReturn(
                 new TextMessageImpl("<TestMessage><text>Hi!</text></TestMessage>", new HashMap<>()));
 
-
         Message response = endpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>"));
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getPayload(String.class), "<TestResponse>Hello World!</TestResponse>");
@@ -113,7 +112,6 @@ public class JmsEndpointAdapterTest extends AbstractTestNGUnitTest {
 
         when(session.createTextMessage("<TestMessage><text>Hi!</text></TestMessage>")).thenReturn(
                 new TextMessageImpl("<TestMessage><text>Hi!</text></TestMessage>", new HashMap<>()));
-
 
         Assert.assertNull(endpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>")));
 

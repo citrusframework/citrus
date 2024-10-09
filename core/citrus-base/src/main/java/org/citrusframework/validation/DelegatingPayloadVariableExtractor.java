@@ -54,7 +54,6 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
         this.namespaces = builder.namespaces;
     }
 
-
     @Override
     public void extractVariables(Message message, TestContext context) {
         if (pathExpressions.isEmpty()) {

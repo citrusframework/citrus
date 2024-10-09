@@ -24,7 +24,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
-
 public class AbstractEndpointAdapterTest {
 
     /** Endpoint adapter mock */

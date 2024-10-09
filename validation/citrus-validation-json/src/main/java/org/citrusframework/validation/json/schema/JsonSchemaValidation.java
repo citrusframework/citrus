@@ -156,7 +156,6 @@ public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidati
         }
     }
 
-
     /**
      * Checks whether the supplied message type is supported by the message.
      *

@@ -472,7 +472,6 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         ValidateMessageParserUtil.parseJsonPathElements(validateElement, validateJsonPathExpressions);
     }
 
-
     /**
      * Parse component returning generic bean definition.
      *

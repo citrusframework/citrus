@@ -49,7 +49,6 @@ public class AbstractTestDocsGeneratorTest {
         }
     };
 
-
     @Test
     public void testGetTestFiles() throws IOException {
 

@@ -262,7 +262,6 @@ public class XsdJavaTestGenerator extends MessagingJavaTestGenerator<XsdJavaTest
     }
 
 
-
     /**
      * Sets the xsd.
      *

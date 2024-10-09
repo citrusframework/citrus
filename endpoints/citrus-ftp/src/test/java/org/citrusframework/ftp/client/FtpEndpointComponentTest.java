@@ -28,7 +28,6 @@ import org.citrusframework.ssh.client.SshEndpointComponent;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-
 public class FtpEndpointComponentTest {
 
     private TestContext context = new TestContext();

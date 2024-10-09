@@ -36,7 +36,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-
 public class WebServiceEndpointComponentTest {
 
     private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);

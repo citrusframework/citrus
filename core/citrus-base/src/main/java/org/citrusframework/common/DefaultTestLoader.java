@@ -229,7 +229,6 @@ public class DefaultTestLoader implements TestLoader {
         return this;
     }
 
-
     @Override
     public void setPackageName(String packageName) {
         this.packageName = packageName;

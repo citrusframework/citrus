@@ -18,7 +18,6 @@ package org.citrusframework.jms.integration.service.model;
 
 import jakarta.xml.bind.annotation.*;
 
-
 /**
  * <p>Java-Klasse für anonymous complex type.
  *

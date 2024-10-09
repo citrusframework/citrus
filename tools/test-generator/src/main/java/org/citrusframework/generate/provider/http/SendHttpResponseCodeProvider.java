@@ -41,5 +41,4 @@ public class SendHttpResponseCodeProvider implements CodeProvider<HttpMessage> {
         return code.build();
     }
 
-
 }

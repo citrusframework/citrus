@@ -109,7 +109,6 @@ public class Conditional extends AbstractActionContainer {
         return conditionExpression;
     }
 
-
     /**
      * Action builder.
      */

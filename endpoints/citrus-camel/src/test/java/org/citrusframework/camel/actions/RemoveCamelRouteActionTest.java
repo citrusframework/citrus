@@ -30,7 +30,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-
 public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
 
     private AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);

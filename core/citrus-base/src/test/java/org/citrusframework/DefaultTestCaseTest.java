@@ -1,6 +1,5 @@
 package org.citrusframework;
 
-
 import org.citrusframework.actions.AbstractAsyncTestAction;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.actions.SleepAction;

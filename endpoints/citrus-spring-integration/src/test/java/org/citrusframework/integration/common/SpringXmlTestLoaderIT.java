@@ -104,5 +104,4 @@ public class SpringXmlTestLoaderIT extends TestNGCitrusSpringSupport {
         }
     }
 
-
 }

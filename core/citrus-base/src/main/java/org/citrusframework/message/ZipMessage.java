@@ -233,7 +233,6 @@ public class ZipMessage extends DefaultMessage {
             return this;
         }
 
-
         /**
          * Gets the content.
          *

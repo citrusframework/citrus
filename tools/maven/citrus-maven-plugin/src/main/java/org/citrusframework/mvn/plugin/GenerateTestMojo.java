@@ -180,7 +180,6 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
                 generator.withSpec(test.getSwagger().getFile());
                 generator.withOperation(test.getSwagger().getOperation());
 
-
                 if (test.getSwagger().getMappings() != null) {
                     generator.withInboundMappings(test.getSwagger().getMappings().getInbound());
                     generator.withOutboundMappings(test.getSwagger().getMappings().getOutbound());

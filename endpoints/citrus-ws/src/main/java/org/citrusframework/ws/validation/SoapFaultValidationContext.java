@@ -83,7 +83,6 @@ public class SoapFaultValidationContext extends DefaultValidationContext {
             return this;
         }
 
-
         /**
          * Add fault detail validation context.
          * @param detailValidationContexts

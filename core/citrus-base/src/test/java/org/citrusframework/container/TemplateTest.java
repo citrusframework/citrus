@@ -30,7 +30,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
-
 public class TemplateTest extends UnitTestSupport {
 
     private final TestAction action = Mockito.mock(TestAction.class);

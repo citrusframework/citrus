@@ -66,5 +66,4 @@ public class WebServiceServerParser extends AbstractServerParser {
         return WebServiceServer.class;
     }
 
-
 }

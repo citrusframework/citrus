@@ -31,7 +31,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-
 public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
 
     private ExecutePLSQLAction.Builder executePLSQLActionBuilder;

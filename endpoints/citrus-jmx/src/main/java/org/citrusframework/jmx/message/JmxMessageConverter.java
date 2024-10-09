@@ -77,7 +77,6 @@ public class JmxMessageConverter implements MessageConverter<ManagedBeanInvocati
             mBeanInvocation.setAttribute(attribute);
         }
 
-
         if (internalMessage.getHeader(JmxMessageHeaders.JMX_OBJECT_DOMAIN) != null) {
             mBeanInvocation.setObjectDomain(internalMessage.getHeader(JmxMessageHeaders.JMX_OBJECT_DOMAIN).toString());
         }

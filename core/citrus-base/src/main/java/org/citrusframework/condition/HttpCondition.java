@@ -109,7 +109,6 @@ public class HttpCondition extends AbstractCondition {
         return (HttpURLConnection) url.openConnection();
     }
 
-
     /**
      * Gets the request url with test variable support.
      * @param context The test context to get the url from

@@ -37,7 +37,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-
 public class SoapAttachmentTest {
 
     private final Attachment attachment = Mockito.mock(Attachment.class);

@@ -45,7 +45,6 @@ public interface KnativeAction extends TestAction {
      */
     KnativeClient getKnativeClient();
 
-
     /**
      * Gets the current namespace.
      */

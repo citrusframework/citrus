@@ -55,7 +55,6 @@ public class CreateSecretAction extends AbstractKubernetesAction implements Kube
                 Resource file = FileUtils.getFileResource(filePath, context);
                 String resolvedFileContent = context.replaceDynamicContentInString(FileUtils.readToString(file, StandardCharsets.UTF_8));
 
-
                 data.put(FileUtils.getFileName(file.getLocation()),
                         Base64.getEncoder().encodeToString(resolvedFileContent.getBytes(StandardCharsets.UTF_8)));
             } catch (IOException e) {

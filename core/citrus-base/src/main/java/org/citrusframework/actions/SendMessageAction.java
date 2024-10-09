@@ -46,7 +46,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.citrusframework.util.StringUtils;
 
-
 /**
  * This action sends a messages to a specified message endpoint. The action holds a reference to
  * a {@link org.citrusframework.endpoint.Endpoint}, which is capable of the message transport implementation. So action is

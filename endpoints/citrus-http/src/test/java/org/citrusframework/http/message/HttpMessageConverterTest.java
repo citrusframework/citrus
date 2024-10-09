@@ -284,7 +284,6 @@ public class HttpMessageConverterTest {
         assertNull(httpEntity.getBody());
     }
 
-
     @Test
     public void testHttpMessageWithStatusCodeContainsCookiesOnOutbound() {
         // GIVEN
@@ -475,7 +474,6 @@ public class HttpMessageConverterTest {
         assertEquals(1, httpMessage.getCookies().size());
         assertEquals(cookieMock, httpMessage.getCookies().get(0));
     }
-
 
     @Test
     public void testSpringIntegrationHeaderMapperListResultIsConvertedOnInbound() {

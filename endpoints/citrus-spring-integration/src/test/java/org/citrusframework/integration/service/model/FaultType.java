@@ -18,7 +18,6 @@ package org.citrusframework.integration.service.model;
 
 import jakarta.xml.bind.annotation.*;
 
-
 /**
  * <p>Java-Klasse für FaultType complex type.
  *

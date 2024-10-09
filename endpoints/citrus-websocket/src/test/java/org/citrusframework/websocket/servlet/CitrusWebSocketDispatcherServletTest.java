@@ -122,7 +122,6 @@ public class CitrusWebSocketDispatcherServletTest extends AbstractTestNGUnitTest
         assertEquals(httpMessageController.getEndpointAdapter().getClass(), TimeoutProducingEndpointAdapter.class);
         assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
 
-
     }
 
     @Test

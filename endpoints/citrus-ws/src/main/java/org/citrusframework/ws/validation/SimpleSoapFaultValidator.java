@@ -16,7 +16,6 @@
 
 package org.citrusframework.ws.validation;
 
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.slf4j.Logger;

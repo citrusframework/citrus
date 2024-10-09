@@ -22,7 +22,6 @@ import org.citrusframework.ws.server.WebServiceServerBuilder;
 
 public final class WebServiceEndpoints extends ClientServerEndpointBuilder<WebServiceClientBuilder, WebServiceServerBuilder>  {
 
-
     /**
      * Private constructor setting the client and server builder implementation.
      */

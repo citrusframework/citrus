@@ -58,7 +58,6 @@ public interface MessageProcessor extends MessageTransformer {
         return Optional.empty();
     }
 
-
     /**
      * Process message with given test context. Processors can change the message payload and headers.
      * @param message the message to process.

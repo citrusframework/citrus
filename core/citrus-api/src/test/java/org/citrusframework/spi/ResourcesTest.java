@@ -177,7 +177,6 @@ public class ResourcesTest {
         assertTrue(new UrlResource(withContentUrlMock).exists());
     }
 
-
     @Test
     public void urlResourceNotExistsOnConnectionFailureTest() throws IOException {
         URL withContentUrlMock = spy(new URL(Resources.HTTP_RESOURCE_PREFIX + "//host/context"));

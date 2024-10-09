@@ -26,7 +26,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-
 @TestPropertySource(value = "classpath:org/citrusframework/reporter/default-logger-disabled.properties")
 public class ReporterConfigDisabledTest extends UnitTestSupport {
 

@@ -50,7 +50,6 @@ public class JsonSupport {
         return new ObjectMappingPayloadBuilder(payload);
     }
 
-
     /**
      * Static builder method constructing a mapping payload builder.
      * @param payload

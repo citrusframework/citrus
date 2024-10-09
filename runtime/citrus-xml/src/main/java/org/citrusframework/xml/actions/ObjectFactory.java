@@ -154,7 +154,6 @@ public class ObjectFactory {
         return new TraceVariables();
     }
 
-
     /**
      * Create an instance of {@link Trace }
      *

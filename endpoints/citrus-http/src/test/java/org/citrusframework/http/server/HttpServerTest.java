@@ -224,5 +224,4 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
         verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
     }
 
-
 }

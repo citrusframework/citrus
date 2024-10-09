@@ -144,7 +144,6 @@ public class XmlConfigurer implements InitializingPhase {
         return domImpl.createLSOutput();
     }
 
-
     /**
      * Creates LSResourceResolver from dom implementation.
      * @return

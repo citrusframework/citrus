@@ -21,7 +21,6 @@ package org.citrusframework.selenium.endpoint;
  */
 public class SeleniumHeaders {
 
-
     /**
      * Prevent instantiation.
      */

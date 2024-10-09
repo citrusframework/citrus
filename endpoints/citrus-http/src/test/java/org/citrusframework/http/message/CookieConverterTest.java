@@ -122,7 +122,6 @@ public class CookieConverterTest {
         assertEquals("foobar", cookies[0].getPath());
     }
 
-
     @Test
     public void testCookieSecureIsPreserved() {
         // GIVEN

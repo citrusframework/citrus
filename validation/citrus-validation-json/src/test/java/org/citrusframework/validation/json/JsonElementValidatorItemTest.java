@@ -51,7 +51,6 @@ public class JsonElementValidatorItemTest {
         assertThat(fixture.getJsonPath()).isEqualTo(expectedPath);
     }
 
-
     @DataProvider
     public static Object[][] getNamePairs() {
         return new Object[][]{

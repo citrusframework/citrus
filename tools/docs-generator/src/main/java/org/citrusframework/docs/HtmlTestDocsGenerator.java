@@ -179,7 +179,6 @@ public class HtmlTestDocsGenerator extends AbstractTestDocsGenerator {
                 .withOverviewTitle(args.length == 5 ? args[4] : generator.overviewTitle)
                 .withColumns(args.length == 6 ? args[5] : generator.overviewColumns);
 
-
             generator.generateDoc();
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new CitrusRuntimeException("Wrong usage exception! " +
