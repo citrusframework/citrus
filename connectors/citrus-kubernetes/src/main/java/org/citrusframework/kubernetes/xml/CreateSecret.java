@@ -79,6 +79,12 @@ public class CreateSecret extends AbstractKubernetesAction.Builder<CreateSecretA
     }
 
     @Override
+    public CreateSecret autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public CreateSecretAction doBuild() {
         return delegate.build();
     }

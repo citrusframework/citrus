@@ -81,6 +81,12 @@ public class ReceiveEvent extends AbstractKnativeAction.Builder<ReceiveEventActi
     }
 
     @Override
+    public ReceiveEvent autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public ReceiveEventAction build() {
         return delegate.build();
     }

@@ -66,6 +66,12 @@ public class VerifyBroker extends AbstractKnativeAction.Builder<VerifyBrokerActi
     }
 
     @Override
+    public VerifyBroker autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
         this.delegate.setReferenceResolver(referenceResolver);
     }

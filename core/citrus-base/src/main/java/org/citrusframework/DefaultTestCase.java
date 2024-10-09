@@ -16,20 +16,13 @@
 
 package org.citrusframework;
 
-import static java.lang.String.format;
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static org.citrusframework.TestResult.failed;
-import static org.citrusframework.TestResult.skipped;
-import static org.citrusframework.TestResult.success;
-import static org.citrusframework.util.TestUtils.waitForCompletion;
-
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.time.StopWatch;
 import org.citrusframework.container.AbstractActionContainer;
 import org.citrusframework.container.AfterTest;
@@ -40,6 +33,14 @@ import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.lang.String.format;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static org.citrusframework.TestResult.failed;
+import static org.citrusframework.TestResult.skipped;
+import static org.citrusframework.TestResult.success;
+import static org.citrusframework.util.TestUtils.waitForCompletion;
 
 /**
  * Default test case implementation holding a list of test actions to execute. Test case also holds variable definitions and
@@ -297,6 +298,18 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             }
         }
 
+        /* test context may also have some actions to run finally */
+        for (final TestActionBuilder<?> actionBuilder : context.getFinalActions()) {
+            TestAction action = actionBuilder.build();
+            if (!action.isDisabled(context)) {
+                context.getTestActionListeners().onTestActionStart(this, action);
+                action.execute(context);
+                context.getTestActionListeners().onTestActionFinish(this, action);
+            } else {
+                context.getTestActionListeners().onTestActionSkipped(this, action);
+            }
+        }
+
         if (testResult.isSuccess() && context.hasExceptions()) {
             CitrusRuntimeException contextException = context.getExceptions().remove(0);
             testResult = getTestResultInstanceProvider(context).createFailed(this, contextException);
@@ -413,7 +426,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
         stringBuilder.append("] ");
 
-        return super.toString() + stringBuilder.toString();
+        return super.toString() + stringBuilder;
     }
 
     @Override

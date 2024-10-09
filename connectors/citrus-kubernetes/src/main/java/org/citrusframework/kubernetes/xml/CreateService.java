@@ -95,6 +95,12 @@ public class CreateService extends AbstractKubernetesAction.Builder<CreateServic
     }
 
     @Override
+    public CreateService autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
         this.delegate.setReferenceResolver(referenceResolver);
     }

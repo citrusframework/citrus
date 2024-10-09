@@ -109,6 +109,12 @@ public class VerifyCustomResource extends AbstractKubernetesAction.Builder<Verif
     }
 
     @Override
+    public VerifyCustomResource autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public VerifyCustomResourceAction doBuild() {
         return delegate.build();
     }

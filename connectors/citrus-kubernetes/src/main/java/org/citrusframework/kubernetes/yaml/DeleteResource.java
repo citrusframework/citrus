@@ -58,6 +58,12 @@ public class DeleteResource extends AbstractKubernetesAction.Builder<DeleteResou
     }
 
     @Override
+    public DeleteResource autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public DeleteResourceAction doBuild() {
         return delegate.build();
     }

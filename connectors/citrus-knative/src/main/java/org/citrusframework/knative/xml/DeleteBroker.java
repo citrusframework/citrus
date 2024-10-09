@@ -66,6 +66,12 @@ public class DeleteBroker extends AbstractKnativeAction.Builder<DeleteBrokerActi
     }
 
     @Override
+    public DeleteBroker autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
         this.delegate.setReferenceResolver(referenceResolver);
     }

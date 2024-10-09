@@ -51,6 +51,12 @@ public interface KnativeAction extends TestAction {
     String getNamespace();
 
     /**
+     * Should remove Knative resources automatically after test.
+     * @return
+     */
+    boolean isAutoRemoveResources();
+
+    /**
      * Resolves namespace name from given test context using the stored test variable.
      * Fallback to the namespace given in Knative environment settings when no test variable is present.
      *

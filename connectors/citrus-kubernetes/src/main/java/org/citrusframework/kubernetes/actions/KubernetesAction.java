@@ -40,6 +40,12 @@ public interface KubernetesAction extends TestAction {
     String getNamespace();
 
     /**
+     * Should remove Knative resources automatically after test.
+     * @return
+     */
+    boolean isAutoRemoveResources();
+
+    /**
      * Resolves namespace name from given test context using the stored test variable.
      * Fallback to the namespace given in Kubernetes environment settings when no test variable is present.
      *

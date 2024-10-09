@@ -38,6 +38,8 @@ import org.citrusframework.kubernetes.KubernetesVariableNames;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 
+import static org.citrusframework.kubernetes.actions.KubernetesActionBuilder.kubernetes;
+
 public class CreateServiceAction extends AbstractKubernetesAction {
 
     private final String serviceName;
@@ -94,6 +96,13 @@ public class CreateServiceAction extends AbstractKubernetesAction {
 
         if (created.getSpec().getClusterIP() != null) {
             context.setVariable(KubernetesVariableNames.SERVICE_CLUSTER_IP.value(), created.getSpec().getClusterIP());
+        }
+
+        if (isAutoRemoveResources()) {
+            context.doFinally(kubernetes().client(getKubernetesClient())
+                    .services()
+                    .delete(created.getMetadata().getName())
+                    .inNamespace(getNamespace()));
         }
     }
 

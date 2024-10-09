@@ -69,6 +69,12 @@ public class WatchPodLogs extends AbstractKubernetesAction.Builder<WatchPodLogsA
     }
 
     @Override
+    public WatchPodLogs autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public WatchPodLogsAction doBuild() {
         return delegate.build();
     }

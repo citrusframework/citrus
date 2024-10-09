@@ -29,6 +29,8 @@ import org.citrusframework.knative.KnativeSupport;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.kubernetes.KubernetesSettings;
 
+import static org.citrusframework.knative.actions.KnativeActionBuilder.knative;
+
 public class CreateTriggerAction extends AbstractKnativeAction {
 
     private final String triggerName;
@@ -50,6 +52,7 @@ public class CreateTriggerAction extends AbstractKnativeAction {
 
     @Override
     public void doExecute(TestContext context) {
+        String resolvedTriggerName = context.replaceDynamicContentInString(triggerName);
         TriggerSpecBuilder triggerSpec = new TriggerSpecBuilder()
                 .withBroker(brokerName(brokerName, context));
 
@@ -61,7 +64,7 @@ public class CreateTriggerAction extends AbstractKnativeAction {
                 .withApiVersion(String.format("%s/%s", KnativeSupport.knativeEventingGroup(), KnativeSupport.knativeApiVersion()))
                 .withNewMetadata()
                     .withNamespace(namespace(context))
-                    .withName(context.replaceDynamicContentInString(triggerName))
+                    .withName(context.replaceDynamicContentInString(resolvedTriggerName))
                     .withLabels(KnativeSettings.getDefaultLabels())
                 .endMetadata()
                 .withSpec(triggerSpec.build())
@@ -71,6 +74,13 @@ public class CreateTriggerAction extends AbstractKnativeAction {
                 .inNamespace(namespace(context))
                 .resource(trigger)
                 .createOr(Updatable::update);
+
+        if (isAutoRemoveResources()) {
+            context.doFinally(knative().client(getKubernetesClient()).client(getKnativeClient())
+                    .trigger()
+                    .delete(resolvedTriggerName)
+                    .inNamespace(getNamespace()));
+        }
     }
 
     private void addFilterOnAttributes(TriggerSpecBuilder triggerSpec, TestContext context) {

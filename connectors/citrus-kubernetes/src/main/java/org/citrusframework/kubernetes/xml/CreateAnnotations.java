@@ -76,6 +76,12 @@ public class CreateAnnotations extends AbstractKubernetesAction.Builder<CreateAn
     }
 
     @Override
+    public CreateAnnotations autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public CreateAnnotationsAction doBuild() {
         return delegate.build();
     }
