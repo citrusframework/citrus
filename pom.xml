@@ -195,6 +195,7 @@
     <ascii-table-version>1.8.0</ascii-table-version>
     <assertj.version>3.26.3</assertj.version>
     <awaitility.version>4.2.2</awaitility.version>
+    <aws-java-sdk2.version>2.29.5</aws-java-sdk2.version>
     <bouncycastle.version>1.78.1</bouncycastle.version>
     <byte.buddy.version>1.15.7</byte.buddy.version>
     <commons.dbcp2.version>2.12.0</commons.dbcp2.version>
@@ -249,6 +250,7 @@
     <netty.version>4.1.105.Final</netty.version>
     <okhttp.version>4.12.0</okhttp.version>
     <picoli-version>4.7.6</picoli-version>
+    <postgresql.version>42.7.3</postgresql.version>
     <saaj.version>3.0.4</saaj.version>
     <selenium.version>4.25.0</selenium.version>
     <slf4j.version>2.0.11</slf4j.version>
@@ -261,6 +263,7 @@
     <sshd.version>2.14.0</sshd.version>
     <swagger.version>1.6.9</swagger.version>
     <swagger.parser.version>2.1.22</swagger.parser.version>
+    <testcontainers.version>1.20.1</testcontainers.version>
     <testng.version>7.10.2</testng.version>
     <vertx.version>4.5.10</vertx.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
@@ -568,6 +571,57 @@
         <groupId>org.junit.vintage</groupId>
         <artifactId>junit-vintage-engine</artifactId>
         <version>${junit.jupiter.version}</version>
+      </dependency>
+
+      <!-- Testcontainers -->
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>testcontainers</artifactId>
+        <version>${testcontainers.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>mongodb</artifactId>
+        <version>${testcontainers.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${testcontainers.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>redpanda</artifactId>
+        <version>${testcontainers.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>kafka</artifactId>
+        <version>${testcontainers.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${postgresql.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-dbcp2</artifactId>
+        <version>${commons.dbcp2.version}</version>
+      </dependency>
+
+      <!-- AWS -->
+      <dependency>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>auth</artifactId>
+        <version>${aws-java-sdk2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>s3</artifactId>
+        <version>${aws-java-sdk2.version}</version>
+        <scope>test</scope>
       </dependency>
 
       <!-- Citrus http dependencies -->
@@ -1118,12 +1172,6 @@
         <groupId>org.hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
         <version>${hsqldb.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-dbcp2</artifactId>
-        <version>${commons.dbcp2.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>

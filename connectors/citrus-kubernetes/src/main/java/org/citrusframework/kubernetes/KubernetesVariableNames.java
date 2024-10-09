@@ -18,6 +18,7 @@ package org.citrusframework.kubernetes;
 
 public enum KubernetesVariableNames {
 
+    CONNECTED("KUBERNETES_CONNECTED"),
     NAMESPACE("KUBERNETES_NAMESPACE"),
     SERVICE_CLUSTER_IP("KUBERNETES_SERVICE_CLUSTER_IP");
 

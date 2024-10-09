@@ -22,6 +22,7 @@
     <module>citrus-selenium</module>
     <module>citrus-sql</module>
     <module>citrus-jbang-connector</module>
+    <module>citrus-testcontainers</module>
   </modules>
 
 </project>

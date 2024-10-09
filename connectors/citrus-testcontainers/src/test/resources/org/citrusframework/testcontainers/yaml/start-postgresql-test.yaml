@@ -1,0 +1,11 @@
+name: "StartPostgreSQLTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - testcontainers:
+      start:
+        postgresql:
+          initScript:
+            value: |
+              CREATE TABLE IF NOT EXISTS todo (id SERIAL PRIMARY KEY, task VARCHAR, completed INTEGER);

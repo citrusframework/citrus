@@ -119,6 +119,14 @@ public final class KubernetesSupport {
         return KubernetesSettings.getNamespace();
     }
 
+    public static boolean isConnected(TestContext context) {
+        if (context.getVariables().containsKey(KubernetesVariableNames.CONNECTED.value())) {
+            return context.getVariable(KubernetesVariableNames.CONNECTED.value(), Boolean.class);
+        }
+
+        return false;
+    }
+
     public static Yaml yaml() {
         Representer representer = new Representer(new DumperOptions()) {
             @Override

@@ -66,6 +66,8 @@ public class KubernetesActor extends TestActor {
                         logger.warn("Skipping Kubernetes action as no proper Kubernetes environment is available on host system!", e);
                         connected = new AtomicBoolean(false);
                     }
+                } else {
+                    return false;
                 }
             }
 

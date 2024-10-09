@@ -1,0 +1,8 @@
+name: "StopContainerTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - testcontainers:
+      stop:
+        name: "my-container"

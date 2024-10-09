@@ -53,6 +53,8 @@
         <include>org.citrusframework:citrus-docker</include>
         <include>org.citrusframework:citrus-selenium</include>
         <include>org.citrusframework:citrus-kubernetes</include>
+        <include>org.citrusframework:citrus-knative</include>
+        <include>org.citrusframework:citrus-testcontainers</include>
         <include>org.citrusframework:citrus-sql</include>
         <include>org.citrusframework:citrus-jbang-connector</include>
 

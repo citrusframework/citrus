@@ -1,0 +1,10 @@
+name: "StartLocalStackTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - testcontainers:
+      start:
+        localstack:
+          services:
+            - "S3"
