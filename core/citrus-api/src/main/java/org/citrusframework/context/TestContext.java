@@ -16,6 +16,17 @@
 
 package org.citrusframework.context;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
@@ -57,17 +68,6 @@ import org.citrusframework.variable.VariableUtils;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 /**
  * Class holding and managing test variables. The test context also provides utility methods
@@ -136,6 +136,12 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      * List of actions to run after each test.
      */
     private List<AfterTest> afterTest = new ArrayList<>();
+
+    /**
+     * Further chain of test actions to be executed in any case (success, error)
+     * Usually used to clean up resources in any case of test result.
+     */
+    private final List<TestActionBuilder<?>> finalActions = new ArrayList<>();
 
     /**
      * List of message listeners to be informed on inbound and outbound message exchange
@@ -663,6 +669,14 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     }
 
     /**
+     * Optains the final actions.
+     * @return
+     */
+    public List<TestActionBuilder<?>> getFinalActions() {
+        return finalActions;
+    }
+
+    /**
      * Obtains the segmentVariableExtractorRegistry
      *
      * @return
@@ -914,6 +928,10 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
                 Optional.ofNullable(testResult)
                         .map(TestResult::isSuccess)
                         .orElse(false);
+    }
+
+    public void doFinally(TestActionBuilder<?> action) {
+        this.finalActions.add(action);
     }
 
     /**

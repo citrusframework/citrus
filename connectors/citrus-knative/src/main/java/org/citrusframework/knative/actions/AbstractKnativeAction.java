@@ -21,6 +21,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
@@ -38,6 +39,8 @@ public abstract class AbstractKnativeAction extends AbstractTestAction implement
     private final ClusterType clusterType;
     private final String namespace;
 
+    private final boolean autoRemoveResources;
+
     public AbstractKnativeAction(String name, Builder<?, ?> builder) {
         super("knative:" + name, builder);
 
@@ -45,6 +48,7 @@ public abstract class AbstractKnativeAction extends AbstractTestAction implement
         this.kubernetesClient = builder.kubernetesClient;
         this.namespace = builder.namespace;
         this.clusterType = builder.clusterType;
+        this.autoRemoveResources = builder.autoRemoveResources;
     }
 
     @Override
@@ -67,6 +71,11 @@ public abstract class AbstractKnativeAction extends AbstractTestAction implement
     }
 
     @Override
+    public boolean isAutoRemoveResources() {
+        return autoRemoveResources;
+    }
+
+    @Override
     public String getNamespace() {
         return namespace;
     }
@@ -83,6 +92,8 @@ public abstract class AbstractKnativeAction extends AbstractTestAction implement
         private String namespace;
 
         protected ReferenceResolver referenceResolver;
+
+        private boolean autoRemoveResources = KnativeSettings.isAutoRemoveResources();
 
         /**
          * Use a custom Kubernetes client.
@@ -113,6 +124,11 @@ public abstract class AbstractKnativeAction extends AbstractTestAction implement
          */
         public B clusterType(ClusterType clusterType) {
             this.clusterType = clusterType;
+            return self;
+        }
+
+        public B autoRemoveResources(boolean enabled) {
+            this.autoRemoveResources = enabled;
             return self;
         }
 

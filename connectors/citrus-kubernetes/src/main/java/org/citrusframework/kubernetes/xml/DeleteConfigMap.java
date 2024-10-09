@@ -58,6 +58,12 @@ public class DeleteConfigMap extends AbstractKubernetesAction.Builder<DeleteConf
     }
 
     @Override
+    public DeleteConfigMap autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public DeleteConfigMapAction doBuild() {
         return delegate.build();
     }

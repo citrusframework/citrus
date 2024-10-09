@@ -18,6 +18,7 @@ package org.citrusframework.kubernetes.actions;
 
 import java.util.Locale;
 
+import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.client.CustomResource;
 import io.fabric8.kubernetes.model.annotation.Group;
 import io.fabric8.kubernetes.model.annotation.Version;
@@ -28,7 +29,7 @@ public class DeleteCustomResourceAction extends AbstractKubernetesAction {
 
     private final String resourceName;
     private final String type;
-    private final Class<? extends CustomResource<?, ?>> resourceType;
+    private final Class<? extends HasMetadata> resourceType;
     private final String version;
     private final String kind;
     private final String group;
@@ -71,7 +72,7 @@ public class DeleteCustomResourceAction extends AbstractKubernetesAction {
     public static class Builder extends AbstractKubernetesAction.Builder<DeleteCustomResourceAction, Builder> {
 
         private String resourceName;
-        private Class<? extends CustomResource<?, ?>> resourceType;
+        private Class<? extends HasMetadata> resourceType;
         private String type;
         private String version;
         private String kind;
@@ -82,7 +83,7 @@ public class DeleteCustomResourceAction extends AbstractKubernetesAction {
             return this;
         }
 
-        public Builder resourceType(Class<CustomResource<?, ?>> resourceType) {
+        public Builder resourceType(Class<? extends HasMetadata> resourceType) {
             this.resourceType = resourceType;
             return this;
         }

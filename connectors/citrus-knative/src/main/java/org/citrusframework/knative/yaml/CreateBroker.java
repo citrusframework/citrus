@@ -62,6 +62,12 @@ public class CreateBroker extends AbstractKnativeAction.Builder<CreateBrokerActi
     }
 
     @Override
+    public CreateBroker autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
         this.delegate.setReferenceResolver(referenceResolver);
     }

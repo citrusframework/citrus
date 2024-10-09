@@ -83,6 +83,12 @@ public class CreateCustomResource extends AbstractKubernetesAction.Builder<Creat
     }
 
     @Override
+    public CreateCustomResource autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public CreateCustomResourceAction doBuild() {
         return delegate.build();
     }

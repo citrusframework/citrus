@@ -70,6 +70,12 @@ public class CreateSubscription extends AbstractKnativeAction.Builder<CreateSubs
     }
 
     @Override
+    public CreateSubscription autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
         this.delegate.setReferenceResolver(referenceResolver);
     }

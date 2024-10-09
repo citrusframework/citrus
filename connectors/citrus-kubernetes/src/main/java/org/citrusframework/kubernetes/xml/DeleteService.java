@@ -58,6 +58,12 @@ public class DeleteService extends AbstractKubernetesAction.Builder<DeleteServic
     }
 
     @Override
+    public DeleteService autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public DeleteServiceAction doBuild() {
         return delegate.build();
     }

@@ -33,6 +33,8 @@ import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 
+import static org.citrusframework.kubernetes.actions.KubernetesActionBuilder.kubernetes;
+
 public class CreateCustomResourceAction extends AbstractKubernetesAction implements KubernetesAction {
 
     private final String type;
@@ -69,11 +71,19 @@ public class CreateCustomResourceAction extends AbstractKubernetesAction impleme
         }
 
         if (resourceType != null) {
-            getKubernetesClient()
+            HasMetadata resource = getKubernetesClient()
                     .resources(resourceType)
                     .inNamespace(namespace(context))
                     .load(new ByteArrayInputStream(resolvedResource.getBytes(StandardCharsets.UTF_8)))
                     .createOr(Updatable::update);
+
+            if (isAutoRemoveResources()) {
+                context.doFinally(kubernetes().client(getKubernetesClient())
+                        .customResources()
+                        .delete(resource.getMetadata().getName())
+                        .inNamespace(getNamespace())
+                        .resourceType(resourceType));
+            }
         } else {
             GenericKubernetesResource resource = getKubernetesClient()
                     .genericKubernetesResources(KubernetesSupport.crdContext(context.replaceDynamicContentInString(type),
@@ -86,6 +96,17 @@ public class CreateCustomResourceAction extends AbstractKubernetesAction impleme
 
             if (resource.get("messages") != null) {
                 throw new CitrusRuntimeException(String.format("Failed to create custom resource - %s", resource.get("messages")));
+            }
+
+            if (isAutoRemoveResources()) {
+                context.doFinally(kubernetes().client(getKubernetesClient())
+                        .customResources()
+                        .delete(resource.getMetadata().getName())
+                        .inNamespace(getNamespace())
+                        .type(type)
+                        .group(group)
+                        .kind(kind)
+                        .version(version));
             }
         }
     }

@@ -102,6 +102,12 @@ public class VerifyPod extends AbstractKubernetesAction.Builder<VerifyPodAction,
     }
 
     @Override
+    public VerifyPod autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public VerifyPodAction doBuild() {
         return delegate.build();
     }

@@ -68,6 +68,12 @@ public class CreateConfigMap extends AbstractKubernetesAction.Builder<CreateConf
     }
 
     @Override
+    public CreateConfigMap autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public CreateConfigMapAction doBuild() {
         return delegate.build();
     }

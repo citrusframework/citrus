@@ -76,6 +76,12 @@ public class CreateLabels extends AbstractKubernetesAction.Builder<CreateLabelsA
     }
 
     @Override
+    public CreateLabels autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public CreateLabelsAction doBuild() {
         return delegate.build();
     }

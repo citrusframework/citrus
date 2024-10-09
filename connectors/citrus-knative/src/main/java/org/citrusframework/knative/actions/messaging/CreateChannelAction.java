@@ -25,6 +25,8 @@ import org.citrusframework.knative.KnativeSupport;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.kubernetes.KubernetesSettings;
 
+import static org.citrusframework.knative.actions.KnativeActionBuilder.knative;
+
 public class CreateChannelAction extends AbstractKnativeAction {
 
     private final String channelName;
@@ -37,11 +39,12 @@ public class CreateChannelAction extends AbstractKnativeAction {
 
     @Override
     public void doExecute(TestContext context) {
+        String resolvedChannelName = context.replaceDynamicContentInString(channelName);
         Channel channel = new ChannelBuilder()
             .withApiVersion(String.format("%s/%s", KnativeSupport.knativeMessagingGroup(), KnativeSupport.knativeApiVersion()))
             .withNewMetadata()
                 .withNamespace(namespace(context))
-                .withName(context.replaceDynamicContentInString(channelName))
+                .withName(context.replaceDynamicContentInString(resolvedChannelName))
                 .withLabels(KnativeSettings.getDefaultLabels())
             .endMetadata()
             .build();
@@ -50,6 +53,13 @@ public class CreateChannelAction extends AbstractKnativeAction {
                 .inNamespace(namespace(context))
                 .resource(channel)
                 .createOr(Updatable::update);
+
+        if (isAutoRemoveResources()) {
+            context.doFinally(knative().client(getKubernetesClient()).client(getKnativeClient())
+                    .channels()
+                    .delete(resolvedChannelName)
+                    .inNamespace(getNamespace()));
+        }
     }
 
     @Override

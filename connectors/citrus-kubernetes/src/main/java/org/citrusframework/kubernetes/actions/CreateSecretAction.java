@@ -33,6 +33,8 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 
+import static org.citrusframework.kubernetes.actions.KubernetesActionBuilder.kubernetes;
+
 public class CreateSecretAction extends AbstractKubernetesAction implements KubernetesAction {
 
     private final String secretName;
@@ -74,10 +76,17 @@ public class CreateSecretAction extends AbstractKubernetesAction implements Kube
                 .withData(data)
                 .build();
 
-        getKubernetesClient().secrets()
+        Secret created = getKubernetesClient().secrets()
                 .inNamespace(namespace(context))
                 .resource(secret)
                 .createOr(Updatable::update);
+
+        if (isAutoRemoveResources()) {
+            context.doFinally(kubernetes().client(getKubernetesClient())
+                    .secrets()
+                    .delete(created.getMetadata().getName())
+                    .inNamespace(getNamespace()));
+        }
     }
 
     /**

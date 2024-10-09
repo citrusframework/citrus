@@ -76,6 +76,12 @@ public class DeleteResource extends AbstractKnativeAction.Builder<DeleteKnativeR
     }
 
     @Override
+    public DeleteResource autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
         this.delegate.setReferenceResolver(referenceResolver);
     }

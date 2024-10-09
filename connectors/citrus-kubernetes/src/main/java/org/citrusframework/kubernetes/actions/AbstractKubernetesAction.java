@@ -20,6 +20,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.kubernetes.KubernetesActor;
+import org.citrusframework.kubernetes.KubernetesSettings;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.slf4j.Logger;
@@ -37,11 +38,14 @@ public abstract class AbstractKubernetesAction extends AbstractTestAction implem
 
     private final String namespace;
 
+    private final boolean autoRemoveResources;
+
     public AbstractKubernetesAction(String name, Builder<?, ?> builder) {
         super("k8s:" + name, builder);
 
         this.kubernetesClient = builder.kubernetesClient;
         this.namespace = builder.namespace;
+        this.autoRemoveResources = builder.autoRemoveResources;
         this.setActor(builder.getActor());
     }
 
@@ -55,6 +59,11 @@ public abstract class AbstractKubernetesAction extends AbstractTestAction implem
         return namespace;
     }
 
+    @Override
+    public boolean isAutoRemoveResources() {
+        return autoRemoveResources;
+    }
+
     /**
      * Action builder.
      */
@@ -62,6 +71,7 @@ public abstract class AbstractKubernetesAction extends AbstractTestAction implem
 
         private KubernetesClient kubernetesClient;
         private String namespace;
+        private boolean autoRemoveResources = KubernetesSettings.isAutoRemoveResources();
         private ReferenceResolver referenceResolver;
 
         /**
@@ -77,6 +87,11 @@ public abstract class AbstractKubernetesAction extends AbstractTestAction implem
          */
         public B inNamespace(String namespace) {
             this.namespace = namespace;
+            return self;
+        }
+
+        public B autoRemoveResources(boolean enabled) {
+            this.autoRemoveResources = enabled;
             return self;
         }
 

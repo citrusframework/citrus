@@ -28,6 +28,8 @@ import org.citrusframework.knative.KnativeVariableNames;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.kubernetes.KubernetesSettings;
 
+import static org.citrusframework.knative.actions.KnativeActionBuilder.knative;
+
 public class CreateBrokerAction extends AbstractKnativeAction {
 
     private final String brokerName;
@@ -99,6 +101,13 @@ public class CreateBrokerAction extends AbstractKnativeAction {
                 .inNamespace(brokerNamespace)
                 .resource(broker)
                 .createOr(Updatable::update);
+
+        if (isAutoRemoveResources()) {
+            context.doFinally(knative().client(getKubernetesClient()).client(getKnativeClient())
+                    .brokers()
+                    .delete(resolvedBrokerName)
+                    .inNamespace(getNamespace()));
+        }
 
         logger.info(String.format("Successfully created Knative broker '%s' in namespace %s", resolvedBrokerName, brokerNamespace));
     }

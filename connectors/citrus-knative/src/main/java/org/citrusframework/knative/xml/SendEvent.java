@@ -96,6 +96,12 @@ public class SendEvent extends AbstractKnativeAction.Builder<SendEventAction, Se
     }
 
     @Override
+    public SendEvent autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public SendEventAction build() {
         return delegate.build();
     }

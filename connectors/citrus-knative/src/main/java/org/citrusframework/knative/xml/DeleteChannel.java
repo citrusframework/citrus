@@ -60,6 +60,12 @@ public class DeleteChannel extends AbstractKnativeAction.Builder<DeleteKnativeRe
     }
 
     @Override
+    public DeleteChannel autoRemoveResources(boolean enabled) {
+        this.delegate.autoRemoveResources(enabled);
+        return this;
+    }
+
+    @Override
     public DeleteChannel inNamespace(String namespace) {
         this.delegate.inNamespace(namespace);
         return this;
