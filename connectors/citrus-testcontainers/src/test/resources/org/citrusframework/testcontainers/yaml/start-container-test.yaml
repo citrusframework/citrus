@@ -1,0 +1,11 @@
+name: "StartContainerTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - testcontainers:
+      start:
+        container:
+          name: "my-container"
+          image: "busybox:latest"
+          command: "echo Hello World"

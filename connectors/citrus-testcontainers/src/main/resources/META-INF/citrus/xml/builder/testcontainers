@@ -1,0 +1,2 @@
+type=org.citrusframework.testcontainers.xml.Testcontainers
+ns=http://citrusframework.org/schema/xml/testcase

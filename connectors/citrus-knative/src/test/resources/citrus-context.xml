@@ -6,8 +6,7 @@
        xmlns:citrus-k8s="http://www.citrusframework.org/schema/kubernetes/config"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                         http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
-                         http://www.citrusframework.org/schema/kubernetes/config http://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config.xsd">
+                         http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 
   <context:property-placeholder location="classpath:citrus.properties"
                                 ignore-unresolvable="true"/>

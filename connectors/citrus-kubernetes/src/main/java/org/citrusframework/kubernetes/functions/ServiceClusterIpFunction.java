@@ -24,12 +24,17 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
+import org.citrusframework.kubernetes.KubernetesSettings;
 import org.citrusframework.kubernetes.KubernetesSupport;
 
 public class ServiceClusterIpFunction implements Function {
 
     @Override
     public String execute(List<String> parameterList, TestContext context) {
+        if (KubernetesSettings.isLocal()) {
+            return "127.0.0.1";
+        }
+
         if (parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty - please provide a proper service name");
         }
