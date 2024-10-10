@@ -114,7 +114,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
      * @return
      */
     public B connectors(List<Connector> connectors) {
-        endpoint.setConnectors(connectors.toArray(new Connector[connectors.size()]));
+        endpoint.setConnectors(connectors.toArray(new Connector[0]));
         return self;
     }
 

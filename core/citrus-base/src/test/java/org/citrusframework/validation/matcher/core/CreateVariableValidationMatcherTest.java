@@ -16,29 +16,29 @@
 
 package org.citrusframework.validation.matcher.core;
 
-import java.util.Arrays;
-
 import org.citrusframework.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 public class CreateVariableValidationMatcherTest extends UnitTestSupport {
 
-    private CreateVariableValidationMatcher matcher = new CreateVariableValidationMatcher();
+    private final CreateVariableValidationMatcher matcher = new CreateVariableValidationMatcher();
 
     @Test
     public void testValidateSuccess() {
-        matcher.validate("field", "This is a test", Arrays.<String>asList(), context);
+        matcher.validate("field", "This is a test", List.of(), context);
 
         Assert.assertEquals(context.getVariable("field"), "This is a test");
 
-        matcher.validate("field", "This is a 2nd test", Arrays.<String>asList(), context);
+        matcher.validate("field", "This is a 2nd test", List.of(), context);
 
         Assert.assertEquals(context.getVariable("field"), "This is a 2nd test");
 
         context.setVariable("foo", "bar");
 
-        matcher.validate("field", "Another test", Arrays.asList("foo"), context);
+        matcher.validate("field", "Another test", List.of("foo"), context);
 
         Assert.assertEquals(context.getVariable("field"), "This is a 2nd test");
         Assert.assertEquals(context.getVariable("foo"), "Another test");

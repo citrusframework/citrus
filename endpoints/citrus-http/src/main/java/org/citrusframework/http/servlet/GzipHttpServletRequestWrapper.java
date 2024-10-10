@@ -52,7 +52,7 @@ public class GzipHttpServletRequestWrapper extends HttpServletRequestWrapper {
     /**
      * Gzip enabled servlet input stream.
      */
-    private class GzipServletInputStream extends ServletInputStream {
+    private static class GzipServletInputStream extends ServletInputStream {
         private final GZIPInputStream gzipStream;
 
         /**

@@ -62,7 +62,7 @@ public abstract class AbstractWatchCommand<T extends HasMetadata, L extends Kube
 
     @Override
     public void execute(MixedOperation<T, L, R> operation, TestContext context) {
-        watch = operation.watch(new Watcher<T>() {
+        watch = operation.watch(new Watcher<>() {
             @Override
             public void eventReceived(Action action, T resource) {
                 if (results.isEmpty() && cachedResult == null) {

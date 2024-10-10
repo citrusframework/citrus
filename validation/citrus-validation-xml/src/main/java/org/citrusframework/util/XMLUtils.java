@@ -121,7 +121,7 @@ public final class XMLUtils {
         String element = pathExpression.substring(pathExpression.lastIndexOf('.')+1);
         elements = doc.getElementsByTagNameNS("*", element);
 
-        String attributeName = null;
+        String attributeName;
         if (elements.getLength() == 0) {
             //No element found, but maybe we are searching for an attribute
             attributeName = element;

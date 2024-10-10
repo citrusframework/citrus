@@ -16,13 +16,14 @@
 
 package org.citrusframework.validation.matcher.core;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 
 public class ContainsIgnoreCaseValidationMatcherTest extends UnitTestSupport {
 
@@ -30,17 +31,17 @@ public class ContainsIgnoreCaseValidationMatcherTest extends UnitTestSupport {
 
     @Test
     public void testValidateSuccess() {
-        matcher.validate("field", "This is a test", Arrays.asList("is a"), context);
-        matcher.validate("field", "This is a test", Arrays.asList("this"), context);
-        matcher.validate("field", "This is a test", Arrays.asList("TEST"), context);
-        matcher.validate("field", "This is a 0815test", Arrays.asList("0815"), context);
-        matcher.validate("field", "This is a test", Arrays.asList(" "), context);
-        matcher.validate("field", "This is a test", Arrays.asList(" IS A "), context);
+        matcher.validate("field", "This is a test", singletonList("is a"), context);
+        matcher.validate("field", "This is a test", singletonList("this"), context);
+        matcher.validate("field", "This is a test", singletonList("TEST"), context);
+        matcher.validate("field", "This is a 0815test", singletonList("0815"), context);
+        matcher.validate("field", "This is a test", singletonList(" "), context);
+        matcher.validate("field", "This is a test", singletonList(" IS A "), context);
     }
 
     @Test
     public void testValidateError() {
-    	assertException("field", "This is a test", Arrays.asList("0815"));
+    	assertException("field", "This is a test", singletonList("0815"));
     }
 
     private void assertException(String fieldName, String value, List<String> control) {

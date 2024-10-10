@@ -16,12 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.Completable;
 import org.citrusframework.context.TestContext;
@@ -36,6 +30,7 @@ import org.citrusframework.message.builder.MessageBuilderSupport;
 import org.citrusframework.message.builder.SendMessageBuilderSupport;
 import org.citrusframework.util.IsJsonPredicate;
 import org.citrusframework.util.IsXmlPredicate;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.SchemaValidator;
 import org.citrusframework.validation.context.SchemaValidationContext;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
@@ -44,7 +39,12 @@ import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.citrusframework.util.StringUtils;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 /**
  * This action sends a messages to a specified message endpoint. The action holds a reference to
@@ -152,7 +152,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         if (forkMode) {
             logger.debug("Forking message sending action ...");
 
-            ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
+            var taskExecutor = newSingleThreadExecutor();
             taskExecutor.execute(() -> {
                 try {
                     validateMessage(message, context);
@@ -164,6 +164,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
                         context.addException(new CitrusRuntimeException(e));
                     }
                 } finally {
+                    taskExecutor.shutdownNow();
                     finished.complete(context);
                 }
             });

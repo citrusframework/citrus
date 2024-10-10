@@ -16,19 +16,20 @@
 
 package org.citrusframework.docker.integration;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DockerClientImpl;
 import com.github.dockerjava.jaxrs.JerseyDockerCmdExecFactory;
+import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.IHookCallBack;
 import org.testng.ITestResult;
 import org.testng.annotations.BeforeSuite;
+
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 /**
  * @since 2.4
@@ -45,8 +46,9 @@ public class AbstractDockerIT extends TestNGCitrusSpringSupport {
     public void checkDockerEnvironment() {
         boolean enabled = Boolean.parseBoolean(System.getProperty("citrus.docker.it.enabled", Boolean.FALSE.toString()));
         if (enabled) {
+            var executor = newSingleThreadExecutor();
             try {
-                Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
+                Future<Boolean> future = executor.submit(() -> {
                     DockerClient dockerClient = DockerClientImpl.getInstance()
                             .withDockerCmdExecFactory(new JerseyDockerCmdExecFactory());
 
@@ -57,6 +59,8 @@ public class AbstractDockerIT extends TestNGCitrusSpringSupport {
                 connected = future.get(5000, TimeUnit.MILLISECONDS);
             } catch (Exception e) {
                 logger.warn("Skipping Docker test execution as no proper Docker environment is available on host system!", e);
+            } finally {
+                executor.shutdownNow();
             }
         }
     }

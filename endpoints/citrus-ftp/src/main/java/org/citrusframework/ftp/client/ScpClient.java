@@ -16,10 +16,6 @@
 
 package org.citrusframework.ftp.client;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Optional;
-
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.keyverifier.AcceptAllServerKeyVerifier;
 import org.apache.sshd.client.keyverifier.KnownHostsServerKeyVerifier;
@@ -41,6 +37,10 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
 
 /**
  * @since 2.7.6
@@ -118,8 +118,7 @@ public class ScpClient extends SftpClient {
 
     @Override
     protected void connectAndLogin() {
-        try {
-            SshClient client = SshClient.setUpDefaultClient();
+        try (var client = SshClient.setUpDefaultClient()) {
             client.start();
 
             if (getEndpointConfiguration().isStrictHostChecking()) {
