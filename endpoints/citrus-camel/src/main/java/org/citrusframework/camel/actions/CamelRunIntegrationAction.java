@@ -96,7 +96,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
             context.setVariable(name + ":pid", pid);
             context.setVariable(name + ":process:" + pid, pao);
 
-            logger.info("Started Camel integration '%s'".formatted(name));
+            logger.info("Started Camel integration '%s' (%s)".formatted(name, pid));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to create temporary file from Camel integration");
         }

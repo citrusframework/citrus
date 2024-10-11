@@ -30,14 +30,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.JBangSupport;
 import org.citrusframework.jbang.ProcessAndOutput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Camel JBang app.
  */
 public class CamelJBang {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(CamelVerifyIntegrationAction.class);
 
     private final JBangSupport camelApp = JBangSupport.jbang().app(CamelJBangSettings.getCamelApp());
 
@@ -56,6 +62,8 @@ public class CamelJBang {
         for (String url : CamelJBangSettings.getTrustUrl()) {
             camelApp.trust(url);
         }
+
+        logger.info("Camel JBang version: " + version());
     }
 
     /**
