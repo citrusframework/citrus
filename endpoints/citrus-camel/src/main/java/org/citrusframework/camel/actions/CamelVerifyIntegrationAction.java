@@ -82,7 +82,7 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
 
     private void verifyRouteLogs(Long pid, String name, String message, TestContext context) {
         if (printLogs) {
-            INTEGRATION_LOG.info(String.format("Waiting for integration '%s' to log message", name));
+            INTEGRATION_LOG.info(String.format("Waiting for Camel integration '%s' to log message", name));
         }
 
         String log;
@@ -98,55 +98,66 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
             }
 
             if (log.contains(message)) {
-                logger.info("Verified integration logs - All values OK!");
+                logger.info("Verified Camel integration logs - All values OK!");
                 return;
             }
 
             if (!printLogs) {
-                logger.warn(String.format("Waiting for integration '%s' to log message - retry in %s ms", name, delayBetweenAttempts));
+                logger.warn(String.format("Waiting for Camel integration '%s' to log message - retry in %s ms", name, delayBetweenAttempts));
             }
 
             try {
                 Thread.sleep(delayBetweenAttempts);
             } catch (InterruptedException e) {
-                logger.warn("Interrupted while waiting for integration logs", e);
+                logger.warn("Interrupted while waiting for Camel integration logs", e);
             }
         }
 
         throw new ActionTimeoutException((maxAttempts * delayBetweenAttempts),
-                new CitrusRuntimeException(String.format("Failed to verify integration '%s' - " +
+                new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' - " +
                         "has not printed message '%s' after %d attempts", name, message, maxAttempts)));
     }
 
     private Long verifyRouteStatus(String name, String phase, TestContext context) {
-        INTEGRATION_STATUS_LOG.info(String.format("Waiting for integration '%s' to be in state '%s'", name, phase));
+        INTEGRATION_STATUS_LOG.info(String.format("Waiting for Camel integration '%s' to be in state '%s'", name, phase));
 
         for (int i = 0; i < maxAttempts; i++) {
             if (context.getVariables().containsKey(name + ":pid")) {
                 Long pid = context.getVariable(name + ":pid", Long.class);
                 Map<String, String> properties = camelJBang().get(pid);
                 if ((phase.equals("Stopped") && properties.isEmpty()) || (!properties.isEmpty() && properties.get("STATUS").equals(phase))) {
-                    logger.info(String.format("Verified integration '%s' state '%s' - All values OK!", name, phase));
+                    logger.info(String.format("Verified Camel integration '%s' state '%s' - All values OK!", name, phase));
                     return pid;
                 } else if (phase.equals("Error")) {
-                    logger.info(String.format("Integration '%s' is in state 'Error'", name));
+                    logger.info(String.format("Camel integration '%s' is in state 'Error'", name));
                     if (stopOnErrorStatus) {
-                        throw new CitrusRuntimeException(String.format("Failed to verify integration '%s' - is in state 'Error'", name));
+                        throw new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' - is in state 'Error'", name));
+                    }
+                }
+
+                if (context.getVariables().containsKey(name + ":process:" + pid)) {
+                    // check if process is still alive
+                    ProcessAndOutput pao = context.getVariable(name + ":process:" + pid, ProcessAndOutput.class);
+                    if (!pao.getProcess().isAlive()) {
+                        logger.info("Failed to verify Camel integration '%s' - exit code %s".formatted(name, pao.getProcess().exitValue()));
+                        logger.info(pao.getOutput());
+
+                        throw new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' - exit code %s", name, pao.getProcess().exitValue()));
                     }
                 }
             }
 
             logger.info(System.lineSeparator() + camelJBang().ps());
-            logger.info(String.format("Waiting for integration '%s' to be in state '%s'- retry in %s ms", name, phase, delayBetweenAttempts));
+            logger.info(String.format("Waiting for Camel integration '%s' to be in state '%s'- retry in %s ms", name, phase, delayBetweenAttempts));
             try {
                 Thread.sleep(delayBetweenAttempts);
             } catch (InterruptedException e) {
-                logger.warn("Interrupted while waiting for integration state", e);
+                logger.warn("Interrupted while waiting for Camel integration state", e);
             }
         }
 
         throw new ActionTimeoutException((maxAttempts * delayBetweenAttempts),
-                new CitrusRuntimeException(String.format("Failed to verify integration '%s' - " +
+                new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' - " +
                         "is not in state '%s' after %d attempts", name, phase, maxAttempts)));
 
     }

@@ -59,7 +59,7 @@ public class CamelStopIntegrationAction extends AbstractCamelJBangAction {
 
         camelJBang().stop(pid);
 
-        logger.info("Stopped Camel integration '%s'".formatted(name));
+        logger.info("Stopped Camel integration '%s' (%s)".formatted(name, pid));
     }
 
     public String getIntegrationName() {
