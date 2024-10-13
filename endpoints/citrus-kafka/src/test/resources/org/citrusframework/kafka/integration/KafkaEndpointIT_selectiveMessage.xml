@@ -61,7 +61,7 @@
           <element name="header-filter-key" value="traceparent"/>
           <element name="header-filter-value" value="${traceId}"/>
           <element name="header-filter-comparator" value="CONTAINS"/>
-          <element name="event-lookback-window" value="PT1S"/>
+          <element name="event-lookback-window" value="PT5S"/>
         </selector>
         <message>
           <data>
