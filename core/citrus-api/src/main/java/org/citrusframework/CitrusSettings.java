@@ -427,7 +427,7 @@ public final class CitrusSettings {
      * @param def  the default value
      * @return first value encountered, which is not null. May return null, if default value is null.
      */
-    private static String getPropertyEnvOrDefault(String prop, String env, String def) {
+    public static String getPropertyEnvOrDefault(String prop, String env, String def) {
         return getProperty(prop, getenv(env) != null ? getenv(env) : def);
     }
 }

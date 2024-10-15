@@ -16,11 +16,12 @@
 
 package org.citrusframework.http.message;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.util.StringUtils;
@@ -42,41 +43,57 @@ public class HttpQueryParamHeaderValidator extends DefaultHeaderValidator {
             return;
         }
 
-        Map<String, String> receiveParams = convertToMap(received);
-        Map<String, String> controlParams = convertToMap(control);
+        // TODO Christoph Deppisch: I changed this to support multi lists, e.q. required for array query parameters.
+        //  Not sure about consequences though. Therefore, i call a new method super.validateHeaderArray below.
+        //  Maybe we should fix this in general.
+        Map<String, Object> receiveParams = convertToMap(received);
+        Map<String, Object> controlParams = convertToMap(control);
 
-        for (Map.Entry<String, String> param : controlParams.entrySet()) {
+        for (Map.Entry<String, Object> param : controlParams.entrySet()) {
             if (!receiveParams.containsKey(param.getKey())) {
                 throw new ValidationException("Validation failed: Query param '" + param.getKey() + "' is missing");
             }
 
-            super.validateHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS + "(" + param.getKey() + ")", receiveParams.get(param.getKey()), param.getValue(), context, validationContext);
+            super.validateHeaderArray(HttpMessageHeaders.HTTP_QUERY_PARAMS + "(" + param.getKey() + ")", receiveParams.get(param.getKey()), param.getValue(), context, validationContext);
         }
+
     }
 
     /**
-     * Convert query string key-value expression to map.
-     * @param expression
-     * @return
+     * Convert query string key-value expression to map. Note, that there could be hamcrest matchers
+     * encoded in the expression.
      */
-    private Map<String, String> convertToMap(Object expression) {
-        if (expression instanceof Map) {
-            return (Map<String, String>) expression;
+    private Map<String, Object> convertToMap(Object expression) {
+
+        if (expression instanceof Map<?,?>) {
+            return (Map<String, Object>) expression;
         }
 
         return Stream.of(Optional.ofNullable(expression)
                 .map(Object::toString)
                 .orElse("")
                 .split(","))
-                .map(keyValue -> keyValue.split("="))
-                .filter(keyValue -> StringUtils.hasText(keyValue[0]))
-                .map(keyValue -> {
-                    if (keyValue.length < 2) {
-                        return new String[]{keyValue[0], ""};
+            .map(keyValue -> keyValue.split("="))
+            .filter(keyValue -> StringUtils.hasText(keyValue[0]))
+            .collect(Collectors.toMap(
+                keyValue -> keyValue[0],  // Key function
+                keyValue ->
+                    // Value function: if no value is present, use an empty string
+                     (keyValue.length < 2 ? "" : keyValue[1])
+                ,
+                (existingValue, newValue) -> {  // Merge function to handle duplicate keys
+                    if (existingValue instanceof List<?>) {
+                        ((List<String>) existingValue).add(newValue.toString());
+                        return existingValue;
+                    } else {
+                        List<String> list = new ArrayList<>();
+                        list.add((String) existingValue);
+                        list.add(newValue.toString());
+                        return list;
                     }
-                    return keyValue;
-                })
-                .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1]));
+                }
+            ));
+
     }
 
     @Override

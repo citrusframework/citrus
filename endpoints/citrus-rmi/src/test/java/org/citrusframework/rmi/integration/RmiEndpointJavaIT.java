@@ -25,6 +25,7 @@ import org.citrusframework.rmi.server.RmiServer;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;

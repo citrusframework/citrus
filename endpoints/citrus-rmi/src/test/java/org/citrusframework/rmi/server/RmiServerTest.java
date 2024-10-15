@@ -16,11 +16,15 @@
 
 package org.citrusframework.rmi.server;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.reset;
+
 import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.registry.Registry;
 import java.util.List;
-
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
@@ -36,11 +40,6 @@ import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.reset;
 
 /**
  * @since 2.5
