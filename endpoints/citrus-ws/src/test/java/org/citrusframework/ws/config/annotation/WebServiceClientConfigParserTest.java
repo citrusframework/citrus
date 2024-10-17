@@ -16,9 +16,11 @@
 
 package org.citrusframework.ws.config.annotation;
 
+import static org.citrusframework.ws.client.WsTestUtils.getInterceptors;
+import static org.mockito.Mockito.when;
+
 import java.util.Arrays;
 import java.util.Map;
-
 import org.citrusframework.TestActor;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusEndpoint;
@@ -51,8 +53,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import static org.mockito.Mockito.when;
 
 public class WebServiceClientConfigParserTest extends AbstractTestNGUnitTest {
 
@@ -137,15 +137,15 @@ public class WebServiceClientConfigParserTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testWebServiceClientParser() {
+    public void testWebServiceClientParser() throws NoSuchFieldException {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st message sender
         Assert.assertEquals(client1.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
         Assert.assertTrue(client1.getEndpointConfiguration().getMessageFactory() instanceof SoapMessageFactory);
         Assert.assertEquals(client1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertEquals(client1.getEndpointConfiguration().getInterceptors().size(), 1L);
-        Assert.assertEquals(client1.getEndpointConfiguration().getInterceptors().get(0).getClass(), LoggingClientInterceptor.class);
+        Assert.assertEquals(getInterceptors(client1).size(), 1L);
+        Assert.assertEquals(getInterceptors(client1).get(0).getClass(), LoggingClientInterceptor.class);
         Assert.assertTrue(client1.getEndpointConfiguration().getMessageConverter() instanceof SoapMessageConverter);
         Assert.assertEquals(client1.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(client1.getEndpointConfiguration().getTimeout(), 5000L);
@@ -175,8 +175,8 @@ public class WebServiceClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(client4.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertNotNull(client4.getEndpointConfiguration().getMessageSender());
         Assert.assertEquals(client4.getEndpointConfiguration().getMessageSender(), messageSender);
-        Assert.assertEquals(client4.getEndpointConfiguration().getInterceptors().size(), 1L);
-        Assert.assertEquals(client4.getEndpointConfiguration().getInterceptors().get(0), clientInterceptor1);
+        Assert.assertEquals(getInterceptors(client4).size(), 1L);
+        Assert.assertEquals(getInterceptors(client4).get(0), clientInterceptor1);
         Assert.assertNotNull(client4.getEndpointConfiguration().getWebServiceTemplate());
         Assert.assertEquals(client4.getEndpointConfiguration().getWebServiceTemplate().getInterceptors().length, 1L);
         Assert.assertTrue(client4.getEndpointConfiguration().getMessageConverter() instanceof WsAddressingMessageConverter);
@@ -184,10 +184,10 @@ public class WebServiceClientConfigParserTest extends AbstractTestNGUnitTest {
         // 5th message sender
         Assert.assertEquals(client5.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
         Assert.assertEquals(client5.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
-        Assert.assertNotNull(client5.getEndpointConfiguration().getInterceptors());
-        Assert.assertEquals(client5.getEndpointConfiguration().getInterceptors().size(), 2L);
-        Assert.assertEquals(client5.getEndpointConfiguration().getInterceptors().get(0), clientInterceptor1);
-        Assert.assertEquals(client5.getEndpointConfiguration().getInterceptors().get(1), clientInterceptor2);
+        Assert.assertNotNull(getInterceptors(client5));
+        Assert.assertEquals(getInterceptors(client5).size(), 2L);
+        Assert.assertEquals(getInterceptors(client5).get(0), clientInterceptor1);
+        Assert.assertEquals(getInterceptors(client5).get(1), clientInterceptor2);
         Assert.assertEquals(client5.getEndpointConfiguration().getPollingInterval(), 250L);
         Assert.assertNotNull(client5.getEndpointConfiguration().getWebServiceTemplate());
         Assert.assertEquals(client5.getEndpointConfiguration().getWebServiceTemplate().getInterceptors().length, 2L);
