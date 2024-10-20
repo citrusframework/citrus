@@ -16,8 +16,6 @@
 
 package org.citrusframework.kafka.integration;
 
-import java.time.Duration;
-
 import org.assertj.core.api.ThrowableAssert;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -29,6 +27,8 @@ import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
+
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
@@ -39,7 +39,7 @@ import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSe
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderContains;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderEquals;
 
-@Test
+@Test(singleThreaded = true)
 public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
 
     @BindToRegistry
@@ -48,7 +48,6 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
             .topic("hello")
             .build();
 
-    @Test
     @CitrusTest
     public void findKafkaEvent_headerEquals_citrus_DSL() {
         var body = "findKafkaEvent_headerEquals_citrus_DSL";
@@ -74,7 +73,6 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         );
     }
 
-    @Test
     @CitrusTest
     public void findKafkaEvent_headerContains_citrus_DSL() {
         var body = "findKafkaEvent_headerContains_citrus_DSL";
@@ -100,7 +98,6 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         );
     }
 
-    @Test
     @CitrusTest
     public void findKafkaEvent_headerStartsWith_citrus_DSL() {
         var body = "findKafkaEvent_headerStartsWith_citrus_DSL";
@@ -132,7 +129,6 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         );
     }
 
-    @Test
     @CitrusTest
     public void findKafkaEvent_headerEndsWith_citrus_DSL() {
         var body = "findKafkaEvent_headerEndsWith_citrus_DSL";
@@ -164,7 +160,6 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         );
     }
 
-    @Test
     @CitrusTest
     public void findKafkaEvent_nothingFound_noMatch_citrus_DSL() {
         var body = "findKafkaEvent_nothingFound_noMatch_citrus_DSL";
@@ -195,7 +190,6 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
                 .hasMessageContaining("Failed to resolve Kafka message using selector");
     }
 
-    @Test
     @CitrusTest
     public void findKafkaEvent_nothingFound_outsideLookbackWindow_citrus_DSL() {
         var body = "findKafkaEvent_nothingFound_outsideLookbackWindow_citrus_DSL";
@@ -228,7 +222,6 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
                 .hasMessageContaining("Failed to resolve Kafka message using selector");
     }
 
-    @Test
     @CitrusTest
     public void findKafkaEvent_duplicateEntriesFound_citrus_DSL() {
         var body = "findKafkaEvent_duplicateEntriesFound_citrus_DSL";
@@ -263,7 +256,6 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
                 .hasMessageContaining("More than one matching record found in topic");
     }
 
-    @Test
     @CitrusTest
     public void findKafkaEvent_headerEquals_java_DSL() {
         var body = "findKafkaEvent_headerEquals_java_DSL";
