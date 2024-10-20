@@ -55,33 +55,42 @@
         </header>
       </send>
 
-      <receive endpoint="helloKafkaEndpoint">
-        <description>Receive Kafka request: Kafka broker -> Citrus</description>
-        <selector>
-          <element name="header-filter-key" value="traceparent"/>
-          <element name="header-filter-value" value="${traceId}"/>
-          <element name="header-filter-comparator" value="CONTAINS"/>
-          <element name="event-lookback-window" value="PT1S"/>
-        </selector>
-        <message>
-          <data>
-            <![CDATA[
-              <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
-                 <MessageId>${messageId}</MessageId>
-                 <CorrelationId>${correlationId}</CorrelationId>
-                 <User>${user}</User>
-                 <Text>Hello Citrus</Text>
-               </HelloRequest>
-            ]]>
-          </data>
-        </message>
-        <header>
-          <element name="Operation" value="sayHello"/>
-          <element name="citrus_kafka_topic" value="hello"/>
-          <element name="citrus_kafka_partition" value="0"/>
-          <element name="citrus_kafka_offset" value="@assertThat(greaterThanOrEqualTo(0))@"/>
-        </header>
-      </receive>
+      <create-variables>
+        <variable name="extractedTraceparent"></variable>
+      </create-variables>
+
+      <repeat-onerror-until-true condition="@assertThat('${extractedTraceparent}', 'equalTo(01-${traceId}-${spanId}-00)')@">
+        <receive endpoint="helloKafkaEndpoint">
+          <description>Receive Kafka request: Kafka broker -> Citrus</description>
+          <selector>
+            <element name="header-filter-key" value="traceparent"/>
+            <element name="header-filter-value" value="${traceId}"/>
+            <element name="header-filter-comparator" value="CONTAINS"/>
+            <element name="event-lookback-window" value="PT1S"/>
+          </selector>
+          <message>
+            <data>
+              <![CDATA[
+                <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                   <MessageId>${messageId}</MessageId>
+                   <CorrelationId>${correlationId}</CorrelationId>
+                   <User>${user}</User>
+                   <Text>Hello Citrus</Text>
+                 </HelloRequest>
+              ]]>
+            </data>
+          </message>
+          <header>
+            <element name="Operation" value="sayHello"/>
+            <element name="citrus_kafka_topic" value="hello"/>
+            <element name="citrus_kafka_partition" value="0"/>
+            <element name="citrus_kafka_offset" value="@assertThat(greaterThanOrEqualTo(0))@"/>
+          </header>
+          <extract>
+            <header name="traceparent" variable="${extractedTraceparent}"/>
+          </extract>
+        </receive>
+      </repeat-onerror-until-true>
     </actions>
   </testcase>
 </spring:beans>

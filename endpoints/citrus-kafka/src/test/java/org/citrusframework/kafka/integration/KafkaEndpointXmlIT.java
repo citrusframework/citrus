@@ -21,7 +21,7 @@ import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-@Test
+@Test(singleThreaded = true)
 public class KafkaEndpointXmlIT extends TestNGCitrusSpringSupport {
 
     @CitrusTestSource(type = TestLoader.SPRING, name = "KafkaEndpointIT_singleMessage")
