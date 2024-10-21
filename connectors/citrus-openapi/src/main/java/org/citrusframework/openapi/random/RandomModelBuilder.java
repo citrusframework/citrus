@@ -16,16 +16,17 @@
 
 package org.citrusframework.openapi.random;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import org.citrusframework.openapi.random.RandomElement.RandomList;
 import org.citrusframework.openapi.random.RandomElement.RandomObject;
 import org.citrusframework.openapi.random.RandomElement.RandomValue;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 /**
  * RandomModelBuilder is a class for building random JSON models. It supports adding simple values,
  * objects, properties, and arrays to the JSON structure. The final model can be converted to a JSON
- * string using the `writeToJson` method. I
+ * string using the `writeToJson` method.
  * <p>
  * The builder is able to build nested structures and can also handle native string, number, and
  * boolean elements, represented as functions for later dynamic string conversion by Citrus.
@@ -79,7 +80,8 @@ public class RandomModelBuilder {
     /**
      * If the builder is in quoting mode, the native value will be quoted, otherwise it will be
      * added as ist.
-     *s
+     * s
+     *
      * @param simpleValue
      */
     public void appendSimpleQuoted(String simpleValue) {
@@ -87,23 +89,15 @@ public class RandomModelBuilder {
     }
 
     public void object(Runnable objectBuilder) {
-        if (deque.isEmpty()) {
-            throwIllegalState();
-        }
+        assertItemsInDequeOrThrow();
 
         RandomObject randomObject = new RandomObject();
         deque.peek().push(randomObject);
         objectBuilder.run();
     }
 
-    private static void throwIllegalState() {
-        throw new IllegalStateException("Encountered empty stack!");
-    }
-
     public void property(String key, Runnable valueBuilder) {
-        if (deque.isEmpty()) {
-            throwIllegalState();
-        }
+        assertItemsInDequeOrThrow();
 
         RandomValue randomValue = new RandomValue();
         deque.peek().push(key, randomValue);
@@ -114,9 +108,8 @@ public class RandomModelBuilder {
     }
 
     public void array(Runnable arrayBuilder) {
-        if (deque.isEmpty()) {
-            throwIllegalState();
-        }
+        assertItemsInDequeOrThrow();
+
         RandomList randomList = new RandomList();
         deque.peek().push(randomList);
 
@@ -128,8 +121,13 @@ public class RandomModelBuilder {
         deque.pop();
     }
 
-    public String quote(String text) {
+    private String quote(String text) {
         return quote ? String.format("\"%s\"", text) : text;
     }
 
+    private void assertItemsInDequeOrThrow() {
+        if (deque.isEmpty()) {
+            throw new IllegalStateException("Encountered empty stack!");
+        }
+    }
 }

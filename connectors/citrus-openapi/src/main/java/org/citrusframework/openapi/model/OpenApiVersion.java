@@ -37,8 +37,8 @@ public enum OpenApiVersion {
 
     static OpenApiVersion fromDocumentType(OasDocument model) {
         return Arrays.stream(values())
-            .filter(version -> version.documentType.isInstance(model))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Unable get OpenAPI version from given document type"));
+                .filter(version -> version.documentType.isInstance(model))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Unable get OpenAPI version from given document type"));
     }
 }

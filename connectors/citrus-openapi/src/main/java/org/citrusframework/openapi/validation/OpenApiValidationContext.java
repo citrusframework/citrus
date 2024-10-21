@@ -16,14 +16,15 @@
 
 package org.citrusframework.openapi.validation;
 
-import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledGlobally;
-import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
-
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.report.MessageResolver;
 import com.atlassian.oai.validator.schema.SchemaValidator;
 import com.atlassian.oai.validator.schema.SwaggerV20Library;
 import io.swagger.v3.oas.models.OpenAPI;
+import jakarta.annotation.Nonnull;
+
+import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledGlobally;
+import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
 
 /**
  * Represents the context for OpenAPI validation, providing configuration and validators for request and response validation.
@@ -50,14 +51,14 @@ public class OpenApiValidationContext {
         return openApi;
     }
 
-    public synchronized OpenApiInteractionValidator getOpenApiInteractionValidator() {
+    public synchronized @Nonnull OpenApiInteractionValidator getOpenApiInteractionValidator() {
         if (openApiInteractionValidator == null) {
             openApiInteractionValidator = new OpenApiInteractionValidator.Builder().withApi(openApi).build();
         }
         return openApiInteractionValidator;
     }
 
-    public synchronized SchemaValidator getSchemaValidator() {
+    public synchronized @Nonnull SchemaValidator getSchemaValidator() {
         if (schemaValidator == null) {
             schemaValidator = new SchemaValidator(openApi, new MessageResolver(), SwaggerV20Library::schemaFactory);
         }

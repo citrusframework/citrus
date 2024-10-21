@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -41,8 +42,7 @@ public class OpenApiRepositoryTest {
     public void shouldInitializeOpenApiRepository() {
         OpenApiRepository openApiRepository = new OpenApiRepository();
         openApiRepository.setRootContextPath(ROOT);
-        openApiRepository.setLocations(
-            List.of("org/citrusframework/openapi/petstore/petstore**.json"));
+        openApiRepository.setLocations(singletonList("org/citrusframework/openapi/petstore/petstore**.json"));
         openApiRepository.initialize();
 
         List<OpenApiSpecification> openApiSpecifications = openApiRepository.getOpenApiSpecifications();
@@ -55,11 +55,11 @@ public class OpenApiRepositoryTest {
         assertEquals(openApiSpecifications.get(1).getRootContextPath(), ROOT);
 
         assertTrue(
-            SampleOpenApiProcessor.processedSpecifications.contains(openApiSpecifications.get(0)));
+                SampleOpenApiProcessor.processedSpecifications.contains(openApiSpecifications.get(0)));
         assertTrue(
-            SampleOpenApiProcessor.processedSpecifications.contains(openApiSpecifications.get(1)));
+                SampleOpenApiProcessor.processedSpecifications.contains(openApiSpecifications.get(1)));
         assertTrue(
-            SampleOpenApiProcessor.processedSpecifications.contains(openApiSpecifications.get(2)));
+                SampleOpenApiProcessor.processedSpecifications.contains(openApiSpecifications.get(2)));
     }
 
     @Test
@@ -115,7 +115,5 @@ public class OpenApiRepositoryTest {
         assertFalse(openApiRepository.isRequestValidationEnabled());
         assertEquals(openApiRepository.getRootContextPath(), "/otherRoot");
         assertEquals(openApiRepository.getLocations(), List.of("l3", "l4"));
-
     }
-
 }

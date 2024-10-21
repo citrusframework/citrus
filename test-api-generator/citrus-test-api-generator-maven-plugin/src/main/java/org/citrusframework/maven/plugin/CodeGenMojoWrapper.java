@@ -16,17 +16,18 @@
 
 package org.citrusframework.maven.plugin;
 
-import static java.lang.String.format;
-import static org.citrusframework.openapi.generator.CitrusJavaCodegen.CODEGEN_NAME;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.citrusframework.openapi.generator.CitrusJavaCodegen;
 import org.openapitools.codegen.plugin.CodeGenMojo;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.lang.String.format;
+import static org.citrusframework.openapi.generator.CitrusJavaCodegen.CODEGEN_NAME;
 
 /**
  * Wrapper class that uses reflection to expose several properties of the {@link CodeGenMojo} for explicit assignment.
@@ -42,7 +43,7 @@ public class CodeGenMojoWrapper extends CodeGenMojo {
 
     private void setFixedConfigOptions() throws MojoExecutionException {
         setPrivateField("generateSupportingFiles", true);
-        setPrivateField( "generatorName", CODEGEN_NAME);
+        setPrivateField("generatorName", CODEGEN_NAME);
     }
 
     public CodeGenMojoWrapper project(MavenProject mavenProject) throws MojoExecutionException {
@@ -93,7 +94,7 @@ public class CodeGenMojoWrapper extends CodeGenMojo {
             field.set(this, fieldValue);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new MojoExecutionException(
-                format("Could not reflectively set field value '%s' for field '%s'", fieldValue, fieldName));
+                    format("Could not reflectively set field value '%s' for field '%s'", fieldValue, fieldName));
         }
     }
 }

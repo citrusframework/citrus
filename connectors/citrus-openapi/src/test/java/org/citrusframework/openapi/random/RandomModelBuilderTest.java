@@ -16,13 +16,14 @@
 
 package org.citrusframework.openapi.random;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
-
-import java.util.ArrayDeque;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.ArrayDeque;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.expectThrows;
 
 public class RandomModelBuilderTest {
 
@@ -63,7 +64,7 @@ public class RandomModelBuilderTest {
 
     @Test
     public void testAppendSimpleQuotedIfNotQuoting() {
-        ReflectionTestUtils.setField(builder,"quote", false);
+        ReflectionTestUtils.setField(builder, "quote", false);
         builder.appendSimpleQuoted("testValue");
         String json = builder.write();
         assertEquals(json, "testValue");
@@ -82,9 +83,9 @@ public class RandomModelBuilderTest {
     @Test
     public void testNestedObject() {
         builder.object(() ->
-            builder.property("outerKey", () -> builder.object(() ->
-                builder.property("innerKey", () -> builder.appendSimple("\"innerValue\""))
-            ))
+                builder.property("outerKey", () -> builder.object(() ->
+                        builder.property("innerKey", () -> builder.appendSimple("\"innerValue\""))
+                ))
         );
         String json = builder.write();
         assertEquals(json, "{\"outerKey\": {\"innerKey\": \"innerValue\"}}");
@@ -121,7 +122,7 @@ public class RandomModelBuilderTest {
             builder.property("key1", () -> builder.array(() -> {
                 builder.appendSimple("\"value1\"");
                 builder.object(() ->
-                    builder.property("nestedKey", () -> builder.appendSimple("\"nestedValue\""))
+                        builder.property("nestedKey", () -> builder.appendSimple("\"nestedValue\""))
                 );
             }));
             builder.property("key2", () -> builder.appendSimple("\"value2\""));
@@ -132,21 +133,22 @@ public class RandomModelBuilderTest {
 
     @Test
     public void testIllegalStateOnEmptyDeque() {
-
         builder.deque.clear();
 
         Exception exception = expectThrows(IllegalStateException.class, () ->
-            builder.property("key", () -> builder.appendSimple("value"))
+                builder.property("key", () -> builder.appendSimple("value"))
         );
         assertEquals(exception.getMessage(), "Encountered empty stack!");
 
         exception = expectThrows(IllegalStateException.class, () ->
-            builder.object(() -> {})
+                builder.object(() -> {
+                })
         );
         assertEquals(exception.getMessage(), "Encountered empty stack!");
 
         exception = expectThrows(IllegalStateException.class, () ->
-            builder.array(() -> {})
+                builder.array(() -> {
+                })
         );
         assertEquals(exception.getMessage(), "Encountered empty stack!");
     }
