@@ -24,7 +24,7 @@ import org.citrusframework.openapi.random.RandomContext;
 /**
  * Generates proper payloads and validation expressions based on Open API specification rules.
  */
-public abstract class OpenApiTestDataGenerator {
+public final class OpenApiTestDataGenerator {
 
     private OpenApiTestDataGenerator() {
         // Static access only
@@ -33,8 +33,7 @@ public abstract class OpenApiTestDataGenerator {
     /**
      * Creates payload from schema for outbound message.
      */
-    public static String createOutboundPayload(OasSchema schema,
-        OpenApiSpecification specification) {
+    public static String createOutboundPayload(OasSchema schema, OpenApiSpecification specification) {
         RandomContext randomContext = new RandomContext(specification, true);
         randomContext.generate(schema);
         return randomContext.getRandomModelBuilder().write();
@@ -43,9 +42,7 @@ public abstract class OpenApiTestDataGenerator {
     /**
      * Use test variable with given name if present or create value from schema with random values
      */
-    public static String createRandomValueExpression(String name, OasSchema schema, OpenApiSpecification specification,
-        TestContext context) {
-
+    public static String createRandomValueExpression(String name, OasSchema schema, OpenApiSpecification specification, TestContext context) {
         if (context.getVariables().containsKey(name)) {
             return CitrusSettings.VARIABLE_PREFIX + name + CitrusSettings.VARIABLE_SUFFIX;
         }
@@ -53,23 +50,18 @@ public abstract class OpenApiTestDataGenerator {
         RandomContext randomContext = new RandomContext(specification, false);
         randomContext.generate(schema);
         return randomContext.getRandomModelBuilder().write();
-
     }
 
     /**
      * Use test variable with given name (if present) or create random value expression using
      * functions according to schema type and format.
      */
-    public static String createRandomValueExpression(String name, OasSchema schema,
-        TestContext context) {
-
+    public static String createRandomValueExpression(String name, OasSchema schema, TestContext context) {
         if (context.getVariables().containsKey(name)) {
             return CitrusSettings.VARIABLE_PREFIX + name + CitrusSettings.VARIABLE_SUFFIX;
         }
 
-        RandomContext randomContext = new RandomContext();
-        randomContext.generate(schema);
-        return randomContext.getRandomModelBuilder().write();
+        return createRandomValueExpression(schema);
     }
 
     public static String createRandomValueExpression(OasSchema schema) {
@@ -77,5 +69,4 @@ public abstract class OpenApiTestDataGenerator {
         randomContext.generate(schema);
         return randomContext.getRandomModelBuilder().write();
     }
-
 }

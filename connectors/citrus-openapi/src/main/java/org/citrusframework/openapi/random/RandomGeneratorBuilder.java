@@ -2,6 +2,7 @@ package org.citrusframework.openapi.random;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+
 import java.util.Collections;
 import java.util.function.BiConsumer;
 
@@ -15,11 +16,11 @@ public class RandomGeneratorBuilder {
     private RandomGeneratorBuilder() {
     }
 
-    static RandomGeneratorBuilder builder() {
+    static RandomGeneratorBuilder randomGeneratorBuilder() {
         return new RandomGeneratorBuilder();
     }
 
-    static RandomGeneratorBuilder builder(String type, String format) {
+    static RandomGeneratorBuilder randomGeneratorBuilder(String type, String format) {
         return new RandomGeneratorBuilder().with(type, format);
     }
 
@@ -28,7 +29,6 @@ public class RandomGeneratorBuilder {
         schema.format = format;
         return this;
     }
-
 
     RandomGeneratorBuilder withType(String type) {
         schema.type = type;

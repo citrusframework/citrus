@@ -16,6 +16,7 @@
 
 package org.citrusframework.openapi;
 
+import jakarta.annotation.Nullable;
 import org.citrusframework.repository.BaseRepository;
 import org.citrusframework.spi.Resource;
 import org.slf4j.Logger;
@@ -25,10 +26,11 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * OpenApi repository holding a set of {@link OpenApiSpecification} known in the test scope.
@@ -58,6 +60,54 @@ public class OpenApiRepository extends BaseRepository {
 
     public OpenApiRepository() {
         super(DEFAULT_NAME);
+    }
+
+    /**
+     * @param openApiResource the OpenAPI resource from which to determine the alias
+     * @return an {@code Optional} containing the resource alias if it can be resolved, otherwise an empty {@code Optional}
+     */
+    // Package protection for testing
+    static Optional<String> determineResourceAlias(Resource openApiResource) {
+        String resourceAlias = null;
+
+        try {
+            File file = openApiResource.getFile();
+            if (file != null) {
+                resourceAlias = file.getName();
+                int index = resourceAlias.lastIndexOf(".");
+                if (index != -1 && index != resourceAlias.length() - 1) {
+                    resourceAlias = resourceAlias.substring(0, index);
+                }
+                return Optional.of(resourceAlias);
+            }
+        } catch (Exception e) {
+            // Ignore and try with url
+        }
+
+        try {
+            URL url = openApiResource.getURL();
+            if (url != null) {
+                String urlString = URLDecoder.decode(url.getPath(), UTF_8).replace("\\", "/");
+                int index = urlString.lastIndexOf("/");
+                resourceAlias = urlString;
+                if (index != -1 && index != urlString.length() - 1) {
+                    resourceAlias = resourceAlias.substring(index + 1);
+                }
+                index = resourceAlias.lastIndexOf(".");
+                if (index != -1 && index != resourceAlias.length() - 1) {
+                    resourceAlias = resourceAlias.substring(0, index);
+                }
+
+            }
+        } catch (MalformedURLException e) {
+            logger.error("Unable to determine resource alias from resource!", e);
+        }
+
+        return Optional.ofNullable(resourceAlias);
+    }
+
+    public List<OpenApiSpecification> getOpenApiSpecifications() {
+        return openApiSpecifications;
     }
 
     public String getRootContextPath() {
@@ -100,56 +150,9 @@ public class OpenApiRepository extends BaseRepository {
 
         this.openApiSpecifications.add(openApiSpecification);
 
-        OpenApiSpecificationProcessor.lookup().values()
-            .forEach(processor -> processor.process(openApiSpecification));
-    }
-
-    /**
-     * @param openApiResource the OpenAPI resource from which to determine the alias
-     * @return an {@code Optional} containing the resource alias if it can be resolved, otherwise an empty {@code Optional}
-     */
-    // Package protection for testing
-    static Optional<String> determineResourceAlias(Resource openApiResource) {
-        String resourceAlias = null;
-
-        try {
-            File file = openApiResource.getFile();
-            if (file != null) {
-                resourceAlias = file.getName();
-                int index = resourceAlias.lastIndexOf(".");
-                if (index != -1 && index != resourceAlias.length()-1) {
-                    resourceAlias = resourceAlias.substring(0, index);
-                }
-                return Optional.of(resourceAlias);
-            }
-        } catch (Exception e) {
-            // Ignore and try with url
-        }
-
-        try {
-            URL url = openApiResource.getURL();
-            if (url != null) {
-                String urlString = URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8).replace("\\","/");
-                int index = urlString.lastIndexOf("/");
-                resourceAlias = urlString;
-                if (index != -1 && index != urlString.length()-1) {
-                    resourceAlias = resourceAlias.substring(index+1);
-                }
-                index = resourceAlias.lastIndexOf(".");
-                if (index != -1 && index != resourceAlias.length()-1) {
-                    resourceAlias = resourceAlias.substring(0, index);
-                }
-
-            }
-        } catch (MalformedURLException e) {
-            logger.error("Unable to determine resource alias from resource!", e);
-        }
-
-        return Optional.ofNullable(resourceAlias);
-    }
-
-    public List<OpenApiSpecification> getOpenApiSpecifications() {
-        return openApiSpecifications;
+        OpenApiSpecificationProcessor.lookup()
+                .values()
+                .forEach(processor -> processor.process(openApiSpecification));
     }
 
     public OpenApiRepository locations(List<String> locations) {
@@ -157,7 +160,10 @@ public class OpenApiRepository extends BaseRepository {
         return this;
     }
 
-    public OpenApiSpecification openApi(String alias) {
-        return  getOpenApiSpecifications().stream().filter(spec -> spec.getAliases().contains(alias)).findFirst().orElse(null);
+    public @Nullable OpenApiSpecification openApi(String alias) {
+        return getOpenApiSpecifications().stream()
+                .filter(spec -> spec.getAliases().contains(alias))
+                .findFirst()
+                .orElse(null);
     }
 }

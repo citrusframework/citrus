@@ -1,5 +1,15 @@
 package org.citrusframework.openapi.random;
 
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import org.citrusframework.openapi.OpenApiSpecification;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -7,15 +17,6 @@ import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
-
-import io.apicurio.datamodels.openapi.models.OasSchema;
-import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
-import java.util.HashMap;
-import java.util.Map;
-import org.citrusframework.openapi.OpenApiSpecification;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 public class RandomContextTest {
 
@@ -30,7 +31,7 @@ public class RandomContextTest {
         RandomModelBuilder randomModelBuilderMock = mock();
         specificationMock = mock();
 
-        schemaDefinitions =new HashMap<>();
+        schemaDefinitions = new HashMap<>();
 
         randomContext = spy(new RandomContext(specificationMock, true));
         ReflectionTestUtils.setField(randomContext, "randomModelBuilder", randomModelBuilderMock);
@@ -68,8 +69,8 @@ public class RandomContextTest {
 
     @Test
     public void testCacheVariable() {
-        HashMap<String, String> cachedValue1 = randomContext.get("testKey", k ->  new HashMap<>());
-        HashMap<String, String> cachedValue2 = randomContext.get("testKey", k ->  new HashMap<>());
+        HashMap<String, String> cachedValue1 = randomContext.get("testKey", k -> new HashMap<>());
+        HashMap<String, String> cachedValue2 = randomContext.get("testKey", k -> new HashMap<>());
 
         assertSame(cachedValue1, cachedValue2);
     }

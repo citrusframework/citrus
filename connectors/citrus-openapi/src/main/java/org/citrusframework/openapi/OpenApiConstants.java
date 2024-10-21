@@ -16,7 +16,7 @@
 
 package org.citrusframework.openapi;
 
-public abstract class OpenApiConstants {
+public final class OpenApiConstants {
 
     public static final String TYPE_ARRAY = "array";
     public static final String TYPE_BOOLEAN = "boolean";

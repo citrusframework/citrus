@@ -2,7 +2,8 @@ package org.citrusframework.openapi.random;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
-import org.citrusframework.openapi.OpenApiConstants;
+
+import static org.citrusframework.openapi.OpenApiConstants.TYPE_STRING;
 
 /**
  * A generator for producing random strings based on an OpenAPI schema.
@@ -14,7 +15,7 @@ public class RandomStringGenerator extends RandomGenerator {
     private static final OasSchema STRING_SCHEMA = new Oas30Schema();
 
     static {
-        STRING_SCHEMA.type = OpenApiConstants.TYPE_STRING;
+        STRING_SCHEMA.type = TYPE_STRING;
     }
 
     public RandomStringGenerator() {

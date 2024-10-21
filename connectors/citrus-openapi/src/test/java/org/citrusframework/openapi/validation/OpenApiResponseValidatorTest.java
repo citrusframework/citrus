@@ -16,23 +16,11 @@
 
 package org.citrusframework.openapi.validation;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.model.Request.Method;
 import com.atlassian.oai.validator.model.Response;
 import com.atlassian.oai.validator.report.ValidationReport;
 import io.apicurio.datamodels.openapi.models.OasOperation;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.openapi.OpenApiSpecification;
@@ -44,6 +32,20 @@ import org.springframework.http.HttpStatusCode;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 public class OpenApiResponseValidatorTest {
 
@@ -88,12 +90,11 @@ public class OpenApiResponseValidatorTest {
         mockCloseable.close();
     }
 
-
     @Test
     public void shouldValidateWithNoErrors() {
         // Given
         when(openApiInteractionValidatorMock.validateResponse(anyString(), any(Method.class), any(Response.class)))
-            .thenReturn(validationReportMock);
+                .thenReturn(validationReportMock);
         when(validationReportMock.hasErrors()).thenReturn(false);
 
         when(operationPathAdapterMock.operation()).thenReturn(operationMock);
@@ -113,7 +114,7 @@ public class OpenApiResponseValidatorTest {
     public void shouldValidateWithErrors() {
         // Given
         when(openApiInteractionValidatorMock.validateResponse(anyString(), any(Method.class), any(Response.class)))
-            .thenReturn(validationReportMock);
+                .thenReturn(validationReportMock);
         when(validationReportMock.hasErrors()).thenReturn(true);
 
         when(operationPathAdapterMock.operation()).thenReturn(operationMock);
@@ -133,7 +134,7 @@ public class OpenApiResponseValidatorTest {
     public void shouldCreateResponseMessage() throws IOException {
         // Given
         when(httpMessageMock.getPayload()).thenReturn("payload");
-        when(httpMessageMock.getHeaders()).thenReturn(Map.of("Content-Type", "application/json"));
+        when(httpMessageMock.getHeaders()).thenReturn(Map.of("Content-Type", APPLICATION_JSON_VALUE));
         when(httpMessageMock.getStatusCode()).thenReturn(HttpStatusCode.valueOf(200));
 
         // When
@@ -144,7 +145,7 @@ public class OpenApiResponseValidatorTest {
         assertTrue(response.getResponseBody().isPresent());
         assertEquals(response.getResponseBody().get().toString(StandardCharsets.UTF_8), "payload");
         assertTrue(response.getHeaderValue("Content-Type").isPresent());
-        assertEquals(response.getHeaderValue("Content-Type").get(), "application/json");
+        assertEquals(response.getHeaderValue("Content-Type").get(), APPLICATION_JSON_VALUE);
         assertEquals(response.getStatus(), Integer.valueOf(200));
     }
 }

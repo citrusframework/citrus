@@ -1,16 +1,17 @@
 package org.citrusframework.openapi.generator.rest.extpetstore.spring;
 
-import java.util.List;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.openapi.OpenApiSpecification;
-import org.citrusframework.openapi.testapi.ApiActionBuilderCustomizer;
+import org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStore;
 import org.citrusframework.openapi.generator.rest.extpetstore.request.ExtPetApi;
+import org.citrusframework.openapi.testapi.ApiActionBuilderCustomizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStore;
+
+import java.util.List;
 
 
 @Configuration
@@ -21,11 +22,11 @@ public class ExtPetStoreBeanConfiguration {
     public OpenApiRepository extPetStoreOpenApiRepository() {
         var openApiRepository = new OpenApiRepository();
         openApiRepository.getOpenApiSpecifications().add(OpenApiSpecification.from(
-            ExtPetStore.extPetStoreApi()));
+                ExtPetStore.extPetStoreApi()));
         return openApiRepository;
     }
 
-    @Bean(name="ExtPetApi")
+    @Bean(name = "ExtPetApi")
     public ExtPetApi extPetApi(@Qualifier("extpetstore.endpoint") Endpoint endpoint, @Autowired(required = false) List<ApiActionBuilderCustomizer> customizers) {
         return new ExtPetApi(endpoint, customizers);
     }

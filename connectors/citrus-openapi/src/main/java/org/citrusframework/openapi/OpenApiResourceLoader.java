@@ -21,27 +21,31 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.models.OasDocument;
-import java.io.InputStream;
-import java.net.URLConnection;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.TrustAllStrategy;
-import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.ssl.SSLContexts;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
-import org.citrusframework.util.FileUtils;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
+
+import static javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier;
+import static javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory;
+import static org.apache.hc.core5.http.HttpHeaders.ACCEPT;
+import static org.apache.hc.core5.http.Method.GET;
+import static org.citrusframework.util.FileUtils.getFileResource;
+import static org.citrusframework.util.FileUtils.readToString;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * Loads Open API specifications from different locations like file resource or web resource.
@@ -63,15 +67,15 @@ public final class OpenApiResourceLoader {
      * Loads the specification from a file resource. Either classpath or file system resource path is supported.
      */
     public static OasDocument fromFile(String resource) {
-        return fromFile(FileUtils.getFileResource(resource), OAS_RESOLVER);
+        return fromFile(getFileResource(resource), OAS_RESOLVER);
     }
 
     /**
      * Loads the raw specification from a file resource. Either classpath or file system resource path is supported.
      */
     public static String rawFromFile(String resource) {
-        return fromFile(FileUtils.getFileResource(resource),
-            RAW_RESOLVER);
+        return fromFile(getFileResource(resource),
+                RAW_RESOLVER);
     }
 
     /**
@@ -90,7 +94,7 @@ public final class OpenApiResourceLoader {
 
     private static <T> T fromFile(Resource resource, Resolver<T> resolver) {
         try {
-            return resolve(FileUtils.readToString(resource), resolver);
+            return resolve(readToString(resource), resolver);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to parse Open API specification: " + resource, e);
         }
@@ -111,30 +115,29 @@ public final class OpenApiResourceLoader {
     }
 
     private static <T> T fromWebResource(URL url, Resolver<T> resolver) {
-        URLConnection con = null;
+        URLConnection connection = null;
         try {
-            con = url.openConnection();
+            connection = url.openConnection();
 
-            if (con instanceof HttpURLConnection httpURLConnection) {
-                httpURLConnection.setRequestMethod(HttpMethod.GET.name());
-                con.setRequestProperty(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+            if (connection instanceof HttpURLConnection httpURLConnection) {
+                httpURLConnection.setRequestMethod(GET.name());
+                connection.setRequestProperty(ACCEPT, APPLICATION_JSON_VALUE);
 
                 int status = httpURLConnection.getResponseCode();
                 if (status > 299) {
                     throw new IllegalStateException(
-                        "Failed to retrieve Open API specification: " + url,
-                        new IOException(FileUtils.readToString(httpURLConnection.getErrorStream())));
+                            "Failed to retrieve Open API specification: " + url,
+                            new IOException(readToString(httpURLConnection.getErrorStream())));
                 }
             }
 
-            try (InputStream inputStream = con.getInputStream()) {
-                return resolve(FileUtils.readToString(inputStream), resolver);
+            try (InputStream inputStream = connection.getInputStream()) {
+                return resolve(readToString(inputStream), resolver);
             }
-
         } catch (IOException e) {
             throw new IllegalStateException("Failed to retrieve Open API specification: " + url, e);
         } finally {
-            if (con instanceof HttpURLConnection httpURLConnection) {
+            if (connection instanceof HttpURLConnection httpURLConnection) {
                 httpURLConnection.disconnect();
             }
         }
@@ -157,34 +160,34 @@ public final class OpenApiResourceLoader {
     private static <T> T fromSecuredWebResource(URL url, Resolver<T> resolver) {
         Objects.requireNonNull(url);
 
-        HttpsURLConnection con = null;
+        HttpsURLConnection connection = null;
         try {
             SSLContext sslcontext = SSLContexts
-                .custom()
-                .loadTrustMaterial(TrustAllStrategy.INSTANCE)
-                .build();
+                    .custom()
+                    .loadTrustMaterial(TrustAllStrategy.INSTANCE)
+                    .build();
 
-            HttpsURLConnection.setDefaultSSLSocketFactory(sslcontext.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier(NoopHostnameVerifier.INSTANCE);
+            setDefaultSSLSocketFactory(sslcontext.getSocketFactory());
+            setDefaultHostnameVerifier(NoopHostnameVerifier.INSTANCE);
 
-            con = (HttpsURLConnection) url.openConnection();
-            con.setRequestMethod(HttpMethod.GET.name());
-            con.setRequestProperty(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+            connection = (HttpsURLConnection) url.openConnection();
+            connection.setRequestMethod(GET.name());
+            connection.setRequestProperty(ACCEPT, APPLICATION_JSON_VALUE);
 
-            int status = con.getResponseCode();
+            int status = connection.getResponseCode();
             if (status > 299) {
                 throw new IllegalStateException("Failed to retrieve Open API specification: " + url,
-                    new IOException(FileUtils.readToString(con.getErrorStream())));
+                        new IOException(readToString(connection.getErrorStream())));
             } else {
-                return resolve(FileUtils.readToString(con.getInputStream()), resolver);
+                return resolve(readToString(connection.getInputStream()), resolver);
             }
         } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
             throw new IllegalStateException("Failed to create https client for ssl connection", e);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to retrieve Open API specification: " + url, e);
         } finally {
-            if (con != null) {
-                con.disconnect();
+            if (connection != null) {
+                connection.disconnect();
             }
         }
     }

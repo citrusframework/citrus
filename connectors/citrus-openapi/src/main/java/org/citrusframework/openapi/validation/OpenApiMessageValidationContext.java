@@ -11,8 +11,7 @@ import org.citrusframework.validation.context.ValidationContext;
  *
  * @since 4.3
  */
-public class OpenApiMessageValidationContext extends DefaultValidationContext implements
-    SchemaValidationContext {
+public class OpenApiMessageValidationContext extends DefaultValidationContext implements SchemaValidationContext {
 
     /**
      * Should message be validated with its schema definition. This is enabled with respect to
@@ -29,9 +28,8 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
 
         // If not explicitly specified, goe for the default.
         this.schemaValidation = builder.schemaValidation != null ? builder.schemaValidation
-            : builder.openApiSpecification.isApiRequestValidationEnabled()
+                : builder.openApiSpecification.isApiRequestValidationEnabled()
                 || builder.openApiSpecification.isApiResponseValidationEnabled();
-
     }
 
     @Override
@@ -53,8 +51,8 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
      * Fluent builder
      */
     public static final class Builder implements
-        ValidationContext.Builder<OpenApiMessageValidationContext, OpenApiMessageValidationContext.Builder>,
-        SchemaValidationContext.Builder<OpenApiMessageValidationContext.Builder> {
+            ValidationContext.Builder<OpenApiMessageValidationContext, OpenApiMessageValidationContext.Builder>,
+            SchemaValidationContext.Builder<OpenApiMessageValidationContext.Builder> {
 
         private OpenApiSpecification openApiSpecification;
 
@@ -67,8 +65,7 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
          */
         private Boolean schemaValidation = OpenApiSettings.isRequestValidationEnabledGlobally();
 
-        public static OpenApiMessageValidationContext.Builder openApi(
-            OpenApiSpecification openApiSpecification) {
+        public static OpenApiMessageValidationContext.Builder openApi(OpenApiSpecification openApiSpecification) {
             Builder builder = new Builder();
             builder.openApiSpecification = openApiSpecification;
             return builder;
@@ -78,8 +75,7 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
             return new OpenApiMessageValidationContext.Builder();
         }
 
-        public OpenApiMessageValidationContext.Builder expression(String path,
-            Object expectedValue) {
+        public OpenApiMessageValidationContext.Builder expression(String path, Object expectedValue) {
             return new OpenApiMessageValidationContext.Builder().expression(path, expectedValue);
         }
 
@@ -103,8 +99,7 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
          * Not used for open api validation. Schema is automatically be derived from associated openApiSpecification.
          */
         @Override
-        public OpenApiMessageValidationContext.Builder schemaRepository(
-            final String schemaRepository) {
+        public OpenApiMessageValidationContext.Builder schemaRepository(final String schemaRepository) {
             return this;
         }
 

@@ -1,20 +1,11 @@
 package org.citrusframework.openapi.generator;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.citrusframework.openapi.generator.CitrusJavaCodegen.CODEGEN_NAME;
-
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.servers.Server;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.citrusframework.openapi.generator.CitrusJavaCodegen.CustomCodegenOperation;
 import org.citrusframework.openapi.generator.CitrusJavaCodegen.CustomCodegenParameter;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +15,16 @@ import org.openapitools.codegen.CodegenConfigLoader;
 import org.openapitools.codegen.CodegenOperation;
 import org.openapitools.codegen.CodegenParameter;
 import org.openapitools.codegen.CodegenProperty;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.citrusframework.openapi.generator.CitrusJavaCodegen.CODEGEN_NAME;
 
 /**
  * This test validates the code generation process.
@@ -69,23 +70,23 @@ class CitrusJavaCodegenTest {
     @Test
     void testAdditionalPropertiesConfiguration() {
         assertThat(codegen.additionalProperties())
-            .containsEntry("apiVersion", "1.0.0")
-            .containsEntry(CitrusJavaCodegen.API_TYPE, CitrusJavaCodegen.API_TYPE_REST)
-            .containsEntry("useJakartaEe", true);
+                .containsEntry("apiVersion", "1.0.0")
+                .containsEntry(CitrusJavaCodegen.API_TYPE, CitrusJavaCodegen.API_TYPE_REST)
+                .containsEntry("useJakartaEe", true);
     }
 
     @Test
     void testReservedWordsConfiguration() {
         assertThat(codegen.reservedWords())
-            .contains("name", "description", "httpclient")
-            .doesNotContain("nonReservedWord");
+                .contains("name", "description", "httpclient")
+                .doesNotContain("nonReservedWord");
     }
 
     @Test
     void testTypeMappings() {
         assertThat(codegen.typeMapping())
-            .containsEntry("binary", "Resource")
-            .containsEntry("file", "Resource");
+                .containsEntry("binary", "Resource")
+                .containsEntry("file", "Resource");
     }
 
     @Test
@@ -93,8 +94,8 @@ class CitrusJavaCodegenTest {
         codegen.additionalProperties().put(CitrusJavaCodegen.API_TYPE, "XXX");
 
         assertThatThrownBy(() -> codegen.processOpts())
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Unknown API_TYPE: 'XXX'");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Unknown API_TYPE: 'XXX'");
     }
 
     @Test
@@ -103,7 +104,7 @@ class CitrusJavaCodegenTest {
         codegen.processOpts();
 
         assertThat(codegen.additionalProperties())
-            .containsEntry(CitrusJavaCodegen.API_TYPE, CitrusJavaCodegen.API_TYPE_REST);
+                .containsEntry(CitrusJavaCodegen.API_TYPE, CitrusJavaCodegen.API_TYPE_REST);
     }
 
     @Test
@@ -119,9 +120,9 @@ class CitrusJavaCodegenTest {
         codegen.preprocessOpenAPI(openAPI);
 
         assertThat(codegen.additionalProperties())
-            .containsEntry("x-api-owner", "citrus-framework")
-            .containsEntry("x-api-version", "2.0.0")
-            .containsEntry("infoExtensions", extensions);
+                .containsEntry("x-api-owner", "citrus-framework")
+                .containsEntry("x-api-version", "2.0.0")
+                .containsEntry("infoExtensions", extensions);
     }
 
     @Test
@@ -132,9 +133,9 @@ class CitrusJavaCodegenTest {
         // Call fromProperty and verify conversion
         CodegenProperty codegenProperty = codegen.fromProperty("name", schema, true);
         assertThat(codegenProperty)
-            .isInstanceOf(CodegenProperty.class)
-            .hasFieldOrPropertyWithValue("name", "_name")
-            .hasFieldOrPropertyWithValue("required", true);
+                .isInstanceOf(CodegenProperty.class)
+                .hasFieldOrPropertyWithValue("name", "_name")
+                .hasFieldOrPropertyWithValue("required", true);
     }
 
     @Test
@@ -146,8 +147,8 @@ class CitrusJavaCodegenTest {
 
         CodegenParameter codegenParameter = codegen.fromFormProperty("formParam", schema, imports);
         assertThat(codegenParameter)
-            .isInstanceOf(CustomCodegenParameter.class)
-            .hasFieldOrPropertyWithValue("paramName", "formParam");
+                .isInstanceOf(CustomCodegenParameter.class)
+                .hasFieldOrPropertyWithValue("paramName", "formParam");
     }
 
     @Test
@@ -159,7 +160,7 @@ class CitrusJavaCodegenTest {
 
         CodegenParameter codegenParameter = codegen.fromParameter(parameter, imports);
         assertThat(codegenParameter)
-            .isInstanceOf(CustomCodegenParameter.class);
+                .isInstanceOf(CustomCodegenParameter.class);
     }
 
     @Test
@@ -169,9 +170,9 @@ class CitrusJavaCodegenTest {
 
         CodegenOperation codegenOperation = codegen.fromOperation("/path", "GET", operation, servers);
         assertThat(codegenOperation)
-            .isInstanceOf(CustomCodegenOperation.class)
-            .hasFieldOrPropertyWithValue("httpMethod", "GET")
-            .hasFieldOrPropertyWithValue("path", "/path");
+                .isInstanceOf(CustomCodegenOperation.class)
+                .hasFieldOrPropertyWithValue("httpMethod", "GET")
+                .hasFieldOrPropertyWithValue("path", "/path");
     }
 
 }

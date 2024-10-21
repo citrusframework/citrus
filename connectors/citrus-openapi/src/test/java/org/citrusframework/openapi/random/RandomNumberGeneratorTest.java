@@ -1,5 +1,14 @@
 package org.citrusframework.openapi.random;
 
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import org.citrusframework.openapi.OpenApiConstants;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import java.math.BigDecimal;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -7,20 +16,24 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-import io.apicurio.datamodels.openapi.models.OasSchema;
-import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
-import java.math.BigDecimal;
-import org.citrusframework.openapi.OpenApiConstants;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
 public class RandomNumberGeneratorTest {
 
     private RandomNumberGenerator generator;
     private RandomContext mockContext;
     private RandomModelBuilder mockBuilder;
     private OasSchema schema;
+
+    @DataProvider(name = "findLeastSignificantDecimalPlace")
+    public static Object[][] findLeastSignificantDecimalPlace() {
+        return new Object[][]{
+                {new BigDecimal("1234.5678"), 4},
+                {new BigDecimal("123.567"), 3},
+                {new BigDecimal("123.56"), 2},
+                {new BigDecimal("123.5"), 1},
+                {new BigDecimal("123.0"), 0},
+                {new BigDecimal("123"), 0}
+        };
+    }
 
     @BeforeMethod
     public void setUp() {
@@ -196,22 +209,8 @@ public class RandomNumberGeneratorTest {
         assertFalse(generator.handles(null));
     }
 
-    @DataProvider(name = "findLeastSignificantDecimalPlace")
-    public static Object[][] findLeastSignificantDecimalPlace() {
-        return new Object[][]{
-            {new BigDecimal("1234.5678"), 4},
-            {new BigDecimal("123.567"), 3},
-            {new BigDecimal("123.56"), 2},
-            {new BigDecimal("123.5"), 1},
-            {new BigDecimal("123.0"), 0},
-            {new BigDecimal("123"), 0}
-        };
-    }
-
     @Test(dataProvider = "findLeastSignificantDecimalPlace")
-    void findLeastSignificantDecimalPlace(BigDecimal number, int expectedSignificance) {
-        assertEquals(generator.findLeastSignificantDecimalPlace(number),
-            expectedSignificance);
+    public void findLeastSignificantDecimalPlace(BigDecimal number, int expectedSignificance) {
+        assertEquals(generator.findLeastSignificantDecimalPlace(number), expectedSignificance);
     }
-
 }

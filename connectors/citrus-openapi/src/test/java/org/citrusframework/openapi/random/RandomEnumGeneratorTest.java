@@ -1,5 +1,12 @@
 package org.citrusframework.openapi.random;
 
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.util.List;
+
+import static java.util.Collections.emptyList;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -7,11 +14,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
-
-import io.apicurio.datamodels.openapi.models.OasSchema;
-import java.util.List;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 public class RandomEnumGeneratorTest {
 
@@ -59,7 +61,7 @@ public class RandomEnumGeneratorTest {
 
     @Test
     public void testGenerateWithEmptyEnum() {
-        mockSchema.enum_ = List.of();
+        mockSchema.enum_ = emptyList();
 
         generator.generate(mockContext, mockSchema);
 

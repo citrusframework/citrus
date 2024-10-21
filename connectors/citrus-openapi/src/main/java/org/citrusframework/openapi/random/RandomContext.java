@@ -1,14 +1,16 @@
 package org.citrusframework.openapi.random;
 
-import static org.citrusframework.openapi.random.RandomConfiguration.RANDOM_CONFIGURATION;
-
 import io.apicurio.datamodels.openapi.models.OasSchema;
+import jakarta.annotation.Nullable;
+import org.citrusframework.openapi.OpenApiSpecification;
+import org.citrusframework.openapi.model.OasModelHelper;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-import org.citrusframework.openapi.OpenApiSpecification;
-import org.citrusframework.openapi.model.OasModelHelper;
+
+import static org.citrusframework.openapi.random.RandomConfiguration.RANDOM_CONFIGURATION;
 
 /**
  * Context class for generating random values based on an OpenAPI specification.
@@ -18,20 +20,17 @@ import org.citrusframework.openapi.model.OasModelHelper;
 public class RandomContext {
 
     private final OpenApiSpecification specification;
-
-    private Map<String, OasSchema> schemaDefinitions;
-
     private final RandomModelBuilder randomModelBuilder;
 
     /**
      * Cache for storing variable during random value generation.
      */
     private final Map<String, Object> contextVariables = new HashMap<>();
+    private Map<String, OasSchema> schemaDefinitions;
 
     /**
      * Constructs a default RandomContext backed by no specification. Note, that this context can not
      * resolve referenced schemas, as no specification is available.
-     *
      */
     public RandomContext() {
         this.randomModelBuilder = new RandomModelBuilder(false);
@@ -42,11 +41,29 @@ public class RandomContext {
      * Constructs a new RandomContext with the specified OpenAPI specification and quote option.
      *
      * @param specification the OpenAPI specification
-     * @param quote whether to quote the generated random values
+     * @param quote         whether to quote the generated random values
      */
     public RandomContext(OpenApiSpecification specification, boolean quote) {
         this.specification = specification;
         this.randomModelBuilder = new RandomModelBuilder(quote);
+    }
+
+    /**
+     * Returns the OpenAPI specification associated with this context.
+     *
+     * @return the OpenAPI specification
+     */
+    public OpenApiSpecification getSpecification() {
+        return specification;
+    }
+
+    /**
+     * Returns the RandomModelBuilder associated with this context.
+     *
+     * @return the RandomModelBuilder
+     */
+    public RandomModelBuilder getRandomModelBuilder() {
+        return randomModelBuilder;
     }
 
     /**
@@ -68,7 +85,7 @@ public class RandomContext {
      * @param schema the schema to resolve
      * @return the resolved schema
      */
-    OasSchema resolveSchema(OasSchema schema) {
+    @Nullable OasSchema resolveSchema(OasSchema schema) {
         if (OasModelHelper.isReferenceType(schema)) {
             if (schemaDefinitions == null) {
                 schemaDefinitions = getSchemaDefinitions();
@@ -79,37 +96,19 @@ public class RandomContext {
     }
 
     /**
-     * Returns the RandomModelBuilder associated with this context.
-     *
-     * @return the RandomModelBuilder
-     */
-    public RandomModelBuilder getRandomModelBuilder() {
-        return randomModelBuilder;
-    }
-
-    /**
-     * Returns the OpenAPI specification associated with this context.
-     *
-     * @return the OpenAPI specification
-     */
-    public OpenApiSpecification getSpecification() {
-        return specification;
-    }
-
-    /**
      * Returns the schema definitions from the specified OpenAPI document.
      *
      * @return a map of schema definitions
      */
     Map<String, OasSchema> getSchemaDefinitions() {
-        return specification != null ?OasModelHelper.getSchemaDefinitions(specification.getOpenApiDoc(null)) : Collections.emptyMap();
+        return specification != null ? OasModelHelper.getSchemaDefinitions(specification.getOpenApiDoc(null)) : Collections.emptyMap();
     }
 
     /**
      * Retrieves a context variable by key, computing its value if necessary using the provided mapping function.
      *
-     * @param <T> the type of the context variable
-     * @param key the key of the context variable
+     * @param <T>             the type of the context variable
+     * @param key             the key of the context variable
      * @param mappingFunction the function to compute the value if it is not present
      * @return the context variable value
      */

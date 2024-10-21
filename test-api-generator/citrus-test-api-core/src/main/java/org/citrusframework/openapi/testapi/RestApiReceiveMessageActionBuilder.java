@@ -16,14 +16,15 @@
 
 package org.citrusframework.openapi.testapi;
 
-import java.util.List;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiSpecificationSource;
 import org.citrusframework.openapi.util.OpenApiUtils;
 
+import java.util.List;
+
 public class RestApiReceiveMessageActionBuilder extends
-    org.citrusframework.openapi.actions.OpenApiClientResponseActionBuilder {
+        org.citrusframework.openapi.actions.OpenApiClientResponseActionBuilder {
 
     private final GeneratedApi generatedApi;
 
@@ -31,10 +32,10 @@ public class RestApiReceiveMessageActionBuilder extends
 
 
     public RestApiReceiveMessageActionBuilder(GeneratedApi generatedApi, OpenApiSpecification openApiSpec,
-        String method, String path, String operationName, String statusCode) {
+                                              String method, String path, String operationName, String statusCode) {
 
         super(new OpenApiSpecificationSource(openApiSpec),
-            OpenApiUtils.createFullPathOperationIdentifier(method, path), statusCode);
+                OpenApiUtils.createFullPathOperationIdentifier(method, path), statusCode);
 
         this.generatedApi = generatedApi;
         this.customizers = generatedApi.getCustomizers();
@@ -45,12 +46,12 @@ public class RestApiReceiveMessageActionBuilder extends
     }
 
     public RestApiReceiveMessageActionBuilder(GeneratedApi generatedApi,
-        OpenApiSpecification openApiSpec,
-        OpenApiClientResponseMessageBuilder messageBuilder, HttpMessage httpMessage, String method,
-        String path, String operationName) {
+                                              OpenApiSpecification openApiSpec,
+                                              OpenApiClientResponseMessageBuilder messageBuilder, HttpMessage httpMessage, String method,
+                                              String path, String operationName) {
 
         super(new OpenApiSpecificationSource(openApiSpec), messageBuilder, httpMessage,
-            OpenApiUtils.createFullPathOperationIdentifier(method, path));
+                OpenApiUtils.createFullPathOperationIdentifier(method, path));
 
 
         this.generatedApi = generatedApi;
