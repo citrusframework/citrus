@@ -16,18 +16,19 @@
 
 package org.citrusframework.openapi.util;
 
-import static java.lang.String.format;
-import static org.citrusframework.util.StringUtils.hasText;
-
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import jakarta.annotation.Nonnull;
-import java.util.stream.Collectors;
+import jakarta.annotation.Nullable;
 import org.citrusframework.openapi.OpenApiConstants;
 import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.spi.ReferenceResolver;
 
-public class OpenApiUtils {
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
+import static org.citrusframework.util.StringUtils.hasText;
+
+public final class OpenApiUtils {
 
     private OpenApiUtils() {
         // Static access only
@@ -44,7 +45,7 @@ public class OpenApiUtils {
      * @return a unique scenario id for the {@link OasOperation}
      */
     public static String createFullPathOperationIdentifier(OasOperation oasOperation, String path) {
-        return format("%s_%s", oasOperation.getMethod().toUpperCase(), path);
+        return createFullPathOperationIdentifier(oasOperation.getMethod().toUpperCase(), path);
     }
 
     /**
@@ -54,12 +55,10 @@ public class OpenApiUtils {
         return format("%s_%s", method.toUpperCase(), path);
     }
 
-    public static boolean isAnyNumberScheme(OasSchema schema) {
-        return (
-            schema != null &&
-                (OpenApiConstants.TYPE_INTEGER.equalsIgnoreCase(schema.type) ||
-                    OpenApiConstants.TYPE_NUMBER.equalsIgnoreCase(schema.type))
-        );
+    public static boolean isAnyNumberScheme(@Nullable OasSchema schema) {
+        return schema != null
+                && (OpenApiConstants.TYPE_INTEGER.equalsIgnoreCase(schema.type)
+                || OpenApiConstants.TYPE_NUMBER.equalsIgnoreCase(schema.type));
     }
 
     /**
@@ -82,9 +81,9 @@ public class OpenApiUtils {
      */
     public static String getKnownOpenApiAliases(ReferenceResolver resolver) {
         return resolver.resolveAll(OpenApiRepository.class).values()
-            .stream().flatMap(
-                openApiRepository -> openApiRepository.getOpenApiSpecifications()
-                    .stream()).flatMap(spec -> spec.getAliases().stream()).collect(
-                Collectors.joining(", "));
+                .stream()
+                .flatMap(openApiRepository -> openApiRepository.getOpenApiSpecifications().stream())
+                .flatMap(spec -> spec.getAliases().stream())
+                .collect(joining(", "));
     }
 }

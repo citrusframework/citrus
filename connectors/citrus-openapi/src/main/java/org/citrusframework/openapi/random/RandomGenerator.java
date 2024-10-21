@@ -1,6 +1,7 @@
 package org.citrusframework.openapi.random;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
+
 import java.util.Objects;
 
 /**
@@ -13,7 +14,13 @@ import java.util.Objects;
 public abstract class RandomGenerator {
 
     public static final String ANY = "$ANY$";
+    public static final RandomGenerator NOOP_RANDOM_GENERATOR = new RandomGenerator() {
 
+        @Override
+        void generate(RandomContext randomContext, OasSchema schema) {
+            // Do nothing
+        }
+    };
     private final OasSchema schema;
 
     protected RandomGenerator() {
@@ -31,11 +38,11 @@ public abstract class RandomGenerator {
 
         if (ANY.equals(schema.type) || Objects.equals(schema.type, other.type)) {
             if (schema.format != null) {
-                return (ANY.equals(schema.format) && other.format != null)|| Objects.equals(schema.format, other.format);
+                return (ANY.equals(schema.format) && other.format != null) || Objects.equals(schema.format, other.format);
             }
 
             if (schema.pattern != null) {
-                return (ANY.equals(schema.pattern) && other.pattern != null)  || Objects.equals(schema.pattern, other.pattern);
+                return (ANY.equals(schema.pattern) && other.pattern != null) || Objects.equals(schema.pattern, other.pattern);
             }
 
             if (schema.enum_ != null && other.enum_ != null) {
@@ -49,13 +56,5 @@ public abstract class RandomGenerator {
     }
 
     abstract void generate(RandomContext randomContext, OasSchema schema);
-
-    public static final RandomGenerator NULL_GENERATOR = new  RandomGenerator() {
-
-        @Override
-        void generate(RandomContext randomContext, OasSchema schema) {
-            // Do nothing
-        }
-    };
 
 }

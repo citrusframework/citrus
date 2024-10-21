@@ -3,9 +3,11 @@ package org.citrusframework.openapi.actions;
 import org.citrusframework.context.TestContext;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class OpenApiPayloadBuilderTest {
 
@@ -36,15 +38,15 @@ public class OpenApiPayloadBuilderTest {
         Object payload = payloadBuilder.buildPayload(context);
 
         // Then
-        Assert.assertTrue(payload instanceof MultiValueMap);
+        assertTrue(payload instanceof MultiValueMap);
         MultiValueMap<String, String> result = (MultiValueMap<String, String>) payload;
-        
-        Assert.assertEquals(result.get("key1").get(0), "value1");
-        Assert.assertEquals(result.get("key2").get(0), "Hello John, welcome!");
-        Assert.assertEquals(result.get("key2").get(1), "Another John message");
-        Assert.assertEquals(result.get("key3").get(0), "a");
-        Assert.assertEquals(result.get("key3").get(1), "b");
-        Assert.assertEquals(result.get("key3").get(2), "John");
+
+        assertEquals(result.get("key1").get(0), "value1");
+        assertEquals(result.get("key2").get(0), "Hello John, welcome!");
+        assertEquals(result.get("key2").get(1), "Another John message");
+        assertEquals(result.get("key3").get(0), "a");
+        assertEquals(result.get("key3").get(1), "b");
+        assertEquals(result.get("key3").get(2), "John");
     }
 
     @Test
@@ -59,7 +61,7 @@ public class OpenApiPayloadBuilderTest {
         Object payload = payloadBuilder.buildPayload(context);
 
         // Then
-        Assert.assertTrue(payload instanceof String);
-        Assert.assertEquals(payload, "This is a simple test");
+        assertTrue(payload instanceof String);
+        assertEquals(payload, "This is a simple test");
     }
 }

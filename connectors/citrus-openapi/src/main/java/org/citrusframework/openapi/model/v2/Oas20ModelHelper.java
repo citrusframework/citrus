@@ -21,6 +21,7 @@ import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Header;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Items;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
@@ -28,6 +29,9 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Schema.Oas20AllOfSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
 import jakarta.annotation.Nullable;
+import org.citrusframework.openapi.model.OasAdapter;
+import org.citrusframework.openapi.model.OasModelHelper;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,8 +39,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.citrusframework.openapi.model.OasAdapter;
-import org.citrusframework.openapi.model.OasModelHelper;
+
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 public final class Oas20ModelHelper {
 
@@ -71,7 +76,6 @@ public final class Oas20ModelHelper {
     }
 
     public static Optional<OasAdapter<OasSchema, String>> getSchema(Oas20Operation oas20Operation, Oas20Response response, List<String> acceptedMediaTypes) {
-
         acceptedMediaTypes = OasModelHelper.resolveAllTypes(acceptedMediaTypes);
         acceptedMediaTypes = acceptedMediaTypes != null ? acceptedMediaTypes : OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES;
 
@@ -79,9 +83,9 @@ public final class Oas20ModelHelper {
         String selectedMediaType = null;
         if (oas20Operation.produces != null && !oas20Operation.produces.isEmpty()) {
             selectedMediaType = acceptedMediaTypes.stream()
-                .filter(type -> !isFormDataMediaType(type))
-                .filter(type -> oas20Operation.produces.contains(type)).findFirst()
-                .orElse(null);
+                    .filter(type -> !isFormDataMediaType(type))
+                    .filter(type -> oas20Operation.produces.contains(type)).findFirst()
+                    .orElse(null);
         }
 
         return selectedSchema == null && selectedMediaType == null ? Optional.empty() : Optional.of(new OasAdapter<>(selectedSchema, selectedMediaType));
@@ -89,7 +93,7 @@ public final class Oas20ModelHelper {
 
     public static boolean isCompositeSchema(Oas20Schema schema) {
         // Note that oneOf and anyOf is not supported by Oas20.
-        return schema instanceof  Oas20AllOfSchema;
+        return schema instanceof Oas20AllOfSchema;
     }
 
     public static Optional<OasSchema> getRequestBodySchema(@Nullable Oas20Document ignoredOpenApiDoc, Oas20Operation operation) {
@@ -131,7 +135,7 @@ public final class Oas20ModelHelper {
     }
 
     private static boolean isFormDataMediaType(String type) {
-        return Arrays.asList("application/x-www-form-urlencoded", "multipart/form-data").contains(type);
+        return Arrays.asList(APPLICATION_FORM_URLENCODED_VALUE, MULTIPART_FORM_DATA_VALUE).contains(type);
     }
 
     /**
@@ -142,30 +146,7 @@ public final class Oas20ModelHelper {
      * @return an {@link Optional} containing the extracted or newly created {@link OasSchema}
      */
     private static OasSchema getHeaderSchema(Oas20Header header) {
-        Oas20Schema schema = new Oas20Schema();
-        schema.title = header.getName();
-        schema.type = header.type;
-        schema.format = header.format;
-        schema.items = header.items;
-        schema.multipleOf = header.multipleOf;
-
-        schema.default_ = header.default_;
-        schema.enum_ = header.enum_;
-
-        schema.pattern = header.pattern;
-        schema.description = header.description;
-        schema.uniqueItems = header.uniqueItems;
-
-        schema.maximum = header.maximum;
-        schema.maxItems = header.maxItems;
-        schema.maxLength = header.maxLength;
-        schema.exclusiveMaximum = header.exclusiveMaximum;
-
-        schema.minimum = header.minimum;
-        schema.minItems = header.minItems;
-        schema.minLength = header.minLength;
-        schema.exclusiveMinimum = header.exclusiveMinimum;
-        return schema;
+        return createOas20Schema(header.getName(), header.type, header.format, header.items, header.multipleOf, header.default_, header.enum_, header.pattern, header.description, header.uniqueItems, header.maximum, header.maxItems, header.maxLength, header.exclusiveMaximum, header.minimum, header.minItems, header.minLength, header.exclusiveMinimum);
     }
 
     /**
@@ -180,31 +161,36 @@ public final class Oas20ModelHelper {
             return Optional.of(oasSchema);
         }
 
-        Oas20Schema schema = new Oas20Schema();
-        schema.title = parameter.getName();
-        schema.type = parameter.type;
-        schema.format = parameter.format;
-        schema.items = parameter.items;
-        schema.multipleOf = parameter.multipleOf;
-
-        schema.default_ = parameter.default_;
-        schema.enum_ = parameter.enum_;
-
-        schema.pattern = parameter.pattern;
-        schema.description = parameter.description;
-        schema.uniqueItems = parameter.uniqueItems;
-
-        schema.maximum = parameter.maximum;
-        schema.maxItems = parameter.maxItems;
-        schema.maxLength = parameter.maxLength;
-        schema.exclusiveMaximum = parameter.exclusiveMaximum;
-
-        schema.minimum = parameter.minimum;
-        schema.minItems = parameter.minItems;
-        schema.minLength = parameter.minLength;
-        schema.exclusiveMinimum = parameter.exclusiveMinimum;
-
+        Oas20Schema schema = createOas20Schema(parameter.getName(), parameter.type, parameter.format, parameter.items, parameter.multipleOf, parameter.default_, parameter.enum_, parameter.pattern, parameter.description, parameter.uniqueItems, parameter.maximum, parameter.maxItems, parameter.maxLength, parameter.exclusiveMaximum, parameter.minimum, parameter.minItems, parameter.minLength, parameter.exclusiveMinimum);
         return Optional.of(schema);
     }
 
+    private static Oas20Schema createOas20Schema(String name, String type, String format, Oas20Items items, Number multipleOf, Object aDefault, List<String> anEnum, String pattern, String description, Boolean uniqueItems, Number maximum, Number maxItems, Number maxLength, Boolean exclusiveMaximum, Number minimum, Number minItems, Number minLength, Boolean exclusiveMinimum) {
+        Oas20Schema schema = new Oas20Schema();
+
+        schema.title = name;
+        schema.type = type;
+        schema.format = format;
+        schema.items = items;
+        schema.multipleOf = multipleOf;
+
+        schema.default_ = aDefault;
+        schema.enum_ = anEnum;
+
+        schema.pattern = pattern;
+        schema.description = description;
+        schema.uniqueItems = uniqueItems;
+
+        schema.maximum = maximum;
+        schema.maxItems = maxItems;
+        schema.maxLength = maxLength;
+        schema.exclusiveMaximum = exclusiveMaximum;
+
+        schema.minimum = minimum;
+        schema.minItems = minItems;
+        schema.minLength = minLength;
+        schema.exclusiveMinimum = exclusiveMinimum;
+
+        return schema;
+    }
 }

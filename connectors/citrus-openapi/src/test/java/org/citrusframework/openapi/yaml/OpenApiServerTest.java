@@ -48,20 +48,19 @@ import java.util.Map;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class OpenApiServerTest extends AbstractYamlActionTest {
 
     @BindToRegistry
     final TestActor testActor = Mockito.mock(TestActor.class);
-
-    private HttpServer httpServer;
-
     private final MessageQueue inboundQueue = new DefaultMessageQueue("inboundQueue");
     private final EndpointAdapter endpointAdapter = new DirectEndpointAdapter(direct()
             .synchronous()
             .timeout(100L)
             .queue(inboundQueue)
             .build());
+    private HttpServer httpServer;
 
     @BeforeClass
     public void setupEndpoints() {
@@ -82,32 +81,32 @@ public class OpenApiServerTest extends AbstractYamlActionTest {
         context.getReferenceResolver().bind("httpServer", httpServer);
 
         endpointAdapter.handleMessage(new HttpMessage()
-                        .method(HttpMethod.GET)
-                        .path("/petstore/v3/pet/12345")
-                        .version("HTTP/1.1")
-                        .accept("application/json")
-                        .contentType("application/json"));
+                .method(HttpMethod.GET)
+                .path("/petstore/v3/pet/12345")
+                .version("HTTP/1.1")
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE));
         endpointAdapter.handleMessage(new HttpMessage("""
-                        {
-                          "id": 1000,
-                          "name": "hasso",
-                          "category": {
-                            "id": 1000,
-                            "name": "dog"
-                          },
-                          "photoUrls": [ "http://localhost:8080/photos/1000" ],
-                          "tags": [
-                            {
-                              "id": 1000,
-                              "name": "generated"
-                            }
-                          ],
-                          "status": "available"
-                        }
-                        """)
-                        .method(HttpMethod.POST)
-                        .path("/petstore/v3/pet")
-                        .contentType("application/json"));
+                {
+                  "id": 1000,
+                  "name": "hasso",
+                  "category": {
+                    "id": 1000,
+                    "name": "dog"
+                  },
+                  "photoUrls": [ "http://localhost:8080/photos/1000" ],
+                  "tags": [
+                    {
+                      "id": 1000,
+                      "name": "generated"
+                    }
+                  ],
+                  "status": "available"
+                }
+                """)
+                .method(HttpMethod.POST)
+                .path("/petstore/v3/pet")
+                .contentType(APPLICATION_JSON_VALUE));
 
         testLoader.load();
 
@@ -133,7 +132,7 @@ public class OpenApiServerTest extends AbstractYamlActionTest {
         Assert.assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
 
         Assert.assertTrue(receiveMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
-        HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
+        HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
         Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "");
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 5L);
@@ -148,7 +147,7 @@ public class OpenApiServerTest extends AbstractYamlActionTest {
         Assert.assertEquals(receiveMessageAction.getControlMessageProcessors().size(), 0);
 
         SendMessageAction sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
-        httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());
+        httpMessageBuilder = ((HttpMessageBuilder) sendMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
 
         Assert.assertTrue(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()).toString().startsWith("{\"id\": "));
@@ -157,7 +156,7 @@ public class OpenApiServerTest extends AbstractYamlActionTest {
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE), 200);
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), "application/json");
+        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), APPLICATION_JSON_VALUE);
 
         Assert.assertNull(sendMessageAction.getEndpoint());
         Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpServer");
@@ -171,7 +170,7 @@ public class OpenApiServerTest extends AbstractYamlActionTest {
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(3) instanceof OpenApiMessageValidationContext);
         Assert.assertEquals(receiveMessageAction.getReceiveTimeout(), 2000L);
 
-        httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
+        httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
         Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()),
                 "{\"id\": \"@isNumber()@\",\"category\": {\"id\": \"@isNumber()@\",\"name\": \"@notEmpty()@\"},\"name\": \"@notEmpty()@\",\"photoUrls\": \"@ignore@\",\"tags\": \"@ignore@\",\"status\": \"@matches(available|pending|sold)@\"}");
@@ -188,7 +187,7 @@ public class OpenApiServerTest extends AbstractYamlActionTest {
         Assert.assertEquals(receiveMessageAction.getEndpointUri(), "httpServer");
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex);
-        httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());
+        httpMessageBuilder = ((HttpMessageBuilder) sendMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
         Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()), "");
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));

@@ -1,17 +1,17 @@
 package org.citrusframework.openapi.random;
 
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.util.function.BiConsumer;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-
-import io.apicurio.datamodels.openapi.models.OasSchema;
-import java.util.function.BiConsumer;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 
 public class RandomGeneratorBuilderTest {
 
@@ -27,11 +27,12 @@ public class RandomGeneratorBuilderTest {
     }
 
     @Test
-    public void testBuilderWithTypeAndFormat() {
+    public void testRandomGeneratorBuilderWithTypeAndFormat() {
         String type = "type1";
         String format = "format1";
 
-        RandomGenerator generator = RandomGeneratorBuilder.builder(type, format).build(consumerMock);
+        RandomGenerator generator = RandomGeneratorBuilder.randomGeneratorBuilder(type, format)
+                .build(consumerMock);
         OasSchema schema = (OasSchema) ReflectionTestUtils.getField(generator, "schema");
         assertNotNull(schema);
         assertEquals(schema.type, type);
@@ -39,41 +40,46 @@ public class RandomGeneratorBuilderTest {
     }
 
     @Test
-    public void testBuilderWithType() {
+    public void testRandomGeneratorBuilderWithType() {
         String type = "type1";
 
-        RandomGenerator generator = RandomGeneratorBuilder.builder().withType(type).build(
-            consumerMock);
+        RandomGenerator generator = RandomGeneratorBuilder.randomGeneratorBuilder()
+                .withType(type)
+                .build(consumerMock);
         OasSchema schema = (OasSchema) ReflectionTestUtils.getField(generator, "schema");
         assertNotNull(schema);
         assertEquals(schema.type, type);
     }
 
     @Test
-    public void testBuilderWithFormat() {
+    public void testRandomGeneratorBuilderWithFormat() {
         String format = "format1";
 
-        RandomGenerator generator = RandomGeneratorBuilder.builder().withFormat(format).build(
-            consumerMock);
+        RandomGenerator generator = RandomGeneratorBuilder.randomGeneratorBuilder()
+                .withFormat(format)
+                .build(consumerMock);
         OasSchema schema = (OasSchema) ReflectionTestUtils.getField(generator, "schema");
         assertNotNull(schema);
         assertEquals(schema.format, format);
     }
 
     @Test
-    public void testBuilderWithPattern() {
+    public void testRandomGeneratorBuilderWithPattern() {
         String pattern = "pattern1";
 
-        RandomGenerator generator = RandomGeneratorBuilder.builder().withPattern(pattern).build(
-            consumerMock);
+        RandomGenerator generator = RandomGeneratorBuilder.randomGeneratorBuilder()
+                .withPattern(pattern)
+                .build(consumerMock);
         OasSchema schema = (OasSchema) ReflectionTestUtils.getField(generator, "schema");
         assertNotNull(schema);
         assertEquals(schema.pattern, pattern);
     }
 
     @Test
-    public void testBuilderWithEnum() {
-        RandomGenerator generator = RandomGeneratorBuilder.builder().withEnum().build(consumerMock);
+    public void testRandomGeneratorBuilderWithEnum() {
+        RandomGenerator generator = RandomGeneratorBuilder.randomGeneratorBuilder()
+                .withEnum()
+                .build(consumerMock);
         OasSchema schema = (OasSchema) ReflectionTestUtils.getField(generator, "schema");
         assertNotNull(schema);
         assertNotNull(schema.enum_);
@@ -82,11 +88,11 @@ public class RandomGeneratorBuilderTest {
 
     @Test
     public void testBuildGenerator() {
-        RandomGenerator generator = RandomGeneratorBuilder.builder().build(consumerMock);
+        RandomGenerator generator = RandomGeneratorBuilder.randomGeneratorBuilder()
+                .build(consumerMock);
 
         generator.generate(contextMock, schemaMock);
 
         verify(consumerMock).accept(contextMock, schemaMock);
     }
-
 }

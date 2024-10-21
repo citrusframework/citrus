@@ -16,18 +16,10 @@
 
 package org.citrusframework.openapi.actions;
 
-import static org.citrusframework.openapi.OpenApiMessageType.RESPONSE;
-import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
-
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import jakarta.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Pattern;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.context.TestContext;
@@ -36,50 +28,81 @@ import org.citrusframework.http.actions.HttpClientResponseActionBuilder;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.message.Message;
-import org.citrusframework.message.MessageType;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.openapi.model.OperationPathAdapter;
-import org.citrusframework.openapi.validation.OpenApiMessageProcessor;
+import org.citrusframework.openapi.validation.OpenApiOperationToMessageHeadersProcessor;
 import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.openapi.validation.OpenApiValidationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
+
+import static org.citrusframework.message.MessageType.JSON;
+import static org.citrusframework.openapi.OpenApiMessageType.RESPONSE;
+import static org.citrusframework.openapi.model.OasModelHelper.resolveSchema;
+import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
+
 /**
  * @since 4.1
  */
 public class OpenApiClientResponseActionBuilder extends HttpClientResponseActionBuilder {
 
-    private OpenApiMessageProcessor openApiMessageProcessor;
-
     private final OpenApiSpecificationSource openApiSpecificationSource;
-
     private final String operationId;
-
+    private OpenApiOperationToMessageHeadersProcessor openApiOperationToMessageHeadersProcessor;
     private boolean schemaValidation = true;
 
     /**
      * Default constructor initializes http response message builder.
      */
-    public OpenApiClientResponseActionBuilder(OpenApiSpecificationSource openApiSpec, String operationId,
-        String statusCode) {
+    public OpenApiClientResponseActionBuilder(OpenApiSpecificationSource openApiSpec, String operationId, String statusCode) {
         this(new HttpMessage(), openApiSpec, operationId, statusCode);
     }
 
     public OpenApiClientResponseActionBuilder(HttpMessage httpMessage,
-        OpenApiSpecificationSource openApiSpecificationSource,
-        String operationId, String statusCode) {
-        this(openApiSpecificationSource, new OpenApiClientResponseMessageBuilder(httpMessage, openApiSpecificationSource, operationId,
-            statusCode), httpMessage, operationId);
+                                              OpenApiSpecificationSource openApiSpecificationSource,
+                                              String operationId,
+                                              String statusCode) {
+        this(openApiSpecificationSource, new OpenApiClientResponseMessageBuilder(httpMessage, openApiSpecificationSource, operationId, statusCode), httpMessage, operationId);
     }
 
-    public OpenApiClientResponseActionBuilder(OpenApiSpecificationSource openApiSpec, OpenApiClientResponseMessageBuilder messageBuilder, HttpMessage message,
-        String operationId) {
+    public OpenApiClientResponseActionBuilder(OpenApiSpecificationSource openApiSpec,
+                                              OpenApiClientResponseMessageBuilder messageBuilder,
+                                              HttpMessage message,
+                                              String operationId) {
         super(messageBuilder, message);
         this.openApiSpecificationSource = openApiSpec;
         this.operationId = operationId;
+    }
+
+    public static void fillMessageTypeFromResponse(OpenApiSpecification openApiSpecification,
+                                                   HttpMessage httpMessage,
+                                                   @Nullable OasOperation operation,
+                                                   @Nullable OasResponse response) {
+        if (operation == null || response == null) {
+            return;
+        }
+
+        Optional<OasSchema> responseSchema = OasModelHelper.getSchema(response);
+        responseSchema.ifPresent(oasSchema -> {
+                    OasSchema resolvedSchema = resolveSchema(openApiSpecification.getOpenApiDoc(null), oasSchema);
+                    if (OasModelHelper.isObjectType(resolvedSchema) || OasModelHelper.isObjectArrayType(resolvedSchema)) {
+                        Collection<String> responseTypes = OasModelHelper.getResponseTypes(operation,response);
+                        if (responseTypes.contains(MediaType.APPLICATION_JSON_VALUE)) {
+                            httpMessage.setHeader(HttpHeaders.CONTENT_TYPE,
+                                    MediaType.APPLICATION_JSON_VALUE);
+                            httpMessage.setType(JSON);
+                        }
+                    }
+                }
+        );
     }
 
     /**
@@ -89,15 +112,14 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
     protected HttpMessageBuilderSupport createHttpMessageBuilderSupport() {
         HttpMessageBuilderSupport support = super.createHttpMessageBuilderSupport();
         support.type(CitrusSettings.getPropertyEnvOrDefault(
-            CitrusSettings.DEFAULT_MESSAGE_TYPE_PROPERTY,
-            CitrusSettings.DEFAULT_MESSAGE_TYPE_ENV,
-            MessageType.JSON.toString()));
+                CitrusSettings.DEFAULT_MESSAGE_TYPE_PROPERTY,
+                CitrusSettings.DEFAULT_MESSAGE_TYPE_ENV,
+                JSON.toString()));
         return support;
     }
 
     @Override
     public ReceiveMessageAction doBuild() {
-
         OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(referenceResolver);
 
         // Honor default enablement of schema validation
@@ -106,17 +128,15 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
             schemaValidation = openApiValidationContext.isResponseValidationEnabled();
         }
 
-        if (schemaValidation && !messageProcessors.contains(openApiMessageProcessor)) {
-            openApiMessageProcessor = new OpenApiMessageProcessor(
-                openApiSpecification, operationId,
-                RESPONSE);
-            process(openApiMessageProcessor);
+        if (schemaValidation && !messageProcessors.contains(openApiOperationToMessageHeadersProcessor)) {
+            openApiOperationToMessageHeadersProcessor = new OpenApiOperationToMessageHeadersProcessor(openApiSpecification, operationId, RESPONSE);
+            process(openApiOperationToMessageHeadersProcessor);
         }
 
         if (schemaValidation && getValidationContexts().stream().noneMatch(OpenApiMessageValidationContext.class::isInstance)) {
             validate(openApi(openApiSpecification)
-                .schemaValidation(schemaValidation)
-                .build());
+                    .schemaValidation(schemaValidation)
+                    .build());
         }
 
         return super.doBuild();
@@ -127,43 +147,17 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
         return this;
     }
 
-    public static void fillMessageTypeFromResponse(OpenApiSpecification openApiSpecification,
-        HttpMessage httpMessage, @Nullable OasOperation operation,
-        @Nullable OasResponse response) {
-
-        if (operation == null || response == null) {
-            return;
-        }
-
-        Optional<OasSchema> responseSchema = OasModelHelper.getSchema(response);
-        responseSchema.ifPresent(oasSchema -> {
-                OasSchema resolvedSchema = OasModelHelper.resolveSchema(
-                    openApiSpecification.getOpenApiDoc(null), oasSchema);
-                if (OasModelHelper.isObjectType(resolvedSchema) || OasModelHelper.isObjectArrayType(
-                    resolvedSchema)) {
-                    Collection<String> responseTypes = OasModelHelper.getResponseTypes(operation,
-                        response);
-                    if (responseTypes.contains(MediaType.APPLICATION_JSON_VALUE)) {
-                        httpMessage.setHeader(HttpHeaders.CONTENT_TYPE,
-                            MediaType.APPLICATION_JSON_VALUE);
-                        httpMessage.setType(MessageType.JSON);
-                    }
-                }
-            }
-        );
-    }
-
     public static class OpenApiClientResponseMessageBuilder extends HttpMessageBuilder {
 
         private final OpenApiSpecificationSource openApiSpecificationSource;
         private final String operationId;
+        private final HttpMessage httpMessage;
         private String statusCode;
 
-        private final HttpMessage httpMessage;
-
         public OpenApiClientResponseMessageBuilder(HttpMessage httpMessage,
-            OpenApiSpecificationSource openApiSpecificationSource,
-            String operationId, String statusCode) {
+                                                   OpenApiSpecificationSource openApiSpecificationSource,
+                                                   String operationId,
+                                                   String statusCode) {
             super(httpMessage);
             this.openApiSpecificationSource = openApiSpecificationSource;
             this.operationId = operationId;
@@ -172,19 +166,19 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
         }
 
         public OpenApiClientResponseMessageBuilder statusCode(String statusCode) {
-            this.statusCode =statusCode;
+            this.statusCode = statusCode;
             return this;
         }
 
         @Override
         public Message build(TestContext context, String messageType) {
-
             OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(context.getReferenceResolver());
 
-            openApiSpecification.getOperation(operationId, context).ifPresentOrElse(operationPathAdapter ->
-                buildMessageFromOperation(openApiSpecification, operationPathAdapter, context), () -> {
-                throw new CitrusRuntimeException("Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(operationId, openApiSpecification.getSpecUrl()));
-            });
+            openApiSpecification.getOperation(operationId, context)
+                    .ifPresentOrElse(operationPathAdapter ->
+                            buildMessageFromOperation(openApiSpecification, operationPathAdapter, context), () -> {
+                        throw new CitrusRuntimeException("Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(operationId, openApiSpecification.getSpecUrl()));
+                    });
 
             return super.build(context, messageType);
         }
@@ -198,11 +192,10 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
 
             if (operation.responses != null) {
                 Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
-                    openApiSpecification.getOpenApiDoc(context), operation, statusCode, null);
+                        openApiSpecification.getOpenApiDoc(context), operation, statusCode, null);
 
                 responseForRandomGeneration.ifPresent(
-                    oasResponse -> fillMessageTypeFromResponse(openApiSpecification, httpMessage,
-                        operation, oasResponse));
+                        oasResponse -> fillMessageTypeFromResponse(openApiSpecification, httpMessage, operation, oasResponse));
             }
 
             if (Pattern.compile("\\d+").matcher(statusCode).matches()) {
@@ -213,6 +206,5 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
 
             httpMessage.getHeaders().putAll(currentHeaders);
         }
-
     }
 }

@@ -1,5 +1,9 @@
 package org.citrusframework.openapi.generator.util;
 
+import org.apache.commons.fileupload.MultipartStream;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.http.message.HttpMessage;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -8,9 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.fileupload.MultipartStream;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.http.message.HttpMessage;
 
 /**
  * Provides utility method to convert a multipart http message to a map for simplified assertion.
@@ -30,7 +31,7 @@ public class MultipartConverter {
         try {
             inputStream = new ByteArrayInputStream(message.getPayload(String.class).getBytes());
             MultipartStream multipartStream = new MultipartStream(inputStream, boundary.getBytes(),
-                4096, null);
+                    4096, null);
 
             boolean nextPart = multipartStream.skipPreamble();
             while (nextPart) {
@@ -61,7 +62,7 @@ public class MultipartConverter {
             return m.group(1);
         } else {
             throw new CitrusRuntimeException(
-                "unable to determine header group name: " + groupPattern);
+                    "unable to determine header group name: " + groupPattern);
         }
     }
 
