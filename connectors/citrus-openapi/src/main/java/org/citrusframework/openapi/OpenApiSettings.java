@@ -43,23 +43,23 @@ public class OpenApiSettings {
 
     public static boolean isGenerateOptionalFieldsGlobally() {
         return parseBoolean(System.getProperty(GENERATE_OPTIONAL_FIELDS_PROPERTY, System.getenv(GENERATE_OPTIONAL_FIELDS_ENV) != null ?
-            System.getenv(GENERATE_OPTIONAL_FIELDS_ENV) : "true"));
+                System.getenv(GENERATE_OPTIONAL_FIELDS_ENV) : "true"));
     }
 
     public static boolean isValidateOptionalFieldsGlobally() {
         return parseBoolean(System.getProperty(VALIDATE_OPTIONAL_FIELDS_PROPERTY, System.getenv(VALIDATE_OPTIONAL_FIELDS_ENV) != null ?
-            System.getenv(VALIDATE_OPTIONAL_FIELDS_ENV) : "true"));
+                System.getenv(VALIDATE_OPTIONAL_FIELDS_ENV) : "true"));
     }
 
     public static boolean isRequestValidationEnabledGlobally() {
         return parseBoolean(System.getProperty(
-            REQUEST_VALIDATION_ENABLED_PROPERTY, System.getenv(REQUEST_VALIDATION_ENABLED_ENV) != null ?
-            System.getenv(REQUEST_VALIDATION_ENABLED_ENV) : "true"));
+                REQUEST_VALIDATION_ENABLED_PROPERTY, System.getenv(REQUEST_VALIDATION_ENABLED_ENV) != null ?
+                        System.getenv(REQUEST_VALIDATION_ENABLED_ENV) : "true"));
     }
 
     public static boolean isResponseValidationEnabledGlobally() {
         return parseBoolean(System.getProperty(
-            RESPONSE_VALIDATION_ENABLED_PROPERTY, System.getenv(RESPONSE_VALIDATION_ENABLED_ENV) != null ?
-            System.getenv(RESPONSE_VALIDATION_ENABLED_ENV) : "true"));
+                RESPONSE_VALIDATION_ENABLED_PROPERTY, System.getenv(RESPONSE_VALIDATION_ENABLED_ENV) != null ?
+                        System.getenv(RESPONSE_VALIDATION_ENABLED_ENV) : "true"));
     }
 }

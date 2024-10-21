@@ -1,7 +1,5 @@
 package org.citrusframework.openapi.generator;
 
-import static org.citrusframework.ws.actions.SoapActionBuilder.soap;
-
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTestSource;
@@ -23,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+
+import static org.citrusframework.ws.actions.SoapActionBuilder.soap;
 
 /**
  * This integration test class for the generated TestAPI aims to comprehensively test all aspects of
@@ -46,6 +46,29 @@ class GeneratedSoapApiIT {
     @Autowired
     private BookServiceSoapApi bookServiceSoapApi;
 
+    @TestConfiguration
+    public static class Config {
+
+        private final int wsPort = SocketUtils.findAvailableTcpPort(8090);
+
+        @Bean(name = {"bookstore.endpoint"})
+        public WebServiceClient soapClient() {
+            return new WebServiceClientBuilder()
+                    .defaultUri("http://localhost:%d".formatted(wsPort))
+                    .build();
+        }
+
+        @Bean
+        public WebServiceServer soapServer() {
+            return WebServiceEndpoints.soap().server()
+                    .port(wsPort)
+                    .timeout(5000)
+                    .autoStart(true)
+                    .build();
+        }
+
+    }
+
     @Nested
     class SoapApi {
 
@@ -57,61 +80,38 @@ class GeneratedSoapApiIT {
         @Test
         void java(@CitrusResource TestCaseRunner runner) {
             String request = """
-                <AddBook>
-                    <book>
-                        <title>Lord of the Rings</title>
-                        <author>J.R.R. Tolkien</author>
-                    </book>
-                </AddBook>
-                """;
+                    <AddBook>
+                        <book>
+                            <title>Lord of the Rings</title>
+                            <author>J.R.R. Tolkien</author>
+                        </book>
+                    </AddBook>
+                    """;
             runner.when(bookServiceSoapApi.sendAddBook().fork(true).message().body(request));
 
             runner.then(soap().server(soapServer)
-                .receive()
-                .message()
-                .body(request));
+                    .receive()
+                    .message()
+                    .body(request));
 
             String response = """
-                <AddBookResponse>
-                    <book>
-                        <title>Lord of the Rings</title>
-                        <author>J.R.R. Tolkien</author>
-                    </book>
-                </AddBookResponse>
-                """;
+                    <AddBookResponse>
+                        <book>
+                            <title>Lord of the Rings</title>
+                            <author>J.R.R. Tolkien</author>
+                        </book>
+                    </AddBookResponse>
+                    """;
 
             runner.then(soap().server(soapServer)
-                .send()
-                .message()
-                .body(response));
+                    .send()
+                    .message()
+                    .body(response));
 
             runner.then(bookServiceSoapApi.receiveAddBook()
-                .message()
-                .body(response));
+                    .message()
+                    .body(response));
         }
-    }
-
-    @TestConfiguration
-    public static class Config {
-
-        private final int wsPort = SocketUtils.findAvailableTcpPort(8090);
-
-        @Bean(name = {"bookstore.endpoint"})
-        public WebServiceClient soapClient() {
-            return new WebServiceClientBuilder()
-                .defaultUri("http://localhost:%d".formatted(wsPort))
-                .build();
-        }
-
-        @Bean
-        public WebServiceServer soapServer() {
-            return WebServiceEndpoints.soap().server()
-                .port(wsPort)
-                .timeout(5000)
-                .autoStart(true)
-                .build();
-        }
-
     }
 }
 

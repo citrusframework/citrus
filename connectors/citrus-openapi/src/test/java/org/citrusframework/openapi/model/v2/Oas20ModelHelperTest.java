@@ -38,7 +38,7 @@ public class Oas20ModelHelperTest {
         operation.responses.addResponse("200", okResponse);
 
         Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
-            document, operation, null, null);
+                document, operation, null, null);
         assertTrue(responseForRandomGeneration.isPresent());
         assertEquals(okResponse, responseForRandomGeneration.get());
     }
@@ -60,7 +60,7 @@ public class Oas20ModelHelperTest {
         operation.responses.addResponse("407", nokResponse407);
 
         Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
-            document, operation, null, null);
+                document, operation, null, null);
         assertTrue(responseForRandomGeneration.isPresent());
         assertEquals(responseForRandomGeneration.get().getStatusCode(), "403");
     }
@@ -83,7 +83,7 @@ public class Oas20ModelHelperTest {
         operation.responses.addResponse("407", nokResponse407);
 
         Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
-            document, operation, null, null);
+                document, operation, null, null);
         assertTrue(responseForRandomGeneration.isPresent());
         assertEquals(responseForRandomGeneration.get().getStatusCode(), "407");
     }

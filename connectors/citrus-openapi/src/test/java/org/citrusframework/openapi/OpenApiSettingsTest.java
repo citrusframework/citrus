@@ -31,15 +31,11 @@ import static org.testng.Assert.assertTrue;
 
 public class OpenApiSettingsTest {
 
-    private final EnvironmentVariables environmentVariables = new EnvironmentVariables();
-
     private static final boolean REQUEST_VALIDATION_ENABLED_GLOBALLY = OpenApiSettings.isRequestValidationEnabledGlobally();
-
     private static final boolean RESPONSE_VALIDATION_ENABLED_GLOBALLY = OpenApiSettings.isResponseValidationEnabledGlobally();
-
     private static final boolean VALIDATE_OPTIONAL_FIELDS_ENABLED_GLOBALLY = OpenApiSettings.isValidateOptionalFieldsGlobally();
-
     private static final boolean GENERATE_OPTIONAL_FIELDS_ENABLED_GLOBALLY = OpenApiSettings.isGenerateOptionalFieldsGlobally();
+    private final EnvironmentVariables environmentVariables = new EnvironmentVariables();
 
     @BeforeMethod
     public void beforeMethod() {
@@ -107,7 +103,7 @@ public class OpenApiSettingsTest {
     }
 
     @Test
-    public void testRequestValidationEnabledByDefault()  {
+    public void testRequestValidationEnabledByDefault() {
         assertTrue(OpenApiSettings.isRequestValidationEnabledGlobally());
     }
 
@@ -140,7 +136,7 @@ public class OpenApiSettingsTest {
     }
 
     @Test
-    public void testResponseValidationEnabledByDefault()  {
+    public void testResponseValidationEnabledByDefault() {
         assertTrue(OpenApiSettings.isResponseValidationEnabledGlobally());
     }
 
@@ -173,7 +169,7 @@ public class OpenApiSettingsTest {
     }
 
     @Test
-    public void testGenerateOptionalFieldsEnabledByDefault()  {
+    public void testGenerateOptionalFieldsEnabledByDefault() {
         assertTrue(OpenApiSettings.isGenerateOptionalFieldsGlobally());
     }
 
@@ -206,7 +202,7 @@ public class OpenApiSettingsTest {
     }
 
     @Test
-    public void testValidateOptionalFieldsEnabledByDefault()  {
+    public void testValidateOptionalFieldsEnabledByDefault() {
         assertTrue(OpenApiSettings.isValidateOptionalFieldsGlobally());
     }
 }

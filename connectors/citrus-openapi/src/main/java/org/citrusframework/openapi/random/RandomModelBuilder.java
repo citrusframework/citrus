@@ -16,11 +16,12 @@
 
 package org.citrusframework.openapi.random;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import org.citrusframework.openapi.random.RandomElement.RandomList;
 import org.citrusframework.openapi.random.RandomElement.RandomObject;
 import org.citrusframework.openapi.random.RandomElement.RandomValue;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
  * RandomModelBuilder is a class for building random JSON models. It supports adding simple values,
@@ -61,6 +62,10 @@ public class RandomModelBuilder {
         this.quote = quote;
     }
 
+    private static void throwIllegalState() {
+        throw new IllegalStateException("Encountered empty stack!");
+    }
+
     public String write() {
         return RandomModelWriter.toString(this);
     }
@@ -79,7 +84,8 @@ public class RandomModelBuilder {
     /**
      * If the builder is in quoting mode, the native value will be quoted, otherwise it will be
      * added as ist.
-     *s
+     * s
+     *
      * @param simpleValue
      */
     public void appendSimpleQuoted(String simpleValue) {
@@ -94,10 +100,6 @@ public class RandomModelBuilder {
         RandomObject randomObject = new RandomObject();
         deque.peek().push(randomObject);
         objectBuilder.run();
-    }
-
-    private static void throwIllegalState() {
-        throw new IllegalStateException("Encountered empty stack!");
     }
 
     public void property(String key, Runnable valueBuilder) {

@@ -16,16 +16,17 @@
 
 package org.citrusframework.openapi;
 
-import static org.citrusframework.util.StringUtils.hasText;
-import static org.springframework.util.CollectionUtils.isEmpty;
-
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import jakarta.annotation.Nullable;
-import java.util.Map;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.openapi.model.OasModelHelper;
+
+import java.util.Map;
+
+import static org.citrusframework.util.StringUtils.hasText;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * Generates proper payloads and validation expressions based on Open API specification rules.
@@ -44,7 +45,7 @@ public abstract class OpenApiTestValidationDataGenerator {
      * Creates control payload from schema for validation.
      */
     public static String createInboundPayload(OasSchema schema, Map<String, OasSchema> definitions,
-        OpenApiSpecification specification) {
+                                              OpenApiSpecification specification) {
         if (OasModelHelper.isReferenceType(schema)) {
             OasSchema resolved = definitions.get(OasModelHelper.getReferenceName(schema.$ref));
             return createInboundPayload(resolved, definitions, specification);
@@ -57,13 +58,13 @@ public abstract class OpenApiTestValidationDataGenerator {
             if (schema.properties != null) {
                 for (Map.Entry<String, OasSchema> entry : schema.properties.entrySet()) {
                     if (specification.isValidateOptionalFields() || isRequired(schema,
-                        entry.getKey())) {
+                            entry.getKey())) {
                         payload.append("\"")
-                            .append(entry.getKey())
-                            .append("\": ")
-                            .append(createValidationExpression(entry.getValue(), definitions, true,
-                                specification))
-                            .append(",");
+                                .append(entry.getKey())
+                                .append("\": ")
+                                .append(createValidationExpression(entry.getValue(), definitions, true,
+                                        specification))
+                                .append(",");
                     }
                 }
             }
@@ -76,7 +77,7 @@ public abstract class OpenApiTestValidationDataGenerator {
         } else if (OasModelHelper.isArrayType(schema)) {
             payload.append("[");
             payload.append(createValidationExpression((OasSchema) schema.items, definitions, true,
-                specification));
+                    specification));
             payload.append("]");
         } else {
             payload.append(createValidationExpression(schema, definitions, false, specification));
@@ -101,9 +102,9 @@ public abstract class OpenApiTestValidationDataGenerator {
      * according to schema type and format.
      */
     public static String createValidationExpression(String name, OasSchema schema,
-        Map<String, OasSchema> definitions,
-        boolean quotes, OpenApiSpecification specification,
-        TestContext context) {
+                                                    Map<String, OasSchema> definitions,
+                                                    boolean quotes, OpenApiSpecification specification,
+                                                    TestContext context) {
         if (context.getVariables().containsKey(name)) {
             return CitrusSettings.VARIABLE_PREFIX + name + CitrusSettings.VARIABLE_SUFFIX;
         }
@@ -115,8 +116,8 @@ public abstract class OpenApiTestValidationDataGenerator {
      * Create validation expression using functions according to schema type and format.
      */
     public static String createValidationExpression(OasSchema schema,
-        Map<String, OasSchema> definitions, boolean quotes,
-        OpenApiSpecification specification) {
+                                                    Map<String, OasSchema> definitions, boolean quotes,
+                                                    OpenApiSpecification specification) {
         if (OasModelHelper.isReferenceType(schema)) {
             OasSchema resolved = definitions.get(OasModelHelper.getReferenceName(schema.$ref));
             return createValidationExpression(resolved, definitions, quotes, specification);
@@ -129,14 +130,14 @@ public abstract class OpenApiTestValidationDataGenerator {
             if (schema.properties != null) {
                 for (Map.Entry<String, OasSchema> entry : schema.properties.entrySet()) {
                     if (specification.isValidateOptionalFields() || isRequired(schema,
-                        entry.getKey())) {
+                            entry.getKey())) {
                         payload.append("\"")
-                            .append(entry.getKey())
-                            .append("\": ")
-                            .append(
-                                createValidationExpression(entry.getValue(), definitions, quotes,
-                                    specification))
-                            .append(",");
+                                .append(entry.getKey())
+                                .append("\": ")
+                                .append(
+                                        createValidationExpression(entry.getValue(), definitions, quotes,
+                                                specification))
+                                .append(",");
                     }
                 }
             }
@@ -175,7 +176,7 @@ public abstract class OpenApiTestValidationDataGenerator {
         }
 
         switch (schema.type) {
-            case OpenApiConstants.TYPE_STRING :
+            case OpenApiConstants.TYPE_STRING:
                 if (schema.format != null && schema.format.equals("date")) {
                     return "@matchesDatePattern('yyyy-MM-dd')@";
                 } else if (schema.format != null && schema.format.equals("date-time")) {
@@ -184,13 +185,13 @@ public abstract class OpenApiTestValidationDataGenerator {
                     return String.format("@matches(%s)@", schema.pattern);
                 } else if (!isEmpty(schema.enum_)) {
                     return String.format("@matches(%s)@",
-                        String.join("|", schema.enum_));
+                            String.join("|", schema.enum_));
                 } else {
                     return "@notEmpty()@";
                 }
             case OpenApiConstants.TYPE_NUMBER, OpenApiConstants.TYPE_INTEGER:
                 return "@isNumber()@";
-            case OpenApiConstants.TYPE_BOOLEAN :
+            case OpenApiConstants.TYPE_BOOLEAN:
                 return "@matches(true|false)@";
             default:
                 return "@ignore@";
@@ -203,10 +204,10 @@ public abstract class OpenApiTestValidationDataGenerator {
     public static String createValidationRegex(String name, @Nullable OasSchema oasSchema) {
 
         if (oasSchema != null && (OasModelHelper.isReferenceType(oasSchema)
-            || OasModelHelper.isObjectType(oasSchema))) {
+                || OasModelHelper.isObjectType(oasSchema))) {
             throw new CitrusRuntimeException(String.format(
-                "Unable to create a validation regex for an reference of object schema '%s'!",
-                name));
+                    "Unable to create a validation regex for an reference of object schema '%s'!",
+                    name));
         }
 
         return createValidationRegex(oasSchema);

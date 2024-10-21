@@ -2,11 +2,12 @@ package org.citrusframework.openapi.random;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import org.citrusframework.openapi.OpenApiConstants;
+import org.citrusframework.openapi.util.OpenApiUtils;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Map;
-import org.citrusframework.openapi.OpenApiConstants;
-import org.citrusframework.openapi.util.OpenApiUtils;
 
 /**
  * A generator for producing random objects based on an OpenAPI schema. This class extends
@@ -45,9 +46,9 @@ public class RandomObjectGenerator extends RandomGenerator {
             if (schema.properties != null) {
                 for (Map.Entry<String, OasSchema> entry : schema.properties.entrySet()) {
                     if (randomContext.getSpecification().isGenerateOptionalFields() || OpenApiUtils.isRequired(schema,
-                        entry.getKey())) {
+                            entry.getKey())) {
                         randomContext.getRandomModelBuilder().property(entry.getKey(), () ->
-                            randomContext.generate(entry.getValue()));
+                                randomContext.generate(entry.getValue()));
                     }
                 }
             }

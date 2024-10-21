@@ -16,11 +16,11 @@
 
 package org.citrusframework.openapi.validation;
 
-import org.citrusframework.openapi.OpenApiMessageType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.openapi.OpenApiMessageHeaders;
+import org.citrusframework.openapi.OpenApiMessageType;
 import org.citrusframework.openapi.OpenApiSpecification;
 
 /**
@@ -36,7 +36,7 @@ public class OpenApiMessageProcessor implements MessageProcessor {
     private final OpenApiMessageType type;
 
     public OpenApiMessageProcessor(OpenApiSpecification openApiSpecification,
-        String operationId, OpenApiMessageType type) {
+                                   String operationId, OpenApiMessageType type) {
         this.operationId = operationId;
         this.openApiSpecification = openApiSpecification;
         this.type = type;
@@ -46,11 +46,11 @@ public class OpenApiMessageProcessor implements MessageProcessor {
     public void process(Message message, TestContext context) {
 
         openApiSpecification
-            .getOperation(operationId, context)
-            .ifPresent(operationPathAdapter -> {
-                // Store the uniqueId of the operation, rather than the operationId, to avoid clashes.
-                message.setHeader(OpenApiMessageHeaders.OAS_UNIQUE_OPERATION_ID, operationPathAdapter.uniqueOperationId());
-                message.setHeader(OpenApiMessageHeaders.OAS_MESSAGE_TYPE, type.toHeaderName());
-            });
+                .getOperation(operationId, context)
+                .ifPresent(operationPathAdapter -> {
+                    // Store the uniqueId of the operation, rather than the operationId, to avoid clashes.
+                    message.setHeader(OpenApiMessageHeaders.OAS_UNIQUE_OPERATION_ID, operationPathAdapter.uniqueOperationId());
+                    message.setHeader(OpenApiMessageHeaders.OAS_MESSAGE_TYPE, type.toHeaderName());
+                });
     }
 }

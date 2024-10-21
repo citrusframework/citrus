@@ -38,7 +38,7 @@ public class OpenApiPayloadBuilderTest {
         // Then
         Assert.assertTrue(payload instanceof MultiValueMap);
         MultiValueMap<String, String> result = (MultiValueMap<String, String>) payload;
-        
+
         Assert.assertEquals(result.get("key1").get(0), "value1");
         Assert.assertEquals(result.get("key2").get(0), "Hello John, welcome!");
         Assert.assertEquals(result.get("key2").get(1), "Another John message");

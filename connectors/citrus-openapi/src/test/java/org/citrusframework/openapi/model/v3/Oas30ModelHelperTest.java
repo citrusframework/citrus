@@ -71,8 +71,8 @@ public class Oas30ModelHelperTest {
 
         Oas30Response response = new Oas30Response("200");
         response.content = Map.of(MediaType.APPLICATION_JSON_VALUE,
-            new Oas30MediaType(MediaType.APPLICATION_JSON_VALUE),
-            MediaType.APPLICATION_XML_VALUE, new Oas30MediaType(MediaType.APPLICATION_XML_VALUE));
+                new Oas30MediaType(MediaType.APPLICATION_JSON_VALUE),
+                MediaType.APPLICATION_XML_VALUE, new Oas30MediaType(MediaType.APPLICATION_XML_VALUE));
 
         operation.responses = new Oas30Responses();
         operation.responses.addResponse("200", response);
@@ -104,14 +104,14 @@ public class Oas30ModelHelperTest {
         xmlMediaType.schema = new Oas30Schema();
 
         okResponse.content = Map.of(MediaType.APPLICATION_JSON_VALUE, jsonMediaType,
-            MediaType.APPLICATION_XML_VALUE, xmlMediaType);
+                MediaType.APPLICATION_XML_VALUE, xmlMediaType);
 
         operation.responses = new Oas30Responses();
         operation.responses.addResponse("403", nokResponse);
         operation.responses.addResponse("200", okResponse);
 
         Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
-            document, operation, null, null);
+                document, operation, null, null);
         assertTrue(responseForRandomGeneration.isPresent());
         assertEquals(okResponse, responseForRandomGeneration.get());
     }
@@ -136,7 +136,7 @@ public class Oas30ModelHelperTest {
         operation.responses.addResponse("407", nokResponse407);
 
         Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
-            document, operation, null, null);
+                document, operation, null, null);
         assertTrue(responseForRandomGeneration.isPresent());
         assertEquals(responseForRandomGeneration.get().getStatusCode(), "403");
 
@@ -163,7 +163,7 @@ public class Oas30ModelHelperTest {
         operation.responses.addResponse("407", nokResponse407);
 
         Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
-            document, operation, null, null);
+                document, operation, null, null);
         assertTrue(responseForRandomGeneration.isPresent());
         assertEquals(responseForRandomGeneration.get().getStatusCode(), "407");
     }

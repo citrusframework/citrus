@@ -16,13 +16,14 @@
 
 package org.citrusframework.openapi.random;
 
-import static org.citrusframework.util.StringUtils.trimTrailingComma;
+import org.citrusframework.openapi.random.RandomElement.RandomValue;
 
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.citrusframework.openapi.random.RandomElement.RandomValue;
+
+import static org.citrusframework.util.StringUtils.trimTrailingComma;
 
 /**
  * Utility class for converting a {@link RandomModelBuilder} to its string representation.

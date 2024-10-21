@@ -16,14 +16,14 @@
 
 package org.citrusframework.openapi.validation;
 
-import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledGlobally;
-import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
-
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.report.MessageResolver;
 import com.atlassian.oai.validator.schema.SchemaValidator;
 import com.atlassian.oai.validator.schema.SwaggerV20Library;
 import io.swagger.v3.oas.models.OpenAPI;
+
+import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledGlobally;
+import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
 
 /**
  * Represents the context for OpenAPI validation, providing configuration and validators for request and response validation.

@@ -7,7 +7,11 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static org.citrusframework.openapi.OpenApiConstants.*;
+import static org.citrusframework.openapi.OpenApiConstants.FORMAT_DATE;
+import static org.citrusframework.openapi.OpenApiConstants.FORMAT_DATE_TIME;
+import static org.citrusframework.openapi.OpenApiConstants.FORMAT_UUID;
+import static org.citrusframework.openapi.OpenApiConstants.TYPE_BOOLEAN;
+import static org.citrusframework.openapi.OpenApiConstants.TYPE_STRING;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;

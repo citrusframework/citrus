@@ -18,7 +18,6 @@ package org.citrusframework.openapi.actions;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;
@@ -33,7 +32,9 @@ public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTe
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
 
-    /** Target http client instance */
+    /**
+     * Target http client instance
+     */
     private Endpoint httpServer;
     private String httpServerUri;
 
@@ -58,7 +59,7 @@ public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTe
      */
     public OpenApiServerRequestActionBuilder receive(String operationId) {
         OpenApiServerRequestActionBuilder builder = new OpenApiServerRequestActionBuilder(
-            openApiSpecificationSource, operationId);
+                openApiSpecificationSource, operationId);
         if (httpServer != null) {
             builder.endpoint(httpServer);
         } else {
@@ -106,7 +107,7 @@ public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTe
      */
     public OpenApiServerResponseActionBuilder send(String operationId, String statusCode, String accept) {
         OpenApiServerResponseActionBuilder builder = new OpenApiServerResponseActionBuilder(
-            openApiSpecificationSource, operationId, statusCode, accept);
+                openApiSpecificationSource, operationId, statusCode, accept);
         if (httpServer != null) {
             builder.endpoint(httpServer);
         } else {
@@ -122,6 +123,7 @@ public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTe
 
     /**
      * Sets the Spring bean application context.
+     *
      * @param referenceResolver
      */
     public OpenApiServerActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {

@@ -46,12 +46,12 @@ public class OpenApiResponseValidator extends OpenApiValidator {
         if (openApiInteractionValidator != null) {
             HttpStatusCode statusCode = httpMessage.getStatusCode();
             Response response = createResponseFromMessage(httpMessage,
-                statusCode != null ? statusCode.value() : null);
+                    statusCode != null ? statusCode.value() : null);
 
             ValidationReport validationReport = openApiInteractionValidator.validateResponse(
-                operationPathAdapter.apiPath(),
-                Method.valueOf(operationPathAdapter.operation().getMethod().toUpperCase()),
-                response);
+                    operationPathAdapter.apiPath(),
+                    Method.valueOf(operationPathAdapter.operation().getMethod().toUpperCase()),
+                    response);
             if (validationReport.hasErrors()) {
                 throw new ValidationException(constructErrorMessage(operationPathAdapter, validationReport));
             }
@@ -63,12 +63,12 @@ public class OpenApiResponseValidator extends OpenApiValidator {
         if (openApiInteractionValidator != null) {
             HttpStatusCode statusCode = httpMessage.getStatusCode();
             Response response = createResponseFromMessage(httpMessage,
-                statusCode != null ? statusCode.value() : null);
+                    statusCode != null ? statusCode.value() : null);
 
             return openApiInteractionValidator.validateResponse(
-                operationPathAdapter.apiPath(),
-                Method.valueOf(operationPathAdapter.operation().getMethod().toUpperCase()),
-                response);
+                    operationPathAdapter.apiPath(),
+                    Method.valueOf(operationPathAdapter.operation().getMethod().toUpperCase()),
+                    response);
 
         }
         return ValidationReport.empty();
@@ -84,7 +84,7 @@ public class OpenApiResponseValidator extends OpenApiValidator {
 
         SimpleResponse.Builder finalResponseBuilder = responseBuilder;
         message.getHeaders().forEach((key, value) -> finalResponseBuilder.withHeader(key,
-            value != null ? value.toString() : null));
+                value != null ? value.toString() : null));
 
         return responseBuilder.build();
     }

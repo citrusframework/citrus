@@ -34,7 +34,7 @@ public abstract class OpenApiTestDataGenerator {
      * Creates payload from schema for outbound message.
      */
     public static String createOutboundPayload(OasSchema schema,
-        OpenApiSpecification specification) {
+                                               OpenApiSpecification specification) {
         RandomContext randomContext = new RandomContext(specification, true);
         randomContext.generate(schema);
         return randomContext.getRandomModelBuilder().write();
@@ -44,7 +44,7 @@ public abstract class OpenApiTestDataGenerator {
      * Use test variable with given name if present or create value from schema with random values
      */
     public static String createRandomValueExpression(String name, OasSchema schema, OpenApiSpecification specification,
-        TestContext context) {
+                                                     TestContext context) {
 
         if (context.getVariables().containsKey(name)) {
             return CitrusSettings.VARIABLE_PREFIX + name + CitrusSettings.VARIABLE_SUFFIX;
@@ -61,7 +61,7 @@ public abstract class OpenApiTestDataGenerator {
      * functions according to schema type and format.
      */
     public static String createRandomValueExpression(String name, OasSchema schema,
-        TestContext context) {
+                                                     TestContext context) {
 
         if (context.getVariables().containsKey(name)) {
             return CitrusSettings.VARIABLE_PREFIX + name + CitrusSettings.VARIABLE_SUFFIX;

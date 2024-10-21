@@ -18,7 +18,6 @@ package org.citrusframework.openapi.actions;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;
@@ -33,7 +32,9 @@ public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTe
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
 
-    /** Target http client instance */
+    /**
+     * Target http client instance
+     */
     private Endpoint httpClient;
     private String httpClientUri;
 
@@ -62,7 +63,7 @@ public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTe
      */
     public OpenApiClientRequestActionBuilder send(String operationId) {
         OpenApiClientRequestActionBuilder builder = new OpenApiClientRequestActionBuilder(
-            openApiSpecificationSource, operationId);
+                openApiSpecificationSource, operationId);
         if (httpClient != null) {
             builder.endpoint(httpClient);
         } else {
@@ -96,7 +97,7 @@ public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTe
      */
     public OpenApiClientResponseActionBuilder receive(String operationId, String statusCode) {
         OpenApiClientResponseActionBuilder builder = new OpenApiClientResponseActionBuilder(
-            openApiSpecificationSource, operationId, statusCode);
+                openApiSpecificationSource, operationId, statusCode);
         if (httpClient != null) {
             builder.endpoint(httpClient);
         } else {
@@ -111,6 +112,7 @@ public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTe
 
     /**
      * Sets the bean reference resolver.
+     *
      * @param referenceResolver
      */
     public OpenApiClientActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {

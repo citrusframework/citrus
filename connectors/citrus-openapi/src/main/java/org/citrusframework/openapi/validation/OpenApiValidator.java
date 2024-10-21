@@ -29,7 +29,7 @@ public abstract class OpenApiValidator {
         OpenApiValidationContext openApiValidationContext = openApiSpecification.getOpenApiValidationContext();
         if (openApiValidationContext != null) {
             openApiInteractionValidator = openApiSpecification.getOpenApiValidationContext()
-                .getOpenApiInteractionValidator();
+                    .getOpenApiInteractionValidator();
         } else {
             openApiInteractionValidator = null;
         }
@@ -45,7 +45,7 @@ public abstract class OpenApiValidator {
      * @return A string representation of all messages contained in the report
      */
     protected String constructErrorMessage(OperationPathAdapter operationPathAdapter,
-        ValidationReport report) {
+                                           ValidationReport report) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("OpenApi ");
         stringBuilder.append(getType());

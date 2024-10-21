@@ -16,21 +16,22 @@
 
 package org.citrusframework.openapi;
 
+import org.citrusframework.spi.ReferenceResolver;
+import org.mockito.MockitoAnnotations;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import static org.citrusframework.openapi.util.OpenApiUtils.getKnownOpenApiAliases;
 import static org.citrusframework.openapi.util.OpenApiUtils.getMethodPath;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import org.citrusframework.spi.ReferenceResolver;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 public class OpenApiUtilsTest {
 
@@ -80,10 +81,10 @@ public class OpenApiUtilsTest {
         OpenApiSpecification spec2 = mock();
 
         when(resolver.resolveAll(OpenApiRepository.class)).thenReturn(
-            Map.of(
-                "repo1", repository1,
-                "repo2", repository2
-            )
+                Map.of(
+                        "repo1", repository1,
+                        "repo2", repository2
+                )
         );
 
         when(repository1.getOpenApiSpecifications()).thenReturn(List.of(spec1));
@@ -106,10 +107,10 @@ public class OpenApiUtilsTest {
         OpenApiRepository repository2 = mock();
 
         when(resolver.resolveAll(OpenApiRepository.class)).thenReturn(
-            Map.of(
-                "repo1", repository1,
-                "repo2", repository2
-            )
+                Map.of(
+                        "repo1", repository1,
+                        "repo2", repository2
+                )
         );
 
         when(repository1.getOpenApiSpecifications()).thenReturn(List.of());

@@ -2,6 +2,7 @@ package org.citrusframework.openapi.random;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+
 import java.util.Collections;
 import java.util.function.BiConsumer;
 

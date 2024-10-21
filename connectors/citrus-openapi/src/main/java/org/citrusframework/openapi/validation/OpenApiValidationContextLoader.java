@@ -21,10 +21,11 @@ import com.atlassian.oai.validator.util.OpenApiLoader;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.parser.core.models.ParseOptions;
 import jakarta.annotation.Nonnull;
-import java.net.URL;
-import java.util.Collections;
 import org.citrusframework.openapi.OpenApiResourceLoader;
 import org.citrusframework.spi.Resource;
+
+import java.net.URL;
+import java.util.Collections;
 
 /**
  * Utility class for creation of  {@link OpenApiValidationContext}.
@@ -34,6 +35,7 @@ public abstract class OpenApiValidationContextLoader {
     private OpenApiValidationContextLoader() {
         // Static access only
     }
+
     /**
      * Creates an OpenApiValidationContext from a secured OpenAPI web resource.
      *
@@ -55,7 +57,7 @@ public abstract class OpenApiValidationContextLoader {
     }
 
     /**
-     *  Creates an OpenApiValidationContext from an OpenAPI file.
+     * Creates an OpenApiValidationContext from an OpenAPI file.
      *
      * @param resource the file resource containing the OpenAPI specification
      * @return the OpenApiValidationContext

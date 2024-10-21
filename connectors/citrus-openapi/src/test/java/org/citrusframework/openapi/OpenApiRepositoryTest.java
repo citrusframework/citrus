@@ -42,7 +42,7 @@ public class OpenApiRepositoryTest {
         OpenApiRepository openApiRepository = new OpenApiRepository();
         openApiRepository.setRootContextPath(ROOT);
         openApiRepository.setLocations(
-            List.of("org/citrusframework/openapi/petstore/petstore**.json"));
+                List.of("org/citrusframework/openapi/petstore/petstore**.json"));
         openApiRepository.initialize();
 
         List<OpenApiSpecification> openApiSpecifications = openApiRepository.getOpenApiSpecifications();
@@ -55,11 +55,11 @@ public class OpenApiRepositoryTest {
         assertEquals(openApiSpecifications.get(1).getRootContextPath(), ROOT);
 
         assertTrue(
-            SampleOpenApiProcessor.processedSpecifications.contains(openApiSpecifications.get(0)));
+                SampleOpenApiProcessor.processedSpecifications.contains(openApiSpecifications.get(0)));
         assertTrue(
-            SampleOpenApiProcessor.processedSpecifications.contains(openApiSpecifications.get(1)));
+                SampleOpenApiProcessor.processedSpecifications.contains(openApiSpecifications.get(1)));
         assertTrue(
-            SampleOpenApiProcessor.processedSpecifications.contains(openApiSpecifications.get(2)));
+                SampleOpenApiProcessor.processedSpecifications.contains(openApiSpecifications.get(2)));
     }
 
     @Test

@@ -16,25 +16,9 @@
 
 package org.citrusframework.openapi;
 
-import static org.citrusframework.openapi.OpenApiSettings.isGenerateOptionalFieldsGlobally;
-import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledGlobally;
-import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
-import static org.citrusframework.openapi.OpenApiSettings.isValidateOptionalFieldsGlobally;
-
 import io.apicurio.datamodels.core.models.common.Info;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpClient;
@@ -48,6 +32,23 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
+
+import static org.citrusframework.openapi.OpenApiSettings.isGenerateOptionalFieldsGlobally;
+import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledGlobally;
+import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
+import static org.citrusframework.openapi.OpenApiSettings.isValidateOptionalFieldsGlobally;
 
 /**
  * OpenApi specification resolves URL or local file resources to a specification document.
@@ -73,48 +74,10 @@ import org.slf4j.LoggerFactory;
  */
 public class OpenApiSpecification {
 
-    private static final Logger logger = LoggerFactory.getLogger(OpenApiSpecification.class);
-
     public static final String HTTPS = "https";
     public static final String HTTP = "http";
-
-    /**
-     * URL to load the OpenAPI specification
-     */
-    private String specUrl;
-
-    private String httpClient;
-    private String requestUrl;
-
-    /**
-     * The optional root context path to which the OpenAPI is hooked. This path is prepended to the
-     * base path specified in the OpenAPI configuration. If no root context path is specified, only
-     * the base path and additional segments are used.
-     */
-    private String rootContextPath;
-
-    private OasDocument openApiDoc;
-
-    private OpenApiValidationContext openApiValidationContext;
-
-    private boolean generateOptionalFields = isGenerateOptionalFieldsGlobally();
-
-    private boolean validateOptionalFields = isValidateOptionalFieldsGlobally();
-
-    /**
-     * Flag to indicate, whether request validation is enabled on api level. Api level overrules global
-     * level and may be overruled by request level.
-     */
-    private boolean apiRequestValidationEnabled = isRequestValidationEnabledGlobally();
-
-    /**
-     * Flag to indicate, whether response validation is enabled on api level. Api level overrules global
-     * level and may be overruled by request level.
-     */
-    private boolean apiResponseValidationEnabled = isResponseValidationEnabledGlobally();
-
+    private static final Logger logger = LoggerFactory.getLogger(OpenApiSpecification.class);
     private final Set<String> aliases = Collections.synchronizedSet(new HashSet<>());
-
     /**
      * Maps the identifier (id) of an operation to OperationPathAdapters. Two different keys may be
      * used for each operation. Refer to
@@ -122,13 +85,38 @@ public class OpenApiSpecification {
      * details.
      */
     private final Map<String, OperationPathAdapter> operationIdToOperationPathAdapter = new ConcurrentHashMap<>();
-
     /**
      * Stores the unique identifier (uniqueId) of an operation, derived from its HTTP method and
      * path. This identifier can always be determined and is therefore safe to use, even for
      * operations without an optional operationId defined.
      */
     private final Map<OasOperation, String> operationToUniqueId = new ConcurrentHashMap<>();
+    /**
+     * URL to load the OpenAPI specification
+     */
+    private String specUrl;
+    private String httpClient;
+    private String requestUrl;
+    /**
+     * The optional root context path to which the OpenAPI is hooked. This path is prepended to the
+     * base path specified in the OpenAPI configuration. If no root context path is specified, only
+     * the base path and additional segments are used.
+     */
+    private String rootContextPath;
+    private OasDocument openApiDoc;
+    private OpenApiValidationContext openApiValidationContext;
+    private boolean generateOptionalFields = isGenerateOptionalFieldsGlobally();
+    private boolean validateOptionalFields = isValidateOptionalFieldsGlobally();
+    /**
+     * Flag to indicate, whether request validation is enabled on api level. Api level overrules global
+     * level and may be overruled by request level.
+     */
+    private boolean apiRequestValidationEnabled = isRequestValidationEnabledGlobally();
+    /**
+     * Flag to indicate, whether response validation is enabled on api level. Api level overrules global
+     * level and may be overruled by request level.
+     */
+    private boolean apiResponseValidationEnabled = isResponseValidationEnabledGlobally();
 
     public static OpenApiSpecification from(String specUrl) {
         OpenApiSpecification specification = new OpenApiSpecification();
@@ -143,10 +131,10 @@ public class OpenApiSpecification {
         OpenApiValidationContext openApiValidationContext;
         if (specUrl.getProtocol().startsWith(HTTPS)) {
             openApiDoc = OpenApiResourceLoader.fromSecuredWebResource(specUrl);
-            openApiValidationContext  = OpenApiValidationContextLoader.fromSecuredWebResource(specUrl);
+            openApiValidationContext = OpenApiValidationContextLoader.fromSecuredWebResource(specUrl);
         } else {
             openApiDoc = OpenApiResourceLoader.fromWebResource(specUrl);
-            openApiValidationContext  = OpenApiValidationContextLoader.fromWebResource(specUrl);
+            openApiValidationContext = OpenApiValidationContextLoader.fromWebResource(specUrl);
         }
 
         specification.setSpecUrl(specUrl.toString());
@@ -154,9 +142,9 @@ public class OpenApiSpecification {
         specification.setOpenApiDoc(openApiDoc);
         specification.setOpenApiValidationContext(openApiValidationContext);
         specification.setRequestUrl(
-            String.format("%s://%s%s%s", specUrl.getProtocol(), specUrl.getHost(),
-                specUrl.getPort() > 0 ? ":" + specUrl.getPort() : "",
-                OasModelHelper.getBasePath(openApiDoc)));
+                String.format("%s://%s%s%s", specUrl.getProtocol(), specUrl.getHost(),
+                        specUrl.getPort() > 0 ? ":" + specUrl.getPort() : "",
+                        OasModelHelper.getBasePath(openApiDoc)));
 
         return specification;
     }
@@ -169,16 +157,16 @@ public class OpenApiSpecification {
         specification.setOpenApiValidationContext(OpenApiValidationContextLoader.fromFile(resource));
 
         String schemeToUse = Optional.ofNullable(OasModelHelper.getSchemes(openApiDoc))
-            .orElse(Collections.singletonList(HTTP))
-            .stream()
-            .filter(s -> s.equals(HTTP) || s.equals(HTTPS))
-            .findFirst()
-            .orElse(HTTP);
+                .orElse(Collections.singletonList(HTTP))
+                .stream()
+                .filter(s -> s.equals(HTTP) || s.equals(HTTPS))
+                .findFirst()
+                .orElse(HTTP);
 
         specification.setSpecUrl(resource.getLocation());
         specification.setRequestUrl(
-            String.format("%s://%s%s", schemeToUse, OasModelHelper.getHost(openApiDoc),
-                OasModelHelper.getBasePath(openApiDoc)));
+                String.format("%s://%s%s", schemeToUse, OasModelHelper.getHost(openApiDoc),
+                        OasModelHelper.getBasePath(openApiDoc)));
 
         return specification;
     }
@@ -195,20 +183,20 @@ public class OpenApiSpecification {
                 // relative path URL - try to resolve with given request URL
                 if (requestUrl != null) {
                     resolvedSpecUrl =
-                        requestUrl.endsWith("/") ? requestUrl + resolvedSpecUrl.substring(1)
-                            : requestUrl + resolvedSpecUrl;
+                            requestUrl.endsWith("/") ? requestUrl + resolvedSpecUrl.substring(1)
+                                    : requestUrl + resolvedSpecUrl;
                 } else if (httpClient != null && context.getReferenceResolver()
-                    .isResolvable(httpClient, HttpClient.class)) {
+                        .isResolvable(httpClient, HttpClient.class)) {
                     String baseUrl = context.getReferenceResolver()
-                        .resolve(httpClient, HttpClient.class).getEndpointConfiguration()
-                        .getRequestUrl();
+                            .resolve(httpClient, HttpClient.class).getEndpointConfiguration()
+                            .getRequestUrl();
                     resolvedSpecUrl = baseUrl.endsWith("/") ? baseUrl + resolvedSpecUrl.substring(1)
-                        : baseUrl + resolvedSpecUrl;
+                            : baseUrl + resolvedSpecUrl;
                 } else {
                     throw new CitrusRuntimeException(
-                        ("Failed to resolve OpenAPI spec URL from relative path %s - " +
-                            "make sure to provide a proper base URL when using relative paths").formatted(
-                            resolvedSpecUrl));
+                            ("Failed to resolve OpenAPI spec URL from relative path %s - " +
+                                    "make sure to provide a proper base URL when using relative paths").formatted(
+                                    resolvedSpecUrl));
                 }
             }
 
@@ -216,7 +204,7 @@ public class OpenApiSpecification {
                 URL specWebResource = toSpecUrl(resolvedSpecUrl);
                 if (resolvedSpecUrl.startsWith(HTTPS)) {
                     initApiDoc(
-                        () -> OpenApiResourceLoader.fromSecuredWebResource(specWebResource));
+                            () -> OpenApiResourceLoader.fromSecuredWebResource(specWebResource));
 
                     setOpenApiValidationContext(OpenApiValidationContextLoader.fromSecuredWebResource(specWebResource));
                 } else {
@@ -226,28 +214,28 @@ public class OpenApiSpecification {
 
                 if (requestUrl == null) {
                     setRequestUrl(String.format("%s://%s%s%s", specWebResource.getProtocol(),
-                        specWebResource.getHost(),
-                        specWebResource.getPort() > 0 ? ":" + specWebResource.getPort() : "",
-                        OasModelHelper.getBasePath(openApiDoc)));
+                            specWebResource.getHost(),
+                            specWebResource.getPort() > 0 ? ":" + specWebResource.getPort() : "",
+                            OasModelHelper.getBasePath(openApiDoc)));
                 }
 
             } else {
                 Resource resource = Resources.create(resolvedSpecUrl);
                 initApiDoc(
-                    () -> OpenApiResourceLoader.fromFile(resource));
+                        () -> OpenApiResourceLoader.fromFile(resource));
                 setOpenApiValidationContext(OpenApiValidationContextLoader.fromFile(resource));
 
                 if (requestUrl == null) {
                     String schemeToUse = Optional.ofNullable(OasModelHelper.getSchemes(openApiDoc))
-                        .orElse(Collections.singletonList(HTTP))
-                        .stream()
-                        .filter(s -> s.equals(HTTP) || s.equals(HTTPS))
-                        .findFirst()
-                        .orElse(HTTP);
+                            .orElse(Collections.singletonList(HTTP))
+                            .stream()
+                            .filter(s -> s.equals(HTTP) || s.equals(HTTPS))
+                            .findFirst()
+                            .orElse(HTTP);
 
                     setRequestUrl(
-                        String.format("%s://%s%s", schemeToUse, OasModelHelper.getHost(openApiDoc),
-                            OasModelHelper.getBasePath(openApiDoc)));
+                            String.format("%s://%s%s", schemeToUse, OasModelHelper.getHost(openApiDoc),
+                                    OasModelHelper.getBasePath(openApiDoc)));
                 }
             }
         }
@@ -259,6 +247,12 @@ public class OpenApiSpecification {
         return openApiValidationContext;
     }
 
+    private void setOpenApiValidationContext(
+            OpenApiValidationContext openApiValidationContext) {
+        this.openApiValidationContext = openApiValidationContext;
+        this.openApiValidationContext.setResponseValidationEnabled(apiResponseValidationEnabled);
+        this.openApiValidationContext.setRequestValidationEnabled(apiRequestValidationEnabled);
+    }
 
     // provided for testing
     URL toSpecUrl(String resolvedSpecUrl) {
@@ -266,19 +260,12 @@ public class OpenApiSpecification {
             return URI.create(resolvedSpecUrl).toURL();
         } catch (MalformedURLException e) {
             throw new IllegalStateException(
-                "Failed to retrieve Open API specification as web resource: " + resolvedSpecUrl, e);
+                    "Failed to retrieve Open API specification as web resource: " + resolvedSpecUrl, e);
         }
     }
 
     void setOpenApiDoc(OasDocument openApiDoc) {
         initApiDoc(() -> openApiDoc);
-    }
-
-    private void setOpenApiValidationContext(
-        OpenApiValidationContext openApiValidationContext) {
-        this.openApiValidationContext = openApiValidationContext;
-        this.openApiValidationContext.setResponseValidationEnabled(apiResponseValidationEnabled);
-        this.openApiValidationContext.setRequestValidationEnabled(apiRequestValidationEnabled);
     }
 
     private void initApiDoc(Supplier<OasDocument> openApiDocSupplier) {
@@ -303,7 +290,7 @@ public class OpenApiSpecification {
             }
 
             for (Map.Entry<String, OasOperation> operationEntry : OasModelHelper.getOperationMap(
-                oasPathItem).entrySet()) {
+                    oasPathItem).entrySet()) {
                 storeOperationPathAdapter(operationEntry.getValue(), path);
             }
         });
@@ -328,7 +315,7 @@ public class OpenApiSpecification {
         operationToUniqueId.put(operation, uniqueOperationId);
 
         OperationPathAdapter operationPathAdapter = new OperationPathAdapter(path, rootContextPath,
-            StringUtils.appendSegmentToUrlPath(rootContextPath, path), operation, uniqueOperationId);
+                StringUtils.appendSegmentToUrlPath(rootContextPath, path), operation, uniqueOperationId);
 
         operationIdToOperationPathAdapter.put(uniqueOperationId, operationPathAdapter);
         if (StringUtils.hasText(operation.operationId)) {
@@ -344,12 +331,12 @@ public class OpenApiSpecification {
         this.specUrl = specUrl;
     }
 
-    public void setHttpClient(String httpClient) {
-        this.httpClient = httpClient;
-    }
-
     public String getHttpClient() {
         return httpClient;
+    }
+
+    public void setHttpClient(String httpClient) {
+        this.httpClient = httpClient;
     }
 
     public String getRequestUrl() {

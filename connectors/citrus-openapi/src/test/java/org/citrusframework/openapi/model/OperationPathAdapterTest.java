@@ -32,7 +32,7 @@ public class OperationPathAdapterTest {
         oas30Operation.operationId = "operationId";
 
         OperationPathAdapter adapter = new OperationPathAdapter("/api/path", "/context/path", "/full/path", oas30Operation,
-            oas30Operation.operationId);
+                oas30Operation.operationId);
 
         // When
         String expectedString = format("%s (%s)", OpenApiUtils.getMethodPath("GET", "/api/path"), "operationId");

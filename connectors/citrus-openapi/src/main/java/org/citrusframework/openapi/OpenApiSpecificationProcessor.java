@@ -32,16 +32,20 @@ import java.util.Map;
  */
 public interface OpenApiSpecificationProcessor {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     Logger logger = LoggerFactory.getLogger(OpenApiSpecificationProcessor.class);
 
-    /** OpenAPI processors resource lookup path */
+    /**
+     * OpenAPI processors resource lookup path
+     */
     String RESOURCE_PATH = "META-INF/citrus/openapi/processor";
 
-    /** Type resolver to find OpenAPI processors on classpath via resource path lookup */
+    /**
+     * Type resolver to find OpenAPI processors on classpath via resource path lookup
+     */
     TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
-
-    void process(OpenApiSpecification openApiSpecification);
 
     /**
      * Resolves all available processors from resource path lookup. Scans classpath for processors meta information
@@ -56,5 +60,7 @@ public interface OpenApiSpecificationProcessor {
 
         return processors;
     }
+
+    void process(OpenApiSpecification openApiSpecification);
 
 }

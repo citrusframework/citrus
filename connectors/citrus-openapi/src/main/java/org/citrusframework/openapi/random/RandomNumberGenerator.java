@@ -1,12 +1,13 @@
 package org.citrusframework.openapi.random;
 
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import org.citrusframework.openapi.util.OpenApiUtils;
+
+import java.math.BigDecimal;
+
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static org.citrusframework.openapi.OpenApiConstants.TYPE_INTEGER;
-
-import io.apicurio.datamodels.openapi.models.OasSchema;
-import java.math.BigDecimal;
-import org.citrusframework.openapi.util.OpenApiUtils;
 
 /**
  * A generator for producing random numbers based on an OpenAPI schema. This class extends the
@@ -35,66 +36,6 @@ public class RandomNumberGenerator extends RandomGenerator {
     public static final BigDecimal THOUSAND = new BigDecimal(1000);
     public static final BigDecimal HUNDRED = java.math.BigDecimal.valueOf(100);
     public static final BigDecimal MINUS_THOUSAND = new BigDecimal(-1000);
-
-    @Override
-    public boolean handles(OasSchema other) {
-        return OpenApiUtils.isAnyNumberScheme(other);
-    }
-
-    @Override
-    void generate(RandomContext randomContext, OasSchema schema) {
-
-        boolean exclusiveMaximum = TRUE.equals(schema.exclusiveMaximum);
-        boolean exclusiveMinimum = TRUE.equals(schema.exclusiveMinimum);
-
-        BigDecimal[] bounds = determineBounds(schema);
-
-        BigDecimal minimum = bounds[0];
-        BigDecimal maximum = bounds[1];
-
-        if (schema.multipleOf != null) {
-            randomContext.getRandomModelBuilder().appendSimple(format(
-                "citrus:randomNumberGenerator('%d', '%s', '%s', '%s', '%s', '%s')",
-                determineDecimalPlaces(schema, minimum, maximum),
-                minimum,
-                maximum,
-                exclusiveMinimum,
-                exclusiveMaximum,
-                schema.multipleOf
-            ));
-        } else {
-            randomContext.getRandomModelBuilder().appendSimple(format(
-                "citrus:randomNumberGenerator('%d', '%s', '%s', '%s', '%s')",
-                determineDecimalPlaces(schema, minimum, maximum),
-                minimum,
-                maximum,
-                exclusiveMinimum,
-                exclusiveMaximum
-            ));
-        }
-    }
-
-    /**
-     * Determines the number of decimal places to use based on the given schema and
-     * minimum/maximum/multipleOf values. For integer types, it returns 0. For other types, it
-     * returns the maximum number of decimal places found between the minimum and maximum values,
-     * with a minimum of 2 decimal places.
-     */
-    private int determineDecimalPlaces(OasSchema schema, BigDecimal minimum,
-        BigDecimal maximum) {
-        if (TYPE_INTEGER.equals(schema.type)) {
-            return 0;
-        } else {
-            Number multipleOf = schema.multipleOf;
-            if (multipleOf != null) {
-                return findLeastSignificantDecimalPlace(new BigDecimal(multipleOf.toString()));
-            }
-
-            return Math.max(2, Math.max(findLeastSignificantDecimalPlace(minimum),
-                findLeastSignificantDecimalPlace(maximum)));
-
-        }
-    }
 
     /**
      * Determine some reasonable bounds for a random number
@@ -137,6 +78,66 @@ public class RandomNumberGenerator extends RandomGenerator {
             return min.add(new BigDecimal(multipleOf.toString()).abs().multiply(HUNDRED));
         } else {
             return min.add(min.multiply(BigDecimal.valueOf(2)).max(THOUSAND));
+        }
+    }
+
+    @Override
+    public boolean handles(OasSchema other) {
+        return OpenApiUtils.isAnyNumberScheme(other);
+    }
+
+    @Override
+    void generate(RandomContext randomContext, OasSchema schema) {
+
+        boolean exclusiveMaximum = TRUE.equals(schema.exclusiveMaximum);
+        boolean exclusiveMinimum = TRUE.equals(schema.exclusiveMinimum);
+
+        BigDecimal[] bounds = determineBounds(schema);
+
+        BigDecimal minimum = bounds[0];
+        BigDecimal maximum = bounds[1];
+
+        if (schema.multipleOf != null) {
+            randomContext.getRandomModelBuilder().appendSimple(format(
+                    "citrus:randomNumberGenerator('%d', '%s', '%s', '%s', '%s', '%s')",
+                    determineDecimalPlaces(schema, minimum, maximum),
+                    minimum,
+                    maximum,
+                    exclusiveMinimum,
+                    exclusiveMaximum,
+                    schema.multipleOf
+            ));
+        } else {
+            randomContext.getRandomModelBuilder().appendSimple(format(
+                    "citrus:randomNumberGenerator('%d', '%s', '%s', '%s', '%s')",
+                    determineDecimalPlaces(schema, minimum, maximum),
+                    minimum,
+                    maximum,
+                    exclusiveMinimum,
+                    exclusiveMaximum
+            ));
+        }
+    }
+
+    /**
+     * Determines the number of decimal places to use based on the given schema and
+     * minimum/maximum/multipleOf values. For integer types, it returns 0. For other types, it
+     * returns the maximum number of decimal places found between the minimum and maximum values,
+     * with a minimum of 2 decimal places.
+     */
+    private int determineDecimalPlaces(OasSchema schema, BigDecimal minimum,
+                                       BigDecimal maximum) {
+        if (TYPE_INTEGER.equals(schema.type)) {
+            return 0;
+        } else {
+            Number multipleOf = schema.multipleOf;
+            if (multipleOf != null) {
+                return findLeastSignificantDecimalPlace(new BigDecimal(multipleOf.toString()));
+            }
+
+            return Math.max(2, Math.max(findLeastSignificantDecimalPlace(minimum),
+                    findLeastSignificantDecimalPlace(maximum)));
+
         }
     }
 

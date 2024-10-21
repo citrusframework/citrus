@@ -16,10 +16,10 @@
 
 package org.citrusframework.openapi.model;
 
+import io.apicurio.datamodels.openapi.models.OasOperation;
+
 import static java.lang.String.format;
 import static org.citrusframework.openapi.util.OpenApiUtils.getMethodPath;
-
-import io.apicurio.datamodels.openapi.models.OasOperation;
 
 /**
  * Adapts the different paths associated with an OpenAPI operation to the {@link OasOperation}.
@@ -30,7 +30,8 @@ import io.apicurio.datamodels.openapi.models.OasOperation;
  * @param fullPath    The full path combining context path and API path.
  * @param operation   The {@link OasOperation} object representing the operation details.
  */
-public record OperationPathAdapter(String apiPath, String contextPath, String fullPath, OasOperation operation, String uniqueOperationId) {
+public record OperationPathAdapter(String apiPath, String contextPath, String fullPath, OasOperation operation,
+                                   String uniqueOperationId) {
 
     @Override
     public String toString() {

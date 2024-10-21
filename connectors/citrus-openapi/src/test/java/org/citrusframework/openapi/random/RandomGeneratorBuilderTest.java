@@ -1,16 +1,17 @@
 package org.citrusframework.openapi.random;
 
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.util.function.BiConsumer;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-
-import io.apicurio.datamodels.openapi.models.OasSchema;
-import java.util.function.BiConsumer;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 
 public class RandomGeneratorBuilderTest {
@@ -43,7 +44,7 @@ public class RandomGeneratorBuilderTest {
         String type = "type1";
 
         RandomGenerator generator = RandomGeneratorBuilder.builder().withType(type).build(
-            consumerMock);
+                consumerMock);
         OasSchema schema = (OasSchema) ReflectionTestUtils.getField(generator, "schema");
         assertNotNull(schema);
         assertEquals(schema.type, type);
@@ -54,7 +55,7 @@ public class RandomGeneratorBuilderTest {
         String format = "format1";
 
         RandomGenerator generator = RandomGeneratorBuilder.builder().withFormat(format).build(
-            consumerMock);
+                consumerMock);
         OasSchema schema = (OasSchema) ReflectionTestUtils.getField(generator, "schema");
         assertNotNull(schema);
         assertEquals(schema.format, format);
@@ -65,7 +66,7 @@ public class RandomGeneratorBuilderTest {
         String pattern = "pattern1";
 
         RandomGenerator generator = RandomGeneratorBuilder.builder().withPattern(pattern).build(
-            consumerMock);
+                consumerMock);
         OasSchema schema = (OasSchema) ReflectionTestUtils.getField(generator, "schema");
         assertNotNull(schema);
         assertEquals(schema.pattern, pattern);

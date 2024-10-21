@@ -45,9 +45,11 @@ import java.util.stream.Collectors;
 
 public final class Oas30ModelHelper {
 
-    /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(Oas30ModelHelper.class);
     public static final String NO_URL_ERROR_MESSAGE = "Unable to determine base path from server URL: %s";
+    /**
+     * Logger
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(Oas30ModelHelper.class);
 
     private Oas30ModelHelper() {
         // utility class
@@ -81,8 +83,8 @@ public final class Oas30ModelHelper {
                         return null;
                     }
                 })
-        .filter(Objects::nonNull)
-        .toList();
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     public static boolean isCompositeSchema(Oas30Schema schema) {
@@ -132,7 +134,7 @@ public final class Oas30ModelHelper {
     }
 
     public static Optional<OasAdapter<OasSchema, String>> getSchema(
-        Oas30Operation ignoredOas30Operation, Oas30Response response, List<String> acceptedMediaTypes) {
+            Oas30Operation ignoredOas30Operation, Oas30Response response, List<String> acceptedMediaTypes) {
 
         acceptedMediaTypes = OasModelHelper.resolveAllTypes(acceptedMediaTypes);
         acceptedMediaTypes = acceptedMediaTypes != null ? acceptedMediaTypes : OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES;
@@ -220,8 +222,8 @@ public final class Oas30ModelHelper {
         }
 
         return response.headers.entrySet()
-                                .stream()
-                                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().schema));
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().schema));
     }
 
     private static boolean isFormDataMediaType(String type) {
@@ -231,13 +233,14 @@ public final class Oas30ModelHelper {
     /**
      * Resolve given server url and replace variable placeholders if any with default variable values. Open API 3.x
      * supports variables with placeholders in form {variable_name} (e.g. "http://{hostname}:{port}/api/v1").
+     *
      * @param server the server holding a URL with maybe variable placeholders.
      * @return the server URL with all placeholders resolved or "/" by default.
      */
     private static String resolveUrl(Server server) {
         String url = Optional.ofNullable(server.url).orElse("/");
         if (server.variables != null) {
-            for (Map.Entry<String, ServerVariable> variable: server.variables.entrySet()) {
+            for (Map.Entry<String, ServerVariable> variable : server.variables.entrySet()) {
                 String defaultValue = Optional.ofNullable(variable.getValue().default_).orElse("");
                 url = url.replaceAll(String.format("\\{%s\\}", variable.getKey()), defaultValue);
             }

@@ -16,7 +16,6 @@
 
 package org.citrusframework.openapi.testapi.spring;
 
-import java.util.List;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.config.xml.AbstractReceiveMessageActionFactoryBean;
@@ -28,15 +27,17 @@ import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiClientResponseActionBuilder.OpenApiClientResponseMessageBuilder;
 import org.citrusframework.openapi.actions.OpenApiSpecificationSource;
+import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
-import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.citrusframework.validation.context.ValidationContext;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
+
+import java.util.List;
 
 /**
  * Parses XML configuration for receiving API responses based on OpenAPI specifications. Extends
@@ -68,10 +69,10 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
     private final String defaultApiEndpointName;
 
     public RestApiReceiveMessageActionParser(OpenApiSpecification openApiSpecification,
-        String operationId,
-        Class<? extends GeneratedApi> apiBeanClass,
-        Class<? extends RestApiReceiveMessageActionBuilder> beanClass,
-        String defaultApiEndpointName) {
+                                             String operationId,
+                                             Class<? extends GeneratedApi> apiBeanClass,
+                                             Class<? extends RestApiReceiveMessageActionBuilder> beanClass,
+                                             String defaultApiEndpointName) {
         this.openApiSpecification = openApiSpecification;
         this.operationId = operationId;
         this.apiBeanClass = apiBeanClass;
@@ -81,21 +82,21 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
 
     @Override
     protected BeanDefinitionBuilder createBeanDefinitionBuilder(Element element,
-        ParserContext parserContext) {
+                                                                ParserContext parserContext) {
 
         BeanDefinitionBuilder beanDefinitionBuilder = super.createBeanDefinitionBuilder(element,
-            parserContext);
+                parserContext);
 
         // Remove the messageBuilder property and inject it directly into the action builder.
         BeanDefinition beanDefinition = beanDefinitionBuilder.getBeanDefinition();
         OpenApiClientResponseMessageBuilder messageBuilder = (OpenApiClientResponseMessageBuilder) beanDefinition.getPropertyValues()
-            .get("messageBuilder");
+                .get("messageBuilder");
         messageBuilder.statusCode(element.getAttribute("statusCode"));
 
         beanDefinition.getPropertyValues().removePropertyValue("messageBuilder");
 
         BeanDefinitionBuilder actionBuilder = BeanDefinitionBuilder.genericBeanDefinition(
-            beanClass);
+                beanClass);
         actionBuilder.addConstructorArgValue(new RuntimeBeanReference(apiBeanClass));
         actionBuilder.addConstructorArgValue(openApiSpecification);
         actionBuilder.addConstructorArgValue(messageBuilder);
@@ -116,7 +117,7 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
     }
 
     @Override
-    protected Class<? extends AbstractReceiveMessageActionFactoryBean<?,?,?>> getMessageFactoryClass() {
+    protected Class<? extends AbstractReceiveMessageActionFactoryBean<?, ?, ?>> getMessageFactoryClass() {
         return TestApiOpenApiClientReceiveActionBuilderFactoryBean.class;
     }
 
@@ -128,16 +129,16 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
     @Override
     protected HttpMessageBuilder createMessageBuilder(HttpMessage httpMessage) {
         return new OpenApiClientResponseMessageBuilder(httpMessage,
-            new OpenApiSpecificationSource(openApiSpecification), operationId, null);
+                new OpenApiSpecificationSource(openApiSpecification), operationId, null);
     }
 
     @Override
     protected List<ValidationContext> parseValidationContexts(Element messageElement,
-        BeanDefinitionBuilder builder) {
+                                                              BeanDefinitionBuilder builder) {
         List<ValidationContext> validationContexts = super.parseValidationContexts(messageElement,
-            builder);
+                builder);
         OpenApiMessageValidationContext openApiMessageValidationContext = getOpenApiMessageValidationContext(
-            messageElement);
+                messageElement);
         validationContexts.add(openApiMessageValidationContext);
         return validationContexts;
     }
@@ -146,9 +147,9 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
      * Constructs the OpenAPI message validation context based on the XML element.
      */
     private OpenApiMessageValidationContext getOpenApiMessageValidationContext(
-        Element messageElement) {
+            Element messageElement) {
         OpenApiMessageValidationContext.Builder context = OpenApiMessageValidationContext.Builder.openApi(
-            openApiSpecification);
+                openApiSpecification);
 
         if (messageElement != null) {
             addSchemaInformationToValidationContext(messageElement, context);
@@ -162,16 +163,12 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
      * {@link RestApiReceiveMessageActionBuilder}.
      */
     public static class TestApiOpenApiClientReceiveActionBuilderFactoryBean extends
-        AbstractReceiveMessageActionFactoryBean<ReceiveMessageAction, HttpMessageBuilderSupport, HttpClientResponseActionBuilder> {
+            AbstractReceiveMessageActionFactoryBean<ReceiveMessageAction, HttpMessageBuilderSupport, HttpClientResponseActionBuilder> {
 
         private RestApiReceiveMessageActionBuilder builder;
 
         public TestApiOpenApiClientReceiveActionBuilderFactoryBean(
-            RestApiReceiveMessageActionBuilder builder) {
-            this.builder = builder;
-        }
-
-        public void setBuilder(RestApiReceiveMessageActionBuilder builder) {
+                RestApiReceiveMessageActionBuilder builder) {
             this.builder = builder;
         }
 
@@ -188,6 +185,10 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
         @Override
         public HttpClientResponseActionBuilder getBuilder() {
             return builder;
+        }
+
+        public void setBuilder(RestApiReceiveMessageActionBuilder builder) {
+            this.builder = builder;
         }
     }
 

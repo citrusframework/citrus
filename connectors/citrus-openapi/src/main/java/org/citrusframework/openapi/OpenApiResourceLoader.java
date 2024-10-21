@@ -21,8 +21,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.models.OasDocument;
-import java.io.InputStream;
-import java.net.URLConnection;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.TrustAllStrategy;
 import org.apache.hc.core5.http.HttpHeaders;
@@ -36,8 +34,10 @@ import org.springframework.http.MediaType;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -71,7 +71,7 @@ public final class OpenApiResourceLoader {
      */
     public static String rawFromFile(String resource) {
         return fromFile(FileUtils.getFileResource(resource),
-            RAW_RESOLVER);
+                RAW_RESOLVER);
     }
 
     /**
@@ -122,8 +122,8 @@ public final class OpenApiResourceLoader {
                 int status = httpURLConnection.getResponseCode();
                 if (status > 299) {
                     throw new IllegalStateException(
-                        "Failed to retrieve Open API specification: " + url,
-                        new IOException(FileUtils.readToString(httpURLConnection.getErrorStream())));
+                            "Failed to retrieve Open API specification: " + url,
+                            new IOException(FileUtils.readToString(httpURLConnection.getErrorStream())));
                 }
             }
 
@@ -160,9 +160,9 @@ public final class OpenApiResourceLoader {
         HttpsURLConnection con = null;
         try {
             SSLContext sslcontext = SSLContexts
-                .custom()
-                .loadTrustMaterial(TrustAllStrategy.INSTANCE)
-                .build();
+                    .custom()
+                    .loadTrustMaterial(TrustAllStrategy.INSTANCE)
+                    .build();
 
             HttpsURLConnection.setDefaultSSLSocketFactory(sslcontext.getSocketFactory());
             HttpsURLConnection.setDefaultHostnameVerifier(NoopHostnameVerifier.INSTANCE);
@@ -174,7 +174,7 @@ public final class OpenApiResourceLoader {
             int status = con.getResponseCode();
             if (status > 299) {
                 throw new IllegalStateException("Failed to retrieve Open API specification: " + url,
-                    new IOException(FileUtils.readToString(con.getErrorStream())));
+                        new IOException(FileUtils.readToString(con.getErrorStream())));
             } else {
                 return resolve(FileUtils.readToString(con.getInputStream()), resolver);
             }
