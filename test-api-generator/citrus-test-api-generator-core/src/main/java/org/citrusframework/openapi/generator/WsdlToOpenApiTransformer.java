@@ -16,10 +16,6 @@
 
 package org.citrusframework.openapi.generator;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static com.fasterxml.jackson.databind.MapperFeature.SORT_PROPERTIES_ALPHABETICALLY;
-import static java.lang.String.format;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -30,11 +26,11 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
-import java.net.URI;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import org.citrusframework.openapi.generator.exception.WsdlToOpenApiTransformationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+
 import javax.wsdl.Binding;
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Definition;
@@ -43,10 +39,15 @@ import javax.wsdl.extensions.soap.SOAPOperation;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
-import org.citrusframework.openapi.generator.exception.WsdlToOpenApiTransformationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
+import java.net.URI;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static com.fasterxml.jackson.databind.MapperFeature.SORT_PROPERTIES_ALPHABETICALLY;
+import static java.lang.String.format;
 
 /**
  * Transforms a WSDL specification into a simple OpenAPI specification for usage with the OpenApiGenerator.
@@ -94,16 +95,15 @@ import org.w3c.dom.Element;
  * @see javax.wsdl.Definition
  * @see javax.wsdl.Binding
  * @see javax.wsdl.BindingOperation
- *
  */
 public class WsdlToOpenApiTransformer {
 
     private static final Logger logger = LoggerFactory.getLogger(WsdlToOpenApiTransformer.class);
 
     private static final YAMLMapper yamlMapper = (YAMLMapper) YAMLMapper.builder()
-        .enable(SORT_PROPERTIES_ALPHABETICALLY)
-        .build()
-        .setSerializationInclusion(NON_NULL);
+            .enable(SORT_PROPERTIES_ALPHABETICALLY)
+            .build()
+            .setSerializationInclusion(NON_NULL);
 
     private final URI wsdlUri;
 
@@ -170,10 +170,10 @@ public class WsdlToOpenApiTransformer {
         info.setTitle("Generated api from wsdl");
 
         info.setDescription(
-            format(
-                "This api has been generated from the following wsdl '%s'. It's purpose is solely to serve as input for SOAP API generation. Note that only operations are extracted from the WSDL. No schema information whatsoever is generated!",
-                java.nio.file.Paths.get(wsdlUri).getFileName()
-            )
+                format(
+                        "This api has been generated from the following wsdl '%s'. It's purpose is solely to serve as input for SOAP API generation. Note that only operations are extracted from the WSDL. No schema information whatsoever is generated!",
+                        java.nio.file.Paths.get(wsdlUri).getFileName()
+                )
         );
         info.setVersion("1.0.0");
 
@@ -197,11 +197,11 @@ public class WsdlToOpenApiTransformer {
         for (Object operation : bindingOperations) {
             if (operation instanceof BindingOperation bindingOperation) {
                 addOperation(
-                    openApi.getPaths(),
-                    bindingOperation.getName(),
-                    retrieveOperationDescription(bindingOperation),
-                    retrieveSoapAction(bindingOperation),
-                    bindingApiName
+                        openApi.getPaths(),
+                        bindingOperation.getName(),
+                        retrieveOperationDescription(bindingOperation),
+                        retrieveSoapAction(bindingOperation),
+                        bindingApiName
                 );
             }
         }
@@ -236,18 +236,18 @@ public class WsdlToOpenApiTransformer {
         javax.wsdl.Operation soapOperation = bindingOperation.getOperation();
         Element documentationElement = bindingOperation.getDocumentationElement();
         if (documentationElement != null) {
-            String documentationText =  documentationElement.getTextContent().trim();
-            description.append(format("%s",documentationText));
+            String documentationText = documentationElement.getTextContent().trim();
+            description.append(format("%s", documentationText));
         }
 
         if (soapOperation != null) {
             documentationElement = soapOperation.getDocumentationElement();
             if (documentationElement != null) {
-                String documentationText =  documentationElement.getTextContent().trim();
+                String documentationText = documentationElement.getTextContent().trim();
                 if (!description.isEmpty()) {
                     description.append(" ");
                 }
-                description.append(format("%s",documentationText));
+                description.append(format("%s", documentationText));
             }
         }
 

@@ -21,19 +21,22 @@ import com.atlassian.oai.validator.util.OpenApiLoader;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.parser.core.models.ParseOptions;
 import jakarta.annotation.Nonnull;
-import java.net.URL;
-import java.util.Collections;
 import org.citrusframework.openapi.OpenApiResourceLoader;
 import org.citrusframework.spi.Resource;
 
+import java.net.URL;
+
+import static java.util.Collections.emptyList;
+
 /**
- * Utility class for creation of  {@link OpenApiValidationContext}.
+ * Utility class for creation of an {@link OpenApiValidationContext}.
  */
-public abstract class OpenApiValidationContextLoader {
+public final class OpenApiValidationContextLoader {
 
     private OpenApiValidationContextLoader() {
         // Static access only
     }
+
     /**
      * Creates an OpenApiValidationContext from a secured OpenAPI web resource.
      *
@@ -41,7 +44,7 @@ public abstract class OpenApiValidationContextLoader {
      * @return the OpenApiValidationContext
      */
     public static OpenApiValidationContext fromSecuredWebResource(@Nonnull URL url) {
-        return createValidationContext(new OpenApiLoader().loadApi(SpecSource.inline(OpenApiResourceLoader.rawFromSecuredWebResource(url)), Collections.emptyList(), defaultParseOptions()));
+        return createValidationContext(new OpenApiLoader().loadApi(SpecSource.inline(OpenApiResourceLoader.rawFromSecuredWebResource(url)), emptyList(), defaultParseOptions()));
     }
 
     /**
@@ -51,17 +54,17 @@ public abstract class OpenApiValidationContextLoader {
      * @return the OpenApiValidationContext
      */
     public static OpenApiValidationContext fromWebResource(@Nonnull URL url) {
-        return createValidationContext(new OpenApiLoader().loadApi(SpecSource.inline(OpenApiResourceLoader.rawFromWebResource(url)), Collections.emptyList(), defaultParseOptions()));
+        return createValidationContext(new OpenApiLoader().loadApi(SpecSource.inline(OpenApiResourceLoader.rawFromWebResource(url)), emptyList(), defaultParseOptions()));
     }
 
     /**
-     *  Creates an OpenApiValidationContext from an OpenAPI file.
+     * Creates an OpenApiValidationContext from an OpenAPI file.
      *
      * @param resource the file resource containing the OpenAPI specification
      * @return the OpenApiValidationContext
      */
     public static OpenApiValidationContext fromFile(@Nonnull Resource resource) {
-        return createValidationContext(new OpenApiLoader().loadApi(SpecSource.inline(OpenApiResourceLoader.rawFromFile(resource)), Collections.emptyList(), defaultParseOptions()));
+        return createValidationContext(new OpenApiLoader().loadApi(SpecSource.inline(OpenApiResourceLoader.rawFromFile(resource)), emptyList(), defaultParseOptions()));
     }
 
     private static OpenApiValidationContext createValidationContext(OpenAPI openApi) {

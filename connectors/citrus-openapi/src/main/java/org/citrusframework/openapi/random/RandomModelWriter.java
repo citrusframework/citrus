@@ -16,41 +16,38 @@
 
 package org.citrusframework.openapi.random;
 
-import static org.citrusframework.util.StringUtils.trimTrailingComma;
+import org.citrusframework.openapi.random.RandomElement.RandomValue;
 
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.citrusframework.openapi.random.RandomElement.RandomValue;
+
+import static org.citrusframework.util.StringUtils.trimTrailingComma;
 
 /**
  * Utility class for converting a {@link RandomModelBuilder} to its string representation.
  * This class provides static methods to serialize the model built by {@link RandomModelBuilder}.
  */
-class RandomModelWriter {
+final class RandomModelWriter {
 
     private RandomModelWriter() {
         // static access only
     }
 
     static String toString(RandomModelBuilder randomModelBuilder) {
-
         StringBuilder builder = new StringBuilder();
         appendObject(builder, randomModelBuilder.deque);
         return builder.toString();
     }
 
     private static void appendObject(StringBuilder builder, Object object) {
-
         if (object instanceof Deque<?> deque) {
             while (!deque.isEmpty()) {
                 appendObject(builder, deque.pop());
             }
-            return;
-        }
-        if (object instanceof Map<?, ?> map) {
-            //noinspection unchecked
+        } else if (object instanceof Map<?, ?> map) {
+            // noinspection unchecked
             appendMap(builder, (Map<String, Object>) map);
         } else if (object instanceof List<?> list) {
             appendArray(builder, list);

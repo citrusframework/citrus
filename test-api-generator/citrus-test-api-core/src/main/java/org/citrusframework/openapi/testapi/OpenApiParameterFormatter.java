@@ -16,12 +16,12 @@
 
 package org.citrusframework.openapi.testapi;
 
-import static java.util.Collections.emptyList;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -36,7 +36,8 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import org.citrusframework.exceptions.CitrusRuntimeException;
+
+import static java.util.Collections.emptyList;
 
 class OpenApiParameterFormatter {
 
@@ -53,8 +54,8 @@ class OpenApiParameterFormatter {
     /**
      * Formats a list of values as a single String based on the separator and other settings.
      */
-    static String formatArray(String parameterName, Object parameterValue , ParameterStyle parameterStyle,
-        boolean explode, boolean isObject) {
+    static String formatArray(String parameterName, Object parameterValue, ParameterStyle parameterStyle,
+                              boolean explode, boolean isObject) {
 
         List<String> values = toList(parameterValue, isObject);
         if (parameterStyle == ParameterStyle.DEEPOBJECT) {
@@ -62,36 +63,36 @@ class OpenApiParameterFormatter {
         }
 
         FormatParameters formatParameters = determineFormatParameters(parameterName, parameterStyle, explode,
-            isObject);
+                isObject);
 
 
         if (isObject && explode) {
             return formatParameters.prefix + explode(values, formatParameters.separator);
         } else {
             return formatParameters.prefix + values.stream()
-                .collect(Collectors.joining(formatParameters.separator));
+                    .collect(Collectors.joining(formatParameters.separator));
         }
 
     }
 
     private static String formatDeepObject(String parameterName, List<String> values) {
         StringBuilder builder = new StringBuilder();
-        for (int i=0;i<values.size();i+=2) {
+        for (int i = 0; i < values.size(); i += 2) {
             String key = values.get(i);
-            String value = values.get(i+1);
+            String value = values.get(i + 1);
             builder.append("%s[%s]=%s".formatted(parameterName, key, value));
             builder.append("&");
         }
 
         if (!builder.isEmpty()) {
-            builder.deleteCharAt(builder.length()-1);
+            builder.deleteCharAt(builder.length() - 1);
         }
         return builder.toString();
     }
 
     private static FormatParameters determineFormatParameters(String parameterName,
-        ParameterStyle parameterStyle,
-        boolean explode, boolean isObject) {
+                                                              ParameterStyle parameterStyle,
+                                                              boolean explode, boolean isObject) {
 
         return switch (parameterStyle) {
             case MATRIX -> matrixFormatParameters(parameterName, explode, isObject);
@@ -106,9 +107,9 @@ class OpenApiParameterFormatter {
             if (isObject) {
                 return new FormatParameters("", "&");
             }
-            return new FormatParameters(parameterName+"=", "&"+parameterName+"=");
+            return new FormatParameters(parameterName + "=", "&" + parameterName + "=");
         } else {
-            return new FormatParameters(parameterName+"=", ",");
+            return new FormatParameters(parameterName + "=", ",");
         }
     }
 
@@ -136,8 +137,8 @@ class OpenApiParameterFormatter {
 
     private static String explode(List<String> values, String delimiter) {
         return IntStream.range(0, values.size() / 2)
-            .mapToObj(i -> values.get(2 * i) + "=" + values.get(2 * i + 1))
-            .collect(Collectors.joining(delimiter));
+                .mapToObj(i -> values.get(2 * i) + "=" + values.get(2 * i + 1))
+                .collect(Collectors.joining(delimiter));
     }
 
     private static List<String> toList(Object value, boolean isObject) {
@@ -158,8 +159,8 @@ class OpenApiParameterFormatter {
             return list.stream().map(Object::toString).toList();
         } else if (value instanceof Map<?, ?> map) {
             return map.entrySet().stream()
-                .flatMap(entry -> Stream.of(entry.getKey().toString(), entry.getValue().toString()))
-                .toList();
+                    .flatMap(entry -> Stream.of(entry.getKey().toString(), entry.getValue().toString()))
+                    .toList();
         } else if (isObject && value instanceof String jsonString) {
             return toList(convertJsonToMap(jsonString), true);
         } else if (isObject) {
@@ -194,7 +195,7 @@ class OpenApiParameterFormatter {
 
             if (valueNode.isObject() || valueNode.isArray()) {
                 throw new IllegalArgumentException(
-                    "Nested objects or arrays are not allowed in the JSON.");
+                        "Nested objects or arrays are not allowed in the JSON.");
             }
             resultMap.put(field.getKey(), valueNode.asText());
         }
@@ -206,7 +207,7 @@ class OpenApiParameterFormatter {
         Map<String, Object> map = new TreeMap<>();
         try {
             for (PropertyDescriptor propertyDescriptor : Introspector.getBeanInfo(
-                bean.getClass(), Object.class).getPropertyDescriptors()) {
+                    bean.getClass(), Object.class).getPropertyDescriptors()) {
                 String propertyName = propertyDescriptor.getName();
                 Object propertyValue = propertyDescriptor.getReadMethod().invoke(bean);
                 if (propertyValue != null) {

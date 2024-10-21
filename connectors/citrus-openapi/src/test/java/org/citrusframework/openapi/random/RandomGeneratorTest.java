@@ -1,16 +1,17 @@
 package org.citrusframework.openapi.random;
 
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.util.List;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
-
-import io.apicurio.datamodels.openapi.models.OasSchema;
-import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
-import java.util.List;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 public class RandomGeneratorTest {
 
@@ -145,7 +146,7 @@ public class RandomGeneratorTest {
     public void testNullGenerator() {
         RandomContext mockContext = mock(RandomContext.class);
 
-        RandomGenerator.NULL_GENERATOR.generate(mockContext, mockSchema);
+        RandomGenerator.NOOP_RANDOM_GENERATOR.generate(mockContext, mockSchema);
 
         verify(mockContext, never()).getRandomModelBuilder();
     }

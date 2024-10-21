@@ -16,14 +16,15 @@
 
 package org.citrusframework.openapi.testapi;
 
-import java.util.List;
 import org.citrusframework.ws.actions.ReceiveSoapMessageAction;
 
-public class SoapApiReceiveMessageActionBuilder extends ReceiveSoapMessageAction.Builder  {
+import java.util.List;
+
+public class SoapApiReceiveMessageActionBuilder extends ReceiveSoapMessageAction.Builder {
 
     private final GeneratedApi generatedApi;
 
-    private final List <ApiActionBuilderCustomizer> customizers;
+    private final List<ApiActionBuilderCustomizer> customizers;
 
     public SoapApiReceiveMessageActionBuilder(GeneratedApi generatedApi, String soapAction) {
 
@@ -34,7 +35,7 @@ public class SoapApiReceiveMessageActionBuilder extends ReceiveSoapMessageAction
         endpoint(generatedApi.getEndpoint());
 
         name(String.format("send-%s:%s", generatedApi.getClass().getSimpleName().toLowerCase(),
-            soapAction));
+                soapAction));
     }
 
     public GeneratedApi getGeneratedApi() {

@@ -28,20 +28,23 @@ import java.util.Map;
  * <p>
  * This interface is designed to be implemented by custom processors that handle OpenAPI specifications.
  * Implementations of this interface are discovered by the standard citrus SPI mechanism.
- * </p>
  */
 public interface OpenApiSpecificationProcessor {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     Logger logger = LoggerFactory.getLogger(OpenApiSpecificationProcessor.class);
 
-    /** OpenAPI processors resource lookup path */
+    /**
+     * OpenAPI processors resource lookup path
+     */
     String RESOURCE_PATH = "META-INF/citrus/openapi/processor";
 
-    /** Type resolver to find OpenAPI processors on classpath via resource path lookup */
+    /**
+     * Type resolver to find OpenAPI processors on classpath via resource path lookup
+     */
     TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
-
-    void process(OpenApiSpecification openApiSpecification);
 
     /**
      * Resolves all available processors from resource path lookup. Scans classpath for processors meta information
@@ -51,10 +54,11 @@ public interface OpenApiSpecificationProcessor {
         Map<String, OpenApiSpecificationProcessor> processors = TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
 
         if (logger.isDebugEnabled()) {
-            processors.forEach((k, v) -> logger.debug(String.format("Found openapi specification processor '%s' as %s", k, v.getClass())));
+            processors.forEach((k, v) -> logger.debug("Found openapi specification processor '{}' as {}", k, v.getClass()));
         }
 
         return processors;
     }
 
+    void process(OpenApiSpecification openApiSpecification);
 }

@@ -28,7 +28,7 @@ public class TestApiUtils {
     public static void addBasicAuthHeader(String username, String password, HttpMessageBuilderSupport messageBuilderSupport) {
         if (!StringUtils.isEmpty(username) && !StringUtils.isEmpty(password)) {
             messageBuilderSupport.header("Authorization",
-                "Basic citrus:encodeBase64(" + username + ":" + password + ")");
+                    "Basic citrus:encodeBase64(" + username + ":" + password + ")");
         }
     }
 

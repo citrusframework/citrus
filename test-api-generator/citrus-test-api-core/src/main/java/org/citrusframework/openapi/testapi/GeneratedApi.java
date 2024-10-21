@@ -16,10 +16,10 @@
 
 package org.citrusframework.openapi.testapi;
 
+import org.citrusframework.endpoint.Endpoint;
+
 import java.util.List;
 import java.util.Map;
-
-import org.citrusframework.endpoint.Endpoint;
 
 /**
  * Interface representing a generated API from an OpenAPI specification.
@@ -58,7 +58,7 @@ public interface GeneratedApi {
      * </p>
      *
      * @return a map containing the specification extensions defined in the "info" section of the API,
-     *         where keys are extension names and values are extension values
+     * where keys are extension names and values are extension values
      */
     Map<String, String> getApiInfoExtensions();
 
