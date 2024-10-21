@@ -1,7 +1,5 @@
 package org.citrusframework.openapi.generator;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.config.CitrusSpringConfig;
@@ -19,45 +17,47 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @CitrusSpringSupport
 @ContextConfiguration(classes = {CitrusSpringConfig.class, ClientConfiguration.class,
-    PetStoreBeanConfiguration.class})
+        PetStoreBeanConfiguration.class})
 class GeneratedSpringBeanConfigurationIT {
 
     @Test
     @CitrusTest
     void petStoreOpenApiRepositoryIsAvailable(@CitrusResource TestContext testContext) {
         var petStoreOpenApiRepository = testContext.getReferenceResolver()
-            .resolve("petStoreOpenApiRepository");
+                .resolve("petStoreOpenApiRepository");
         assertThat(petStoreOpenApiRepository)
-            .isNotNull();
+                .isNotNull();
     }
 
     @Test
     @CitrusTest
     void petApiRepositoryIsAvailable(@CitrusResource TestContext testContext) {
         var petApi = testContext.getReferenceResolver()
-            .resolve(PetApi.class);
+                .resolve(PetApi.class);
         assertThat(petApi)
-            .isNotNull();
+                .isNotNull();
     }
 
     @Test
     @CitrusTest
     void storeApiRepositoryIsAvailable(@CitrusResource TestContext testContext) {
         var storeApi = testContext.getReferenceResolver()
-            .resolve(StoreApi.class);
+                .resolve(StoreApi.class);
         assertThat(storeApi)
-            .isNotNull();
+                .isNotNull();
     }
 
     @Test
     @CitrusTest
     void userApiRepositoryIsAvailable(@CitrusResource TestContext testContext) {
         var userApi = testContext.getReferenceResolver()
-            .resolve(UserApi.class);
+                .resolve(UserApi.class);
         assertThat(userApi)
-            .isNotNull();
+                .isNotNull();
     }
 
     @TestConfiguration

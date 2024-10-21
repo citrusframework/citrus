@@ -81,15 +81,49 @@ public class OpenApiSpecificationTest {
     @InjectMocks
     private OpenApiSpecification openApiSpecification;
 
+    @DataProvider(name = "protocollDataProvider")
+    public static Object[][] protocolls() {
+        return new Object[][]{{PING_API_HTTP_URL_STRING}, {PING_API_HTTPS_URL_STRING}};
+    }
+
+    @DataProvider(name = "lazyInitializationDataprovider")
+    public static Object[][] specSources() {
+        return new Object[][]{
+                {null, "classpath:org/citrusframework/openapi/ping/ping-api.yaml"},
+                {null, PING_API_HTTP_URL_STRING},
+                {null, PING_API_HTTPS_URL_STRING},
+                {null, "/ping-api.yaml"},
+                {"http://org.citrus.sample", "/ping-api.yaml"}
+        };
+    }
+
+    private static URL mockUrlConnection(String urlString) {
+        try {
+            HttpsURLConnection httpsURLConnectionMock = mock();
+            when(httpsURLConnectionMock.getResponseCode()).thenReturn(200);
+            when(httpsURLConnectionMock.getInputStream()).thenAnswer(
+                    invocation -> new ByteArrayInputStream(PING_API_STRING.getBytes(
+                            StandardCharsets.UTF_8)));
+
+            URL urlMock = mock();
+            when(urlMock.getProtocol()).thenReturn(urlString.substring(0, urlString.indexOf(":")));
+            when(urlMock.toString()).thenReturn(urlString);
+            when(urlMock.openConnection()).thenReturn(httpsURLConnectionMock);
+            return urlMock;
+        } catch (Exception e) {
+            throw new CitrusRuntimeException("Unable to mock spec url!", e);
+        }
+    }
+
     @BeforeClass
     public void beforeClass() throws IOException {
         PING_API_STRING = readToString(
-            new ClasspathResource(
-                "classpath:org/citrusframework/openapi/ping/ping-api.yaml"));
+                new ClasspathResource(
+                        "classpath:org/citrusframework/openapi/ping/ping-api.yaml"));
     }
+
     @BeforeMethod
     public void setUp() {
-
         mockCloseable = MockitoAnnotations.openMocks(this);
 
         testContextMock.setReferenceResolver(referenceResolverMock);
@@ -98,11 +132,6 @@ public class OpenApiSpecificationTest {
     @AfterMethod
     public void tearDown() throws Exception {
         mockCloseable.close();
-    }
-
-    @DataProvider(name = "protocollDataProvider")
-    public static Object[][] protocolls() {
-        return new Object[][] {{PING_API_HTTP_URL_STRING}, {PING_API_HTTPS_URL_STRING}};
     }
 
     @Test(dataProvider = "protocollDataProvider")
@@ -122,16 +151,16 @@ public class OpenApiSpecificationTest {
         assertNotNull(specification);
         assertNotNull(specification.getOpenApiValidationContext());
         Optional<OperationPathAdapter> pingOperationPathAdapter = specification.getOperation(
-            PING_OPERATION_ID,
-            testContextMock);
+                PING_OPERATION_ID,
+                testContextMock);
         assertTrue(pingOperationPathAdapter.isPresent());
         assertEquals(pingOperationPathAdapter.get().apiPath(), "/ping/{id}");
         assertNull(pingOperationPathAdapter.get().contextPath());
         assertEquals(pingOperationPathAdapter.get().fullPath(), "/ping/{id}");
 
         Optional<OperationPathAdapter> pongOperationPathAdapter = specification.getOperation(
-            PONG_OPERATION_ID,
-            testContextMock);
+                PONG_OPERATION_ID,
+                testContextMock);
         assertTrue(pongOperationPathAdapter.isPresent());
         assertEquals(pongOperationPathAdapter.get().apiPath(), "/pong/{id}");
         assertNull(pongOperationPathAdapter.get().contextPath());
@@ -141,7 +170,7 @@ public class OpenApiSpecificationTest {
     @Test
     public void shouldInitializeFromResource() {
         // Given
-        Resource resource= new ClasspathResource("classpath:org/citrusframework/openapi/ping/ping-api.yaml");
+        Resource resource = new ClasspathResource("classpath:org/citrusframework/openapi/ping/ping-api.yaml");
 
         // When
         OpenApiSpecification specification = OpenApiSpecification.from(resource);
@@ -172,7 +201,7 @@ public class OpenApiSpecificationTest {
     public void shouldReturnEmptyOptionalWhenOperationIdIsNull() {
         // When
         Optional<OperationPathAdapter> result = openApiSpecification.getOperation(null,
-            testContextMock);
+                testContextMock);
 
         // Then
         assertTrue(result.isEmpty());
@@ -190,30 +219,19 @@ public class OpenApiSpecificationTest {
     @Test
     public void shouldInitializeDocumentWhenRequestingOperation() {
         // Given/When
-        when(testContextMock.replaceDynamicContentInString(isA(String.class))).thenAnswer(answer->
-            answer.getArgument(0)
+        when(testContextMock.replaceDynamicContentInString(isA(String.class))).thenAnswer(answer ->
+                answer.getArgument(0)
         );
         OpenApiSpecification specification = OpenApiSpecification.from("classpath:org/citrusframework/openapi/ping/ping-api.yaml");
 
         // Then
         Optional<OperationPathAdapter> pingOperationPathAdapter = specification.getOperation(
-            PING_OPERATION_ID,
-            testContextMock);
+                PING_OPERATION_ID,
+                testContextMock);
         assertTrue(pingOperationPathAdapter.isPresent());
         assertEquals(pingOperationPathAdapter.get().apiPath(), "/ping/{id}");
         assertNull(pingOperationPathAdapter.get().contextPath());
         assertEquals(pingOperationPathAdapter.get().fullPath(), "/ping/{id}");
-    }
-
-    @DataProvider(name = "lazyInitializationDataprovider")
-    public static Object[][] specSources() {
-        return new Object[][]{
-            {null, "classpath:org/citrusframework/openapi/ping/ping-api.yaml"},
-            {null, PING_API_HTTP_URL_STRING},
-            {null, PING_API_HTTPS_URL_STRING},
-            {null, "/ping-api.yaml"},
-            {"http://org.citrus.sample", "/ping-api.yaml"}
-        };
     }
 
     @Test(dataProvider = "lazyInitializationDataprovider")
@@ -262,24 +280,6 @@ public class OpenApiSpecificationTest {
 
     }
 
-    private static URL mockUrlConnection(String urlString) {
-        try {
-           HttpsURLConnection httpsURLConnectionMock = mock();
-            when(httpsURLConnectionMock.getResponseCode()).thenReturn(200);
-            when(httpsURLConnectionMock.getInputStream()).thenAnswer(
-                invocation -> new ByteArrayInputStream(PING_API_STRING.getBytes(
-                    StandardCharsets.UTF_8)));
-
-            URL urlMock = mock();
-            when(urlMock.getProtocol()).thenReturn(urlString.substring(0,urlString.indexOf(":")));
-            when(urlMock.toString()).thenReturn(urlString);
-            when(urlMock.openConnection()).thenReturn(httpsURLConnectionMock);
-            return urlMock;
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Unable to mock spec url!", e);
-        }
-    }
-
     @Test
     public void shouldDisableEnableResponseValidationWhenSet() {
         // Given
@@ -302,13 +302,13 @@ public class OpenApiSpecificationTest {
 
     }
 
-        @Test
-        public void shouldAddAlias() {
-            String alias = "alias1";
-            openApiSpecification.addAlias(alias);
+    @Test
+    public void shouldAddAlias() {
+        String alias = "alias1";
+        openApiSpecification.addAlias(alias);
 
-            assertTrue(openApiSpecification.getAliases().contains(alias));
-        }
+        assertTrue(openApiSpecification.getAliases().contains(alias));
+    }
 
     @Test
     public void shouldReturnSpecUrl() {
@@ -333,16 +333,16 @@ public class OpenApiSpecificationTest {
         specification.setRootContextPath("/root");
 
         Optional<OperationPathAdapter> pingOperationPathAdapter = specification.getOperation(
-            PING_OPERATION_ID,
-            testContextMock);
+                PING_OPERATION_ID,
+                testContextMock);
         assertTrue(pingOperationPathAdapter.isPresent());
         assertEquals(pingOperationPathAdapter.get().apiPath(), "/ping/{id}");
         assertEquals(pingOperationPathAdapter.get().contextPath(), "/root");
         assertEquals(pingOperationPathAdapter.get().fullPath(), "/root/ping/{id}");
 
         Optional<OperationPathAdapter> pongOperationPathAdapter = specification.getOperation(
-            PONG_OPERATION_ID,
-            testContextMock);
+                PONG_OPERATION_ID,
+                testContextMock);
         assertTrue(pongOperationPathAdapter.isPresent());
         assertEquals(pongOperationPathAdapter.get().apiPath(), "/pong/{id}");
         assertEquals(pongOperationPathAdapter.get().contextPath(), "/root");
@@ -365,7 +365,6 @@ public class OpenApiSpecificationTest {
 
         assertFalse(openApiSpecification.isValidateOptionalFields());
         assertFalse(openApiSpecification.isGenerateOptionalFields());
-
     }
 
     @Test
@@ -381,6 +380,5 @@ public class OpenApiSpecificationTest {
 
         assertEquals(openApiSpecification.getSpecUrl(), "/ping-api.yaml");
         assertEquals(openApiSpecification.getRequestUrl(), "http://or.citrus.sample");
-
     }
 }

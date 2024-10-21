@@ -30,21 +30,18 @@ import jakarta.xml.bind.annotation.XmlRegistry;
  * type definitions, element declarations and model
  * groups.  Factory methods for each of these are
  * provided in this class.
- *
  */
 @XmlRegistry
 public class ObjectFactory {
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.citrusframework.xml.actions
-     *
      */
     public ObjectFactory() {
     }
 
     /**
      * Create an instance of {@link OpenApi }
-     *
      */
     public OpenApi createOpenApi() {
         return new OpenApi();

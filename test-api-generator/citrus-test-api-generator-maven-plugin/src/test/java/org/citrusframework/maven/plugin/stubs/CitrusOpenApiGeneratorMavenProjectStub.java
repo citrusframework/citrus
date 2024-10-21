@@ -1,13 +1,14 @@
 package org.citrusframework.maven.plugin.stubs;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.plugin.testing.stubs.MavenProjectStub;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class CitrusOpenApiGeneratorMavenProjectStub extends MavenProjectStub {
 

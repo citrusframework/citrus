@@ -1,12 +1,12 @@
 package org.citrusframework.openapi.testapi;
 
+import org.citrusframework.http.actions.HttpClientRequestActionBuilder.HttpMessageBuilderSupport;
+import org.junit.jupiter.api.Test;
+
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-
-import org.citrusframework.http.actions.HttpClientRequestActionBuilder.HttpMessageBuilderSupport;
-import org.junit.jupiter.api.Test;
 
 class TestApiUtilsTest {
 

@@ -257,6 +257,7 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
     /**
      * Converts current builder to client builder.
+     *
      * @return
      */
     private OpenApiClientActionBuilder asClientBuilder() {
@@ -270,6 +271,7 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
     /**
      * Converts current builder to server builder.
+     *
      * @return
      */
     private OpenApiServerActionBuilder asServerBuilder() {

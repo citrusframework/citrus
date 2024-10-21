@@ -1,33 +1,32 @@
 package org.citrusframework.openapi.generator.soap.bookservice.request;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.citrusframework.ws.actions.ReceiveSoapMessageAction;
-import org.citrusframework.ws.actions.SendSoapMessageAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.openapi.testapi.ApiActionBuilderCustomizer;
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.citrusframework.openapi.testapi.SoapApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.testapi.SoapApiSendMessageActionBuilder;
+import org.citrusframework.ws.actions.ReceiveSoapMessageAction;
+import org.citrusframework.ws.actions.SendSoapMessageAction;
+
+import java.util.List;
+import java.util.Map;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 
 @SuppressWarnings("unused")
 @jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-05T19:07:46.419751700+02:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
-public class BookServiceSoapApi implements GeneratedApi
-{
+public class BookServiceSoapApi implements GeneratedApi {
 
     private final Endpoint endpoint;
 
     private final List<ApiActionBuilderCustomizer> customizers;
 
-    public BookServiceSoapApi(Endpoint endpoint)  {
+    public BookServiceSoapApi(Endpoint endpoint) {
         this(endpoint, emptyList());
     }
 
-    public BookServiceSoapApi(Endpoint endpoint, List<ApiActionBuilderCustomizer> customizers)  {
+    public BookServiceSoapApi(Endpoint endpoint, List<ApiActionBuilderCustomizer> customizers) {
         this.endpoint = endpoint;
         this.customizers = customizers;
     }
@@ -66,27 +65,27 @@ public class BookServiceSoapApi implements GeneratedApi
         return customizers;
     }
 
-    public AddBookSendActionBuilder sendAddBook()   {
+    public AddBookSendActionBuilder sendAddBook() {
         return new AddBookSendActionBuilder(this);
     }
 
-    public AddBookReceiveActionBuilder receiveAddBook()   {
+    public AddBookReceiveActionBuilder receiveAddBook() {
         return new AddBookReceiveActionBuilder(this);
     }
 
-    public GetAllBooksSendActionBuilder sendGetAllBooks()   {
+    public GetAllBooksSendActionBuilder sendGetAllBooks() {
         return new GetAllBooksSendActionBuilder(this);
     }
 
-    public GetAllBooksReceiveActionBuilder receiveGetAllBooks()   {
+    public GetAllBooksReceiveActionBuilder receiveGetAllBooks() {
         return new GetAllBooksReceiveActionBuilder(this);
     }
 
-    public GetBookSendActionBuilder sendGetBook()   {
+    public GetBookSendActionBuilder sendGetBook() {
         return new GetBookSendActionBuilder(this);
     }
 
-    public GetBookReceiveActionBuilder receiveGetBook()   {
+    public GetBookReceiveActionBuilder receiveGetBook() {
         return new GetBookReceiveActionBuilder(this);
     }
 

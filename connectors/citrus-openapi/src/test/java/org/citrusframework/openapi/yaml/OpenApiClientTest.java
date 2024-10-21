@@ -53,12 +53,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class OpenApiClientTest extends AbstractYamlActionTest {
 
@@ -73,13 +73,10 @@ public class OpenApiClientTest extends AbstractYamlActionTest {
 
     private final int port = SocketUtils.findAvailableTcpPort(8080);
     private final String uri = "http://localhost:" + port + "/test";
-
+    private final MessageQueue inboundQueue = new DefaultMessageQueue("inboundQueue");
+    private final Queue<HttpMessage> responses = new ArrayBlockingQueue<>(6);
     private HttpServer httpServer;
     private HttpClient httpClient;
-
-    private final MessageQueue inboundQueue = new DefaultMessageQueue("inboundQueue");
-
-    private final Queue<HttpMessage> responses = new ArrayBlockingQueue<>(6);
 
     @BeforeClass
     public void setupEndpoints() {
@@ -139,7 +136,7 @@ public class OpenApiClientTest extends AbstractYamlActionTest {
                   ],
                   "status": "available"
                 }
-                """).status(HttpStatus.OK).contentType("application/json"));
+                """).status(HttpStatus.OK).contentType(APPLICATION_JSON_VALUE));
         responses.add(new HttpMessage().status(HttpStatus.CREATED));
 
         testLoader.load();
@@ -160,7 +157,7 @@ public class OpenApiClientTest extends AbstractYamlActionTest {
         SendMessageAction sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
         Assert.assertFalse(sendMessageAction.isForkMode());
         Assert.assertTrue(sendMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
-        HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());
+        HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder) sendMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
         Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()), "");
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 5L);
@@ -185,7 +182,7 @@ public class OpenApiClientTest extends AbstractYamlActionTest {
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(2) instanceof HeaderValidationContext);
 
-        httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
+        httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
 
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 5L);
@@ -193,7 +190,7 @@ public class OpenApiClientTest extends AbstractYamlActionTest {
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE), 200);
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), "application/json");
+        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), APPLICATION_JSON_VALUE);
         Assert.assertNull(receiveMessageAction.getEndpoint());
         Assert.assertEquals(receiveMessageAction.getEndpointUri(), "httpClient");
         Assert.assertEquals(receiveMessageAction.getMessageProcessors().size(), 1);
@@ -201,7 +198,7 @@ public class OpenApiClientTest extends AbstractYamlActionTest {
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
         Assert.assertFalse(sendMessageAction.isForkMode());
-        httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());
+        httpMessageBuilder = ((HttpMessageBuilder) sendMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
         Assert.assertTrue(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()).toString().startsWith("{\"id\": "));
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
@@ -212,7 +209,7 @@ public class OpenApiClientTest extends AbstractYamlActionTest {
         Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
         Assert.assertEquals(requestHeaders.get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/pet");
         Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_URI), "/pet");
-        Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_CONTENT_TYPE), "application/json");
+        Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_CONTENT_TYPE), APPLICATION_JSON_VALUE);
         Assert.assertNull(sendMessageAction.getEndpoint());
         Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpClient");
 
@@ -222,7 +219,7 @@ public class OpenApiClientTest extends AbstractYamlActionTest {
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(2) instanceof HeaderValidationContext);
 
-        httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
+        httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
         Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "");
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
