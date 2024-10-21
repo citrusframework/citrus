@@ -56,15 +56,13 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
 
     @BindToRegistry
     final TestActor testActor = Mockito.mock(TestActor.class);
-
-    private HttpServer httpServer;
-
     private final MessageQueue inboundQueue = new DefaultMessageQueue("inboundQueue");
     private final EndpointAdapter endpointAdapter = new DirectEndpointAdapter(direct()
             .synchronous()
             .timeout(100L)
             .queue(inboundQueue)
             .build());
+    private HttpServer httpServer;
 
     @BeforeClass
     public void setupEndpoints() {
@@ -85,32 +83,32 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         context.getReferenceResolver().bind("httpServer", httpServer);
 
         endpointAdapter.handleMessage(new HttpMessage()
-                        .method(HttpMethod.GET)
-                        .path("/petstore/v3/pet/12345")
-                        .version("HTTP/1.1")
-                        .accept("application/json")
-                        .contentType("application/json"));
+                .method(HttpMethod.GET)
+                .path("/petstore/v3/pet/12345")
+                .version("HTTP/1.1")
+                .accept("application/json")
+                .contentType("application/json"));
         endpointAdapter.handleMessage(new HttpMessage("""
-                        {
-                          "id": 1000,
-                          "name": "hasso",
-                          "category": {
-                            "id": 1000,
-                            "name": "dog"
-                          },
-                          "photoUrls": [ "http://localhost:8080/photos/1000" ],
-                          "tags": [
-                            {
-                              "id": 1000,
-                              "name": "generated"
-                            }
-                          ],
-                          "status": "available"
-                        }
-                        """)
-                        .method(HttpMethod.POST)
-                        .path("/petstore/v3/pet")
-                        .contentType("application/json"));
+                {
+                  "id": 1000,
+                  "name": "hasso",
+                  "category": {
+                    "id": 1000,
+                    "name": "dog"
+                  },
+                  "photoUrls": [ "http://localhost:8080/photos/1000" ],
+                  "tags": [
+                    {
+                      "id": 1000,
+                      "name": "generated"
+                    }
+                  ],
+                  "status": "available"
+                }
+                """)
+                .method(HttpMethod.POST)
+                .path("/petstore/v3/pet")
+                .contentType("application/json"));
 
         testLoader.load();
 
@@ -136,7 +134,7 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
 
         assertTrue(receiveMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
-        HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
+        HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
         assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "");
         assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 5L);
@@ -151,7 +149,7 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         assertEquals(receiveMessageAction.getControlMessageProcessors().size(), 0);
 
         SendMessageAction sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
-        httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());
+        httpMessageBuilder = ((HttpMessageBuilder) sendMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
 
         assertTrue(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()).toString().startsWith("{\"id\": "));
@@ -174,7 +172,7 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         assertTrue(receiveMessageAction.getValidationContexts().get(3) instanceof OpenApiMessageValidationContext);
         assertEquals(receiveMessageAction.getReceiveTimeout(), 2000L);
 
-        httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
+        httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
         assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()),
                 "{\"id\": \"@isNumber()@\",\"category\": {\"id\": \"@isNumber()@\",\"name\": \"@notEmpty()@\"},\"name\": \"@notEmpty()@\",\"photoUrls\": \"@ignore@\",\"tags\": \"@ignore@\",\"status\": \"@matches(available|pending|sold)@\"}");
@@ -191,7 +189,7 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         assertEquals(receiveMessageAction.getEndpoint(), httpServer);
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex);
-        httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());
+        httpMessageBuilder = ((HttpMessageBuilder) sendMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
         assertEquals(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()), "");
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));

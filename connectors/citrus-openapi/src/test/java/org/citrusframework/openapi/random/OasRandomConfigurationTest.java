@@ -7,7 +7,11 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static org.citrusframework.openapi.OpenApiConstants.*;
+import static org.citrusframework.openapi.OpenApiConstants.FORMAT_DATE;
+import static org.citrusframework.openapi.OpenApiConstants.FORMAT_DATE_TIME;
+import static org.citrusframework.openapi.OpenApiConstants.FORMAT_UUID;
+import static org.citrusframework.openapi.OpenApiConstants.TYPE_BOOLEAN;
+import static org.citrusframework.openapi.OpenApiConstants.TYPE_STRING;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
@@ -174,6 +178,6 @@ public class OasRandomConfigurationTest {
         OasSchema schema = new Oas30Schema();
         RandomGenerator generator = randomConfiguration.getGenerator(schema);
         assertNotNull(generator);
-        assertSame(generator, RandomGenerator.NULL_GENERATOR);
+        assertSame(generator, RandomGenerator.NOOP_RANDOM_GENERATOR);
     }
 }

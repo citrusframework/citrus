@@ -1,5 +1,11 @@
 package org.citrusframework.openapi.random;
 
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import org.citrusframework.openapi.OpenApiConstants;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atLeastOnce;
@@ -8,12 +14,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import io.apicurio.datamodels.openapi.models.OasSchema;
-import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
-import org.citrusframework.openapi.OpenApiConstants;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 public class RandomArrayGeneratorTest {
 

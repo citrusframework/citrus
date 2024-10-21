@@ -38,15 +38,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.Test;
 
-import java.util.List;
-
+import static java.util.Collections.singletonList;
 import static org.citrusframework.http.actions.HttpActionBuilder.http;
 import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi;
 import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.fail;
 
 @Test
-@ContextConfiguration(classes =  {Config.class})
+@ContextConfiguration(classes = {Config.class})
 public class OpenApiServerIT extends TestNGCitrusSpringSupport {
 
     public static final String VALID_PET_PATH = "classpath:org/citrusframework/openapi/petstore/pet.json";
@@ -73,7 +72,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         then(openapi("petstore-v3")
                 .server(httpServer)
                 .receive("getPetById")
-            .message()
+                .message()
         );
 
         then(openapi("petstore-v3")
@@ -86,59 +85,58 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
                 .response(HttpStatus.OK)
                 .message()
                 .body("""
-                        {
-                          "id": "@isNumber()@",
-                          "name": "@notEmpty()@",
-                          "category": {
-                            "id": "@isNumber()@",
-                            "name": "@notEmpty()@"
-                          },
-                          "photoUrls": "@notEmpty()@",
-                          "tags":  "@ignore@",
-                          "status": "@matches(sold|pending|available)@"
-                        }
-                """));
+                                {
+                                  "id": "@isNumber()@",
+                                  "name": "@notEmpty()@",
+                                  "category": {
+                                    "id": "@isNumber()@",
+                                    "name": "@notEmpty()@"
+                                  },
+                                  "photoUrls": "@notEmpty()@",
+                                  "tags":  "@ignore@",
+                                  "status": "@matches(sold|pending|available)@"
+                                }
+                        """));
     }
 
     @CitrusTest
     public void shouldExecuteGetPetByIdWithRandomizedId() {
-
         when(http()
-            .client(httpClient)
-            .send()
-            .get("/pet/726354")
-            .message()
-            .accept("application/json")
-            .fork(true));
+                .client(httpClient)
+                .send()
+                .get("/pet/726354")
+                .message()
+                .accept("application/json")
+                .fork(true));
 
         then(openapi("petstore-v3")
-            .server(httpServer)
-            .receive("getPetById")
-            .message()
+                .server(httpServer)
+                .receive("getPetById")
+                .message()
         );
 
         then(openapi("petstore-v3")
-            .server(httpServer)
-            .send("getPetById", HttpStatus.OK));
+                .server(httpServer)
+                .send("getPetById", HttpStatus.OK));
 
         then(http()
-            .client(httpClient)
-            .receive()
-            .response(HttpStatus.OK)
-            .message()
-            .body("""
-                        {
-                          "id": "@isNumber()@",
-                          "name": "@notEmpty()@",
-                          "category": {
-                            "id": "@isNumber()@",
-                            "name": "@notEmpty()@"
-                          },
-                          "photoUrls": "@notEmpty()@",
-                          "tags":  "@ignore@",
-                          "status": "@matches(sold|pending|available)@"
-                        }
-                """));
+                .client(httpClient)
+                .receive()
+                .response(HttpStatus.OK)
+                .message()
+                .body("""
+                                {
+                                  "id": "@isNumber()@",
+                                  "name": "@notEmpty()@",
+                                  "category": {
+                                    "id": "@isNumber()@",
+                                    "name": "@notEmpty()@"
+                                  },
+                                  "photoUrls": "@notEmpty()@",
+                                  "tags":  "@ignore@",
+                                  "status": "@matches(sold|pending|available)@"
+                                }
+                        """));
     }
 
     @CitrusTest
@@ -146,34 +144,34 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         variable("petId", "1001");
 
         when(http()
-            .client(httpClient)
-            .send()
-            .get("/pet/${petId}")
-            .message()
-            .accept("application/json")
-            .fork(true));
+                .client(httpClient)
+                .send()
+                .get("/pet/${petId}")
+                .message()
+                .accept("application/json")
+                .fork(true));
 
         then(openapi("petstore-v3")
-            .server(httpServer)
-            .receive("getPetById"));
+                .server(httpServer)
+                .receive("getPetById"));
 
         HttpMessageBuilderSupport getPetByIdResponseBuilder = openapi("petstore-v3")
-            .server(httpServer)
-            .send("getPetById", HttpStatus.OK)
-            .message().body("""
-                        {
-                          "id": "xxxx",
-                          "name": "Garfield",
-                          "category": {
-                            "id": 111,
-                            "name": "Comic"
-                          },
-                          "photoUrls": [],
-                          "tags":  [],
-                          "status": "available"
-                        }
-                """);
-        assertThrows(TestCaseFailedException.class, () ->then(getPetByIdResponseBuilder));
+                .server(httpServer)
+                .send("getPetById", HttpStatus.OK)
+                .message().body("""
+                                {
+                                  "id": "xxxx",
+                                  "name": "Garfield",
+                                  "category": {
+                                    "id": 111,
+                                    "name": "Comic"
+                                  },
+                                  "photoUrls": [],
+                                  "tags":  [],
+                                  "status": "available"
+                                }
+                        """);
+        assertThrows(TestCaseFailedException.class, () -> then(getPetByIdResponseBuilder));
     }
 
     @CitrusTest
@@ -181,54 +179,54 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         variable("petId", "1001");
 
         when(http()
-            .client(httpClient)
-            .send()
-            .get("/pet/${petId}")
-            .message()
-            .accept("application/json")
-            .fork(true));
+                .client(httpClient)
+                .send()
+                .get("/pet/${petId}")
+                .message()
+                .accept("application/json")
+                .fork(true));
 
         then(openapi("petstore-v3")
-            .server(httpServer)
-            .receive("getPetById"));
+                .server(httpServer)
+                .receive("getPetById"));
 
         HttpMessageBuilderSupport getPetByIdResponseBuilder = openapi("petstore-v3")
-            .server(httpServer)
-            .send("getPetById", HttpStatus.OK)
-            .schemaValidation(false)
-            .message().body("""
-                        {
-                          "id": "xxxx",
-                          "name": "Garfield",
-                          "category": {
-                            "id": 111,
-                            "name": "Comic"
-                          },
-                          "photoUrls": [],
-                          "tags":  [],
-                          "status": "available"
-                        }
-                """);
+                .server(httpServer)
+                .send("getPetById", HttpStatus.OK)
+                .schemaValidation(false)
+                .message().body("""
+                                {
+                                  "id": "xxxx",
+                                  "name": "Garfield",
+                                  "category": {
+                                    "id": 111,
+                                    "name": "Comic"
+                                  },
+                                  "photoUrls": [],
+                                  "tags":  [],
+                                  "status": "available"
+                                }
+                        """);
         then(getPetByIdResponseBuilder);
 
         then(http()
-            .client(httpClient)
-            .receive()
-            .response(HttpStatus.OK)
-            .message()
-            .body("""
-                        {
-                          "id": "xxxx",
-                          "name": "Garfield",
-                          "category": {
-                            "id": 111,
-                            "name": "Comic"
-                          },
-                          "photoUrls": [],
-                          "tags":  [],
-                          "status": "available"
-                        }
-                """));
+                .client(httpClient)
+                .receive()
+                .response(HttpStatus.OK)
+                .message()
+                .body("""
+                                {
+                                  "id": "xxxx",
+                                  "name": "Garfield",
+                                  "category": {
+                                    "id": 111,
+                                    "name": "Comic"
+                                  },
+                                  "photoUrls": [],
+                                  "tags":  [],
+                                  "status": "available"
+                                }
+                        """));
     }
 
     @CitrusTest
@@ -251,24 +249,23 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         variable("petId", "1001");
 
         when(http()
-            .client(httpClient)
-            .send()
-            .get("/pet/${petId}")
-            .message()
-            .accept("application/json")
-            .fork(true));
+                .client(httpClient)
+                .send()
+                .get("/pet/${petId}")
+                .message()
+                .accept("application/json")
+                .fork(true));
 
         then(openapi("petstore-v3")
-            .server(httpServer)
-            .receive("getPetById"));
+                .server(httpServer)
+                .receive("getPetById"));
 
         OpenApiServerResponseActionBuilder sendMessageActionBuilder = openapi("petstore-v3")
-            .server(httpServer)
-            .send("getPetById", HttpStatus.OK);
+                .server(httpServer)
+                .send("getPetById", HttpStatus.OK);
         sendMessageActionBuilder.message().body(Resources.create(INVALID_PET_PATH));
 
         assertThrows(TestCaseFailedException.class, () -> then(sendMessageActionBuilder));
-
     }
 
     @CitrusTest
@@ -276,17 +273,17 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         variable("petId", "xxx");
 
         when(http()
-            .client(httpClient)
-            .send()
-            .post("/pet")
-            .message()
-            .body(Resources.create(VALID_PET_PATH))
-            .contentType("application/json")
-            .fork(true));
+                .client(httpClient)
+                .send()
+                .post("/pet")
+                .message()
+                .body(Resources.create(VALID_PET_PATH))
+                .contentType("application/json")
+                .fork(true));
 
         OpenApiServerRequestActionBuilder addPetBuilder = openapi("petstore-v3")
-            .server(httpServer)
-            .receive("addPet");
+                .server(httpServer)
+                .receive("addPet");
 
         assertThrows(TestCaseFailedException.class, () -> then(addPetBuilder));
     }
@@ -296,18 +293,18 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         variable("petId", -1);
 
         when(http()
-            .client(httpClient)
-            .send()
-            .post("/pet")
-            .message()
-            .body(Resources.create(VALID_PET_PATH))
-            .contentType("application/json")
-            .fork(true));
+                .client(httpClient)
+                .send()
+                .post("/pet")
+                .message()
+                .body(Resources.create(VALID_PET_PATH))
+                .contentType("application/json")
+                .fork(true));
 
         OpenApiServerRequestActionBuilder addPetBuilder = openapi("petstore-v3")
-            .server(httpServer)
-            .receive("addPet")
-            .schemaValidation(false);
+                .server(httpServer)
+                .receive("addPet")
+                .schemaValidation(false);
 
         try {
             when(addPetBuilder);
@@ -329,25 +326,24 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
                 .fork(true));
 
         OpenApiServerRequestActionBuilder receiveActionBuilder = openapi
-            .server(httpServer)
-            .receive("addPet");
+                .server(httpServer)
+                .receive("addPet");
+
         if (valid) {
             then(receiveActionBuilder);
 
             then(openapi
-                .server(httpServer)
-                .send("addPet", HttpStatus.CREATED));
+                    .server(httpServer)
+                    .send("addPet", HttpStatus.CREATED));
 
             then(http()
-                .client(httpClient)
-                .receive()
-                .response(HttpStatus.CREATED));
+                    .client(httpClient)
+                    .receive()
+                    .response(HttpStatus.CREATED));
 
         } else {
             assertThrows(() -> then(receiveActionBuilder));
         }
-
-
     }
 
     @Configuration
@@ -358,25 +354,24 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         @Bean
         public HttpServer httpServer() {
             return new HttpServerBuilder()
-                .port(port)
-                .timeout(5000L)
-                .autoStart(true)
-                .defaultStatus(HttpStatus.NO_CONTENT)
-                .build();
+                    .port(port)
+                    .timeout(5000L)
+                    .autoStart(true)
+                    .defaultStatus(HttpStatus.NO_CONTENT)
+                    .build();
         }
 
         @Bean
         public HttpClient httpClient() {
             return new HttpClientBuilder()
-                .requestUrl("http://localhost:%d/petstore/v3".formatted(port))
-                .build();
+                    .requestUrl("http://localhost:%d/petstore/v3".formatted(port))
+                    .build();
         }
 
         @Bean
         public OpenApiRepository petstoreOpenApiRepository() {
             return new OpenApiRepository()
-                .locations(List.of("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
+                    .locations(singletonList("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
         }
     }
-
 }

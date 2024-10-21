@@ -16,18 +16,20 @@
 
 package org.citrusframework.openapi.validation;
 
-import org.citrusframework.openapi.OpenApiMessageType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
-import org.citrusframework.openapi.OpenApiMessageHeaders;
+import org.citrusframework.openapi.OpenApiMessageType;
 import org.citrusframework.openapi.OpenApiSpecification;
+
+import static org.citrusframework.openapi.OpenApiMessageHeaders.OAS_MESSAGE_TYPE;
+import static org.citrusframework.openapi.OpenApiMessageHeaders.OAS_UNIQUE_OPERATION_ID;
 
 /**
  * {@code MessageProcessor} that prepares the message for OpenAPI validation by setting respective
  * message headers.
  */
-public class OpenApiMessageProcessor implements MessageProcessor {
+public class OpenApiOperationToMessageHeadersProcessor implements MessageProcessor {
 
     private final OpenApiSpecification openApiSpecification;
 
@@ -35,8 +37,9 @@ public class OpenApiMessageProcessor implements MessageProcessor {
 
     private final OpenApiMessageType type;
 
-    public OpenApiMessageProcessor(OpenApiSpecification openApiSpecification,
-        String operationId, OpenApiMessageType type) {
+    public OpenApiOperationToMessageHeadersProcessor(OpenApiSpecification openApiSpecification,
+                                                     String operationId,
+                                                     OpenApiMessageType type) {
         this.operationId = operationId;
         this.openApiSpecification = openApiSpecification;
         this.type = type;
@@ -44,13 +47,12 @@ public class OpenApiMessageProcessor implements MessageProcessor {
 
     @Override
     public void process(Message message, TestContext context) {
-
         openApiSpecification
-            .getOperation(operationId, context)
-            .ifPresent(operationPathAdapter -> {
-                // Store the uniqueId of the operation, rather than the operationId, to avoid clashes.
-                message.setHeader(OpenApiMessageHeaders.OAS_UNIQUE_OPERATION_ID, operationPathAdapter.uniqueOperationId());
-                message.setHeader(OpenApiMessageHeaders.OAS_MESSAGE_TYPE, type.toHeaderName());
-            });
+                .getOperation(operationId, context)
+                .ifPresent(operationPathAdapter -> {
+                    // Store the uniqueId of the operation, rather than the operationId, to avoid clashes.
+                    message.setHeader(OAS_UNIQUE_OPERATION_ID, operationPathAdapter.uniqueOperationId());
+                    message.setHeader(OAS_MESSAGE_TYPE, type.toHeaderName());
+                });
     }
 }

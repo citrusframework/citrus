@@ -40,9 +40,9 @@ public class SoapApiReceiveMessageActionParser extends ReceiveSoapMessageActionP
     private final String defaultEndpointName;
 
     public SoapApiReceiveMessageActionParser(
-        Class<? extends GeneratedApi> apiBeanClass,
-        Class<? extends SoapApiReceiveMessageActionBuilder> beanClass,
-        String defaultEndpointName) {
+            Class<? extends GeneratedApi> apiBeanClass,
+            Class<? extends SoapApiReceiveMessageActionBuilder> beanClass,
+            String defaultEndpointName) {
         this.apiBeanClass = apiBeanClass;
         this.receiveBeanClass = beanClass;
         this.defaultEndpointName = defaultEndpointName;
@@ -70,7 +70,7 @@ public class SoapApiReceiveMessageActionParser extends ReceiveSoapMessageActionP
     private BeanDefinitionBuilder createTestApiActionBuilder() {
 
         BeanDefinitionBuilder actionBuilder = BeanDefinitionBuilder.genericBeanDefinition(
-            receiveBeanClass);
+                receiveBeanClass);
         actionBuilder.addConstructorArgValue(new RuntimeBeanReference(apiBeanClass));
 
         return actionBuilder;
@@ -85,10 +85,10 @@ public class SoapApiReceiveMessageActionParser extends ReceiveSoapMessageActionP
      * Test action factory bean.
      */
     public static class TestApiSoapClientReceiveActionBuilderFactoryBean extends
-        ReceiveSoapMessageActionFactoryBean {
+            ReceiveSoapMessageActionFactoryBean {
 
         public TestApiSoapClientReceiveActionBuilderFactoryBean(
-            SoapApiReceiveMessageActionBuilder builder) {
+                SoapApiReceiveMessageActionBuilder builder) {
             super(builder);
         }
     }

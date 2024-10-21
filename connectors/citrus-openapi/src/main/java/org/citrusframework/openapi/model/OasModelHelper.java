@@ -16,10 +16,6 @@
 
 package org.citrusframework.openapi.model;
 
-import static java.util.Collections.singletonList;
-import static org.citrusframework.openapi.OpenApiConstants.TYPE_ARRAY;
-import static org.citrusframework.openapi.OpenApiConstants.TYPE_OBJECT;
-
 import io.apicurio.datamodels.combined.visitors.CombinedVisitorAdapter;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
@@ -40,9 +36,12 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import jakarta.annotation.Nullable;
+import org.citrusframework.openapi.model.v2.Oas20ModelHelper;
+import org.citrusframework.openapi.model.v3.Oas30ModelHelper;
+import org.citrusframework.util.StringUtils;
+
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -52,10 +51,14 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import org.citrusframework.openapi.model.v2.Oas20ModelHelper;
-import org.citrusframework.openapi.model.v3.Oas30ModelHelper;
-import org.citrusframework.util.StringUtils;
-import org.springframework.http.MediaType;
+
+import static java.lang.String.format;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.citrusframework.openapi.OpenApiConstants.TYPE_ARRAY;
+import static org.citrusframework.openapi.OpenApiConstants.TYPE_OBJECT;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
 public final class OasModelHelper {
 
@@ -65,7 +68,7 @@ public final class OasModelHelper {
      * List of preferred media types in the order of priority,
      * used when no specific 'Accept' header is provided to determine the default response type.
      */
-    public static final List<String> DEFAULT_ACCEPTED_MEDIA_TYPES = List.of(MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE);
+    public static final List<String> DEFAULT_ACCEPTED_MEDIA_TYPES = List.of(APPLICATION_JSON_VALUE, TEXT_PLAIN_VALUE);
 
     private OasModelHelper() {
         // utility class
@@ -73,6 +76,7 @@ public final class OasModelHelper {
 
     /**
      * Determines if given schema is of type object.
+     *
      * @param schema to check
      * @return true if given schema is an object.
      */
@@ -82,6 +86,7 @@ public final class OasModelHelper {
 
     /**
      * Determines if given schema is of type array.
+     *
      * @param schema to check
      * @return true if given schema is an array.
      */
@@ -91,19 +96,19 @@ public final class OasModelHelper {
 
     /**
      * Determines if given schema is of type object array .
+     *
      * @param schema to check
      * @return true if given schema is an object array.
      */
     public static boolean isObjectArrayType(@Nullable OasSchema schema) {
-
         if (schema == null || !TYPE_ARRAY.equals(schema.type)) {
             return false;
         }
 
         Object items = schema.items;
-        if (items instanceof  OasSchema oasSchema) {
+        if (items instanceof OasSchema oasSchema) {
             return isObjectType(oasSchema);
-        } else if (items instanceof  List<?> list) {
+        } else if (items instanceof List<?> list) {
             return list.stream().allMatch(item -> item instanceof OasSchema oasSchema && isObjectType(oasSchema));
         }
 
@@ -112,6 +117,7 @@ public final class OasModelHelper {
 
     /**
      * Determines if given schema has a reference to another schema object.
+     *
      * @param schema to check
      * @return true if given schema has a reference.
      */
@@ -149,12 +155,13 @@ public final class OasModelHelper {
 
     /**
      * Iterate through list of generic path items and collect path items of given type.
+     *
      * @param paths given path items.
      * @return typed list of path items.
      */
     public static List<OasPathItem> getPathItems(OasPaths paths) {
         if (paths == null) {
-            return Collections.emptyList();
+            return emptyList();
         }
 
         return paths.getItems();
@@ -163,6 +170,7 @@ public final class OasModelHelper {
     /**
      * Construct map of all specified operations for given path item. Only non-null operations are added to the
      * map where the key is the http method name.
+     *
      * @param pathItem path holding operations.
      * @return map of operations on the given path where Http method name is the key.
      */
@@ -204,6 +212,7 @@ public final class OasModelHelper {
      * Get pure name from reference path. Usually reference definitions start with '#/definitions/' for OpenAPI 2.x and
      * '#/components/schemas/' for OpenAPI 3.x and this method removes the basic reference path part and just returns the
      * reference object name.
+     *
      * @param reference path expression.
      * @return the name of the reference object.
      */
@@ -220,12 +229,12 @@ public final class OasModelHelper {
     }
 
     public static Optional<OasAdapter<OasSchema, String>> getSchema(OasOperation oasOperation, OasResponse response, List<String> acceptedMediaTypes) {
-        if (oasOperation instanceof  Oas20Operation oas20Operation && response instanceof Oas20Response oas20Response) {
+        if (oasOperation instanceof Oas20Operation oas20Operation && response instanceof Oas20Response oas20Response) {
             return Oas20ModelHelper.getSchema(oas20Operation, oas20Response, acceptedMediaTypes);
         } else if (oasOperation instanceof Oas30Operation oas30Operation && response instanceof Oas30Response oas30Response) {
             return Oas30ModelHelper.getSchema(oas30Operation, oas30Response, acceptedMediaTypes);
         }
-        throw new IllegalArgumentException(String.format("Unsupported operation response type: %s", response.getClass()));
+        throw new IllegalArgumentException(format("Unsupported operation response type: %s", response.getClass()));
     }
 
     public static Optional<OasSchema> getParameterSchema(OasParameter parameter) {
@@ -263,24 +272,23 @@ public final class OasModelHelper {
      *     <li>Fallback 3: Returns the first response object related to a 2xx status code even without a schema. This is for operations that simply do not return anything else than a status code.</li>
      *     <li>Fallback 4: Returns the first response in the list of responses, no matter which schema.</li>
      * </ul>
-     *
+     * <p>
      * Note that for Fallback 3 and 4, it is very likely, that there is no schema specified. It is expected, that an empty response is a viable response in these cases.
      *
      * @param openApiDoc The OpenAPI document containing the API specifications.
-     * @param operation The OAS operation for which to determine the response.
+     * @param operation  The OAS operation for which to determine the response.
      * @param statusCode The specific status code to match against responses, or {@code null} to search for any acceptable response.
-     * @param accept The mediatype accepted by the request
+     * @param accept     The mediatype accepted by the request
      * @return An {@link Optional} containing the resolved {@link OasResponse} if found, or {@link Optional#empty()} otherwise.
      */
     public static Optional<OasResponse> getResponseForRandomGeneration(OasDocument openApiDoc, OasOperation operation, @Nullable String statusCode, @Nullable String accept) {
-
         if (operation.responses == null || operation.responses.getResponses().isEmpty()) {
             return Optional.empty();
         }
 
         // Resolve all references
         Map<String, OasResponse> responseMap = OasModelHelper.resolveResponses(openApiDoc,
-            operation.responses);
+                operation.responses);
 
         // For a given status code, do not fall back
         if (statusCode != null) {
@@ -296,25 +304,25 @@ public final class OasModelHelper {
         if (response.isEmpty()) {
             // Fallback 2: Pick the response object related to the first 2xx, providing an accepted schema
             response = responseMap.values().stream()
-                .filter(r -> r.getStatusCode() != null && r.getStatusCode().startsWith("2"))
-                .map(OasResponse.class::cast)
-                .filter(acceptedSchemas)
-                .findFirst();
+                    .filter(r -> r.getStatusCode() != null && r.getStatusCode().startsWith("2"))
+                    .map(OasResponse.class::cast)
+                    .filter(acceptedSchemas)
+                    .findFirst();
         }
 
         if (response.isEmpty()) {
             // Fallback 3: Pick the response object related to the first 2xx (even without schema)
             response = responseMap.values().stream()
-                .filter(r -> r.getStatusCode() != null && r.getStatusCode().startsWith("2"))
-                .map(OasResponse.class::cast)
-                .findFirst();
+                    .filter(r -> r.getStatusCode() != null && r.getStatusCode().startsWith("2"))
+                    .map(OasResponse.class::cast)
+                    .findFirst();
         }
 
         if (response.isEmpty()) {
             // Fallback 4: Pick the first response no matter which schema
             response = operation.responses.getResponses().stream()
-                .map(resp -> responseMap.get(resp.getStatusCode()))
-                .filter(Objects::nonNull)
+                    .map(resp -> responseMap.get(resp.getStatusCode()))
+                    .filter(Objects::nonNull)
                     .findFirst();
         }
 
@@ -323,10 +331,11 @@ public final class OasModelHelper {
 
     /**
      * Delegate method to version specific model helpers for Open API v2 or v3.
-     * @param openApiDoc the open api document either v2 or v3
+     *
+     * @param openApiDoc    the open api document either v2 or v3
      * @param oas20Function function to apply in case of v2
      * @param oas30Function function to apply in case of v3
-     * @param <T> generic return value
+     * @param <T>           generic return value
      * @return
      */
     private static <T> T delegate(OasDocument openApiDoc, Function<Oas20Document, T> oas20Function, Function<Oas30Document, T> oas30Function) {
@@ -336,15 +345,16 @@ public final class OasModelHelper {
             return oas30Function.apply((Oas30Document) openApiDoc);
         }
 
-        throw new IllegalArgumentException(String.format("Unsupported Open API document type: %s", openApiDoc.getClass()));
+        throw new IllegalArgumentException(format("Unsupported Open API document type: %s", openApiDoc.getClass()));
     }
 
     /**
      * Delegate method to version specific model helpers for Open API v2 or v3.
+     *
      * @param response
      * @param oas20Function function to apply in case of v2
      * @param oas30Function function to apply in case of v3
-     * @param <T> generic return value
+     * @param <T>           generic return value
      * @return
      */
     private static <T> T delegate(OasResponse response, Function<Oas20Response, T> oas20Function, Function<Oas30Response, T> oas30Function) {
@@ -354,33 +364,35 @@ public final class OasModelHelper {
             return oas30Function.apply(oas30Response);
         }
 
-        throw new IllegalArgumentException(String.format("Unsupported operation response type: %s", response.getClass()));
+        throw new IllegalArgumentException(format("Unsupported operation response type: %s", response.getClass()));
     }
 
     /**
      * Delegate method to version specific model helpers for Open API v2 or v3.
+     *
      * @param response
      * @param oas20Function function to apply in case of v2
      * @param oas30Function function to apply in case of v3
-     * @param <T> generic return value
+     * @param <T>           generic return value
      * @return
      */
     private static <T> T delegate(OasOperation operation, OasResponse response, BiFunction<Oas20Operation, Oas20Response, T> oas20Function, BiFunction<Oas30Operation, Oas30Response, T> oas30Function) {
-        if (operation instanceof Oas20Operation oas20Operation && response instanceof  Oas20Response oas20Response) {
+        if (operation instanceof Oas20Operation oas20Operation && response instanceof Oas20Response oas20Response) {
             return oas20Function.apply(oas20Operation, oas20Response);
-        } else if (operation instanceof Oas30Operation oas30Operation && response instanceof  Oas30Response oas30Response) {
+        } else if (operation instanceof Oas30Operation oas30Operation && response instanceof Oas30Response oas30Response) {
             return oas30Function.apply(oas30Operation, oas30Response);
         }
 
-        throw new IllegalArgumentException(String.format("Unsupported operation response type: %s", response.getClass()));
+        throw new IllegalArgumentException(format("Unsupported operation response type: %s", response.getClass()));
     }
 
     /**
      * Delegate method to version specific model helpers for Open API v2 or v3.
+     *
      * @param parameter
      * @param oas20Function function to apply in case of v2
      * @param oas30Function function to apply in case of v3
-     * @param <T> generic return value
+     * @param <T>           generic return value
      * @return
      */
     private static <T> T delegate(OasParameter parameter, Function<Oas20Parameter, T> oas20Function, Function<Oas30Parameter, T> oas30Function) {
@@ -390,15 +402,16 @@ public final class OasModelHelper {
             return oas30Function.apply(oas30Parameter);
         }
 
-        throw new IllegalArgumentException(String.format("Unsupported operation parameter type: %s", parameter.getClass()));
+        throw new IllegalArgumentException(format("Unsupported operation parameter type: %s", parameter.getClass()));
     }
 
     /**
      * Delegate method to version specific model helpers for Open API v2 or v3.
+     *
      * @param schema
      * @param oas20Function function to apply in case of v2
      * @param oas30Function function to apply in case of v3
-     * @param <T> generic return value
+     * @param <T>           generic return value
      * @return
      */
     private static <T> T delegate(OasSchema schema, Function<Oas20Schema, T> oas20Function, Function<Oas30Schema, T> oas30Function) {
@@ -408,15 +421,16 @@ public final class OasModelHelper {
             return oas30Function.apply(oas30Schema);
         }
 
-        throw new IllegalArgumentException(String.format("Unsupported operation parameter type: %s", schema.getClass()));
+        throw new IllegalArgumentException(format("Unsupported operation parameter type: %s", schema.getClass()));
     }
 
     /**
      * Delegate method to version specific model helpers for Open API v2 or v3.
+     *
      * @param operation
      * @param oas20Function function to apply in case of v2
      * @param oas30Function function to apply in case of v3
-     * @param <T> generic return value
+     * @param <T>           generic return value
      * @return
      */
     private static <T> T delegate(OasOperation operation, Function<Oas20Operation, T> oas20Function, Function<Oas30Operation, T> oas30Function) {
@@ -426,7 +440,7 @@ public final class OasModelHelper {
             return oas30Function.apply(oas30Operation);
         }
 
-        throw new IllegalArgumentException(String.format("Unsupported operation type: %s", operation.getClass()));
+        throw new IllegalArgumentException(format("Unsupported operation type: %s", operation.getClass()));
     }
 
     /**
@@ -436,7 +450,7 @@ public final class OasModelHelper {
      * @param operation
      * @param oas20Function function to apply in case of v2
      * @param oas30Function function to apply in case of v3
-     * @param <T> generic return value
+     * @param <T>           generic return value
      * @return
      */
     private static <T> T delegate(OasDocument openApiDoc, OasOperation operation, BiFunction<Oas20Document, Oas20Operation, T> oas20Function, BiFunction<Oas30Document, Oas30Operation, T> oas30Function) {
@@ -446,7 +460,7 @@ public final class OasModelHelper {
             return oas30Function.apply((Oas30Document) openApiDoc, (Oas30Operation) operation);
         }
 
-        throw new IllegalArgumentException(String.format("Unsupported Open API document type: %s", openApiDoc.getClass()));
+        throw new IllegalArgumentException(format("Unsupported Open API document type: %s", openApiDoc.getClass()));
     }
 
     private static boolean isOas30(OasDocument openApiDoc) {
@@ -471,9 +485,7 @@ public final class OasModelHelper {
      * @return a {@link List} of {@link OasResponse} instances, where all references have been resolved.
      */
     private static Map<String, OasResponse> resolveResponses(OasDocument openApiDoc, OasResponses responses) {
-
-        Function<String, OasResponse> responseResolver = getResponseResolver(
-            openApiDoc);
+        Function<String, OasResponse> responseResolver = getResponseResolver(openApiDoc);
 
         Map<String, OasResponse> responseMap = new HashMap<>();
         for (OasResponse response : responses.getResponses()) {
@@ -502,11 +514,10 @@ public final class OasModelHelper {
         return responseMap;
     }
 
-    private static Function<String, OasResponse> getResponseResolver(
-        OasDocument openApiDoc) {
+    private static Function<String, OasResponse> getResponseResolver(OasDocument openApiDoc) {
         return delegate(openApiDoc,
-             doc -> (responseRef -> doc.responses.getResponse(OasModelHelper.getReferenceName(responseRef))),
-             doc -> (responseRef -> doc.components.responses.get(OasModelHelper.getReferenceName(responseRef))));
+                doc -> (responseRef -> doc.responses.getResponse(OasModelHelper.getReferenceName(responseRef))),
+                doc -> (responseRef -> doc.components.responses.get(OasModelHelper.getReferenceName(responseRef))));
     }
 
     /**
@@ -514,7 +525,7 @@ public final class OasModelHelper {
      * This method uses the provided {@link OasOperationVisitor} to process each operation within the paths of the OAS document.
      *
      * @param oasDocument the OAS document to traverse
-     * @param visitor the visitor to apply to each OAS operation
+     * @param visitor     the visitor to apply to each OAS operation
      */
     public static void visitOasOperations(OasDocument oasDocument, OasOperationVisitor visitor) {
         if (oasDocument == null || visitor == null) {
@@ -537,7 +548,7 @@ public final class OasModelHelper {
                 }
 
                 getOperationMap(oasPathItem).values()
-                    .forEach(oasOperation -> visitor.visit(oasPathItem, oasOperation));
+                        .forEach(oasOperation -> visitor.visit(oasPathItem, oasOperation));
 
             }
         });
@@ -553,11 +564,11 @@ public final class OasModelHelper {
      */
     public static List<String> resolveAllTypes(@Nullable List<String> acceptedMediaTypes) {
         if (acceptedMediaTypes == null) {
-            return acceptedMediaTypes;
+            return null;
         }
 
         return acceptedMediaTypes.stream()
-            .flatMap(types -> Arrays.stream(types.split(","))).map(String::trim).toList();
+                .flatMap(types -> Arrays.stream(types.split(","))).map(String::trim).toList();
     }
 
 }

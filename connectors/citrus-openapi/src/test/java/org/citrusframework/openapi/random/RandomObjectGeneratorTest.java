@@ -1,5 +1,18 @@
 package org.citrusframework.openapi.random;
 
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import org.citrusframework.openapi.OpenApiConstants;
+import org.citrusframework.openapi.OpenApiSpecification;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashMap;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
@@ -9,17 +22,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
-
-import io.apicurio.datamodels.openapi.models.OasSchema;
-import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.List;
-import org.citrusframework.openapi.OpenApiConstants;
-import org.citrusframework.openapi.OpenApiSpecification;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 public class RandomObjectGeneratorTest {
 
@@ -38,7 +40,6 @@ public class RandomObjectGeneratorTest {
         when(contextMock.getRandomModelBuilder()).thenReturn(randomModelBuilderSpy);
         when(contextMock.getSpecification()).thenReturn(specificationMock);
         when(contextMock.get(eq("OBJECT_STACK"), any())).thenReturn(new ArrayDeque<>());
-
     }
 
     @Test
@@ -91,7 +92,7 @@ public class RandomObjectGeneratorTest {
         schema.properties = new HashMap<>();
         OasSchema propertySchema = new Oas30Schema();
         schema.properties.put("property1", propertySchema);
-        schema.required = List.of("property1");
+        schema.required = singletonList("property1");
 
         when(specificationMock.isGenerateOptionalFields()).thenReturn(false);
 
@@ -109,7 +110,7 @@ public class RandomObjectGeneratorTest {
         schema.properties = new HashMap<>();
         OasSchema propertySchema = new Oas30Schema();
         schema.properties.put("property1", propertySchema);
-        schema.required = List.of();
+        schema.required = emptyList();
         when(specificationMock.isGenerateOptionalFields()).thenReturn(false);
         generator.generate(contextMock, schema);
 

@@ -16,63 +16,24 @@
 
 package org.citrusframework.openapi;
 
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Schema.Oas20AllOfSchema;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Pattern;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.openapi.OpenApiTestValidationDataGenerator.createValidationExpression;
 import static org.citrusframework.openapi.OpenApiTestValidationDataGenerator.createValidationRegex;
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;
 
-import io.apicurio.datamodels.openapi.models.OasSchema;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Schema.Oas20AllOfSchema;
-import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
-import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Pattern;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
 public class OpenApiTestValidationDataGeneratorTest {
-
-    @Test
-    public void anyOfIsIgnoredForOas3() {
-
-        Oas30Schema anyOfSchema = new Oas30Schema();
-        anyOfSchema.anyOf = List.of(new Oas30Schema(), new Oas30Schema());
-
-        assertEquals(createValidationExpression(
-            anyOfSchema, new HashMap<>(), true, mock()), "\"@ignore@\"");
-    }
-
-    @Test
-    public void allOfIsIgnoredForOas3() {
-
-        Oas30Schema allOfSchema = new Oas30Schema();
-        allOfSchema.allOf = List.of(new Oas30Schema(), new Oas30Schema());
-
-        assertEquals(createValidationExpression(
-            allOfSchema, new HashMap<>(), true, mock()), "\"@ignore@\"");
-    }
-
-    @Test
-    public void oneOfIsIgnoredForOas3() {
-
-        Oas30Schema oneOfSchema = new Oas30Schema();
-        oneOfSchema.oneOf = List.of(new Oas30Schema(), new Oas30Schema());
-
-        assertEquals(createValidationExpression(
-            oneOfSchema, new HashMap<>(), true, mock()), "\"@ignore@\"");
-    }
-
-    @Test
-    public void allOfIsIgnoredForOas2() {
-
-        Oas20AllOfSchema allOfSchema = new Oas20AllOfSchema();
-        allOfSchema.allOf = List.of(new Oas20Schema(), new Oas20Schema());
-
-        assertEquals(createValidationExpression(
-            allOfSchema, new HashMap<>(), true, mock()), "\"@ignore@\"");
-    }
 
     @DataProvider(name = "createValidationRegexDataProvider")
     public static Object[][] createValidationRegexDataProvider() {
@@ -107,49 +68,85 @@ public class OpenApiTestValidationDataGeneratorTest {
 
         Oas30Schema enumSchema = new Oas30Schema();
         enumSchema.type = OpenApiConstants.TYPE_STRING;
-        enumSchema.enum_ = List.of("A","B","C");
+        enumSchema.enum_ = List.of("A", "B", "C");
 
         return new Object[][]{
-            {stringSchema, "xyz", true},
-            {uuidSchema, "123e4567-e89b-12d3-a456-426614174000", true},
-            {uuidSchema, "123e4567-e89b-12d3-a456-42661417400", false},
-            {dateSchema, "2023-05-15", true},
-            {dateSchema, "2023-15-15", false},
-            {dateTimeSchema, "2023-05-15T10:15:30Z", true},
-            {dateTimeSchema, "2023-05-15T25:15:30Z", false},
-            {integerSchema, "2023", true},
-            {integerSchema, "2023.05", false},
-            {numberSchema, "2023", true},
-            {numberSchema, "2023.xx", false},
-            {booleanSchema, "true", true},
-            {booleanSchema, "false", true},
-            {booleanSchema, "yes", false},
-            {booleanSchema, "no", false},
-            {booleanSchema, "yes", false},
-            {booleanSchema, "no", false},
-            {regexSchema, "156", true},
-            {regexSchema, "651", false},
-            {enumSchema, "A", true},
-            {enumSchema, "B", true},
-            {enumSchema, "C", true},
-            {enumSchema, "a", false},
-            {enumSchema, "D", false},
+                {stringSchema, "xyz", true},
+                {uuidSchema, "123e4567-e89b-12d3-a456-426614174000", true},
+                {uuidSchema, "123e4567-e89b-12d3-a456-42661417400", false},
+                {dateSchema, "2023-05-15", true},
+                {dateSchema, "2023-15-15", false},
+                {dateTimeSchema, "2023-05-15T10:15:30Z", true},
+                {dateTimeSchema, "2023-05-15T25:15:30Z", false},
+                {integerSchema, "2023", true},
+                {integerSchema, "2023.05", false},
+                {numberSchema, "2023", true},
+                {numberSchema, "2023.xx", false},
+                {booleanSchema, "true", true},
+                {booleanSchema, "false", true},
+                {booleanSchema, "yes", false},
+                {booleanSchema, "no", false},
+                {booleanSchema, "yes", false},
+                {booleanSchema, "no", false},
+                {regexSchema, "156", true},
+                {regexSchema, "651", false},
+                {enumSchema, "A", true},
+                {enumSchema, "B", true},
+                {enumSchema, "C", true},
+                {enumSchema, "a", false},
+                {enumSchema, "D", false},
         };
     }
 
+    @Test
+    public void anyOfIsIgnoredForOas3() {
+        Oas30Schema anyOfSchema = new Oas30Schema();
+        anyOfSchema.anyOf = List.of(new Oas30Schema(), new Oas30Schema());
+
+        assertEquals(createValidationExpression(
+                anyOfSchema, new HashMap<>(), true, mock()), "\"@ignore@\"");
+    }
+
+    @Test
+    public void allOfIsIgnoredForOas3() {
+        Oas30Schema allOfSchema = new Oas30Schema();
+        allOfSchema.allOf = List.of(new Oas30Schema(), new Oas30Schema());
+
+        assertEquals(createValidationExpression(
+                allOfSchema, new HashMap<>(), true, mock()), "\"@ignore@\"");
+    }
+
+    @Test
+    public void oneOfIsIgnoredForOas3() {
+        Oas30Schema oneOfSchema = new Oas30Schema();
+        oneOfSchema.oneOf = List.of(new Oas30Schema(), new Oas30Schema());
+
+        assertEquals(createValidationExpression(
+                oneOfSchema, new HashMap<>(), true, mock()), "\"@ignore@\"");
+    }
+
+    @Test
+    public void allOfIsIgnoredForOas2() {
+        Oas20AllOfSchema allOfSchema = new Oas20AllOfSchema();
+        allOfSchema.allOf = List.of(new Oas20Schema(), new Oas20Schema());
+
+        assertEquals(createValidationExpression(
+                allOfSchema, new HashMap<>(), true, mock()), "\"@ignore@\"");
+    }
+
     @Test(dataProvider = "createValidationRegexDataProvider")
-    void createValidationRegex_shouldValidateRealDataCorrectly(OasSchema schema, String toValidate, boolean result) {
+    public void createValidationRegex_shouldValidateRealDataCorrectly(OasSchema schema, String toValidate, boolean result) {
         String regex = createValidationRegex(schema);
         assertThat(Pattern.matches(regex, toValidate)).isEqualTo(result);
     }
 
     @Test
-    void validationRegexOfNullIsEmpty() {
+    public void validationRegexOfNullIsEmpty() {
         assertThat(createValidationRegex(null)).isEmpty();
     }
 
     @Test
-    void defaultvalidationRegexIsEmpty() {
+    public void defaultvalidationRegexIsEmpty() {
         Oas30Schema oas30Schema = new Oas30Schema();
         oas30Schema.type = "xxxx";
         assertThat(createValidationRegex(oas30Schema)).isEmpty();

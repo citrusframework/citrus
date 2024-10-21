@@ -75,13 +75,10 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
 
     private final int port = SocketUtils.findAvailableTcpPort(8080);
     private final String uri = "http://localhost:" + port + "/test";
-
+    private final MessageQueue inboundQueue = new DefaultMessageQueue("inboundQueue");
+    private final Queue<HttpMessage> responses = new ArrayBlockingQueue<>(6);
     private HttpServer httpServer;
     private HttpClient httpClient;
-
-    private final MessageQueue inboundQueue = new DefaultMessageQueue("inboundQueue");
-
-    private final Queue<HttpMessage> responses = new ArrayBlockingQueue<>(6);
 
     @BeforeClass
     public void setupEndpoints() {
@@ -165,7 +162,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         SendMessageAction sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
         Assert.assertFalse(sendMessageAction.isForkMode());
         Assert.assertTrue(sendMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
-        HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());
+        HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder) sendMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
         Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()), "");
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 5L);
@@ -190,7 +187,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(2) instanceof HeaderValidationContext);
 
-        httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
+        httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
 
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 5L);
@@ -206,7 +203,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
         Assert.assertFalse(sendMessageAction.isForkMode());
-        httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());
+        httpMessageBuilder = ((HttpMessageBuilder) sendMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
         Assert.assertTrue(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()).toString().startsWith("{\"id\": "));
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
@@ -227,7 +224,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(2) instanceof HeaderValidationContext);
 
-        httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
+        httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
         Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "");
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
