@@ -1,0 +1,64 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+    xmlns:petstore="http://www.citrusframework.org/citrus-test-schema/petstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/http/testcase
+    http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/petstore-api
+    http://www.citrusframework.org/citrus-test-schema/petstore-api/petstore-api.xsd"
+>
+    <testcase name="withFileUploadTest">
+        <actions>
+            <create-variables>
+                <variable name="petId" value="1234"/>
+                <variable name="additionalMetadata" value="MyAdditionalMetadata"/>
+                <variable name="file" value="filedata"/>
+            </create-variables>
+
+            <petstore:send-upload-file petId="${petId}"
+                fork="true"
+                additionalMetadata="${additionalMetadata}">
+                <petstore:body>
+                    <petstore:data>${file}</petstore:data>
+                </petstore:body>
+            </petstore:send-upload-file>
+
+            <http:receive-request server="httpServer">
+                <http:POST path="/api/v3/pet/${petId}/uploadImage">
+                    <http:headers content-type="application/octet-stream"/>
+                    <http:body>
+                        <http:data>
+                            [102, 105, 108, 101, 100, 97, 116, 97]
+                        </http:data>
+                    </http:body>
+                </http:POST>
+            </http:receive-request>
+
+            <http:send-response server="httpServer">
+                <http:headers status="200">
+                    <http:header name="Content-Type" value="application/json"/>
+                </http:headers>
+                <http:body type="json">
+                    <http:data>
+                        {"code": 12, "type":"post-image-ok", "message":"image successfully uploaded"}
+                    </http:data>
+                </http:body>
+            </http:send-response>
+
+            <petstore:receive-upload-file>
+                <http:body>
+                    <http:validate>
+                        <http:json-path expression="$.code" value="12"/>
+                        <http:json-path expression="$.message" value="image successfully uploaded"/>
+                    </http:validate>
+                </http:body>
+            </petstore:receive-upload-file>
+        </actions>
+    </testcase>
+</spring:beans>

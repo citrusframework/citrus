@@ -1,0 +1,66 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+    xmlns:extpetstore="http://www.citrusframework.org/citrus-test-schema/extpetstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/http/testcase
+    http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api/extpetstore-api.xsd"
+>
+    <testcase name="withFormUrlEncodedTest">
+        <actions>
+            <create-variables>
+                <variable name="petId" value="1234"/>
+                <variable name="nick1" value="Wind"/>
+                <variable name="nick2" value="Storm"/>
+                <variable name="tag2" value="tag2Value"/>
+            </create-variables>
+
+            <extpetstore:send-update-pet-with-form-url-encoded petId="${petId}" fork="true" _name="Thunder" age="5" owners="2" status="sold">
+                <extpetstore:tags>tag1</extpetstore:tags>
+                <extpetstore:tags>${tag2}</extpetstore:tags>
+                <extpetstore:nicknames>${nick1}</extpetstore:nicknames>
+                <extpetstore:nicknames>${nick2}</extpetstore:nicknames>
+                <extpetstore:nicknames><![CDATA[Wei{:/?#[]@!\$&'()*+,;=%\"<>^`{|}~ }rd]]></extpetstore:nicknames>
+            </extpetstore:send-update-pet-with-form-url-encoded>
+
+            <http:receive-request server="httpServer">
+                <http:PUT path="/api/v3/ext/pet/form/1234">
+                    <http:headers content-type="application/x-www-form-urlencoded;charset=UTF-8" accept="@contains('application/json')@"/>
+                    <http:body>
+                        <http:validate>
+                            <http:script type="groovy">
+                                <![CDATA[
+                                assert receivedMessage.getPayload(String.class).contains("name=Thunder")
+                                assert receivedMessage.getPayload(String.class).contains("status=sold")
+                                assert receivedMessage.getPayload(String.class).contains("nicknames=Wind")
+                                assert receivedMessage.getPayload(String.class).contains("nicknames=Storm")
+                                assert receivedMessage.getPayload(String.class).contains("nicknames=Wei%7B%3A%2F%3F%23%5B%5D%40%21%5C%24%26%27%28%29*%2B%2C%3B%3D%25%5C%22%3C%3E%5E%60%7B%7C%7D%7E+%7Drd")
+                                assert receivedMessage.getPayload(String.class).contains("tags=tag1")
+                                assert receivedMessage.getPayload(String.class).contains("tags=tag2Value")
+                                assert receivedMessage.getPayload(String.class).contains("age=5")
+                                assert receivedMessage.getPayload(String.class).contains("owners=")
+                                ]]>
+                            </http:script>
+                        </http:validate>
+                    </http:body>
+                </http:PUT>
+            </http:receive-request>
+
+            <http:send-response server="httpServer">
+                <http:headers status="200" reason-phrase="OK">
+                    <http:header name="Content-Type" value="application/json"/>
+                </http:headers>
+            </http:send-response>
+
+            <extpetstore:receive-update-pet-with-form-url-encoded responseCode="200"/>
+
+        </actions>
+    </testcase>
+</spring:beans>

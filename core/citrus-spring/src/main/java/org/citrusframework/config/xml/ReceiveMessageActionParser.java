@@ -30,6 +30,7 @@ import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.util.ValidateMessageParserUtil;
 import org.citrusframework.config.util.VariableExtractorParserUtil;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.SchemaValidationContext;
@@ -62,11 +63,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String endpointUri = element.getAttribute("endpoint");
-
-        if (!hasText(endpointUri)) {
-            throw new BeanCreationException("Endpoint reference must not be empty");
-        }
+        String endpointUri = parseEndpoint(element);
 
         BeanDefinitionBuilder builder = parseComponent(element, parserContext);
         builder.addPropertyValue("name", element.getLocalName());
@@ -99,6 +96,15 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         builder.addPropertyValue("variableExtractors", getVariableExtractors(element));
 
         return builder.getBeanDefinition();
+    }
+
+    protected String parseEndpoint(Element element) {
+        String endpointUri = element.getAttribute("endpoint");
+
+        if (!StringUtils.hasText(endpointUri)) {
+            throw new BeanCreationException("Endpoint reference must not be empty");
+        }
+        return endpointUri;
     }
 
     /**
@@ -267,7 +273,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @param messageElement The message element to get the configuration from
      * @param context The context to set the schema validation configuration to
      */
-    private void addSchemaInformationToValidationContext(Element messageElement, SchemaValidationContext.Builder<?> context) {
+    protected void addSchemaInformationToValidationContext(Element messageElement, SchemaValidationContext.Builder<?> context) {
         String schemaValidation = messageElement.getAttribute("schema-validation");
         if (hasText(schemaValidation)) {
             context.schemaValidation(parseBoolean(schemaValidation));
@@ -479,7 +485,11 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @return
      */
     protected BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.genericBeanDefinition(ReceiveMessageActionFactoryBean.class);
+        return BeanDefinitionBuilder.genericBeanDefinition(getMessageFactoryClass());
+    }
+
+    protected Class<? extends AbstractReceiveMessageActionFactoryBean> getMessageFactoryClass() {
+        return ReceiveMessageActionFactoryBean.class;
     }
 
     /**

@@ -1,0 +1,42 @@
+<project
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>full-config</artifactId>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>citrus-test-api-generator-maven-plugin</artifactId>
+                <configuration>
+                    <apis>
+                        <api>
+                            <apiPackage>org.mypackage.%PREFIX%.api</apiPackage>
+                            <endpoint>myEndpoint</endpoint>
+                            <invokerPackage>org.mypackage.%PREFIX%.invoker</invokerPackage>
+                            <modelPackage>org.mypackage.%PREFIX%.model</modelPackage>
+                            <prefix>Full</prefix>
+                            <source>api/test-api.yml</source>
+                            <targetXmlnsNamespace>"http://myNamespace"</targetXmlnsNamespace>
+                        </api>
+                    </apis>
+                    <sourceFolder>generated-sources-mod</sourceFolder>
+                    <resourceFolder>generated-resources-mod</resourceFolder>
+                    <schemaFolder>myschema/xsd</schemaFolder>
+                    <metaInfFolder>main-mod/resources-mod/META-INF-MOD</metaInfFolder>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>create-test-api</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
