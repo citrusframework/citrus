@@ -16,16 +16,16 @@
 
 package org.citrusframework.util;
 
-import static java.lang.String.format;
-
 import jakarta.annotation.Nonnull;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
+import static java.lang.String.format;
 
 /**
  * Helper for working with reflection on classes.
@@ -282,7 +282,5 @@ public class ReflectionHelper {
 
             currentClass = currentClass.getSuperclass();
         }
-
     }
-
 }

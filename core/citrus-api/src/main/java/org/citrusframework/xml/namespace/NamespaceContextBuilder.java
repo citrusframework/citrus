@@ -16,18 +16,18 @@
 
 package org.citrusframework.xml.namespace;
 
+import org.citrusframework.message.Message;
+
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
-
-import org.citrusframework.message.Message;
 
 /**
  * Builds a namespace context for XPath expression evaluations. Builder supports default mappings
  * as well as dynamic mappings from received message.
- *
+ * <p>
  * Namespace mappings are defined as key value pairs where key is definded as namespace prefix and value is the
  * actual namespace uri.
  *
@@ -50,7 +50,7 @@ public class NamespaceContextBuilder {
         DefaultNamespaceContext defaultNamespaceContext = new DefaultNamespaceContext();
 
         //first add default namespace definitions
-        if (namespaceMappings.size() > 0) {
+        if (!namespaceMappings.isEmpty()) {
             defaultNamespaceContext.addNamespaces(namespaceMappings);
         }
 
