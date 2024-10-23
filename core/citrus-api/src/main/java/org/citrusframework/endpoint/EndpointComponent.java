@@ -16,14 +16,14 @@
 
 package org.citrusframework.endpoint;
 
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Endpoint component registers with bean name in Spring application context and is then responsible to create proper endpoints dynamically from
@@ -75,7 +75,7 @@ public interface EndpointComponent {
         Map<String, EndpointComponent> components = TYPE_RESOLVER.resolveAll();
 
         if (logger.isDebugEnabled()) {
-            components.forEach((k, v) -> logger.debug(String.format("Found endpoint component '%s' as %s", k, v.getClass())));
+            components.forEach((k, v) -> logger.debug("Found endpoint component '{}' as {}", k, v.getClass()));
         }
         return components;
     }
@@ -92,7 +92,7 @@ public interface EndpointComponent {
             EndpointComponent instance = TYPE_RESOLVER.resolve(component);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve endpoint component from resource '%s/%s'", RESOURCE_PATH, component));
+            logger.warn("Failed to resolve endpoint component from resource '{}/{}'", RESOURCE_PATH, component);
         }
 
         return Optional.empty();

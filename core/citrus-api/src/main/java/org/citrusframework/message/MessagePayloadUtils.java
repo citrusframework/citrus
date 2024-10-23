@@ -105,7 +105,7 @@ public class MessagePayloadUtils {
                     if (nextStartElementPos > i + 1) {
                         String textBetweenElements = s.substring(i + 1, nextStartElementPos);
 
-                        if (textBetweenElements.replaceAll("\\s", "").length() == 0) {
+                        if (textBetweenElements.replaceAll("\\s", "").isEmpty()) {
                             sb.append(System.lineSeparator());
                         } else {
                             sb.append(textBetweenElements.trim());

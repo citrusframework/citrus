@@ -16,14 +16,14 @@
 
 package org.citrusframework.message;
 
-import java.util.Optional;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 /**
  * Processor performs operations on the given message. The processor is able to change message content such as payload and headers.
@@ -52,7 +52,7 @@ public interface MessageProcessor extends MessageTransformer {
             Builder<T, B> instance = TYPE_RESOLVER.resolve(processor);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve message processor from resource '%s/%s'", RESOURCE_PATH, processor));
+            logger.warn("Failed to resolve message processor from resource '{}/{}'", RESOURCE_PATH, processor);
         }
 
         return Optional.empty();

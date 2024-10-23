@@ -16,10 +16,6 @@
 
 package org.citrusframework.validation;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
@@ -30,6 +26,10 @@ import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Message validator interface. Message validation need specific information like
@@ -57,7 +57,7 @@ public interface MessageValidator<T extends ValidationContext> {
         Map<String, MessageValidator<?>> validators = TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
 
         if (logger.isDebugEnabled()) {
-            validators.forEach((k, v) -> logger.debug(String.format("Found message validator '%s' as %s", k, v.getClass())));
+            validators.forEach((k, v) -> logger.debug("Found message validator '{}' as {}", k, v.getClass()));
         }
 
         return validators;
@@ -75,7 +75,7 @@ public interface MessageValidator<T extends ValidationContext> {
             MessageValidator<? extends ValidationMatcher> instance = TYPE_RESOLVER.resolve(validator);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve validator from resource '%s/%s'", RESOURCE_PATH, validator));
+            logger.warn("Failed to resolve validator from resource '{}/{}'", RESOURCE_PATH, validator);
         }
 
         return Optional.empty();

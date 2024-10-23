@@ -16,14 +16,14 @@
 
 package org.citrusframework.functions;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * General function interface.
@@ -49,7 +49,7 @@ public interface Function {
             functions.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
 
             if (logger.isDebugEnabled()) {
-                functions.forEach((k, v) -> logger.debug(String.format("Found function '%s' as %s", k, v.getClass())));
+                functions.forEach((k, v) -> logger.debug("Found function '{}' as {}", k, v.getClass()));
             }
         }
 

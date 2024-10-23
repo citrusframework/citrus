@@ -16,15 +16,15 @@
 
 package org.citrusframework.validation.matcher;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * General validation matcher interface.
@@ -51,7 +51,7 @@ public interface ValidationMatcher {
             matcher.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
 
             if (logger.isDebugEnabled()) {
-                matcher.forEach((k, v) -> logger.debug(String.format("Found validation matcher '%s' as %s", k, v.getClass())));
+                matcher.forEach((k, v) -> logger.debug("Found validation matcher '{}' as {}", k, v.getClass()));
             }
         }
         return matcher;

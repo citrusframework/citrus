@@ -16,10 +16,10 @@
 
 package org.citrusframework.validation.matcher;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.citrusframework.exceptions.CitrusRuntimeException;
 
 /**
  * Default implementation of control expression parser.
@@ -34,7 +34,7 @@ public class DefaultControlExpressionParser implements ControlExpressionParser {
 
         if (controlExpression != null && !controlExpression.isBlank()) {
             extractParameters(controlExpression, useDelimiter, extractedParameters, 0);
-            if (extractedParameters.size() == 0) {
+            if (extractedParameters.isEmpty()) {
                 // if the controlExpression has text but no parameters were extracted, then assume that
                 // the controlExpression itself is the only parameter
                 extractedParameters.add(controlExpression);
