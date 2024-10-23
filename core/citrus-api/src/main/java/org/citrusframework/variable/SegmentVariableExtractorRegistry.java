@@ -16,14 +16,6 @@
 
 package org.citrusframework.variable;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
@@ -31,6 +23,14 @@ import org.citrusframework.spi.TypeResolver;
 import org.citrusframework.util.ReflectionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Simple registry holding all available segment variable extractor implementations. Test context can ask this registry for
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 public class SegmentVariableExtractorRegistry {
 
     /** Logger */
-    private static final Logger logger = LoggerFactory.getLogger(SegmentVariableExtractor.class);
+    private static final Logger logger = LoggerFactory.getLogger(SegmentVariableExtractorRegistry.class);
 
     /** Segment variable extractor resource lookup path */
     private static final String RESOURCE_PATH = "META-INF/citrus/variable/extractor/segment";
@@ -60,7 +60,7 @@ public class SegmentVariableExtractorRegistry {
             Map<String, SegmentVariableExtractor> extractors = TYPE_RESOLVER.resolveAll();
             return extractors.values();
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve segment variable extractor from resource '%s'", RESOURCE_PATH));
+            logger.warn("Failed to resolve segment variable extractor from resource '{}'", RESOURCE_PATH);
         }
 
         return Collections.emptyList();

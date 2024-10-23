@@ -35,7 +35,7 @@ public final class MessageHeaderUtils {
 
     /**
      * Check if given header name belongs to Spring Integration internal headers.
-     *
+     * <p>
      * This is given if header name starts with internal header prefix or
      * matches one of Spring's internal header names.
      *

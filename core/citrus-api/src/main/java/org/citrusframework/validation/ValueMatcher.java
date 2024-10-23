@@ -16,10 +16,6 @@
 
 package org.citrusframework.validation;
 
-import java.util.Map;
-import java.util.Optional;
-
-import java.util.concurrent.ConcurrentHashMap;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
@@ -27,10 +23,14 @@ import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+
 public interface ValueMatcher {
 
     /** Logger */
-    Logger logger = LoggerFactory.getLogger(MessageValidator.class);
+    Logger logger = LoggerFactory.getLogger(ValueMatcher.class);
 
     /** Message validator resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/value/matcher";
@@ -50,7 +50,7 @@ public interface ValueMatcher {
             validators.putAll(TYPE_RESOLVER.resolveAll());
 
             if (logger.isDebugEnabled()) {
-                validators.forEach((k, v) -> logger.debug(String.format("Found validator '%s' as %s", k, v.getClass())));
+                validators.forEach((k, v) -> logger.debug("Found validator '{}' as {}", k, v.getClass()));
             }
         }
         return validators;
@@ -68,7 +68,7 @@ public interface ValueMatcher {
             ValueMatcher instance = TYPE_RESOLVER.resolve(validator);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve value matcher from resource '%s/%s'", RESOURCE_PATH, validator));
+            logger.warn("Failed to resolve value matcher from resource '{}/{}'", RESOURCE_PATH, validator);
         }
 
         return Optional.empty();

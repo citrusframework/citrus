@@ -16,11 +16,10 @@
 
 package org.citrusframework.message;
 
-import static org.testng.Assert.assertEquals;
-
-import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertEquals;
 
 public class MessagePayloadUtilsTest {
 

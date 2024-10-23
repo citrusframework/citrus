@@ -16,13 +16,13 @@
 
 package org.citrusframework.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public interface TypeConverter {
 
@@ -48,12 +48,12 @@ public interface TypeConverter {
         if (converters.isEmpty()) {
             converters.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
 
-            if (converters.size() == 0) {
+            if (converters.isEmpty()) {
                 converters.put(DEFAULT, DefaultTypeConverter.INSTANCE);
             }
 
             if (logger.isDebugEnabled()) {
-                converters.forEach((k, v) -> logger.debug(String.format("Found type converter '%s' as %s", k, v.getClass())));
+                converters.forEach((k, v) -> logger.debug("Found type converter '{}' as {}", k, v.getClass()));
             }
         }
 
@@ -64,7 +64,7 @@ public interface TypeConverter {
      * Lookup default type converter specified by resource path lookup and/or environment settings. In case only a single type converter is loaded
      * via resource path lookup this converter is used regardless of any environment settings. If there are multiple converter implementations
      * on the classpath the environment settings must specify the default.
-     *
+     * <p>
      * If no converter implementation is given via resource path lookup the default implementation is returned.
      * @return type converter to use by default.
      */
@@ -76,7 +76,7 @@ public interface TypeConverter {
      * Lookup default type converter specified by resource path lookup and/or environment settings. In case only a single type converter is loaded
      * via resource path lookup this converter is used regardless of any environment settings. If there are multiple converter implementations
      * on the classpath the environment settings must specify the default.
-     *
+     * <p>
      * If no converter implementation is given via resource path lookup the default implementation is returned.
      *
      * @param defaultTypeConverter the fallback default converter
@@ -89,20 +89,20 @@ public interface TypeConverter {
         if (converters.size() == 1) {
             Map.Entry<String, TypeConverter> converterEntry = converters.entrySet().iterator().next();
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Using type converter '%s'", converterEntry.getKey()));
+                logger.debug("Using type converter '{}'", converterEntry.getKey());
             }
 
             return converterEntry.getValue();
         } else if (converters.containsKey(name)) {
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Using type converter '%s'", name));
+                logger.debug("Using type converter '{}'", name);
             }
 
             return converters.get(name);
         }
 
         if (!CitrusSettings.TYPE_CONVERTER_DEFAULT.equals(name)) {
-            logger.warn(String.format("Missing type converter for name '%s' - using default type converter", name));
+            logger.warn("Missing type converter for name '{}' - using default type converter", name);
         }
 
         return defaultTypeConverter;
