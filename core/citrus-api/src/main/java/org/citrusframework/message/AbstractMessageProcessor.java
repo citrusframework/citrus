@@ -38,7 +38,7 @@ public abstract class AbstractMessageProcessor implements MessageProcessor, Mess
         if (supportsMessageType(message.getType())) {
             processMessage(message, context);
         } else {
-            logger.debug(String.format("Message processor '%s' skipped for message type: %s", getName(), message.getType()));
+            logger.debug("Message processor '{}' skipped for message type: {}", getName(), message.getType());
         }
     }
 

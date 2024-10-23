@@ -16,15 +16,15 @@
 
 package org.citrusframework.context.resolver;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Type resolver able to adapt an alias type to a given source type. Used in {@link org.citrusframework.spi.ReferenceResolver} to
@@ -54,7 +54,7 @@ public interface TypeAliasResolver<S, A> {
             resolvers.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name"));
 
             if (logger.isDebugEnabled()) {
-                resolvers.forEach((k, v) -> logger.debug(String.format("Found type alias resolver '%s' as %s", k, v.getClass())));
+                resolvers.forEach((k, v) -> logger.debug("Found type alias resolver '{}' as {}", k, v.getClass()));
             }
         }
         return resolvers;
@@ -71,7 +71,7 @@ public interface TypeAliasResolver<S, A> {
         try {
             return Optional.of(TYPE_RESOLVER.resolve(resolver));
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve type alias resolver from resource '%s/%s'", RESOURCE_PATH, resolver));
+            logger.warn("Failed to resolve type alias resolver from resource '{}/{}'", RESOURCE_PATH, resolver);
         }
 
         return Optional.empty();

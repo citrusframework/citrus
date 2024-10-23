@@ -16,9 +16,6 @@
 
 package org.citrusframework.annotations;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.spi.BindToRegistry;
@@ -27,6 +24,9 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ReflectionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 
 /**
  * Dependency injection support for {@link CitrusEndpoint} endpoint annotations.
@@ -57,7 +57,7 @@ public abstract class CitrusEndpointAnnotations {
                 return;
             }
 
-            logger.debug(String.format("Injecting Citrus endpoint on test class field '%s'", field.getName()));
+            logger.debug("Injecting Citrus endpoint on test class field '{}'", field.getName());
             CitrusEndpoint endpointAnnotation = field.getAnnotation(CitrusEndpoint.class);
 
             for (Annotation annotation : field.getAnnotations()) {
