@@ -16,12 +16,6 @@
 
 package org.citrusframework.actions.dsl;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
@@ -59,11 +53,22 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.ByteArrayInputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
 import static org.citrusframework.dsl.MessageSupport.message;
 import static org.citrusframework.validation.xml.XmlMessageValidationContext.Builder.xml;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
@@ -220,7 +225,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testReceiveBuilderWithPayloadResource() throws IOException {
+    public void testReceiveBuilderWithPayloadResource() {
         reset(resource, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
@@ -523,7 +528,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testReceiveBuilderWithHeaderResource() throws IOException {
+    public void testReceiveBuilderWithHeaderResource() {
         reset(resource, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
@@ -581,7 +586,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testReceiveBuilderWithMultipleHeaderResource() throws IOException {
+    public void testReceiveBuilderWithMultipleHeaderResource() {
         reset(resource, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
@@ -1051,7 +1056,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testDeactivateSchemaValidation() throws IOException {
+    public void testDeactivateSchemaValidation() {
 
         reset(messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);

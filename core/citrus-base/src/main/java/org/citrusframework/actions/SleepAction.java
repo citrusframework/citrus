@@ -16,14 +16,14 @@
 
 package org.citrusframework.actions;
 
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
-
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Stop the test execution for a given amount of time.
@@ -55,7 +55,7 @@ public class SleepAction extends AbstractTestAction {
         String duration = context.resolveDynamicValue(time);
 
         try {
-            logger.info(String.format("Sleeping %s %s", duration, timeUnit));
+            logger.info("Sleeping {} {}", duration, timeUnit);
 
             if (duration.indexOf(".") > 0) {
                 switch (timeUnit) {
@@ -76,7 +76,7 @@ public class SleepAction extends AbstractTestAction {
                 timeUnit.sleep(Long.parseLong(duration));
             }
 
-            logger.info(String.format("Returning after %s %s", duration, timeUnit));
+            logger.info("Returning after {} {}", duration, timeUnit);
         } catch (InterruptedException e) {
             throw new CitrusRuntimeException(e);
         }

@@ -16,12 +16,12 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.List;
-import java.util.Random;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
+
+import java.util.List;
+import java.util.Random;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
@@ -113,7 +113,7 @@ public class RandomNumberFunction implements Function {
             }
         }
 
-        if (builder.length() == 0) {
+        if (builder.isEmpty()) {
             // very unlikely to happen, ensures that empty string is not returned
             builder.append('0');
         }

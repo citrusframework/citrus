@@ -16,13 +16,6 @@
 
 package org.citrusframework.container;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.Completable;
 import org.citrusframework.TestAction;
@@ -31,6 +24,13 @@ import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Abstract base class for all containers holding several embedded test actions.
@@ -106,10 +106,8 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
 
         for (TestAction action : new ArrayList<>(executedActions)) {
             if (action instanceof Completable && !((Completable) action).isDone(context)) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug(Optional.ofNullable(action.getName()).filter(name -> name.trim().length() > 0)
-                            .orElseGet(() -> action.getClass().getName()) + " not completed yet");
-                }
+                logger.debug("{} not completed yet", Optional.ofNullable(action.getName()).filter(name -> !name.trim().isEmpty())
+                        .orElseGet(() -> action.getClass().getName()));
                 return false;
             }
         }

@@ -16,18 +16,18 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
+
+import java.util.List;
 
 import static java.lang.Integer.parseInt;
 import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * Function implements simple substring functionality.
- *
+ * <p>
  * Function requires at least a target string and a beginIndex as function parameters. A
  * optional endIndex may be given as function parameter, too. The parameter usage looks
  * like this: substring(targetString, beginIndex, [endIndex]).

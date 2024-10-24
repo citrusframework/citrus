@@ -16,14 +16,14 @@
 
 package org.citrusframework;
 
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.Optional;
 
 @FunctionalInterface
 public interface CitrusContextProvider {
@@ -85,7 +85,7 @@ public interface CitrusContextProvider {
             CitrusContextProvider instance = TYPE_RESOLVER.resolve(name);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve Citrus context provider from resource '%s/%s'", RESOURCE_PATH, name));
+            logger.warn("Failed to resolve Citrus context provider from resource '{}/{}'", RESOURCE_PATH, name);
         }
 
         return Optional.empty();

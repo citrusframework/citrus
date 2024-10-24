@@ -16,13 +16,13 @@
 
 package org.citrusframework.validation.json;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.SchemaValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Validation context holding JSON specific validation information.
@@ -35,7 +35,7 @@ public class JsonMessageValidationContext extends DefaultValidationContext imple
 
     /**
      * Should message be validated with its schema definition
-     *
+     * <p>
      * This is currently disabled by default, because old json tests would fail with a validation exception
      * as soon as a json schema repository is specified and the schema validation is activated.
      */

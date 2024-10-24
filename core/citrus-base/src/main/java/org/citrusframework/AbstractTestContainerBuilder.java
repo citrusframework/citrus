@@ -16,15 +16,15 @@
 
 package org.citrusframework;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.citrusframework.actions.NoopTestAction;
 import org.citrusframework.container.TestActionContainer;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Abstract container builder takes care on calling the container runner when actions are placed in the container.
@@ -129,7 +129,7 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
 
             @Override
             public T build() {
-                if (container.getActions().size() > 0) {
+                if (!container.getActions().isEmpty()) {
                     return container;
                 }
 

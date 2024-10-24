@@ -16,14 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -31,6 +23,14 @@ import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Action to enable class invocation through java reflection
@@ -125,7 +125,7 @@ public class JavaAction extends AbstractTestAction {
                     Arrays.stream(methodTypes).map(Class::getSimpleName).collect(Collectors.joining(",")) + ")' for class '" + instance.getClass() + "'");
         }
 
-        logger.info("Invoking method '" + methodToRun.toString() + "' on instance '" + instance.getClass() + "'");
+        logger.info("Invoking method '{}' on instance '{}'", methodToRun, instance.getClass());
 
         methodToRun.invoke(instance, methodObjects);
     }
@@ -152,7 +152,7 @@ public class JavaAction extends AbstractTestAction {
                 "is set for Java reflection call");
         }
 
-        logger.info("Instantiating class for name '" + className + "'");
+        logger.info("Instantiating class for name '{}'", className);
 
         Class<?> classToRun = Class.forName(className);
 

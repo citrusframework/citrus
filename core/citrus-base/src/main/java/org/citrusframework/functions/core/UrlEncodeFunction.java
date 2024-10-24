@@ -16,14 +16,14 @@
 
 package org.citrusframework.functions.core;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
 
 /**
  * Encodes a character sequence to URL encoded string using given charset.
@@ -33,7 +33,7 @@ public class UrlEncodeFunction implements Function {
 
     @Override
     public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.size() < 1) {
+        if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Invalid function parameter usage! Missing parameters!");
         }
 

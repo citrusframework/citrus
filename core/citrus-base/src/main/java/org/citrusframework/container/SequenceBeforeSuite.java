@@ -39,7 +39,7 @@ public class SequenceBeforeSuite extends AbstractSuiteActionContainer implements
         logger.info("Entering before suite block");
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Executing " + actions.size() + " actions before suite");
+            logger.debug("Executing {} actions before suite", actions.size());
             logger.debug("");
         }
 
@@ -49,7 +49,7 @@ public class SequenceBeforeSuite extends AbstractSuiteActionContainer implements
                 /* Executing test action and validate its success */
                 action.execute(context);
             } catch (Exception e) {
-                logger.error("Task failed " + action.getName() + "Nested exception is: ", e);
+                logger.error("Task failed {}Nested exception is: ", action.getName(), e);
                 throw new CitrusRuntimeException(e);
             }
         }

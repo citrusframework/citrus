@@ -1,5 +1,8 @@
 package org.citrusframework.util;
 
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
 import static org.citrusframework.util.StringUtils.hasText;
 import static org.citrusframework.util.StringUtils.isEmpty;
 import static org.citrusframework.util.StringUtils.quote;
@@ -8,9 +11,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
-
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 public class StringUtilsTest {
 
@@ -38,6 +38,7 @@ public class StringUtilsTest {
     public void hasText_returnsFalse_forBlankText(String str) {
         assertFalse(hasText(str));
     }
+
     @Test(dataProvider = "emptyText")
     public void hasText_returnsFalse_forEmptyText(String str) {
         assertFalse(hasText(str));
@@ -124,13 +125,13 @@ public class StringUtilsTest {
     @DataProvider(name = "trimTrailingCommaDataProvider")
     public Object[][] trimTrailingCommaDataProvider() {
         return new Object[][]{
-            {new StringBuilder("Example text,    "), "Example text"},
-            {new StringBuilder("No trailing comma    "), "No trailing comma"},
-            {new StringBuilder("No trailing comma,\n\t\n    "), "No trailing comma"},
-            {new StringBuilder("Trailing comma,"), "Trailing comma"},
-            {new StringBuilder("Multiple commas and spaces,,,   "), "Multiple commas and spaces,,"},
-            {new StringBuilder("No trim needed"), "No trim needed"},
-            {new StringBuilder(), ""}
+                {new StringBuilder("Example text,    "), "Example text"},
+                {new StringBuilder("No trailing comma    "), "No trailing comma"},
+                {new StringBuilder("No trailing comma,\n\t\n    "), "No trailing comma"},
+                {new StringBuilder("Trailing comma,"), "Trailing comma"},
+                {new StringBuilder("Multiple commas and spaces,,,   "), "Multiple commas and spaces,,"},
+                {new StringBuilder("No trim needed"), "No trim needed"},
+                {new StringBuilder(), ""}
         };
     }
 
@@ -162,26 +163,25 @@ public class StringUtilsTest {
         assertEquals(builder.toString(), "");
     }
 
-    @DataProvider(name = "titleCaseData")
-    public Object[][] titleCaseData() {
+    @DataProvider
+    public Object[][] convertFirstChartToUpperCaseData() {
         return new Object[][]{
-            {"hello", "Hello"},
-            {"h", "H"},
-            {"Hello", "Hello"},
-            {null, ""},
-            {"", ""},
-            {"hello world", "Hello world"},
-            {" hello", " hello"},
-            {"1test", "1test"},
-            {"!special", "!special"}
+                {"hello", "Hello"},
+                {"h", "H"},
+                {"Hello", "Hello"},
+                {null, ""},
+                {"", ""},
+                {"hello world", "Hello world"},
+                {" hello", " hello"},
+                {"1test", "1test"},
+                {"!special", "!special"}
         };
     }
 
-    @Test(dataProvider = "titleCaseData")
-    public void testTitleCase(String input, String expected) {
-        String actual = StringUtils.titleCase(input);
+    @Test(dataProvider = "convertFirstChartToUpperCaseData")
+    public void testConvertFirstChartToUpperCase(String input, String expected) {
+        String actual = StringUtils.convertFirstChartToUpperCase(input);
         assertEquals(actual, expected,
-            "The titleCase method did not return the expected result.");
+                "The titleCase method did not return the expected result.");
     }
-
 }

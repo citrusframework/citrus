@@ -67,7 +67,6 @@ public class DefaultMessage implements Message {
      * @param message
      */
     public DefaultMessage(Message message) {
-
         this(message.getPayload(), message.getHeaders());
 
         this.setName(message.getName());

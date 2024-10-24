@@ -16,6 +16,13 @@
 
 package org.citrusframework.message;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -25,13 +32,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.spi.Resource;
-import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @since 2.7.5
@@ -139,7 +139,7 @@ public class ZipMessage extends DefaultMessage {
     private void addToZip(String path, Entry entry, ZipOutputStream zos) throws IOException {
         String name = (path.endsWith("/") ? path : path + "/") + entry.getName();
         if (entry.isDirectory()) {
-            logger.debug("Adding directory to zip: " + name);
+            logger.debug("Adding directory to zip: {}", name);
 
             zos.putNextEntry(new ZipEntry(name.endsWith("/") ? name : name + "/"));
             for (Entry child : entry.getEntries()) {
@@ -151,7 +151,7 @@ public class ZipMessage extends DefaultMessage {
             }
             zos.closeEntry();
         } else {
-            logger.debug("Adding file to zip: " + name);
+            logger.debug("Adding file to zip: {}", name);
 
             zos.putNextEntry(new ZipEntry(name));
             zos.write(entry.getContent());

@@ -16,10 +16,6 @@
 
 package org.citrusframework.validation;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
@@ -28,6 +24,10 @@ import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.citrusframework.validation.ValidationUtils.buildValueToBeInCollectionErrorMessage;
 import static org.testng.Assert.assertEquals;
@@ -45,17 +45,17 @@ public class ValidationUtilsTest extends UnitTestSupport {
     }
 
     @Test(dataProvider = "testData")
-    public void testValidateValues(Object actualValue, Object expectedValue, String path) throws Exception {
+    public void testValidateValues(Object actualValue, Object expectedValue, String path) {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
 
     @Test(dataProvider = "testDataFailed", expectedExceptions = ValidationException.class)
-    public void testValidateValuesFailure(Object actualValue, Object expectedValue, String path) throws Exception {
+    public void testValidateValuesFailure(Object actualValue, Object expectedValue, String path) {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
 
     @Test(dataProvider = "testDataTypeFailed", expectedExceptions = ValidationException.class)
-    public void testValidateValuesTypeFailure(String actualValue, Object expectedValue, String path) throws Exception {
+    public void testValidateValuesTypeFailure(String actualValue, Object expectedValue, String path) {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
 
