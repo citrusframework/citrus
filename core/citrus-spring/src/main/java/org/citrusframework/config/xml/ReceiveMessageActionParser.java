@@ -16,21 +16,9 @@
 
 package org.citrusframework.config.xml;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Stream;
-
-import org.citrusframework.CitrusSettings;
 import org.citrusframework.actions.ReceiveMessageAction;
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.util.ValidateMessageParserUtil;
 import org.citrusframework.config.util.VariableExtractorParserUtil;
-import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.SchemaValidationContext;
@@ -51,6 +39,15 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
+
 import static java.lang.Boolean.parseBoolean;
 import static org.citrusframework.util.StringUtils.hasText;
 
@@ -63,20 +60,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String endpointUri = parseEndpoint(element);
-
-        BeanDefinitionBuilder builder = parseComponent(element, parserContext);
-        builder.addPropertyValue("name", element.getLocalName());
-
-        if (endpointUri.contains(":") || (endpointUri.contains(CitrusSettings.VARIABLE_PREFIX) && endpointUri.contains(CitrusSettings.VARIABLE_SUFFIX))) {
-            builder.addPropertyValue("endpointUri", endpointUri);
-        } else {
-            builder.addPropertyReference("endpoint", endpointUri);
-        }
-
-        DescriptionElementParser.doParse(element, builder);
-
-        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
+        BeanDefinitionBuilder builder = getBeanDefinitionBuilder(element, parserContext);
 
         String receiveTimeout = element.getAttribute("timeout");
         if (hasText(receiveTimeout)) {
@@ -96,15 +80,6 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         builder.addPropertyValue("variableExtractors", getVariableExtractors(element));
 
         return builder.getBeanDefinition();
-    }
-
-    protected String parseEndpoint(Element element) {
-        String endpointUri = element.getAttribute("endpoint");
-
-        if (!StringUtils.hasText(endpointUri)) {
-            throw new BeanCreationException("Endpoint reference must not be empty");
-        }
-        return endpointUri;
     }
 
     /**
@@ -323,7 +298,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         //for now we only handle jsonPath validation
         Map<String, Object> validateJsonPathExpressions = new HashMap<>();
         List<Element> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
-        if (validateElements.size() > 0) {
+        if (!validateElements.isEmpty()) {
             for (Element validateElement : validateElements) {
                 extractJsonPathValidateExpressions(validateElement, validateJsonPathExpressions);
             }
@@ -390,16 +365,17 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         Map<String, String> validateNamespaces = new HashMap<>();
 
         List<Element> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
-        if (validateElements.size() > 0) {
+        if (!validateElements.isEmpty()) {
             for (Element validateElement : validateElements) {
                 //check for namespace validation elements
                 List<Element> validateNamespaceElements = DomUtils.getChildElementsByTagName(validateElement, "namespace");
-                if (validateNamespaceElements.size() > 0) {
+                if (!validateNamespaceElements.isEmpty()) {
                     for (Element namespaceElement : validateNamespaceElements) {
                         validateNamespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
                     }
                 }
             }
+
             context.namespaces(validateNamespaces);
         }
     }
@@ -416,7 +392,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         Map<String, Object> validateXpathExpressions = new HashMap<>();
 
         List<Element> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
-        if (validateElements.size() > 0) {
+        if (!validateElements.isEmpty()) {
             for (Element validateElement : validateElements) {
                 extractXPathValidateExpressions(validateElement, validateXpathExpressions);
             }
@@ -466,8 +442,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @param validateElement
      * @param validateJsonPathExpressions
      */
-    private void extractJsonPathValidateExpressions(
-            Element validateElement, Map<String, Object> validateJsonPathExpressions) {
+    private void extractJsonPathValidateExpressions(Element validateElement, Map<String, Object> validateJsonPathExpressions) {
         //check for jsonPath validation - old style with direct attribute
         String pathExpression = validateElement.getAttribute("path");
         if (JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
@@ -478,16 +453,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         ValidateMessageParserUtil.parseJsonPathElements(validateElement, validateJsonPathExpressions);
     }
 
-    /**
-     * Parse component returning generic bean definition.
-     *
-     * @param element
-     * @return
-     */
-    protected BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.genericBeanDefinition(getMessageFactoryClass());
-    }
-
+    @Override
     protected Class<? extends AbstractReceiveMessageActionFactoryBean> getMessageFactoryClass() {
         return ReceiveMessageActionFactoryBean.class;
     }

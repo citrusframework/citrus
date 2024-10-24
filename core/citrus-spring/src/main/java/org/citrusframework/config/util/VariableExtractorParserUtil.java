@@ -16,14 +16,14 @@
 
 package org.citrusframework.config.util;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.variable.VariableExtractor;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Helper for parsing 'extract' elements containing nested xpath or json variable-extractors.
@@ -52,7 +52,7 @@ public class VariableExtractorParserUtil {
             Element messageElement = DomUtils.getChildElementByTagName(element, "message");
             if (messageElement != null) {
                 List<?> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
-                if (namespaceElements.size() > 0) {
+                if (!namespaceElements.isEmpty()) {
                     for (Object namespaceElementObject : namespaceElements) {
                         Element namespaceElement = (Element) namespaceElementObject;
                         namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));

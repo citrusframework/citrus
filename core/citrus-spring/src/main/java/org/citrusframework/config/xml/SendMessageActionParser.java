@@ -16,23 +16,21 @@
 
 package org.citrusframework.config.xml;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.citrusframework.CitrusSettings;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.message.MessageBuilder;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.variable.VariableExtractor;
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Bean definition parser for send action in test case.
@@ -42,19 +40,7 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String endpointUri = parseEndpoint(element);
-
-        BeanDefinitionBuilder builder = parseComponent(element, parserContext);
-        builder.addPropertyValue("name", element.getLocalName());
-
-        if (endpointUri.contains(":") || (endpointUri.contains(CitrusSettings.VARIABLE_PREFIX) && endpointUri.contains(CitrusSettings.VARIABLE_SUFFIX))) {
-            builder.addPropertyValue("endpointUri", endpointUri);
-        } else {
-            builder.addPropertyReference("endpoint", endpointUri);
-        }
-
-        DescriptionElementParser.doParse(element, builder);
-        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
+        BeanDefinitionBuilder builder = getBeanDefinitionBuilder(element, parserContext);
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("fork"), "forkMode");
 
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
@@ -105,28 +91,10 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
         return builder.getBeanDefinition();
     }
 
-    protected String parseEndpoint(Element element) {
-        String endpointUri = element.getAttribute("endpoint");
-
-        if (!StringUtils.hasText(endpointUri)) {
-            throw new BeanCreationException("Endpoint reference must not be empty");
-        }
-        return endpointUri;
-    }
-
-    /**
-     * Parse component returning generic bean definition.
-     * @param element
-     * @param parserContext
-     * @return
-     */
-    protected BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.genericBeanDefinition(getMessageFactoryClass());
-    }
-
     /**
      * Gets the bean definition builder class.
      */
+    @Override
     protected Class<? extends AbstractSendMessageActionFactoryBean<?, ?, ?>> getMessageFactoryClass() {
         return SendMessageActionFactoryBean.class;
     }
