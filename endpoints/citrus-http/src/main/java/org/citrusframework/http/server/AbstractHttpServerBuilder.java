@@ -251,7 +251,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     /**
-     * Sets the handleCookies property.
+     * Sets the semicolon handling property.
      *
      * @param flag
      * @return

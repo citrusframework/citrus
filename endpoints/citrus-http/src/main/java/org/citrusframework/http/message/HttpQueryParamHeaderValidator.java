@@ -16,18 +16,21 @@
 
 package org.citrusframework.http.message;
 
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.validation.DefaultHeaderValidator;
+import org.citrusframework.validation.context.HeaderValidationContext;
+import org.citrusframework.validation.matcher.ValidationMatcherUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.util.StringUtils;
-import org.citrusframework.validation.DefaultHeaderValidator;
-import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.matcher.ValidationMatcherUtils;
+
+import static java.util.stream.Collectors.toMap;
+import static org.citrusframework.http.message.HttpMessageHeaders.HTTP_QUERY_PARAMS;
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * @since 2.7.6
@@ -39,7 +42,7 @@ public class HttpQueryParamHeaderValidator extends DefaultHeaderValidator {
         if (ValidationMatcherUtils.isValidationMatcherExpression(Optional.ofNullable(control)
                 .map(Object::toString)
                 .orElse(""))) {
-            super.validateHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS, received, control, context, validationContext);
+            super.validateHeader(HTTP_QUERY_PARAMS, received, control, context, validationContext);
             return;
         }
 
@@ -54,9 +57,8 @@ public class HttpQueryParamHeaderValidator extends DefaultHeaderValidator {
                 throw new ValidationException("Validation failed: Query param '" + param.getKey() + "' is missing");
             }
 
-            super.validateHeaderArray(HttpMessageHeaders.HTTP_QUERY_PARAMS + "(" + param.getKey() + ")", receiveParams.get(param.getKey()), param.getValue(), context, validationContext);
+            super.validateHeaderArray(HTTP_QUERY_PARAMS + "(" + param.getKey() + ")", receiveParams.get(param.getKey()), param.getValue(), context, validationContext);
         }
-
     }
 
     /**
@@ -64,7 +66,6 @@ public class HttpQueryParamHeaderValidator extends DefaultHeaderValidator {
      * encoded in the expression.
      */
     private Map<String, Object> convertToMap(Object expression) {
-
         if (expression instanceof Map<?,?>) {
             return (Map<String, Object>) expression;
         }
@@ -74,8 +75,8 @@ public class HttpQueryParamHeaderValidator extends DefaultHeaderValidator {
                 .orElse("")
                 .split(","))
             .map(keyValue -> keyValue.split("="))
-            .filter(keyValue -> StringUtils.hasText(keyValue[0]))
-            .collect(Collectors.toMap(
+            .filter(keyValue -> hasText(keyValue[0]))
+            .collect(toMap(
                 keyValue -> keyValue[0],  // Key function
                 keyValue ->
                     // Value function: if no value is present, use an empty string
@@ -93,11 +94,10 @@ public class HttpQueryParamHeaderValidator extends DefaultHeaderValidator {
                     }
                 }
             ));
-
     }
 
     @Override
     public boolean supports(String headerName, Class<?> type) {
-        return headerName.equals(HttpMessageHeaders.HTTP_QUERY_PARAMS);
+        return headerName.equals(HTTP_QUERY_PARAMS);
     }
 }

@@ -668,7 +668,6 @@ public class HttpServer extends AbstractServer {
         this.handleSemicolonPathContent = handleSemicolonPathContent;
     }
 
-
     /**
      * Gets the response cache size.
      *
