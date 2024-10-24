@@ -49,6 +49,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import static org.citrusframework.util.StringUtils.hasText;
+import static org.citrusframework.util.XMLUtils.prettyPrint;
 
 /**
  * Default message validator implementation. Working on XML messages
@@ -77,8 +78,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage,
                                 TestContext context, XmlMessageValidationContext validationContext) throws ValidationException {
-        logger.debug("Start XML message validation ...");
-
+        logger.debug("Start XML message validation: {}", prettyPrint(receivedMessage.getPayload(String.class)));
         try {
             if (validationContext.isSchemaValidationEnabled()) {
                 schemaValidator.validate(receivedMessage, context, validationContext);
@@ -103,9 +103,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             logger.debug("XML message validation successful: All values OK");
         } catch (ClassCastException | DOMException | LSException e) {
             throw new CitrusRuntimeException(e);
-        } catch (ValidationException ex) {
-            logger.error("Failed to validate:\n{}", XMLUtils.prettyPrint(receivedMessage.getPayload(String.class)));
-            throw ex;
         }
     }
 
