@@ -58,14 +58,11 @@ import org.testng.annotations.Listeners;
 /**
  * Basic Citrus TestNG support base class with Spring support automatically handles test case runner creation. Also provides method parameter resolution
  * and resource injection. Users can just extend this class and make use of the action runner methods provided in {@link org.citrusframework.TestActionRunner}
- * and {@link GherkinTestActionRunner}. Provides Spring test listener support and
- * loads basic Spring application context for Citrus.
- *
+ * and {@link GherkinTestActionRunner}. Provides Spring test listener support and loads basic Spring application context for Citrus.
  */
 @Listeners( { TestNGCitrusSpringMethodInterceptor.class } )
 @ContextConfiguration(classes =  {CitrusSpringConfig.class})
-public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
-        implements GherkinTestActionRunner {
+public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests implements GherkinTestActionRunner {
 
     /** Citrus instance */
     protected Citrus citrus;
@@ -115,8 +112,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
      * @param methodTestLoaders
      * @param invocationCount
      */
-    protected void run(ITestResult testResult, Method method, List<TestLoader> methodTestLoaders,
-        int invocationCount) {
+    protected void run(ITestResult testResult, Method method, List<TestLoader> methodTestLoaders, int invocationCount) {
         if (citrus == null) {
             citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
             CitrusAnnotations.injectCitrusFramework(this, citrus);
