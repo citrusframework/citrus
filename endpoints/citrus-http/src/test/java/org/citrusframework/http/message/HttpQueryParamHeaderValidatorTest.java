@@ -16,14 +16,13 @@
 
 package org.citrusframework.http.message;
 
-import java.util.Collections;
-
-import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import java.util.Collections;
 
 import static org.hamcrest.Matchers.is;
 

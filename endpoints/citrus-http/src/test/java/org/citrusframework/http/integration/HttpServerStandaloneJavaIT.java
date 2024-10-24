@@ -27,6 +27,7 @@ import org.testng.annotations.Test;
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.citrusframework.container.Assert.Builder.assertException;
 import static org.citrusframework.http.actions.HttpActionBuilder.http;
+import static org.hamcrest.Matchers.oneOf;
 
 @Test
 public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport {
@@ -102,9 +103,10 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport {
                 .receive()
                 .response()
                 .message()
-                .header(HttpMessageHeaders.HTTP_STATUS_CODE, Matchers.isOneOf(HttpStatus.CREATED.value(),
-                                                                                HttpStatus.ACCEPTED.value(),
-                                                                                HttpStatus.OK.value())));
+                .header(HttpMessageHeaders.HTTP_STATUS_CODE, Matchers.is(
+                        oneOf(HttpStatus.CREATED.value(),
+                                HttpStatus.ACCEPTED.value(),
+                                HttpStatus.OK.value()))));
 
         run(echo("Test header validation error"));
 

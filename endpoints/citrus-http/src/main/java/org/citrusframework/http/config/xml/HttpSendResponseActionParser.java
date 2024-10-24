@@ -16,7 +16,6 @@
 
 package org.citrusframework.http.config.xml;
 
-import jakarta.servlet.http.Cookie;
 import org.citrusframework.config.xml.SendMessageActionParser;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
@@ -30,10 +29,9 @@ import org.w3c.dom.Element;
 
 import java.util.List;
 
-import static java.lang.Boolean.parseBoolean;
-import static java.lang.Integer.parseInt;
 import static org.citrusframework.config.util.BeanDefinitionParserUtils.setPropertyReference;
 import static org.citrusframework.config.xml.DescriptionElementParser.doParse;
+import static org.citrusframework.http.config.xml.CookieUtils.setCookieElement;
 import static org.citrusframework.util.StringUtils.hasText;
 
 /**
@@ -78,28 +76,7 @@ public class HttpSendResponseActionParser extends SendMessageActionParser {
             }
 
             List<?> cookieElements = DomUtils.getChildElementsByTagName(headers, "cookie");
-            for (Object item : cookieElements) {
-                Element cookieElement = (Element) item;
-                Cookie cookie = new Cookie(cookieElement.getAttribute("name"), cookieElement.getAttribute("value"));
-
-                if (cookieElement.hasAttribute("path")) {
-                    cookie.setPath(cookieElement.getAttribute("path"));
-                }
-
-                if (cookieElement.hasAttribute("domain")) {
-                    cookie.setDomain(cookieElement.getAttribute("domain"));
-                }
-
-                if (cookieElement.hasAttribute("max-age")) {
-                    cookie.setMaxAge(parseInt(cookieElement.getAttribute("max-age")));
-                }
-
-                if (cookieElement.hasAttribute("secure")) {
-                    cookie.setSecure(parseBoolean(cookieElement.getAttribute("secure")));
-                }
-
-                httpMessage.cookie(cookie);
-            }
+            setCookieElement(httpMessage, cookieElements);
         }
 
         Element body = DomUtils.getChildElementByTagName(element, "body");
