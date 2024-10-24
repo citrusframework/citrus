@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 public class HeaderMappingKeyExtractorTest {
 
     @Test
-    public void testExtractMappingKey() throws Exception {
+    public void testExtractMappingKey() {
         HeaderMappingKeyExtractor extractor = new HeaderMappingKeyExtractor();
         extractor.setHeaderName("Foo");
 
@@ -34,7 +34,7 @@ public class HeaderMappingKeyExtractorTest {
     }
 
     @Test
-    public void testExtractMappingKeyWithoutHeaderNameSet() throws Exception {
+    public void testExtractMappingKeyWithoutHeaderNameSet() {
         HeaderMappingKeyExtractor extractor = new HeaderMappingKeyExtractor();
 
         try {
@@ -48,7 +48,7 @@ public class HeaderMappingKeyExtractorTest {
     }
 
     @Test
-    public void testExtractMappingKeyWithUnknownHeaderName() throws Exception {
+    public void testExtractMappingKeyWithUnknownHeaderName() {
         HeaderMappingKeyExtractor extractor = new HeaderMappingKeyExtractor("UNKNOWN");
 
         try {

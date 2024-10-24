@@ -16,11 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -28,6 +23,11 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 /**
  * Action reads property files and creates test variables for every property entry. File
@@ -55,9 +55,7 @@ public class LoadPropertiesAction extends AbstractTestAction {
     public void doExecute(TestContext context) {
         Resource resource = FileUtils.getFileResource(filePath, context);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Reading property file " + FileUtils.getFileName(resource.getLocation()));
-        }
+        logger.debug("Reading property file {}", FileUtils.getFileName(resource.getLocation()));
 
         Properties props = FileUtils.loadAsProperties(resource);
 
@@ -65,13 +63,10 @@ public class LoadPropertiesAction extends AbstractTestAction {
         for (Entry<Object, Object> entry : props.entrySet()) {
             String key = entry.getKey().toString();
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Loading property: " + key + "=" + props.getProperty(key) + " into variables");
-            }
+            logger.debug("Loading property: {}={} into variables", key, props.getProperty(key));
 
             if (logger.isDebugEnabled() && context.getVariables().containsKey(key)) {
-                logger.debug("Overwriting property " + key + " old value:" + context.getVariable(key)
-                        + " new value:" + props.getProperty(key));
+                logger.debug("Overwriting property {} old value:{} new value:{}", key, context.getVariable(key), props.getProperty(key));
             }
 
             try {
@@ -83,7 +78,7 @@ public class LoadPropertiesAction extends AbstractTestAction {
 
         context.resolveDynamicValuesInMap(unresolved).forEach(context::setVariable);
 
-        logger.info("Loaded property file " + FileUtils.getFileName(resource.getLocation()));
+        logger.info("Loaded property file {}", FileUtils.getFileName(resource.getLocation()));
     }
 
     /**

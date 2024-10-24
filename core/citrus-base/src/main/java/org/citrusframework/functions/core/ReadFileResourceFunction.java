@@ -16,9 +16,6 @@
 
 package org.citrusframework.functions.core;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.apache.commons.codec.binary.Base64;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -26,12 +23,15 @@ import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
 import org.citrusframework.util.FileUtils;
 
+import java.io.IOException;
+import java.util.List;
+
 /**
  * Function reads file from given file path and returns the complete file content as function result.
  * File content is automatically parsed for test variables.
- *
+ * <p>
  * File path can also have test variables as part of the file name or path.
- *
+ * <p>
  * The function accepts the following parameters:
  *
  * <ol>

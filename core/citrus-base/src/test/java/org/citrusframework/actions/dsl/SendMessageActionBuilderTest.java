@@ -16,11 +16,6 @@
 
 package org.citrusframework.actions.dsl;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
@@ -51,6 +46,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.ByteArrayInputStream;
+import java.util.Collections;
+import java.util.HashMap;
 
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.citrusframework.dsl.MessageSupport.message;
@@ -273,7 +272,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testSendBuilderWithPayloadResource() throws IOException {
+    public void testSendBuilderWithPayloadResource() {
         reset(resource, messageEndpoint, messageProducer);
         when(messageEndpoint.createProducer()).thenReturn(messageProducer);
         when(messageEndpoint.getActor()).thenReturn(null);
@@ -497,7 +496,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testSendBuilderWithHeaderDataResource() throws IOException {
+    public void testSendBuilderWithHeaderDataResource() {
         reset(resource, messageEndpoint, messageProducer);
         when(messageEndpoint.createProducer()).thenReturn(messageProducer);
         when(messageEndpoint.getActor()).thenReturn(null);

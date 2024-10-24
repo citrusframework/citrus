@@ -16,13 +16,6 @@
 
 package org.citrusframework.validation.interceptor;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
@@ -32,6 +25,13 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import static org.testng.Assert.assertEquals;
 
@@ -71,7 +71,7 @@ public class GzipMessageProcessorTest extends UnitTestSupport {
         //THEN
         assertEquals(message.getType(), MessageType.GZIP.name());
         try (ByteArrayOutputStream unzipped = new ByteArrayOutputStream();
-             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(message.getPayload(byte[].class)));) {
+             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(message.getPayload(byte[].class)))) {
             unzipped.write(gzipInputStream.readAllBytes());
             Assert.assertEquals(unzipped.toByteArray(), "foo".getBytes(StandardCharsets.UTF_8));
         }
@@ -90,7 +90,7 @@ public class GzipMessageProcessorTest extends UnitTestSupport {
         //THEN
         assertEquals(message.getType(), MessageType.GZIP.name());
         try (ByteArrayOutputStream unzipped = new ByteArrayOutputStream();
-             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(message.getPayload(byte[].class)));) {
+             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(message.getPayload(byte[].class)))) {
             unzipped.write(gzipInputStream.readAllBytes());
             Assert.assertEquals(unzipped.toByteArray(), "foo".getBytes(StandardCharsets.UTF_8));
         }
@@ -109,7 +109,7 @@ public class GzipMessageProcessorTest extends UnitTestSupport {
         //THEN
         assertEquals(message.getType(), MessageType.GZIP.name());
         try (ByteArrayOutputStream unzipped = new ByteArrayOutputStream();
-             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(message.getPayload(byte[].class)));) {
+             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(message.getPayload(byte[].class)))) {
             unzipped.write(gzipInputStream.readAllBytes());
             Assert.assertEquals(unzipped.toByteArray(), "foo".getBytes(StandardCharsets.UTF_8));
         }
@@ -128,7 +128,7 @@ public class GzipMessageProcessorTest extends UnitTestSupport {
         //THEN
         assertEquals(message.getType(), MessageType.GZIP.name());
         try (ByteArrayOutputStream unzipped = new ByteArrayOutputStream();
-             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(message.getPayload(byte[].class)));) {
+             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(message.getPayload(byte[].class)))) {
             unzipped.write(gzipInputStream.readAllBytes());
             Assert.assertEquals(unzipped.toByteArray(), FileUtils.copyToByteArray(getTestFile().getInputStream()));
         }
