@@ -16,12 +16,12 @@
 
 package org.citrusframework.endpoint.resolver;
 
-import java.util.Map;
-import java.util.StringTokenizer;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.util.StringUtils;
+
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Endpoint uri resolver working on message headers. Resolver is searching for a specific header entry which holds the actual
@@ -78,7 +78,7 @@ public class DynamicEndpointUriResolver implements EndpointUriResolver {
             requestUri = requestUri.substring(0, requestUri.length() - 1);
         }
 
-        while (path.startsWith("/") && path.length() > 0) {
+        while (path.startsWith("/") && !path.isEmpty()) {
             path = path.length() == 1 ? "" : path.substring(1);
         }
 
@@ -114,7 +114,7 @@ public class DynamicEndpointUriResolver implements EndpointUriResolver {
             queryParamBuilder.append("&").append(tok.nextToken());
         }
 
-        return requestUri + queryParamBuilder.toString();
+        return requestUri + queryParamBuilder;
     }
 
     /**

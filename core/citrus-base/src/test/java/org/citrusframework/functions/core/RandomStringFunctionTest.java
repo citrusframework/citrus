@@ -16,15 +16,15 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
-import java.util.Set;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -138,6 +138,5 @@ public class RandomStringFunctionTest extends UnitTestSupport {
         Assert.assertTrue(sizes.contains(8));
         Assert.assertTrue(sizes.contains(9));
         Assert.assertTrue(sizes.contains(10));
-
     }
 }

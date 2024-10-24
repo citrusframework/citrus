@@ -16,12 +16,12 @@
 
 package org.citrusframework.condition;
 
-import java.io.File;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 /**
  * Tests for the presence of a file and returns true if the file exists
@@ -46,9 +46,7 @@ public class FileCondition extends AbstractCondition {
 
     @Override
     public boolean isSatisfied(TestContext context) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Checking file path '%s'", file != null ? file.getPath() : filePath));
-        }
+        logger.debug("Checking file path '{}'", file != null ? file.getPath() : filePath);
 
         if (file != null) {
             return file.exists() && file.isFile();
@@ -56,7 +54,7 @@ public class FileCondition extends AbstractCondition {
             try {
                 return FileUtils.getFileResource(context.replaceDynamicContentInString(filePath), context).getFile().isFile();
             } catch (Exception e) {
-                logger.warn(String.format("Failed to access file resource '%s'", e.getMessage()));
+                logger.warn("Failed to access file resource '{}'", e.getMessage());
                 return false;
             }
         }

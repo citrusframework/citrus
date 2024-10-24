@@ -41,7 +41,7 @@ public class SequenceAfterSuite extends AbstractSuiteActionContainer implements 
         logger.info("Entering after suite block");
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Executing " + actions.size() + " actions after suite");
+            logger.debug("Executing {} actions after suite", actions.size());
             logger.debug("");
         }
 
@@ -51,7 +51,7 @@ public class SequenceAfterSuite extends AbstractSuiteActionContainer implements 
                 /* Executing test action and validate its success */
                 action.execute(context);
             } catch (Exception e) {
-                logger.error("After suite action failed " + action.getName() + "Nested exception is: ", e);
+                logger.error("After suite action failed {}Nested exception is: ", action.getName(), e);
                 logger.error("Continue after suite actions");
                 success = false;
             }

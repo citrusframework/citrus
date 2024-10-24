@@ -16,15 +16,15 @@
 
 package org.citrusframework.actions;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Stream;
-
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Action that prints variable values to the console/logger. Action requires a list of variable
@@ -53,7 +53,7 @@ public class TraceVariablesAction extends AbstractTestAction {
         logger.info("Trace variables");
 
         Iterator<String> it;
-        if (variableNames != null && variableNames.size() > 0) {
+        if (variableNames != null && !variableNames.isEmpty()) {
             it = variableNames.iterator();
         } else {
             it = context.getVariables().keySet().iterator();
@@ -63,7 +63,7 @@ public class TraceVariablesAction extends AbstractTestAction {
             String key = it.next();
             String value = context.getVariable(key);
 
-            logger.info("Variable " + context.getLogModifier().mask(key + " = " + value));
+            logger.info("Variable {}", context.getLogModifier().mask(key + " = " + value));
         }
     }
 
