@@ -16,14 +16,14 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.Collections;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.Collections;
 
 /**
  * @since 2.6.2
@@ -36,27 +36,27 @@ public class LoadMessageFunctionTest extends UnitTestSupport {
             .setHeader("operation", "sampleOperation");
 
     @Test
-    public void testLoadMessagePayload() throws Exception {
+    public void testLoadMessagePayload() {
         context.getMessageStore().storeMessage("request", message);
         Assert.assertEquals(function.execute(Collections.singletonList("request"), context), "This is a sample message");
         Assert.assertEquals(function.execute(Collections.singletonList("request.body()"), context), "This is a sample message");
     }
 
     @Test
-    public void testLoadMessageHeader() throws Exception {
+    public void testLoadMessageHeader() {
         context.getMessageStore().storeMessage("request", message);
         Assert.assertEquals(function.execute(Collections.singletonList("request.header(operation)"), context), "sampleOperation");
         Assert.assertEquals(function.execute(Collections.singletonList("request.header('operation')"), context), "sampleOperation");
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Missing header name.*")
-    public void testLoadMessageHeaderEmpty() throws Exception {
+    public void testLoadMessageHeaderEmpty() {
         context.getMessageStore().storeMessage("request", message);
         function.execute(Collections.singletonList("request.header()"), context);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find header 'wrong'.*")
-    public void testLoadMessageHeaderUnknown() throws Exception {
+    public void testLoadMessageHeaderUnknown() {
         context.getMessageStore().storeMessage("request", message);
         function.execute(Collections.singletonList("request.header('wrong')"), context);
     }

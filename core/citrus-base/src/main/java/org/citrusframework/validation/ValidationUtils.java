@@ -16,17 +16,17 @@
 
 package org.citrusframework.validation;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import org.apache.commons.codec.binary.Base64;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Utility class provides helper methods for validation work in Citrus.
@@ -155,7 +155,7 @@ public abstract class ValidationUtils {
     /**
      * Combines value matchers from multiple sources. Includes validators coming from reference resolver
      * and resource path lookup are added.
-     *
+     * <p>
      * Then pick matcher that explicitly supports the given expected value type.
      * @param expectedValue
      * @param context

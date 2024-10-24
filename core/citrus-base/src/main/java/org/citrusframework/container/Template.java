@@ -44,12 +44,12 @@ import java.util.stream.Collectors;
 /**
  * This class represents a previously defined block of test actions. Test cases can call
  * templates and reuse their functionality.
- *
+ * <p>
  * Templates operate on test variables. While calling, the template caller can set these
  * variables as parameters.
- *
+ * <p>
  * Nested test actions are executed in sequence.
- *
+ * <p>
  * The template execution may affect existing variable values in the calling test case. So
  * variables may have different values in the test case after template execution. Therefore,
  * users can create a local test context by setting globalContext to false. Templates then will

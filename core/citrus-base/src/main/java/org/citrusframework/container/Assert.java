@@ -72,9 +72,7 @@ public class Assert extends AbstractActionContainer {
 
     @Override
     public void doExecute(TestContext context) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Assert container asserting exceptions of type {}", exception.getSimpleName());
-        }
+        logger.debug("Assert container asserting exceptions of type {}", exception.getSimpleName());
 
         try {
             executeAction(this.action.build(), context);

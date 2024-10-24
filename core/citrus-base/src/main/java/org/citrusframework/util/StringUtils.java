@@ -62,7 +62,6 @@ public class StringUtils {
     }
 
     public static String appendSegmentToUrlPath(String path, String segment) {
-
         if (path == null) {
             return segment;
         }
@@ -88,7 +87,7 @@ public class StringUtils {
 
     /**
      * Trims trailing whitespace characters and the first trailing comma from the end of the given StringBuilder.
-     *
+     * <p>
      * This method removes all trailing whitespace characters (such as spaces, tabs, and newline characters)
      * and the first trailing comma found from the end of the content in the provided StringBuilder.
      * Any additional commas or whitespace characters after the first trailing comma are not removed.
@@ -114,11 +113,11 @@ public class StringUtils {
      * the rest of the string unchanged. If the input string is empty or null,
      * an empty string is returned.
      *
-     * @param input The string to be converted to title case. It can be null or empty.
-     * @return the strnig in title case
+     * @param input The string to be converted. It can be null or empty.
+     * @return the string in with upper case first letter
      */
-    public static String titleCase(String input) {
-        if (input != null && !"".equals(input)) {
+    public static String convertFirstChartToUpperCase(String input) {
+        if (input != null && !input.isEmpty()) {
             String firstLetter = input.substring(0, 1).toUpperCase(Locale.ROOT);
             return input.length() == 1 ? firstLetter : firstLetter + input.substring(1);
         } else {

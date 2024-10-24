@@ -16,8 +16,6 @@
 
 package org.citrusframework.validation;
 
-import java.nio.charset.StandardCharsets;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
@@ -26,6 +24,8 @@ import org.citrusframework.validation.context.DefaultValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import java.nio.charset.StandardCharsets;
 
 public class DefaultTextEqualsMessageValidatorTest extends UnitTestSupport {
 
@@ -41,7 +41,7 @@ public class DefaultTextEqualsMessageValidatorTest extends UnitTestSupport {
     }
 
     @Test(dataProvider = "errorTests", expectedExceptions = ValidationException.class)
-    public void testValidateError(Object received, Object control) throws Exception {
+    public void testValidateError(Object received, Object control) {
         Message receivedMessage = new DefaultMessage(received);
         Message controlMessage = new DefaultMessage(control);
 

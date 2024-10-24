@@ -16,9 +16,6 @@
 
 package org.citrusframework.report;
 
-import java.time.Duration;
-import java.util.Locale;
-
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -28,6 +25,9 @@ import org.slf4j.Logger;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.time.Duration;
+import java.util.Locale;
 
 import static java.lang.String.format;
 import static org.citrusframework.TestResult.failed;

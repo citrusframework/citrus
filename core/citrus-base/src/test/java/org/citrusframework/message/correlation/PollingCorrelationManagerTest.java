@@ -29,7 +29,7 @@ public class PollingCorrelationManagerTest {
     private ObjectStore objectStore = Mockito.mock(ObjectStore.class);
 
     @Test
-    public void testFind() throws Exception {
+    public void testFind() {
         DirectSyncEndpointConfiguration pollableEndpointConfiguration = new DirectSyncEndpointConfiguration();
         pollableEndpointConfiguration.setPollingInterval(100L);
         pollableEndpointConfiguration.setTimeout(500L);

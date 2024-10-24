@@ -16,13 +16,13 @@
 
 package org.citrusframework.validation.script;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 
 /**
  * Script builder builds a script with custom code body. Script header and tail come from static
@@ -71,7 +71,7 @@ public final class TemplateBasedScriptBuilder {
                         scriptBuilder.append(line);
                         scriptBuilder.append("\n");
                     } else {
-                        scriptBody.append((scriptBody.length() == 0 ? "" : "\n"));
+                        scriptBody.append((scriptBody.isEmpty() ? "" : "\n"));
                         scriptBody.append(line);
                     }
                 }
@@ -83,7 +83,7 @@ public final class TemplateBasedScriptBuilder {
         }
 
         scriptBuilder.append(scriptHead);
-        scriptBuilder.append(scriptBody.toString());
+        scriptBuilder.append(scriptBody);
         scriptBuilder.append(scriptTail);
 
         return scriptBuilder.toString();

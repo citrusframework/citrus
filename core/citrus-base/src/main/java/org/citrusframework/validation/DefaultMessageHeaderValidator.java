@@ -16,15 +16,6 @@
 
 package org.citrusframework.validation;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -35,6 +26,15 @@ import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Basic header message validator provides message header validation. Subclasses only have to add
@@ -112,7 +112,7 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Head
     /**
      * Combines header validators from multiple sources. First the manual added validators in this class are added. Then
      * validators coming from reference resolver and resource path lookup are added.
-     *
+     * <p>
      * At the end a distinct combination of all validators is returned.
      * @param context
      * @return

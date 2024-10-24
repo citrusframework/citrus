@@ -16,12 +16,12 @@
 
 package org.citrusframework.actions;
 
-import java.util.Date;
-
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Date;
 
 /**
  * Prints messages to the console/logger during test execution.
@@ -49,7 +49,7 @@ public class EchoAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         if (message == null) {
-            logger.info("Citrus test " + new Date(System.currentTimeMillis()));
+            logger.info("Citrus test {}", new Date(System.currentTimeMillis()));
         } else {
             logger.info(context.getLogModifier().mask(context.replaceDynamicContentInString(message)));
         }
