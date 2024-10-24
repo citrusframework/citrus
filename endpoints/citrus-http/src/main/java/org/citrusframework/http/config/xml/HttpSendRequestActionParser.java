@@ -16,9 +16,6 @@
 
 package org.citrusframework.http.config.xml;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.xml.DescriptionElementParser;
@@ -37,6 +34,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @since 2.4
  */
@@ -44,13 +44,11 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = createBeanDefinitionBuilder(
-            element, parserContext);
+        BeanDefinitionBuilder builder = createBeanDefinitionBuilder(element, parserContext);
         return builder.getBeanDefinition();
     }
 
-    protected BeanDefinitionBuilder createBeanDefinitionBuilder(Element element,
-        ParserContext parserContext) {
+    protected BeanDefinitionBuilder createBeanDefinitionBuilder(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = parseComponent(element, parserContext);
         builder.addPropertyValue("name", "http:" + element.getLocalName());
 
@@ -146,8 +144,7 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
             }
         }
 
-        HttpMessageBuilder httpMessageBuilder = createMessageBuilder(
-            httpMessage);
+        HttpMessageBuilder httpMessageBuilder = createMessageBuilder(httpMessage);
         DefaultMessageBuilder messageContentBuilder = constructMessageBuilder(body, builder);
 
         httpMessageBuilder.setName(messageContentBuilder.getName());
@@ -162,6 +159,7 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
         if (!variableExtractors.isEmpty()) {
             builder.addPropertyValue("variableExtractors", variableExtractors);
         }
+
         return builder;
     }
 
@@ -169,12 +167,12 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
         if (element.hasChildNodes()) {
             return DomUtils.getChildElements(element).get(0);
         }
+
         throw new BeanCreationException("No request element specified for http send - invalid test action definition");
     }
 
     protected Element getHeadersElement(Element requestElement) {
-        Element headers = DomUtils.getChildElementByTagName(requestElement, "headers");
-        return headers;
+        return DomUtils.getChildElementByTagName(requestElement, "headers");
     }
 
     /**

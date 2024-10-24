@@ -16,6 +16,19 @@
 
 package org.citrusframework.http.message;
 
+import jakarta.servlet.http.Cookie;
+import org.citrusframework.message.DefaultMessage;
+import org.citrusframework.message.Message;
+import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static org.citrusframework.http.message.HttpMessageHeaders.HTTP_COOKIE_PREFIX;
 import static org.citrusframework.http.message.HttpMessageUtils.getQueryParameterMap;
 import static org.citrusframework.message.MessageHeaders.ID;
@@ -25,18 +38,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-
-import jakarta.servlet.http.Cookie;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.citrusframework.message.DefaultMessage;
-import org.citrusframework.message.Message;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 /**
  * @since 2.7
@@ -146,7 +147,6 @@ public class HttpMessageUtilsTest {
         };
     }
 
-
     @Test
     public void testGetQueryParameterMapWithValues() {
         HttpMessage httpMessage = new HttpMessage();
@@ -195,5 +195,4 @@ public class HttpMessageUtilsTest {
         List<String> q3Values = queryParams.get("q3");
         assertTrue(q3Values.contains(""));
     }
-
 }
