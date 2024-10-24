@@ -16,16 +16,6 @@
 
 package org.citrusframework.http.validation;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.StringTokenizer;
-import java.util.stream.Collectors;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -45,6 +35,16 @@ import org.citrusframework.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 /**
  * Validates x-www-form-urlencoded HTML form data content by marshalling form fields to Xml representation.
@@ -101,7 +101,7 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
                 .map(XmlMessageValidationContext.class::cast)
                 .findFirst();
 
-        if (!provided.isPresent()) {
+        if (provided.isEmpty()) {
             List<ValidationContext> enriched = new ArrayList<>(validationContexts);
             enriched.add(new XmlMessageValidationContext());
             return enriched;
@@ -124,12 +124,12 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
         // try to find xml message validator in registry
         Optional<MessageValidator<? extends ValidationContext>> defaultMessageValidator = context.getMessageValidatorRegistry().findMessageValidator(DEFAULT_XML_MESSAGE_VALIDATOR);
 
-        if (!defaultMessageValidator.isPresent()
+        if (defaultMessageValidator.isEmpty()
                 && context.getReferenceResolver().isResolvable(DEFAULT_XML_MESSAGE_VALIDATOR)) {
             defaultMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class));
         }
 
-        if (!defaultMessageValidator.isPresent()) {
+        if (defaultMessageValidator.isEmpty()) {
             // try to find xml message validator via resource path lookup
             defaultMessageValidator = MessageValidator.lookup("xml");
         }
