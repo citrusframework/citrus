@@ -16,13 +16,6 @@
 
 package org.citrusframework;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.actions.AbstractAsyncTestAction;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.Async;
@@ -34,6 +27,13 @@ import org.citrusframework.util.TestUtils;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.citrusframework.DefaultTestActionBuilder.action;
 
@@ -121,7 +121,7 @@ public class TestCaseTest extends UnitTestSupport {
                 .findAny();
 
         waitingThread.ifPresent(thread -> LoggerFactory.getLogger("TestWaitForFinishAsync").warn(Arrays.toString(threads.get(thread))));
-        waitingThread.ifPresent(thread -> Assert.fail(String.format("Waiting thread still alive: %s", thread.toString())));
+        waitingThread.ifPresent(thread -> Assert.fail(String.format("Waiting thread still alive: %s", thread)));
     }
 
     @Test
@@ -220,6 +220,6 @@ public class TestCaseTest extends UnitTestSupport {
                 .filter(Thread::isAlive)
                 .findAny();
 
-        waitingThread.ifPresent(thread -> Assert.fail(String.format("Waiting thread still alive: %s", thread.toString())));
+        waitingThread.ifPresent(thread -> Assert.fail(String.format("Waiting thread still alive: %s", thread)));
     }
 }

@@ -16,13 +16,6 @@
 
 package org.citrusframework.validation;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.util.StringUtils;
@@ -30,6 +23,14 @@ import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @since 2.7.6
@@ -76,9 +77,7 @@ public class DefaultHeaderValidator implements HeaderValidator {
                         + null + "'");
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Validating header element: %s='%s' : OK".formatted(headerName, expectedValue));
-        }
+        logger.debug("Validating header element: {}='{}' : OK", headerName, expectedValue);
     }
 
     public void validateHeaderArray(String headerName, Object receivedValue, Object controlValue, TestContext context, HeaderValidationContext validationContext) {
@@ -121,15 +120,12 @@ public class DefaultHeaderValidator implements HeaderValidator {
                 throw new ValidationException(String.format("Values not equal for header element '%s', expected '%s' but was '%s'",
                     headerName, String.join(", ", expectedValues), String.join(", ", receivedValues)));
             }
-
         } else if (!expectedValues.isEmpty()) {
             throw new ValidationException(String.format("Values not equal for header element '%s', expected '%s' but was 'null'",
                 headerName, String.join(", ", expectedValues)));
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Validating header element: %s='%s' : OK".formatted(headerName, String.join(", ", expectedValues)));
-        }
+        logger.debug("Validating header element: {}='{}' : OK", headerName, String.join(", ", expectedValues));
     }
 
     private static boolean validateExpected(String headerName, TestContext context,
@@ -156,6 +152,7 @@ public class DefaultHeaderValidator implements HeaderValidator {
                 }
             }
         }
+
         return validated;
     }
 

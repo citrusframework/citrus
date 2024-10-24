@@ -93,7 +93,7 @@ public abstract class TestUtils {
                     if (logger.isDebugEnabled()) {
                         logger.debug("Failed to wait for completion of nested test actions", e);
                     } else {
-                        logger.warn(String.format("Failed to wait for completion of nested test actions because of %s",  e.getMessage()));
+                        logger.warn("Failed to wait for completion of nested test actions because of {}", e.getMessage());
                     }
                 }
             }, 100L, timeout / 10, TimeUnit.MILLISECONDS);
@@ -110,7 +110,7 @@ public abstract class TestUtils {
                 scheduledExecutor.shutdown();
                 scheduledExecutor.awaitTermination((timeout / 10) / 2, TimeUnit.MICROSECONDS);
             } catch (InterruptedException e) {
-                logger.warn(String.format("Failed to await orderly termination of waiting tasks to complete, caused by %s", e.getMessage()));
+                logger.warn("Failed to await orderly termination of waiting tasks to complete, caused by {}", e.getMessage());
             }
 
             if (!scheduledExecutor.isTerminated()) {

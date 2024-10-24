@@ -27,44 +27,34 @@ public class InvocationDummy {
     private static final Logger logger = LoggerFactory.getLogger(InvocationDummy.class);
 
     public InvocationDummy() {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Constructor without argument");
-        }
+        logger.debug("Constructor without argument");
     }
 
     public InvocationDummy(String arg) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Constructor with argument: " + arg);
-        }
+        logger.debug("Constructor with argument: {}", arg);
     }
 
     public InvocationDummy(Integer arg1, String arg2, Boolean arg3) {
         if (logger.isDebugEnabled()) {
-        	if (logger.isDebugEnabled()) {
-                logger.debug("Constructor with arguments:");
-                logger.debug("arg1: " + arg1);
-                logger.debug("arg2: " + arg2);
-                logger.debug("arg3: " + arg3);
-            }
+            logger.debug("Constructor with arguments:");
+            logger.debug("arg1: {}", arg1);
+            logger.debug("arg2: {}", arg2);
+            logger.debug("arg3: {}", arg3);
         }
     }
 
     public void invoke() {
-    	if (logger.isDebugEnabled()) {
-            logger.debug("Methode invoke no arguments");
-        }
+        logger.debug("Methode invoke no arguments");
     }
 
     public void invoke(String text) {
-    	if (logger.isDebugEnabled()) {
-            logger.debug("Methode invoke with string argument: '" + text + "'");
-        }
+        logger.debug("Methode invoke with string argument: '{}'", text);
     }
 
     public void invoke(String[] args) {
-        for (var arg : args) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Methode invoke with argument: " + arg);
+        if (logger.isDebugEnabled()) {
+            for (var arg : args) {
+                logger.debug("Methode invoke with argument: {}", arg);
             }
         }
     }
@@ -72,16 +62,16 @@ public class InvocationDummy {
     public void invoke(Integer arg1, String arg2, Boolean arg3) {
         if (logger.isDebugEnabled()) {
             logger.debug("Method invoke with arguments:");
-            logger.debug("arg1: " + arg1);
-            logger.debug("arg2: " + arg2);
-            logger.debug("arg3: " + arg3);
+            logger.debug("arg1: {}", arg1);
+            logger.debug("arg2: {}", arg2);
+            logger.debug("arg3: {}", arg3);
         }
     }
 
     public static void main(String[] args) {
-        for (int i = 0; i < args.length; i++) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("arg" + i + ": " + args[i]);
+        if (logger.isDebugEnabled()) {
+            for (String arg : args) {
+                logger.debug("arg{}: ", arg);
             }
         }
     }

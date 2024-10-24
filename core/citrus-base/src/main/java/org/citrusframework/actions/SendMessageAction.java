@@ -26,7 +26,6 @@ import org.citrusframework.message.MessageDirection;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.builder.MessageBuilderSupport;
 import org.citrusframework.message.builder.SendMessageBuilderSupport;
-import org.citrusframework.util.StringUtils;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
@@ -37,6 +36,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * This action sends a messages to a specified message endpoint. The action holds a reference to
@@ -120,10 +120,8 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         finished.whenComplete((ctx, ex) -> {
             if (ex != null) {
-                if (logger.isWarnEnabled()) {
-                    logger.warn("Failure in forked send action: %s".formatted(ex.getMessage()));
-                }
-            } else {
+                logger.warn("Failure in forked send action", ex);
+            } else if (logger.isWarnEnabled()) {
                 for (Exception ctxEx : ctx.getExceptions()) {
                     logger.warn(ctxEx.getMessage());
                 }
@@ -137,12 +135,11 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         final Endpoint messageEndpoint = getOrCreateEndpoint(context);
 
-        if (StringUtils.hasText(message.getName())) {
+        if (hasText(message.getName())) {
             context.getMessageStore().storeMessage(message.getName(), message);
         } else {
             context.getMessageStore()
-                .storeMessage(context.getMessageStore().constructMessageName(this, messageEndpoint),
-                    message);
+                .storeMessage(context.getMessageStore().constructMessageName(this, messageEndpoint), message);
         }
 
         if (forkMode) {
@@ -178,11 +175,10 @@ public class SendMessageAction extends AbstractTestAction implements Completable
      * Validate the message against registered schema validators.
      */
     protected void validateMessage(Message message, TestContext context) {
-            context.getMessageValidatorRegistry().getSchemaValidators().values().stream()
-                .filter(validator -> validator.canValidate(message, isSchemaValidation())).forEach(validator ->
-                    validator.validate(message, context, this.schemaRepository, this.schema));
+        context.getMessageValidatorRegistry().getSchemaValidators().values().stream()
+                .filter(validator -> validator.canValidate(message, isSchemaValidation()))
+                .forEach(validator -> validator.validate(message, context, this.schemaRepository, this.schema));
     }
-
 
     /**
      * {@inheritDoc}
@@ -236,7 +232,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     public Endpoint getOrCreateEndpoint(TestContext context) {
         if (endpoint != null) {
             return endpoint;
-        } else if (StringUtils.hasText(endpointUri)) {
+        } else if (hasText(endpointUri)) {
             return context.getEndpointFactory().create(endpointUri, context);
         } else {
             throw new CitrusRuntimeException("Neither endpoint nor endpoint uri is set properly!");
@@ -434,8 +430,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
             if (referenceResolver != null) {
                 if (messageBuilderSupport.getDataDictionaryName() != null) {
                     this.messageBuilderSupport.dictionary(
-                        referenceResolver.resolve(messageBuilderSupport.getDataDictionaryName(),
-                            DataDictionary.class));
+                        referenceResolver.resolve(messageBuilderSupport.getDataDictionaryName(), DataDictionary.class));
                 }
             }
 

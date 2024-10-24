@@ -33,6 +33,7 @@ import static java.lang.Integer.parseInt;
  *
  */
 public class RandomStringFunction implements Function {
+
     private static final Random generator = new Random(System.currentTimeMillis());
 
     private static final char[] ALPHABET_UPPER = { 'A', 'B', 'C', 'D', 'E', 'F', 'G',

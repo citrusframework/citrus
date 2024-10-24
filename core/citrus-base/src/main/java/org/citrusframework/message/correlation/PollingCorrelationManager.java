@@ -62,9 +62,7 @@ public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {
 
     @Override
     public String getCorrelationKey(String correlationKeyName, TestContext context) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Get correlation key for '%s'", correlationKeyName));
-        }
+        logger.debug("Get correlation key for '{}'", correlationKeyName);
 
         String correlationKey = null;
         if (context.getVariables().containsKey(correlationKeyName)) {
@@ -77,7 +75,7 @@ public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {
             timeLeft -= pollingInterval;
 
             if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug("Correlation key not available yet - retrying in " + (timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft) + "ms");
+                RETRY_LOG.debug("Correlation key not available yet - retrying in {}ms", timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
             }
 
             try {
@@ -109,7 +107,7 @@ public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {
             timeLeft -= pollingInterval;
 
             if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug(retryLogMessage + " - retrying in " + (timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft) + "ms");
+                RETRY_LOG.debug("{} - retrying in {}ms", retryLogMessage, timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
             }
 
             try {
