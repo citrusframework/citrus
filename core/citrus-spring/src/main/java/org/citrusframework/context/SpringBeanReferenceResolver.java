@@ -16,13 +16,6 @@
 
 package org.citrusframework.context;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import org.citrusframework.context.resolver.TypeAliasResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
@@ -33,6 +26,13 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Spring bean reference resolver operates on given application context to resolve bean references.
@@ -209,7 +209,7 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
             try {
                 return Optional.of(resolver.adapt(supplier.apply(resolver.getAliasType())));
             } catch (Exception e) {
-                logger.warn(String.format("Unable to resolve alias type %s for required source %s", resolver.getAliasType(), source));
+                logger.warn("Unable to resolve alias type {} for required source {}", resolver.getAliasType(), source);
                 return Optional.empty();
             }
         }
@@ -238,7 +238,7 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
                         .stream()
                         .collect(Collectors.toMap(Map.Entry::getKey, v -> resolver.adapt(v.getValue()))));
             } catch (Exception e) {
-                logger.warn(String.format("Unable to resolve alias type %s for required source %s", resolver.getAliasType(), source));
+                logger.warn("Unable to resolve alias type {} for required source {}", resolver.getAliasType(), source);
                 return Optional.empty();
             }
         }

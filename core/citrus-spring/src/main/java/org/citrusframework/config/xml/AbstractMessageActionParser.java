@@ -16,14 +16,9 @@
 
 package org.citrusframework.config.xml;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.common.Named;
+import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.xml.parser.CitrusXmlConfigParser;
 import org.citrusframework.config.xml.parser.ScriptMessageBuilderParser;
 import org.citrusframework.message.DelegatingPathExpressionProcessor;
@@ -47,15 +42,65 @@ import org.citrusframework.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
+import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * Parser providing basic message element configurations used in send and receive actions.
  *
  */
 public abstract class AbstractMessageActionParser implements BeanDefinitionParser {
+
+    protected BeanDefinitionBuilder getBeanDefinitionBuilder(Element element, ParserContext parserContext) {
+        String endpointUri = parseEndpoint(element);
+
+        BeanDefinitionBuilder builder = parseComponent(element, parserContext);
+        builder.addPropertyValue("name", element.getLocalName());
+
+        if (endpointUri.contains(":") || (endpointUri.contains(CitrusSettings.VARIABLE_PREFIX) && endpointUri.contains(CitrusSettings.VARIABLE_SUFFIX))) {
+            builder.addPropertyValue("endpointUri", endpointUri);
+        } else {
+            builder.addPropertyReference("endpoint", endpointUri);
+        }
+
+        DescriptionElementParser.doParse(element, builder);
+
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
+        return builder;
+    }
+
+    protected String parseEndpoint(Element element) {
+        String endpointUri = element.getAttribute("endpoint");
+
+        if (!hasText(endpointUri)) {
+            throw new BeanCreationException("Endpoint reference must not be empty");
+        }
+
+        return endpointUri;
+    }
+
+    /**
+     * Parse component returning generic bean definition.
+     * @param element
+     * @param parserContext
+     * @return
+     */
+    protected BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
+        return BeanDefinitionBuilder.genericBeanDefinition(getMessageFactoryClass());
+    }
+
+    protected abstract Class<?> getMessageFactoryClass();
 
     /**
      * Static parse method taking care of basic message element parsing.

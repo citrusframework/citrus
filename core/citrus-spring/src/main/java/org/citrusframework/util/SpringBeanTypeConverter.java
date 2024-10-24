@@ -16,16 +16,6 @@
 
 package org.citrusframework.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,10 +25,20 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+
 public final class SpringBeanTypeConverter extends DefaultTypeConverter {
 
     /** Logger */
-    private static final Logger logger = LoggerFactory.getLogger(DefaultTypeConverter.class);
+    private static final Logger logger = LoggerFactory.getLogger(SpringBeanTypeConverter.class);
 
     public static SpringBeanTypeConverter INSTANCE = new SpringBeanTypeConverter();
 

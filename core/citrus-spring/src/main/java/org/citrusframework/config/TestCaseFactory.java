@@ -16,11 +16,11 @@
 
 package org.citrusframework.config;
 
-import java.util.List;
-
 import org.citrusframework.TestAction;
 import org.citrusframework.TestCase;
 import org.springframework.beans.factory.FactoryBean;
+
+import java.util.List;
 
 /**
  * Test case factory bean constructs test cases with test actions and test finally block.
@@ -37,13 +37,13 @@ public class TestCaseFactory implements FactoryBean<TestCase> {
 
     @Override
     public TestCase getObject() throws Exception {
-        if (this.testActions != null && this.testActions.size() > 0) {
+        if (this.testActions != null && !this.testActions.isEmpty()) {
             for (TestAction action : testActions) {
                 testCase.addTestAction(action);
             }
         }
 
-        if (this.finalActions != null && this.finalActions.size() > 0) {
+        if (this.finalActions != null && !this.finalActions.isEmpty()) {
             for (TestAction action : finalActions) {
                 testCase.addFinalAction(action);
             }
