@@ -16,14 +16,6 @@
 
 package org.citrusframework.rmi.client;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.rmi.NotBoundException;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-import java.rmi.registry.Registry;
-import java.util.Arrays;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -45,6 +37,14 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
+import java.util.Arrays;
 
 /**
  * @since 2.5
@@ -112,8 +112,8 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
             }
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Sending message to RMI server: '" + binding + "'");
-                logger.debug("Message to send:\n" + message.getPayload(String.class));
+                logger.debug("Sending message to RMI server: '{}'", binding);
+                logger.debug("Message to send:\n{}", message.getPayload(String.class));
             }
             context.onOutboundMessage(message);
 
@@ -132,7 +132,7 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
             Message response = new DefaultMessage(payload.toString());
             correlationManager.store(correlationKey, response);
 
-            logger.info("Message was sent to RMI server: '" + binding + "'");
+            logger.info("Message was sent to RMI server: '{}'", binding);
             if (result != null) {
                 context.onInboundMessage(response);
             }
@@ -146,7 +146,7 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
             throw new CitrusRuntimeException("Failed to invoke method on remote target, because remote method not accessible", e);
         }
 
-        logger.info("Message was sent to RMI server: '" + binding + "'");
+        logger.info("Message was sent to RMI server: '{}'", binding);
     }
 
     @Override
