@@ -79,7 +79,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
         ObjectHelper.assertNotNull(replyDestination, "Failed to find JMS reply destination for message correlation key: '" + correlationKey + "'");
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending JMS message to destination: '" + endpointConfiguration.getDestinationName(replyDestination) + "'");
+            logger.debug("Sending JMS message to destination: '{}'", endpointConfiguration.getDestinationName(replyDestination));
         }
 
         endpointConfiguration.getJmsTemplate().send(replyDestination, session -> {
@@ -90,7 +90,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
 
         context.onOutboundMessage(message);
 
-        logger.info("Message was sent to JMS destination: '" + endpointConfiguration.getDestinationName(replyDestination) + "'");
+        logger.info("Message was sent to JMS destination: '{}'", endpointConfiguration.getDestinationName(replyDestination));
     }
 
     /**
@@ -107,8 +107,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
             correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
             correlationManager.store(correlationKey, jmsMessage.getReplyTo());
         }  else {
-            logger.warn("Unable to retrieve reply to destination for message \n" +
-                    jmsMessage + "\n - no reply to destination found in message headers!");
+            logger.warn("Unable to retrieve reply to destination for message \n{}\n - no reply to destination found in message headers!", jmsMessage);
         }
     }
 
