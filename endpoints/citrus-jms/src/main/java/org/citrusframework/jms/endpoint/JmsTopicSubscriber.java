@@ -50,7 +50,7 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
 public class JmsTopicSubscriber extends JmsConsumer implements Runnable {
 
     /** Logger */
-    private static final Logger logger = LoggerFactory.getLogger(JmsConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(JmsTopicSubscriber.class);
 
     /** Boolean flag for continued message consumption, if false stop */
     private boolean running = true;
@@ -118,7 +118,7 @@ public class JmsTopicSubscriber extends JmsConsumer implements Runnable {
 
             TopicSubscriber subscriber;
             if (endpointConfiguration.isDurableSubscription()) {
-                logger.debug(String.format("Create JMS topic durable subscription '%s'", Optional.ofNullable(endpointConfiguration.getDurableSubscriberName()).orElseGet(this::getName)));
+                logger.debug("Create JMS topic durable subscription '{}'", Optional.ofNullable(endpointConfiguration.getDurableSubscriberName()).orElseGet(this::getName));
                 subscriber = session.createDurableSubscriber(topic, Optional.ofNullable(endpointConfiguration.getDurableSubscriberName()).orElseGet(this::getName));
             } else {
                 logger.debug("Create JMS topic subscription");
@@ -137,12 +137,12 @@ public class JmsTopicSubscriber extends JmsConsumer implements Runnable {
                     Message message = endpointConfiguration.getMessageConverter().convertInbound(event, endpointConfiguration, context);
 
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Received topic event '%s'", message.getId()));
+                        logger.debug("Received topic event '{}'", message.getId());
                     }
                     messageQueue.createProducer().send(message, context);
                 } else {
                     if (logger.isDebugEnabled()) {
-                        logger.debug("Topic subscriber received null message - continue after " + endpointConfiguration.getPollingInterval() + " milliseconds");
+                        logger.debug("Topic subscriber received null message - continue after {} milliseconds", endpointConfiguration.getPollingInterval());
                     }
 
                     try {
