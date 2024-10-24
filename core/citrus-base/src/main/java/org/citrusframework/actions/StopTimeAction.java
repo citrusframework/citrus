@@ -61,12 +61,12 @@ public class StopTimeAction extends AbstractTestAction {
                 context.setVariable(timeLineId + timeLineSuffix, time);
 
                 if (description != null) {
-                    logger.info("TimeWatcher " + timeLineId + " after " + time + " ms (" + description + ")");
+                    logger.info("TimeWatcher {} after {} ms ({})", timeLineId, time, description);
                 } else {
-                    logger.info("TimeWatcher " + timeLineId + " after " + time + " ms");
+                    logger.info("TimeWatcher {} after {} ms", timeLineId, time);
                 }
             } else {
-                logger.info("Starting TimeWatcher: " + timeLineId);
+                logger.info("Starting TimeWatcher: {}", timeLineId);
                 context.setVariable(timeLineId, System.currentTimeMillis());
                 context.setVariable(timeLineId + timeLineSuffix, 0L);
             }

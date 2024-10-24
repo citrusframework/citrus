@@ -16,16 +16,16 @@
 
 package org.citrusframework.report;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Scanner;
-
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.message.RawMessage;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -43,13 +43,13 @@ public class MessageTracingTestListenerTest extends UnitTestSupport {
     }
 
     @Test
-    public void shouldReturnTheSameTraceFile() throws Exception {
+    public void shouldReturnTheSameTraceFile() {
         String testname = "SomeDummyTest";
         Assert.assertEquals(testling.getTraceFile(testname).getAbsolutePath(), testling.getTraceFile(testname).getAbsolutePath());
     }
 
     @Test
-    public void shouldContainMessages() throws Exception {
+    public void shouldContainMessages() {
         String testname = "SomeDummyTest";
         String inboundPayload = "Inbound Message";
         String outboundPayload = "Outbound Message";

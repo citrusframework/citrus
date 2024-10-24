@@ -59,7 +59,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
 import static org.citrusframework.util.ReflectionHelper.copyFields;
 import static org.citrusframework.util.StringUtils.appendSegmentToUrlPath;
-import static org.citrusframework.util.StringUtils.titleCase;
+import static org.citrusframework.util.StringUtils.convertFirstChartToUpperCase;
 import static org.openapitools.codegen.CliOption.newString;
 import static org.openapitools.codegen.utils.CamelizeOption.LOWERCASE_FIRST_LETTER;
 import static org.openapitools.codegen.utils.StringUtils.camelize;
@@ -377,7 +377,7 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
                                         String schemaFolder) {
 
         supportingFiles.add(new SupportingFile("namespace_handler.mustache", springFolder,
-                titleCase(apiPrefix) + "NamespaceHandler.java"));
+                convertFirstChartToUpperCase(apiPrefix) + "NamespaceHandler.java"));
         supportingFiles.add(new SupportingFile("schema.mustache", schemaFolder,
                 apiPrefix.toLowerCase() + "-api.xsd"));
     }
@@ -388,16 +388,16 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
         apiTemplateFiles().put("api_soap.mustache", ".java");
 
         supportingFiles.add(new SupportingFile("namespace_handler_soap.mustache", springFolder,
-                titleCase(apiPrefix) + "NamespaceHandler.java"));
+                convertFirstChartToUpperCase(apiPrefix) + "NamespaceHandler.java"));
         supportingFiles.add(new SupportingFile("schema_soap.mustache", schemaFolder,
                 apiPrefix.toLowerCase() + "-api.xsd"));
     }
 
     private void addDefaultSupportingFiles() {
         supportingFiles.add(new SupportingFile("api_locator.mustache", invokerFolder,
-                titleCase(apiPrefix) + ".java"));
+                convertFirstChartToUpperCase(apiPrefix) + ".java"));
         supportingFiles.add(new SupportingFile("bean_configuration.mustache", springFolder,
-                titleCase(apiPrefix) + "BeanConfiguration.java"));
+                convertFirstChartToUpperCase(apiPrefix) + "BeanConfiguration.java"));
     }
 
     @Override

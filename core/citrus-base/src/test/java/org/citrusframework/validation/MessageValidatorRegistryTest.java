@@ -16,11 +16,6 @@
 
 package org.citrusframework.validation;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
@@ -33,6 +28,11 @@ import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -118,7 +118,7 @@ public class MessageValidatorRegistryTest {
     }
 
     @Test
-    public void testFindMessageValidators() throws Exception {
+    public void testFindMessageValidators() {
         MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
 
         Map<String, MessageValidator<? extends ValidationContext>> messageValidators = new HashMap<>();
@@ -161,7 +161,7 @@ public class MessageValidatorRegistryTest {
     }
 
     @Test
-    public void testMessageValidatorRegistryXmlConfig() throws Exception {
+    public void testMessageValidatorRegistryXmlConfig() {
         //non XML message type
         List<MessageValidator<? extends ValidationContext>> matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""));
 
@@ -193,7 +193,7 @@ public class MessageValidatorRegistryTest {
     }
 
     @Test
-    public void testMessageValidatorRegistryJsonConfig() throws Exception {
+    public void testMessageValidatorRegistryJsonConfig() {
         //JSON message type and empty payload
         List<MessageValidator<? extends ValidationContext>> matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage(""));
 
@@ -216,7 +216,7 @@ public class MessageValidatorRegistryTest {
     }
 
     @Test
-    public void testMessageValidatorRegistryPlaintextConfig() throws Exception {
+    public void testMessageValidatorRegistryPlaintextConfig() {
         //Plaintext message type and empty payload
         List<MessageValidator<? extends ValidationContext>> matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""));
 
@@ -237,7 +237,7 @@ public class MessageValidatorRegistryTest {
     }
 
     @Test
-    public void testMessageValidatorRegistryFallback() throws Exception {
+    public void testMessageValidatorRegistryFallback() {
         List<MessageValidator<? extends ValidationContext>> matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.XML.name(), new DefaultMessage("{ \"id\": 12345 }"));
 
         Assert.assertNotNull(matchingValidators);
@@ -339,7 +339,7 @@ public class MessageValidatorRegistryTest {
     }
 
     @Test
-    public void testSchemaValidators() throws Exception {
+    public void testSchemaValidators() {
         MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
 
         Map<String, SchemaValidator<? extends SchemaValidationContext>> schemaValidators = new HashMap<>();

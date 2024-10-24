@@ -16,15 +16,23 @@
 
 package org.citrusframework.functions;
 
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.functions.core.RandomStringFunction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.functions.Functions.*;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+
+import static org.citrusframework.functions.Functions.changeDate;
+import static org.citrusframework.functions.Functions.currentDate;
+import static org.citrusframework.functions.Functions.decodeBase64;
+import static org.citrusframework.functions.Functions.digestAuthHeader;
+import static org.citrusframework.functions.Functions.encodeBase64;
+import static org.citrusframework.functions.Functions.randomNumber;
+import static org.citrusframework.functions.Functions.randomString;
+import static org.citrusframework.functions.Functions.randomUUID;
+import static org.citrusframework.functions.Functions.unixTimestamp;
 
 public class FunctionsTest extends UnitTestSupport {
 
@@ -39,65 +47,65 @@ public class FunctionsTest extends UnitTestSupport {
     }
 
     @Test
-    public void testChangeDate() throws Exception {
+    public void testChangeDate() {
         Assert.assertEquals(changeDate("01.01.2014", "+1y", context), "01.01.2015");
         Assert.assertEquals(changeDate("2014-01-01T12:00:00", "+1y", "yyyy-MM-dd'T'HH:mm:ss", context), "2015-01-01T12:00:00");
     }
 
     @Test
-    public void testEncodeBase64() throws Exception {
+    public void testEncodeBase64() {
         Assert.assertEquals(encodeBase64("Foo", context), "Rm9v");
     }
 
     @Test
-    public void testEncodeBase64WithCharset() throws Exception {
+    public void testEncodeBase64WithCharset() {
         Assert.assertEquals(encodeBase64("Foo", StandardCharsets.UTF_8, context), "Rm9v");
     }
 
     @Test
-    public void testDecodeBase64() throws Exception {
+    public void testDecodeBase64() {
         Assert.assertEquals(decodeBase64("Rm9v", context), "Foo");
     }
 
     @Test
-    public void testDecodeBase64WithCharset() throws Exception {
+    public void testDecodeBase64WithCharset() {
         Assert.assertEquals(decodeBase64("Rm9v", StandardCharsets.UTF_8, context), "Foo");
     }
 
     @Test
-    public void testDigestAuthHeader() throws Exception {
+    public void testDigestAuthHeader() {
         digestAuthHeader("username", "password", "authRealm", "acegi", "POST", "http://localhost:8080", "citrus", "md5", context);
     }
 
     @Test
-    public void testRandomUUID() throws Exception {
+    public void testRandomUUID() {
         Assert.assertNotNull(randomUUID(context));
     }
 
     @Test
-    public void testRandomNumber() throws Exception {
+    public void testRandomNumber() {
         Assert.assertTrue(randomNumber(10L, context).length() > 9);
     }
 
     @Test
-    public void testRandomNumberWithParams() throws Exception {
+    public void testRandomNumberWithParams() {
         Assert.assertTrue(randomNumber(10L, true, context).length() > 9);
     }
 
     @Test
-    public void testRandomString() throws Exception {
+    public void testRandomString() {
         Assert.assertEquals(randomString(10L, context).length(), 10);
     }
 
     @Test
-    public void testRandomStringWithParams() throws Exception {
+    public void testRandomStringWithParams() {
         Assert.assertEquals(randomString(10L, false, context).length(), 10);
         Assert.assertEquals(randomString(10L, RandomStringFunction.LOWERCASE, context).length(), 10);
         Assert.assertEquals(randomString(10L, RandomStringFunction.UPPERCASE, false, context).length(), 10);
     }
 
     @Test
-    public void testUnixTimestamp() throws Exception {
+    public void testUnixTimestamp() {
         Assert.assertEquals(String.valueOf(System.currentTimeMillis() / 1000L), unixTimestamp(context));
     }
 }

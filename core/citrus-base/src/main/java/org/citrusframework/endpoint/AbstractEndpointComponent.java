@@ -16,6 +16,13 @@
 
 package org.citrusframework.endpoint;
 
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.ReflectionHelper;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.util.TypeConversionUtils;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -26,17 +33,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.util.ReflectionHelper;
-import org.citrusframework.util.TypeConversionUtils;
-import org.citrusframework.util.StringUtils;
-
 /**
  * Default endpoint component reads component name from endpoint uri and parses parameters from uri using
  * the HTTP uri pattern.
- *
+ * <p>
  * http://localhost:8080?param1=value1&param2=value2&param3=value3
  * jms:queue.name?connectionFactory=specialConnectionFactory
  * soap:localhost:8080?soapAction=sayHello
@@ -185,16 +185,13 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
             Field field = ReflectionHelper.findField(endpointConfigurationType, parameterEntry.getKey());
 
             if (field == null) {
-                if (paramString.length() == 0) {
+                if (paramString.isEmpty()) {
                     paramString.append("?").append(parameterEntry.getKey());
-                    if (parameterEntry.getValue() != null) {
-                        paramString.append("=").append(parameterEntry.getValue());
-                    }
                 } else {
                     paramString.append("&").append(parameterEntry.getKey());
-                    if (parameterEntry.getValue() != null) {
-                        paramString.append("=").append(parameterEntry.getValue());
-                    }
+                }
+                if (parameterEntry.getValue() != null) {
+                    paramString.append("=").append(parameterEntry.getValue());
                 }
             }
         }

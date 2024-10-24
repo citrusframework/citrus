@@ -84,9 +84,7 @@ public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
     private void lookupValidationMatchers() {
         ValidationMatcher.lookup().forEach((k, m) -> {
             getMembers().put(k, m);
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Register message matcher '%s' as %s", k, m.getClass()));
-            }
+            logger.debug("Register message matcher '{}' as {}", k, m.getClass());
         });
     }
 }

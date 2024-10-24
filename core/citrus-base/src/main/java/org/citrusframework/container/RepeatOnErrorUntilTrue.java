@@ -25,10 +25,10 @@ import org.slf4j.LoggerFactory;
 /**
  * Looping test container iterating the nested test actions in case an error occurred in one
  * of them. Iteration continues until a aborting condition evaluates to true.
- *
+ * <p>
  * Number of iterations is kept in a index variable. The nested test actions can access this variable
  * as normal test variable.
- *
+ * <p>
  * Between the iterations container can sleep automatically a given amount of time.
  *
  */
@@ -60,8 +60,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
             } catch (CitrusRuntimeException e) {
                 exception = e;
 
-                logger.info("Caught exception of type " + e.getClass().getName() + " '" +
-                        e.getMessage() + "' - performing retry #" + index);
+                logger.info("Caught exception of type {} '{}' - performing retry #{}", e.getClass().getName(), e.getMessage(), index);
 
                 doAutoSleep();
                 index++;
@@ -69,7 +68,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
         }
 
         if (exception != null) {
-            logger.info("All retries failed - raising exception " + exception.getClass().getName());
+            logger.info("All retries failed - raising exception {}", exception.getClass().getName());
             throw exception;
         }
     }
@@ -79,7 +78,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
      */
     private void doAutoSleep() {
         if (autoSleep > 0) {
-            logger.info("Sleeping " + autoSleep + " milliseconds");
+            logger.info("Sleeping {} milliseconds", autoSleep);
 
             try {
                 Thread.sleep(autoSleep);
@@ -87,7 +86,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
                 logger.error("Error during doc generation", e);
             }
 
-            logger.info("Returning after " + autoSleep + " milliseconds");
+            logger.info("Returning after {} milliseconds", autoSleep);
         }
     }
 

@@ -45,16 +45,14 @@ public class Catch extends AbstractActionContainer {
 
     @Override
     public void doExecute(TestContext context) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Catch container catching exceptions of type " + exception);
-        }
+        logger.debug("Catch container catching exceptions of type {}", exception);
 
         for (TestActionBuilder<?> actionBuilder: actions) {
             try {
                 executeAction(actionBuilder.build(), context);
             } catch (Exception e) {
                 if (exception != null && exception.equals(e.getClass().getName())) {
-                    logger.info("Caught exception " + e.getClass() + ": " + e.getLocalizedMessage());
+                    logger.info("Caught exception {}: {}", e.getClass(), e.getLocalizedMessage());
                     continue;
                 }
                 throw new CitrusRuntimeException(e);

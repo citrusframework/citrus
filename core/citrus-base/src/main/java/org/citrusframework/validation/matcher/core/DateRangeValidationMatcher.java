@@ -47,10 +47,7 @@ public class DateRangeValidationMatcher implements ValidationMatcher {
 
     @Override
     public void validate(String fieldName, String value, List<String> params, TestContext context) throws ValidationException {
-        logger.debug(String.format(
-                "Validating date range for date '%s' using control data: %s",
-                value,
-                ValidationMatcherUtils.getParameterListAsString(params)));
+        logger.debug("Validating date range for date '{}' using control data: {}", value, ValidationMatcherUtils.getParameterListAsString(params));
         try {
 
             String dateFromParam = params.get(0);

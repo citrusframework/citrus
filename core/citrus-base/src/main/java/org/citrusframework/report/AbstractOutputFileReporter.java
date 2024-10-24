@@ -16,14 +16,14 @@
 
 package org.citrusframework.report;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @since 2.7.4
@@ -64,7 +64,7 @@ public abstract class AbstractOutputFileReporter extends AbstractTestReporter {
         try (Writer fileWriter = new FileWriter(new File(targetDirectory, reportFileName))) {
             fileWriter.append(content);
             fileWriter.flush();
-            logger.info("Generated test report: " + targetDirectory + File.separator + reportFileName);
+            logger.info("Generated test report: {}{}{}", targetDirectory, File.separator, reportFileName);
         } catch (IOException e) {
             logger.error("Failed to create test report", e);
         }

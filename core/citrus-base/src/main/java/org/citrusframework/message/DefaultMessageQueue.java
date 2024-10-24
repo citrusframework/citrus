@@ -15,11 +15,11 @@
  */
 package org.citrusframework.message;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Default message queue implementation. Holds queued messages in memory and adds selective consumption of messages
@@ -76,8 +76,7 @@ public class DefaultMessageQueue implements MessageQueue {
             timeLeft -= pollingInterval;
 
             if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug("No message received with message selector - retrying in " +
-                        (timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft) + "ms");
+                RETRY_LOG.debug("No message received with message selector - retrying in {}ms", timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
             }
 
             try {
@@ -99,11 +98,9 @@ public class DefaultMessageQueue implements MessageQueue {
             Message message = (Message) o;
             if (selector.accept(message)) {
                 if (this.queue.remove(message)) {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Purged message '%s' from in memory queue", message.getId()));
-                    }
+                    logger.debug("Purged message '{}' from in memory queue", message.getId());
                 } else {
-                    logger.warn(String.format("Failed to purge message '%s' from in memory queue", message.getId()));
+                    logger.warn("Failed to purge message '{}' from in memory queue", message.getId());
                 }
             }
         }

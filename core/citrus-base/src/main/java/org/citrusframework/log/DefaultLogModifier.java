@@ -16,11 +16,11 @@
 
 package org.citrusframework.log;
 
+import org.citrusframework.CitrusSettings;
+
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import org.citrusframework.CitrusSettings;
 
 /**
  * Default modifier implementation uses regular expressions to mask logger output.
@@ -44,7 +44,7 @@ public class DefaultLogModifier implements LogMessageModifier {
 
     @Override
     public String mask(String source) {
-        if (!CitrusSettings.isLogModifierEnabled() || source == null || source.length() == 0) {
+        if (!CitrusSettings.isLogModifierEnabled() || source == null || source.isEmpty()) {
             return source;
         }
 

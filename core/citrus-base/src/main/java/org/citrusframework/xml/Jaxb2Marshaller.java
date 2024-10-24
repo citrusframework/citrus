@@ -16,21 +16,6 @@
 
 package org.citrusframework.xml;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.xml.XMLConstants;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.PropertyException;
@@ -42,6 +27,21 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+
+import javax.xml.XMLConstants;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Marshaller uses Jaxb to marshal/unmarshal data.
@@ -119,7 +119,7 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
             try {
                 marshaller.setProperty(k, v);
             } catch (PropertyException e) {
-                logger.warn(String.format("Unable to set marshaller property %s=%s", k, v));
+                logger.warn("Unable to set marshaller property {}={}", k, v);
             }
         });
 
@@ -139,9 +139,7 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
     private JAXBContext getOrCreateContext() throws JAXBException {
         if (jaxbContext == null) {
             synchronized (this) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("Creating JAXBContext with bound classes %s", Arrays.toString(classesToBeBound)));
-                }
+                logger.debug("Creating JAXBContext with bound classes {}", Arrays.toString(classesToBeBound));
 
                 if (classesToBeBound != null) {
                     jaxbContext = JAXBContext.newInstance(classesToBeBound);
@@ -161,10 +159,7 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
     }
 
     private Schema loadSchema(Resource... schemas) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Using marshaller validation schemas '%s'",
-                    Stream.of(schemas).map(Object::toString).collect(Collectors.joining(","))));
-        }
+        logger.debug("Using marshaller validation schemas '{}'", Stream.of(schemas).map(Object::toString).collect(Collectors.joining(",")));
 
         try {
             List<Source> schemaSources = new ArrayList<>();

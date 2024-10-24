@@ -85,9 +85,7 @@ public class PurgeEndpointAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Purging message endpoints ...");
-        }
+        logger.debug("Purging message endpoints ...");
 
         for (Endpoint endpoint : endpoints) {
             purgeEndpoint(endpoint, context);
@@ -108,9 +106,7 @@ public class PurgeEndpointAction extends AbstractTestAction {
      * @param context
      */
     private void purgeEndpoint(Endpoint endpoint, TestContext context) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Try to purge message endpoint " + endpoint.getName());
-        }
+        logger.debug("Try to purge message endpoint {}", endpoint.getName());
 
         int messagesPurged = 0;
         Consumer messageConsumer = endpoint.createConsumer();
@@ -124,14 +120,12 @@ public class PurgeEndpointAction extends AbstractTestAction {
                     message = (receiveTimeout >= 0) ? messageConsumer.receive(context, receiveTimeout) : messageConsumer.receive(context);
                 }
             } catch (ActionTimeoutException e) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Stop purging due to timeout - " + e.getMessage());
-                }
+                logger.debug("Stop purging due to timeout - {}", e.getMessage());
                 break;
             }
 
             if (message != null) {
-                logger.debug("Removed message from endpoint " + endpoint.getName());
+                logger.debug("Removed message from endpoint {}", endpoint.getName());
                 messagesPurged++;
 
                 try {
@@ -142,9 +136,7 @@ public class PurgeEndpointAction extends AbstractTestAction {
             }
         } while (message != null);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Purged " + messagesPurged + " messages from endpoint");
-        }
+        logger.debug("Purged {} messages from endpoint", messagesPurged);
     }
 
     /**

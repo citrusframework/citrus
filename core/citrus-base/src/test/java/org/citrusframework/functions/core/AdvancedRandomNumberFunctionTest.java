@@ -153,9 +153,6 @@ public class AdvancedRandomNumberFunctionTest {
         }
     }
 
-    // randomDouble('0','3','3','true','true')
-    // randomDouble('0','3','3','true','true')
-
     @Test
     public void testRandomDouble32MinEqualsMaxEdgeCase() {
         List<String> params = List.of("2", "3.0", "3.0", "false", "false");
@@ -169,8 +166,7 @@ public class AdvancedRandomNumberFunctionTest {
 
     @Test
     public void testRandomInteger64EdgeCase() {
-        List<String> params = List.of("0", "-9223372036854775808", "9223372036854775807", "false",
-            "false");
+        List<String> params = List.of("0", "-9223372036854775808", "9223372036854775807", "false", "false");
         String result = function.execute(params, context);
         assertNotNull(result);
         double randomValue = Double.parseDouble(result);
@@ -188,8 +184,7 @@ public class AdvancedRandomNumberFunctionTest {
 
     @Test
     public void testRandomNumberDoubleEdgeCase() {
-        List<String> params = List.of("0", "-1.7976931348623157E308", "1.7976931348623157E308",
-            "false", "false");
+        List<String> params = List.of("0", "-1.7976931348623157E308", "1.7976931348623157E308", "false", "false");
         String result = function.execute(params, context);
         assertNotNull(result);
         double randomValue = Double.parseDouble(result);
@@ -244,7 +239,6 @@ public class AdvancedRandomNumberFunctionTest {
     @DataProvider(name = "testRandomNumber")
     public static Object[][] testRandomNumber() {
         return new Object[][]{
-
             {0, 12, null, null, false, false},
             {0, null, 0, 2, true, true},
             {0, null, null, null, false, false},
@@ -337,7 +331,6 @@ public class AdvancedRandomNumberFunctionTest {
             {5, 19.123d, -21, 0, true, true},
             {5, 20.123d, 0, null, false, false},
             {5, 21.123d, 21.122d, 21.124d, false, false},
-
         };
     }
 
@@ -397,8 +390,8 @@ public class AdvancedRandomNumberFunctionTest {
         if (obj == null) {
             return "null";
         }
-        return obj.toString();
 
+        return obj.toString();
     }
 
     private <T extends Throwable> T expectThrows(Class<T> exceptionClass, Runnable runnable) {
@@ -411,6 +404,7 @@ public class AdvancedRandomNumberFunctionTest {
                 throw new AssertionError("Unexpected exception type", throwable);
             }
         }
+
         throw new AssertionError("Expected exception not thrown");
     }
 }

@@ -16,6 +16,14 @@
 
 package org.citrusframework.main.scan;
 
+import org.citrusframework.TestClass;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.ClasspathResourceResolver;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.ReflectionHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.nio.file.Path;
@@ -24,14 +32,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-
-import org.citrusframework.TestClass;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.spi.ClasspathResourceResolver;
-import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.ReflectionHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @since 2.7.4
@@ -97,7 +97,7 @@ public class ClassPathTestScanner extends AbstractTestScanner {
             });
             return hasTestMethod.get();
         } catch (NoClassDefFoundError | ClassNotFoundException e) {
-            logger.warn("Unable to access class: " + className);
+            logger.warn("Unable to access class: {}", className);
             return false;
         }
     }

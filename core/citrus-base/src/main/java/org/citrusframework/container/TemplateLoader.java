@@ -16,10 +16,6 @@
 
 package org.citrusframework.container;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.functions.Function;
 import org.citrusframework.spi.ReferenceResolverAware;
@@ -28,10 +24,14 @@ import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 public interface TemplateLoader extends ReferenceResolverAware {
 
     /** Logger */
-    Logger logger = LoggerFactory.getLogger(Function.class);
+    Logger logger = LoggerFactory.getLogger(TemplateLoader.class);
 
     /** Function resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/template/loader";
@@ -53,7 +53,7 @@ public interface TemplateLoader extends ReferenceResolverAware {
             TemplateLoader instance = TYPE_RESOLVER.resolve(name);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve template loader from resource '%s/%s'", RESOURCE_PATH, name));
+            logger.warn("Failed to resolve template loader from resource '{}/{}'", RESOURCE_PATH, name);
         }
 
         return Optional.empty();

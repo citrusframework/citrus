@@ -16,16 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -62,10 +52,20 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * This action receives messages from a service destination. Action uses a {@link org.citrusframework.endpoint.Endpoint}
  * to receive the message, this means that this action is independent of any message transport.
- *
+ * <p>
  * The received message is validated using a {@link MessageValidator} supporting expected
  * control message payload and header templates.
  *
@@ -184,9 +184,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * @return
      */
     private Message receiveSelected(TestContext context, String selectorString) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Setting message selector: '" + selectorString + "'");
-        }
+        logger.debug("Setting message selector: '{}'", selectorString);
 
         Endpoint messageEndpoint = getOrCreateEndpoint(context);
         Consumer consumer = messageEndpoint.createConsumer();
@@ -201,7 +199,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                         context, messageEndpoint.getEndpointConfiguration().getTimeout());
             }
         } else {
-            logger.warn(String.format("Unable to receive selective with consumer implementation: '%s'", consumer.getClass()));
+            logger.warn("Unable to receive selective with consumer implementation: '{}'", consumer.getClass());
             return receive(context);
         }
     }
@@ -213,9 +211,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     protected void validateMessage(Message message, TestContext context) {
         messageProcessors.forEach(processor -> processor.process(message, context));
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Received message:\n" + message.print(context));
-        }
+        logger.debug("Received message:\n{}", message.print(context));
 
         // extract variables from received message content
         for (VariableExtractor variableExtractor : variableExtractors) {
@@ -232,9 +228,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         if (validationProcessor != null) {
             validationProcessor.validate(message, context);
         } else {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Control message:\n" + controlMessage.print(context));
-            }
+            logger.debug("Control message:\n{}", controlMessage.print(context));
 
             if (!validators.isEmpty()) {
                 for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
@@ -733,13 +727,13 @@ public class ReceiveMessageAction extends AbstractTestAction {
         /**
          * Revisit configured validation context list and automatically add context based on message payload and path
          * expression contexts if any.
-         *
+         * <p>
          * This method makes sure that validation contexts are configured. If no validation context has been set yet the method
          * automatically adds proper validation contexts for Json and XML message payloads.
-         *
+         * <p>
          * In case a path expression (JsonPath, XPath) context is set but no proper message validation context (Json, Xml) the
          * method automatically adds the proper message validation context.
-         *
+         * <p>
          * Only when validation contexts are set properly according to the message type and content the message validation
          * steps will execute later on.
          */

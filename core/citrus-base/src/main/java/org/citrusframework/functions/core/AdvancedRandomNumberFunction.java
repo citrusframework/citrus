@@ -16,16 +16,17 @@
 
 package org.citrusframework.functions.core;
 
-import static java.lang.String.format;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.InvalidFunctionUsageException;
+import org.citrusframework.functions.Function;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+
+import static java.lang.String.format;
 
 /**
  * A function for generating random double values with specified decimal places and range. This
@@ -64,20 +65,15 @@ public class AdvancedRandomNumberFunction implements Function {
                 "Decimal places must be a non-negative integer value.");
         }
 
-        BigDecimal minValue = getParameter(parameterList, 1, BigDecimal.class, BigDecimal::new,
-            DEFAULT_MIN_VALUE);
-        BigDecimal maxValue = getParameter(parameterList, 2, BigDecimal.class, BigDecimal::new,
-            DEFAULT_MAX_VALUE);
+        BigDecimal minValue = getParameter(parameterList, 1, BigDecimal.class, BigDecimal::new, DEFAULT_MIN_VALUE);
+        BigDecimal maxValue = getParameter(parameterList, 2, BigDecimal.class, BigDecimal::new, DEFAULT_MAX_VALUE);
         if (minValue.compareTo(maxValue) > 0) {
             throw new InvalidFunctionUsageException("Min value must be less than max value.");
         }
 
-        boolean excludeMin = getParameter(parameterList, 3, Boolean.class, Boolean::parseBoolean,
-            false);
-        boolean excludeMax = getParameter(parameterList, 4, Boolean.class, Boolean::parseBoolean,
-            false);
-        BigDecimal multiple = getParameter(parameterList, 5, BigDecimal.class, BigDecimal::new,
-            null);
+        boolean excludeMin = getParameter(parameterList, 3, Boolean.class, Boolean::parseBoolean, false);
+        boolean excludeMax = getParameter(parameterList, 4, Boolean.class, Boolean::parseBoolean, false);
+        BigDecimal multiple = getParameter(parameterList, 5, BigDecimal.class, BigDecimal::new, null);
 
         return getRandomNumber(decimalPlaces, minValue, maxValue, excludeMin, excludeMax, multiple);
     }
@@ -96,27 +92,27 @@ public class AdvancedRandomNumberFunction implements Function {
         java.util.function.Function<String, T> parseFunction) {
         T value;
         try {
-
             value = parseFunction.apply(text);
             if (value == null) {
                 throw new CitrusRuntimeException(
-                    "Text '%s' could not be parsed to '%s'. Resulting value is null".formatted(text,
-                        type.getSimpleName()));
+                    "Text '%s' could not be parsed to '%s'. Resulting value is null".formatted(text, type.getSimpleName()));
             }
             return value;
         } catch (Exception e) {
             throw new InvalidFunctionUsageException(
-                format("Invalid parameter at index %d. %s must be parsable to %s.", index, text,
-                    type.getSimpleName()));
+                format("Invalid parameter at index %d. %s must be parsable to %s.", index, text, type.getSimpleName()));
         }
     }
 
     /**
      * Static number generator method.
      */
-    private String getRandomNumber(int decimalPlaces, BigDecimal minValue, BigDecimal maxValue,
-        boolean excludeMin, boolean excludeMax, BigDecimal multiple) {
-
+    private String getRandomNumber(int decimalPlaces,
+                                   BigDecimal minValue,
+                                   BigDecimal maxValue,
+                                   boolean excludeMin,
+                                   boolean excludeMax,
+                                   BigDecimal multiple) {
         minValue = excludeMin ? incrementToExclude(minValue) : minValue;
         maxValue = excludeMax ? decrementToExclude(maxValue) : maxValue;
 
@@ -145,20 +141,18 @@ public class AdvancedRandomNumberFunction implements Function {
     BigDecimal createRandomValue(BigDecimal minValue, BigDecimal range, double random) {
         BigDecimal offset = range.multiply(BigDecimal.valueOf(random));
         BigDecimal value = minValue.add(offset);
-        return value.compareTo(BigDecimal.valueOf(Double.MAX_VALUE)) > 0 ? BigDecimal.valueOf(
-            Double.MAX_VALUE) : value;
+        return value.compareTo(BigDecimal.valueOf(Double.MAX_VALUE)) > 0 ? BigDecimal.valueOf(Double.MAX_VALUE)
+                : value;
     }
 
     private BigDecimal largestMultipleOf(BigDecimal highest, BigDecimal multipleOf) {
-        RoundingMode roundingMode =
-            highest.compareTo(BigDecimal.ZERO) < 0 ? RoundingMode.UP : RoundingMode.DOWN;
+        RoundingMode roundingMode = highest.compareTo(BigDecimal.ZERO) < 0 ? RoundingMode.UP : RoundingMode.DOWN;
         BigDecimal factor = highest.divide(multipleOf, 0, roundingMode);
         return multipleOf.multiply(factor);
     }
 
     private BigDecimal lowestMultipleOf(BigDecimal lowest, BigDecimal multipleOf) {
-        RoundingMode roundingMode =
-            lowest.compareTo(java.math.BigDecimal.ZERO) < 0 ? RoundingMode.DOWN : RoundingMode.UP;
+        RoundingMode roundingMode = lowest.compareTo(java.math.BigDecimal.ZERO) < 0 ? RoundingMode.DOWN : RoundingMode.UP;
         BigDecimal factor = lowest.divide(multipleOf, 0, roundingMode);
         return multipleOf.multiply(factor);
     }
@@ -174,8 +168,7 @@ public class AdvancedRandomNumberFunction implements Function {
     }
 
     private BigDecimal determineIncrement(BigDecimal number) {
-        return java.math.BigDecimal.valueOf(
-            1.0d / (Math.pow(10d, findLeastSignificantDecimalPlace(number))));
+        return BigDecimal.valueOf(1.0d / (Math.pow(10d, findLeastSignificantDecimalPlace(number))));
     }
 
     private int findLeastSignificantDecimalPlace(BigDecimal number) {
@@ -190,12 +183,9 @@ public class AdvancedRandomNumberFunction implements Function {
         return parts[1].length();
     }
 
-    private BigDecimal createMultipleOf(
-        BigDecimal minimum,
+    private BigDecimal createMultipleOf(BigDecimal minimum,
         BigDecimal maximum,
-        BigDecimal multipleOf
-    ) {
-
+        BigDecimal multipleOf) {
         BigDecimal lowestMultiple = lowestMultipleOf(minimum, multipleOf);
         BigDecimal largestMultiple = largestMultipleOf(maximum, multipleOf);
 
@@ -223,5 +213,4 @@ public class AdvancedRandomNumberFunction implements Function {
 
         return randomMultiple;
     }
-
 }

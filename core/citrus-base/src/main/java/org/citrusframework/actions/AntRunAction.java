@@ -16,12 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Stack;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.DefaultLogger;
@@ -38,10 +32,16 @@ import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Stack;
+
 /**
  * Action calls Apache ANT with given build file and runs ANT targets
  * as separate build. User can set and overwrite properties for the build.
- *
+ * <p>
  * Build logging output is forwarded to test run logger.
  *
  * @since 1.3
@@ -95,7 +95,7 @@ public class AntRunAction extends AbstractTestAction {
 
             for (Entry<Object, Object> entry : properties.entrySet()) {
                 String propertyValue = entry.getValue() != null ? context.replaceDynamicContentInString(entry.getValue().toString()) : "";
-                logger.debug("Set build property: " + entry.getKey() + "=" + propertyValue);
+                logger.debug("Set build property: {}={}", entry.getKey(), propertyValue);
                 project.setProperty(entry.getKey().toString(), propertyValue);
             }
 
@@ -109,20 +109,20 @@ public class AntRunAction extends AbstractTestAction {
 
             project.addBuildListener(consoleLogger);
 
-            logger.info("Executing ANT build: " + buildFileResource);
+            logger.info("Executing ANT build: {}", buildFileResource);
 
             if (StringUtils.hasText(targets)) {
-                logger.info("Executing ANT targets: " + targets);
+                logger.info("Executing ANT targets: {}", targets);
                 project.executeTargets(parseTargets());
             } else {
-                logger.info("Executing ANT target: " + target);
+                logger.info("Executing ANT target: {}", target);
                 project.executeTarget(target);
             }
         } catch (BuildException e) {
             throw new CitrusRuntimeException("Failed to run ANT build file", e);
         }
 
-        logger.info("Executed ANT build: " + buildFileResource);
+        logger.info("Executed ANT build: {}", buildFileResource);
     }
 
     private static DefaultLogger getDefaultConsoleLogger() {
@@ -166,7 +166,7 @@ public class AntRunAction extends AbstractTestAction {
     private void loadBuildPropertyFile(Project project, TestContext context) {
         if (StringUtils.hasText(propertyFilePath)) {
             String propertyFileResource = context.replaceDynamicContentInString(propertyFilePath);
-            logger.info("Reading build property file: " + propertyFileResource);
+            logger.info("Reading build property file: {}", propertyFileResource);
             Properties fileProperties = new Properties();
             try {
                 Resource propertyResource = Resources.fromClasspath(propertyFileResource);
@@ -174,10 +174,7 @@ public class AntRunAction extends AbstractTestAction {
 
                 for (Entry<Object, Object> entry : fileProperties.entrySet()) {
                     String propertyValue = entry.getValue() != null ? context.replaceDynamicContentInString(entry.getValue().toString()) : "";
-
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Set build property from file resource: " + entry.getKey() + "=" + propertyValue);
-                    }
+                    logger.debug("Set build property from file resource: {}={}", entry.getKey(), propertyValue);
                     project.setProperty(entry.getKey().toString(), propertyValue);
                 }
             } catch (IOException e) {
