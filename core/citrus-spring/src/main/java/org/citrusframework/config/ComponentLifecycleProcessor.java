@@ -47,9 +47,7 @@ public class ComponentLifecycleProcessor implements DestructionAwareBeanPostProc
         }
 
         if (bean instanceof InitializingPhase) {
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Initializing component '%s'", beanName));
-            }
+            logger.debug("Initializing component '{}'", beanName);
             ((InitializingPhase) bean).initialize();
         }
 
@@ -59,9 +57,7 @@ public class ComponentLifecycleProcessor implements DestructionAwareBeanPostProc
     @Override
     public void postProcessBeforeDestruction(Object bean, String beanName) throws BeansException {
         if (requiresDestruction(bean)) {
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Destroying component '%s'", beanName));
-            }
+            logger.debug("Destroying component '{}'", beanName);
             ((ShutdownPhase) bean).destroy();
         }
     }
