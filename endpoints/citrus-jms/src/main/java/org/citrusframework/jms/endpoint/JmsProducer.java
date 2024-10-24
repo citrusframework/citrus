@@ -81,7 +81,7 @@ public class JmsProducer implements Producer {
      */
     private void send(Message message, String destinationName, TestContext context) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending JMS message to destination: '" + destinationName + "'");
+            logger.debug("Sending JMS message to destination: '{}'", destinationName);
         }
 
         endpointConfiguration.getJmsTemplate().send(destinationName, session -> {
@@ -90,7 +90,7 @@ public class JmsProducer implements Producer {
             return jmsMessage;
         });
 
-        logger.info("Message was sent to JMS destination: '" + destinationName + "'");
+        logger.info("Message was sent to JMS destination: '{}'", destinationName);
     }
 
     /**
@@ -101,7 +101,7 @@ public class JmsProducer implements Producer {
      */
     private void send(Message message, Destination destination, TestContext context) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending JMS message to destination: '" + endpointConfiguration.getDestinationName(destination) + "'");
+            logger.debug("Sending JMS message to destination: '{}'", endpointConfiguration.getDestinationName(destination));
         }
 
         endpointConfiguration.getJmsTemplate().send(destination, session -> {
@@ -110,7 +110,7 @@ public class JmsProducer implements Producer {
             return jmsMessage;
         });
 
-        logger.info("Message was sent to JMS destination: '" + endpointConfiguration.getDestinationName(destination) + "'");
+        logger.info("Message was sent to JMS destination: '{}'", endpointConfiguration.getDestinationName(destination));
     }
 
     @Override
