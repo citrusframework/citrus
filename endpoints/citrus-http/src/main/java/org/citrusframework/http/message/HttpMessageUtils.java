@@ -16,17 +16,20 @@
 
 package org.citrusframework.http.message;
 
-import static org.citrusframework.http.message.HttpMessageHeaders.HTTP_QUERY_PARAMS;
-import static org.citrusframework.util.StringUtils.hasText;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Pair;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
+import static org.citrusframework.http.message.HttpMessageHeaders.HTTP_QUERY_PARAMS;
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * @since 2.7.5
@@ -95,9 +98,9 @@ public final class HttpMessageUtils {
                     String value = keyAndValue.length > 1 ? keyAndValue[1] : "";
                     return Pair.of(key, value);
                 })
-                .collect(Collectors.groupingBy(
-                    Pair::getLeft, Collectors.mapping(Pair::getRight, Collectors.toList())));
+                .collect(groupingBy(Pair::getLeft,mapping(Pair::getRight,toList())));
         }
-        return Collections.emptyMap();
+
+        return emptyMap();
     }
 }
