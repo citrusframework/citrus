@@ -28,7 +28,7 @@ public class LoggingInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         if (logger.isDebugEnabled()) {
-            logger.debug(channel.toString() + ": " + message.getPayload());
+            logger.debug("{}: {}", channel.toString(), message.getPayload());
         }
 
         if (message.getPayload() instanceof Throwable) {
