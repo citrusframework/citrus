@@ -33,11 +33,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.joining;
+import static org.citrusframework.openapi.testapi.ParameterStyle.DEEPOBJECT;
 
 class OpenApiParameterFormatter {
 
@@ -54,25 +56,24 @@ class OpenApiParameterFormatter {
     /**
      * Formats a list of values as a single String based on the separator and other settings.
      */
-    static String formatArray(String parameterName, Object parameterValue, ParameterStyle parameterStyle,
-                              boolean explode, boolean isObject) {
-
+    static String formatArray(String parameterName,
+                              Object parameterValue,
+                              ParameterStyle parameterStyle,
+                              boolean explode,
+                              boolean isObject) {
         List<String> values = toList(parameterValue, isObject);
-        if (parameterStyle == ParameterStyle.DEEPOBJECT) {
+        if (DEEPOBJECT.equals(parameterStyle)) {
             return formatDeepObject(parameterName, values);
         }
 
-        FormatParameters formatParameters = determineFormatParameters(parameterName, parameterStyle, explode,
-                isObject);
-
+        FormatParameters formatParameters = determineFormatParameters(parameterName, parameterStyle, explode, isObject);
 
         if (isObject && explode) {
             return formatParameters.prefix + explode(values, formatParameters.separator);
         } else {
             return formatParameters.prefix + values.stream()
-                    .collect(Collectors.joining(formatParameters.separator));
+                    .collect(joining(formatParameters.separator));
         }
-
     }
 
     private static String formatDeepObject(String parameterName, List<String> values) {
@@ -87,13 +88,14 @@ class OpenApiParameterFormatter {
         if (!builder.isEmpty()) {
             builder.deleteCharAt(builder.length() - 1);
         }
+
         return builder.toString();
     }
 
     private static FormatParameters determineFormatParameters(String parameterName,
                                                               ParameterStyle parameterStyle,
-                                                              boolean explode, boolean isObject) {
-
+                                                              boolean explode,
+                                                              boolean isObject) {
         return switch (parameterStyle) {
             case MATRIX -> matrixFormatParameters(parameterName, explode, isObject);
             case LABEL -> labelFormatParameters(explode);
@@ -123,11 +125,10 @@ class OpenApiParameterFormatter {
         if (explode) {
             if (isObject) {
                 prefix = ";";
-                separator = prefix;
             } else {
                 prefix = ";" + parameterName + "=";
-                separator = prefix;
             }
+            separator = prefix;
         } else {
             prefix = ";" + parameterName + "=";
         }
@@ -138,11 +139,10 @@ class OpenApiParameterFormatter {
     private static String explode(List<String> values, String delimiter) {
         return IntStream.range(0, values.size() / 2)
                 .mapToObj(i -> values.get(2 * i) + "=" + values.get(2 * i + 1))
-                .collect(Collectors.joining(delimiter));
+                .collect(joining(delimiter));
     }
 
     private static List<String> toList(Object value, boolean isObject) {
-
         if (value == null) {
             return emptyList();
         }
@@ -166,7 +166,7 @@ class OpenApiParameterFormatter {
         } else if (isObject) {
             return toList(convertBeanToMap(value), true);
         } else {
-            return List.of(value.toString());
+            return singletonList(value.toString());
         }
     }
 
@@ -214,8 +214,7 @@ class OpenApiParameterFormatter {
                     map.put(propertyName, propertyValue);
                 }
             }
-        } catch (IntrospectionException | IllegalAccessException |
-                 InvocationTargetException e) {
+        } catch (IntrospectionException | IllegalAccessException | InvocationTargetException e) {
             throw new CitrusRuntimeException("Error converting bean to map: " + e.getMessage(), e);
         }
         return map;
@@ -223,5 +222,4 @@ class OpenApiParameterFormatter {
 
     private record FormatParameters(String prefix, String separator) {
     }
-
 }

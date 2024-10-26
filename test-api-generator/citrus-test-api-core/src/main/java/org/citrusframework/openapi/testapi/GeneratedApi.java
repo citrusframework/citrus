@@ -55,7 +55,6 @@ public interface GeneratedApi {
      * Specification extensions, also known as vendor extensions, are custom key-value pairs used to describe extra
      * functionality not covered by the standard OpenAPI Specification. These properties start with "x-".
      * This method collects only the extensions defined in the "info" section of the API.
-     * </p>
      *
      * @return a map containing the specification extensions defined in the "info" section of the API,
      * where keys are extension names and values are extension values
@@ -68,5 +67,4 @@ public interface GeneratedApi {
      * Returns the endpoint of the generated api.
      */
     Endpoint getEndpoint();
-
 }

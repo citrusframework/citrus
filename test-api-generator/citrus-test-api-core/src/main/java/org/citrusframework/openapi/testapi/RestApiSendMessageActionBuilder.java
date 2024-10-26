@@ -24,12 +24,10 @@ import org.citrusframework.http.actions.HttpClientRequestActionBuilder;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.openapi.OpenApiSpecification;
+import org.citrusframework.openapi.actions.OpenApiClientRequestActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiSpecificationSource;
-import org.citrusframework.openapi.util.OpenApiUtils;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.StringUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -43,9 +41,12 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import static java.lang.String.format;
+import static org.citrusframework.openapi.util.OpenApiUtils.createFullPathOperationIdentifier;
+import static org.citrusframework.util.FileUtils.copyToByteArray;
+import static org.citrusframework.util.FileUtils.getDefaultCharset;
+import static org.citrusframework.util.StringUtils.isEmpty;
 
-public class RestApiSendMessageActionBuilder extends
-        org.citrusframework.openapi.actions.OpenApiClientRequestActionBuilder {
+public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionBuilder {
 
     private final GeneratedApi generatedApi;
 
@@ -55,7 +56,9 @@ public class RestApiSendMessageActionBuilder extends
 
     public RestApiSendMessageActionBuilder(GeneratedApi generatedApi,
                                            OpenApiSpecification openApiSpec,
-                                           String method, String path, String operationName) {
+                                           String method,
+                                           String path,
+                                           String operationName) {
         this(generatedApi, openApiSpec, new HttpMessage(), method, path, operationName);
     }
 
@@ -63,21 +66,24 @@ public class RestApiSendMessageActionBuilder extends
                                            OpenApiSpecification openApiSpec,
                                            HttpMessage httpMessage, String method,
                                            String path, String operationName) {
-
         this(generatedApi, openApiSpec,
                 new TestApiClientRequestMessageBuilder(httpMessage,
                         new OpenApiSpecificationSource(openApiSpec),
-                        OpenApiUtils.createFullPathOperationIdentifier(method, path)), httpMessage, method, path,
+                        createFullPathOperationIdentifier(method, path)),
+                httpMessage,
+                method,
+                path,
                 operationName);
     }
 
     public RestApiSendMessageActionBuilder(GeneratedApi generatedApi,
                                            OpenApiSpecification openApiSpec,
-                                           TestApiClientRequestMessageBuilder messageBuilder, HttpMessage httpMessage, String method,
-                                           String path, String operationName) {
-
-        super(new OpenApiSpecificationSource(openApiSpec), messageBuilder, httpMessage,
-                OpenApiUtils.createFullPathOperationIdentifier(method, path));
+                                           TestApiClientRequestMessageBuilder messageBuilder,
+                                           HttpMessage httpMessage,
+                                           String method,
+                                           String path,
+                                           String operationName) {
+        super(new OpenApiSpecificationSource(openApiSpec), messageBuilder, httpMessage, createFullPathOperationIdentifier(method, path));
 
         this.generatedApi = generatedApi;
         this.customizers = generatedApi.getCustomizers();
@@ -85,12 +91,12 @@ public class RestApiSendMessageActionBuilder extends
         endpoint(generatedApi.getEndpoint());
 
         httpMessage.path(path);
-        name(format("send-%s:%s", generatedApi.getClass().getSimpleName().toLowerCase(),
-                operationName));
+
+        name(format("send-%s:%s", generatedApi.getClass().getSimpleName().toLowerCase(), operationName));
+
         getMessageBuilderSupport().header("citrus_open_api_operation_name", operationName);
         getMessageBuilderSupport().header("citrus_open_api_method", method);
         getMessageBuilderSupport().header("citrus_open_api_path", path);
-
     }
 
     public GeneratedApi getGeneratedApi() {
@@ -106,12 +112,8 @@ public class RestApiSendMessageActionBuilder extends
         return super.name(name);
     }
 
-    protected void pathParameter(String name, Object value, ParameterStyle parameterStyle,
-                                 boolean explode, boolean isObject) {
-
-        ((TestApiClientRequestMessageBuilder) getMessageBuilderSupport().getMessageBuilder()).pathParameter(
-                name, value, parameterStyle, explode, isObject);
-
+    protected void pathParameter(String name, Object value, ParameterStyle parameterStyle, boolean explode, boolean isObject) {
+        ((TestApiClientRequestMessageBuilder) getMessageBuilderSupport().getMessageBuilder()).pathParameter(name, value, parameterStyle, explode, isObject);
     }
 
     protected void formParameter(String name, Object value) {
@@ -119,8 +121,7 @@ public class RestApiSendMessageActionBuilder extends
     }
 
     protected void setFormParameter(String name, Object value) {
-
-        if (value == null || StringUtils.isEmpty(value.toString())) {
+        if (value == null || isEmpty(value.toString())) {
             return;
         }
 
@@ -128,19 +129,15 @@ public class RestApiSendMessageActionBuilder extends
     }
 
     protected void queryParameter(final String name, Object value) {
-
-        if (value == null || StringUtils.isEmpty(value.toString())) {
+        if (value == null || isEmpty(value.toString())) {
             return;
         }
 
-        setParameter((paramName, paramValue) -> super.queryParam(paramName,
-                paramValue != null ? paramValue.toString() : null), name, value);
+        setParameter((paramName, paramValue) -> super.queryParam(paramName, paramValue != null ? paramValue.toString() : null), name, value);
     }
 
-    protected void queryParameter(final String name, Object value, ParameterStyle parameterStyle,
-                                  boolean explode, boolean isObject) {
-
-        if (value == null || StringUtils.isEmpty(value.toString())) {
+    protected void queryParameter(final String name, Object value, ParameterStyle parameterStyle, boolean explode, boolean isObject) {
+        if (value == null || isEmpty(value.toString())) {
             return;
         }
 
@@ -153,20 +150,15 @@ public class RestApiSendMessageActionBuilder extends
     }
 
     protected void headerParameter(String name, Object value) {
-
-        if (value == null || StringUtils.isEmpty(value.toString())) {
+        if (value == null || isEmpty(value.toString())) {
             return;
         }
 
-        setParameter(
-                (paramName, paramValue) -> getMessageBuilderSupport().header(paramName, paramValue),
-                name, value);
+        setParameter((paramName, paramValue) -> getMessageBuilderSupport().header(paramName, paramValue), name, value);
     }
 
-    protected void headerParameter(String name, Object value, ParameterStyle parameterStyle,
-                                   boolean explode, boolean isObject) {
-
-        if (value == null || StringUtils.isEmpty(value.toString())) {
+    protected void headerParameter(String name, Object value, ParameterStyle parameterStyle, boolean explode, boolean isObject) {
+        if (value == null || isEmpty(value.toString())) {
             return;
         }
 
@@ -174,20 +166,15 @@ public class RestApiSendMessageActionBuilder extends
     }
 
     protected void cookieParameter(String name, Object value) {
-
-        if (value == null || StringUtils.isEmpty(value.toString())) {
+        if (value == null || isEmpty(value.toString())) {
             return;
         }
 
-        setParameter((paramName, paramValue) -> getMessageBuilderSupport().cookie(
-                        (new Cookie(paramName, paramValue != null ? paramValue.toString() : null))), name,
-                value);
+        setParameter((paramName, paramValue) -> getMessageBuilderSupport().cookie((new Cookie(paramName, paramValue != null ? paramValue.toString() : null))), name, value);
     }
 
-    protected void cookieParameter(String name, Object value, ParameterStyle parameterStyle,
-                                   boolean explode, boolean isObject) {
-
-        if (value == null || StringUtils.isEmpty(value.toString())) {
+    protected void cookieParameter(String name, Object value, ParameterStyle parameterStyle, boolean explode, boolean isObject) {
+        if (value == null || isEmpty(value.toString())) {
             return;
         }
 
@@ -199,8 +186,7 @@ public class RestApiSendMessageActionBuilder extends
         cookieParameter(keyValue[0], keyValue[1]);
     }
 
-    private void setParameter(BiConsumer<String, Object> parameterConsumer,
-                              final String parameterName, Object parameterValue) {
+    private void setParameter(BiConsumer<String, Object> parameterConsumer, final String parameterName, Object parameterValue) {
         if (parameterValue != null) {
             if (byte[].class.isAssignableFrom(parameterValue.getClass())) {
                 // Pass through byte array
@@ -222,7 +208,6 @@ public class RestApiSendMessageActionBuilder extends
 
     @Override
     public SendMessageAction doBuild() {
-
         if (!formParameters.isEmpty()) {
             getMessageBuilderSupport().body(formParameters);
         }
@@ -234,7 +219,7 @@ public class RestApiSendMessageActionBuilder extends
         if (object instanceof byte[] bytes) {
             return bytes;
         } else if (object instanceof Resource resource) {
-            return FileUtils.copyToByteArray(resource.getInputStream());
+            return copyToByteArray(resource.getInputStream());
         } else if (object instanceof String string) {
 
             Resource resource = Resources.create(string);
@@ -247,7 +232,8 @@ public class RestApiSendMessageActionBuilder extends
             } catch (IllegalArgumentException e) {
                 // Ignore decoding failure and treat as regular string
             }
-            return string.getBytes(FileUtils.getDefaultCharset());
+
+            return string.getBytes(getDefaultCharset());
         }
 
         throw new IllegalArgumentException(
@@ -256,12 +242,11 @@ public class RestApiSendMessageActionBuilder extends
     }
 
     protected String getOrDefault(String value, String defaultValue, boolean base64Encode) {
-
-        if (StringUtils.isEmpty(value) && StringUtils.isEmpty(defaultValue)) {
+        if (isEmpty(value) && isEmpty(defaultValue)) {
             return null;
         }
 
-        if (StringUtils.isEmpty(value)) {
+        if (isEmpty(value)) {
             value = defaultValue;
         }
 
@@ -272,8 +257,7 @@ public class RestApiSendMessageActionBuilder extends
         return value;
     }
 
-    public static final class TestApiClientRequestMessageBuilder extends
-            OpenApiClientRequestMessageBuilder {
+    public static final class TestApiClientRequestMessageBuilder extends OpenApiClientRequestMessageBuilder {
 
         private final Map<String, ParameterData> pathParameters = new HashMap<>();
 
@@ -287,22 +271,19 @@ public class RestApiSendMessageActionBuilder extends
             if (message.getCookies() != null && !message.getCookies().isEmpty()) {
                 for (Cookie cookie : message.getCookies()) {
                     if (cookie.getValue().contains(",")) {
-                        cookie.setValue(
-                                URLEncoder.encode(cookie.getValue(), FileUtils.getDefaultCharset()));
+                        cookie.setValue(URLEncoder.encode(cookie.getValue(), getDefaultCharset()));
                     }
                 }
             }
         }
 
-        public void pathParameter(String name, Object value, ParameterStyle parameterStyle,
-                                  boolean explode, boolean isObject) {
-
+        public void pathParameter(String name, Object value, ParameterStyle parameterStyle, boolean explode, boolean isObject) {
             if (value == null) {
                 throw new CitrusRuntimeException(
                         "Mandatory path parameter '%s' must not be null".formatted(name));
             }
-            pathParameters.put(name,
-                    new ParameterData(name, value, parameterStyle, explode, isObject));
+
+            pathParameters.put(name, new ParameterData(name, value, parameterStyle, explode, isObject));
         }
 
         @Override
@@ -325,9 +306,6 @@ public class RestApiSendMessageActionBuilder extends
         }
     }
 
-    public record ParameterData(String name, Object value, ParameterStyle parameterStyle,
-                                boolean explode, boolean isObject) {
-
+    public record ParameterData(String name, Object value, ParameterStyle parameterStyle, boolean explode, boolean isObject) {
     }
-
 }
