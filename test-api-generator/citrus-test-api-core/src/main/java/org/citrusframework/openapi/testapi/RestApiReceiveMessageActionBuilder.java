@@ -18,49 +18,51 @@ package org.citrusframework.openapi.testapi;
 
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.openapi.OpenApiSpecification;
+import org.citrusframework.openapi.actions.OpenApiClientResponseActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiSpecificationSource;
-import org.citrusframework.openapi.util.OpenApiUtils;
 
 import java.util.List;
 
-public class RestApiReceiveMessageActionBuilder extends
-        org.citrusframework.openapi.actions.OpenApiClientResponseActionBuilder {
+import static java.lang.String.format;
+import static org.citrusframework.openapi.util.OpenApiUtils.createFullPathOperationIdentifier;
+
+public class RestApiReceiveMessageActionBuilder extends OpenApiClientResponseActionBuilder {
 
     private final GeneratedApi generatedApi;
 
     private final List<ApiActionBuilderCustomizer> customizers;
 
-
-    public RestApiReceiveMessageActionBuilder(GeneratedApi generatedApi, OpenApiSpecification openApiSpec,
-                                              String method, String path, String operationName, String statusCode) {
-
-        super(new OpenApiSpecificationSource(openApiSpec),
-                OpenApiUtils.createFullPathOperationIdentifier(method, path), statusCode);
+    public RestApiReceiveMessageActionBuilder(GeneratedApi generatedApi,
+                                              OpenApiSpecification openApiSpec,
+                                              String method,
+                                              String path,
+                                              String operationName,
+                                              String statusCode) {
+        super(new OpenApiSpecificationSource(openApiSpec), createFullPathOperationIdentifier(method, path), statusCode);
 
         this.generatedApi = generatedApi;
         this.customizers = generatedApi.getCustomizers();
 
-        name(String.format("receive-%s", operationName));
+        name(format("receive-%s", operationName));
 
         endpoint(generatedApi.getEndpoint());
     }
 
     public RestApiReceiveMessageActionBuilder(GeneratedApi generatedApi,
                                               OpenApiSpecification openApiSpec,
-                                              OpenApiClientResponseMessageBuilder messageBuilder, HttpMessage httpMessage, String method,
-                                              String path, String operationName) {
-
-        super(new OpenApiSpecificationSource(openApiSpec), messageBuilder, httpMessage,
-                OpenApiUtils.createFullPathOperationIdentifier(method, path));
-
+                                              OpenApiClientResponseMessageBuilder messageBuilder,
+                                              HttpMessage httpMessage,
+                                              String method,
+                                              String path,
+                                              String operationName) {
+        super(new OpenApiSpecificationSource(openApiSpec), messageBuilder, httpMessage, createFullPathOperationIdentifier(method, path));
 
         this.generatedApi = generatedApi;
         this.customizers = generatedApi.getCustomizers();
 
-        name(String.format("receive-%s", operationName));
+        name(format("receive-%s", operationName));
 
         endpoint(generatedApi.getEndpoint());
-
     }
 
     public GeneratedApi getGeneratedApi() {

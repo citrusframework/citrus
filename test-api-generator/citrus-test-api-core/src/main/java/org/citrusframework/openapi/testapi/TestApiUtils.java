@@ -17,24 +17,23 @@
 package org.citrusframework.openapi.testapi;
 
 import org.citrusframework.http.actions.HttpClientRequestActionBuilder.HttpMessageBuilderSupport;
-import org.citrusframework.util.StringUtils;
 
-public class TestApiUtils {
+import static org.citrusframework.util.StringUtils.isEmpty;
+
+public final class TestApiUtils {
 
     private TestApiUtils() {
         //prevent instantiation of utility class
     }
 
     public static void addBasicAuthHeader(String username, String password, HttpMessageBuilderSupport messageBuilderSupport) {
-        if (!StringUtils.isEmpty(username) && !StringUtils.isEmpty(password)) {
-            messageBuilderSupport.header("Authorization",
-                    "Basic citrus:encodeBase64(" + username + ":" + password + ")");
+        if (!isEmpty(username) && !isEmpty(password)) {
+            messageBuilderSupport.header("Authorization", "Basic citrus:encodeBase64(" + username + ":" + password + ")");
         }
     }
 
     public static String mapXmlAttributeNameToJavaPropertyName(String attributeName) {
-
-        if (StringUtils.isEmpty(attributeName)) {
+        if (isEmpty(attributeName)) {
             return attributeName;
         }
 
@@ -45,7 +44,5 @@ public class TestApiUtils {
         }
 
         return attributeName;
-
     }
-
 }
