@@ -53,12 +53,6 @@
 
         <!-- Test scoped dependencies -->
         <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>${assertj.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.citrusframework</groupId>
             <artifactId>citrus-junit5</artifactId>
             <version>${project.version}</version>
@@ -77,5 +71,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 </project>

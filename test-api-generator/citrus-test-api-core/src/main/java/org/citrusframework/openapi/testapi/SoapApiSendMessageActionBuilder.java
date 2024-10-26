@@ -20,6 +20,8 @@ import org.citrusframework.ws.actions.SendSoapMessageAction.Builder;
 
 import java.util.List;
 
+import static java.lang.String.format;
+
 public class SoapApiSendMessageActionBuilder extends Builder {
 
     private final GeneratedApi generatedApi;
@@ -27,15 +29,14 @@ public class SoapApiSendMessageActionBuilder extends Builder {
     private final List<ApiActionBuilderCustomizer> customizers;
 
     public SoapApiSendMessageActionBuilder(GeneratedApi generatedApi, String soapAction) {
-
         super();
+
         this.generatedApi = generatedApi;
         this.customizers = generatedApi.getCustomizers();
 
         endpoint(generatedApi.getEndpoint());
 
-        name(String.format("send-%s:%s", generatedApi.getClass().getSimpleName().toLowerCase(),
-                soapAction));
+        name(format("send-%s:%s", generatedApi.getClass().getSimpleName().toLowerCase(),soapAction));
     }
 
     public GeneratedApi getGeneratedApi() {
@@ -45,6 +46,4 @@ public class SoapApiSendMessageActionBuilder extends Builder {
     public List<ApiActionBuilderCustomizer> getCustomizers() {
         return customizers;
     }
-
-
 }
