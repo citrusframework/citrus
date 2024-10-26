@@ -30,5 +30,4 @@ public interface ApiActionBuilderCustomizer {
 
     default <T extends ReceiveMessageActionBuilder<?, ?, ?>> void customizeResponseBuilder(GeneratedApi generatedApi, T builder) {
     }
-
 }
