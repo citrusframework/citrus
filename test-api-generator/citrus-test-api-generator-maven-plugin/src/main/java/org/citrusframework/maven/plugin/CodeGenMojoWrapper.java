@@ -19,7 +19,6 @@ package org.citrusframework.maven.plugin;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
-import org.citrusframework.openapi.generator.CitrusJavaCodegen;
 import org.openapitools.codegen.plugin.CodeGenMojo;
 
 import java.io.File;
@@ -28,6 +27,9 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static org.citrusframework.openapi.generator.CitrusJavaCodegen.CODEGEN_NAME;
+import static org.citrusframework.openapi.generator.CitrusJavaCodegen.GENERATED_SCHEMA_FOLDER;
+import static org.citrusframework.openapi.generator.CitrusJavaCodegen.RESOURCE_FOLDER;
+import static org.citrusframework.openapi.generator.CitrusJavaCodegen.SOURCE_FOLDER;
 
 /**
  * Wrapper class that uses reflection to expose several properties of the {@link CodeGenMojo} for explicit assignment.
@@ -72,21 +74,22 @@ public class CodeGenMojoWrapper extends CodeGenMojo {
     }
 
     public CodeGenMojoWrapper schemaFolder(String schemaFolder) {
-        configOptionsProperties.put(CitrusJavaCodegen.GENERATED_SCHEMA_FOLDER, schemaFolder);
+        configOptionsProperties.put(GENERATED_SCHEMA_FOLDER, schemaFolder);
         return this;
     }
 
     public CodeGenMojoWrapper resourceFolder(String resourceFolder) {
-        configOptionsProperties.put(CitrusJavaCodegen.RESOURCE_FOLDER, resourceFolder);
+        configOptionsProperties.put(RESOURCE_FOLDER, resourceFolder);
         return this;
     }
 
     public CodeGenMojoWrapper sourceFolder(String sourceFolder) {
-        configOptionsProperties.put(CitrusJavaCodegen.SOURCE_FOLDER, sourceFolder);
+        configOptionsProperties.put(SOURCE_FOLDER, sourceFolder);
         return this;
     }
 
-    @SuppressWarnings("java:S3011") // Accessibility bypass
+    // Accessibility bypass
+    @SuppressWarnings("java:S3011")
     private void setPrivateField(String fieldName, Object fieldValue) throws MojoExecutionException {
         try {
             var field = CodeGenMojo.class.getDeclaredField(fieldName);

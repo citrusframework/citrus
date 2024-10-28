@@ -17,8 +17,6 @@
 package org.citrusframework.maven.plugin;
 
 import com.google.common.annotations.VisibleForTesting;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -92,44 +90,57 @@ public class TestApiGeneratorMojo extends AbstractMojo {
      * schemas/handlers. See also {@link TestApiGeneratorMojo}#DEFAULT_TARGET_NAMESPACE_TEMPLATE.
      */
     public static final String DEFAULT_META_INF_FOLDER = "target/generated-test-resources/META-INF";
+
     /**
      * sourceFolder: specifies the location to which the sources are generated. Defaults to 'generated-test-sources'.
      */
     public static final String SOURCE_FOLDER_PROPERTY = "citrus.test.api.generator.source.folder";
+
     /**
      * resourceFolder: specifies the location to which the resources are generated. Defaults to 'generated-test-resources'.
      */
     public static final String RESOURCE_FOLDER_PROPERTY = "citrus.test.api.generator.resource.folder";
+
     /**
      * schemaFolder: specifies the location for the generated xsd schemas. Defaults to 'schema/xsd/%VERSION%'
      */
     public static final String API_SCHEMA_FOLDER = "citrus.test.api.generator.schema.folder";
+
     /**
      * metaInfFolder: specifies the location to which the resources are generated. Defaults to 'generated-resources'.
      */
     public static final String META_INF_FOLDER = "citrus.test.api.generator.meta.inf.folder";
+
     /**
      * resourceFolder: specifies the location to which the resources are generated. Defaults to 'generated-resources'.
      */
     public static final String GENERATE_SPRING_INTEGRATION_FILES = "citrus.test.api.generator.generate.spring.integration.files";
+
     @Component
     private final BuildContext buildContext = new DefaultBuildContext();
+
     @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject mavenProject;
+
     @Parameter(defaultValue = "${mojoExecution}", readonly = true)
     private MojoExecution mojoExecution;
+
     @Parameter(property = SOURCE_FOLDER_PROPERTY, defaultValue = DEFAULT_SOURCE_FOLDER)
     @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})  // Maven injected
     private String sourceFolder = DEFAULT_SOURCE_FOLDER;
+
     @Parameter(property = RESOURCE_FOLDER_PROPERTY, defaultValue = DEFAULT_RESOURCE_FOLDER)
     @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})  // Maven injected
     private String resourceFolder = DEFAULT_RESOURCE_FOLDER;
+
     @Parameter(property = API_SCHEMA_FOLDER, defaultValue = DEFAULT_SCHEMA_FOLDER_TEMPLATE)
     @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})  // Maven injected
     private String schemaFolder = DEFAULT_SCHEMA_FOLDER_TEMPLATE;
+
     @Parameter(property = META_INF_FOLDER, defaultValue = DEFAULT_META_INF_FOLDER)
     @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})  // Maven injected
     private String metaInfFolder = DEFAULT_META_INF_FOLDER;
+
     @Parameter(property = GENERATE_SPRING_INTEGRATION_FILES, defaultValue = "true")
     @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})  // Maven injected
     private boolean generateSpringIntegrationFiles = true;
@@ -237,8 +248,6 @@ public class TestApiGeneratorMojo extends AbstractMojo {
      * Note that the default values are not properly set by maven processor. Therefore, the default values have been assigned additionally
      * on field level.
      */
-    @Getter
-    @Setter
     public static class ApiConfig {
 
         public static final String DEFAULT_ENDPOINT = "PREFIX_ENDPOINT";
@@ -247,68 +256,167 @@ public class TestApiGeneratorMojo extends AbstractMojo {
          * prefix: specifies the prefixed used for the test api. Typically, an acronym for the application which is being tested.
          */
         public static final String API_PREFIX_PROPERTY = "citrus.test.api.generator.prefix";
+
         /**
          * source: specifies the source of the test api.
          */
         public static final String API_SOURCE_PROPERTY = "citrus.test.api.generator.source";
+
         /**
          * version: specifies the version of the api. May be null.
          */
         public static final String API_VERSION_PROPERTY = "citrus.test.api.generator.version";
+
         /**
          * endpoint: specifies the endpoint of the test api. Defaults to 'prefixEndpoint'.
          */
         public static final String API_ENDPOINT_PROPERTY = "citrus.test.api.generator.endpoint";
+
         /**
          * type: specifies the type of the test api. Defaults to 'REST'
          */
         public static final String API_TYPE_PROPERTY = "citrus.test.api.generator.type";
+
         /**
          * useTags: specifies whether tags should be used by the generator. Defaults to 'true'. If useTags is set to true, the generator
          * will organize the generated code based on the tags defined in your API specification.
          */
         public static final String API_USE_TAGS_PROPERTY = "citrus.test.api.generator.use.tags";
+
         /**
          * invokerPackage: specifies the package for the test api classes. Defaults to
          * 'org.citrusframework.automation.%PREFIX%.%VERSION%'.
          */
         public static final String API_INVOKER_PACKAGE_PROPERTY = "citrus.test.api.generator.invoker.package";
+
         /**
          * apiPackage: specifies the package for the test api classes. Defaults to
          * 'org.citrusframework.automation.%PREFIX%.%VERSION%.api'.
          */
         public static final String API_API_PACKAGE_PROPERTY = "citrus.test.api.generator.api.package";
+
         /**
          * modelPackage: specifies the package for the test api classes. Defaults to
          * 'org.citrusframework.automation.%PREFIX%.%VERSION%.model'.
          */
         public static final String API_MODEL_PACKAGE_PROPERTY = "citrus.test.api.generator.model.package";
+
         /**
          * targetXmlNamespace: specifies the xml namespace to be used by the api. Defaults to
          * 'http://www.citrusframework.org/schema/%VERSION%/%PREFIX%-api'
          */
         @SuppressWarnings("JavadocLinkAsPlainText")
         public static final String API_NAMESPACE_PROPERTY = "citrus.test.api.generator.namespace";
+
         @Parameter(required = true, property = API_PREFIX_PROPERTY)
         private String prefix;
+
         @Parameter(required = true, property = API_SOURCE_PROPERTY)
         private String source;
+
         @Parameter(property = API_VERSION_PROPERTY)
         private String version;
+
         @Parameter(property = API_ENDPOINT_PROPERTY, defaultValue = DEFAULT_ENDPOINT)
         private String endpoint = DEFAULT_ENDPOINT;
+
         @Parameter(property = API_TYPE_PROPERTY, defaultValue = "REST")
         private ApiType type = DEFAULT_API_TYPE;
+
         @Parameter(property = API_USE_TAGS_PROPERTY, defaultValue = "true")
         private boolean useTags = true;
+
         @Parameter(property = API_INVOKER_PACKAGE_PROPERTY, defaultValue = DEFAULT_INVOKER_PACKAGE)
         private String invokerPackage = DEFAULT_INVOKER_PACKAGE;
+
         @Parameter(property = API_API_PACKAGE_PROPERTY, defaultValue = DEFAULT_API_PACKAGE)
         private String apiPackage = DEFAULT_API_PACKAGE;
+
         @Parameter(property = API_MODEL_PACKAGE_PROPERTY, defaultValue = DEFAULT_MODEL_PACKAGE)
         private String modelPackage = DEFAULT_MODEL_PACKAGE;
+
         @Parameter(property = API_NAMESPACE_PROPERTY, defaultValue = DEFAULT_TARGET_NAMESPACE_TEMPLATE)
         private String targetXmlnsNamespace = DEFAULT_TARGET_NAMESPACE_TEMPLATE;
+
+        public String getPrefix() {
+            return prefix;
+        }
+
+        public void setPrefix(String prefix) {
+            this.prefix = prefix;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public void setSource(String source) {
+            this.source = source;
+        }
+
+        public String getVersion() {
+            return version;
+        }
+
+        public void setVersion(String version) {
+            this.version = version;
+        }
+
+        public String getEndpoint() {
+            return endpoint;
+        }
+
+        public void setEndpoint(String endpoint) {
+            this.endpoint = endpoint;
+        }
+
+        public ApiType getType() {
+            return type;
+        }
+
+        public void setType(ApiType type) {
+            this.type = type;
+        }
+
+        public boolean isUseTags() {
+            return useTags;
+        }
+
+        public void setUseTags(boolean useTags) {
+            this.useTags = useTags;
+        }
+
+        public String getInvokerPackage() {
+            return invokerPackage;
+        }
+
+        public void setInvokerPackage(String invokerPackage) {
+            this.invokerPackage = invokerPackage;
+        }
+
+        public String getApiPackage() {
+            return apiPackage;
+        }
+
+        public void setApiPackage(String apiPackage) {
+            this.apiPackage = apiPackage;
+        }
+
+        public String getModelPackage() {
+            return modelPackage;
+        }
+
+        public void setModelPackage(String modelPackage) {
+            this.modelPackage = modelPackage;
+        }
+
+        public String getTargetXmlnsNamespace() {
+            return targetXmlnsNamespace;
+        }
+
+        public void setTargetXmlnsNamespace(String targetXmlnsNamespace) {
+            this.targetXmlnsNamespace = targetXmlnsNamespace;
+        }
 
         public String qualifiedEndpoint() {
             return DEFAULT_ENDPOINT.equals(endpoint) ? getPrefix().toLowerCase() + "Endpoint" : endpoint;
