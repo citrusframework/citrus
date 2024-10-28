@@ -18,12 +18,14 @@ package org.citrusframework.openapi.testapi.spring;
 
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.citrusframework.openapi.testapi.SoapApiReceiveMessageActionBuilder;
-import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.config.xml.ReceiveSoapMessageActionParser;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
+
+import static org.citrusframework.util.StringUtils.hasText;
+import static org.springframework.beans.factory.support.BeanDefinitionBuilder.genericBeanDefinition;
 
 public class SoapApiReceiveMessageActionParser extends ReceiveSoapMessageActionParser {
 
@@ -58,19 +60,19 @@ public class SoapApiReceiveMessageActionParser extends ReceiveSoapMessageActionP
         return beanDefinitionBuilder;
     }
 
+    @Override
     protected String parseEndpoint(Element element) {
         String endpointUri = element.getAttribute("endpoint");
 
-        if (!StringUtils.hasText(endpointUri)) {
+        if (!hasText(endpointUri)) {
             endpointUri = defaultEndpointName;
         }
+
         return endpointUri;
     }
 
     private BeanDefinitionBuilder createTestApiActionBuilder() {
-
-        BeanDefinitionBuilder actionBuilder = BeanDefinitionBuilder.genericBeanDefinition(
-                receiveBeanClass);
+        BeanDefinitionBuilder actionBuilder = genericBeanDefinition(receiveBeanClass);
         actionBuilder.addConstructorArgValue(new RuntimeBeanReference(apiBeanClass));
 
         return actionBuilder;
@@ -87,10 +89,8 @@ public class SoapApiReceiveMessageActionParser extends ReceiveSoapMessageActionP
     public static class TestApiSoapClientReceiveActionBuilderFactoryBean extends
             ReceiveSoapMessageActionFactoryBean {
 
-        public TestApiSoapClientReceiveActionBuilderFactoryBean(
-                SoapApiReceiveMessageActionBuilder builder) {
+        public TestApiSoapClientReceiveActionBuilderFactoryBean(SoapApiReceiveMessageActionBuilder builder) {
             super(builder);
         }
     }
-
 }
