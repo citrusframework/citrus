@@ -44,7 +44,7 @@ public class PetsApi {
     }
 
     /**
-     * Builder with required parameters as string to allow for dynamic content.
+     * Builder with required parameters as string, allowing dynamic content using citrus expressions.
      */
     public DeletePetRequestActionBuilder sendDeletePet$(String petIdExpression) {
         DeletePetRequestActionBuilder builder = new DeletePetRequestActionBuilder(petIdExpression, openApiSpecification);

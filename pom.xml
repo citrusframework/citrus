@@ -165,7 +165,7 @@
     <maven.assembly.plugin.version>3.6.0</maven.assembly.plugin.version>
     <maven.changes.plugin.version>2.12.1</maven.changes.plugin.version>
     <maven.clean.plugin.version>3.3.1</maven.clean.plugin.version>
-    <maven.dependency.plugin.version>3.6.0</maven.dependency.plugin.version>
+    <maven.dependency.plugin.version>3.7.1</maven.dependency.plugin.version>
     <maven.deploy.plugin.version>3.1.1</maven.deploy.plugin.version>
     <maven.failsafe.plugin.version>2.22.2</maven.failsafe.plugin.version>
     <maven.gpg.plugin.version>1.6</maven.gpg.plugin.version>

@@ -1,45 +1,58 @@
 package org.citrusframework.openapi.generator.rest.petstore.request;
 
+import static java.lang.String.format;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static org.citrusframework.util.StringUtils.isEmpty;
+import static org.citrusframework.util.StringUtils.isNotEmpty;
+
 import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.openapi.OpenApiSpecification;
-import org.citrusframework.openapi.generator.rest.petstore.PetStore;
-import org.citrusframework.openapi.generator.rest.petstore.model.*;
 import org.citrusframework.openapi.testapi.ApiActionBuilderCustomizer;
-import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.citrusframework.openapi.testapi.ParameterStyle;
-import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.testapi.RestApiSendMessageActionBuilder;
+import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
+import org.citrusframework.openapi.testapi.TestApiUtils;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-
-import static java.lang.String.format;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
+import org.citrusframework.openapi.generator.rest.petstore.PetStore;
+import org.citrusframework.openapi.generator.rest.petstore.model.*;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-05T19:07:45.597236600+02:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
-public class UserApi implements GeneratedApi {
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:43.309584600+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+public class UserApi implements GeneratedApi
+{
 
-    private final List<ApiActionBuilderCustomizer> customizers;
-    private final Endpoint endpoint;
-    private final OpenApiSpecification openApiSpecification;
     @Value("${" + "petstore.base64-encode-api-key:#{false}}")
     private boolean base64EncodeApiKey;
+
     @Value("${" + "petstore.api-key:#{null}}")
     private String defaultApiKey;
 
-    public UserApi(Endpoint endpoint) {
+    private final List<ApiActionBuilderCustomizer> customizers;
+
+    private final Endpoint endpoint;
+
+    private final OpenApiSpecification openApiSpecification;
+
+    public UserApi(Endpoint endpoint)  {
         this(endpoint, emptyList());
     }
 
-    public UserApi(Endpoint endpoint, List<ApiActionBuilderCustomizer> customizers) {
+    public UserApi(Endpoint endpoint, List<ApiActionBuilderCustomizer> customizers)  {
         this.endpoint = endpoint;
         this.customizers = customizers;
 
@@ -87,110 +100,110 @@ public class UserApi implements GeneratedApi {
     /**
      * Builder with type safe required parameters.
      */
-    public CreateUserSendActionBuilder sendCreateUser() {
-        return new CreateUserSendActionBuilder(this, openApiSpecification);
+    public CreateUserSendActionBuilder sendCreateUser()   {
+            return new CreateUserSendActionBuilder(this, openApiSpecification);
     }
 
-    public CreateUserReceiveActionBuilder receiveCreateUser(@NotNull HttpStatus statusCode) {
+    public CreateUserReceiveActionBuilder receiveCreateUser(@NotNull HttpStatus statusCode)   {
         return new CreateUserReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public CreateUserReceiveActionBuilder receiveCreateUser(@NotNull String statusCode) {
-        return new CreateUserReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public CreateUserReceiveActionBuilder receiveCreateUser(@NotNull String statusCode)   {
+        return new CreateUserReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public CreateUsersWithListInputSendActionBuilder sendCreateUsersWithListInput() {
-        return new CreateUsersWithListInputSendActionBuilder(this, openApiSpecification);
+    public CreateUsersWithListInputSendActionBuilder sendCreateUsersWithListInput()   {
+            return new CreateUsersWithListInputSendActionBuilder(this, openApiSpecification);
     }
 
-    public CreateUsersWithListInputReceiveActionBuilder receiveCreateUsersWithListInput(@NotNull HttpStatus statusCode) {
+    public CreateUsersWithListInputReceiveActionBuilder receiveCreateUsersWithListInput(@NotNull HttpStatus statusCode)   {
         return new CreateUsersWithListInputReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public CreateUsersWithListInputReceiveActionBuilder receiveCreateUsersWithListInput(@NotNull String statusCode) {
-        return new CreateUsersWithListInputReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public CreateUsersWithListInputReceiveActionBuilder receiveCreateUsersWithListInput(@NotNull String statusCode)   {
+        return new CreateUsersWithListInputReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public DeleteUserSendActionBuilder sendDeleteUser(String username) {
-        return new DeleteUserSendActionBuilder(this, openApiSpecification, username);
+    public DeleteUserSendActionBuilder sendDeleteUser(String username)   {
+            return new DeleteUserSendActionBuilder(this, openApiSpecification, username);
     }
 
-    public DeleteUserReceiveActionBuilder receiveDeleteUser(@NotNull HttpStatus statusCode) {
+    public DeleteUserReceiveActionBuilder receiveDeleteUser(@NotNull HttpStatus statusCode)   {
         return new DeleteUserReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public DeleteUserReceiveActionBuilder receiveDeleteUser(@NotNull String statusCode) {
-        return new DeleteUserReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public DeleteUserReceiveActionBuilder receiveDeleteUser(@NotNull String statusCode)   {
+        return new DeleteUserReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public GetUserByNameSendActionBuilder sendGetUserByName(String username) {
-        return new GetUserByNameSendActionBuilder(this, openApiSpecification, username);
+    public GetUserByNameSendActionBuilder sendGetUserByName(String username)   {
+            return new GetUserByNameSendActionBuilder(this, openApiSpecification, username);
     }
 
-    public GetUserByNameReceiveActionBuilder receiveGetUserByName(@NotNull HttpStatus statusCode) {
+    public GetUserByNameReceiveActionBuilder receiveGetUserByName(@NotNull HttpStatus statusCode)   {
         return new GetUserByNameReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public GetUserByNameReceiveActionBuilder receiveGetUserByName(@NotNull String statusCode) {
-        return new GetUserByNameReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public GetUserByNameReceiveActionBuilder receiveGetUserByName(@NotNull String statusCode)   {
+        return new GetUserByNameReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public LoginUserSendActionBuilder sendLoginUser() {
-        return new LoginUserSendActionBuilder(this, openApiSpecification);
+    public LoginUserSendActionBuilder sendLoginUser()   {
+            return new LoginUserSendActionBuilder(this, openApiSpecification);
     }
 
-    public LoginUserReceiveActionBuilder receiveLoginUser(@NotNull HttpStatus statusCode) {
+    public LoginUserReceiveActionBuilder receiveLoginUser(@NotNull HttpStatus statusCode)   {
         return new LoginUserReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public LoginUserReceiveActionBuilder receiveLoginUser(@NotNull String statusCode) {
-        return new LoginUserReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public LoginUserReceiveActionBuilder receiveLoginUser(@NotNull String statusCode)   {
+        return new LoginUserReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public LogoutUserSendActionBuilder sendLogoutUser() {
-        return new LogoutUserSendActionBuilder(this, openApiSpecification);
+    public LogoutUserSendActionBuilder sendLogoutUser()   {
+            return new LogoutUserSendActionBuilder(this, openApiSpecification);
     }
 
-    public LogoutUserReceiveActionBuilder receiveLogoutUser(@NotNull HttpStatus statusCode) {
+    public LogoutUserReceiveActionBuilder receiveLogoutUser(@NotNull HttpStatus statusCode)   {
         return new LogoutUserReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public LogoutUserReceiveActionBuilder receiveLogoutUser(@NotNull String statusCode) {
-        return new LogoutUserReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public LogoutUserReceiveActionBuilder receiveLogoutUser(@NotNull String statusCode)   {
+        return new LogoutUserReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public UpdateUserSendActionBuilder sendUpdateUser(String username) {
-        return new UpdateUserSendActionBuilder(this, openApiSpecification, username);
+    public UpdateUserSendActionBuilder sendUpdateUser(String username)   {
+            return new UpdateUserSendActionBuilder(this, openApiSpecification, username);
     }
 
-    public UpdateUserReceiveActionBuilder receiveUpdateUser(@NotNull HttpStatus statusCode) {
+    public UpdateUserReceiveActionBuilder receiveUpdateUser(@NotNull HttpStatus statusCode)   {
         return new UpdateUserReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public UpdateUserReceiveActionBuilder receiveUpdateUser(@NotNull String statusCode) {
-        return new UpdateUserReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public UpdateUserReceiveActionBuilder receiveUpdateUser(@NotNull String statusCode)   {
+        return new UpdateUserReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     public static class CreateUserSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "POST";
 
@@ -235,7 +248,7 @@ public class UserApi implements GeneratedApi {
     }
 
     public static class CreateUserReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "POST";
 
@@ -243,7 +256,7 @@ public class UserApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "createUser";
 
-        public CreateUserReceiveActionBuilder(UserApi userApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public CreateUserReceiveActionBuilder(UserApi userApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(userApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -264,7 +277,7 @@ public class UserApi implements GeneratedApi {
     }
 
     public static class CreateUsersWithListInputSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "POST";
 
@@ -283,18 +296,18 @@ public class UserApi implements GeneratedApi {
             super(userApi, openApiSpecification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
         }
 
-        public CreateUsersWithListInputSendActionBuilder user(User... user) {
+        public CreateUsersWithListInputSendActionBuilder user(User...user) {
             return this;
         }
 
-        public void setUser(User... user) {
+        public void setUser(User...user) {
         }
 
-        public CreateUsersWithListInputSendActionBuilder user(String... userExpression) {
+        public CreateUsersWithListInputSendActionBuilder user(String...userExpression) {
             return this;
         }
 
-        public void setUser(String... userExpression) {
+        public void setUser(String...userExpression) {
         }
 
         @Override
@@ -309,7 +322,7 @@ public class UserApi implements GeneratedApi {
     }
 
     public static class CreateUsersWithListInputReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "POST";
 
@@ -317,7 +330,7 @@ public class UserApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "createUsersWithListInput";
 
-        public CreateUsersWithListInputReceiveActionBuilder(UserApi userApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public CreateUsersWithListInputReceiveActionBuilder(UserApi userApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(userApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -338,7 +351,7 @@ public class UserApi implements GeneratedApi {
     }
 
     public static class DeleteUserSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "DELETE";
 
@@ -379,7 +392,7 @@ public class UserApi implements GeneratedApi {
     }
 
     public static class DeleteUserReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "DELETE";
 
@@ -387,7 +400,7 @@ public class UserApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "deleteUser";
 
-        public DeleteUserReceiveActionBuilder(UserApi userApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public DeleteUserReceiveActionBuilder(UserApi userApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(userApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -408,7 +421,7 @@ public class UserApi implements GeneratedApi {
     }
 
     public static class GetUserByNameSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -449,7 +462,7 @@ public class UserApi implements GeneratedApi {
     }
 
     public static class GetUserByNameReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -457,7 +470,7 @@ public class UserApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "getUserByName";
 
-        public GetUserByNameReceiveActionBuilder(UserApi userApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public GetUserByNameReceiveActionBuilder(UserApi userApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(userApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -478,7 +491,7 @@ public class UserApi implements GeneratedApi {
     }
 
     public static class LoginUserSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -527,7 +540,7 @@ public class UserApi implements GeneratedApi {
     }
 
     public static class LoginUserReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -535,7 +548,7 @@ public class UserApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "loginUser";
 
-        public LoginUserReceiveActionBuilder(UserApi userApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public LoginUserReceiveActionBuilder(UserApi userApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(userApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -556,7 +569,7 @@ public class UserApi implements GeneratedApi {
     }
 
     public static class LogoutUserSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -587,7 +600,7 @@ public class UserApi implements GeneratedApi {
     }
 
     public static class LogoutUserReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -595,7 +608,7 @@ public class UserApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "logoutUser";
 
-        public LogoutUserReceiveActionBuilder(UserApi userApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public LogoutUserReceiveActionBuilder(UserApi userApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(userApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -616,7 +629,7 @@ public class UserApi implements GeneratedApi {
     }
 
     public static class UpdateUserSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "PUT";
 
@@ -671,7 +684,7 @@ public class UserApi implements GeneratedApi {
     }
 
     public static class UpdateUserReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "PUT";
 
@@ -679,7 +692,7 @@ public class UserApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "updateUser";
 
-        public UpdateUserReceiveActionBuilder(UserApi userApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public UpdateUserReceiveActionBuilder(UserApi userApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(userApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
