@@ -39,6 +39,9 @@ import org.w3c.dom.Element;
 
 import java.util.List;
 
+import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
+import static org.springframework.beans.factory.support.BeanDefinitionBuilder.genericBeanDefinition;
+
 /**
  * Parses XML configuration for receiving API responses based on OpenAPI specifications. Extends
  * {@link HttpReceiveResponseActionParser} to handle OpenAPI-specific response builders and
@@ -83,9 +86,7 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
     @Override
     protected BeanDefinitionBuilder createBeanDefinitionBuilder(Element element,
                                                                 ParserContext parserContext) {
-
-        BeanDefinitionBuilder beanDefinitionBuilder = super.createBeanDefinitionBuilder(element,
-                parserContext);
+        BeanDefinitionBuilder beanDefinitionBuilder = super.createBeanDefinitionBuilder(element, parserContext);
 
         // Remove the messageBuilder property and inject it directly into the action builder.
         BeanDefinition beanDefinition = beanDefinitionBuilder.getBeanDefinition();
@@ -95,8 +96,7 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
 
         beanDefinition.getPropertyValues().removePropertyValue("messageBuilder");
 
-        BeanDefinitionBuilder actionBuilder = BeanDefinitionBuilder.genericBeanDefinition(
-                beanClass);
+        BeanDefinitionBuilder actionBuilder = genericBeanDefinition(beanClass);
         actionBuilder.addConstructorArgValue(new RuntimeBeanReference(apiBeanClass));
         actionBuilder.addConstructorArgValue(openApiSpecification);
         actionBuilder.addConstructorArgValue(messageBuilder);
@@ -135,10 +135,8 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
     @Override
     protected List<ValidationContext> parseValidationContexts(Element messageElement,
                                                               BeanDefinitionBuilder builder) {
-        List<ValidationContext> validationContexts = super.parseValidationContexts(messageElement,
-                builder);
-        OpenApiMessageValidationContext openApiMessageValidationContext = getOpenApiMessageValidationContext(
-                messageElement);
+        List<ValidationContext> validationContexts = super.parseValidationContexts(messageElement, builder);
+        OpenApiMessageValidationContext openApiMessageValidationContext = getOpenApiMessageValidationContext(messageElement);
         validationContexts.add(openApiMessageValidationContext);
         return validationContexts;
     }
@@ -146,10 +144,8 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
     /**
      * Constructs the OpenAPI message validation context based on the XML element.
      */
-    private OpenApiMessageValidationContext getOpenApiMessageValidationContext(
-            Element messageElement) {
-        OpenApiMessageValidationContext.Builder context = OpenApiMessageValidationContext.Builder.openApi(
-                openApiSpecification);
+    private OpenApiMessageValidationContext getOpenApiMessageValidationContext(Element messageElement) {
+        OpenApiMessageValidationContext.Builder context = openApi(openApiSpecification);
 
         if (messageElement != null) {
             addSchemaInformationToValidationContext(messageElement, context);
@@ -167,8 +163,7 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
 
         private RestApiReceiveMessageActionBuilder builder;
 
-        public TestApiOpenApiClientReceiveActionBuilderFactoryBean(
-                RestApiReceiveMessageActionBuilder builder) {
+        public TestApiOpenApiClientReceiveActionBuilderFactoryBean(RestApiReceiveMessageActionBuilder builder) {
             this.builder = builder;
         }
 
@@ -191,5 +186,4 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
             this.builder = builder;
         }
     }
-
 }
