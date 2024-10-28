@@ -1,45 +1,58 @@
 package org.citrusframework.openapi.generator.rest.petstore.request;
 
+import static java.lang.String.format;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static org.citrusframework.util.StringUtils.isEmpty;
+import static org.citrusframework.util.StringUtils.isNotEmpty;
+
 import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.openapi.OpenApiSpecification;
-import org.citrusframework.openapi.generator.rest.petstore.PetStore;
-import org.citrusframework.openapi.generator.rest.petstore.model.*;
 import org.citrusframework.openapi.testapi.ApiActionBuilderCustomizer;
-import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.citrusframework.openapi.testapi.ParameterStyle;
-import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.testapi.RestApiSendMessageActionBuilder;
+import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
+import org.citrusframework.openapi.testapi.TestApiUtils;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-
-import static java.lang.String.format;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
+import org.citrusframework.openapi.generator.rest.petstore.PetStore;
+import org.citrusframework.openapi.generator.rest.petstore.model.*;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-05T19:07:45.597236600+02:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
-public class StoreApi implements GeneratedApi {
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:43.309584600+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+public class StoreApi implements GeneratedApi
+{
 
-    private final List<ApiActionBuilderCustomizer> customizers;
-    private final Endpoint endpoint;
-    private final OpenApiSpecification openApiSpecification;
     @Value("${" + "petstore.base64-encode-api-key:#{false}}")
     private boolean base64EncodeApiKey;
+
     @Value("${" + "petstore.api-key:#{null}}")
     private String defaultApiKey;
 
-    public StoreApi(Endpoint endpoint) {
+    private final List<ApiActionBuilderCustomizer> customizers;
+
+    private final Endpoint endpoint;
+
+    private final OpenApiSpecification openApiSpecification;
+
+    public StoreApi(Endpoint endpoint)  {
         this(endpoint, emptyList());
     }
 
-    public StoreApi(Endpoint endpoint, List<ApiActionBuilderCustomizer> customizers) {
+    public StoreApi(Endpoint endpoint, List<ApiActionBuilderCustomizer> customizers)  {
         this.endpoint = endpoint;
         this.customizers = customizers;
 
@@ -87,81 +100,81 @@ public class StoreApi implements GeneratedApi {
     /**
      * Builder with type safe required parameters.
      */
-    public DeleteOrderSendActionBuilder sendDeleteOrder(Long orderId) {
-        return new DeleteOrderSendActionBuilder(this, openApiSpecification, orderId);
+    public DeleteOrderSendActionBuilder sendDeleteOrder(Long orderId)   {
+            return new DeleteOrderSendActionBuilder(this, openApiSpecification, orderId);
     }
 
     /**
-     * Builder with required parameters as string to allow for dynamic content.
+     * Builder with required parameters as string, allowing dynamic content using citrus expressions.
      */
-    public DeleteOrderSendActionBuilder sendDeleteOrder$(String orderIdExpression) {
-        return new DeleteOrderSendActionBuilder(openApiSpecification, this, orderIdExpression);
+    public DeleteOrderSendActionBuilder sendDeleteOrder$(String orderIdExpression )   {
+            return new DeleteOrderSendActionBuilder(openApiSpecification, this, orderIdExpression);
     }
 
-    public DeleteOrderReceiveActionBuilder receiveDeleteOrder(@NotNull HttpStatus statusCode) {
+    public DeleteOrderReceiveActionBuilder receiveDeleteOrder(@NotNull HttpStatus statusCode)   {
         return new DeleteOrderReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public DeleteOrderReceiveActionBuilder receiveDeleteOrder(@NotNull String statusCode) {
-        return new DeleteOrderReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public DeleteOrderReceiveActionBuilder receiveDeleteOrder(@NotNull String statusCode)   {
+        return new DeleteOrderReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public GetInventorySendActionBuilder sendGetInventory() {
-        GetInventorySendActionBuilder builder = new GetInventorySendActionBuilder(this, openApiSpecification);
-        builder.setBase64EncodeApiKey(base64EncodeApiKey);
-        return builder;
+    public GetInventorySendActionBuilder sendGetInventory()   {
+            GetInventorySendActionBuilder builder =  new GetInventorySendActionBuilder(this, openApiSpecification);
+            builder.setBase64EncodeApiKey(base64EncodeApiKey);
+            return builder;
     }
 
-    public GetInventoryReceiveActionBuilder receiveGetInventory(@NotNull HttpStatus statusCode) {
+    public GetInventoryReceiveActionBuilder receiveGetInventory(@NotNull HttpStatus statusCode)   {
         return new GetInventoryReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public GetInventoryReceiveActionBuilder receiveGetInventory(@NotNull String statusCode) {
-        return new GetInventoryReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public GetInventoryReceiveActionBuilder receiveGetInventory(@NotNull String statusCode)   {
+        return new GetInventoryReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public GetOrderByIdSendActionBuilder sendGetOrderById(Long orderId) {
-        return new GetOrderByIdSendActionBuilder(this, openApiSpecification, orderId);
+    public GetOrderByIdSendActionBuilder sendGetOrderById(Long orderId)   {
+            return new GetOrderByIdSendActionBuilder(this, openApiSpecification, orderId);
     }
 
     /**
-     * Builder with required parameters as string to allow for dynamic content.
+     * Builder with required parameters as string, allowing dynamic content using citrus expressions.
      */
-    public GetOrderByIdSendActionBuilder sendGetOrderById$(String orderIdExpression) {
-        return new GetOrderByIdSendActionBuilder(openApiSpecification, this, orderIdExpression);
+    public GetOrderByIdSendActionBuilder sendGetOrderById$(String orderIdExpression )   {
+            return new GetOrderByIdSendActionBuilder(openApiSpecification, this, orderIdExpression);
     }
 
-    public GetOrderByIdReceiveActionBuilder receiveGetOrderById(@NotNull HttpStatus statusCode) {
+    public GetOrderByIdReceiveActionBuilder receiveGetOrderById(@NotNull HttpStatus statusCode)   {
         return new GetOrderByIdReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public GetOrderByIdReceiveActionBuilder receiveGetOrderById(@NotNull String statusCode) {
-        return new GetOrderByIdReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public GetOrderByIdReceiveActionBuilder receiveGetOrderById(@NotNull String statusCode)   {
+        return new GetOrderByIdReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public PlaceOrderSendActionBuilder sendPlaceOrder() {
-        return new PlaceOrderSendActionBuilder(this, openApiSpecification);
+    public PlaceOrderSendActionBuilder sendPlaceOrder()   {
+            return new PlaceOrderSendActionBuilder(this, openApiSpecification);
     }
 
-    public PlaceOrderReceiveActionBuilder receivePlaceOrder(@NotNull HttpStatus statusCode) {
+    public PlaceOrderReceiveActionBuilder receivePlaceOrder(@NotNull HttpStatus statusCode)   {
         return new PlaceOrderReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public PlaceOrderReceiveActionBuilder receivePlaceOrder(@NotNull String statusCode) {
-        return new PlaceOrderReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public PlaceOrderReceiveActionBuilder receivePlaceOrder(@NotNull String statusCode)   {
+        return new PlaceOrderReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     public static class DeleteOrderSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "DELETE";
 
@@ -180,8 +193,8 @@ public class StoreApi implements GeneratedApi {
         /**
          * Constructor with required parameters as string to allow for dynamic content.
          */
-        public DeleteOrderSendActionBuilder(OpenApiSpecification openApiSpecification, StoreApi storeApi, String orderIdExpression) {
-            super(storeApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+            public DeleteOrderSendActionBuilder(OpenApiSpecification openApiSpecification, StoreApi storeApi, String orderIdExpression) {
+            super(storeApi, openApiSpecification,  METHOD, ENDPOINT, OPERATION_NAME);
             pathParameter("orderId", orderIdExpression, ParameterStyle.SIMPLE, false, false);
         }
 
@@ -200,7 +213,7 @@ public class StoreApi implements GeneratedApi {
 
         public DeleteOrderSendActionBuilder orderId(String orderIdExpression) {
             pathParameter("orderId", orderIdExpression, ParameterStyle.SIMPLE, false, false);
-            return this;
+                return this;
         }
 
         @Override
@@ -215,7 +228,7 @@ public class StoreApi implements GeneratedApi {
     }
 
     public static class DeleteOrderReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "DELETE";
 
@@ -223,7 +236,7 @@ public class StoreApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "deleteOrder";
 
-        public DeleteOrderReceiveActionBuilder(StoreApi storeApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public DeleteOrderReceiveActionBuilder(StoreApi storeApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(storeApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -244,7 +257,7 @@ public class StoreApi implements GeneratedApi {
     }
 
     public static class GetInventorySendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -297,7 +310,7 @@ public class StoreApi implements GeneratedApi {
     }
 
     public static class GetInventoryReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -305,7 +318,7 @@ public class StoreApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "getInventory";
 
-        public GetInventoryReceiveActionBuilder(StoreApi storeApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public GetInventoryReceiveActionBuilder(StoreApi storeApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(storeApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -326,7 +339,7 @@ public class StoreApi implements GeneratedApi {
     }
 
     public static class GetOrderByIdSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -345,8 +358,8 @@ public class StoreApi implements GeneratedApi {
         /**
          * Constructor with required parameters as string to allow for dynamic content.
          */
-        public GetOrderByIdSendActionBuilder(OpenApiSpecification openApiSpecification, StoreApi storeApi, String orderIdExpression) {
-            super(storeApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+            public GetOrderByIdSendActionBuilder(OpenApiSpecification openApiSpecification, StoreApi storeApi, String orderIdExpression) {
+            super(storeApi, openApiSpecification,  METHOD, ENDPOINT, OPERATION_NAME);
             pathParameter("orderId", orderIdExpression, ParameterStyle.SIMPLE, false, false);
         }
 
@@ -365,7 +378,7 @@ public class StoreApi implements GeneratedApi {
 
         public GetOrderByIdSendActionBuilder orderId(String orderIdExpression) {
             pathParameter("orderId", orderIdExpression, ParameterStyle.SIMPLE, false, false);
-            return this;
+                return this;
         }
 
         @Override
@@ -380,7 +393,7 @@ public class StoreApi implements GeneratedApi {
     }
 
     public static class GetOrderByIdReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -388,7 +401,7 @@ public class StoreApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "getOrderById";
 
-        public GetOrderByIdReceiveActionBuilder(StoreApi storeApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public GetOrderByIdReceiveActionBuilder(StoreApi storeApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(storeApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -409,7 +422,7 @@ public class StoreApi implements GeneratedApi {
     }
 
     public static class PlaceOrderSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "POST";
 
@@ -454,7 +467,7 @@ public class StoreApi implements GeneratedApi {
     }
 
     public static class PlaceOrderReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "POST";
 
@@ -462,7 +475,7 @@ public class StoreApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "placeOrder";
 
-        public PlaceOrderReceiveActionBuilder(StoreApi storeApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public PlaceOrderReceiveActionBuilder(StoreApi storeApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(storeApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 

@@ -31,8 +31,6 @@ import org.citrusframework.openapi.generator.rest.petstore.request.PetApi;
 import org.citrusframework.openapi.generator.rest.petstore.request.PetApi.GetPetByIdReceiveActionBuilder;
 import org.citrusframework.openapi.generator.rest.petstore.spring.PetStoreBeanConfiguration;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.SocketUtils;
 import org.citrusframework.validation.json.JsonPathVariableExtractor;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.variable.GlobalVariables;
@@ -46,7 +44,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -60,8 +57,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.http.actions.HttpActionBuilder.http;
 import static org.citrusframework.openapi.generator.util.MultipartConverter.multipartMessageToMap;
+import static org.citrusframework.util.FileUtils.copyToByteArray;
+import static org.citrusframework.util.FileUtils.readToString;
+import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 import static org.citrusframework.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 
 /**
  * This integration test class for the generated TestAPI aims to comprehensively test all aspects of
@@ -74,23 +79,26 @@ import static org.springframework.http.HttpStatus.OK;
  */
 
 @ExtendWith(CitrusSpringExtension.class)
-@SpringBootTest(classes = {PetStoreBeanConfiguration.class, ExtPetStoreBeanConfiguration.class,
-        CitrusSpringConfig.class, Config.class}, properties = {
-        "extpetstore.basic.username=extUser",
-        "extpetstore.basic.password=extPassword",
-        "extpetstore.bearer.token=defaultBearerToken",
-        "extpetstore.api-key-query=defaultTopSecretQueryApiKey",
-        "extpetstore.api-key-header=defaultTopSecretHeaderApiKey",
-        "extpetstore.api-key-cookie=defaultTopSecretCookieApiKey",
-        "extpetstore.base64-encode-api-key=true"
-}
-)
+@SpringBootTest(
+        classes = {
+                PetStoreBeanConfiguration.class,
+                ExtPetStoreBeanConfiguration.class,
+                CitrusSpringConfig.class,
+                Config.class},
+        properties = {
+                "extpetstore.basic.username=extUser",
+                "extpetstore.basic.password=extPassword",
+                "extpetstore.bearer.token=defaultBearerToken",
+                "extpetstore.api-key-query=defaultTopSecretQueryApiKey",
+                "extpetstore.api-key-header=defaultTopSecretHeaderApiKey",
+                "extpetstore.api-key-cookie=defaultTopSecretCookieApiKey",
+                "extpetstore.base64-encode-api-key=true"
+        })
 class GeneratedRestApiIT {
 
     public static final List<Integer> PET_ID_LIST = List.of(1, 2);
     public static final List<String> PET_ID_AS_STRING_LIST = List.of("1", "2");
-    public static final List<String> PET_ID_WITH_VARIABLE_EXPRESSIONS_LIST = List.of("${one}",
-            "${two}");
+    public static final List<String> PET_ID_WITH_VARIABLE_EXPRESSIONS_LIST = List.of("${one}", "${two}");
 
     public static final PetIdentifier PET_IDENTIFIER = new PetIdentifier()._name("Louis")
             .alias("Alexander");
@@ -118,11 +126,11 @@ class GeneratedRestApiIT {
     @TestConfiguration
     public static class Config {
 
-        private final int port = SocketUtils.findAvailableTcpPort(8080);
+        private final int port = findAvailableTcpPort(8080);
 
-        private final int otherPort = SocketUtils.findAvailableTcpPort(8081);
+        private final int otherPort = findAvailableTcpPort(8081);
 
-        private final int wsPort = SocketUtils.findAvailableTcpPort(8090);
+        private final int wsPort = findAvailableTcpPort(8090);
 
         /**
          * Main http client for accessing the main http server.
@@ -166,7 +174,7 @@ class GeneratedRestApiIT {
                     .port(port)
                     .timeout(5000L)
                     .autoStart(true)
-                    .defaultStatus(HttpStatus.NO_CONTENT)
+                    .defaultStatus(NO_CONTENT)
                     .handleCookies(true)
                     .handleHandleSemicolonPathContent(true)
                     .build();
@@ -191,7 +199,7 @@ class GeneratedRestApiIT {
                     .port(otherPort)
                     .timeout(5000L)
                     .autoStart(true)
-                    .defaultStatus(HttpStatus.NO_CONTENT)
+                    .defaultStatus(NO_CONTENT)
                     .build();
         }
 
@@ -257,11 +265,10 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleArray("200"));
-
                     }
 
                     @Test
@@ -279,16 +286,14 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleArray("200"));
-
                     }
 
                     @Test
                     void java_array_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithSimpleStyleArray$(PET_ID_AS_STRING_LIST)
                                 .fork(true));
 
@@ -301,16 +306,14 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleArray("200"));
-
                     }
 
                     @Test
-                    void java_array_value_non_type_safe_with_variables(
-                            @CitrusResource TestCaseRunner runner) {
+                    void java_array_value_non_type_safe_with_variables(@CitrusResource TestCaseRunner runner) {
                         runner.variable("one", "1");
                         runner.variable("two", "2");
 
@@ -328,20 +331,17 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleArray("200"));
-
                     }
 
                     @Test
                     void java_object_value(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
-                        runner.when(extPetApi.sendGetPetWithSimpleStyleObject(
-                                        PET_IDENTIFIER)
+                        runner.when(extPetApi.sendGetPetWithSimpleStyleObject(PET_IDENTIFIER)
                                 .schemaValidation(false)
                                 .fork(true));
 
@@ -354,7 +354,7 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleObject("200"));
@@ -362,7 +362,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_object_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi.sendGetPetWithSimpleStyleObject$(PET_IDENTIFIER_AS_STRING)
@@ -378,12 +377,11 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleObject("200"));
                     }
-
                 }
 
                 @Nested
@@ -404,11 +402,10 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleArrayExploded("200"));
-
                     }
 
                     @Test
@@ -426,16 +423,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleArrayExploded("200"));
-
                     }
 
                     @Test
                     void java_array_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(
                                 extPetApi.sendGetPetWithSimpleStyleArrayExploded$(PET_ID_AS_STRING_LIST)
                                         .fork(true));
@@ -449,16 +444,14 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleArrayExploded("200"));
-
                     }
 
                     @Test
-                    void java_array_value_non_type_safe_with_variables(
-                            @CitrusResource TestCaseRunner runner) {
+                    void java_array_value_non_type_safe_with_variables(@CitrusResource TestCaseRunner runner) {
                         runner.variable("one", "1");
                         runner.variable("two", "2");
 
@@ -476,16 +469,14 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleArrayExploded("200"));
-
                     }
 
                     @Test
                     void java_object_value(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi.sendGetPetWithSimpleStyleObjectExploded(
@@ -503,7 +494,7 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleObjectExploded("200"));
@@ -511,7 +502,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_object_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi.sendGetPetWithSimpleStyleObjectExploded$(
@@ -529,12 +519,11 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleObjectExploded("200"));
                     }
-
                 }
             }
 
@@ -550,11 +539,8 @@ class GeneratedRestApiIT {
                      * request validation to overcome this issue.
                      */
                     @Test
-                    void throws_request_validation_exception(
-                            @CitrusResource TestCaseRunner runner) {
-
-                        HttpClientRequestActionBuilder builder = extPetApi.sendGetPetWithLabelStyleArray(
-                                        PET_ID_LIST)
+                    void throws_request_validation_exception(@CitrusResource TestCaseRunner runner) {
+                        HttpClientRequestActionBuilder builder = extPetApi.sendGetPetWithLabelStyleArray(PET_ID_LIST)
                                 .fork(false);
 
                         assertThatThrownBy(() -> runner.when(builder))
@@ -566,7 +552,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi.sendGetPetWithLabelStyleArray(List.of(1))
@@ -582,16 +567,14 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithLabelStyleArray("200"));
-
                     }
 
                     @Test
                     void java_array_value(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi.sendGetPetWithLabelStyleArray(PET_ID_LIST)
@@ -607,16 +590,14 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithLabelStyleArray("200"));
-
                     }
 
                     @Test
                     void java_array_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi.sendGetPetWithLabelStyleArray$(PET_ID_AS_STRING_LIST)
@@ -632,16 +613,14 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithLabelStyleArray("200"));
-
                     }
 
                     @Test
-                    void java_array_value_non_type_safe_with_variables(
-                            @CitrusResource TestCaseRunner runner) {
+                    void java_array_value_non_type_safe_with_variables(@CitrusResource TestCaseRunner runner) {
                         runner.variable("one", "1");
                         runner.variable("two", "2");
 
@@ -662,20 +641,17 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithLabelStyleArray("200"));
-
                     }
 
                     @Test
                     void java_object_value(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
-                        runner.when(extPetApi.sendGetPetWithLabelStyleObject(
-                                        PET_IDENTIFIER)
+                        runner.when(extPetApi.sendGetPetWithLabelStyleObject(PET_IDENTIFIER)
                                 .schemaValidation(false)
                                 .fork(true));
 
@@ -688,7 +664,7 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithLabelStyleObject("200"));
@@ -696,7 +672,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_object_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi.sendGetPetWithLabelStyleObject$("""
@@ -714,7 +689,7 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithLabelStyleObject("200"));
@@ -739,11 +714,10 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithLabelStyleArrayExploded("200"));
-
                     }
 
                     @Test
@@ -761,16 +735,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithLabelStyleArrayExploded("200"));
-
                     }
 
                     @Test
                     void java_array_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(
                                 extPetApi.sendGetPetWithLabelStyleArrayExploded$(PET_ID_AS_STRING_LIST)
                                         .fork(true));
@@ -784,22 +756,19 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithLabelStyleArrayExploded("200"));
-
                     }
 
                     @Test
-                    void java_array_value_non_type_safe_with_variables(
-                            @CitrusResource TestCaseRunner runner) {
+                    void java_array_value_non_type_safe_with_variables(@CitrusResource TestCaseRunner runner) {
                         runner.variable("one", "1");
                         runner.variable("two", "2");
 
                         runner.when(
-                                extPetApi.sendGetPetWithLabelStyleArrayExploded$(
-                                                PET_ID_WITH_VARIABLE_EXPRESSIONS_LIST)
+                                extPetApi.sendGetPetWithLabelStyleArrayExploded$(PET_ID_WITH_VARIABLE_EXPRESSIONS_LIST)
                                         .fork(true));
 
                         runner.then(http().server(httpServer)
@@ -811,16 +780,14 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithLabelStyleArrayExploded("200"));
-
                     }
 
                     @Test
                     void java_object_value(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi.sendGetPetWithLabelStyleObjectExploded$("""
@@ -839,7 +806,7 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithLabelStyleObjectExploded("200"));
@@ -847,7 +814,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_object_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi.sendGetPetWithLabelStyleObjectExploded(
@@ -865,13 +831,12 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithLabelStyleObjectExploded("200"));
                     }
                 }
-
             }
 
             @Nested
@@ -882,7 +847,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithMatrixStyleArray(List.of(1))
                                 .fork(true));
 
@@ -895,16 +859,14 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithMatrixStyleArray("200"));
-
                     }
 
                     @Test
                     void java_array_value(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithMatrixStyleArray(PET_ID_LIST)
                                 .fork(true));
 
@@ -917,16 +879,14 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithMatrixStyleArray("200"));
-
                     }
 
                     @Test
                     void java_array_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithMatrixStyleArray$(PET_ID_AS_STRING_LIST)
                                 .fork(true));
 
@@ -939,16 +899,14 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithMatrixStyleArray("200"));
-
                     }
 
                     @Test
-                    void java_array_value_non_type_safe_with_variables(
-                            @CitrusResource TestCaseRunner runner) {
+                    void java_array_value_non_type_safe_with_variables(@CitrusResource TestCaseRunner runner) {
                         runner.variable("one", "1");
                         runner.variable("two", "2");
 
@@ -966,16 +924,14 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithMatrixStyleArray("200"));
-
                     }
 
                     @Test
                     void java_object_value(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi.sendGetPetWithMatrixStyleObject(
@@ -992,7 +948,7 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithMatrixStyleObject("200"));
@@ -1000,7 +956,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_object_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi.sendGetPetWithMatrixStyleObject$(
@@ -1017,12 +972,11 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithMatrixStyleObject("200"));
                     }
-
                 }
 
                 @Nested
@@ -1030,7 +984,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithMatrixStyleArrayExploded(List.of(1))
                                 .fork(true));
 
@@ -1042,16 +995,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithMatrixStyleArrayExploded("200"));
-
                     }
 
                     @Test
                     void java_array_value(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithMatrixStyleArrayExploded(PET_ID_LIST)
                                 .fork(true));
 
@@ -1063,16 +1014,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithMatrixStyleArrayExploded("200"));
-
                     }
 
                     @Test
                     void java_array_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(
                                 extPetApi.sendGetPetWithMatrixStyleArrayExploded$(PET_ID_AS_STRING_LIST)
                                         .fork(true));
@@ -1086,17 +1035,14 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithMatrixStyleArrayExploded("200"));
-
                     }
 
                     @Test
-                    void java_array_value_non_type_safe_with_variables(
-                            @CitrusResource TestCaseRunner runner) {
-
+                    void java_array_value_non_type_safe_with_variables(@CitrusResource TestCaseRunner runner) {
                         runner.variable("one", "1");
                         runner.variable("two", "2");
 
@@ -1114,16 +1060,14 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithMatrixStyleArrayExploded("200"));
-
                     }
 
                     @Test
                     void java_object_value(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi.sendGetPetWithMatrixStyleObjectExploded(
@@ -1141,7 +1085,7 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithMatrixStyleObject("200"));
@@ -1149,7 +1093,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_object_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi.sendGetPetWithMatrixStyleObjectExploded$(
@@ -1167,12 +1110,11 @@ class GeneratedRestApiIT {
                                 .send()
                                 .response(OK)
                                 .message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithMatrixStyleObject("200"));
                     }
-
                 }
             }
         }
@@ -1186,10 +1128,8 @@ class GeneratedRestApiIT {
                 @Nested
                 class Array {
 
-
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithSimpleStyleHeader(List.of(1))
                                 .fork(true));
 
@@ -1201,16 +1141,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleHeader("200"));
-
                     }
 
                     @Test
                     void java_array_value(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithSimpleStyleHeader(PET_ID_LIST)
                                 .fork(true));
 
@@ -1222,18 +1160,15 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleHeader("200"));
-
                     }
 
                     @Test
                     void java_array_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
-                        runner.when(extPetApi.sendGetPetWithSimpleStyleHeader$(
-                                        PET_ID_AS_STRING_LIST)
+                        runner.when(extPetApi.sendGetPetWithSimpleStyleHeader$(PET_ID_AS_STRING_LIST)
                                 .fork(true));
 
                         runner.then(http().server(httpServer)
@@ -1244,17 +1179,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleHeader("200"));
-
                     }
 
                     @Test
-                    void java_array_value_non_type_safe_with_variables(
-                            @CitrusResource TestCaseRunner runner) {
-
+                    void java_array_value_non_type_safe_with_variables(@CitrusResource TestCaseRunner runner) {
                         runner.variable("one", "1");
                         runner.variable("two", "2");
 
@@ -1270,16 +1202,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleHeader("200"));
-
                     }
 
                     @Test
                     void java_object_value(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi
@@ -1295,7 +1225,7 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleExplodedHeader("200"));
@@ -1303,7 +1233,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_object_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi
@@ -1319,12 +1248,11 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleExplodedHeader("200"));
                     }
-
                 }
 
                 @Nested
@@ -1332,7 +1260,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithSimpleStyleExplodedHeader(List.of(1))
                                 .fork(true));
 
@@ -1344,16 +1271,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleExplodedHeader("200"));
-
                     }
 
                     @Test
                     void java_array_value(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithSimpleStyleExplodedHeader(PET_ID_LIST)
                                 .fork(true));
 
@@ -1365,18 +1290,15 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleExplodedHeader("200"));
-
                     }
 
                     @Test
                     void java_array_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
-                        runner.when(extPetApi.sendGetPetWithSimpleStyleExplodedHeader$(
-                                        PET_ID_AS_STRING_LIST)
+                        runner.when(extPetApi.sendGetPetWithSimpleStyleExplodedHeader$(PET_ID_AS_STRING_LIST)
                                 .fork(true));
 
                         runner.then(http().server(httpServer)
@@ -1387,22 +1309,18 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleExplodedHeader("200"));
-
                     }
 
                     @Test
-                    void java_array_value_non_type_safe_with_variables(
-                            @CitrusResource TestCaseRunner runner) {
-
+                    void java_array_value_non_type_safe_with_variables(@CitrusResource TestCaseRunner runner) {
                         runner.variable("one", "1");
                         runner.variable("two", "2");
 
-                        runner.when(extPetApi.sendGetPetWithSimpleStyleExplodedHeader$(
-                                        PET_ID_WITH_VARIABLE_EXPRESSIONS_LIST)
+                        runner.when(extPetApi.sendGetPetWithSimpleStyleExplodedHeader$(PET_ID_WITH_VARIABLE_EXPRESSIONS_LIST)
                                 .fork(true));
 
                         runner.then(http().server(httpServer)
@@ -1413,16 +1331,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithSimpleStyleExplodedHeader("200"));
-
                     }
 
                     @Test
                     void java_object_value(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi
@@ -1438,7 +1354,7 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(
@@ -1447,7 +1363,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_object_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi
@@ -1463,16 +1378,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(
                                 extPetApi.receiveGetPetWithSimpleStyleExplodedObjectHeader("200"));
                     }
                 }
-
             }
-
         }
 
         @Nested
@@ -1486,7 +1399,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithFormStyleQuery(List.of(1))
                                 .fork(true));
 
@@ -1498,16 +1410,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleQuery("200"));
-
                     }
 
                     @Test
                     void java_arrya_value(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithFormStyleQuery(PET_ID_LIST)
                                 .fork(true));
 
@@ -1519,7 +1429,7 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleQuery("200"));
@@ -1527,7 +1437,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_arrya_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithFormStyleQuery$(PET_ID_AS_STRING_LIST)
                                 .fork(true));
 
@@ -1539,16 +1448,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleQuery("200"));
                     }
 
                     @Test
-                    void java_arrya_value_non_type_safe_with_variables(
-                            @CitrusResource TestCaseRunner runner) {
-
+                    void java_arrya_value_non_type_safe_with_variables(@CitrusResource TestCaseRunner runner) {
                         runner.variable("one", "1");
                         runner.variable("two", "2");
 
@@ -1564,7 +1471,7 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleQuery("200"));
@@ -1572,7 +1479,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_object_value(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi
@@ -1588,7 +1494,7 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleObjectQuery("200"));
@@ -1596,7 +1502,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_object_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi
@@ -1612,7 +1517,7 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleObjectQuery("200"));
@@ -1624,7 +1529,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithFormStyleExplodedQuery(List.of(1))
                                 .fork(true));
 
@@ -1636,16 +1540,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleQuery("200"));
-
                     }
 
                     @Test
                     void java_array_value(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithFormStyleExplodedQuery(PET_ID_LIST)
                                 .fork(true));
 
@@ -1661,7 +1563,7 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleQuery("200"));
@@ -1669,7 +1571,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_array_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(
                                 extPetApi.sendGetPetWithFormStyleExplodedQuery$(PET_ID_AS_STRING_LIST)
                                         .fork(true));
@@ -1686,16 +1587,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleQuery("200"));
                     }
 
                     @Test
-                    void java_array_value_non_type_safe_with_variables(
-                            @CitrusResource TestCaseRunner runner) {
-
+                    void java_array_value_non_type_safe_with_variables(@CitrusResource TestCaseRunner runner) {
                         runner.variable("one", "1");
                         runner.variable("two", "2");
 
@@ -1715,7 +1614,7 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleQuery("200"));
@@ -1723,7 +1622,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_object_value(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi
                                 .sendGetPetWithFormStyleExplodedObjectQuery(
                                         PET_IDENTIFIER)
@@ -1738,7 +1636,7 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleObjectQuery("200"));
@@ -1746,7 +1644,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_object_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi
                                 .sendGetPetWithFormStyleExplodedObjectQuery$(
                                         PET_IDENTIFIER_AS_STRING)
@@ -1761,7 +1658,7 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleObjectQuery("200"));
@@ -1777,10 +1674,7 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_object_value(@CitrusResource TestCaseRunner runner) {
-
-                        runner.when(extPetApi
-                                .sendGetPetWithDeepObjectTypeQuery(
-                                        PET_IDENTIFIER)
+                        runner.when(extPetApi.sendGetPetWithDeepObjectTypeQuery(PET_IDENTIFIER)
                                 .fork(true));
                         runner.then(http().server(httpServer)
                                 .receive()
@@ -1792,7 +1686,7 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithDeepObjectTypeQuery("200"));
@@ -1800,10 +1694,7 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_object_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
-                        runner.when(extPetApi
-                                .sendGetPetWithDeepObjectTypeQuery$(
-                                        PET_IDENTIFIER_AS_STRING)
+                        runner.when(extPetApi.sendGetPetWithDeepObjectTypeQuery$(PET_IDENTIFIER_AS_STRING)
                                 .fork(true));
                         runner.then(http().server(httpServer)
                                 .receive()
@@ -1815,7 +1706,7 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithDeepObjectTypeQuery("200"));
@@ -1835,7 +1726,6 @@ class GeneratedRestApiIT {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithFormStyleCookie(List.of(1))
                                 .fork(true));
 
@@ -1847,16 +1737,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleCookie("200"));
-
                     }
 
                     @Test
                     void java_array_value(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithFormStyleCookie(PET_ID_LIST)
                                 .fork(true));
 
@@ -1870,16 +1758,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleCookie("200"));
-
                     }
 
                     @Test
                     void java_array_value_non_type_safe(@CitrusResource TestCaseRunner runner) {
-
                         runner.when(extPetApi.sendGetPetWithFormStyleCookie$(PET_ID_AS_STRING_LIST)
                                 .fork(true));
 
@@ -1893,17 +1779,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleCookie("200"));
-
                     }
 
                     @Test
-                    void java_array_value_non_type_safe_with_variables(
-                            @CitrusResource TestCaseRunner runner) {
-
+                    void java_array_value_non_type_safe_with_variables(@CitrusResource TestCaseRunner runner) {
                         runner.variable("one", "1");
                         runner.variable("two", "2");
 
@@ -1921,16 +1804,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleCookie("200"));
-
                     }
 
                     @Test
                     void java_object_value(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi.sendGetPetWithFormObjectStyleCookie(
@@ -1949,16 +1830,14 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleCookie("200"));
-
                     }
 
                     @Test
                     void java_object_value_none_type(@CitrusResource TestCaseRunner runner) {
-
                         // Note that we need to disable oas validation here, as validation is
                         // currently not supported with the chosen serialization approach.
                         runner.when(extPetApi.sendGetPetWithFormObjectStyleCookie$(
@@ -1977,11 +1856,10 @@ class GeneratedRestApiIT {
                         runner.then(http().server(httpServer)
                                 .send()
                                 .response(OK).message()
-                                .contentType("application/json")
+                                .contentType(APPLICATION_JSON_VALUE)
                                 .body("[]"));
 
                         runner.when(extPetApi.receiveGetPetWithFormStyleCookie("200"));
-
                     }
                 }
             }
@@ -2044,7 +1922,6 @@ class GeneratedRestApiIT {
                 runner.when(extPetApi
                         .receiveUpdatePetWithArrayQueryData(OK)
                         .message());
-
             }
         }
     }
@@ -2081,7 +1958,6 @@ class GeneratedRestApiIT {
                     .response(OK));
 
             runner.when(petApi.receiveUpdatePetWithForm("200"));
-
         }
     }
 
@@ -2104,9 +1980,7 @@ class GeneratedRestApiIT {
             }
 
             @Test
-            void java(
-                    @CitrusResource TestCaseRunner runner) {
-
+            void java(@CitrusResource TestCaseRunner runner) {
                 runner.variable("petId", "1234");
 
                 runner.when(petApi
@@ -2125,12 +1999,11 @@ class GeneratedRestApiIT {
                         .message()
                         .body(Resources.create(
                                 "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/invalidGetPetById_response.json"))
-                        .contentType("application/json"));
+                        .contentType(APPLICATION_JSON_VALUE));
 
                 runner.when(petApi
                         .receiveGetPetById(OK)
                         .schemaValidation(false));
-
             }
         }
     }
@@ -2154,7 +2027,6 @@ class GeneratedRestApiIT {
 
             @Test
             void java(@CitrusResource TestCaseRunner runner) {
-
                 runner.variable("petId", "1234");
 
                 runner.when(petApi
@@ -2173,7 +2045,7 @@ class GeneratedRestApiIT {
                         .message()
                         .body(Resources.create(
                                 "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                        .contentType("application/json"));
+                        .contentType(APPLICATION_JSON_VALUE));
 
                 HttpClientResponseActionBuilder.HttpMessageBuilderSupport builder = petApi
                         .receiveGetPetById(OK).message().reasonPhrase("Almost OK");
@@ -2198,7 +2070,6 @@ class GeneratedRestApiIT {
 
             @Test
             void java(@CitrusResource TestCaseRunner runner) {
-
                 runner.variable("petId", "1234");
 
                 runner.when(petApi
@@ -2217,7 +2088,7 @@ class GeneratedRestApiIT {
                         .message()
                         .body(Resources.create(
                                 "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                        .contentType("application/json"));
+                        .contentType(APPLICATION_JSON_VALUE));
 
                 GetPetByIdReceiveActionBuilder getPetByIdResponseActionBuilder = petApi
                         .receiveGetPetById("201");
@@ -2242,7 +2113,6 @@ class GeneratedRestApiIT {
 
             @Test
             void java(@CitrusResource TestCaseRunner runner) {
-
                 runner.variable("petId", "1234");
 
                 runner.when(petApi
@@ -2261,7 +2131,7 @@ class GeneratedRestApiIT {
                         .message()
                         .body(Resources.create(
                                 "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                        .contentType("application/json"));
+                        .contentType(APPLICATION_JSON_VALUE));
 
                 HttpClientResponseActionBuilder.HttpMessageBuilderSupport builder = petApi
                         .receiveGetPetById(OK).message().version("HTTP/1.0");
@@ -2286,7 +2156,6 @@ class GeneratedRestApiIT {
 
             @Test
             void java(@CitrusResource TestCaseRunner runner) {
-
                 runner.variable("petId", "1234");
 
                 runner.when(petApi
@@ -2305,7 +2174,7 @@ class GeneratedRestApiIT {
                         .message()
                         .body(Resources.create(
                                 "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/invalidGetPetById_response.json"))
-                        .contentType("application/json"));
+                        .contentType(APPLICATION_JSON_VALUE));
 
                 GetPetByIdReceiveActionBuilder getPetByIdResponseActionBuilder = petApi.receiveGetPetById(
                         OK);
@@ -2313,7 +2182,6 @@ class GeneratedRestApiIT {
                                 TestCaseFailedException.class)
                         .hasMessageContaining("Object has missing required properties ([\"name\"]): []")
                         .hasCauseInstanceOf(ValidationException.class);
-
             }
         }
 
@@ -2330,7 +2198,6 @@ class GeneratedRestApiIT {
 
             @Test
             void java(@CitrusResource TestCaseRunner runner) {
-
                 runner.variable("petId", "1234");
 
                 runner.when(petApi
@@ -2349,7 +2216,7 @@ class GeneratedRestApiIT {
                         .message()
                         .body(Resources.create(
                                 "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                        .contentType("application/json"));
+                        .contentType(APPLICATION_JSON_VALUE));
 
                 HttpClientResponseActionBuilder.HttpMessageBuilderSupport builder = petApi
                         .receiveGetPetById(OK).message().body(Resources.create(
@@ -2359,7 +2226,6 @@ class GeneratedRestApiIT {
                         .hasMessageContaining(
                                 "Number of entries is not equal in element: '$', expected '[description]' but was '[photoUrls, name, id, category, tags, status]'")
                         .hasCauseInstanceOf(ValidationException.class);
-
             }
         }
 
@@ -2376,7 +2242,6 @@ class GeneratedRestApiIT {
 
             @Test
             void java(@CitrusResource TestCaseRunner runner) {
-
                 runner.variable("petId", "1234");
 
                 runner.when(petApi
@@ -2395,7 +2260,7 @@ class GeneratedRestApiIT {
                         .message()
                         .body(Resources.create(
                                 "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                        .contentType("application/json"));
+                        .contentType(APPLICATION_JSON_VALUE));
 
                 HttpClientResponseActionBuilder.HttpMessageBuilderSupport builder = petApi
                         .receiveGetPetById(OK).message().body("""
@@ -2405,7 +2270,6 @@ class GeneratedRestApiIT {
                         .hasMessageContaining(
                                 "Number of entries is not equal in element: '$', expected '[description]' but was '[photoUrls, name, id, category, tags, status]'")
                         .hasCauseInstanceOf(ValidationException.class);
-
             }
         }
 
@@ -2422,7 +2286,6 @@ class GeneratedRestApiIT {
 
             @Test
             void java(@CitrusResource TestCaseRunner runner) {
-
                 runner.variable("petId", "1234");
 
                 runner.when(petApi
@@ -2441,7 +2304,7 @@ class GeneratedRestApiIT {
                         .message()
                         .body(Resources.create(
                                 "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                        .contentType("application/json"));
+                        .contentType(APPLICATION_JSON_VALUE));
 
                 HttpClientResponseActionBuilder.HttpMessageBuilderSupport builder = petApi
                         .receiveGetPetById(OK).message()
@@ -2451,7 +2314,6 @@ class GeneratedRestApiIT {
                         .hasMessageContaining(
                                 "Values not equal for element '$.name', expected 'unknown' but was")
                         .hasCauseInstanceOf(ValidationException.class);
-
             }
         }
     }
@@ -2522,7 +2384,7 @@ class GeneratedRestApiIT {
                     .message()
                     .body(Resources.create(
                             "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                    .contentType("application/json"));
+                    .contentType(APPLICATION_JSON_VALUE));
 
             runner.then(petApi.receiveGetPetById(OK)
                     .message()
@@ -2562,7 +2424,7 @@ class GeneratedRestApiIT {
                     .message()
                     .body(Resources.create(
                             "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                    .contentType("application/json"));
+                    .contentType(APPLICATION_JSON_VALUE));
 
             runner.then(petApi.receiveGetPetById(OK).endpoint(otherApplicationServiceClient)
                     .message()
@@ -2625,14 +2487,12 @@ class GeneratedRestApiIT {
                             .message()
                             .body(Resources.create(
                                     "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                            .contentType("application/json"));
+                            .contentType(APPLICATION_JSON_VALUE));
 
                     runner.when(extPetApi
                             .receiveGetPetByIdWithBasicAuthentication(OK)
                             .message());
-
                 }
-
             }
 
             /**
@@ -2647,8 +2507,7 @@ class GeneratedRestApiIT {
                 }
 
                 @Test
-                void java(
-                        @CitrusResource TestCaseRunner runner) {
+                void java(@CitrusResource TestCaseRunner runner) {
                     runner.variable("petId", "1234");
 
                     runner.when(extPetApi
@@ -2668,14 +2527,12 @@ class GeneratedRestApiIT {
                             .message()
                             .body(Resources.create(
                                     "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                            .contentType("application/json"));
+                            .contentType(APPLICATION_JSON_VALUE));
 
                     runner.when(extPetApi
                             .receiveGetPetByIdWithBasicAuthentication(OK)
                             .message());
-
                 }
-
             }
         }
 
@@ -2694,8 +2551,7 @@ class GeneratedRestApiIT {
                 }
 
                 @Test
-                void java(
-                        @CitrusResource TestCaseRunner runner) {
+                void java(@CitrusResource TestCaseRunner runner) {
                     runner.variable("petId", "1234");
 
                     runner.when(extPetApi
@@ -2714,12 +2570,11 @@ class GeneratedRestApiIT {
                             .message()
                             .body(Resources.create(
                                     "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                            .contentType("application/json"));
+                            .contentType(APPLICATION_JSON_VALUE));
 
                     runner.when(extPetApi
                             .receiveGetPetByIdWithBearerAuthentication(OK)
                             .message());
-
                 }
             }
 
@@ -2754,22 +2609,17 @@ class GeneratedRestApiIT {
                             .message()
                             .body(Resources.create(
                                     "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                            .contentType("application/json"));
+                            .contentType(APPLICATION_JSON_VALUE));
 
                     runner.when(extPetApi
                             .receiveGetPetByIdWithBearerAuthentication(OK)
                             .message());
-
                 }
-
             }
-
         }
-
 
         @Nested
         class ApiKeyAuthentication {
-
 
             /**
              * Demonstrates API key authentication using default values from properties.
@@ -2784,7 +2634,6 @@ class GeneratedRestApiIT {
 
                 @Test
                 void java(@CitrusResource TestCaseRunner runner) {
-
                     runner.variable("petId", "1234");
 
                     runner.when(extPetApi
@@ -2809,13 +2658,12 @@ class GeneratedRestApiIT {
                             .message()
                             .body(Resources.create(
                                     "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/invalidGetPetById_response.json"))
-                            .contentType("application/json"));
+                            .contentType(APPLICATION_JSON_VALUE));
 
                     runner.when(extPetApi
                             .receiveGetPetByIdWithApiKeyAuthentication(OK)
                             .schemaValidation(false));
                 }
-
             }
 
             /**
@@ -2830,9 +2678,7 @@ class GeneratedRestApiIT {
                 }
 
                 @Test
-                void java(
-                        @CitrusResource TestCaseRunner runner) {
-
+                void java(@CitrusResource TestCaseRunner runner) {
                     runner.variable("petId", "1234");
                     runner.variable("apiKeyHeader", "TopSecretHeader");
                     runner.variable("apiKeyCookie", "TopSecretCookie");
@@ -2861,7 +2707,7 @@ class GeneratedRestApiIT {
                             .message()
                             .body(Resources.create(
                                     "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/invalidGetPetById_response.json"))
-                            .contentType("application/json"));
+                            .contentType(APPLICATION_JSON_VALUE));
 
                     runner.when(extPetApi
                             .receiveGetPetByIdWithApiKeyAuthentication(OK)
@@ -2878,17 +2724,16 @@ class GeneratedRestApiIT {
     class Multipart {
 
         @Test
-        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withMultiPartTest")
+        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withMultipartTest")
         void xml() {
         }
 
         @Test
         void java(@CitrusResource TestCaseRunner runner) throws IOException {
-
-            byte[] templateData = FileUtils.copyToByteArray(
+            byte[] templateData = copyToByteArray(
                     Resources.create(
                             "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/vaccinationTemplate.bin"));
-            String additionalData = FileUtils.readToString(Resources.create(
+            String additionalData = readToString(Resources.create(
                     "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/vaccinationAdditionalData.json"));
 
             runner.when(extPetApi.sendGenerateVaccinationReport$(
@@ -2923,7 +2768,8 @@ class GeneratedRestApiIT {
             runner.then(http().server(httpServer)
                     .send()
                     .response(OK)
-                    .message().contentType("application/pdf")
+                    .message()
+                    .contentType(APPLICATION_PDF_VALUE)
                     .body(Resources.create(
                             "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/vaccinationReport.pdf")));
 
@@ -2970,9 +2816,7 @@ class GeneratedRestApiIT {
                     .response(OK));
 
             runner.when(petApi.receiveUpdatePetWithForm("200"));
-
         }
-
     }
 
     /**
@@ -3009,7 +2853,7 @@ class GeneratedRestApiIT {
                     .receive()
                     .put("/api/v3/ext/pet/form/1234")
                     .message()
-                    .contentType("application/x-www-form-urlencoded")
+                    .contentType(APPLICATION_FORM_URLENCODED_VALUE)
                     .validate((Message message, TestContext context) ->
                             assertThat(message.getPayload(String.class))
                                     .contains("name=Thunder")
@@ -3030,7 +2874,6 @@ class GeneratedRestApiIT {
             runner.when(extPetApi
                     .receiveUpdatePetWithFormUrlEncoded(OK)
                     .message());
-
         }
     }
 
@@ -3062,7 +2905,7 @@ class GeneratedRestApiIT {
                     .receive()
                     .put("/api/v3/ext/pet/form/1234")
                     .message()
-                    .contentType("application/x-www-form-urlencoded")
+                    .contentType(APPLICATION_FORM_URLENCODED_VALUE)
                     .validate((Message message, TestContext context) ->
                             assertThat(message.getPayload(String.class))
                                     .contains("name=Thunder")
@@ -3083,7 +2926,6 @@ class GeneratedRestApiIT {
             runner.when(extPetApi
                     .receiveUpdatePetWithFormUrlEncoded(OK)
                     .message());
-
         }
     }
 
@@ -3136,7 +2978,6 @@ class GeneratedRestApiIT {
                     .response(OK));
 
             runner.when(petApi.receiveUpdatePetWithForm("200"));
-
         }
     }
 
@@ -3171,7 +3012,6 @@ class GeneratedRestApiIT {
                     .response(OK));
 
             runner.when(petApi.receiveUpdatePetWithForm("200"));
-
         }
     }
 
@@ -3207,7 +3047,7 @@ class GeneratedRestApiIT {
                     .cookie(new Cookie("NonApiCookie", "nonApiCookieValue"))
                     .body(Resources.create(
                             "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                    .contentType("application/json"));
+                    .contentType(APPLICATION_JSON_VALUE));
 
             runner.then(petApi.receiveGetPetById(OK)
                     .message()
@@ -3267,7 +3107,7 @@ class GeneratedRestApiIT {
                     .cookie(new Cookie("NonApiCookie", "nonApiCookieValue"))
                     .body(Resources.create(
                             "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                    .contentType("application/json"));
+                    .contentType(APPLICATION_JSON_VALUE));
 
             runner.then(petApi.receiveGetPetById(OK)
                     .message()
@@ -3309,7 +3149,7 @@ class GeneratedRestApiIT {
                     .cookie(new Cookie("NonApiCookie", "nonApiCookieValue"))
                     .body(Resources.create(
                             "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                    .contentType("application/json"));
+                    .contentType(APPLICATION_JSON_VALUE));
 
             runner.then(petApi.receiveGetPetById(OK)
                     .message()
@@ -3332,7 +3172,6 @@ class GeneratedRestApiIT {
         @Test
         @CitrusTest
         void java(@CitrusResource TestCaseRunner runner) {
-
             runner.variable("petId", "1234");
 
             runner.when(petApi
@@ -3351,7 +3190,7 @@ class GeneratedRestApiIT {
                     .message()
                     .body(Resources.create(
                             "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                    .contentType("application/json"));
+                    .contentType(APPLICATION_JSON_VALUE));
 
             runner.then(petApi.receiveGetPetById(OK)
                     .message()
@@ -3372,9 +3211,7 @@ class GeneratedRestApiIT {
         }
 
         @Test
-        void java(
-                @CitrusResource TestCaseRunner runner, @CitrusResource TestContext context) {
-
+        void java(@CitrusResource TestCaseRunner runner, @CitrusResource TestContext context) {
             runner.variable("petId", "1234");
 
             runner.when(petApi
@@ -3393,7 +3230,7 @@ class GeneratedRestApiIT {
                     .message()
                     .body(Resources.create(
                             "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                    .contentType("application/json"));
+                    .contentType(APPLICATION_JSON_VALUE));
 
             runner.when(petApi
                     .receiveGetPetById(OK)
@@ -3404,7 +3241,7 @@ class GeneratedRestApiIT {
                             .expression("$.name", "varName")))
             ;
 
-            assertThat(context.getVariable("varContentType")).isEqualTo("application/json");
+            assertThat(context.getVariable("varContentType")).isEqualTo(APPLICATION_JSON_VALUE);
             assertThat(context.getVariable("varName")).matches("hasso|cutie|fluffy");
         }
     }
@@ -3443,7 +3280,7 @@ class GeneratedRestApiIT {
                     .message()
                     .body(Resources.create(
                             "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
-                    .contentType("application/json"));
+                    .contentType(APPLICATION_JSON_VALUE));
 
             runner.when(extPetApi
                     .receiveGetPetWithCookie(OK)
@@ -3465,7 +3302,6 @@ class GeneratedRestApiIT {
         @Test
         @CitrusTest
         void uploadFile_java(@CitrusResource TestCaseRunner runner) {
-
             String additionalMetadata = "myMeta";
             String file = "filedata";
 
@@ -3481,7 +3317,7 @@ class GeneratedRestApiIT {
                     .receive()
                     .post("/api/v3/pet/${petId}/uploadImage")
                     .message()
-                    .contentType("application/octet-stream")
+                    .contentType(APPLICATION_OCTET_STREAM_VALUE)
                     .queryParam("additionalMetadata", "myMeta")
                     .validate((message, context) -> {
                         Object payload = message.getPayload();
@@ -3498,7 +3334,7 @@ class GeneratedRestApiIT {
                     .body("""
                             {"code": 12, "type":"post-image-ok", "message":"image successfully uploaded"}
                             """)
-                    .contentType("application/json"));
+                    .contentType(APPLICATION_JSON_VALUE));
 
             runner.then(petApi
                     .receiveUploadFile(OK)
@@ -3508,4 +3344,3 @@ class GeneratedRestApiIT {
         }
     }
 }
-

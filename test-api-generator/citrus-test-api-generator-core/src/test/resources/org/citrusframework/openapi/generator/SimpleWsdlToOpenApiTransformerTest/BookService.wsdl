@@ -9,7 +9,6 @@
         which can be used to add or retrieve books from a collection.
     </wsdl:documentation>
 
-
     <xsd:import namespace="http://www.citrusframework.org/datatype" schemaLocation="BookDatatypes.xsd" />
 
     <!--

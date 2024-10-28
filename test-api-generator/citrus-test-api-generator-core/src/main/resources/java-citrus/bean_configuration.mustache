@@ -33,7 +33,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}};
 
-
 @Configuration
 {{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
 public class {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}BeanConfiguration {

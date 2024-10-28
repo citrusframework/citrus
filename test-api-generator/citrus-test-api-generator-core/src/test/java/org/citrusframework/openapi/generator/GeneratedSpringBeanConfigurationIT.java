@@ -20,8 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @CitrusSpringSupport
-@ContextConfiguration(classes = {CitrusSpringConfig.class, ClientConfiguration.class,
-        PetStoreBeanConfiguration.class})
+@ContextConfiguration(classes = {CitrusSpringConfig.class, ClientConfiguration.class, PetStoreBeanConfiguration.class})
 class GeneratedSpringBeanConfigurationIT {
 
     @Test

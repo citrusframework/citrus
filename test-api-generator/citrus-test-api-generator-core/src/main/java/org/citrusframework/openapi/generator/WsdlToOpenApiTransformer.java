@@ -40,7 +40,6 @@ import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -48,6 +47,7 @@ import java.util.Map.Entry;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static com.fasterxml.jackson.databind.MapperFeature.SORT_PROPERTIES_ALPHABETICALLY;
 import static java.lang.String.format;
+import static java.util.Collections.singletonList;
 
 /**
  * Transforms a WSDL specification into a simple OpenAPI specification for usage with the OpenApiGenerator.
@@ -166,8 +166,8 @@ public class WsdlToOpenApiTransformer {
     }
 
     private Info createInfo() {
-        Info info = new Info();
-        info.setTitle("Generated api from wsdl");
+        Info info = new Info()
+                .title("Generated api from wsdl");
 
         info.setDescription(
                 format(
@@ -177,8 +177,8 @@ public class WsdlToOpenApiTransformer {
         );
         info.setVersion("1.0.0");
 
-        Contact contact = new Contact();
-        contact.setName("org.citrusframework.openapi.generator.SimpleWsdlToOpenApiTransformer");
+        Contact contact = new Contact()
+                .name("org.citrusframework.openapi.generator.SimpleWsdlToOpenApiTransformer");
         info.setContact(contact);
 
         return info;
@@ -208,24 +208,23 @@ public class WsdlToOpenApiTransformer {
     }
 
     private void addOperation(Paths paths, String name, String description, String soapAction, String tag) {
-        Operation postOperation = new Operation();
-
         logger.debug("Adding operation to spec: {}", name);
 
-        postOperation.setOperationId(name);
-        postOperation.setDescription(description);
-        postOperation.setSummary(soapAction);
-        postOperation.tags(Collections.singletonList(tag));
+        Operation postOperation = new Operation()
+                .operationId(name)
+                .description(description)
+                .summary(soapAction);
+        postOperation.tags(singletonList(tag));
         ApiResponses responses = new ApiResponses();
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setDescription("Generic Response");
+        ApiResponse apiResponse = new ApiResponse()
+                .description("Generic Response");
         responses.addApiResponse("default", apiResponse);
         postOperation.responses(responses);
 
-        PathItem pi = new PathItem();
-        pi.setPost(postOperation);
+        PathItem pathItem = new PathItem()
+                .post(postOperation);
 
-        paths.addPathItem("/" + name, pi);
+        paths.addPathItem("/" + name, pathItem);
     }
 
     /**

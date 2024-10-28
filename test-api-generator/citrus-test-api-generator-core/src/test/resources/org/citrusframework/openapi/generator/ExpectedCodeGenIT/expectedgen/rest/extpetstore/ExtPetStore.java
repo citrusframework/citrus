@@ -7,5 +7,4 @@ public class ExtPetStore {
     public static URL extPetStoreApi() {
         return ExtPetStore.class.getResource("ExtPetStore_openApi.yaml");
     }
-
 }
