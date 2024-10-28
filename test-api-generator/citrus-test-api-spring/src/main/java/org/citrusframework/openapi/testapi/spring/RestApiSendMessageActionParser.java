@@ -33,7 +33,6 @@ import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.testapi.RestApiSendMessageActionBuilder;
 import org.citrusframework.openapi.testapi.RestApiSendMessageActionBuilder.TestApiClientRequestMessageBuilder;
-import org.citrusframework.openapi.testapi.TestApiUtils;
 import org.citrusframework.util.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
@@ -48,8 +47,12 @@ import org.w3c.dom.Node;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.parseBoolean;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.citrusframework.openapi.testapi.TestApiUtils.mapXmlAttributeNameToJavaPropertyName;
+import static org.springframework.beans.factory.support.BeanDefinitionBuilder.genericBeanDefinition;
+import static org.springframework.util.xml.DomUtils.getChildElementByTagName;
 
 /**
  * Parses the XML configuration for sending API requests based on OpenAPI specifications. Extends
@@ -125,21 +128,17 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
     @Override
     protected BeanDefinitionBuilder createBeanDefinitionBuilder(final Element element,
                                                                 ParserContext parserContext) {
+        BeanDefinitionBuilder beanDefinitionBuilder = super.createBeanDefinitionBuilder(element, parserContext);
 
-        BeanDefinitionBuilder beanDefinitionBuilder = super.createBeanDefinitionBuilder(element,
-                parserContext);
-
-        BeanDefinitionBuilder actionBuilder = createTestApiActionBuilder(
-                element, beanDefinitionBuilder);
+        BeanDefinitionBuilder actionBuilder = createTestApiActionBuilder(element, beanDefinitionBuilder);
         beanDefinitionBuilder.addConstructorArgValue(actionBuilder.getBeanDefinition());
 
         setDefaultEndpoint(beanDefinitionBuilder);
 
-        Element receive = DomUtils.getChildElementByTagName(element, "receive");
+        Element receive = getChildElementByTagName(element, "receive");
         if (receive != null) {
-            boolean fork = Boolean.parseBoolean(element.getAttribute("fork"));
-            return wrapSendAndReceiveActionInSequence(fork, receive, parserContext,
-                    beanDefinitionBuilder);
+            boolean fork = parseBoolean(element.getAttribute("fork"));
+            return wrapSendAndReceiveActionInSequence(fork, receive, parserContext, beanDefinitionBuilder);
         }
 
         return beanDefinitionBuilder;
@@ -147,8 +146,7 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
 
     private BeanDefinitionBuilder createTestApiActionBuilder(Element element,
                                                              BeanDefinitionBuilder beanDefinitionBuilder) {
-        BeanDefinitionBuilder actionBuilder = propagateMessageBuilderToActionBuilder(
-                beanDefinitionBuilder);
+        BeanDefinitionBuilder actionBuilder = propagateMessageBuilderToActionBuilder(beanDefinitionBuilder);
         readConstructorParameters(element, actionBuilder);
         readNonConstructorParameters(element, actionBuilder);
         return actionBuilder;
@@ -160,19 +158,18 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
      * and receiving messages and adds them to a container that executes these actions in sequence
      * or asynchronously, depending on the {@code fork} parameter.
      */
-    private BeanDefinitionBuilder wrapSendAndReceiveActionInSequence(boolean fork, Element receive,
-                                                                     ParserContext parserContext, BeanDefinitionBuilder beanDefinitionBuilder) {
+    private BeanDefinitionBuilder wrapSendAndReceiveActionInSequence(boolean fork,
+                                                                     Element receive,
+                                                                     ParserContext parserContext,
+                                                                     BeanDefinitionBuilder beanDefinitionBuilder) {
+        Class<? extends AbstractTestContainerFactoryBean<?, ?>> containerClass = fork ? AsyncFactoryBean.class
+                : SequenceFactoryBean.class;
 
-        Class<? extends AbstractTestContainerFactoryBean<?, ?>> containerClass =
-                fork ? AsyncFactoryBean.class : SequenceFactoryBean.class;
-
-        BeanDefinitionBuilder sequenceBuilder = BeanDefinitionBuilder.genericBeanDefinition(
-                containerClass);
+        BeanDefinitionBuilder sequenceBuilder = genericBeanDefinition(containerClass);
 
         RestApiReceiveMessageActionParser receiveApiResponseActionParser = new RestApiReceiveMessageActionParser(
                 openApiSpecification, operationId, apiBeanClass, receiveBeanClass, defaultEndpointName);
-        BeanDefinition receiveResponseBeanDefinition = receiveApiResponseActionParser.parse(
-                receive, parserContext);
+        BeanDefinition receiveResponseBeanDefinition = receiveApiResponseActionParser.parse(receive, parserContext);
 
         ManagedList<BeanDefinition> actions = new ManagedList<>();
         actions.add(beanDefinitionBuilder.getBeanDefinition());
@@ -187,16 +184,13 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
      * Propagates the message builder created by the superclass into the specific send message
      * action builder.
      */
-    private BeanDefinitionBuilder propagateMessageBuilderToActionBuilder(
-            BeanDefinitionBuilder beanDefinitionBuilder) {
-
+    private BeanDefinitionBuilder propagateMessageBuilderToActionBuilder(BeanDefinitionBuilder beanDefinitionBuilder) {
         BeanDefinition beanDefinition = beanDefinitionBuilder.getBeanDefinition();
         OpenApiClientRequestMessageBuilder messageBuilder = (OpenApiClientRequestMessageBuilder) beanDefinition.getPropertyValues()
                 .get("messageBuilder");
         beanDefinition.getPropertyValues().removePropertyValue("messageBuilder");
 
-        BeanDefinitionBuilder actionBuilder = BeanDefinitionBuilder.genericBeanDefinition(
-                requestBeanClass);
+        BeanDefinitionBuilder actionBuilder = genericBeanDefinition(requestBeanClass);
 
         actionBuilder.addConstructorArgValue(new RuntimeBeanReference(apiBeanClass));
         actionBuilder.addConstructorArgValue(openApiSpecification);
@@ -210,7 +204,6 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
      * the provided {@link BeanDefinitionBuilder}.
      */
     private void readConstructorParameters(Element element, BeanDefinitionBuilder actionBuilder) {
-
         for (String parameterName : constructorParameters) {
             if (element.hasAttribute(parameterName)) {
                 actionBuilder.addConstructorArgValue(element.getAttribute(parameterName));
@@ -227,9 +220,7 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
      */
     private void readNonConstructorParameters(Element element,
                                               BeanDefinitionBuilder actionBuilder) {
-
         for (String parameterName : nonConstructorParameters) {
-
             if (isHandledBySuper(parameterName)) {
                 continue;
             }
@@ -245,13 +236,13 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
             Attr attribute = element.getAttributeNode(attributeName);
             if (attribute != null) {
                 actionBuilder.addPropertyValue(
-                        TestApiUtils.mapXmlAttributeNameToJavaPropertyName(parameterName),
+                        mapXmlAttributeNameToJavaPropertyName(parameterName),
                         attribute.getValue());
             } else {
                 List<String> values = collectChildNodeContents(element, attributeName);
                 if (values != null && !values.isEmpty()) {
                     actionBuilder.addPropertyValue(
-                            TestApiUtils.mapXmlAttributeNameToJavaPropertyName(parameterName),
+                            mapXmlAttributeNameToJavaPropertyName(parameterName),
                             values);
                 }
             }
@@ -320,8 +311,7 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
 
         private RestApiSendMessageActionBuilder builder;
 
-        public TestApiOpenApiClientSendActionBuilderFactoryBean(
-                RestApiSendMessageActionBuilder builder) {
+        public TestApiOpenApiClientSendActionBuilderFactoryBean(RestApiSendMessageActionBuilder builder) {
             this.builder = builder;
         }
 
@@ -344,5 +334,4 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
             this.builder = builder;
         }
     }
-
 }
