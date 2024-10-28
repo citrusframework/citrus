@@ -31,6 +31,9 @@ import java.util.function.BiConsumer;
 
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.CITRUS_TEST_SCHEMA;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVars;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVarsToLowerCase;
 
 /**
  * Utility class responsible for generating the Spring meta files 'spring.handlers' and 'spring.schemas', used
@@ -77,7 +80,7 @@ public class SpringMetaFileGenerator {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (!line.contains(TestApiGeneratorMojo.CITRUS_TEST_SCHEMA)) {
+                if (!line.contains(CITRUS_TEST_SCHEMA)) {
                     filteredLines.add(line);
                 }
             }
@@ -107,11 +110,9 @@ public class SpringMetaFileGenerator {
     private void writeSpringSchemaMetaFile(File springMetafileDirectory) throws MojoExecutionException {
         String filename = "spring.schemas";
         writeSpringMetaFile(springMetafileDirectory, filename, (fileWriter, apiConfig) -> {
-            String targetXmlnsNamespace = TestApiGeneratorMojo.replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(), apiConfig.getPrefix(),
-                    apiConfig.getVersion());
-            String schemaFolderPath = TestApiGeneratorMojo.replaceDynamicVars(testApiGeneratorMojo.schemaFolder(apiConfig), apiConfig.getPrefix(),
-                    apiConfig.getVersion());
-            String schemaPath = String.format("%s/%s-api.xsd", schemaFolderPath, apiConfig.getPrefix().toLowerCase());
+            String targetXmlnsNamespace = replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(), apiConfig.getPrefix(), apiConfig.getVersion());
+            String schemaFolderPath = replaceDynamicVars(testApiGeneratorMojo.schemaFolder(apiConfig), apiConfig.getPrefix(), apiConfig.getVersion());
+            String schemaPath = format("%s/%s-api.xsd", schemaFolderPath, apiConfig.getPrefix().toLowerCase());
             appendLine(fileWriter, format("%s.xsd=%s%n", targetXmlnsNamespace.replace("http://", "http\\://"), schemaPath), filename);
         });
     }
@@ -119,12 +120,10 @@ public class SpringMetaFileGenerator {
     private void writeSpringHandlerMetaFile(File springMetafileDirectory) throws MojoExecutionException {
         String filename = "spring.handlers";
         writeSpringMetaFile(springMetafileDirectory, filename, (fileWriter, apiConfig) -> {
-            String targetXmlnsNamespace = TestApiGeneratorMojo.replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(), apiConfig.getPrefix(),
-                    apiConfig.getVersion());
-            String invokerPackage = TestApiGeneratorMojo.replaceDynamicVarsToLowerCase(apiConfig.getInvokerPackage(), apiConfig.getPrefix(), apiConfig.getVersion());
+            String targetXmlnsNamespace = replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(), apiConfig.getPrefix(), apiConfig.getVersion());
+            String invokerPackage = replaceDynamicVarsToLowerCase(apiConfig.getInvokerPackage(), apiConfig.getPrefix(), apiConfig.getVersion());
             String namespaceHandlerClass = invokerPackage + ".citrus.extension." + apiConfig.getPrefix() + "NamespaceHandler";
-            appendLine(fileWriter, format("%s=%s%n", targetXmlnsNamespace.replace("http://", "http\\://"), namespaceHandlerClass),
-                    filename);
+            appendLine(fileWriter, format("%s=%s%n", targetXmlnsNamespace.replace("http://", "http\\://"), namespaceHandlerClass), filename);
         });
     }
 
