@@ -62,6 +62,21 @@
                       context-config-location="classpath:org/citrusframework/http/citrus-http-servlet.xml"
                       resource-base="src/test/resources"/>
 
+  <citrus-http:client id="helloHttpClientWithRedirect"
+      request-url="http://localhost:14080/hello"
+      timeout="5000"/>
+
+  <citrus-http:client id="helloHttpClientWithRedirectDisabled"
+      request-url="http://localhost:14080/hello"
+      disable-redirect-handling="true"
+      timeout="5000"/>
+
+  <citrus-http:server id="helloHttpServerWithRedirect"
+      port="14080"
+      auto-start="true"
+      context-config-location="classpath:org/citrusframework/http/citrus-http-with-redirect-servlet.xml"
+      resource-base="src/test/resources"/>
+
   <citrus-http:client id="echoHttpClient"
                       request-url="http://localhost:12080/echo"
                       handle-cookies="true"

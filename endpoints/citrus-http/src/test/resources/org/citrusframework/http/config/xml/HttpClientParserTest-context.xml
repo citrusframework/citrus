@@ -20,6 +20,7 @@
                           timeout="10000"
                           default-accept-header="false"
                           handle-cookies="true"
+                          disable-redirect-handling="true"
                           error-strategy="throwsException"
                           error-handler="errorHandler"
                           message-converter="messageConverter"

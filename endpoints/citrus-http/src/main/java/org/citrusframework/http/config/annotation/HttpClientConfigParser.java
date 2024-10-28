@@ -82,6 +82,7 @@ public class HttpClientConfigParser implements AnnotationConfigParser<HttpClient
 
         builder.defaultAcceptHeader(annotation.defaultAcceptHeader());
         builder.handleCookies(annotation.handleCookies());
+        builder.disableRedirectHandling(annotation.disableRedirectHandling());
         builder.charset(annotation.charset());
         builder.contentType(annotation.contentType());
         builder.pollingInterval(annotation.pollingInterval());

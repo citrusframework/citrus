@@ -17,7 +17,6 @@
 package org.citrusframework.http.config.xml;
 
 import java.util.Map;
-
 import org.citrusframework.TestActor;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpResponseErrorHandler;
@@ -57,6 +56,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(httpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getTimeout(), 5000L);
         Assert.assertFalse(httpClient.getEndpointConfiguration().isHandleCookies());
+        Assert.assertFalse(httpClient.getEndpointConfiguration().isDisableRedirectHandling());
 
         // 2nd message sender
         httpClient = clients.get("httpClient2");
@@ -72,6 +72,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(httpClient.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertFalse(httpClient.getEndpointConfiguration().isDefaultAcceptHeader());
         Assert.assertTrue(httpClient.getEndpointConfiguration().isHandleCookies());
+        Assert.assertTrue(httpClient.getEndpointConfiguration().isDisableRedirectHandling());
         Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandler(), beanDefinitionContext.getBean("errorHandler"));
         Assert.assertEquals(httpClient.getEndpointConfiguration().getBinaryMediaTypes().size(), 2L);

@@ -68,6 +68,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
             charset="ISO-8859-1",
             defaultAcceptHeader=false,
             handleCookies=true,
+            disableRedirectHandling = true,
             timeout=10000L,
             errorStrategy = ErrorHandlingStrategy.THROWS_EXCEPTION,
             errorHandler = "errorHandler",
@@ -161,6 +162,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertFalse(httpClient2.getEndpointConfiguration().isDefaultAcceptHeader());
         Assert.assertTrue(httpClient2.getEndpointConfiguration().isHandleCookies());
+        Assert.assertTrue(httpClient2.getEndpointConfiguration().isDisableRedirectHandling());
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getErrorHandler(), errorHandler);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getBinaryMediaTypes().size(), 2L);
