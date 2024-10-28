@@ -389,7 +389,6 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
      * Store a copy of the source open api as resource.
      */
     private void writeApiToResourceFolder() {
-
         String directoryPath = appendSegmentToUrlPath(getOutputDir(), getResourceFolder());
         directoryPath = appendSegmentToUrlPath(directoryPath, invokerPackage.replace('.', File.separatorChar));
 

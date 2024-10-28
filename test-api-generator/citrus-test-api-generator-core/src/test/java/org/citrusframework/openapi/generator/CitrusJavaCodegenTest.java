@@ -25,6 +25,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.openapi.generator.CitrusJavaCodegen.CODEGEN_NAME;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 /**
  * This test validates the code generation process.
@@ -101,7 +102,9 @@ class CitrusJavaCodegenTest {
     @Test
     void testProcessOptsValidApiType() {
         codegen.additionalProperties().put(CitrusJavaCodegen.API_TYPE, CitrusJavaCodegen.API_TYPE_REST);
-        codegen.processOpts();
+        codegen.setOutputDir("target");
+
+        assertDoesNotThrow(() -> codegen.processOpts());
 
         assertThat(codegen.additionalProperties())
                 .containsEntry(CitrusJavaCodegen.API_TYPE, CitrusJavaCodegen.API_TYPE_REST);
