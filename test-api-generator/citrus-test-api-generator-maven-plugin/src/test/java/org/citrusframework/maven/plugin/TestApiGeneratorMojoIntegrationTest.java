@@ -37,7 +37,7 @@ import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynam
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
-class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
+public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
 
     public static final String OTHER_META_FILE_CONTENT = "somenamespace=somevalue";
 
@@ -92,9 +92,7 @@ class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
 
     @ParameterizedTest
     @MethodSource
-    void executeMojoWithConfigurations(String configName, Exception expectedException)
-            throws Exception {
-
+    void executeMojoWithConfigurations(String configName, Exception expectedException) throws Exception {
         try {
             fixture = fixtureFromPom(configName);
         } catch (MojoExecutionException | MojoFailureException e) {
@@ -120,7 +118,8 @@ class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
             }
         } else {
             // When/Then
-            assertThatThrownBy(() -> fixture.execute()).isInstanceOf(expectedException.getClass())
+            assertThatThrownBy(() -> fixture.execute())
+                    .isInstanceOf(expectedException.getClass())
                     .hasMessage(expectedException.getMessage());
         }
     }
@@ -131,7 +130,6 @@ class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
     private void writeSomeValuesToSpringMetaFiles(List<ApiConfig> apiConfigs) {
         for (ApiConfig apiConfig : apiConfigs) {
             for (String filePathTemplate : SPRING_META_FILE_TEMPLATES) {
-
                 String filePath = resolveFilePath(apiConfig, filePathTemplate);
                 File file = new File(filePath);
                 if (!file.getParentFile().exists() && !new File(filePath).getParentFile().mkdirs()) {
@@ -149,7 +147,6 @@ class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
     }
 
     private void assertFilesGenerated(ApiConfig apiConfig) {
-
         for (String filePathTemplate : STANDARD_FILE_PATH_TEMPLATES) {
             String filePath = resolveFilePath(apiConfig, filePathTemplate);
             assertThat(new File(filePath)).isFile().exists();
@@ -190,7 +187,6 @@ class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
     }
 
     private void assertSchemasInSpringSchemas(ApiConfig apiConfig) throws IOException {
-
         String targetNamespace = replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(), apiConfig.getPrefix(), apiConfig.getVersion());
         targetNamespace = targetNamespace.replace(":", "\\:");
         String schemaPath = replaceDynamicVarsToLowerCase((String) getField(fixture, "schemaFolder"), apiConfig.getPrefix(), apiConfig.getVersion());
@@ -204,14 +200,14 @@ class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
     }
 
     private void assertTargetNamespace(ApiConfig apiConfig) throws IOException {
-        assertThat(getContentOfFile(apiConfig, "-api.xsd")).contains(
-                String.format("targetNamespace=\"%s\"",
+        assertThat(getContentOfFile(apiConfig, "-api.xsd"))
+                .contains(String.format("targetNamespace=\"%s\"",
                         replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(), apiConfig.getPrefix(), apiConfig.getVersion())));
     }
 
     private void assertEndpointName(ApiConfig apiConfig) throws IOException {
-        assertThat(getContentOfFile(apiConfig, "BeanConfiguration")).contains(
-                String.format("@Qualifier(\"%s\")", apiConfig.qualifiedEndpoint()));
+        assertThat(getContentOfFile(apiConfig, "BeanConfiguration"))
+                .contains(String.format("@Qualifier(\"%s\")", apiConfig.qualifiedEndpoint()));
     }
 
     private String getContentOfFile(ApiConfig apiConfig, String fileIdentifier) throws IOException {
@@ -228,13 +224,13 @@ class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
 
     private String getTemplateContaining(String text) {
         return concat(stream(STANDARD_FILE_PATH_TEMPLATES), stream(SPRING_META_FILE_TEMPLATES))
-                .filter(path -> path.contains(text)).findFirst()
+                .filter(path -> path.contains(text))
+                .findFirst()
                 .orElseThrow(() -> new AssertionError(String.format("Can't find file template with content: '%s'", text)));
     }
 
     @NotNull
     private String resolveFilePath(ApiConfig apiConfig, String filePathTemplate) {
-
         String lowerCasePrefix = apiConfig.getPrefix().toLowerCase();
         char[] prefixCharArray = apiConfig.getPrefix().toCharArray();
         prefixCharArray[0] = Character.toUpperCase(prefixCharArray[0]);
@@ -269,7 +265,6 @@ class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
     }
 
     private String toFolder(String text) {
-
         if (text == null) {
             return "";
         }
@@ -291,5 +286,4 @@ class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
 
         return testApiGeneratorMojo;
     }
-
 }
