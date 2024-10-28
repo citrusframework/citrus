@@ -22,34 +22,58 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * VaccinationDocumentResult
+ * PetIdentifier
  */
 @jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:44.158583300+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
-public class VaccinationDocumentResult {
-  private String documentId;
+public class PetIdentifier {
+  private String _name;
 
-  public VaccinationDocumentResult() {
+  private String alias;
+
+  public PetIdentifier() {
   }
 
-  public VaccinationDocumentResult documentId(String documentId) {
+  public PetIdentifier _name(String _name) {
     
-    this.documentId = documentId;
+    this._name = _name;
     return this;
   }
 
    /**
-   * The unique ID of the uploaded vaccination document.
-   * @return documentId
+   * Get _name
+   * @return _name
   **/
   @jakarta.annotation.Nullable
 
-  public String getDocumentId() {
-    return documentId;
+  public String getName() {
+    return _name;
   }
 
 
-  public void setDocumentId(String documentId) {
-    this.documentId = documentId;
+  public void setName(String _name) {
+    this._name = _name;
+  }
+
+
+  public PetIdentifier alias(String alias) {
+    
+    this.alias = alias;
+    return this;
+  }
+
+   /**
+   * Get alias
+   * @return alias
+  **/
+  @jakarta.annotation.Nullable
+
+  public String getAlias() {
+    return alias;
+  }
+
+
+  public void setAlias(String alias) {
+    this.alias = alias;
   }
 
   @Override
@@ -60,20 +84,22 @@ public class VaccinationDocumentResult {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    VaccinationDocumentResult vaccinationDocumentResult = (VaccinationDocumentResult) o;
-    return Objects.equals(this.documentId, vaccinationDocumentResult.documentId);
+    PetIdentifier petIdentifier = (PetIdentifier) o;
+    return Objects.equals(this._name, petIdentifier._name) &&
+        Objects.equals(this.alias, petIdentifier.alias);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(documentId);
+    return Objects.hash(_name, alias);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class VaccinationDocumentResult {\n");
-    sb.append("    documentId: ").append(toIndentedString(documentId)).append("\n");
+    sb.append("class PetIdentifier {\n");
+    sb.append("    _name: ").append(toIndentedString(_name)).append("\n");
+    sb.append("    alias: ").append(toIndentedString(alias)).append("\n");
     sb.append("}");
     return sb.toString();
   }

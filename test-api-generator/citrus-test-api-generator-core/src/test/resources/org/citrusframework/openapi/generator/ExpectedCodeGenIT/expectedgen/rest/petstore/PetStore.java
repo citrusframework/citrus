@@ -7,5 +7,4 @@ public class PetStore {
     public static URL petStoreApi() {
         return PetStore.class.getResource("petStore_openApi.yaml");
     }
-
 }
