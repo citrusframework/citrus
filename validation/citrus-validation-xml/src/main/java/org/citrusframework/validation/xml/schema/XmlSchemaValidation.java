@@ -16,18 +16,6 @@
 
 package org.citrusframework.validation.xml.schema;
 
-import static java.lang.String.format;
-import static org.citrusframework.validation.xml.schema.ValidationStrategy.FAIL;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.XmlValidationHelper;
 import org.citrusframework.context.TestContext;
@@ -54,6 +42,19 @@ import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXParseException;
+
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static java.lang.String.format;
+import static org.citrusframework.validation.xml.schema.ValidationStrategy.FAIL;
 
 public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidationContext> {
 
@@ -243,7 +244,6 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
 
     @Override
     public void validate(Message message, TestContext context, String schemaRepository, String schema) {
-
         XmlMessageValidationContext validationContext = Builder.xml()
             .schemaValidation(true)
             .schema(schema)

@@ -192,7 +192,6 @@ public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidati
 
     @Override
     public void validate(Message message, TestContext context, String schemaRepository, String schema) {
-
         JsonMessageValidationContext validationContext = Builder.json()
             .schemaValidation(true)
             .schema(schema)

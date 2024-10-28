@@ -16,12 +16,6 @@
 
 package org.citrusframework.validation.text;
 
-import static java.lang.Boolean.parseBoolean;
-import static java.lang.Integer.parseInt;
-import static org.citrusframework.message.MessagePayloadUtils.normalizeWhitespace;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
@@ -31,6 +25,13 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DefaultMessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Integer.parseInt;
+import static org.citrusframework.message.MessagePayloadUtils.normalizeWhitespace;
 
 /**
  * Plain text validator using simple String comparison.

@@ -16,39 +16,40 @@
 
 package org.citrusframework.json;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.citrusframework.json.schema.SimpleJsonSchema;
 import org.citrusframework.repository.BaseRepository;
 import org.citrusframework.spi.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Schema repository holding a set of json schema resources known in the test scope.
  * @since 2.7.3
  */
-public class JsonSchemaRepository  extends BaseRepository {
+public class JsonSchemaRepository extends BaseRepository {
+
+    /** Logger */
+    private static Logger logger = LoggerFactory.getLogger(JsonSchemaRepository.class);
 
     private static final String DEFAULT_NAME = "jsonSchemaRepository";
 
     /** List of schema resources */
     private List<SimpleJsonSchema> schemas = new ArrayList<>();
 
-
-    /** Logger */
-    private static Logger logger = LoggerFactory.getLogger(JsonSchemaRepository.class);
-
     public JsonSchemaRepository() {
         super(DEFAULT_NAME);
     }
 
-
+    @Override
     protected void addRepository(Resource resource) {
         if (resource.getLocation().endsWith(".json")) {
             if (logger.isDebugEnabled()) {
                 logger.debug("Loading json schema resource '{}'", resource.getLocation());
             }
+
             SimpleJsonSchema simpleJsonSchema = new SimpleJsonSchema(resource);
             simpleJsonSchema.initialize();
             schemas.add(simpleJsonSchema);

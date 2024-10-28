@@ -68,8 +68,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings("rawtypes")
     public void testSendMessageOverwriteMessageElementsJsonPath() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
-        messageBuilder.setPayloadBuilder(
-            new DefaultPayloadBuilder("{ \"TestRequest\": { \"Message\": \"?\" }}"));
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("{ \"TestRequest\": { \"Message\": \"?\" }}"));
 
         Map<String, Object> overwriteElements = new HashMap<>();
         overwriteElements.put("$.TestRequest.Message", "Hello World!");
@@ -99,12 +98,10 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             .process(processor)
             .build();
         sendAction.execute(context);
-
     }
 
     @Test
     public void testSendJsonMessageWithValidation() {
-
         AtomicBoolean validated = new AtomicBoolean(false);
 
         SchemaValidator<?> schemaValidator = mock(SchemaValidator.class);
@@ -115,6 +112,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             Assert.assertEquals(invocation.getArgument(2, String.class), "fooRepository");
 
             validated.set(true);
+
             return null;
         }).when(schemaValidator)
             .validate(isA(Message.class), isA(TestContext.class), isA(String.class),
@@ -129,8 +127,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         context.getMessageValidatorRegistry().addSchemaValidator("JSON", schemaValidator);
 
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
-        messageBuilder.setPayloadBuilder(
-            new DefaultPayloadBuilder("{ \"TestRequest\": { \"Message\": \"?\" }}"));
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("{ \"TestRequest\": { \"Message\": \"?\" }}"));
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
