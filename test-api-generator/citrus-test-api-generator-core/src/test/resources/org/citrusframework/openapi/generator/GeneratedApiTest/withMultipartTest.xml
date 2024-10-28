@@ -13,7 +13,7 @@
     http://www.citrusframework.org/citrus-test-schema/extpetstore-api
     http://www.citrusframework.org/citrus-test-schema/extpetstore-api/extpetstore-api.xsd"
 >
-    <testcase name="withMultiPartTest">
+    <testcase name="withMultipartTest">
         <actions>
 
             <create-variables>
