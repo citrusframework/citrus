@@ -174,5 +174,4 @@ class CitrusJavaCodegenTest {
                 .hasFieldOrPropertyWithValue("httpMethod", "GET")
                 .hasFieldOrPropertyWithValue("path", "/path");
     }
-
 }

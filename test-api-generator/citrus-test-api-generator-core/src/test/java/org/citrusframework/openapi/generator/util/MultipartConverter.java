@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
+
 /**
  * Provides utility method to convert a multipart http message to a map for simplified assertion.
  */
@@ -27,11 +29,8 @@ public class MultipartConverter {
         String boundary = contentType.substring(contentType.indexOf("=") + 1);
 
         Map<String, Object> partMap = new HashMap<>();
-        ByteArrayInputStream inputStream = null;
-        try {
-            inputStream = new ByteArrayInputStream(message.getPayload(String.class).getBytes());
-            MultipartStream multipartStream = new MultipartStream(inputStream, boundary.getBytes(),
-                    4096, null);
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(message.getPayload(String.class).getBytes())) {
+            MultipartStream multipartStream = new MultipartStream(inputStream, boundary.getBytes(), 4096, null);
 
             boolean nextPart = multipartStream.skipPreamble();
             while (nextPart) {
@@ -51,15 +50,12 @@ public class MultipartConverter {
         } catch (IOException e) {
             throw new CitrusRuntimeException("Unable to parse multipart data");
         }
-
     }
 
     private static String getHeaderGroup(String headers, Pattern groupPattern) {
-
-        Matcher m = groupPattern.matcher(headers);
-
-        if (m.find()) {
-            return m.group(1);
+        Matcher matcher = groupPattern.matcher(headers);
+        if (matcher.find()) {
+            return matcher.group(1);
         } else {
             throw new CitrusRuntimeException(
                     "unable to determine header group name: " + groupPattern);
@@ -67,11 +63,10 @@ public class MultipartConverter {
     }
 
     private static Object convertContent(String rawContent, String contentType) {
-        if (contentType != null) {
-            if (contentType.contains("application/octet-stream")) {
-                return rawContent.getBytes(StandardCharsets.ISO_8859_1);
-            }
+        if (contentType != null&& contentType.contains(APPLICATION_OCTET_STREAM_VALUE)) {
+            return rawContent.getBytes(StandardCharsets.ISO_8859_1);
         }
+
         return rawContent;
     }
 }

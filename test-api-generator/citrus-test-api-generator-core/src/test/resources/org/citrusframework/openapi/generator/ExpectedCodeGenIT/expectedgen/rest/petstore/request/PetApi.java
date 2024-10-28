@@ -1,46 +1,58 @@
 package org.citrusframework.openapi.generator.rest.petstore.request;
 
+import static java.lang.String.format;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static org.citrusframework.util.StringUtils.isEmpty;
+import static org.citrusframework.util.StringUtils.isNotEmpty;
+
 import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.openapi.OpenApiSpecification;
-import org.citrusframework.openapi.generator.rest.petstore.PetStore;
-import org.citrusframework.openapi.generator.rest.petstore.model.*;
 import org.citrusframework.openapi.testapi.ApiActionBuilderCustomizer;
-import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.citrusframework.openapi.testapi.ParameterStyle;
-import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.testapi.RestApiSendMessageActionBuilder;
+import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
+import org.citrusframework.openapi.testapi.TestApiUtils;
 import org.citrusframework.spi.Resource;
+import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-
-import static java.lang.String.format;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
+import org.citrusframework.openapi.generator.rest.petstore.PetStore;
+import org.citrusframework.openapi.generator.rest.petstore.model.*;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-05T19:07:45.597236600+02:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
-public class PetApi implements GeneratedApi {
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:43.309584600+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+public class PetApi implements GeneratedApi
+{
 
-    private final List<ApiActionBuilderCustomizer> customizers;
-    private final Endpoint endpoint;
-    private final OpenApiSpecification openApiSpecification;
     @Value("${" + "petstore.base64-encode-api-key:#{false}}")
     private boolean base64EncodeApiKey;
+
     @Value("${" + "petstore.api-key:#{null}}")
     private String defaultApiKey;
 
-    public PetApi(Endpoint endpoint) {
+    private final List<ApiActionBuilderCustomizer> customizers;
+
+    private final Endpoint endpoint;
+
+    private final OpenApiSpecification openApiSpecification;
+
+    public PetApi(Endpoint endpoint)  {
         this(endpoint, emptyList());
     }
 
-    public PetApi(Endpoint endpoint, List<ApiActionBuilderCustomizer> customizers) {
+    public PetApi(Endpoint endpoint, List<ApiActionBuilderCustomizer> customizers)  {
         this.endpoint = endpoint;
         this.customizers = customizers;
 
@@ -88,158 +100,158 @@ public class PetApi implements GeneratedApi {
     /**
      * Builder with type safe required parameters.
      */
-    public AddPetSendActionBuilder sendAddPet() {
-        return new AddPetSendActionBuilder(this, openApiSpecification);
+    public AddPetSendActionBuilder sendAddPet()   {
+            return new AddPetSendActionBuilder(this, openApiSpecification);
     }
 
-    public AddPetReceiveActionBuilder receiveAddPet(@NotNull HttpStatus statusCode) {
+    public AddPetReceiveActionBuilder receiveAddPet(@NotNull HttpStatus statusCode)   {
         return new AddPetReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public AddPetReceiveActionBuilder receiveAddPet(@NotNull String statusCode) {
-        return new AddPetReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public AddPetReceiveActionBuilder receiveAddPet(@NotNull String statusCode)   {
+        return new AddPetReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public DeletePetSendActionBuilder sendDeletePet(Long petId) {
-        return new DeletePetSendActionBuilder(this, openApiSpecification, petId);
+    public DeletePetSendActionBuilder sendDeletePet(Long petId)   {
+            return new DeletePetSendActionBuilder(this, openApiSpecification, petId);
     }
 
     /**
-     * Builder with required parameters as string to allow for dynamic content.
+     * Builder with required parameters as string, allowing dynamic content using citrus expressions.
      */
-    public DeletePetSendActionBuilder sendDeletePet$(String petIdExpression) {
-        return new DeletePetSendActionBuilder(openApiSpecification, this, petIdExpression);
+    public DeletePetSendActionBuilder sendDeletePet$(String petIdExpression )   {
+            return new DeletePetSendActionBuilder(openApiSpecification, this, petIdExpression);
     }
 
-    public DeletePetReceiveActionBuilder receiveDeletePet(@NotNull HttpStatus statusCode) {
+    public DeletePetReceiveActionBuilder receiveDeletePet(@NotNull HttpStatus statusCode)   {
         return new DeletePetReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public DeletePetReceiveActionBuilder receiveDeletePet(@NotNull String statusCode) {
-        return new DeletePetReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public DeletePetReceiveActionBuilder receiveDeletePet(@NotNull String statusCode)   {
+        return new DeletePetReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public FindPetsByStatusSendActionBuilder sendFindPetsByStatus() {
-        return new FindPetsByStatusSendActionBuilder(this, openApiSpecification);
+    public FindPetsByStatusSendActionBuilder sendFindPetsByStatus()   {
+            return new FindPetsByStatusSendActionBuilder(this, openApiSpecification);
     }
 
-    public FindPetsByStatusReceiveActionBuilder receiveFindPetsByStatus(@NotNull HttpStatus statusCode) {
+    public FindPetsByStatusReceiveActionBuilder receiveFindPetsByStatus(@NotNull HttpStatus statusCode)   {
         return new FindPetsByStatusReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public FindPetsByStatusReceiveActionBuilder receiveFindPetsByStatus(@NotNull String statusCode) {
-        return new FindPetsByStatusReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public FindPetsByStatusReceiveActionBuilder receiveFindPetsByStatus(@NotNull String statusCode)   {
+        return new FindPetsByStatusReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public FindPetsByTagsSendActionBuilder sendFindPetsByTags() {
-        return new FindPetsByTagsSendActionBuilder(this, openApiSpecification);
+    public FindPetsByTagsSendActionBuilder sendFindPetsByTags()   {
+            return new FindPetsByTagsSendActionBuilder(this, openApiSpecification);
     }
 
-    public FindPetsByTagsReceiveActionBuilder receiveFindPetsByTags(@NotNull HttpStatus statusCode) {
+    public FindPetsByTagsReceiveActionBuilder receiveFindPetsByTags(@NotNull HttpStatus statusCode)   {
         return new FindPetsByTagsReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public FindPetsByTagsReceiveActionBuilder receiveFindPetsByTags(@NotNull String statusCode) {
-        return new FindPetsByTagsReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public FindPetsByTagsReceiveActionBuilder receiveFindPetsByTags(@NotNull String statusCode)   {
+        return new FindPetsByTagsReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public GetPetByIdSendActionBuilder sendGetPetById(Long petId) {
-        GetPetByIdSendActionBuilder builder = new GetPetByIdSendActionBuilder(this, openApiSpecification, petId);
-        builder.setBase64EncodeApiKey(base64EncodeApiKey);
-        return builder;
+    public GetPetByIdSendActionBuilder sendGetPetById(Long petId)   {
+            GetPetByIdSendActionBuilder builder =  new GetPetByIdSendActionBuilder(this, openApiSpecification, petId);
+            builder.setBase64EncodeApiKey(base64EncodeApiKey);
+            return builder;
     }
 
     /**
-     * Builder with required parameters as string to allow for dynamic content.
+     * Builder with required parameters as string, allowing dynamic content using citrus expressions.
      */
-    public GetPetByIdSendActionBuilder sendGetPetById$(String petIdExpression) {
-        GetPetByIdSendActionBuilder builder = new GetPetByIdSendActionBuilder(openApiSpecification, this, petIdExpression);
-        builder.setBase64EncodeApiKey(base64EncodeApiKey);
-        builder.setApiKey(defaultApiKey);
-        return builder;
+    public GetPetByIdSendActionBuilder sendGetPetById$(String petIdExpression )   {
+            GetPetByIdSendActionBuilder builder =  new GetPetByIdSendActionBuilder(openApiSpecification, this, petIdExpression);
+            builder.setBase64EncodeApiKey(base64EncodeApiKey);
+            builder.setApiKey(defaultApiKey);
+            return builder;
     }
 
-    public GetPetByIdReceiveActionBuilder receiveGetPetById(@NotNull HttpStatus statusCode) {
+    public GetPetByIdReceiveActionBuilder receiveGetPetById(@NotNull HttpStatus statusCode)   {
         return new GetPetByIdReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public GetPetByIdReceiveActionBuilder receiveGetPetById(@NotNull String statusCode) {
-        return new GetPetByIdReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public GetPetByIdReceiveActionBuilder receiveGetPetById(@NotNull String statusCode)   {
+        return new GetPetByIdReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public UpdatePetSendActionBuilder sendUpdatePet() {
-        return new UpdatePetSendActionBuilder(this, openApiSpecification);
+    public UpdatePetSendActionBuilder sendUpdatePet()   {
+            return new UpdatePetSendActionBuilder(this, openApiSpecification);
     }
 
-    public UpdatePetReceiveActionBuilder receiveUpdatePet(@NotNull HttpStatus statusCode) {
+    public UpdatePetReceiveActionBuilder receiveUpdatePet(@NotNull HttpStatus statusCode)   {
         return new UpdatePetReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public UpdatePetReceiveActionBuilder receiveUpdatePet(@NotNull String statusCode) {
-        return new UpdatePetReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public UpdatePetReceiveActionBuilder receiveUpdatePet(@NotNull String statusCode)   {
+        return new UpdatePetReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public UpdatePetWithFormSendActionBuilder sendUpdatePetWithForm(Long petId) {
-        return new UpdatePetWithFormSendActionBuilder(this, openApiSpecification, petId);
+    public UpdatePetWithFormSendActionBuilder sendUpdatePetWithForm(Long petId)   {
+            return new UpdatePetWithFormSendActionBuilder(this, openApiSpecification, petId);
     }
 
     /**
-     * Builder with required parameters as string to allow for dynamic content.
+     * Builder with required parameters as string, allowing dynamic content using citrus expressions.
      */
-    public UpdatePetWithFormSendActionBuilder sendUpdatePetWithForm$(String petIdExpression) {
-        return new UpdatePetWithFormSendActionBuilder(openApiSpecification, this, petIdExpression);
+    public UpdatePetWithFormSendActionBuilder sendUpdatePetWithForm$(String petIdExpression )   {
+            return new UpdatePetWithFormSendActionBuilder(openApiSpecification, this, petIdExpression);
     }
 
-    public UpdatePetWithFormReceiveActionBuilder receiveUpdatePetWithForm(@NotNull HttpStatus statusCode) {
+    public UpdatePetWithFormReceiveActionBuilder receiveUpdatePetWithForm(@NotNull HttpStatus statusCode)   {
         return new UpdatePetWithFormReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public UpdatePetWithFormReceiveActionBuilder receiveUpdatePetWithForm(@NotNull String statusCode) {
-        return new UpdatePetWithFormReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public UpdatePetWithFormReceiveActionBuilder receiveUpdatePetWithForm(@NotNull String statusCode)   {
+        return new UpdatePetWithFormReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     /**
      * Builder with type safe required parameters.
      */
-    public UploadFileSendActionBuilder sendUploadFile(Long petId) {
-        return new UploadFileSendActionBuilder(this, openApiSpecification, petId);
+    public UploadFileSendActionBuilder sendUploadFile(Long petId)   {
+            return new UploadFileSendActionBuilder(this, openApiSpecification, petId);
     }
 
     /**
-     * Builder with required parameters as string to allow for dynamic content.
+     * Builder with required parameters as string, allowing dynamic content using citrus expressions.
      */
-    public UploadFileSendActionBuilder sendUploadFile$(String petIdExpression) {
-        return new UploadFileSendActionBuilder(openApiSpecification, this, petIdExpression);
+    public UploadFileSendActionBuilder sendUploadFile$(String petIdExpression )   {
+            return new UploadFileSendActionBuilder(openApiSpecification, this, petIdExpression);
     }
 
-    public UploadFileReceiveActionBuilder receiveUploadFile(@NotNull HttpStatus statusCode) {
+    public UploadFileReceiveActionBuilder receiveUploadFile(@NotNull HttpStatus statusCode)   {
         return new UploadFileReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
     }
 
-    public UploadFileReceiveActionBuilder receiveUploadFile(@NotNull String statusCode) {
-        return new UploadFileReceiveActionBuilder(this, openApiSpecification, statusCode);
+    public UploadFileReceiveActionBuilder receiveUploadFile(@NotNull String statusCode)   {
+        return new UploadFileReceiveActionBuilder(this, openApiSpecification,  statusCode);
     }
 
     public static class AddPetSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "POST";
 
@@ -270,7 +282,7 @@ public class PetApi implements GeneratedApi {
     }
 
     public static class AddPetReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "POST";
 
@@ -278,7 +290,7 @@ public class PetApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "addPet";
 
-        public AddPetReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public AddPetReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(petApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -299,7 +311,7 @@ public class PetApi implements GeneratedApi {
     }
 
     public static class DeletePetSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "DELETE";
 
@@ -318,8 +330,8 @@ public class PetApi implements GeneratedApi {
         /**
          * Constructor with required parameters as string to allow for dynamic content.
          */
-        public DeletePetSendActionBuilder(OpenApiSpecification openApiSpecification, PetApi petApi, String petIdExpression) {
-            super(petApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+            public DeletePetSendActionBuilder(OpenApiSpecification openApiSpecification, PetApi petApi, String petIdExpression) {
+            super(petApi, openApiSpecification,  METHOD, ENDPOINT, OPERATION_NAME);
             pathParameter("petId", petIdExpression, ParameterStyle.SIMPLE, false, false);
         }
 
@@ -338,7 +350,7 @@ public class PetApi implements GeneratedApi {
 
         public DeletePetSendActionBuilder petId(String petIdExpression) {
             pathParameter("petId", petIdExpression, ParameterStyle.SIMPLE, false, false);
-            return this;
+                return this;
         }
 
         public DeletePetSendActionBuilder apiKey(String apiKey) {
@@ -362,7 +374,7 @@ public class PetApi implements GeneratedApi {
     }
 
     public static class DeletePetReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "DELETE";
 
@@ -370,7 +382,7 @@ public class PetApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "deletePet";
 
-        public DeletePetReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public DeletePetReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(petApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -391,7 +403,7 @@ public class PetApi implements GeneratedApi {
     }
 
     public static class FindPetsByStatusSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -431,7 +443,7 @@ public class PetApi implements GeneratedApi {
     }
 
     public static class FindPetsByStatusReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -439,7 +451,7 @@ public class PetApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "findPetsByStatus";
 
-        public FindPetsByStatusReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public FindPetsByStatusReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(petApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -460,7 +472,7 @@ public class PetApi implements GeneratedApi {
     }
 
     public static class FindPetsByTagsSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -479,12 +491,12 @@ public class PetApi implements GeneratedApi {
             super(petApi, openApiSpecification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
         }
 
-        public FindPetsByTagsSendActionBuilder tags(String... tags) {
+        public FindPetsByTagsSendActionBuilder tags(String...tags) {
             queryParameter("tags", tags, ParameterStyle.FORM, true, false);
             return this;
         }
 
-        public void setTags(String... tags) {
+        public void setTags(String...tags) {
             queryParameter("tags", tags, ParameterStyle.FORM, true, false);
         }
 
@@ -500,7 +512,7 @@ public class PetApi implements GeneratedApi {
     }
 
     public static class FindPetsByTagsReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -508,7 +520,7 @@ public class PetApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "findPetsByTags";
 
-        public FindPetsByTagsReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public FindPetsByTagsReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(petApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -529,7 +541,7 @@ public class PetApi implements GeneratedApi {
     }
 
     public static class GetPetByIdSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -556,8 +568,8 @@ public class PetApi implements GeneratedApi {
         /**
          * Constructor with required parameters as string to allow for dynamic content.
          */
-        public GetPetByIdSendActionBuilder(OpenApiSpecification openApiSpecification, PetApi petApi, String petIdExpression) {
-            super(petApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+            public GetPetByIdSendActionBuilder(OpenApiSpecification openApiSpecification, PetApi petApi, String petIdExpression) {
+            super(petApi, openApiSpecification,  METHOD, ENDPOINT, OPERATION_NAME);
             pathParameter("petId", petIdExpression, ParameterStyle.SIMPLE, false, false);
         }
 
@@ -576,7 +588,7 @@ public class PetApi implements GeneratedApi {
 
         public GetPetByIdSendActionBuilder petId(String petIdExpression) {
             pathParameter("petId", petIdExpression, ParameterStyle.SIMPLE, false, false);
-            return this;
+                return this;
         }
 
         public void setBase64EncodeApiKey(boolean encode) {
@@ -605,7 +617,7 @@ public class PetApi implements GeneratedApi {
     }
 
     public static class GetPetByIdReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "GET";
 
@@ -613,7 +625,7 @@ public class PetApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "getPetById";
 
-        public GetPetByIdReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public GetPetByIdReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(petApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -634,7 +646,7 @@ public class PetApi implements GeneratedApi {
     }
 
     public static class UpdatePetSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "PUT";
 
@@ -665,7 +677,7 @@ public class PetApi implements GeneratedApi {
     }
 
     public static class UpdatePetReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "PUT";
 
@@ -673,7 +685,7 @@ public class PetApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "updatePet";
 
-        public UpdatePetReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public UpdatePetReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(petApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -694,7 +706,7 @@ public class PetApi implements GeneratedApi {
     }
 
     public static class UpdatePetWithFormSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "POST";
 
@@ -713,8 +725,8 @@ public class PetApi implements GeneratedApi {
         /**
          * Constructor with required parameters as string to allow for dynamic content.
          */
-        public UpdatePetWithFormSendActionBuilder(OpenApiSpecification openApiSpecification, PetApi petApi, String petIdExpression) {
-            super(petApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+            public UpdatePetWithFormSendActionBuilder(OpenApiSpecification openApiSpecification, PetApi petApi, String petIdExpression) {
+            super(petApi, openApiSpecification,  METHOD, ENDPOINT, OPERATION_NAME);
             pathParameter("petId", petIdExpression, ParameterStyle.SIMPLE, false, false);
         }
 
@@ -733,7 +745,7 @@ public class PetApi implements GeneratedApi {
 
         public UpdatePetWithFormSendActionBuilder petId(String petIdExpression) {
             pathParameter("petId", petIdExpression, ParameterStyle.SIMPLE, false, false);
-            return this;
+                return this;
         }
 
         public UpdatePetWithFormSendActionBuilder _name(String _name) {
@@ -766,7 +778,7 @@ public class PetApi implements GeneratedApi {
     }
 
     public static class UpdatePetWithFormReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "POST";
 
@@ -774,7 +786,7 @@ public class PetApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "updatePetWithForm";
 
-        public UpdatePetWithFormReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public UpdatePetWithFormReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(petApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
@@ -795,7 +807,7 @@ public class PetApi implements GeneratedApi {
     }
 
     public static class UploadFileSendActionBuilder extends
-            RestApiSendMessageActionBuilder {
+                RestApiSendMessageActionBuilder {
 
         private static final String METHOD = "POST";
 
@@ -814,8 +826,8 @@ public class PetApi implements GeneratedApi {
         /**
          * Constructor with required parameters as string to allow for dynamic content.
          */
-        public UploadFileSendActionBuilder(OpenApiSpecification openApiSpecification, PetApi petApi, String petIdExpression) {
-            super(petApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+            public UploadFileSendActionBuilder(OpenApiSpecification openApiSpecification, PetApi petApi, String petIdExpression) {
+            super(petApi, openApiSpecification,  METHOD, ENDPOINT, OPERATION_NAME);
             pathParameter("petId", petIdExpression, ParameterStyle.SIMPLE, false, false);
         }
 
@@ -834,7 +846,7 @@ public class PetApi implements GeneratedApi {
 
         public UploadFileSendActionBuilder petId(String petIdExpression) {
             pathParameter("petId", petIdExpression, ParameterStyle.SIMPLE, false, false);
-            return this;
+                return this;
         }
 
         public UploadFileSendActionBuilder additionalMetadata(String additionalMetadata) {
@@ -872,7 +884,7 @@ public class PetApi implements GeneratedApi {
     }
 
     public static class UploadFileReceiveActionBuilder extends
-            RestApiReceiveMessageActionBuilder {
+                        RestApiReceiveMessageActionBuilder {
 
         private static final String METHOD = "POST";
 
@@ -880,7 +892,7 @@ public class PetApi implements GeneratedApi {
 
         private static final String OPERATION_NAME = "uploadFile";
 
-        public UploadFileReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification, String statusCode) {
+        public UploadFileReceiveActionBuilder(PetApi petApi, OpenApiSpecification openApiSpecification,  String statusCode) {
             super(petApi, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 

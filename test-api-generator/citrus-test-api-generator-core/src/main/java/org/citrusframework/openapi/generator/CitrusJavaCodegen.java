@@ -24,8 +24,6 @@ import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.servers.Server;
-import lombok.Getter;
-import lombok.Setter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.testapi.RestApiSendMessageActionBuilder;
@@ -64,9 +62,9 @@ import static org.openapitools.codegen.CliOption.newString;
 import static org.openapitools.codegen.utils.CamelizeOption.LOWERCASE_FIRST_LETTER;
 import static org.openapitools.codegen.utils.StringUtils.camelize;
 
-@Getter
-@Setter
 public class CitrusJavaCodegen extends AbstractJavaCodegen {
+
+    private static final Logger logger = LoggerFactory.getLogger(CitrusJavaCodegen.class);
 
     public static final String CODEGEN_NAME = "java-citrus";
     public static final String API_TYPE_REST = "REST";
@@ -82,13 +80,12 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
     public static final String RESPONSE_BUILDER_CLASS = "responseBuilderClass";
     public static final String REQUEST_BUILDER_CLASS_NAME = "requestBuilderClassName";
     public static final String RESPONSE_BUILDER_CLASS_NAME = "responseBuilderClassName";
-    private static final Logger logger = LoggerFactory.getLogger(CitrusJavaCodegen.class);
+
     protected String apiPrefix = "Api";
 
     protected String httpClient = API_ENDPOINT;
 
-    protected String resourceFolder =
-            "src" + File.separator + "main" + File.separator + "resources";
+    protected String resourceFolder = "src" + File.separator + "main" + File.separator + "resources";
     protected String generatedSchemaFolder = "schema" + File.separator + "xsd";
     protected String targetXmlnsNamespace;
 
@@ -108,29 +105,96 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
         configureTypeMappings();
     }
 
-    private static void postProcessSecurityParameters(
-            CustomCodegenOperation customCodegenOperation) {
+    private static void postProcessSecurityParameters(CustomCodegenOperation customCodegenOperation) {
         customCodegenOperation.hasApiKeyAuth = customCodegenOperation.authMethods.stream()
                 .anyMatch(codegenSecurity -> codegenSecurity.isApiKey);
 
         customCodegenOperation.authWithParameters = customCodegenOperation.hasApiKeyAuth;
         for (CodegenSecurity codegenSecurity : customCodegenOperation.authMethods) {
             if (TRUE.equals(codegenSecurity.isBasicBasic)) {
-                customCodegenOperation.optionalAndAuthParameterNames.add(
-                        "basicAuthUsername");
-                customCodegenOperation.optionalAndAuthParameterNames.add(
-                        "basicAuthPassword");
+                customCodegenOperation.optionalAndAuthParameterNames.add("basicAuthUsername");
+                customCodegenOperation.optionalAndAuthParameterNames.add("basicAuthPassword");
                 customCodegenOperation.authWithParameters = true;
             } else if (TRUE.equals(codegenSecurity.isApiKey)) {
-                customCodegenOperation.optionalAndAuthParameterNames.add(
-                        camelize(codegenSecurity.keyParamName, LOWERCASE_FIRST_LETTER));
+                customCodegenOperation.optionalAndAuthParameterNames.add(camelize(codegenSecurity.keyParamName, LOWERCASE_FIRST_LETTER));
                 customCodegenOperation.authWithParameters = true;
             } else if (TRUE.equals(codegenSecurity.isBasicBearer)) {
-                customCodegenOperation.optionalAndAuthParameterNames.add(
-                        "basicAuthBearer");
+                customCodegenOperation.optionalAndAuthParameterNames.add("basicAuthBearer");
                 customCodegenOperation.authWithParameters = true;
             }
         }
+    }
+
+    public String getApiPrefix() {
+        return apiPrefix;
+    }
+
+    public void setApiPrefix(String apiPrefix) {
+        this.apiPrefix = apiPrefix;
+    }
+
+    public String getHttpClient() {
+        return httpClient;
+    }
+
+    public void setHttpClient(String httpClient) {
+        this.httpClient = httpClient;
+    }
+
+    public String getResourceFolder() {
+        return resourceFolder;
+    }
+
+    public void setResourceFolder(String resourceFolder) {
+        this.resourceFolder = resourceFolder;
+    }
+
+    public String getGeneratedSchemaFolder() {
+        return generatedSchemaFolder;
+    }
+
+    public void setGeneratedSchemaFolder(String generatedSchemaFolder) {
+        this.generatedSchemaFolder = generatedSchemaFolder;
+    }
+
+    public String getTargetXmlnsNamespace() {
+        return targetXmlnsNamespace;
+    }
+
+    public void setTargetXmlnsNamespace(String targetXmlnsNamespace) {
+        this.targetXmlnsNamespace = targetXmlnsNamespace;
+    }
+
+    public String getApiVersion() {
+        return apiVersion;
+    }
+
+    public void setApiVersion(String apiVersion) {
+        this.apiVersion = apiVersion;
+    }
+
+    public String getInvokerFolder() {
+        return invokerFolder;
+    }
+
+    public void setInvokerFolder(String invokerFolder) {
+        this.invokerFolder = invokerFolder;
+    }
+
+    public String getSpringFolder() {
+        return springFolder;
+    }
+
+    public void setSpringFolder(String springFolder) {
+        this.springFolder = springFolder;
+    }
+
+    public String getSchemaFolder() {
+        return schemaFolder;
+    }
+
+    public void setSchemaFolder(String schemaFolder) {
+        this.schemaFolder = schemaFolder;
     }
 
     private void configureAdditionalProperties() {
@@ -207,10 +271,10 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
     }
 
     /**
-     * Configures a friendly name for the generator. This will be used by the generator to select
+     * Configures a human-friendly name for the generator. This will be used by the generator to select
      * the library with the -g flag.
      *
-     * @return the friendly name for the generator
+     * @return the human-friendly name for the generator
      */
     @Override
     public String getName() {
@@ -284,8 +348,7 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
         }
         additionalProperties.put(RESOURCE_FOLDER, resourceFolder);
 
-        invokerFolder = (sourceFolder + File.separator + invokerPackage).replace(".",
-                File.separator);
+        invokerFolder = (sourceFolder + File.separator + invokerPackage).replace(".", File.separator);
         springFolder = invokerFolder + File.separator + "spring";
         schemaFolder = resourceFolder + File.separator + generatedSchemaFolder;
     }
@@ -302,28 +365,20 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
     }
 
     private void setupSoapApiType(String springFolder, String schemaFolder) {
-        additionalProperties.put(REQUEST_BUILDER_CLASS,
-                SoapApiSendMessageActionBuilder.class.getName());
-        additionalProperties.put(REQUEST_BUILDER_CLASS_NAME,
-                SoapApiSendMessageActionBuilder.class.getSimpleName());
-        additionalProperties.put(RESPONSE_BUILDER_CLASS,
-                SoapApiReceiveMessageActionBuilder.class.getName());
-        additionalProperties.put(RESPONSE_BUILDER_CLASS_NAME,
-                SoapApiReceiveMessageActionBuilder.class.getSimpleName());
+        additionalProperties.put(REQUEST_BUILDER_CLASS, SoapApiSendMessageActionBuilder.class.getName());
+        additionalProperties.put(REQUEST_BUILDER_CLASS_NAME, SoapApiSendMessageActionBuilder.class.getSimpleName());
+        additionalProperties.put(RESPONSE_BUILDER_CLASS, SoapApiReceiveMessageActionBuilder.class.getName());
+        additionalProperties.put(RESPONSE_BUILDER_CLASS_NAME, SoapApiReceiveMessageActionBuilder.class.getSimpleName());
         additionalProperties.put("isRest", false);
         additionalProperties.put("isSoap", true);
         addSoapSupportingFiles(springFolder, schemaFolder);
     }
 
     private void setupRestApiType(String springFolder, String schemaFolder) {
-        additionalProperties.put(REQUEST_BUILDER_CLASS,
-                RestApiSendMessageActionBuilder.class.getName());
-        additionalProperties.put(REQUEST_BUILDER_CLASS_NAME,
-                RestApiSendMessageActionBuilder.class.getSimpleName());
-        additionalProperties.put(RESPONSE_BUILDER_CLASS,
-                RestApiReceiveMessageActionBuilder.class.getName());
-        additionalProperties.put(RESPONSE_BUILDER_CLASS_NAME,
-                RestApiReceiveMessageActionBuilder.class.getSimpleName());
+        additionalProperties.put(REQUEST_BUILDER_CLASS, RestApiSendMessageActionBuilder.class.getName());
+        additionalProperties.put(REQUEST_BUILDER_CLASS_NAME, RestApiSendMessageActionBuilder.class.getSimpleName());
+        additionalProperties.put(RESPONSE_BUILDER_CLASS, RestApiReceiveMessageActionBuilder.class.getName());
+        additionalProperties.put(RESPONSE_BUILDER_CLASS_NAME, RestApiReceiveMessageActionBuilder.class.getSimpleName());
         additionalProperties.put("isRest", true);
         additionalProperties.put("isSoap", false);
 
@@ -336,8 +391,7 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
     private void writeApiToResourceFolder() {
 
         String directoryPath = appendSegmentToUrlPath(getOutputDir(), getResourceFolder());
-        directoryPath = appendSegmentToUrlPath(directoryPath,
-                invokerPackage.replace('.', File.separatorChar));
+        directoryPath = appendSegmentToUrlPath(directoryPath, invokerPackage.replace('.', File.separatorChar));
 
         String filename = getApiPrefix() + "_openApi.yaml";
 
@@ -373,9 +427,7 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
         }
     }
 
-    private void addRestSupportingFiles(String springFolder,
-                                        String schemaFolder) {
-
+    private void addRestSupportingFiles(String springFolder, String schemaFolder) {
         supportingFiles.add(new SupportingFile("namespace_handler.mustache", springFolder,
                 convertFirstChartToUpperCase(apiPrefix) + "NamespaceHandler.java"));
         supportingFiles.add(new SupportingFile("schema.mustache", schemaFolder,
@@ -401,15 +453,13 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
     }
 
     @Override
-    public CodegenParameter fromRequestBody(RequestBody body, Set<String> imports,
-                                            String bodyParameterName) {
+    public CodegenParameter fromRequestBody(RequestBody body, Set<String> imports, String bodyParameterName) {
         CodegenParameter codegenParameter = super.fromRequestBody(body, imports, bodyParameterName);
         return convertToCustomCodegenParameter(codegenParameter);
     }
 
     @Override
-    public CodegenParameter fromFormProperty(String name, Schema propertySchema,
-                                             Set<String> imports) {
+    public CodegenParameter fromFormProperty(String name, Schema propertySchema, Set<String> imports) {
         CodegenParameter codegenParameter = super.fromFormProperty(name, propertySchema, imports);
         return convertToCustomCodegenParameter(codegenParameter);
     }
@@ -429,13 +479,11 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
      * Converts given codegenParameter to a custom {@link CustomCodegenParameter} to provide
      * additional derived properties.
      */
-    private CustomCodegenParameter convertToCustomCodegenParameter(
-            CodegenParameter codegenParameter) {
+    private CustomCodegenParameter convertToCustomCodegenParameter(CodegenParameter codegenParameter) {
         CustomCodegenParameter customCodegenParameter = new CustomCodegenParameter();
         copyFields(CodegenParameter.class, codegenParameter, customCodegenParameter);
 
-        customCodegenParameter.isBaseTypeString = codegenParameter.isString || "String".equals(
-                codegenParameter.baseType);
+        customCodegenParameter.isBaseTypeString = codegenParameter.isString || "String".equals(codegenParameter.baseType);
 
         return customCodegenParameter;
     }
@@ -447,16 +495,13 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
                                           List<Server> servers) {
         CodegenOperation op = super.fromOperation(path, httpMethod, operation, servers);
         return convertToCustomCodegenOperation(op);
-
     }
 
     /**
      * Converts given codegenOperation to a custom {@link CustomCodegenOperation} to provide
      * additional derived properties.
      */
-    private CustomCodegenOperation convertToCustomCodegenOperation(
-            CodegenOperation codegenOperation) {
-
+    private CustomCodegenOperation convertToCustomCodegenOperation(CodegenOperation codegenOperation) {
         CustomCodegenOperation customOperation = new CustomCodegenOperation();
 
         copyFields(CodegenOperation.class, codegenOperation, customOperation);
@@ -469,14 +514,12 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
                 !customOperation.requiredParams.isEmpty() &&
                         customOperation.requiredParams
                                 .stream()
-                                .anyMatch(
-                                        param -> !param.isBodyParam && !"String".equals(param.dataType));
+                                .anyMatch(param -> !param.isBodyParam && !"String".equals(param.dataType));
 
         if (customOperation.optionalParams != null) {
             customOperation.optionalAndAuthParameterNames.addAll(
                     customOperation.optionalParams.stream()
-                            .map(codegenParameter ->
-                                    toVarName(codegenParameter.nameInCamelCase))
+                            .map(codegenParameter -> toVarName(codegenParameter.nameInCamelCase))
                             .toList());
         }
 
@@ -484,8 +527,7 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
     }
 
     @Override
-    public OperationsMap postProcessOperationsWithModels(OperationsMap objs,
-                                                         List<ModelMap> allModels) {
+    public OperationsMap postProcessOperationsWithModels(OperationsMap objs, List<ModelMap> allModels) {
         OperationsMap operationsMap = super.postProcessOperationsWithModels(objs, allModels);
 
         OperationMap operations = objs.getOperations();
@@ -519,6 +561,7 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
 
         public CustomCodegenOperation() {
             super();
+
             requiredNonBodyParams = new ArrayList<>();
             optionalAndAuthParameterNames = new ArrayList<>();
         }
@@ -535,18 +578,19 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
                 return false;
             }
             CustomCodegenOperation that = (CustomCodegenOperation) o;
-            return needsConstructorWithAllStringParameter
-                    == that.needsConstructorWithAllStringParameter
-                    && hasApiKeyAuth == that.hasApiKeyAuth && Objects.equals(requiredNonBodyParams,
-                    that.requiredNonBodyParams) && Objects.equals(optionalAndAuthParameterNames,
-                    that.optionalAndAuthParameterNames);
+            return needsConstructorWithAllStringParameter == that.needsConstructorWithAllStringParameter
+                    && hasApiKeyAuth == that.hasApiKeyAuth
+                    && Objects.equals(requiredNonBodyParams, that.requiredNonBodyParams)
+                    && Objects.equals(optionalAndAuthParameterNames, that.optionalAndAuthParameterNames);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(super.hashCode(), requiredNonBodyParams,
+            return Objects.hash(super.hashCode(),
+                    requiredNonBodyParams,
                     optionalAndAuthParameterNames,
-                    needsConstructorWithAllStringParameter, hasApiKeyAuth);
+                    needsConstructorWithAllStringParameter,
+                    hasApiKeyAuth);
         }
     }
 

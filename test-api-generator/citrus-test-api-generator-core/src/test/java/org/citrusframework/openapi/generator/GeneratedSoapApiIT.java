@@ -9,7 +9,6 @@ import org.citrusframework.junit.jupiter.spring.CitrusSpringExtension;
 import org.citrusframework.openapi.generator.GeneratedSoapApiIT.Config;
 import org.citrusframework.openapi.generator.soap.bookservice.request.BookServiceSoapApi;
 import org.citrusframework.openapi.generator.soap.bookservice.spring.BookServiceBeanConfiguration;
-import org.citrusframework.util.SocketUtils;
 import org.citrusframework.ws.client.WebServiceClient;
 import org.citrusframework.ws.client.WebServiceClientBuilder;
 import org.citrusframework.ws.endpoint.builder.WebServiceEndpoints;
@@ -22,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
+import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 import static org.citrusframework.ws.actions.SoapActionBuilder.soap;
 
 /**
@@ -35,10 +35,8 @@ import static org.citrusframework.ws.actions.SoapActionBuilder.soap;
  */
 
 @ExtendWith(CitrusSpringExtension.class)
-@SpringBootTest(classes = {BookServiceBeanConfiguration.class, CitrusSpringConfig.class, Config.class}
-)
+@SpringBootTest(classes = {BookServiceBeanConfiguration.class, CitrusSpringConfig.class, Config.class})
 class GeneratedSoapApiIT {
-
 
     @Autowired
     private WebServiceServer soapServer;
@@ -49,7 +47,7 @@ class GeneratedSoapApiIT {
     @TestConfiguration
     public static class Config {
 
-        private final int wsPort = SocketUtils.findAvailableTcpPort(8090);
+        private final int wsPort = findAvailableTcpPort(8090);
 
         @Bean(name = {"bookstore.endpoint"})
         public WebServiceClient soapClient() {
@@ -114,4 +112,3 @@ class GeneratedSoapApiIT {
         }
     }
 }
-

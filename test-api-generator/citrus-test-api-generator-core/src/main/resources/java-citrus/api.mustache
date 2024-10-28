@@ -170,7 +170,7 @@ public class {{classname}} implements GeneratedApi
     {{#needsConstructorWithAllStringParameter}}
 
     /**
-     * Builder with required parameters as string to allow for dynamic content.
+     * Builder with required parameters as string, allowing dynamic content using citrus expressions.
      */
     public {{operationIdCamelCase}}SendActionBuilder send{{operationIdCamelCase}}$({{#requiredNonBodyParams}}{{^isArray}}String {{paramName}}Expression{{/isArray}}{{#isArray}}List<String> {{paramName}}Expression{{/isArray}}{{^-last}}, {{/-last}} {{/requiredNonBodyParams}})   {
         {{#authWithParameters}}

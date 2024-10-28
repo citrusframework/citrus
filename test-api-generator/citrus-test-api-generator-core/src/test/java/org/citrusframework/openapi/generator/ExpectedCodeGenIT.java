@@ -44,14 +44,11 @@ class ExpectedCodeGenIT {
     }
 
     static Stream<Arguments> getResourcesForSoap() throws IOException {
-        return geClassResourcesIgnoringInnerClasses(
-                BASE_PACKAGE + "/soap/bookservice");
+        return geClassResourcesIgnoringInnerClasses(BASE_PACKAGE + "/soap/bookservice");
     }
 
-    private static Stream<Arguments> geClassResourcesIgnoringInnerClasses(String path)
-            throws IOException {
-        return Streams.of(
-                        new PathMatchingResourcePatternResolver().getResources(path + "/**/*.class"))
+    private static Stream<Arguments> geClassResourcesIgnoringInnerClasses(String path) throws IOException {
+        return Streams.of(new PathMatchingResourcePatternResolver().getResources(path + "/**/*.class"))
                 .filter(resource -> {
                             try {
                                 return !resource.getURI().toString().contains("$");
