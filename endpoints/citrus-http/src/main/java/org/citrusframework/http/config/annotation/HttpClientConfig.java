@@ -94,6 +94,12 @@ public @interface HttpClientConfig {
     boolean handleCookies() default false;
 
     /**
+     * Disbable redirect handling.
+     * @return
+     */
+    boolean disableRedirectHandling() default false;
+
+    /**
      * Content type.
      * @return
      */

@@ -76,6 +76,7 @@ public class HttpClientParser extends AbstractEndpointParser {
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("content-type"), "contentType");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("polling-interval"), "pollingInterval");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("handle-cookies"), "handleCookies");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("disable-redirect-handling"), "disableRedirectHandling");
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("error-handler"), "errorHandler");
         if (element.hasAttribute("error-strategy")) {

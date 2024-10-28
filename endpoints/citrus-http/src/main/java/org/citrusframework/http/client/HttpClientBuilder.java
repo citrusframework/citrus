@@ -147,6 +147,16 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     /**
+     * Sets the disabled redirect handling property.
+     * @param flag
+     * @return
+     */
+    public HttpClientBuilder disableRedirectHandling(boolean flag) {
+        endpoint.getEndpointConfiguration().setDisableRedirectHandling(flag);
+        return this;
+    }
+
+    /**
      * Sets the content type.
      * @param contentType
      * @return

@@ -71,6 +71,7 @@
         <xs:attribute name="content-type" type="xs:string"/>
         <xs:attribute name="default-accept-header" type="xs:boolean"/>
         <xs:attribute name="handle-cookies" type="xs:boolean"/>
+        <xs:attribute name="disable-redirect-handling" type="xs:boolean"/>
         <xs:attribute name="interceptors" type="xs:string"/>
         <xs:attribute name="binary-media-types" type="xs:string"/>
         <xs:attribute name="error-handler" type="xs:string"/>
