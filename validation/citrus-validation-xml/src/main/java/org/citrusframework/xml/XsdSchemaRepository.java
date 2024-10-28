@@ -95,6 +95,7 @@ public class XsdSchemaRepository extends BaseRepository {
         }
     }
 
+    @Override
     protected void addRepository(Resource resource) {
         if (resource.getLocation().endsWith(".xsd")) {
             addXsdSchema(resource);
