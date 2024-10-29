@@ -16,28 +16,33 @@
 
 package org.citrusframework.container;
 
+import jakarta.annotation.Nullable;
+import org.apache.commons.lang3.time.StopWatch;
 import org.citrusframework.AbstractIteratingContainerBuilder;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
+
+import static java.util.Objects.nonNull;
+
 /**
  * Looping test container iterating the nested test actions in case an error occurred in one
  * of them. Iteration continues until a aborting condition evaluates to true.
- *
+ * <p>
  * Number of iterations is kept in a index variable. The nested test actions can access this variable
  * as normal test variable.
- *
+ * <p>
  * Between the iterations container can sleep automatically a given amount of time.
- *
  */
 public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
-    /** Auto sleep in milliseconds */
-    private final Long autoSleep;
 
-    /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(RepeatOnErrorUntilTrue.class);
+
+    private final Duration autoSleep;
 
     /**
      * Default constructor.
@@ -52,7 +57,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
     public void executeIteration(TestContext context) {
         CitrusRuntimeException exception = null;
 
-        while(!checkCondition(context)) {
+        while (!checkCondition(context)) {
             try {
                 exception = null;
                 executeActions(context);
@@ -60,8 +65,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
             } catch (CitrusRuntimeException e) {
                 exception = e;
 
-                logger.info("Caught exception of type " + e.getClass().getName() + " '" +
-                        e.getMessage() + "' - performing retry #" + index);
+                logger.info("Caught exception of type {} '{}' - performing retry #{}", e.getClass().getName(), e.getMessage(), index);
 
                 doAutoSleep();
                 index++;
@@ -69,7 +73,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
         }
 
         if (exception != null) {
-            logger.info("All retries failed - raising exception " + exception.getClass().getName());
+            logger.info("All retries failed - raising exception {}", exception.getClass().getName());
             throw exception;
         }
     }
@@ -78,24 +82,35 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
      * Sleep amount of time in between iterations.
      */
     private void doAutoSleep() {
-        if (autoSleep > 0) {
-            logger.info("Sleeping " + autoSleep + " milliseconds");
+        if (autoSleep.toMillis() > 0) {
+            logger.info("Sleeping {}", autoSleep);
 
             try {
-                Thread.sleep(autoSleep);
+                Thread.sleep(autoSleep.toMillis());
             } catch (InterruptedException e) {
                 logger.error("Error during doc generation", e);
+                Thread.currentThread().interrupt();
             }
 
-            logger.info("Returning after " + autoSleep + " milliseconds");
+            logger.info("Returning after {}", autoSleep);
         }
     }
 
     /**
-     * Gets the autoSleep.
+     * Gets the duration this action sleeps in milliseconds.
+     *
      * @return the autoSleep
+     * @deprecated use {@link RepeatOnErrorUntilTrue#getAutoSleepDuration()} instead
      */
+    @Deprecated(forRemoval = true)
     public Long getAutoSleep() {
+        return autoSleep.toMillis();
+    }
+
+    /**
+     * @return the duration this action sleeps in between retries
+     */
+    public Duration getAutoSleepDuration() {
         return autoSleep;
     }
 
@@ -104,11 +119,10 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
      */
     public static class Builder extends AbstractIteratingContainerBuilder<RepeatOnErrorUntilTrue, Builder> {
 
-        private Long autoSleep = 1000L;
+        private Duration autoSleep = Duration.ofMillis(1_000L);
 
         /**
          * Fluent API action building entry method used in Java DSL.
-         * @return
          */
         public static Builder repeatOnError() {
             return new Builder();
@@ -116,8 +130,6 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
 
         /**
          * Adds a condition to this iterate container.
-         * @param condition
-         * @return
          */
         public Builder until(String condition) {
             condition(condition);
@@ -126,8 +138,6 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
 
         /**
          * Adds a condition expression to this iterate container.
-         * @param condition
-         * @return
          */
         public Builder until(IteratingConditionExpression condition) {
             condition(condition);
@@ -136,11 +146,19 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
 
         /**
          * Sets the auto sleep time in between repeats in milliseconds.
-         * @param autoSleepInMillis
-         * @return
+         *
+         * @deprecated use {@link Builder#autoSleep(Duration)} instead
          */
         public Builder autoSleep(long autoSleepInMillis) {
-            this.autoSleep = autoSleepInMillis;
+            this.autoSleep = Duration.ofMillis(autoSleepInMillis);
+            return this;
+        }
+
+        /**
+         * Sets the sleep interval between retries of this action.
+         */
+        public Builder autoSleep(Duration autoSleep) {
+            this.autoSleep = autoSleep;
             return this;
         }
 
