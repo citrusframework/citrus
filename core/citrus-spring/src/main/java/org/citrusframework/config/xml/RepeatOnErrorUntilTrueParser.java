@@ -46,7 +46,7 @@ public class RepeatOnErrorUntilTrueParser extends AbstractIterationTestActionPar
 
         /**
          * Setter for auto sleep time (in milliseconds).
-         * @param autoSleep
+         * @param autoSleep the auto sleep time in between repeats in milliseconds
          */
         public void setAutoSleep(Long autoSleep) {
             this.builder.autoSleep(autoSleep);

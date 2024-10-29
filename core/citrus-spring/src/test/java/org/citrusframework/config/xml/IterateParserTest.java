@@ -16,11 +16,14 @@
 
 package org.citrusframework.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import org.citrusframework.container.Iterate;
 import org.citrusframework.testng.AbstractActionParserTest;
+import org.testng.annotations.Test;
+
+import java.time.Duration;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 public class IterateParserTest extends AbstractActionParserTest<Iterate> {
 
@@ -30,24 +33,27 @@ public class IterateParserTest extends AbstractActionParserTest<Iterate> {
         assertActionClassAndName(Iterate.class, "iterate");
 
         Iterate action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getCondition(), "i lt 3");
-        Assert.assertEquals(action.getIndexName(), "i");
-        Assert.assertEquals(action.getStart(), 1);
-        Assert.assertEquals(action.getStep(), 1);
-        Assert.assertEquals(action.getActionCount(), 1);
+        assertEquals(action.getCondition(), "i lt 3");
+        assertEquals(action.getIndexName(), "i");
+        assertEquals(action.getStart(), 1);
+        assertEquals(action.getStep(), 1);
+        assertEquals(action.getActionCount(), 1);
+        assertNull(action.getTimeout());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getCondition(), "index lt= 2");
-        Assert.assertEquals(action.getIndexName(), "index");
-        Assert.assertEquals(action.getStart(), 1);
-        Assert.assertEquals(action.getStep(), 1);
-        Assert.assertEquals(action.getActionCount(), 1);
+        assertEquals(action.getCondition(), "index lt= 2");
+        assertEquals(action.getIndexName(), "index");
+        assertEquals(action.getStart(), 1);
+        assertEquals(action.getStep(), 1);
+        assertEquals(action.getActionCount(), 1);
+        assertNull(action.getTimeout());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getCondition(), "i lt= 10");
-        Assert.assertEquals(action.getIndexName(), "i");
-        Assert.assertEquals(action.getStart(), 0);
-        Assert.assertEquals(action.getStep(), 5);
-        Assert.assertEquals(action.getActionCount(), 2);
+        assertEquals(action.getCondition(), "i lt= 10");
+        assertEquals(action.getIndexName(), "i");
+        assertEquals(action.getStart(), 0);
+        assertEquals(action.getStep(), 5);
+        assertEquals(action.getActionCount(), 2);
+        assertEquals(action.getTimeout(), Duration.ofSeconds(3));
     }
 }

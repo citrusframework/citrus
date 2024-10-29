@@ -20,63 +20,161 @@ import org.citrusframework.AbstractIteratingContainerBuilder;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.util.BooleanExpressionParser;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 
+import java.time.Duration;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
+import static java.lang.Thread.currentThread;
+import static java.util.Objects.nonNull;
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
 public abstract class AbstractIteratingActionContainer extends AbstractActionContainer {
-    /** Boolean expression string */
+
+    /**
+     * Boolean expression string
+     */
     protected final String condition;
 
-    /** Optional condition expression evaluates to true or false */
+    /**
+     * Optional condition expression evaluates to true or false
+     */
     protected final IteratingConditionExpression conditionExpression;
 
-    /** Name of index variable */
+    /**
+     * Looping index
+     */
+    protected int index;
+
+    /**
+     * Name of index variable
+     */
     protected final String indexName;
 
-    /** Cache start index for further container executions - e.g. in loop */
+    /**
+     * Cache start index for further container executions - e.g. in loop
+     */
     protected final int start;
 
-    /** Looping index */
-    protected int index;
+    /**
+     * The maximum duration this iteration can take until it reaches a timeout.
+     */
+    private final Duration timeout;
 
     public AbstractIteratingActionContainer(String name, AbstractIteratingContainerBuilder<?, ?> builder) {
         super(name, builder);
 
         this.condition = builder.getCondition();
         this.conditionExpression = builder.getConditionExpression();
-        this.indexName = builder.getIndexName();
         this.index = builder.getIndex();
+        this.indexName = builder.getIndexName();
         this.start = builder.getStart();
+        this.timeout = builder.getTimeout();
     }
 
     @Override
     public final void doExecute(TestContext context) {
         index = start;
-        executeIteration(context);
+
+        if (nonNull(timeout) && timeout.toMillis() > 0) {
+            executeIterationWithTimeout(context);
+        } else {
+            executeIteration(context);
+        }
+    }
+
+    private void executeIterationWithTimeout(TestContext context) {
+        var executor = newSingleThreadExecutor();
+
+        try {
+            var future = executor.submit(() -> executeIteration(context));
+            future.get(timeout.toMillis(), MILLISECONDS);
+        } catch (ExecutionException | TimeoutException e) {
+            throw new CitrusRuntimeException("Iteration reached timeout!", e);
+        } catch (InterruptedException e) {
+            currentThread().interrupt();
+            throw new RuntimeException(e);
+        } finally {
+            executor.shutdown();
+        }
+    }
+
+    @Override
+    public boolean isDone(TestContext context) {
+        return super.isDone(context) || !checkCondition(context);
+    }
+
+    /**
+     * @return the condition
+     */
+    public String getCondition() {
+        return condition;
+    }
+
+    /**
+     * @return the condition expression
+     */
+    public IteratingConditionExpression getConditionExpression() {
+        return conditionExpression;
+    }
+
+    /**
+     * @return the index
+     */
+    public int getIndex() {
+        return index;
+    }
+
+    /**
+     * @return the index name
+     */
+    public String getIndexName() {
+        return indexName;
+    }
+
+    /**
+     * @return the start index
+     */
+    public int getStart() {
+        return start;
+    }
+
+    /**
+     * The maximum duration this iteration can take until it reaches a timeout.
+     */
+    public Duration getTimeout() {
+        return timeout;
     }
 
     /**
      * Execute embedded actions in loop.
-     * @param context TestContext holding variable information.
+     *
+     * @param context Test context holding variable information.
      */
     protected abstract void executeIteration(TestContext context);
 
     /**
      * Executes the nested test actions.
-     * @param context
+     *
+     * @param context Test context holding variable information.
      */
     protected void executeActions(TestContext context) {
         context.setVariable(indexName, String.valueOf(index));
 
-        for (TestActionBuilder<?> actionBuilder: actions) {
+        for (TestActionBuilder<?> actionBuilder : actions) {
             executeAction(actionBuilder.build(), context);
         }
     }
 
     /**
      * Check aborting condition.
-     * @return
+     *
+     * @return whether the conditioning has been satisfied.
      */
     protected boolean checkCondition(TestContext context) {
         if (conditionExpression != null) {
@@ -103,50 +201,5 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
         }
 
         return BooleanExpressionParser.evaluate(conditionString);
-    }
-
-    @Override
-    public boolean isDone(TestContext context) {
-        return super.isDone(context) || !checkCondition(context);
-    }
-
-    /**
-     * Gets the condition.
-     * @return the condition
-     */
-    public String getCondition() {
-        return condition;
-    }
-
-    /**
-     * Gets the condition.
-     * @return the conditionExpression
-     */
-    public IteratingConditionExpression getConditionExpression() {
-        return conditionExpression;
-    }
-
-    /**
-     * Gets the indexName.
-     * @return the indexName
-     */
-    public String getIndexName() {
-        return indexName;
-    }
-
-    /**
-     * Gets the index.
-     * @return the index
-     */
-    public int getIndex() {
-        return index;
-    }
-
-    /**
-     * Gets the start index.
-     * @return
-     */
-    public int getStart() {
-        return start;
     }
 }

@@ -59,7 +59,7 @@
         <variable name="extractedTraceparent"/>
       </create-variables>
 
-      <repeat-onerror-until-true condition="@assertThat('${extractedTraceparent}', 'equalTo(01-${traceId}-${spanId}-00)')@">
+      <repeat-onerror-until-true condition="@assertThat('${extractedTraceparent}', 'equalTo(01-${traceId}-${spanId}-00)')@" timeout="PT5S">
         <receive endpoint="helloKafkaEndpoint">
           <description>Receive Kafka request: Kafka broker -> Citrus</description>
           <selector>

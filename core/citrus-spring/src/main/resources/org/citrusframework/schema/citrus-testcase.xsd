@@ -649,6 +649,7 @@
         <xs:attribute name="condition" type="xs:string" use="required"/>
         <xs:attribute name="start" type="xs:string"/>
         <xs:attribute name="step" type="xs:string"/>
+        <xs:attribute name="timeout" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="RepeatUntilTrueActionType">
@@ -658,6 +659,7 @@
         </xs:sequence>
         <xs:attribute name="index" type="xs:string"/>
         <xs:attribute name="condition" type="xs:string" use="required"/>
+        <xs:attribute name="timeout" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="RepeatOnErrorUntilTrueActionType">
@@ -665,9 +667,10 @@
             <xs:element ref="description" minOccurs="0"/>
             <xs:group ref="actionGroup" maxOccurs="unbounded"/>
         </xs:sequence>
-        <xs:attribute name="index" type="xs:string"/>
-        <xs:attribute name="condition" type="xs:string" use="required"/>
         <xs:attribute name="auto-sleep" type="xs:string"/>
+        <xs:attribute name="condition" type="xs:string" use="required"/>
+        <xs:attribute name="index" type="xs:string"/>
+        <xs:attribute name="timeout" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="ConditionalActionType">

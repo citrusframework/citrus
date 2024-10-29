@@ -20,6 +20,8 @@ import org.citrusframework.AbstractIteratingContainerBuilder;
 import org.citrusframework.container.AbstractIteratingActionContainer;
 import org.citrusframework.container.IteratingConditionExpression;
 
+import java.time.Duration;
+
 public abstract class AbstractIteratingTestContainerFactoryBean<T extends AbstractIteratingActionContainer, B extends AbstractIteratingContainerBuilder<?, ?>> extends AbstractTestContainerFactoryBean<T, B> {
 
     /**
@@ -52,5 +54,13 @@ public abstract class AbstractIteratingTestContainerFactoryBean<T extends Abstra
      */
     public void setStart(int start) {
         getBuilder().startsWith(start);
+    }
+
+    /**
+     * Setter fot timeout duration.
+     * @param timeout the maximum duration this action will take before ending in a timeout
+     */
+    public void setTimeout(Duration timeout) {
+        getBuilder().timeout(timeout);
     }
 }

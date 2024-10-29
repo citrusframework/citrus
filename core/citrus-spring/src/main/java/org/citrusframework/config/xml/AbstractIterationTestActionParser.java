@@ -22,23 +22,29 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import java.time.Duration;
+
+import static org.citrusframework.config.util.BeanDefinitionParserUtils.setPropertyValue;
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
- * Abstract parser implementation for all iterative container actions. Parser takes care of
- * index name, aborting condition, index start value and description
- *
+ * Abstract parser implementation for all iterative container actions. Parser takes care of index name, aborting
+ * condition, index start value and description
  */
-public abstract class AbstractIterationTestActionParser  implements BeanDefinitionParser {
+public abstract class AbstractIterationTestActionParser implements BeanDefinitionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = parseComponent(element, parserContext);
 
-        DescriptionElementParser.doParse(element, builder);
+        MessageSelectorParser.doParse(element, builder);
 
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("index"), "indexName");
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("condition"), "condition");
+        setPropertyValue(builder, element.getAttribute("condition"), "condition");
+        setPropertyValue(builder, element.getAttribute("index"), "indexName");
+
+        if (hasText(element.getAttribute("timeout"))) {
+            builder.addPropertyValue("timeout", Duration.parse(element.getAttribute("timeout")));
+        }
 
         builder.addPropertyValue("name", element.getLocalName());
 

@@ -16,11 +16,14 @@
 
 package org.citrusframework.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import org.citrusframework.container.RepeatOnErrorUntilTrue;
 import org.citrusframework.testng.AbstractActionParserTest;
+import org.testng.annotations.Test;
+
+import java.time.Duration;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 public class RepeatOnErrorUntilTrueParserTest extends AbstractActionParserTest<RepeatOnErrorUntilTrue> {
 
@@ -30,31 +33,35 @@ public class RepeatOnErrorUntilTrueParserTest extends AbstractActionParserTest<R
         assertActionClassAndName(RepeatOnErrorUntilTrue.class, "repeat-onerror-until-true");
 
         RepeatOnErrorUntilTrue action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getCondition(), "i gt 3");
-        Assert.assertEquals(action.getIndexName(), "i");
-        Assert.assertEquals(action.getStart(), 1);
-        Assert.assertEquals(action.getAutoSleep(), Long.valueOf(1000L));
-        Assert.assertEquals(action.getActionCount(), 1);
+        assertEquals(action.getCondition(), "i gt 3");
+        assertEquals(action.getIndexName(), "i");
+        assertEquals(action.getStart(), 1);
+        assertEquals(action.getAutoSleep(), Long.valueOf(1000L));
+        assertEquals(action.getActionCount(), 1);
+        assertNull(action.getTimeout());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getCondition(), "index gt= 2");
-        Assert.assertEquals(action.getIndexName(), "index");
-        Assert.assertEquals(action.getStart(), 1);
-        Assert.assertEquals(action.getAutoSleep(), Long.valueOf(1000L));
-        Assert.assertEquals(action.getActionCount(), 1);
+        assertEquals(action.getCondition(), "index gt= 2");
+        assertEquals(action.getIndexName(), "index");
+        assertEquals(action.getStart(), 1);
+        assertEquals(action.getAutoSleep(), Long.valueOf(1000L));
+        assertEquals(action.getActionCount(), 1);
+        assertNull(action.getTimeout());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getCondition(), "i gt= 10");
-        Assert.assertEquals(action.getIndexName(), "i");
-        Assert.assertEquals(action.getStart(), 1);
-        Assert.assertEquals(action.getAutoSleep(), Long.valueOf(500L));
-        Assert.assertEquals(action.getActionCount(), 2);
+        assertEquals(action.getCondition(), "i gt= 10");
+        assertEquals(action.getIndexName(), "i");
+        assertEquals(action.getStart(), 1);
+        assertEquals(action.getAutoSleep(), Long.valueOf(500L));
+        assertEquals(action.getActionCount(), 2);
+        assertNull(action.getTimeout());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getCondition(), "i gt= 5");
-        Assert.assertEquals(action.getIndexName(), "i");
-        Assert.assertEquals(action.getStart(), 1);
-        Assert.assertEquals(action.getAutoSleep(), Long.valueOf(250L));
-        Assert.assertEquals(action.getActionCount(), 1);
+        assertEquals(action.getCondition(), "i gt= 5");
+        assertEquals(action.getIndexName(), "i");
+        assertEquals(action.getStart(), 1);
+        assertEquals(action.getAutoSleep(), Long.valueOf(250L));
+        assertEquals(action.getActionCount(), 1);
+        assertEquals(action.getTimeout(), Duration.ofSeconds(1));
     }
 }
