@@ -37,13 +37,16 @@ import org.citrusframework.validation.matcher.core.StartsWithValidationMatcher;
 import org.citrusframework.validation.matcher.core.StringLengthValidationMatcher;
 import org.citrusframework.validation.matcher.core.TrimAllWhitespacesValidationMatcher;
 import org.citrusframework.validation.matcher.core.TrimValidationMatcher;
+import org.citrusframework.validation.matcher.core.UuidV4ValidationMatcher;
 import org.citrusframework.validation.matcher.core.WeekdayValidationMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger logger = LoggerFactory.getLogger(DefaultValidationMatcherLibrary.class);
 
     /**
@@ -74,6 +77,7 @@ public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
         getMembers().put("notNull", new NotNullValidationMatcher());
         getMembers().put("ignore", new IgnoreValidationMatcher());
         getMembers().put("hasLength", new StringLengthValidationMatcher());
+        getMembers().put("isUUIDv4", new UuidV4ValidationMatcher());
 
         lookupValidationMatchers();
     }
