@@ -32,14 +32,6 @@ public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestA
     private CamelContext camelContext;
 
     /**
-     * Fluent API action building entry method used in Java DSL.
-     * @return
-     */
-    public static CamelRouteActionBuilder camel() {
-        return new CamelRouteActionBuilder();
-    }
-
-    /**
      * Processor calling given Camel route as part of the message processing.
      * @return
      */

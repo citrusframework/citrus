@@ -19,6 +19,7 @@ package org.citrusframework.camel.actions;
 import java.io.IOException;
 
 import org.citrusframework.camel.context.CamelReferenceResolver;
+import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.groovy.dsl.GroovySupport;
@@ -50,6 +51,10 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
             toCreate = new GroovySupport()
                     .withTestContext(context)
                     .load(context.replaceDynamicContentInString(script), "org.apache.camel.*");
+
+            if (toCreate instanceof InitializingPhase) {
+                ((InitializingPhase) toCreate).initialize();
+            }
         } else {
             toCreate = component;
         }
@@ -84,6 +89,10 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
         }
 
         public Builder component(String name, Object component) {
+            if (component instanceof String) {
+                return component(name, component.toString());
+            }
+
             this.name = name;
             this.component = component;
             return this;
@@ -94,12 +103,16 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
         }
 
         public Builder component(String name, Resource resource) {
-            this.name = name;
             try {
-                this.script = FileUtils.readToString(resource);
+                return component(name, FileUtils.readToString(resource));
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Failed to read Camel component from resource '%s'".formatted(resource.getLocation()), e);
             }
+        }
+
+        public Builder component(String name, String script) {
+            this.name = name;
+            this.script = script;
             return this;
         }
 
