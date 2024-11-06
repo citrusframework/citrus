@@ -23,6 +23,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActor;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.eventing.CreateBrokerAction;
+import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 
 @XmlRootElement(name = "create-broker")
@@ -44,6 +45,12 @@ public class CreateBroker extends AbstractKnativeAction.Builder<CreateBrokerActi
     @Override
     public CreateBroker actor(TestActor actor) {
         delegate.actor(actor);
+        return this;
+    }
+
+    @Override
+    public CreateBroker clusterType(ClusterType clusterType) {
+        delegate.clusterType(clusterType);
         return this;
     }
 

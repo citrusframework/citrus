@@ -21,6 +21,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.eventing.CreateBrokerAction;
+import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 
 public class CreateBroker extends AbstractKnativeAction.Builder<CreateBrokerAction, CreateBroker> {
@@ -40,6 +41,12 @@ public class CreateBroker extends AbstractKnativeAction.Builder<CreateBrokerActi
     @Override
     public CreateBroker actor(TestActor actor) {
         delegate.actor(actor);
+        return this;
+    }
+
+    @Override
+    public CreateBroker clusterType(ClusterType clusterType) {
+        delegate.clusterType(clusterType);
         return this;
     }
 

@@ -27,6 +27,7 @@ import org.citrusframework.TestActor;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.KnativeAction;
+import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 
@@ -41,6 +42,8 @@ public class Knative implements TestActionBuilder<KnativeAction>, ReferenceResol
     private String k8sClient;
     private String knativeClient;
     private String namespace;
+
+    private ClusterType clusterType;
 
     private ReferenceResolver referenceResolver;
 
@@ -59,6 +62,12 @@ public class Knative implements TestActionBuilder<KnativeAction>, ReferenceResol
     @XmlAttribute
     public Knative setNamespace(String namespace) {
         this.namespace = namespace;
+        return this;
+    }
+
+    @XmlAttribute(name = "cluster-type")
+    public Knative setClusterType(String clusterType) {
+        this.clusterType = ClusterType.valueOf(clusterType);
         return this;
     }
 
@@ -150,6 +159,10 @@ public class Knative implements TestActionBuilder<KnativeAction>, ReferenceResol
 
         builder.description(description);
         builder.inNamespace(namespace);
+
+        if (clusterType != null) {
+            builder.clusterType(clusterType);
+        }
 
         if (referenceResolver != null) {
             if (k8sClient != null) {

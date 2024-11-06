@@ -21,6 +21,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.eventing.DeleteBrokerAction;
+import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 
 public class DeleteBroker extends AbstractKnativeAction.Builder<DeleteBrokerAction, DeleteBroker> {
@@ -40,6 +41,12 @@ public class DeleteBroker extends AbstractKnativeAction.Builder<DeleteBrokerActi
     @Override
     public DeleteBroker actor(TestActor actor) {
         delegate.actor(actor);
+        return this;
+    }
+
+    @Override
+    public DeleteBroker clusterType(ClusterType clusterType) {
+        delegate.clusterType(clusterType);
         return this;
     }
 

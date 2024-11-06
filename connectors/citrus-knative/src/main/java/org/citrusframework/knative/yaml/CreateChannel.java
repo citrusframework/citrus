@@ -21,6 +21,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.messaging.CreateChannelAction;
+import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 
 public class CreateChannel extends AbstractKnativeAction.Builder<CreateChannelAction, CreateChannel> {
@@ -40,6 +41,12 @@ public class CreateChannel extends AbstractKnativeAction.Builder<CreateChannelAc
     @Override
     public CreateChannel actor(TestActor actor) {
         delegate.actor(actor);
+        return this;
+    }
+
+    @Override
+    public CreateChannel clusterType(ClusterType clusterType) {
+        delegate.clusterType(clusterType);
         return this;
     }
 

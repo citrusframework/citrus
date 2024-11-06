@@ -23,6 +23,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActor;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.messaging.CreateChannelAction;
+import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 
 @XmlRootElement(name = "create-channel")
@@ -44,6 +45,12 @@ public class CreateChannel extends AbstractKnativeAction.Builder<CreateChannelAc
     @Override
     public CreateChannel actor(TestActor actor) {
         delegate.actor(actor);
+        return this;
+    }
+
+    @Override
+    public CreateChannel clusterType(ClusterType clusterType) {
+        delegate.clusterType(clusterType);
         return this;
     }
 

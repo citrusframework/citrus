@@ -20,7 +20,7 @@ actions:
       receiveEvent:
         service: "my-service"
         event:
-          data:
+          data: Hello Knative broker
           attributes:
             - name: ce-type
               value: "org.citrusframework.knative.event"

@@ -23,6 +23,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActor;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.eventing.VerifyBrokerAction;
+import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 
 @XmlRootElement(name = "verify-broker")
@@ -44,6 +45,12 @@ public class VerifyBroker extends AbstractKnativeAction.Builder<VerifyBrokerActi
     @Override
     public VerifyBroker actor(TestActor actor) {
         delegate.actor(actor);
+        return this;
+    }
+
+    @Override
+    public VerifyBroker clusterType(ClusterType clusterType) {
+        delegate.clusterType(clusterType);
         return this;
     }
 

@@ -23,6 +23,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActor;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.messaging.CreateSubscriptionAction;
+import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 
 @XmlRootElement(name = "create-subscription")
@@ -54,6 +55,12 @@ public class CreateSubscription extends AbstractKnativeAction.Builder<CreateSubs
     @Override
     public CreateSubscription actor(TestActor actor) {
         delegate.actor(actor);
+        return this;
+    }
+
+    @Override
+    public CreateSubscription clusterType(ClusterType clusterType) {
+        delegate.clusterType(clusterType);
         return this;
     }
 
