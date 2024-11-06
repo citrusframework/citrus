@@ -16,6 +16,9 @@
 
 package org.citrusframework.camel.yaml;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.citrusframework.camel.actions.AbstractCamelJBangAction;
 import org.citrusframework.camel.actions.CamelRunIntegrationAction;
 import org.citrusframework.camel.actions.CamelStopIntegrationAction;
@@ -102,8 +105,32 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 builder.integration(Resources.create(integration.file));
             }
 
+            builder.autoRemove(integration.autoRemove);
+
             if (integration.sourceCode != null) {
                 builder.integration(integration.sourceCode);
+            }
+
+            if (integration.systemProperties != null) {
+                if (integration.systemProperties.getFile() != null) {
+                    builder.withSystemProperties(Resources.create(
+                            integration.systemProperties.getFile()));
+                }
+
+                integration.systemProperties
+                        .getProperties()
+                        .forEach(property -> builder.withSystemProperty(property.getName(), property.getValue()));
+            }
+
+            if (integration.environment != null) {
+                if (integration.environment.getFile() != null) {
+                    builder.withEnvs(Resources.create(
+                            integration.environment.getFile()));
+                }
+
+                integration.environment
+                        .getVariables()
+                        .forEach(variable -> builder.withEnv(variable.getName(), variable.getValue()));
             }
         }
 
@@ -111,6 +138,12 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             private String name;
             private String file;
             private String sourceCode;
+
+            private boolean autoRemove;
+
+            protected Environment environment;
+
+            protected SystemProperties systemProperties;
 
             public void setName(String integrationName) {
                 this.name = integrationName;
@@ -122,6 +155,128 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
             public void setSources(String sourceCode) {
                 this.sourceCode = sourceCode;
+            }
+
+            public Environment getEnvironment() {
+                return this.environment;
+            }
+
+            public void setEnvironment(Environment environment) {
+                this.environment = environment;
+            }
+
+            public SystemProperties getSystemProperties() {
+                return this.systemProperties;
+            }
+
+            public void setSystemProperties(SystemProperties systemProperties) {
+                this.systemProperties = systemProperties;
+            }
+
+            public void setAutoRemove(boolean autoRemove) {
+                this.autoRemove = autoRemove;
+            }
+
+            public boolean isAutoRemove() {
+                return autoRemove;
+            }
+
+            public static class Environment {
+
+                protected String file;
+
+                protected List<Variable> variables;
+
+                public List<Variable> getVariables() {
+                    if (variables == null) {
+                        variables = new ArrayList<>();
+                    }
+                    return this.variables;
+                }
+
+                public void setVariables(List<Variable> variables) {
+                    this.variables = variables;
+                }
+
+                public void setFile(String file) {
+                    this.file = file;
+                }
+
+                public String getFile() {
+                    return file;
+                }
+
+                public static class Variable {
+
+                    protected String name;
+                    protected String value;
+
+                    public String getName() {
+                        return name;
+                    }
+
+                    public void setName(String value) {
+                        this.name = value;
+                    }
+
+                    public String getValue() {
+                        return value;
+                    }
+
+                    public void setValue(String value) {
+                        this.value = value;
+                    }
+
+                }
+            }
+
+            public static class SystemProperties {
+
+                protected String file;
+
+                protected List<Property> properties;
+
+                public List<Property> getProperties() {
+                    if (properties == null) {
+                        properties = new ArrayList<>();
+                    }
+                    return this.properties;
+                }
+
+                public void setProperties(List<Property> properties) {
+                    this.properties = properties;
+                }
+
+                public void setFile(String file) {
+                    this.file = file;
+                }
+
+                public String getFile() {
+                    return file;
+                }
+
+                public static class Property {
+
+                    protected String name;
+                    protected String value;
+
+                    public String getName() {
+                        return name;
+                    }
+
+                    public void setName(String value) {
+                        this.name = value;
+                    }
+
+                    public String getValue() {
+                        return value;
+                    }
+
+                    public void setValue(String value) {
+                        this.value = value;
+                    }
+
+                }
             }
         }
 

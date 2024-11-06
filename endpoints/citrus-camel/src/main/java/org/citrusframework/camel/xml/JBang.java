@@ -16,12 +16,14 @@
 
 package org.citrusframework.camel.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.XmlValue;
 import org.citrusframework.camel.CamelSettings;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -105,7 +107,11 @@ public class JBang {
         }
 
         @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "")
+        @XmlType(name = "", propOrder = {
+                "environment",
+                "systemProperties",
+                "source"
+        })
         public static class Integration {
             @XmlAttribute
             protected String name;
@@ -113,8 +119,17 @@ public class JBang {
             @XmlAttribute
             protected String file;
 
-            @XmlValue
-            protected String sourceCode;
+            @XmlAttribute(name = "auto-remove")
+            protected boolean autoRemove;
+
+            @XmlElement
+            protected String source;
+
+            @XmlElement
+            protected Environment environment;
+
+            @XmlElement(name = "system-properties")
+            protected SystemProperties systemProperties;
 
             public void setName(String name) {
                 this.name = name;
@@ -122,6 +137,14 @@ public class JBang {
 
             public String getName() {
                 return name;
+            }
+
+            public boolean isAutoRemove() {
+                return autoRemove;
+            }
+
+            public void setAutoRemove(boolean autoRemove) {
+                this.autoRemove = autoRemove;
             }
 
             public void setFile(String file) {
@@ -132,12 +155,138 @@ public class JBang {
                 return file;
             }
 
-            public void setSourceCode(String sourceCode) {
-                this.sourceCode = sourceCode;
+            public void setSource(String source) {
+                this.source = source;
             }
 
-            public String getSourceCode() {
-                return sourceCode;
+            public String getSource() {
+                return source;
+            }
+
+            public Environment getEnvironment() {
+                return environment;
+            }
+
+            public void setEnvironment(Environment environment) {
+                this.environment = environment;
+            }
+
+            public SystemProperties getSystemProperties() {
+                return systemProperties;
+            }
+
+            public void setSystemProperties(SystemProperties systemProperties) {
+                this.systemProperties = systemProperties;
+            }
+
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = "", propOrder = {
+                    "variables",
+            })
+            public static class Environment {
+
+                @XmlAttribute
+                protected String file;
+
+                @XmlElement(name = "variable")
+                protected List<Variable> variables;
+
+                public List<Variable> getVariables() {
+                    if (variables == null) {
+                        variables = new ArrayList<>();
+                    }
+                    return this.variables;
+                }
+
+                public void setFile(String file) {
+                    this.file = file;
+                }
+
+                public String getFile() {
+                    return file;
+                }
+
+                @XmlAccessorType(XmlAccessType.FIELD)
+                @XmlType(name = "")
+                public static class Variable {
+
+                    @XmlAttribute(name = "name", required = true)
+                    protected String name;
+                    @XmlAttribute(name = "value")
+                    protected String value;
+
+                    public String getName() {
+                        return name;
+                    }
+
+                    public void setName(String value) {
+                        this.name = value;
+                    }
+
+                    public String getValue() {
+                        return value;
+                    }
+
+                    public void setValue(String value) {
+                        this.value = value;
+                    }
+
+                }
+            }
+
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = "", propOrder = {
+                    "properties",
+            })
+            public static class SystemProperties {
+
+                @XmlAttribute
+                protected String file;
+
+                @XmlElement(name = "property")
+                protected List<Property> properties;
+
+                public List<Property> getProperties() {
+                    if (properties == null) {
+                        properties = new ArrayList<>();
+                    }
+                    return this.properties;
+                }
+
+                public void setFile(String file) {
+                    this.file = file;
+                }
+
+                public String getFile() {
+                    return file;
+                }
+
+                @XmlAccessorType(XmlAccessType.FIELD)
+                @XmlType(name = "")
+                public static class Property {
+
+                    @XmlAttribute(name = "name", required = true)
+                    protected String name;
+                    @XmlAttribute(name = "value")
+                    protected String value;
+
+                    public String getName() {
+                        return name;
+                    }
+
+                    public void setName(String value) {
+                        this.name = value;
+                    }
+
+                    public String getValue() {
+                        return value;
+                    }
+
+                    public void setValue(String value) {
+                        this.value = value;
+                    }
+
+                }
             }
         }
     }

@@ -25,8 +25,8 @@ import org.citrusframework.util.StringUtils;
 
 public final class CamelJBangSettings {
 
-    private static final String JBANG_PROPERTY_PREFIX = "citrus.jbang.camel.";
-    private static final String JBANG_ENV_PREFIX = "CITRUS_JBANG_CAMEL_";
+    private static final String JBANG_PROPERTY_PREFIX = "citrus.camel.jbang.";
+    private static final String JBANG_ENV_PREFIX = "CITRUS_CAMEL_JBANG_";
 
     private static final String WORK_DIR_PROPERTY = JBANG_PROPERTY_PREFIX + "work.dir";
     private static final String WORK_DIR_ENV = JBANG_ENV_PREFIX + "WORK_DIR";
@@ -53,6 +53,10 @@ public final class CamelJBangSettings {
     private static final String CAMEL_DUMP_INTEGRATION_OUTPUT_PROPERTY = JBANG_PROPERTY_PREFIX + "dump.integration.output";
     private static final String CAMEL_DUMP_INTEGRATION_OUTPUT_ENV = JBANG_ENV_PREFIX + "DUMP_INTEGRATION_OUTPUT";
     private static final String CAMEL_DUMP_INTEGRATION_OUTPUT_DEFAULT = "false";
+
+    private static final String AUTO_REMOVE_RESOURCES_PROPERTY = JBANG_PROPERTY_PREFIX + "auto.remove.resources";
+    private static final String AUTO_REMOVE_RESOURCES_ENV = JBANG_ENV_PREFIX + "AUTO_REMOVE_RESOURCES";
+    private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "false";
 
     private CamelJBangSettings() {
         // prevent instantiation of utility class
@@ -137,5 +141,16 @@ public final class CamelJBangSettings {
         return System.getProperty(KAMELETS_VERSION_PROPERTY,
                 System.getenv(KAMELETS_VERSION_ENV) != null ? System.getenv(KAMELETS_VERSION_ENV) : KAMELETS_VERSION_DEFAULT);
     }
+
+    /**
+     * When set to true Camel JBang resources created during the test are
+     * automatically removed after the test.
+     * @return
+     */
+    public static boolean isAutoRemoveResources() {
+        return Boolean.parseBoolean(System.getProperty(AUTO_REMOVE_RESOURCES_PROPERTY,
+                System.getenv(AUTO_REMOVE_RESOURCES_ENV) != null ? System.getenv(AUTO_REMOVE_RESOURCES_ENV) : AUTO_REMOVE_RESOURCES_DEFAULT));
+    }
+
 
 }
