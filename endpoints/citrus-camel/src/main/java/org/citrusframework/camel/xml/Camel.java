@@ -149,12 +149,36 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
             CamelRunIntegrationAction.Builder builder = new CamelRunIntegrationAction.Builder()
                     .integrationName(jbang.getRun().getIntegration().getName());
 
-            if (jbang.getRun().getIntegration().getSourceCode() != null) {
-                builder.integration(jbang.getRun().getIntegration().getSourceCode());
+            if (jbang.getRun().getIntegration().getSource() != null) {
+                builder.integration(jbang.getRun().getIntegration().getSource());
             }
+
+            builder.autoRemove(jbang.getRun().getIntegration().isAutoRemove());
 
             if (jbang.getRun().getIntegration().getFile() != null) {
                 builder.integration(Resources.create(jbang.getRun().getIntegration().getFile()));
+            }
+
+            if (jbang.getRun().getIntegration().getSystemProperties() != null) {
+                if (jbang.getRun().getIntegration().getSystemProperties().getFile() != null) {
+                    builder.withSystemProperties(Resources.create(
+                            jbang.getRun().getIntegration().getSystemProperties().getFile()));
+                }
+
+                jbang.getRun().getIntegration().getSystemProperties()
+                        .getProperties()
+                        .forEach(property -> builder.withSystemProperty(property.getName(), property.getValue()));
+            }
+
+            if (jbang.getRun().getIntegration().getEnvironment() != null) {
+                if (jbang.getRun().getIntegration().getEnvironment().getFile() != null) {
+                    builder.withEnvs(Resources.create(
+                            jbang.getRun().getIntegration().getEnvironment().getFile()));
+                }
+
+                jbang.getRun().getIntegration().getEnvironment()
+                        .getVariables()
+                        .forEach(variable -> builder.withEnv(variable.getName(), variable.getValue()));
             }
 
             this.builder = builder;

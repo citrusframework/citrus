@@ -995,12 +995,38 @@
                   <xs:sequence>
                     <xs:element name="integration">
                       <xs:complexType>
-                        <xs:simpleContent>
-                          <xs:extension base="xs:string">
-                            <xs:attribute name="name" type="xs:string"/>
-                            <xs:attribute name="file" type="xs:string"/>
-                          </xs:extension>
-                        </xs:simpleContent>
+                        <xs:sequence>
+                          <xs:element name="environment" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="variable" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:attribute name="name" use="required" type="xs:string"/>
+                                    <xs:attribute name="value" use="required" type="xs:string"/>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="file" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="systemProperties" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="property" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:attribute name="name" use="required" type="xs:string"/>
+                                    <xs:attribute name="value" use="required" type="xs:string"/>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="file" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="source" type="xs:string" minOccurs="0"/>
+                        </xs:sequence>
+                        <xs:attribute name="name" type="xs:string"/>
+                        <xs:attribute name="file" type="xs:string"/>
+                        <xs:attribute name="auto-remove" type="xs:boolean"/>
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>

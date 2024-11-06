@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 import org.citrusframework.camel.jbang.CamelJBangSettings;
 import org.citrusframework.context.TestContext;
@@ -32,6 +35,8 @@ import org.citrusframework.util.IsXmlPredicate;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.citrusframework.camel.dsl.CamelSupport.camel;
 
 /**
  * Runs given Camel integration with Camel JBang tooling.
@@ -50,6 +55,14 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
     /** Source code to run as a Camel integration */
     private final String sourceCode;
 
+    /** Environment variables set on the Camel JBang process */
+    private final Map<String, String> envVars;
+
+    /** System properties set on the Camel JBang process */
+    private final Map<String, String> systemProperties;
+
+    private final boolean autoRemoveResources;
+
     /**
      * Default constructor.
      */
@@ -59,6 +72,9 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
         this.integrationName = builder.integrationName;
         this.integrationResource = builder.integrationResource;
         this.sourceCode = builder.sourceCode;
+        this.envVars = builder.envVars;
+        this.systemProperties = builder.systemProperties;
+        this.autoRemoveResources = builder.autoRemoveResources;
     }
 
     @Override
@@ -83,6 +99,9 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
                 throw new CitrusRuntimeException("Missing Camel integration source code or file");
             }
 
+            camelJBang().camelApp().withEnvs(context.resolveDynamicValuesInMap(envVars));
+            camelJBang().camelApp().withSystemProperties(context.resolveDynamicValuesInMap(systemProperties));
+
             ProcessAndOutput pao = camelJBang().run(name, integrationToRun);
 
             if (!pao.getProcess().isAlive()) {
@@ -97,6 +116,12 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
             context.setVariable(name + ":process:" + pid, pao);
 
             logger.info("Started Camel integration '%s' (%s)".formatted(name, pid));
+
+            if (autoRemoveResources) {
+                context.doFinally(camel()
+                        .jbang()
+                        .stop(name));
+            }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to create temporary file from Camel integration");
         }
@@ -132,6 +157,13 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
         private String sourceCode;
         private String integrationName = "route";
         private Resource integrationResource;
+
+        private final Map<String, String> envVars = new HashMap<>();
+        private Resource envVarsFile;
+        private final Map<String, String> systemProperties = new HashMap<>();
+        private Resource systemPropertiesFile;
+
+        private boolean autoRemoveResources = CamelJBangSettings.isAutoRemoveResources();
 
         /**
          * Runs Camel integration from given source code.
@@ -178,8 +210,95 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
             return this;
         }
 
+        /**
+         * Adds an environment variable.
+         * @param key
+         * @param value
+         * @return
+         */
+        public Builder withEnv(String key, String value) {
+            this.envVars.put(key, value);
+            return this;
+        }
+
+        /**
+         * Adds environment variables.
+         * @param envVars
+         * @return
+         */
+        public Builder withEnvs(Map<String, String> envVars) {
+            this.envVars.putAll(envVars);
+            return this;
+        }
+
+        /**
+         * Adds environment variables from given file resource.
+         * @param envVarsFile
+         * @return
+         */
+        public Builder withEnvs(Resource envVarsFile) {
+            this.envVarsFile = envVarsFile;
+            return this;
+        }
+
+        /**
+         * Adds a system properties.
+         * @param key
+         * @param value
+         * @return
+         */
+        public Builder withSystemProperty(String key, String value) {
+            this.systemProperties.put(key, value);
+            return this;
+        }
+
+        /**
+         * Adds system properties.
+         * @param systemProperties
+         * @return
+         */
+        public Builder withSystemProperties(Map<String, String> systemProperties) {
+            this.systemProperties.putAll(systemProperties);
+            return this;
+        }
+
+        /**
+         * Adds system properties from given file resource.
+         * @param systemPropertiesFile
+         * @return
+         */
+        public Builder withSystemProperties(Resource systemPropertiesFile) {
+            this.systemPropertiesFile = systemPropertiesFile;
+            return this;
+        }
+
+        public Builder autoRemove(boolean enabled) {
+            this.autoRemoveResources = enabled;
+            return this;
+        }
+
         @Override
         public CamelRunIntegrationAction build() {
+            if (systemPropertiesFile != null) {
+                Properties props = new Properties();
+                try {
+                    props.load(systemPropertiesFile.getInputStream());
+                    props.forEach((k, v) -> withSystemProperty(k.toString(), v.toString()));
+                } catch (IOException e) {
+                    throw new CitrusRuntimeException("Failed to read properties file", e);
+                }
+            }
+
+            if (envVarsFile != null) {
+                Properties props = new Properties();
+                try {
+                    props.load(envVarsFile.getInputStream());
+                    props.forEach((k, v) -> withEnv(k.toString(), v.toString()));
+                } catch (IOException e) {
+                    throw new CitrusRuntimeException("Failed to read properties file", e);
+                }
+            }
+
             return new CamelRunIntegrationAction(this);
         }
     }
