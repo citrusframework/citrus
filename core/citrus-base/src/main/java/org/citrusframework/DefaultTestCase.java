@@ -120,7 +120,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             } catch (final TestCaseFailedException e) {
                 gracefullyStopTimer();
                 throw e;
-            } catch (final Exception | AssertionError e) {
+            } catch (final Exception | Error e) {
                 testResult = getTestResultInstanceProvider(context).createFailed(this, e);
                 throw new TestCaseFailedException(e);
             }
@@ -143,7 +143,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             debugVariables("Test", context);
 
             beforeTest(context);
-        } catch (final Exception | AssertionError e) {
+        } catch (final Exception | Error e) {
             testResult = getTestResultInstanceProvider(context).createFailed(this, e);
             throw new TestCaseFailedException(e);
         }
@@ -171,7 +171,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
                 if (sequenceAfterTest.shouldExecute(getName(), packageName, groups)) {
                     sequenceAfterTest.execute(context);
                 }
-            } catch (final Exception | AssertionError e) {
+            } catch (final Exception | Error e) {
                 logger.warn("After test failed with errors", e);
             }
         }
@@ -194,7 +194,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             } else {
                 context.getTestActionListeners().onTestActionSkipped(this, action);
             }
-        } catch (final Exception | AssertionError e) {
+        } catch (final Exception | Error e) {
             testResult = getTestResultInstanceProvider(context).createFailed(this, e);
             throw new TestCaseFailedException(e);
         } finally {
@@ -238,8 +238,11 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
                 throw new TestCaseFailedException(contextException);
             }
         } catch (final TestCaseFailedException e) {
+            if (isNull(testResult) || testResult.isSuccess()) {
+                testResult = getTestResultInstanceProvider(context).createFailed(this, e.getCause());
+            }
             throw e;
-        } catch (final Exception | AssertionError e) {
+        } catch (final Exception | Error e) {
             testResult = getTestResultInstanceProvider(context).createFailed(this, e);
             throw new TestCaseFailedException(e);
         } finally {

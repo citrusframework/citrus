@@ -16,6 +16,10 @@
 
 package org.citrusframework.common;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.DefaultTestCase;
@@ -27,10 +31,6 @@ import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
 import static org.citrusframework.TestResult.failed;
 
@@ -91,9 +91,17 @@ public class DefaultTestLoader implements TestLoader {
         try {
             doLoad();
         } catch (TestCaseFailedException e) {
+            if (testCase == null) {
+                testCase = runner.getTestCase();
+            }
+
+            if (testCase.getTestResult() == null || testCase.getTestResult().isSuccess()) {
+                testCase.setTestResult(failed(testCase.getName(), testCase.getTestClass().getName(), e));
+            }
+
             // This kind of exception indicates that the error has already been handled. Just throw and end test run.
             throw e;
-        } catch (Exception | AssertionError e) {
+        } catch (Exception | Error e) {
             if (testCase == null) {
                 testCase = runner.getTestCase();
             }

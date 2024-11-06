@@ -123,8 +123,7 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
             citrus.run(testCase, context);
             handler.forEach(handler -> handler.accept(testCase));
         } catch (IOException e) {
-            throw citrusContext.getTestContextFactory().getObject()
-                    .handleError(testName, packageName, "Failed to load YAML test with name '" + testName + "'", e);
+            throw context.handleError(testName, packageName, "Failed to load YAML test with name '" + testName + "'", e);
         }
     }
 

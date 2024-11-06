@@ -90,8 +90,7 @@ public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware 
             citrus.run(testCase, context);
             handler.forEach(handler -> handler.accept(testCase));
         } catch (JAXBException | IOException e) {
-            throw citrusContext.getTestContextFactory().getObject()
-                    .handleError(testName, packageName, "Failed to load XML test with name '" + testName + "'", e);
+            throw context.handleError(testName, packageName, "Failed to load XML test with name '" + testName + "'", e);
         }
     }
 
