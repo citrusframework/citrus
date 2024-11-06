@@ -48,6 +48,10 @@ public final class CitrusTestFactorySupport {
         return new CitrusTestFactorySupport(type, TestLoader::load);
     }
 
+    public static CitrusTestFactorySupport java() {
+        return factory(TestLoader.JAVA);
+    }
+
     public static CitrusTestFactorySupport xml() {
         return factory(TestLoader.XML);
     }

@@ -128,7 +128,7 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
                     }
                 }
             } else {
-                testLoader = new DefaultTestLoader();
+                testLoader = createTestLoader();
             }
 
             CitrusAnnotations.injectAll(testLoader, citrus, ctx);
@@ -236,6 +236,15 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
         testLoader.setPackageName(packageName);
 
         return testLoader;
+    }
+
+    /**
+     * Create default test loader.
+     * Subclasses may overwrite in order to provide custom loaders.
+     * @return
+     */
+    protected TestLoader createTestLoader() {
+        return new DefaultTestLoader();
     }
 
     @Override

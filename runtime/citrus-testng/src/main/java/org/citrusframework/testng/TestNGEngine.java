@@ -84,7 +84,7 @@ public class TestNGEngine extends AbstractTestEngine {
 
     private void addTestSources(XmlSuite suite, TestRunConfiguration configuration) {
         List<TestSource> testSources = configuration.getTestSources().stream()
-                .filter(source -> !"java".equals(source.getType()))
+                .filter(source -> !"java".equals(source.getType()) || !TestClass.isKnownToClasspath(source.getName()))
                 .toList();
 
         for (TestSource source : testSources) {
@@ -156,6 +156,7 @@ public class TestNGEngine extends AbstractTestEngine {
         List<TestClass> testClasses = configuration.getTestSources().stream()
                 .filter(source -> "java".equals(source.getType()))
                 .map(TestSource::getName)
+                .filter(TestClass::isKnownToClasspath)
                 .map(TestClass::fromString)
                 .toList();
 
