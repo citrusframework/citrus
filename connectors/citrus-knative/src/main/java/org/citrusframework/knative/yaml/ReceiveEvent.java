@@ -24,6 +24,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.eventing.ReceiveEventAction;
+import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 
@@ -59,6 +60,12 @@ public class ReceiveEvent extends AbstractKnativeAction.Builder<ReceiveEventActi
     @Override
     public ReceiveEvent actor(TestActor actor) {
         delegate.actor(actor);
+        return this;
+    }
+
+    @Override
+    public ReceiveEvent clusterType(ClusterType clusterType) {
+        delegate.clusterType(clusterType);
         return this;
     }
 

@@ -23,6 +23,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActor;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.DeleteKnativeResourceAction;
+import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 
 @XmlRootElement(name = "delete-resource")
@@ -54,6 +55,12 @@ public class DeleteResource extends AbstractKnativeAction.Builder<DeleteKnativeR
     @Override
     public DeleteResource actor(TestActor actor) {
         delegate.actor(actor);
+        return this;
+    }
+
+    @Override
+    public DeleteResource clusterType(ClusterType clusterType) {
+        delegate.clusterType(clusterType);
         return this;
     }
 

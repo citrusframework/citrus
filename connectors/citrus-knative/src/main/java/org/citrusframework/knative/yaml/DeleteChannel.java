@@ -21,6 +21,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.DeleteKnativeResourceAction;
+import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 
 public class DeleteChannel extends AbstractKnativeAction.Builder<DeleteKnativeResourceAction, DeleteChannel> {
@@ -40,6 +41,12 @@ public class DeleteChannel extends AbstractKnativeAction.Builder<DeleteKnativeRe
     @Override
     public DeleteChannel actor(TestActor actor) {
         delegate.actor(actor);
+        return this;
+    }
+
+    @Override
+    public DeleteChannel clusterType(ClusterType clusterType) {
+        delegate.clusterType(clusterType);
         return this;
     }
 

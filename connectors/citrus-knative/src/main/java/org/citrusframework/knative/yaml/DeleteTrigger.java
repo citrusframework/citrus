@@ -21,6 +21,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.eventing.DeleteTriggerAction;
+import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 
 public class DeleteTrigger extends AbstractKnativeAction.Builder<DeleteTriggerAction, DeleteTrigger> {
@@ -40,6 +41,12 @@ public class DeleteTrigger extends AbstractKnativeAction.Builder<DeleteTriggerAc
     @Override
     public DeleteTrigger actor(TestActor actor) {
         delegate.actor(actor);
+        return this;
+    }
+
+    @Override
+    public DeleteTrigger clusterType(ClusterType clusterType) {
+        delegate.clusterType(clusterType);
         return this;
     }
 

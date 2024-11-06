@@ -21,6 +21,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.DeleteKnativeResourceAction;
+import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 
 public class DeleteSubscription extends AbstractKnativeAction.Builder<DeleteKnativeResourceAction, DeleteSubscription> {
@@ -40,6 +41,12 @@ public class DeleteSubscription extends AbstractKnativeAction.Builder<DeleteKnat
     @Override
     public DeleteSubscription actor(TestActor actor) {
         delegate.actor(actor);
+        return this;
+    }
+
+    @Override
+    public DeleteSubscription clusterType(ClusterType clusterType) {
+        delegate.clusterType(clusterType);
         return this;
     }
 

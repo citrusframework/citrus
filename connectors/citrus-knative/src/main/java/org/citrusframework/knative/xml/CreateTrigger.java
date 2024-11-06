@@ -30,6 +30,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.TestActor;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.eventing.CreateTriggerAction;
+import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 
 @XmlRootElement(name = "create-trigger")
@@ -71,6 +72,12 @@ public class CreateTrigger extends AbstractKnativeAction.Builder<CreateTriggerAc
     @Override
     public CreateTrigger actor(TestActor actor) {
         delegate.actor(actor);
+        return this;
+    }
+
+    @Override
+    public CreateTrigger clusterType(ClusterType clusterType) {
+        delegate.clusterType(clusterType);
         return this;
     }
 
