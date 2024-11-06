@@ -16,17 +16,17 @@
 
 package org.citrusframework;
 
-import org.citrusframework.common.TestLoader;
-import org.citrusframework.message.MessageType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import org.citrusframework.common.TestLoader;
+import org.citrusframework.message.MessageType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.System.getProperty;
@@ -37,6 +37,7 @@ import static java.util.Collections.emptySet;
 import static java.util.logging.LogManager.getLogManager;
 import static java.util.stream.Collectors.toSet;
 import static org.citrusframework.common.TestLoader.GROOVY;
+import static org.citrusframework.common.TestLoader.JAVA;
 import static org.citrusframework.common.TestLoader.SPRING;
 import static org.citrusframework.common.TestLoader.YAML;
 
@@ -415,6 +416,7 @@ public final class CitrusSettings {
             case TestLoader.XML, SPRING -> getXmlTestFileNamePattern();
             case GROOVY -> getGroovyTestFileNamePattern();
             case YAML -> getYamlTestFileNamePattern();
+            case JAVA -> getJavaTestFileNamePattern();
             default -> emptySet();
         };
     }

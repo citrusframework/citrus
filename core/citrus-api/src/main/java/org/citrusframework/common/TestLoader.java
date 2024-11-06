@@ -41,6 +41,7 @@ public interface TestLoader {
     /** Default Citrus test loader from classpath resource properties */
     ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
+    String JAVA = "java";
     String XML = "xml";
     String YAML = "yaml";
     String SPRING = "spring";

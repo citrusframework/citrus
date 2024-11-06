@@ -71,4 +71,20 @@ public class TestClass extends TestSource {
             throw new CitrusRuntimeException("Failed to create test class", e);
         }
     }
+
+    public static boolean isKnownToClasspath(String testClass) {
+        try {
+            String className;
+            if (testClass.contains("#")) {
+                className = testClass.substring(0, testClass.indexOf("#"));
+            } else {
+                className = testClass;
+            }
+
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
 }
