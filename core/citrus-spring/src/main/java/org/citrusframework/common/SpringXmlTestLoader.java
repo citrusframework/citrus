@@ -57,8 +57,7 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
             citrus.run(testCase, context);
             handler.forEach(handler -> handler.accept(testCase));
         } catch (NoSuchBeanDefinitionException e) {
-            throw citrusContext.getTestContextFactory().getObject()
-                    .handleError(testName, packageName, "Failed to load Spring XML test with name '" + testName + "'", e);
+            throw context.handleError(testName, packageName, "Failed to load Spring XML test with name '" + testName + "'", e);
         }
     }
 

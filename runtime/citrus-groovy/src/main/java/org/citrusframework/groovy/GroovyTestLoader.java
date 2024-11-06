@@ -55,8 +55,7 @@ public class GroovyTestLoader extends DefaultTestLoader implements TestSourceAwa
 
             handler.forEach(it -> it.accept(testCase));
         } catch (IOException e) {
-            throw citrusContext.getTestContextFactory().getObject()
-                    .handleError(testName, packageName, "Failed to load Groovy test source '" + testName + "'", e);
+            throw context.handleError(testName, packageName, "Failed to load Groovy test source '" + testName + "'", e);
         }
     }
 
