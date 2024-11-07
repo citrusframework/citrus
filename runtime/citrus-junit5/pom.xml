@@ -44,6 +44,10 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-launcher</artifactId>
+    </dependency>
 
     <!-- Test scoped dependencies -->
     <dependency>
