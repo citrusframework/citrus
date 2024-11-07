@@ -19,11 +19,26 @@ package org.citrusframework.main;
 import org.citrusframework.cucumber.CucumberTestEngine;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.junit.JUnit4TestEngine;
+import org.citrusframework.junit.jupiter.JUnitJupiterEngine;
 import org.citrusframework.testng.TestNGEngine;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class TestEngineLookupTest {
+
+    @Test
+    public void shouldResolveJUnit5Engine() {
+        TestRunConfiguration configuration = new TestRunConfiguration();
+        configuration.setEngine("junit5");
+        Assert.assertEquals(TestEngine.lookup(configuration).getClass(), JUnitJupiterEngine.class);
+    }
+
+    @Test
+    public void shouldResolveJUnitJupiterEngine() {
+        TestRunConfiguration configuration = new TestRunConfiguration();
+        configuration.setEngine("junit-jupiter");
+        Assert.assertEquals(TestEngine.lookup(configuration).getClass(), JUnitJupiterEngine.class);
+    }
 
     @Test
     public void shouldResolveJUnit4Engine() {
