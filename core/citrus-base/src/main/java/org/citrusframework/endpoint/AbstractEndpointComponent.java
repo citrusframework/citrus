@@ -20,6 +20,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -30,8 +32,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ReflectionHelper;
-import org.citrusframework.util.TypeConversionUtils;
 import org.citrusframework.util.StringUtils;
+import org.citrusframework.util.TypeConversionUtils;
 
 /**
  * Default endpoint component reads component name from endpoint uri and parses parameters from uri using
@@ -59,7 +61,7 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
     @Override
     public Endpoint createEndpoint(String endpointUri, TestContext context) {
         try {
-            URI uri = new URI(endpointUri);
+            URI uri = new URI(resolveEndpointUri(endpointUri));
             String path = uri.getSchemeSpecificPart();
 
             if (path.startsWith("//")) {
@@ -200,6 +202,15 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
         }
 
         return paramString.toString();
+    }
+
+    private static String resolveEndpointUri(String endpointUri) {
+        if (endpointUri.contains("?")) {
+            String[] tokens = endpointUri.split("\\?", 2);
+            return tokens[0] + "?" + URLEncoder.encode(tokens[1], StandardCharsets.UTF_8);
+        } else {
+            return endpointUri;
+        }
     }
 
     /**
