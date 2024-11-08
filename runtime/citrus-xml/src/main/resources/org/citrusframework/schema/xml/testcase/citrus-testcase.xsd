@@ -1005,6 +1005,13 @@
                 </xs:annotation>
                 <xs:complexType>
                   <xs:sequence>
+                    <xs:element name="args" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="argument" type="xs:string" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
                     <xs:element name="integration">
                       <xs:complexType>
                         <xs:sequence>
@@ -1038,11 +1045,12 @@
                         </xs:sequence>
                         <xs:attribute name="name" type="xs:string"/>
                         <xs:attribute name="file" type="xs:string"/>
-                        <xs:attribute name="auto-remove" type="xs:boolean"/>
-                        <xs:attribute name="wait-for-running-state" type="xs:boolean"/>
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>
+                  <xs:attribute name="args" type="xs:string"/>
+                  <xs:attribute name="auto-remove" type="xs:boolean"/>
+                  <xs:attribute name="wait-for-running-state" type="xs:boolean"/>
                 </xs:complexType>
               </xs:element>
               <xs:element name="stop">

@@ -20,7 +20,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -55,6 +58,9 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
     /** Source code to run as a Camel integration */
     private final String sourceCode;
 
+    /** Camel Jbang command arguments */
+    private final List<String> args;
+
     /** Environment variables set on the Camel JBang process */
     private final Map<String, String> envVars;
 
@@ -74,6 +80,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
         this.integrationName = builder.integrationName;
         this.integrationResource = builder.integrationResource;
         this.sourceCode = builder.sourceCode;
+        this.args = builder.args;
         this.envVars = builder.envVars;
         this.systemProperties = builder.systemProperties;
         this.autoRemoveResources = builder.autoRemoveResources;
@@ -105,7 +112,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
             camelJBang().camelApp().withEnvs(context.resolveDynamicValuesInMap(envVars));
             camelJBang().camelApp().withSystemProperties(context.resolveDynamicValuesInMap(systemProperties));
 
-            ProcessAndOutput pao = camelJBang().run(name, integrationToRun);
+            ProcessAndOutput pao = camelJBang().run(name, integrationToRun, args.toArray(String[]::new));
 
             if (!pao.getProcess().isAlive()) {
                 logger.info("Failed to start Camel integration '%s'".formatted(name));
@@ -171,6 +178,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
         private String integrationName = "route";
         private Resource integrationResource;
 
+        private final List<String> args = new ArrayList<>();
         private final Map<String, String> envVars = new HashMap<>();
         private Resource envVarsFile;
         private final Map<String, String> systemProperties = new HashMap<>();
@@ -221,6 +229,38 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
          */
         public Builder integrationName(String name) {
             this.integrationName = name;
+            return this;
+        }
+
+        /**
+         * Adds a command argument.
+         * @param arg
+         * @return
+         */
+        public Builder withArg(String arg) {
+            this.args.add(arg);
+            return this;
+        }
+
+        /**
+         * Adds a command argument with name and value.
+         * @param name
+         * @param value
+         * @return
+         */
+        public Builder withArg(String name, String value) {
+            this.args.add(name);
+            this.args.add(value);
+            return this;
+        }
+
+        /**
+         * Adds command arguments.
+         * @param args
+         * @return
+         */
+        public Builder withArgs(String... args) {
+            this.args.addAll(Arrays.asList(args));
             return this;
         }
 

@@ -5,6 +5,8 @@ actions:
   - camel:
       jbang:
         run:
+          args:
+            - "--verbose"
           integration:
             name: "hello-yaml"
             file: "classpath:org/citrusframework/camel/integration/route.yaml"
