@@ -110,6 +110,10 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             builder.withArgs(args.toArray(String[]::new));
         }
 
+        public void setResources(List<String> resources) {
+            resources.forEach(builder::addResource);
+        }
+
         public void setIntegration(Integration integration) {
             builder.integrationName(integration.name);
 

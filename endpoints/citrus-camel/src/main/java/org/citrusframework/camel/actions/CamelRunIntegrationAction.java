@@ -55,6 +55,9 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
     /** Camel integration resource */
     private final Resource integrationResource;
 
+    /** Optional list of resource files to include */
+    private final List<String> resourceFiles;
+
     /** Source code to run as a Camel integration */
     private final String sourceCode;
 
@@ -79,6 +82,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
 
         this.integrationName = builder.integrationName;
         this.integrationResource = builder.integrationResource;
+        this.resourceFiles = builder.resourceFiles;
         this.sourceCode = builder.sourceCode;
         this.args = builder.args;
         this.envVars = builder.envVars;
@@ -112,7 +116,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
             camelJBang().camelApp().withEnvs(context.resolveDynamicValuesInMap(envVars));
             camelJBang().camelApp().withSystemProperties(context.resolveDynamicValuesInMap(systemProperties));
 
-            ProcessAndOutput pao = camelJBang().run(name, integrationToRun, args.toArray(String[]::new));
+            ProcessAndOutput pao = camelJBang().run(name, integrationToRun, resourceFiles, args.toArray(String[]::new));
 
             if (!pao.getProcess().isAlive()) {
                 logger.info("Failed to start Camel integration '%s'".formatted(name));
@@ -177,6 +181,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
         private String sourceCode;
         private String integrationName = "route";
         private Resource integrationResource;
+        private final List<String> resourceFiles = new ArrayList<>();
 
         private final List<String> args = new ArrayList<>();
         private final Map<String, String> envVars = new HashMap<>();
@@ -207,6 +212,26 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
             if (integrationName == null) {
                 this.integrationName = FileUtils.getBaseName(FileUtils.getFileName(resource.getLocation()));
             }
+            return this;
+        }
+
+        /**
+         * Add resource file to the integration run.
+         * @param resource
+         * @return
+         */
+        public Builder addResource(Resource resource) {
+            this.resourceFiles.add(resource.getFile().getAbsolutePath());
+            return this;
+        }
+
+        /**
+         * Construct resource from given path and add file as resource to the integration run.
+         * @param resourcePath
+         * @return
+         */
+        public Builder addResource(String resourcePath) {
+            this.resourceFiles.add(resourcePath);
             return this;
         }
 
@@ -360,5 +385,6 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
 
             return new CamelRunIntegrationAction(this);
         }
+
     }
 }
