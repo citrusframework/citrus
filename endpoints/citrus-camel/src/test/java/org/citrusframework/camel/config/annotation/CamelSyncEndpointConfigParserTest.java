@@ -16,9 +16,11 @@
 
 package org.citrusframework.camel.config.annotation;
 
+import org.apache.camel.CamelContext;
 import org.citrusframework.TestActor;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusEndpoint;
+import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.endpoint.CamelSyncEndpoint;
 import org.citrusframework.camel.message.CamelMessageConverter;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
@@ -26,7 +28,6 @@ import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.apache.camel.CamelContext;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
@@ -71,8 +72,8 @@ public class CamelSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-        when(referenceResolver.isResolvable("camelContext")).thenReturn(true);
-        when(referenceResolver.resolve("camelContext", CamelContext.class)).thenReturn(camelContext);
+        when(referenceResolver.isResolvable(CamelSettings.getContextName())).thenReturn(true);
+        when(referenceResolver.resolve(CamelSettings.getContextName(), CamelContext.class)).thenReturn(camelContext);
         when(referenceResolver.resolve("messageConverter", CamelMessageConverter.class)).thenReturn(messageConverter);
         when(referenceResolver.resolve("messageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
         when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);

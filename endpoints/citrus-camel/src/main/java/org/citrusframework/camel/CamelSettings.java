@@ -26,7 +26,7 @@ public final class CamelSettings {
 
     private static final String CONTEXT_NAME_PROPERTY = CAMEL_PROPERTY_PREFIX + "context.name";
     private static final String CONTEXT_NAME_ENV = CAMEL_ENV_PREFIX + "CONTEXT_NAME";
-    private static final String CONTEXT_NAME_DEFAULT = "citrusCamelContext";
+    private static final String CONTEXT_NAME_DEFAULT = "camelContext";
 
     private static final String TIMEOUT_PROPERTY = CAMEL_PROPERTY_PREFIX + "timeout";
     private static final String TIMEOUT_ENV = CAMEL_ENV_PREFIX + "TIMEOUT";

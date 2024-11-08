@@ -33,6 +33,7 @@ import org.citrusframework.camel.actions.CamelControlBusAction;
 import org.citrusframework.camel.actions.CamelRunIntegrationAction;
 import org.citrusframework.camel.actions.CamelStopIntegrationAction;
 import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
+import org.citrusframework.camel.actions.CreateCamelComponentAction;
 import org.citrusframework.camel.actions.CreateCamelContextAction;
 import org.citrusframework.camel.actions.CreateCamelRouteAction;
 import org.citrusframework.camel.actions.RemoveCamelRouteAction;
@@ -45,6 +46,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.util.StringUtils;
 
 @XmlRootElement(name = "camel")
 public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAware {
@@ -86,6 +88,24 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
 
         if (controlBus.language != null) {
             builder.language(controlBus.getLanguage().getType(), controlBus.getLanguage().getExpression());
+        }
+
+        this.builder = builder;
+        return this;
+    }
+
+    @XmlElement(name = "create-component")
+    public Camel setCreateComponent(Component component) {
+        CreateCamelComponentAction.Builder builder = new CreateCamelComponentAction.Builder();
+
+        builder.componentName(component.getName());
+
+        if (StringUtils.hasText(component.getScript())) {
+            builder.component(component.getScript());
+        }
+
+        if (StringUtils.hasText(component.getFile())) {
+            builder.component(Resources.create(component.getFile()));
         }
 
         this.builder = builder;
@@ -154,6 +174,7 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
             }
 
             builder.autoRemove(jbang.getRun().getIntegration().isAutoRemove());
+            builder.waitForRunningState(jbang.getRun().getIntegration().isWaitForRunningState());
 
             if (jbang.getRun().getIntegration().getFile() != null) {
                 builder.integration(Resources.create(jbang.getRun().getIntegration().getFile()));

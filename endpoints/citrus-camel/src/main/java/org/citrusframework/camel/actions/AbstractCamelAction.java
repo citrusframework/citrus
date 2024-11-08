@@ -17,6 +17,7 @@
 package org.citrusframework.camel.actions;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.camel.CamelSettings;
@@ -82,8 +83,16 @@ public abstract class AbstractCamelAction extends AbstractTestAction implements 
 
                 if (referenceResolver.isResolvable(CamelSettings.getContextName())) {
                     camelContext = referenceResolver.resolve(CamelSettings.getContextName(), CamelContext.class);
-                } else {
+                } else if (referenceResolver.isResolvable(CamelContext.class)) {
                     camelContext = referenceResolver.resolve(CamelContext.class);
+                } else {
+                    camelContext = new DefaultCamelContext();
+                    try {
+                        camelContext.start();
+                    } catch (Exception e) {
+                        throw new IllegalStateException("Failed to start Camel context '%s'".formatted(CamelSettings.getContextName()), e);
+                    }
+                    referenceResolver.bind(CamelSettings.getContextName(), camelContext);
                 }
             }
 

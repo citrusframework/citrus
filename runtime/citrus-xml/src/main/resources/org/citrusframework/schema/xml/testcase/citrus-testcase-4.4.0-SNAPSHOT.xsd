@@ -863,6 +863,18 @@
     <xs:sequence>
       <xs:element name="description" type="xs:string" minOccurs="0"/>
       <xs:choice>
+        <xs:element name="create-component">
+          <xs:annotation>
+            <xs:documentation>Creates new Camel component and binds to Camel registry</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="script" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+            <xs:attribute name="file" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
         <xs:element name="create-context">
           <xs:annotation>
             <xs:documentation>Creates new Camel context on the fly</xs:documentation>
@@ -1027,6 +1039,7 @@
                         <xs:attribute name="name" type="xs:string"/>
                         <xs:attribute name="file" type="xs:string"/>
                         <xs:attribute name="auto-remove" type="xs:boolean"/>
+                        <xs:attribute name="wait-for-running-state" type="xs:boolean"/>
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>

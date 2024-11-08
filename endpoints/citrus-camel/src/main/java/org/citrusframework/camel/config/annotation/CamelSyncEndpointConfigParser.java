@@ -18,6 +18,7 @@ package org.citrusframework.camel.config.annotation;
 
 import org.apache.camel.CamelContext;
 import org.citrusframework.TestActor;
+import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.endpoint.CamelSyncEndpoint;
 import org.citrusframework.camel.endpoint.CamelSyncEndpointBuilder;
 import org.citrusframework.camel.message.CamelMessageConverter;
@@ -36,8 +37,8 @@ public class CamelSyncEndpointConfigParser implements AnnotationConfigParser<Cam
 
         if (StringUtils.hasText(annotation.camelContext())) {
             builder.camelContext(referenceResolver.resolve(annotation.camelContext(), CamelContext.class));
-        } else if (referenceResolver.isResolvable("camelContext")) {
-            builder.camelContext(referenceResolver.resolve("camelContext", CamelContext.class));
+        } else if (referenceResolver.isResolvable(CamelSettings.getContextName())) {
+            builder.camelContext(referenceResolver.resolve(CamelSettings.getContextName(), CamelContext.class));
         } else {
             builder.camelContext(referenceResolver.resolve(CamelContext.class));
         }

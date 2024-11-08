@@ -37,7 +37,7 @@ public class StopCamelRouteActionParserTest extends AbstractActionParserTest<Sto
 
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("camelContext", CamelContext.class));
+        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class));
         Assert.assertEquals(action.getRouteIds().size(), 2);
     }
 }

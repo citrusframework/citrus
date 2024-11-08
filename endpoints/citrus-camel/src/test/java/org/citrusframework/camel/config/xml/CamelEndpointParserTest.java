@@ -16,13 +16,14 @@
 
 package org.citrusframework.camel.config.xml;
 
+import java.util.Map;
+
 import org.citrusframework.TestActor;
+import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.endpoint.CamelEndpoint;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @since 1.4.1
@@ -37,7 +38,7 @@ public class CamelEndpointParserTest extends AbstractBeanDefinitionParserTest {
 
         // 1st message receiver
         CamelEndpoint camelEndpoint = endpoints.get("camelEndpoint1");
-        Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getCamelContext(), beanDefinitionContext.getBean("camelContext"));
+        Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getCamelContext(), beanDefinitionContext.getBean(CamelSettings.getContextName()));
         Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getEndpointUri(), "direct:news-feed1");
         Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
 

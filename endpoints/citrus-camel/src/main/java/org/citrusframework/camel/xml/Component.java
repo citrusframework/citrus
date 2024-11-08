@@ -19,16 +19,21 @@ package org.citrusframework.camel.xml;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
-public class CamelContext {
+@XmlType(name = "", propOrder = {
+        "script"
+})
+public class Component {
     @XmlAttribute(required = true)
     protected String name;
 
     @XmlAttribute
-    protected boolean autoStart = true;
+    protected String file;
+    @XmlElement
+    protected String script;
 
     public String getName() {
         return name;
@@ -38,11 +43,19 @@ public class CamelContext {
         this.name = name;
     }
 
-    public boolean isAutoStart() {
-        return autoStart;
+    public String getFile() {
+        return file;
     }
 
-    public void setAutoStart(boolean autoStart) {
-        this.autoStart = autoStart;
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    public String getScript() {
+        return script;
+    }
+
+    public void setScript(String script) {
+        this.script = script;
     }
 }

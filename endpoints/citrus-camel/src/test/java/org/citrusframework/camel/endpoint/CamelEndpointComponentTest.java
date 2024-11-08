@@ -20,12 +20,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.camel.CamelContext;
+import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.spi.ReferenceResolver;
-import org.apache.camel.CamelContext;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -39,9 +40,9 @@ import static org.mockito.Mockito.when;
  */
 public class CamelEndpointComponentTest {
 
-    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
-    private CamelContext camelContext = Mockito.mock(CamelContext.class);
-    private TestContext context = new TestContext();
+    private final ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
+    private final CamelContext camelContext = Mockito.mock(CamelContext.class);
+    private final TestContext context = new TestContext();
 
     @BeforeClass
     public void setup() {
@@ -70,7 +71,6 @@ public class CamelEndpointComponentTest {
         Assert.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "seda:news-feed");
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
-
     }
 
     @Test
@@ -95,7 +95,6 @@ public class CamelEndpointComponentTest {
         Assert.assertEquals(((CamelSyncEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "seda:news-feed");
         Assert.assertEquals(((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
         Assert.assertEquals(((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
-
     }
 
     @Test
@@ -108,7 +107,7 @@ public class CamelEndpointComponentTest {
 
         reset(referenceResolver);
         when(referenceResolver.resolveAll(CamelContext.class)).thenReturn(camelContextMap);
-        when(referenceResolver.isResolvable("camelContext")).thenReturn(false);
+        when(referenceResolver.isResolvable(CamelSettings.getContextName())).thenReturn(false);
         when(referenceResolver.isResolvable("myCamelContext")).thenReturn(true);
         when(referenceResolver.resolve("myCamelContext", CamelContext.class)).thenReturn(camelContext);
         Endpoint endpoint = component.createEndpoint("camel:direct:news-feed?timeout=10000&camelContext=myCamelContext", context);
@@ -118,7 +117,6 @@ public class CamelEndpointComponentTest {
         Assert.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "direct:news-feed");
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
-
     }
 
     @Test
@@ -131,7 +129,7 @@ public class CamelEndpointComponentTest {
 
         reset(referenceResolver);
         when(referenceResolver.resolveAll(CamelContext.class)).thenReturn(camelContextMap);
-        when(referenceResolver.isResolvable("camelContext")).thenReturn(false);
+        when(referenceResolver.isResolvable(CamelSettings.getContextName())).thenReturn(false);
         when(referenceResolver.isResolvable("myCamelContext")).thenReturn(true);
         when(referenceResolver.resolve("myCamelContext", CamelContext.class)).thenReturn(camelContext);
         Endpoint endpoint = component.createEndpoint("camel:controlbus:route?routeId=news&timeout=10000&camelContext=myCamelContext&action=stats", context);
@@ -141,7 +139,22 @@ public class CamelEndpointComponentTest {
         Assert.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "controlbus:route?routeId=news&action=stats");
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+    }
 
+    @Test
+    public void testCreateEndpointWithBeanReference() throws Exception {
+        CamelEndpointComponent component = new CamelEndpointComponent();
+
+        reset(referenceResolver);
+        when(referenceResolver.resolveAll(CamelContext.class)).thenReturn(Collections.singletonMap("myCamelContext", camelContext));
+        when(referenceResolver.resolve(CamelContext.class)).thenReturn(camelContext);
+        Endpoint endpoint = component.createEndpoint("camel:direct:news?provider=#newsProvider", context);
+
+        Assert.assertEquals(endpoint.getClass(), CamelEndpoint.class);
+
+        Assert.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "direct:news?provider=#newsProvider");
+        Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
+        Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
     }
 
     @Test

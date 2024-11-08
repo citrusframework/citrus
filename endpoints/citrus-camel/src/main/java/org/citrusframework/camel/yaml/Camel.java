@@ -53,6 +53,10 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
         this.delegate = builder;
     }
 
+    public void setCreateComponent(CreateComponent builder) {
+        this.delegate = builder;
+    }
+
     public void setCreateContext(CreateContext builder) {
         this.delegate = builder;
     }

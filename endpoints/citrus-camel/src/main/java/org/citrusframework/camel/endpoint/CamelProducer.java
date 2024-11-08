@@ -16,12 +16,15 @@
 
 package org.citrusframework.camel.endpoint;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Producer;
-import org.apache.camel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,8 +103,8 @@ public class CamelProducer implements Producer {
             } else if (context.getReferenceResolver() != null) {
                 if (context.getReferenceResolver().resolveAll(CamelContext.class).size() == 1) {
                     endpointConfiguration.setCamelContext(context.getReferenceResolver().resolve(CamelContext.class));
-                } else if (context.getReferenceResolver().isResolvable("camelContext")) {
-                    endpointConfiguration.setCamelContext(context.getReferenceResolver().resolve("camelContext", CamelContext.class));
+                } else if (context.getReferenceResolver().isResolvable(CamelSettings.getContextName())) {
+                    endpointConfiguration.setCamelContext(context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
                 } else {
                     endpointConfiguration.setCamelContext(new DefaultCamelContext());
                 }

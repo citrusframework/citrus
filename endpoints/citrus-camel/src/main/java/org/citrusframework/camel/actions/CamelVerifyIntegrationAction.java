@@ -74,7 +74,7 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
         Long pid = verifyRouteStatus(name, context.replaceDynamicContentInString(phase), context);
 
         if (logMessage != null) {
-            verifyRouteLogs(pid, name, context.replaceDynamicContentInString(logMessage), context);
+            verifyRouteLogs(pid, name, context.replaceDynamicContentInString(logMessage.trim()), context);
         }
 
         logger.info("Successfully verified Camel integration '%s'".formatted(name));
