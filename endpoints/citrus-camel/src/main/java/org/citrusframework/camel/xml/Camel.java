@@ -173,8 +173,16 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                 builder.integration(jbang.getRun().getIntegration().getSource());
             }
 
-            builder.autoRemove(jbang.getRun().getIntegration().isAutoRemove());
-            builder.waitForRunningState(jbang.getRun().getIntegration().isWaitForRunningState());
+            builder.autoRemove(jbang.getRun().isAutoRemove());
+            builder.waitForRunningState(jbang.getRun().isWaitForRunningState());
+
+            if (jbang.getRun().getArgLine() != null) {
+                builder.withArgs(jbang.getRun().getArgLine().split(" "));
+            }
+
+            if (jbang.getRun().getArgs() != null) {
+                builder.withArgs(jbang.getRun().getArgs().getArgs().toArray(String[]::new));
+            }
 
             if (jbang.getRun().getIntegration().getFile() != null) {
                 builder.integration(Resources.create(jbang.getRun().getIntegration().getFile()));

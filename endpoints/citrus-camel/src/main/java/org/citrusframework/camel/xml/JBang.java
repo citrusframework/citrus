@@ -92,6 +92,7 @@ public class JBang {
 
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
+            "args",
             "integration"
     })
     public static class RunIntegration {
@@ -99,12 +100,70 @@ public class JBang {
         @XmlElement(required = true)
         private Integration integration;
 
+        @XmlAttribute(name = "auto-remove")
+        protected boolean autoRemove;
+
+        @XmlAttribute(name = "args")
+        protected String argLine;
+
+        @XmlAttribute(name = "wait-for-running-state")
+        protected boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
+
+        @XmlElement
+        protected Args args;
+
         public Integration getIntegration() {
             return integration;
         }
 
         public void setIntegration(Integration integration) {
             this.integration = integration;
+        }
+
+        public boolean isAutoRemove() {
+            return autoRemove;
+        }
+
+        public void setAutoRemove(boolean autoRemove) {
+            this.autoRemove = autoRemove;
+        }
+
+        public boolean isWaitForRunningState() {
+            return waitForRunningState;
+        }
+
+        public void setWaitForRunningState(boolean waitForRunningState) {
+            this.waitForRunningState = waitForRunningState;
+        }
+
+        public String getArgLine() {
+            return argLine;
+        }
+
+        public void setArgLine(String argLine) {
+            this.argLine = argLine;
+        }
+
+        public Args getArgs() {
+            return args;
+        }
+
+        public void setArgs(Args args) {
+            this.args = args;
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+                "args",
+        })
+        public static class Args {
+
+            @XmlElement(name = "argument")
+            protected List<String> args;
+
+            public List<String> getArgs() {
+                return args;
+            }
         }
 
         @XmlAccessorType(XmlAccessType.FIELD)
@@ -119,12 +178,6 @@ public class JBang {
 
             @XmlAttribute
             protected String file;
-
-            @XmlAttribute(name = "auto-remove")
-            protected boolean autoRemove;
-
-            @XmlAttribute(name = "wait-for-running-state")
-            protected boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
 
             @XmlElement
             protected String source;
@@ -141,22 +194,6 @@ public class JBang {
 
             public String getName() {
                 return name;
-            }
-
-            public boolean isAutoRemove() {
-                return autoRemove;
-            }
-
-            public void setAutoRemove(boolean autoRemove) {
-                this.autoRemove = autoRemove;
-            }
-
-            public boolean isWaitForRunningState() {
-                return waitForRunningState;
-            }
-
-            public void setWaitForRunningState(boolean waitForRunningState) {
-                this.waitForRunningState = waitForRunningState;
             }
 
             public void setFile(String file) {

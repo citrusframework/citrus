@@ -22,7 +22,7 @@
   <actions>
     <camel>
       <jbang>
-        <run>
+        <run args="--verbose">
           <integration name="hello-xml"
                        file="classpath:org/citrusframework/camel/integration/route.yaml"/>
         </run>
