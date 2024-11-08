@@ -93,7 +93,8 @@ public class JBang {
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
             "args",
-            "integration"
+            "integration",
+            "resources"
     })
     public static class RunIntegration {
 
@@ -111,6 +112,9 @@ public class JBang {
 
         @XmlElement
         protected Args args;
+
+        @XmlElement
+        protected Resources resources;
 
         public Integration getIntegration() {
             return integration;
@@ -134,6 +138,14 @@ public class JBang {
 
         public void setWaitForRunningState(boolean waitForRunningState) {
             this.waitForRunningState = waitForRunningState;
+        }
+
+        public void setResources(Resources resources) {
+            this.resources = resources;
+        }
+
+        public Resources getResources() {
+            return resources;
         }
 
         public String getArgLine() {
@@ -162,7 +174,35 @@ public class JBang {
             protected List<String> args;
 
             public List<String> getArgs() {
+                if (args == null) {
+                    args = new ArrayList<>();
+                }
                 return args;
+            }
+
+            public void setArgs(List<String> args) {
+                this.args = args;
+            }
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+                "resources",
+        })
+        public static class Resources {
+
+            @XmlElement(name = "resource")
+            protected List<String> resources;
+
+            public List<String> getResources() {
+                if (resources == null) {
+                    resources = new ArrayList<>();
+                }
+                return resources;
+            }
+
+            public void setResources(List<String> resources) {
+                this.resources = resources;
             }
         }
 

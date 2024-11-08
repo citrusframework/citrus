@@ -1047,6 +1047,13 @@
                         <xs:attribute name="file" type="xs:string"/>
                       </xs:complexType>
                     </xs:element>
+                    <xs:element name="resources" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="resource" type="xs:string" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
                   </xs:sequence>
                   <xs:attribute name="args" type="xs:string"/>
                   <xs:attribute name="auto-remove" type="xs:boolean"/>

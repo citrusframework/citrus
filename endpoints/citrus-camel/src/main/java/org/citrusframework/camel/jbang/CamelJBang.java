@@ -86,21 +86,23 @@ public class CamelJBang {
      * Run given integration with JBang Camel app.
      * @param name
      * @param path
+     * @param resources
      * @param args
      * @return
      */
-    public ProcessAndOutput run(String name, Path path, String... args) {
-        return run(name, path.toAbsolutePath().toString(), args);
+    public ProcessAndOutput run(String name, Path path, List<String> resources, String... args) {
+        return run(name, path.toAbsolutePath().toString(), resources, args);
     }
 
     /**
      * Run given integration with JBang Camel app.
      * @param name
      * @param file
+     * @param resources
      * @param args
      * @return
      */
-    public ProcessAndOutput run(String name, String file, String... args) {
+    public ProcessAndOutput run(String name, String file, List<String> resources, String... args) {
         List<String> runArgs = new ArrayList<>();
         runArgs.add("--name");
         runArgs.add(name);
@@ -113,6 +115,7 @@ public class CamelJBang {
         runArgs.addAll(Arrays.asList(args));
 
         runArgs.add(file);
+        runArgs.addAll(resources);
 
         if (CamelJBangSettings.isCamelDumpIntegrationOutput()) {
             Path workDir = CamelJBangSettings.getWorkDir();
