@@ -346,7 +346,9 @@ public class JBangSupport {
      */
     private static ProcessAndOutput execute(List<String> command, Map<String, String> envVars) {
         try {
-            LOG.info("Executing JBang command: %s".formatted(String.join(" ", command)));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Executing JBang command: %s".formatted(String.join(" ", command)));
+            }
 
             ProcessBuilder pBuilder = new ProcessBuilder(command)
                     .redirectErrorStream(true);
