@@ -48,7 +48,7 @@ public class CreateCamelRouteActionParserTest extends AbstractActionParserTest<C
 
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("camelContext", CamelContext.class));
+        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class));
         Assert.assertEquals(action.getRouteSpec().replaceAll("\\s", ""), ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
                 "<routeContext xmlns=\"http://camel.apache.org/schema/spring\">" +
                     "<route>" +

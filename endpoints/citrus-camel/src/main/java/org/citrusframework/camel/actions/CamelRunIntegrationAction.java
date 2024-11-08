@@ -63,6 +63,8 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
 
     private final boolean autoRemoveResources;
 
+    private final boolean waitForRunningState;
+
     /**
      * Default constructor.
      */
@@ -75,6 +77,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
         this.envVars = builder.envVars;
         this.systemProperties = builder.systemProperties;
         this.autoRemoveResources = builder.autoRemoveResources;
+        this.waitForRunningState = builder.waitForRunningState;
     }
 
     @Override
@@ -122,6 +125,16 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
                         .jbang()
                         .stop(name));
             }
+
+            logger.info("Waiting for the Camel integration '%s' (%s) to be running ...".formatted(name, pid));
+
+            if (waitForRunningState) {
+                new CamelVerifyIntegrationAction.Builder()
+                        .integrationName(name)
+                        .isRunning()
+                        .build()
+                        .execute(context);
+            }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to create temporary file from Camel integration");
         }
@@ -164,6 +177,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
         private Resource systemPropertiesFile;
 
         private boolean autoRemoveResources = CamelJBangSettings.isAutoRemoveResources();
+        private boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
 
         /**
          * Runs Camel integration from given source code.
@@ -274,6 +288,11 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
 
         public Builder autoRemove(boolean enabled) {
             this.autoRemoveResources = enabled;
+            return this;
+        }
+
+        public Builder waitForRunningState(boolean enabled) {
+            this.waitForRunningState = enabled;
             return this;
         }
 

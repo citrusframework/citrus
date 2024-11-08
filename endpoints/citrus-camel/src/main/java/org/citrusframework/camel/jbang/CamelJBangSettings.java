@@ -58,6 +58,10 @@ public final class CamelJBangSettings {
     private static final String AUTO_REMOVE_RESOURCES_ENV = JBANG_ENV_PREFIX + "AUTO_REMOVE_RESOURCES";
     private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "false";
 
+    private static final String WAIT_FOR_RUNNING_STATE_PROPERTY = JBANG_PROPERTY_PREFIX + "wait.for.running.state";
+    private static final String WAIT_FOR_RUNNING_STATE_ENV = JBANG_ENV_PREFIX + "WAIT_FOR_RUNNING_STATE";
+    private static final String WAIT_FOR_RUNNING_STATE_DEFAULT = "true";
+
     private CamelJBangSettings() {
         // prevent instantiation of utility class
     }
@@ -152,5 +156,12 @@ public final class CamelJBangSettings {
                 System.getenv(AUTO_REMOVE_RESOURCES_ENV) != null ? System.getenv(AUTO_REMOVE_RESOURCES_ENV) : AUTO_REMOVE_RESOURCES_DEFAULT));
     }
 
-
+    /**
+     * When set to true Camel JBang will automatically wait for each integration created to be in running state.
+     * @return
+     */
+    public static boolean isWaitForRunningState() {
+        return Boolean.parseBoolean(System.getProperty(WAIT_FOR_RUNNING_STATE_PROPERTY,
+                System.getenv(WAIT_FOR_RUNNING_STATE_ENV) != null ? System.getenv(WAIT_FOR_RUNNING_STATE_ENV) : WAIT_FOR_RUNNING_STATE_DEFAULT));
+    }
 }

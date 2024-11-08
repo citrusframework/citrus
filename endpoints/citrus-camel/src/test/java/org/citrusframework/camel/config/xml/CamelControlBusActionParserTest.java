@@ -39,7 +39,7 @@ public class CamelControlBusActionParserTest extends AbstractActionParserTest<Ca
 
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("camelContext", CamelContext.class));
+        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class));
         Assert.assertEquals(action.getRouteId(), "route_2");
         Assert.assertEquals(action.getAction(), "status");
         Assert.assertEquals(action.getResult(), "Stopped");
@@ -53,7 +53,7 @@ public class CamelControlBusActionParserTest extends AbstractActionParserTest<Ca
 
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("camelContext", CamelContext.class));
+        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class));
         Assert.assertEquals(action.getLanguageType(), "simple");
         Assert.assertEquals(action.getLanguageExpression(), "${camelContext.getRouteController().getRouteStatus('route_3')}");
         Assert.assertEquals(action.getResult(), "Started");

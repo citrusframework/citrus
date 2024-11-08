@@ -26,6 +26,7 @@ import org.citrusframework.groovy.dsl.GroovySupport;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Creates component and binds it to the given Camel context.
@@ -88,6 +89,11 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
             return new Builder();
         }
 
+        public Builder componentName(String componentName) {
+            this.name = componentName;
+            return this;
+        }
+
         public Builder component(String name, Object component) {
             if (component instanceof String) {
                 return component(name, component.toString());
@@ -99,7 +105,12 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
         }
 
         public Builder component(Resource resource) {
-            return component(FileUtils.getBaseName(FileUtils.getFileName(resource.getLocation())), resource);
+            if (StringUtils.hasText(this.name)) {
+                return component(this.name, resource);
+            } else {
+                return component(FileUtils.getBaseName(FileUtils.getFileName(resource.getLocation())), resource);
+
+            }
         }
 
         public Builder component(String name, Resource resource) {
@@ -112,6 +123,11 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
 
         public Builder component(String name, String script) {
             this.name = name;
+            this.script = script;
+            return this;
+        }
+
+        public Builder component(String script) {
             this.script = script;
             return this;
         }

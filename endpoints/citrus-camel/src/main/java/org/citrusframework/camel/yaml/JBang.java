@@ -23,6 +23,7 @@ import org.citrusframework.camel.actions.AbstractCamelJBangAction;
 import org.citrusframework.camel.actions.CamelRunIntegrationAction;
 import org.citrusframework.camel.actions.CamelStopIntegrationAction;
 import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
+import org.citrusframework.camel.jbang.CamelJBangSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resources;
 
@@ -106,6 +107,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             }
 
             builder.autoRemove(integration.autoRemove);
+            builder.waitForRunningState(integration.waitForRunningState);
 
             if (integration.sourceCode != null) {
                 builder.integration(integration.sourceCode);
@@ -140,6 +142,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             private String sourceCode;
 
             private boolean autoRemove;
+            private boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
 
             protected Environment environment;
 
@@ -179,6 +182,14 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
             public boolean isAutoRemove() {
                 return autoRemove;
+            }
+
+            public void setWaitForRunningState(boolean waitForRunningState) {
+                this.waitForRunningState = waitForRunningState;
+            }
+
+            public boolean isWaitForRunningState() {
+                return waitForRunningState;
             }
 
             public static class Environment {

@@ -24,7 +24,7 @@
             </routeContext>
           </camel:create-routes>
 
-          <camel:create-routes camel-context="camelContext">
+          <camel:create-routes camel-context="citrusCamelContext">
             <routeContext xmlns="http://camel.apache.org/schema/spring">
               <route>
                 <from uri="direct:test3"/>

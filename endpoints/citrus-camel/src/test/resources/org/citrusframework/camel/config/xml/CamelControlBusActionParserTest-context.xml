@@ -14,7 +14,7 @@
             <camel:route id="route_1" action="start"/>
           </camel:control-bus>
 
-          <camel:control-bus camel-context="camelContext">
+          <camel:control-bus camel-context="citrusCamelContext">
             <camel:route id="route_2" action="status"/>
             <camel:result>Stopped</camel:result>
           </camel:control-bus>
@@ -23,7 +23,7 @@
             <camel:language type="simple">${camelContext.stop()}</camel:language>
           </camel:control-bus>
 
-          <camel:control-bus camel-context="camelContext">
+          <camel:control-bus camel-context="citrusCamelContext">
             <camel:language type="simple">${camelContext.getRouteController().getRouteStatus('route_3')}</camel:language>
             <camel:result>Started</camel:result>
           </camel:control-bus>

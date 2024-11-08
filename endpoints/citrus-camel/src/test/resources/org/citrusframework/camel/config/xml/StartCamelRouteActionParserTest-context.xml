@@ -14,7 +14,7 @@
             <camel:route id="route_1"/>
           </camel:start-routes>
 
-          <camel:start-routes camel-context="camelContext">
+          <camel:start-routes camel-context="citrusCamelContext">
             <camel:route id="route_2"/>
             <camel:route id="route_3"/>
           </camel:start-routes>

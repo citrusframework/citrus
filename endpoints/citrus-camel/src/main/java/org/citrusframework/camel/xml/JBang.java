@@ -25,6 +25,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.camel.CamelSettings;
+import org.citrusframework.camel.jbang.CamelJBangSettings;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -122,6 +123,9 @@ public class JBang {
             @XmlAttribute(name = "auto-remove")
             protected boolean autoRemove;
 
+            @XmlAttribute(name = "wait-for-running-state")
+            protected boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
+
             @XmlElement
             protected String source;
 
@@ -145,6 +149,14 @@ public class JBang {
 
             public void setAutoRemove(boolean autoRemove) {
                 this.autoRemove = autoRemove;
+            }
+
+            public boolean isWaitForRunningState() {
+                return waitForRunningState;
+            }
+
+            public void setWaitForRunningState(boolean waitForRunningState) {
+                this.waitForRunningState = waitForRunningState;
             }
 
             public void setFile(String file) {
