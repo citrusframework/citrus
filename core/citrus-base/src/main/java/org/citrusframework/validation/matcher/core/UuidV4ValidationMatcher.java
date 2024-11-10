@@ -24,9 +24,10 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * UuidValidationMatcher checks if valid UUID version 4 is present
+ * This validation matcher checks if a valid UUID version 4 is present.
  */
 public class UuidV4ValidationMatcher implements ValidationMatcher {
+
     @Override
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
         try {

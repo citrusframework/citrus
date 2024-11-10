@@ -21,12 +21,10 @@ import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-/**
- * @since 2.5
- */
-public class DateRangeValidationMatcherIT  extends TestNGCitrusSpringSupport {
+public class UuidV4ValidationMatcherIT extends TestNGCitrusSpringSupport {
 
     @Test
     @CitrusTestSource(type = TestLoader.SPRING)
-    public void DateRangeValidationMatcherIT() {}
+    public void UuidV4ValidationMatcherIT() {
+    }
 }
