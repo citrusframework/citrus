@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+        xmlns:spring="http://www.springframework.org/schema/beans"
+        xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                  http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
+  <testcase name="UuidV4ValidationMatcherIT">
+    <meta-info>
+      <author>bbortt</author>
+      <creationdate>2014-11-10</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>bbortt</last-updated-by>
+      <last-updated-on>2014-11-10T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>
+      Tests the @isUUIDv4()@ validator
+    </description>
+
+    <variables>
+      <variable name="validUuid" value="653ce6fd-dca4-4672-bbc0-16e2b74b8b81"/>
+      <variable name="invalidUuid" value="019314e4-1eab-70a2-84cc-1b1328b36cdb"/>
+    </variables>
+
+    <actions>
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>Hello Citrus!</data>
+        </message>
+        <header>
+          <element name="message-id" value="${validUuid}"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message type="plaintext">
+          <data>Hello Citrus!</data>
+        </message>
+        <header>
+          <element name="message-id" value="@isUUIDv4()@"/>
+        </header>
+      </receive>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>Hello Citrus!</data>
+        </message>
+        <header>
+          <element name="message-id" value="${invalidUuid}"/>
+        </header>
+      </send>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException"
+          message="UuidV4ValidationMatcher failed for field 'message-id'. Received value '${invalidUuid}' is not a uuid v4.">
+        <when>
+          <receive endpoint="helloEndpoint">
+            <message type="plaintext">
+              <data>Hello Citrus!</data>
+            </message>
+            <header>
+              <element name="message-id" value="@isUUIDv4()@"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+    </actions>
+  </testcase>
+</spring:beans>

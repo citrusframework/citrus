@@ -1,5 +1,5 @@
 [[validation-matcher]]
-= Validation matcher
+= Validation Matchers
 
 Message validation in Citrus is essential. The framework offers several validation mechanisms for different message types and formats. With test variables we are able to check for simple value equality. We ensure that message entries are equal to predefined expected values. Validation matcher add powerful assertion functionality on top of that. You just can use the predefined validation matcher functionalities in order to perform more complex assertions like *contains* or *isNumber* in your validation statements.
 
@@ -392,4 +392,34 @@ You can now skip all whitespaces in your control value.
 [source,xml]
 ----
 <value>@trimAllWhitespaces('somevalue')@</value>
+----
+
+[[matcher-is-uuid-v4]]
+== isUUIDv4()
+
+This validation matcher checks if a valid UUID version 4 is present.
+Given the `<variable name="validUuid" value="653ce6fd-dca4-4672-bbc0-16e2b74b8b81"/>`, usage is as following.
+
+.Example `isUUIDv4()` validation
+[source,xml]
+----
+<actions>
+    <send endpoint="helloEndpoint">
+        <message>
+            <data>Hello Citrus!</data>
+        </message>
+        <header>
+            <element name="message-id" value="${validUuid}"/>
+        </header>
+    </send>
+
+    <receive endpoint="helloEndpoint">
+        <message type="plaintext">
+            <data>Hello Citrus!</data>
+        </message>
+        <header>
+            <element name="message-id" value="@isUUIDv4()@"/>
+        </header>
+    </receive>
+</actions>
 ----
