@@ -536,7 +536,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         }
 
         @Override
-        public ExecuteSQLQueryAction build() {
+        public ExecuteSQLQueryAction doBuild() {
             return new ExecuteSQLQueryAction(this);
         }
     }

@@ -17,7 +17,6 @@
 package org.citrusframework.sql.yaml;
 
 import java.util.List;
-import javax.sql.DataSource;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ExecutePLSQLAction;
@@ -29,7 +28,6 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
 
     private final ExecutePLSQLAction.Builder builder = new ExecutePLSQLAction.Builder();
 
-    private String dataSource;
     private String transactionManager;
 
     private ReferenceResolver referenceResolver;
@@ -39,7 +37,7 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
     }
 
     public void setDataSource(String dataSource) {
-        this.dataSource = dataSource;
+        builder.dataSource(dataSource);
         builder.name(String.format("plsql:%s", dataSource));
     }
 
@@ -80,7 +78,7 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
     @Override
     public ExecutePLSQLAction build() {
         if (referenceResolver != null) {
-            builder.dataSource(referenceResolver.resolve(dataSource, DataSource.class));
+            builder.withReferenceResolver(referenceResolver);
 
             if (transactionManager != null) {
                 builder.transactionManager(referenceResolver.resolve(transactionManager, PlatformTransactionManager.class));

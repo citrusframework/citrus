@@ -810,7 +810,7 @@
         </xs:complexType>
       </xs:element>
     </xs:sequence>
-    <xs:attribute name="datasource" type="xs:string" use="required"/>
+    <xs:attribute name="datasource" type="xs:string"/>
     <xs:attribute name="ignore-errors" type="xs:boolean"/>
   </xs:complexType>
 

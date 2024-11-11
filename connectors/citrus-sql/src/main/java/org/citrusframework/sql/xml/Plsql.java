@@ -16,16 +16,15 @@
 
 package org.citrusframework.sql.xml;
 
-import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ExecutePLSQLAction;
 import org.citrusframework.spi.ReferenceResolver;
@@ -37,7 +36,6 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
 
     private final ExecutePLSQLAction.Builder builder = new ExecutePLSQLAction.Builder();
 
-    private String dataSource;
     private String transactionManager;
 
     private ReferenceResolver referenceResolver;
@@ -50,7 +48,7 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
 
     @XmlAttribute(name = "datasource", required = true)
     public Plsql setDataSource(String dataSource) {
-        this.dataSource = dataSource;
+        builder.dataSource(dataSource);
         builder.name(String.format("plsql:%s", dataSource));
         return this;
     }
@@ -96,7 +94,7 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
     @Override
     public ExecutePLSQLAction build() {
         if (referenceResolver != null) {
-            builder.dataSource(referenceResolver.resolve(dataSource, DataSource.class));
+            builder.withReferenceResolver(referenceResolver);
 
             if (transactionManager != null) {
                 builder.transactionManager(referenceResolver.resolve(transactionManager, PlatformTransactionManager.class));

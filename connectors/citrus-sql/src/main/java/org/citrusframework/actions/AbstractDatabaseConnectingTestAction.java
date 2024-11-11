@@ -28,9 +28,12 @@ import org.citrusframework.TestActorAware;
 import org.citrusframework.common.Described;
 import org.citrusframework.common.Named;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.SqlUtils;
+import org.citrusframework.util.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -210,15 +213,20 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     /**
      * Action builder.
      */
-    public static abstract class Builder<T extends AbstractDatabaseConnectingTestAction, S extends Builder<T, S>> extends AbstractTestActionBuilder<T, S> {
+    public static abstract class Builder<T extends AbstractDatabaseConnectingTestAction, S extends Builder<T, S>> extends AbstractTestActionBuilder<T, S> implements ReferenceResolverAware {
 
         protected JdbcTemplate jdbcTemplate;
         protected DataSource dataSource;
+
+        protected String dataSourceName;
+
         protected String sqlResourcePath;
         protected final List<String> statements = new ArrayList<>();
         protected PlatformTransactionManager transactionManager;
         protected String transactionTimeout = String.valueOf(TransactionDefinition.TIMEOUT_DEFAULT);
         protected String transactionIsolationLevel = "ISOLATION_DEFAULT";
+
+        private ReferenceResolver referenceResolver;
 
         /**
          * Sets the Spring JDBC template to use.
@@ -281,6 +289,16 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
         }
 
         /**
+         * Sets the name of the SQL data source.
+         * @param dataSourceName
+         * @return
+         */
+        public S dataSource(String dataSourceName) {
+            this.dataSourceName = dataSourceName;
+            return self;
+        }
+
+        /**
          * List of statements to execute. Declared inline in the test case.
          * @param statements
          */
@@ -315,6 +333,31 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
         public S sqlResource(String filePath) {
             this.sqlResourcePath = filePath;
             return self;
+        }
+
+        @Override
+        public final T build() {
+            if (jdbcTemplate == null && dataSource == null && referenceResolver != null) {
+                if (StringUtils.hasText(dataSourceName)) {
+                    dataSource = referenceResolver.resolve(dataSourceName, DataSource.class);
+                } else if (referenceResolver.isResolvable(DataSource.class)) {
+                    dataSource = referenceResolver.resolve(DataSource.class);
+                }
+            }
+
+            return doBuild();
+        }
+
+        protected abstract T doBuild();
+
+        public S withReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
+            return self;
+        }
+
+        @Override
+        public void setReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
         }
     }
 }
