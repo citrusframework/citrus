@@ -144,15 +144,19 @@ public class PostgreSQLSettings {
             context.setVariable(getEnvVarName(containerType, "CONTAINER_ID"), dockerContainerId);
             context.setVariable(getEnvVarName(containerType, "CONTAINER_NAME"), dockerContainerName);
 
+            context.setVariable(getEnvVarName(containerType, "SERVICE_PORT"), container.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT));
+            context.setVariable(getEnvVarName(containerType, "PORT"), container.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT));
             context.setVariable(getEnvVarName(containerType, "LOCAL_URL"), container.getJdbcUrl());
             context.setVariable(getEnvVarName(containerType, "SERVICE_LOCAL_URL"), container.getJdbcUrl());
 
             if (!KubernetesSupport.isConnected(context) || !TestContainersSettings.isKubedockEnabled()) {
                 context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
                 context.setVariable(getEnvVarName(containerType, "SERVICE_URL"), container.getJdbcUrl());
+                context.setVariable(getEnvVarName(containerType, "URL"), container.getJdbcUrl());
             } else {
                 context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
                 context.setVariable(getEnvVarName(containerType, "SERVICE_URL"), container.getJdbcUrl().replace("localhost", serviceName));
+                context.setVariable(getEnvVarName(containerType, "URL"), container.getJdbcUrl().replace("localhost", serviceName));
             }
 
             context.setVariable(getEnvVarName(containerType, "DRIVER"), container.getDriverClassName());

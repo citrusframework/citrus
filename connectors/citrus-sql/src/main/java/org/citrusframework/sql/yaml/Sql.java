@@ -20,7 +20,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import javax.sql.DataSource;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.AbstractDatabaseConnectingTestAction;
@@ -35,7 +34,6 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
 
     private AbstractDatabaseConnectingTestAction.Builder<?, ?> builder = new ExecuteSQLAction.Builder();
 
-    private String dataSource;
     private String transactionManager;
 
     private ReferenceResolver referenceResolver;
@@ -49,7 +47,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
     }
 
     public void setDataSource(String dataSource) {
-        this.dataSource = dataSource;
+        builder.dataSource(dataSource);
         builder.name(String.format("sql:%s", dataSource));
     }
 
@@ -110,7 +108,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
     @Override
     public AbstractDatabaseConnectingTestAction build() {
         if (referenceResolver != null) {
-            builder.dataSource(referenceResolver.resolve(dataSource, DataSource.class));
+            builder.withReferenceResolver(referenceResolver);
 
             if (transactionManager != null) {
                 builder.transactionManager(referenceResolver.resolve(transactionManager, PlatformTransactionManager.class));

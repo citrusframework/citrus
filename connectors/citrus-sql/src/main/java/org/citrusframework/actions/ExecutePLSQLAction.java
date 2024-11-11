@@ -226,7 +226,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
         }
 
         @Override
-        public ExecutePLSQLAction build() {
+        public ExecutePLSQLAction doBuild() {
             return new ExecutePLSQLAction(this);
         }
     }

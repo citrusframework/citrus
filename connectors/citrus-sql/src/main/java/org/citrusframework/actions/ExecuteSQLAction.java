@@ -16,12 +16,12 @@
 
 package org.citrusframework.actions;
 
+import java.util.List;
+import javax.sql.DataSource;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.springframework.transaction.support.TransactionTemplate;
-
-import javax.sql.DataSource;
-import java.util.List;
 
 /**
  * Test action execute SQL statements. Use this action when executing
@@ -149,7 +149,7 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
         }
 
         @Override
-        public ExecuteSQLAction build() {
+        public ExecuteSQLAction doBuild() {
             return new ExecuteSQLAction(this);
         }
     }
