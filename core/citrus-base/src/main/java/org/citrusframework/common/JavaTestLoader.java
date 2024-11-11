@@ -18,9 +18,13 @@ package org.citrusframework.common;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
@@ -36,6 +40,7 @@ import org.citrusframework.util.StringUtils;
  */
 public class JavaTestLoader extends DefaultTestLoader implements TestSourceAware {
 
+    private static final Pattern packageNamePattern = Pattern.compile("^package\\s+([a-zA-Z_][.a-zA-Z_]+);$", Pattern.MULTILINE);
     private String source;
 
     @Override
@@ -50,9 +55,12 @@ public class JavaTestLoader extends DefaultTestLoader implements TestSourceAware
                 throw new CitrusRuntimeException("Failed to compile Java source file: %s".formatted(javaSource.getFile().getAbsolutePath()));
             }
 
+            String packageName = extractPackageName(javaSource);
+            String qualifiedClassName = StringUtils.hasText(packageName) ? packageName + "." + getClassName() : getClassName();
+
             // Load and instantiate compiled class.
-            URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { Paths.get(javaSource.getURI()).getParent().toUri().toURL() });
-            Class<?> cls = Class.forName(getClassName(), true, classLoader);
+            URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { getClassLoaderBaseURL(packageName, javaSource) });
+            Class<?> cls = Class.forName(qualifiedClassName, true, classLoader);
             Object instance = cls.getDeclaredConstructor().newInstance();
 
             CitrusAnnotations.injectAll(instance, citrus, context);
@@ -98,6 +106,36 @@ public class JavaTestLoader extends DefaultTestLoader implements TestSourceAware
         }
 
         return FileUtils.getBaseName(testName.endsWith(FileUtils.FILE_EXTENSION_JAVA) ? testName : testName + FileUtils.FILE_EXTENSION_JAVA);
+    }
+
+    private static String extractPackageName(Resource javaSource) throws IOException {
+        String content = FileUtils.readToString(javaSource);
+        Matcher matcher = packageNamePattern.matcher(content);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+
+        return "";
+    }
+
+    /**
+     * Get Class loader base URL for given Java file resource path.
+     * The package name of the class must be taken into account when walking the parent tree of the folder structure upwards.
+     * @param packageName
+     * @param javaSource
+     * @return
+     * @throws MalformedURLException
+     */
+    private static URL getClassLoaderBaseURL(String packageName, Resource javaSource) throws MalformedURLException {
+        Path clBase = Paths.get(javaSource.getURI()).getParent();
+
+        if (StringUtils.hasText(packageName)) {
+            for (int i = 0; i < packageName.split("\\.").length; i++) {
+                clBase = clBase.getParent();
+            }
+        }
+
+        return clBase.toUri().toURL();
     }
 
     /**
