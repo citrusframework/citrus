@@ -32,6 +32,7 @@ import org.citrusframework.main.AbstractTestEngine;
 import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.main.scan.ClassPathTestScanner;
 import org.citrusframework.main.scan.JarFileTestScanner;
+import org.citrusframework.report.TestReporterSettings;
 import org.citrusframework.testng.main.TestNGCitrusTest;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
@@ -64,6 +65,7 @@ public class TestNGEngine extends AbstractTestEngine {
 
     public void run() {
         TestNG testng = new TestNG();
+        testng.setOutputDirectory(TestReporterSettings.getReportDirectory() + "/" + TestNG.DEFAULT_OUTPUTDIR);
 
         for (ITestNGListener listener : listeners) {
             testng.addListener(listener);

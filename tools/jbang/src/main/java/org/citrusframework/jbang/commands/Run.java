@@ -39,6 +39,7 @@ import org.citrusframework.jbang.LoggingSupport;
 import org.citrusframework.main.TestEngine;
 import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.report.TestReporter;
+import org.citrusframework.report.TestReporterSettings;
 import org.citrusframework.report.TestResults;
 import org.citrusframework.util.FileUtils;
 import picocli.CommandLine.Command;
@@ -63,14 +64,14 @@ public class Run extends CitrusCommand {
             "^\\s*public class\\s+([a-zA-Z0-9]*)[\\s+|;].*$", Pattern.MULTILINE);
 
     @Option(names = { "--logging" }, defaultValue = "true", description = "Can be used to turn off logging")
-    private boolean logging = true;
+    private final boolean logging = true;
 
     @Option(names = { "--logging-level" }, completionCandidates = LoggingSupport.LoggingLevels.class,
             defaultValue = "info", description = "Logging level")
     private String loggingLevel;
 
     @Option(names = { "--logging-color" }, defaultValue = "true", description = "Use colored logging")
-    private boolean loggingColor = true;
+    private final boolean loggingColor = true;
 
     @Parameters(description = "The test file(s) to run. If no files specified then application.properties is used as source for which files to run.",
                 arity = "0..9", paramLabel = "<files>", parameterConsumer = FilesConsumer.class)
@@ -89,6 +90,7 @@ public class Run extends CitrusCommand {
 
     private int run() throws Exception {
         File work = new File(WORK_DIR);
+        TestReporterSettings.setReportDirectory(WORK_DIR + "/citrus-reports");
         removeDir(work);
         if (!work.mkdirs()) {
             System.err.println("Failed to create working directory " + WORK_DIR);
@@ -207,11 +209,7 @@ public class Run extends CitrusCommand {
 
         String on = FileUtils.getBaseName(name);
         on = on.toLowerCase(Locale.ROOT);
-        if (on.endsWith("readme")) {
-            return true;
-        }
-
-        return false;
+        return on.endsWith("readme");
     }
 
     private static void removeDir(File d) {

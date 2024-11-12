@@ -31,6 +31,7 @@ public final class TestReporterSettings {
 
     private static final String REPORT_DIRECTORY_PROPERTY = "citrus.report.directory";
     private static final String REPORT_DIRECTORY_ENV = "CITRUS_REPORT_DIRECTORY";
+    private static final String REPORT_DIRECTORY_DEFAULT = "target/citrus-reports";
 
     /**
      * Get setting if report should automatically clear all test results after finishing the test suite. Default value
@@ -57,6 +58,10 @@ public final class TestReporterSettings {
      */
     public static String getReportDirectory() {
         return System.getProperty(REPORT_DIRECTORY_PROPERTY,  System.getenv(REPORT_DIRECTORY_ENV) != null ?
-                System.getenv(REPORT_DIRECTORY_ENV) : "target/citrus-reports");
+                System.getenv(REPORT_DIRECTORY_ENV) : REPORT_DIRECTORY_DEFAULT);
+    }
+
+    public static void setReportDirectory(String dir) {
+        System.setProperty(REPORT_DIRECTORY_PROPERTY, dir);
     }
 }
