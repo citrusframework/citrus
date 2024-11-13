@@ -5,7 +5,7 @@
       includeMetadata: true
     steps:
       - setBody:
-          simple: "Hello Camel #${header.CamelTimerCounter}"
+          simple: "{{greeting}} #${header.CamelTimerCounter}"
       - transform:
           simple: "${body.toUpperCase()}"
       - to: "log:info"

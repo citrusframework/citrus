@@ -114,7 +114,7 @@ public final class CamelJBangSettings {
      * When set to true JBang process output for Camel integrations will be redirected to a file in the current working directory.
      * @return
      */
-    public static boolean isCamelDumpIntegrationOutput() {
+    public static boolean isDumpIntegrationOutput() {
         return Boolean.parseBoolean(System.getProperty(CAMEL_DUMP_INTEGRATION_OUTPUT_PROPERTY,
                 System.getenv(CAMEL_DUMP_INTEGRATION_OUTPUT_ENV) != null ? System.getenv(CAMEL_DUMP_INTEGRATION_OUTPUT_ENV) : CAMEL_DUMP_INTEGRATION_OUTPUT_DEFAULT));
     }

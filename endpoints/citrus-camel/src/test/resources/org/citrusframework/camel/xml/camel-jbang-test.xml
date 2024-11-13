@@ -24,7 +24,11 @@
       <jbang>
         <run args="--verbose">
           <integration name="hello-xml"
-                       file="classpath:org/citrusframework/camel/integration/route.yaml"/>
+                       file="classpath:org/citrusframework/camel/integration/route.yaml">
+            <system-properties>
+              <property name="greeting" value="Hello Camel"/>
+            </system-properties>
+          </integration>
         </run>
       </jbang>
     </camel>

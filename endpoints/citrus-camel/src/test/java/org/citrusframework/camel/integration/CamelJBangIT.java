@@ -43,16 +43,18 @@ public class CamelJBangIT extends TestNGCitrusSupport {
                       includeMetadata: true
                     steps:
                       - setBody:
-                          simple: "Hello Camel #${header.CamelTimerCounter}"
+                          simple: "{{greeting}} #${header.CamelTimerCounter}"
                       - transform:
                           simple: "${body.toUpperCase()}"
                       - to: "log:info"
-                """));
+                """)
+                .withSystemProperty("greeting", "Hello Camel"));
 
         then(camel().jbang()
                 .verify("hello")
                 .waitForLogMessage("HELLO CAMEL #10"));
     }
+
     @Test
     @CitrusTest(name = "RunIntegration_Resource_IT")
     public void runIntegrationWithResourceIT() {
@@ -62,7 +64,8 @@ public class CamelJBangIT extends TestNGCitrusSupport {
 
         when(camel().jbang()
                 .run()
-                .integration(Resources.fromClasspath("route.yaml", CamelJBangIT.class)));
+                .integration(Resources.fromClasspath("route.yaml", CamelJBangIT.class))
+                .withEnv("GREETING", "Hello Camel"));
 
         then(camel().jbang()
                 .verify("route")

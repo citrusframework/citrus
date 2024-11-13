@@ -1028,7 +1028,7 @@
                               <xs:attribute name="file" type="xs:string"/>
                             </xs:complexType>
                           </xs:element>
-                          <xs:element name="systemProperties" minOccurs="0">
+                          <xs:element name="system-properties" minOccurs="0">
                             <xs:complexType>
                               <xs:sequence>
                                 <xs:element name="property" maxOccurs="unbounded">

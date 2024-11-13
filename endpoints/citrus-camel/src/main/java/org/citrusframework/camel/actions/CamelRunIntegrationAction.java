@@ -73,6 +73,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
     private final boolean autoRemoveResources;
 
     private final boolean waitForRunningState;
+    private final boolean dumpIntegrationOutput;
 
     /**
      * Default constructor.
@@ -89,6 +90,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
         this.systemProperties = builder.systemProperties;
         this.autoRemoveResources = builder.autoRemoveResources;
         this.waitForRunningState = builder.waitForRunningState;
+        this.dumpIntegrationOutput = builder.dumpIntegrationOutput;
     }
 
     @Override
@@ -113,6 +115,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
                 throw new CitrusRuntimeException("Missing Camel integration source code or file");
             }
 
+            camelJBang().dumpIntegrationOutput(dumpIntegrationOutput);
             camelJBang().camelApp().withEnvs(context.resolveDynamicValuesInMap(envVars));
             camelJBang().camelApp().withSystemProperties(context.resolveDynamicValuesInMap(systemProperties));
 
@@ -191,6 +194,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
 
         private boolean autoRemoveResources = CamelJBangSettings.isAutoRemoveResources();
         private boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
+        private boolean dumpIntegrationOutput = CamelJBangSettings.isDumpIntegrationOutput();
 
         /**
          * Runs Camel integration from given source code.
@@ -348,6 +352,11 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
          */
         public Builder withSystemProperties(Resource systemPropertiesFile) {
             this.systemPropertiesFile = systemPropertiesFile;
+            return this;
+        }
+
+        public Builder dumpIntegrationOutput(boolean enabled) {
+            this.dumpIntegrationOutput = enabled;
             return this;
         }
 

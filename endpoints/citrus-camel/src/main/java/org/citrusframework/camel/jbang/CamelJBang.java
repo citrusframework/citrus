@@ -47,6 +47,8 @@ public class CamelJBang {
 
     private final JBangSupport camelApp = JBangSupport.jbang().app(CamelJBangSettings.getCamelApp());
 
+    private boolean dumpIntegrationOutput = CamelJBangSettings.isDumpIntegrationOutput();
+
     /**
      * Prevent direct instantiation.
      */
@@ -117,7 +119,7 @@ public class CamelJBang {
         runArgs.add(file);
         runArgs.addAll(resources);
 
-        if (CamelJBangSettings.isCamelDumpIntegrationOutput()) {
+        if (dumpIntegrationOutput) {
             Path workDir = CamelJBangSettings.getWorkDir();
             File outputFile = workDir.resolve(String.format("i-%s-output.txt", name)).toFile();
 
@@ -230,6 +232,11 @@ public class CamelJBang {
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to list integrations from JBang", e);
         }
+    }
+
+    public CamelJBang dumpIntegrationOutput(boolean enabled) {
+        this.dumpIntegrationOutput = enabled;
+        return this;
     }
 
 }

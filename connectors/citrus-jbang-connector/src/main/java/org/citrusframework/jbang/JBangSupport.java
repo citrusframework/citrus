@@ -94,7 +94,7 @@ public class JBangSupport {
      * Get JBang version.
      */
     public String version() {
-        ProcessAndOutput p = execute(jBang("version"), envVars);
+        ProcessAndOutput p = execute(jBang("version"), null);
         return p.getOutput();
     }
 
@@ -175,7 +175,7 @@ public class JBangSupport {
      * Command can be a script file or an app command.
      */
     public ProcessAndOutput runAsync(String command, List<String> args) {
-        return executeAsync(jBang(systemProperties, constructAllArgs(command, args)));
+        return executeAsync(jBang(systemProperties, constructAllArgs(command, args)), envVars);
     }
 
     /**
@@ -193,7 +193,7 @@ public class JBangSupport {
      * Redirect the process output to given file.
      */
     public ProcessAndOutput runAsync(String command, File output, List<String> args) {
-        return executeAsync(jBang(systemProperties, constructAllArgs(command, args)), output);
+        return executeAsync(jBang(systemProperties, constructAllArgs(command, args)), output, envVars);
     }
 
     private List<String> constructAllArgs(String command, List<String> args) {
@@ -333,7 +333,7 @@ public class JBangSupport {
 
         return systemProperties.entrySet()
                 .stream()
-                .map(entry -> "-D%s=%s".formatted(entry.getKey(), entry.getValue()))
+                .map(entry -> "-D%s=\"%s\"".formatted(entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining(" ")) + " ";
     }
 
@@ -353,7 +353,7 @@ public class JBangSupport {
             ProcessBuilder pBuilder = new ProcessBuilder(command)
                     .redirectErrorStream(true);
 
-            if (envVars != null && !envVars.isEmpty()) {
+            if (envVars != null) {
                 pBuilder.environment().putAll(envVars);
             }
 
@@ -382,13 +382,19 @@ public class JBangSupport {
      * Execute JBang command using the process API. Waits for the process to complete and returns the process instance so
      * caller is able to access the exit code and process output.
      * @param command
+     * @param envVars
      * @return
      */
-    private static ProcessAndOutput executeAsync(List<String> command) {
+    private static ProcessAndOutput executeAsync(List<String> command, Map<String, String> envVars) {
         try {
-            Process p = new ProcessBuilder(command)
-                    .redirectErrorStream(true)
-                    .start();
+            ProcessBuilder pBuilder = new ProcessBuilder(command)
+                    .redirectErrorStream(true);
+
+            if (envVars != null) {
+                pBuilder.environment().putAll(envVars);
+            }
+
+            Process p = pBuilder.start();
             return new ProcessAndOutput(p);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Error while executing JBang", e);
@@ -400,15 +406,20 @@ public class JBangSupport {
      * caller is able to access the exit code and process output.
      * @param command
      * @param outputFile
+     * @param envVars
      * @return
      */
-    private static ProcessAndOutput executeAsync(List<String> command, File outputFile) {
+    private static ProcessAndOutput executeAsync(List<String> command, File outputFile, Map<String, String> envVars) {
         try {
-            Process p = new ProcessBuilder(command)
+            ProcessBuilder pBuilder = new ProcessBuilder(command)
                 .redirectErrorStream(true)
-                .redirectOutput(outputFile)
-                .start();
+                .redirectOutput(outputFile);
 
+            if (envVars != null) {
+                pBuilder.environment().putAll(envVars);
+            }
+
+            Process p = pBuilder.start();
             return new ProcessAndOutput(p, outputFile);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Error while executing JBang", e);

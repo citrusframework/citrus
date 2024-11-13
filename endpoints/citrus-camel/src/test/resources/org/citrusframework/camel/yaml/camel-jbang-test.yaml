@@ -10,6 +10,10 @@ actions:
           integration:
             name: "hello-yaml"
             file: "classpath:org/citrusframework/camel/integration/route.yaml"
+            systemProperties:
+              properties:
+                - name: greeting
+                  value: Hello Camel
   - camel:
       jbang:
         verify:
