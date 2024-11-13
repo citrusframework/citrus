@@ -115,9 +115,9 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         newLine();
 
         info(format("TOTAL:\t\t%s", testResults.getFailed() + testResults.getSuccess()));
-        info(format("SUCCESS:\t\t%s (%s%%)", testResults.getSuccess(), testResults.getSuccessPercentageFormatted()));
+        info(format("SUCCESS:\t%s (%s%%)", testResults.getSuccess(), testResults.getSuccessPercentageFormatted()));
         info(format("FAILED:\t\t%s (%s%%)", testResults.getFailed(), testResults.getFailedPercentageFormatted()));
-        debug(format("SKIPPED:\t\t%s (%s%%)", testResults.getSkipped(), testResults.getSkippedPercentageFormatted()));
+        debug(format("SKIPPED:\t%s (%s%%)", testResults.getSkipped(), testResults.getSkippedPercentageFormatted()));
         info(format("PERFORMANCE:\t%s ms", testResults.getTotalDuration().toMillis()));
 
         newLine();

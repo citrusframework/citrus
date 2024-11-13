@@ -223,7 +223,7 @@ public class LoggingReporterTest {
 
     private void verifyResultSummaryLog(int total, int success, int failed, long performance) {
         verify(logger).info("TOTAL:\t\t" + total);
-        verify(logger).info("SUCCESS:\t\t" + success + " (" + calculatePercentage(total, success) + "%)");
+        verify(logger).info("SUCCESS:\t" + success + " (" + calculatePercentage(total, success) + "%)");
         verify(logger).info("FAILED:\t\t" + failed + " (" + calculatePercentage(total, failed) + "%)");
         verify(logger).info("PERFORMANCE:\t" + performance + " ms");
     }
