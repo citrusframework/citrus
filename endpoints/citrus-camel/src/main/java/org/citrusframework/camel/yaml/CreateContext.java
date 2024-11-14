@@ -25,7 +25,7 @@ public class CreateContext implements CamelActionBuilderWrapper<CreateCamelConte
         builder.contextName(contextName);
     }
 
-    public void setAutStart(boolean autoStart) {
+    public void setAutoStart(boolean autoStart) {
         builder.autoStart(autoStart);
     }
 

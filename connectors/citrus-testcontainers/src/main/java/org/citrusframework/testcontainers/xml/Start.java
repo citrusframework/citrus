@@ -187,15 +187,24 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         }
 
         if (container.getEnvironmentVariables() != null) {
-            container.getEnvironmentVariables().getVariables().forEach(variable -> {
-                builder.withEnv(variable.getName(), variable.getValue());
-            });
+            container.getEnvironmentVariables().getVariables().forEach(variable -> builder.withEnv(variable.getName(), variable.getValue()));
         }
 
         if (container.getLabels() != null) {
-            container.getLabels().getLabels().forEach(label -> {
-                builder.withLabel(label.getName(), label.getValue());
-            });
+            container.getLabels().getLabels().forEach(label -> builder.withLabel(label.getName(), label.getValue()));
+        }
+
+        if (container.getExposedPorts() != null) {
+            container.getExposedPorts().getPorts().forEach(builder::addExposedPort);
+        }
+
+        if (container.getPortBindings() != null) {
+            container.getPortBindings().getBindings().forEach(builder::addPortBinding);
+        }
+
+        if (container.getVolumeMounts() != null) {
+            container.getVolumeMounts().getMounts().forEach(mount ->
+                    builder.withVolumeMount(mount.getFile(), mount.getMountPath()));
         }
     }
 
@@ -203,6 +212,9 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
     @XmlType(name = "", propOrder = {
             "labels",
             "environmentVariables",
+            "exposedPorts",
+            "portBindings",
+            "volumeMounts"
     })
     public static class Container {
 
@@ -229,6 +241,15 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         @XmlElement
         protected Labels labels;
+
+        @XmlElement(name = "exposed-ports")
+        protected ExposedPorts exposedPorts;
+
+        @XmlElement(name = "port-bindings")
+        protected PortBindings portBindings;
+
+        @XmlElement(name = "volume-mounts")
+        protected VolumeMounts volumeMounts;
 
         public String getName() {
             return name;
@@ -292,6 +313,119 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         public void setLabels(Labels labels) {
             this.labels = labels;
+        }
+
+        public ExposedPorts getExposedPorts() {
+            return exposedPorts;
+        }
+
+        public void setExposedPorts(ExposedPorts exposedPorts) {
+            this.exposedPorts = exposedPorts;
+        }
+
+        public PortBindings getPortBindings() {
+            return portBindings;
+        }
+
+        public void setPortBindings(PortBindings portBindings) {
+            this.portBindings = portBindings;
+        }
+
+        public VolumeMounts getVolumeMounts() {
+            return volumeMounts;
+        }
+
+        public void setVolumeMounts(VolumeMounts volumeMounts) {
+            this.volumeMounts = volumeMounts;
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+                "mounts"
+        })
+        public static class VolumeMounts {
+
+            @XmlElement(name = "mount")
+            private List<Mount> mounts;
+
+            public List<Mount> getMounts() {
+                if (mounts == null) {
+                    mounts = new ArrayList<>();
+                }
+                return mounts;
+            }
+
+            public void setMounts(List<Mount> mounts) {
+                this.mounts = mounts;
+            }
+
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = "")
+            public static class Mount {
+
+                @XmlAttribute(name = "file", required = true)
+                protected String file;
+                @XmlAttribute(name = "mount-path", required = true)
+                protected String mountPath;
+
+                public String getFile() {
+                    return file;
+                }
+
+                public void setFile(String file) {
+                    this.file = file;
+                }
+
+                public String getMountPath() {
+                    return mountPath;
+                }
+
+                public void setMountPath(String mountPath) {
+                    this.mountPath = mountPath;
+                }
+            }
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+                "ports"
+        })
+        public static class ExposedPorts {
+
+            @XmlElement(name = "port")
+            private List<Integer> ports;
+
+            public List<Integer> getPorts() {
+                if (ports == null) {
+                    ports = new ArrayList<>();
+                }
+                return ports;
+            }
+
+            public void setPorts(List<Integer> ports) {
+                this.ports = ports;
+            }
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+                "bindings"
+        })
+        public static class PortBindings {
+
+            @XmlElement(name = "binding")
+            private List<String> bindings;
+
+            public List<String> getBindings() {
+                if (bindings == null) {
+                    bindings = new ArrayList<>();
+                }
+                return bindings;
+            }
+
+            public void setBindings(List<String> bindings) {
+                this.bindings = bindings;
+            }
         }
     }
 

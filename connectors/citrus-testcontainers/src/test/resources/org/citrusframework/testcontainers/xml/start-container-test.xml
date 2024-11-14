@@ -21,7 +21,14 @@
   <actions>
     <testcontainers>
       <start>
-        <container name="my-container" image="busybox:latest" command="echo Hello World"/>
+        <container name="my-container" image="busybox:latest" command="echo Hello World">
+          <labels>
+            <label name="app" value="citrus"/>
+          </labels>
+          <env>
+            <variable name="FOO" value="bar"/>
+          </env>
+        </container>
       </start>
     </testcontainers>
   </actions>

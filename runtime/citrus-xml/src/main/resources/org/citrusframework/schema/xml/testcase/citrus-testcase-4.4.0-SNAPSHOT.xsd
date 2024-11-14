@@ -1905,6 +1905,32 @@
                       </xs:sequence>
                     </xs:complexType>
                   </xs:element>
+                  <xs:element name="exposed-ports" minOccurs="0">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="port" maxOccurs="unbounded" type="xs:int"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="port-bindings" minOccurs="0">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="binding" maxOccurs="unbounded" type="xs:string"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="volume-mounts" minOccurs="0">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="mount" maxOccurs="unbounded">
+                          <xs:complexType>
+                            <xs:attribute name="file" use="required" type="xs:string"/>
+                            <xs:attribute name="mount-path" use="required" type="xs:string"/>
+                          </xs:complexType>
+                        </xs:element>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
                 </xs:sequence>
                 <xs:attribute name="name" type="xs:string"/>
                 <xs:attribute name="service-name" type="xs:string"/>
