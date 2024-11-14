@@ -38,6 +38,14 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
     }
 
     /**
+     * Manage generic testcontainers.
+     * @return
+     */
+    public GenericContainerActionBuilder container() {
+        return new GenericContainerActionBuilder();
+    }
+
+    /**
      * Manage LocalStack testcontainers.
      * @return
      */
@@ -98,6 +106,26 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
         StopTestcontainersAction.Builder builder = new StopTestcontainersAction.Builder();
         delegate = builder;
         return builder;
+    }
+
+    public class GenericContainerActionBuilder {
+        /**
+         * Start generic testcontainers instance.
+         */
+        public StartTestcontainersAction.Builder<?> start() {
+            StartTestcontainersAction.Builder<?> builder = new StartTestcontainersAction.Builder<>();
+            delegate = builder;
+            return builder;
+        }
+
+        /**
+         * Stop generic testcontainers instance.
+         */
+        public StopTestcontainersAction.Builder stop() {
+            StopTestcontainersAction.Builder builder = new StopTestcontainersAction.Builder();
+            delegate = builder;
+            return builder;
+        }
     }
 
     public class LocalStackActionBuilder {

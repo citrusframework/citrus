@@ -19,13 +19,18 @@ package org.citrusframework.testcontainers.actions;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.citrusframework.context.TestContext;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
+import org.testcontainers.utility.MountableFile;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
 import static org.citrusframework.testcontainers.actions.TestcontainersActionBuilder.testcontainers;
@@ -77,11 +82,17 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
                 dockerContainerName = dockerContainerName.substring(1);
             }
 
-            String containerType = containerName.toUpperCase().replaceAll("-", "_").replaceAll("\\.", "_");
-            context.setVariable(getEnvVarName(containerType, "HOST"), container.getHost());
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_IP"), container.getHost());
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_ID"), dockerContainerId);
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_NAME"), dockerContainerName);
+            if (containerName != null) {
+                String containerType = containerName.toUpperCase().replaceAll("-", "_").replaceAll("\\.", "_");
+                context.setVariable(getEnvVarName(containerType, "HOST"), container.getHost());
+                context.setVariable(getEnvVarName(containerType, "CONTAINER_IP"), container.getHost());
+                context.setVariable(getEnvVarName(containerType, "CONTAINER_ID"), dockerContainerId);
+                context.setVariable(getEnvVarName(containerType, "CONTAINER_NAME"), dockerContainerName);
+
+                if (!container.getExposedPorts().isEmpty()) {
+                    context.setVariable(getEnvVarName(containerType, "PORT"), container.getFirstMappedPort());
+                }
+            }
         }
     }
 
@@ -110,6 +121,12 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
         protected C container;
         protected Network network;
         protected Duration startupTimeout = Duration.ofSeconds(TestContainersSettings.getStartupTimeout());
+
+        protected final Set<Integer> exposedPorts = new HashSet<>();
+        protected final List<String> portBindings = new ArrayList<>();
+
+        protected final Map<MountableFile, String> volumeMounts = new HashMap<>();
+
         private boolean autoRemoveResources = TestContainersSettings.isAutoRemoveResources();
 
         public B containerName(String name) {
@@ -193,6 +210,60 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
             return self;
         }
 
+        public B addExposedPort(int port) {
+            this.exposedPorts.add(port);
+            return self;
+        }
+
+        public B addExposedPorts(int... ports) {
+            for (int port : ports) {
+                addExposedPort(port);
+            }
+            return self;
+        }
+
+        public B addExposedPorts(List<Integer> ports) {
+            exposedPorts.addAll(ports);
+            return self;
+        }
+
+        public B addPortBinding(String binding) {
+            this.portBindings.add(binding);
+            return self;
+        }
+
+        public B addPortBindings(String... bindings) {
+            for (String binding : bindings) {
+                addPortBinding(binding);
+            }
+            return self;
+        }
+
+        public B addPortBindings(List<String> bindings) {
+            portBindings.addAll(bindings);
+            return self;
+        }
+
+        public B withVolumeMount(MountableFile mountableFile, String containerPath) {
+            this.volumeMounts.put(mountableFile, containerPath);
+            return self;
+        }
+
+        public B withVolumeMount(String mountableFile, String mountPath) {
+            return withVolumeMount(Resources.create(mountableFile), mountPath);
+        }
+
+        public B withVolumeMount(Resource mountableFile, String mountPath) {
+            if (mountableFile instanceof Resources.ClasspathResource) {
+                this.volumeMounts.put(MountableFile.forClasspathResource(mountableFile.getLocation()), mountPath);
+            } else if (mountableFile instanceof Resources.FileSystemResource) {
+                this.volumeMounts.put(MountableFile.forHostPath(mountableFile.getFile().getAbsolutePath()), mountPath);
+            } else {
+                this.volumeMounts.put(MountableFile.forHostPath(mountableFile.getLocation()), mountPath);
+            }
+            return self;
+        }
+
         protected void prepareBuild() {
         }
 
@@ -205,7 +276,11 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
 
                 if (network != null) {
                     container.withNetwork(network);
-                    container.withNetworkAliases(containerName);
+                    if (serviceName != null) {
+                        container.withNetworkAliases(serviceName);
+                    } else if (containerName != null) {
+                        container.withNetworkAliases(containerName);
+                    }
                 }
 
                 container.withStartupTimeout(startupTimeout);
@@ -214,8 +289,22 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
             container.withLabels(labels);
             container.withEnv(env);
 
+            exposedPorts.forEach(container::addExposedPort);
+            container.setPortBindings(portBindings);
+
+            volumeMounts.forEach((mountableFile, containerPath) ->
+                    container.withCopyFileToContainer(mountableFile, containerPath));
+
             if (!commandLine.isEmpty()) {
                 container.withCommand(commandLine.toArray(String[]::new));
+            }
+
+            if (containerName == null && image != null) {
+                if (image.contains(":")) {
+                    containerName = image.split(":")[0];
+                } else {
+                    containerName = image;
+                }
             }
 
             return doBuild();

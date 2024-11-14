@@ -167,13 +167,16 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             builder.withCommand(container.getCommand().split(" "));
         }
 
-        container.getEnv().forEach(variable -> {
-            builder.withEnv(variable.getName(), variable.getValue());
-        });
+        container.getEnv().forEach(variable -> builder.withEnv(variable.getName(), variable.getValue()));
 
-        container.getLabels().forEach(label -> {
-            builder.withLabel(label.getName(), label.getValue());
-        });
+        container.getLabels().forEach(label -> builder.withLabel(label.getName(), label.getValue()));
+
+        container.getExposedPorts().forEach(builder::addExposedPort);
+
+        container.getPortBindings().forEach(builder::addPortBinding);
+
+        container.getVolumeMounts().forEach(mount ->
+                builder.withVolumeMount(mount.getFile(), mount.getMountPath()));
     }
 
     public static class Container {
@@ -193,6 +196,12 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         protected List<Variable> env;
 
         protected List<Label> labels;
+
+        protected List<Integer> exposedPorts;
+
+        protected List<String> portBindings;
+
+        protected List<VolumeMount> volumeMounts;
 
         public String getName() {
             return name;
@@ -262,6 +271,39 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
                 labels = new ArrayList<>();
             }
             return labels;
+        }
+
+        public List<Integer> getExposedPorts() {
+            if (exposedPorts == null) {
+                exposedPorts = new ArrayList<>();
+            }
+            return exposedPorts;
+        }
+
+        public void setExposedPorts(List<Integer> exposedPorts) {
+            this.exposedPorts = exposedPorts;
+        }
+
+        public List<String> getPortBindings() {
+            if (portBindings == null) {
+                portBindings = new ArrayList<>();
+            }
+            return portBindings;
+        }
+
+        public void setPortBindings(List<String> portBindings) {
+            this.portBindings = portBindings;
+        }
+
+        public List<VolumeMount> getVolumeMounts() {
+            if (volumeMounts == null) {
+                volumeMounts = new ArrayList<>();
+            }
+            return volumeMounts;
+        }
+
+        public void setVolumeMounts(List<VolumeMount> volumeMounts) {
+            this.volumeMounts = volumeMounts;
         }
     }
 
@@ -414,6 +456,28 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
                 this.value = value;
             }
 
+        }
+    }
+
+    public static class VolumeMount {
+
+        protected String file;
+        protected String mountPath;
+
+        public String getFile() {
+            return file;
+        }
+
+        public void setFile(String file) {
+            this.file = file;
+        }
+
+        public String getMountPath() {
+            return mountPath;
+        }
+
+        public void setMountPath(String mountPath) {
+            this.mountPath = mountPath;
         }
     }
 

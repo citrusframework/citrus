@@ -9,3 +9,9 @@ actions:
           name: "my-container"
           image: "busybox:latest"
           command: "echo Hello World"
+          labels:
+            - name: app
+              value: citrus
+          env:
+            - name: FOO
+              value: bar
