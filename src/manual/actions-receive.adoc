@@ -920,7 +920,7 @@ Let us have a closer look at a message selector inside a receiving action:
 ----
 @CitrusTest
 public void selectorTest() {
-    Map<String, String> selectorMap = new HasMap<>();
+    Map<String, String> selectorMap = new HashMap<>();
     selectorMap.put("correlationId", "Cx1x123456789");
     selectorMap.put("operation", "getOrders");
 
