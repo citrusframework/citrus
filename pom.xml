@@ -195,7 +195,7 @@
     <ascii-table-version>1.8.0</ascii-table-version>
     <assertj.version>3.26.3</assertj.version>
     <awaitility.version>4.2.2</awaitility.version>
-    <aws-java-sdk2.version>2.29.5</aws-java-sdk2.version>
+    <aws-java-sdk2.version>2.27.19</aws-java-sdk2.version>
     <bouncycastle.version>1.78.1</bouncycastle.version>
     <byte.buddy.version>1.15.7</byte.buddy.version>
     <commons.dbcp2.version>2.12.0</commons.dbcp2.version>
