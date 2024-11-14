@@ -68,7 +68,7 @@ public class Run extends CitrusCommand {
 
     @Option(names = { "--logging-level" }, completionCandidates = LoggingSupport.LoggingLevels.class,
             defaultValue = "info", description = "Logging level")
-    private String loggingLevel;
+    private final String loggingLevel = "info";
 
     @Option(names = { "--logging-color" }, defaultValue = "true", description = "Use colored logging")
     private final boolean loggingColor = true;
