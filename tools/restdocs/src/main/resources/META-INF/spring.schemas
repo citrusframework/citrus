@@ -36,5 +36,5 @@ http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-4.
 http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-4.3.1.xsd=org/citrusframework/schema/citrus-restdocs-config-4.3.1.xsd
 http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-4.3.2.xsd=org/citrusframework/schema/citrus-restdocs-config-4.3.2.xsd
 http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-4.3.3.xsd=org/citrusframework/schema/citrus-restdocs-config-4.3.3.xsd
-http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-4.4.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-restdocs-config-4.4.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-4.4.0.xsd=org/citrusframework/schema/citrus-restdocs-config-4.4.0.xsd
 http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config.xsd=org/citrusframework/schema/citrus-restdocs-config.xsd
