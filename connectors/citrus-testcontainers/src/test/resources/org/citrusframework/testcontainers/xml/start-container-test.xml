@@ -21,7 +21,7 @@
   <actions>
     <testcontainers>
       <start>
-        <container name="my-container" image="busybox:latest" command="echo Hello World">
+        <container name="my-container" image="busybox:latest" command="echo Hello World" auto-remove="false">
           <labels>
             <label name="app" value="citrus"/>
           </labels>

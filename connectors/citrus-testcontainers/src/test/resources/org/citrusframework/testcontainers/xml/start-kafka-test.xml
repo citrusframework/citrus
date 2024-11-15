@@ -21,7 +21,7 @@
   <actions>
     <testcontainers>
       <start>
-        <kafka>
+        <kafka auto-remove="false">
           <labels>
             <label name="app" value="citrus"/>
           </labels>

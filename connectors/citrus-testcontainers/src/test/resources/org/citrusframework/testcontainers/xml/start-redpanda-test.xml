@@ -21,7 +21,7 @@
   <actions>
     <testcontainers>
       <start>
-        <redpanda>
+        <redpanda auto-remove="false">
           <labels>
             <label name="app" value="citrus"/>
           </labels>

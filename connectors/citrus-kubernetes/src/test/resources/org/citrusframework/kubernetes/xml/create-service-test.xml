@@ -19,11 +19,11 @@
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
   <actions>
-    <kubernetes client="k8sClient" namespace="test">
+    <kubernetes client="k8sClient" namespace="test" auto-remove="false">
       <create-service name="my-service-1" auto-create-server-binding="false"/>
     </kubernetes>
 
-    <kubernetes client="k8sClient" namespace="test">
+    <kubernetes client="k8sClient" namespace="test" auto-remove="false">
       <create-service name="my-service-2" server="myServer">
         <ports>
           <port-mapping port="80" target-port="8888"/>

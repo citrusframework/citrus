@@ -6,6 +6,7 @@ actions:
   - kubernetes:
       client: "k8sClient"
       namespace: "test"
+      autoRemove: false
       createService:
         name: "my-service-1"
         autoCreateServerBinding: false
@@ -13,6 +14,7 @@ actions:
   - kubernetes:
       client: "k8sClient"
       namespace: "test"
+      autoRemove: false
       createService:
         name: "my-service-2"
         server: "myServer"

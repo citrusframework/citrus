@@ -24,6 +24,7 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActionContainerBuilder;
 import org.citrusframework.TestActor;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.kubernetes.KubernetesSettings;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.KubernetesAction;
 import org.citrusframework.spi.ReferenceResolver;
@@ -39,6 +40,7 @@ public class Kubernetes implements TestActionBuilder<KubernetesAction>, Referenc
 
     private String kubernetesClient;
     private String namespace;
+    private boolean autoRemoveResources = KubernetesSettings.isAutoRemoveResources();
 
     private ReferenceResolver referenceResolver;
 
@@ -57,6 +59,12 @@ public class Kubernetes implements TestActionBuilder<KubernetesAction>, Referenc
     @XmlAttribute
     public Kubernetes setNamespace(String namespace) {
         this.namespace = namespace;
+        return this;
+    }
+
+    @XmlAttribute(name = "auto-remove")
+    public Kubernetes setAutoRemove(boolean autoRemoveResources) {
+        this.autoRemoveResources = autoRemoveResources;
         return this;
     }
 
@@ -159,6 +167,7 @@ public class Kubernetes implements TestActionBuilder<KubernetesAction>, Referenc
 
         builder.description(description);
         builder.inNamespace(namespace);
+        builder.autoRemoveResources(autoRemoveResources);
 
         if (referenceResolver != null) {
             if (kubernetesClient != null) {

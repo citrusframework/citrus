@@ -6,6 +6,7 @@ actions:
   - testcontainers:
       start:
         postgresql:
+          autoRemove: false
           initScript:
             value: |
               CREATE TABLE IF NOT EXISTS todo (id SERIAL PRIMARY KEY, task VARCHAR, completed INTEGER);

@@ -6,6 +6,7 @@ actions:
   - testcontainers:
       start:
         mongodb:
+          autoRemove: false
           labels:
             - name: app
               value: citrus

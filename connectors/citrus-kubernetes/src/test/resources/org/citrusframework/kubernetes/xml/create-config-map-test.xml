@@ -19,7 +19,7 @@
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
   <actions>
-    <kubernetes client="k8sClient" namespace="test">
+    <kubernetes client="k8sClient" namespace="test" auto-remove="false">
       <create-config-map name="my-config-map-1">
         <properties>
           <property name="foo" value="bar"/>
@@ -27,7 +27,7 @@
       </create-config-map>
     </kubernetes>
 
-    <kubernetes client="k8sClient" namespace="test">
+    <kubernetes client="k8sClient" namespace="test" auto-remove="false">
       <create-config-map name="my-config-map-2" file="classpath:org/citrusframework/kubernetes/integration/configMap.properties"/>
     </kubernetes>
   </actions>

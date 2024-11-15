@@ -37,7 +37,7 @@ public class KubernetesSettings {
 
     private static final String AUTO_REMOVE_RESOURCES_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "auto.remove.resources";
     private static final String AUTO_REMOVE_RESOURCES_ENV = KUBERNETES_ENV_PREFIX + "AUTO_REMOVE_RESOURCES";
-    private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "false";
+    private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "true";
 
     private static final String ENABLED_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "enabled";
     private static final String ENABLED_ENV = KUBERNETES_ENV_PREFIX + "ENABLED";

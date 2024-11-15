@@ -6,5 +6,6 @@ actions:
   - knative:
       client: "knativeClient"
       namespace: "test"
+      autoRemove: false
       createBroker:
         name: "my-broker"

@@ -1722,6 +1722,7 @@
     </xs:sequence>
     <xs:attribute name="client" type="xs:string"/>
     <xs:attribute name="namespace" type="xs:string"/>
+    <xs:attribute name="auto-remove" type="xs:boolean"/>
     <xs:attribute name="actor" type="xs:string"/>
   </xs:complexType>
 
@@ -1864,6 +1865,7 @@
     <xs:attribute name="kubernetes-client" type="xs:string"/>
     <xs:attribute name="client" type="xs:string"/>
     <xs:attribute name="namespace" type="xs:string"/>
+    <xs:attribute name="auto-remove" type="xs:boolean"/>
     <xs:attribute name="cluster-type" type="xs:string"/>
     <xs:attribute name="actor" type="xs:string"/>
   </xs:complexType>

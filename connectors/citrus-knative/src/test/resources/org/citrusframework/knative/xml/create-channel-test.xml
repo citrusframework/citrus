@@ -19,7 +19,7 @@
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
   <actions>
-    <knative client="knativeClient" namespace="test">
+    <knative client="knativeClient" namespace="test" auto-remove="false">
       <create-channel name="my-channel"/>
     </knative>
   </actions>

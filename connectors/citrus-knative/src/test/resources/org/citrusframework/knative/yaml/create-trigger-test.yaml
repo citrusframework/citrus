@@ -6,6 +6,7 @@ actions:
   - knative:
       client: "knativeClient"
       namespace: "test"
+      autoRemove: false
       createTrigger:
         name: "my-trigger-1"
         broker: "my-broker"
@@ -13,6 +14,7 @@ actions:
   - knative:
       client: "knativeClient"
       namespace: "test"
+      autoRemove: false
       createTrigger:
         name: "my-trigger-2"
         broker: "my-broker"

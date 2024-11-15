@@ -6,6 +6,7 @@ actions:
   - knative:
       client: "knativeClient"
       namespace: "test"
+      autoRemove: false
       createSubscription:
         name: "my-subscription"
         channel: "my-channel"

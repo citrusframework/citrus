@@ -31,7 +31,7 @@ public final class TestContainersSettings {
 
     private static final String AUTO_REMOVE_RESOURCES_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "auto.remove.resources";
     private static final String AUTO_REMOVE_RESOURCES_ENV = TESTCONTAINERS_ENV_PREFIX + "AUTO_REMOVE_RESOURCES";
-    private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "false";
+    private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "true";
 
     private static final String KUBEDOCK_ENABLED_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "kubedock.enabled";
     private static final String KUBEDOCK_ENABLED_ENV = TESTCONTAINERS_ENV_PREFIX + "KUBEDOCK_ENABLED";

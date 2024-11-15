@@ -22,6 +22,7 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActionContainerBuilder;
 import org.citrusframework.TestActor;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.KnativeAction;
 import org.citrusframework.kubernetes.ClusterType;
@@ -38,6 +39,7 @@ public class Knative implements TestActionBuilder<KnativeAction>, ReferenceResol
     private String k8sClient;
     private String knativeClient;
     private String namespace;
+    private boolean autoRemoveResources = KnativeSettings.isAutoRemoveResources();
 
     private ClusterType clusterType;
 
@@ -53,6 +55,10 @@ public class Knative implements TestActionBuilder<KnativeAction>, ReferenceResol
 
     public void setNamespace(String namespace) {
         this.namespace = namespace;
+    }
+
+    public void setAutoRemove(boolean autoRemoveResources) {
+        this.autoRemoveResources = autoRemoveResources;
     }
 
     public void setClusterType(ClusterType clusterType) {
@@ -131,6 +137,7 @@ public class Knative implements TestActionBuilder<KnativeAction>, ReferenceResol
 
         builder.description(description);
         builder.inNamespace(namespace);
+        builder.autoRemoveResources(autoRemoveResources);
 
         if (clusterType != null) {
             builder.clusterType(clusterType);

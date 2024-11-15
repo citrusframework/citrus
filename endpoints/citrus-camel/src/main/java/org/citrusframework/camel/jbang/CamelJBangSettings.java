@@ -56,7 +56,7 @@ public final class CamelJBangSettings {
 
     private static final String AUTO_REMOVE_RESOURCES_PROPERTY = JBANG_PROPERTY_PREFIX + "auto.remove.resources";
     private static final String AUTO_REMOVE_RESOURCES_ENV = JBANG_ENV_PREFIX + "AUTO_REMOVE_RESOURCES";
-    private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "false";
+    private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "true";
 
     private static final String WAIT_FOR_RUNNING_STATE_PROPERTY = JBANG_PROPERTY_PREFIX + "wait.for.running.state";
     private static final String WAIT_FOR_RUNNING_STATE_ENV = JBANG_ENV_PREFIX + "WAIT_FOR_RUNNING_STATE";

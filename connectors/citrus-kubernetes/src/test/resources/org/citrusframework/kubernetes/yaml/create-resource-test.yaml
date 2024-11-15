@@ -6,6 +6,7 @@ actions:
   - kubernetes:
       client: "k8sClient"
       namespace: "test"
+      autoRemove: false
       createResource:
         data: |
           apiVersion: v1
@@ -24,5 +25,6 @@ actions:
   - kubernetes:
       client: "k8sClient"
       namespace: "test"
+      autoRemove: false
       createResource:
         file: "classpath:org/citrusframework/kubernetes/integration/pod.yaml"

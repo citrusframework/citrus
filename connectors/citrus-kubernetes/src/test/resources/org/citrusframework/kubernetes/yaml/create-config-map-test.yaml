@@ -6,6 +6,7 @@ actions:
   - kubernetes:
       client: "k8sClient"
       namespace: "test"
+      autoRemove: false
       createConfigMap:
         name: "my-config-map-1"
         properties:
@@ -15,6 +16,7 @@ actions:
   - kubernetes:
       client: "k8sClient"
       namespace: "test"
+      autoRemove: false
       createConfigMap:
         name: "my-config-map-2"
         file: "classpath:org/citrusframework/kubernetes/integration/configMap.properties"

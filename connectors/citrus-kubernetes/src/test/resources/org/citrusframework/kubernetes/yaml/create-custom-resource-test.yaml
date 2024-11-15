@@ -6,6 +6,7 @@ actions:
   - kubernetes:
       client: "k8sClient"
       namespace: "test"
+      autoRemove: false
       createCustomResource:
         type: "org.citrusframework.kubernetes.integration.Foo"
         data: |

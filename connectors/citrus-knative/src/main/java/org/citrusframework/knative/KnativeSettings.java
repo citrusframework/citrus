@@ -68,7 +68,7 @@ public class KnativeSettings {
 
     private static final String AUTO_REMOVE_RESOURCES_PROPERTY = KNATIVE_PROPERTY_PREFIX + "auto.remove.resources";
     private static final String AUTO_REMOVE_RESOURCES_ENV = KNATIVE_ENV_PREFIX + "AUTO_REMOVE_RESOURCES";
-    private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "false";
+    private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "true";
 
     private static final String VERIFY_BROKER_RESPONSE_PROPERTY = KNATIVE_PROPERTY_PREFIX + "verify.broker.resources";
     private static final String VERIFY_BROKER_RESPONSE_ENV = KNATIVE_ENV_PREFIX + "VERIFY_BROKER_RESPONSE";

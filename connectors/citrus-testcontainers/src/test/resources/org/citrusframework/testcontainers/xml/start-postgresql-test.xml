@@ -21,7 +21,7 @@
   <actions>
     <testcontainers>
       <start>
-        <postgresql>
+        <postgresql auto-remove="false">
           <init-script>CREATE TABLE IF NOT EXISTS todo (id SERIAL PRIMARY KEY, task VARCHAR, completed INTEGER);</init-script>
         </postgresql>
       </start>

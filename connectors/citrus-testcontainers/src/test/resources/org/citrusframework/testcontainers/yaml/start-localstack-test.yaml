@@ -6,5 +6,6 @@ actions:
   - testcontainers:
       start:
         localstack:
+          autoRemove: false
           services:
             - "S3"

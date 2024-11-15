@@ -8,6 +8,7 @@ actions:
         container:
           name: "my-container"
           image: "busybox:latest"
+          autoRemove: false
           command: "echo Hello World"
           labels:
             - name: app

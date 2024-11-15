@@ -21,7 +21,7 @@
   <actions>
     <testcontainers>
       <start>
-        <localstack services="S3"/>
+        <localstack services="S3" auto-remove="false"/>
       </start>
     </testcontainers>
   </actions>
