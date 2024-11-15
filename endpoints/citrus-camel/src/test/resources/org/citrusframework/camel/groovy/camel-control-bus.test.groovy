@@ -16,7 +16,7 @@
 
 package org.citrusframework.camel.groovy
 
-import static org.citrusframework.camel.actions.CamelActionBuilder.camel
+import static org.citrusframework.camel.dsl.CamelSupport.camel
 
 name "CamelControlBusTest"
 author "Christoph"
