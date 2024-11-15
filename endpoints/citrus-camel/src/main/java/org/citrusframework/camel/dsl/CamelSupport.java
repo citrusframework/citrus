@@ -24,10 +24,13 @@ import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.builder.ExpressionClauseSupport;
 import org.apache.camel.model.OutputDefinition;
 import org.apache.camel.model.ProcessorDefinition;
+import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CamelActionBuilder;
 import org.citrusframework.camel.actions.CamelContextActionBuilder;
 import org.citrusframework.camel.actions.CamelControlBusAction;
+import org.citrusframework.camel.actions.CamelExchangeActionBuilder;
 import org.citrusframework.camel.actions.CamelJBangActionBuilder;
 import org.citrusframework.camel.actions.CamelRouteActionBuilder;
 import org.citrusframework.camel.actions.CreateCamelComponentAction;
@@ -67,7 +70,7 @@ public class CamelSupport {
     }
 
     /**
-     * Static entrance for all Camel related Java DSL functionalities.
+     * Sets Camel context.
      * @return
      */
     public CamelSupport camelContext(CamelContext camelContext) {
@@ -76,11 +79,27 @@ public class CamelSupport {
     }
 
     /**
-     * Static entrance for all Camel related Java DSL functionalities.
+     * Entrance for Camel context related Java DSL functionalities.
      * @return
      */
     public CamelContextActionBuilder camelContext() {
         return new CamelContextActionBuilder();
+    }
+
+    /**
+     * Sends message using Camel endpointUris.
+     * @return
+     */
+    public CamelExchangeActionBuilder<SendMessageAction.Builder> send() {
+        return new CamelActionBuilder().send();
+    }
+
+    /**
+     * Receives message using Camel endpointUris.
+     * @return
+     */
+    public CamelExchangeActionBuilder<ReceiveMessageAction.Builder> receive() {
+        return new CamelActionBuilder().receive();
     }
 
     /**

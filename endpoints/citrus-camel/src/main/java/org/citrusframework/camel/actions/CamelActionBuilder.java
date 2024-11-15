@@ -20,6 +20,8 @@ import jakarta.annotation.Nullable;
 import org.apache.camel.CamelContext;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
@@ -29,14 +31,6 @@ public class CamelActionBuilder implements TestActionBuilder.DelegatingTestActio
     private CamelContext camelContext;
 
     private TestActionBuilder<?> delegate;
-
-    /**
-     * Static entrance method for the Camel action builder.
-     * @return
-     */
-    public static CamelActionBuilder camel() {
-        return new CamelActionBuilder();
-    }
 
     /**
      * Static entrance for all Camel related Java DSL functionalities.
@@ -53,6 +47,26 @@ public class CamelActionBuilder implements TestActionBuilder.DelegatingTestActio
      */
     public CamelContextActionBuilder camelContext() {
         CamelContextActionBuilder builder = new CamelContextActionBuilder();
+        this.delegate = builder;
+        return builder;
+    }
+
+    /**
+     * Sends message using Camel endpointUri and components.
+     * @return
+     */
+    public CamelExchangeActionBuilder<SendMessageAction.Builder> send() {
+        CamelExchangeActionBuilder<SendMessageAction.Builder> builder = CamelExchangeActionBuilder.send();
+        this.delegate = builder;
+        return builder;
+    }
+
+    /**
+     * Receive messages using Camel endpointUri and components.
+     * @return
+     */
+    public CamelExchangeActionBuilder<ReceiveMessageAction.Builder> receive() {
+        CamelExchangeActionBuilder<ReceiveMessageAction.Builder> builder = CamelExchangeActionBuilder.receive();
         this.delegate = builder;
         return builder;
     }
