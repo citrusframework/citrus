@@ -18,8 +18,8 @@
 
 //JAVA 17+
 //REPOS mavencentral
-//DEPS org.citrusframework:citrus-bom:${citrus.jbang.version:4.3.3}@pom
-//DEPS org.citrusframework:citrus-jbang:${citrus.jbang.version:4.3.3}
+//DEPS org.citrusframework:citrus-bom:${citrus.jbang.version:4.4.0}@pom
+//DEPS org.citrusframework:citrus-jbang:${citrus.jbang.version:4.4.0}
 //DEPS org.citrusframework:citrus-jbang-connector
 //DEPS org.citrusframework:citrus-groovy
 //DEPS org.citrusframework:citrus-xml

@@ -14,7 +14,7 @@ hesitate to contact us. Find below the reference documentation for the latest Ci
 |Version |HTML |PDF
 
 |Latest	|link:/citrus/reference/html/index.html[HTML] |link:/citrus/reference/pdf/citrus-reference.pdf[PDF]
-|4.4.0-SNAPSHOT	|link:/citrus/reference/4.4.0-SNAPSHOT/html/index.html[HTML] |link:/citrus/reference/4.4.0-SNAPSHOT/pdf/citrus-reference-4.4.0-SNAPSHOT.pdf[PDF]
+|4.4.0	|link:/citrus/reference/4.4.0/html/index.html[HTML] |link:/citrus/reference/4.4.0/pdf/citrus-reference-4.4.0.pdf[PDF]
 |4.3.3	|link:/citrus/reference/4.3.3/html/index.html[HTML] |link:/citrus/reference/4.3.3/pdf/citrus-reference-4.3.3.pdf[PDF]
 |4.3.2	|link:/citrus/reference/4.3.2/html/index.html[HTML] |link:/citrus/reference/4.3.2/pdf/citrus-reference-4.3.2.pdf[PDF]
 |4.3.1	|link:/citrus/reference/4.3.1/html/index.html[HTML] |link:/citrus/reference/4.3.1/pdf/citrus-reference-4.3.1.pdf[PDF]
