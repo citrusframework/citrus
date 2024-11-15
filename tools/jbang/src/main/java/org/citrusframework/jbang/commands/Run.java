@@ -64,14 +64,14 @@ public class Run extends CitrusCommand {
             "^\\s*public class\\s+([a-zA-Z0-9]*)[\\s+|;].*$", Pattern.MULTILINE);
 
     @Option(names = { "--logging" }, defaultValue = "true", description = "Can be used to turn off logging")
-    private final boolean logging = true;
+    private boolean logging = true;
 
     @Option(names = { "--logging-level" }, completionCandidates = LoggingSupport.LoggingLevels.class,
             defaultValue = "info", description = "Logging level")
-    private final String loggingLevel = "info";
+    private String loggingLevel = "info";
 
     @Option(names = { "--logging-color" }, defaultValue = "true", description = "Use colored logging")
-    private final boolean loggingColor = true;
+    private boolean loggingColor = true;
 
     @Parameters(description = "The test file(s) to run. If no files specified then application.properties is used as source for which files to run.",
                 arity = "0..9", paramLabel = "<files>", parameterConsumer = FilesConsumer.class)
