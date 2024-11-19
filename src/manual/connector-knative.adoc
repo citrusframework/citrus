@@ -1,0 +1,616 @@
+[[knative]]
+= Knative support
+
+Knative lets you build Serverless and Event Driven applications on the cloud. The project knows the two main components Knative Serving and Knative Eventing.
+
+Citrus as a test framework is able to interact with Knative to manage and leverage Serving and Eventing resources on a Kubernetes cluster.
+
+NOTE: The Knative support in Citrus is enabled by adding a separate Maven module as a dependency to your project
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-knative</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+[[knative-client]]
+== Knative client
+
+Citrus interacts with Knative resources on the Kubernetes cluster.
+This means we need to connect as a client to a Kubernetes cluster as part of the test.
+Citrus uses the Fabric8 Knative client implementation for this connection.
+You can create and configure the client once and reuse the client instance in multiple test cases.
+
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public KubernetesClient kubernetesClient() {
+    return new KubernetesClientBuilder().build();
+}
+
+@BindToRegistry
+public KnativeClient knativeClient() {
+    return kubernetesClient().adapt(KnativeClient.class);
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public KubernetesClient kubernetesClient() {
+    return new KubernetesClientBuilder().build();
+}
+
+@Bean
+public KnativeClient knativeClient() {
+    return kubernetesClient().adapt(KnativeClient.class);
+}
+----
+
+The Fabric8 Knative client is based on the Kubernetes client implementation.
+You can bind the client instances as beans to the Citrus bean registry.
+You may then reference and inject the client to your tests using the `@CitrusResource` annotation.
+Spring beans may be autowired to the test case as usual with `@Autowired`.
+
+[[knative-broker]]
+== Knative broker
+
+Citrus is able to create Knative Eventing broker resources as part of the test.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void knativeBrokerTest() {
+    given(knative()
+            .client(knativeClient)
+            .brokers()
+            .create("my-broker")
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="KnativeBrokerTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <knative client="knativeClient" namespace="test">
+          <create-broker name="my-broker"/>
+        </knative>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: KnativeBrokerTest
+actions:
+  - knative:
+      client: "knativeClient"
+      namespace: "test"
+      createBroker:
+        name: "my-broker"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+The test above creates a new Knative broker resource in the given namespace.
+In the following you can connect to the broker to produce and consume events.
+
+NOTE: Citrus automatically removes the created Knative resources after the test. This is the default behavior that makes Citrus delete resources such as the Knative broker even when the test has finished in failure state. However, you can disable the auto removal by setting this system property or environment variable: `citrus.knative.auto.remove.resources=false` or `CITRUS_KNATIVE_AUTO_REMOVE_RESOURCES=false`
+
+You can also disable the auto removal of the Knative broker on the test action, too:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void knativeBrokerTest() {
+    given(knative()
+            .client(knativeClient)
+            .brokers()
+            .create("my-broker")
+            .autoRemoveResources(false)
+            .inNamespace("my-namespace"));
+}
+----
+
+[[knative-broker-verify]]
+== Verify broker status
+
+The test may also verify that a broker is running and ready on a given Kubernetes namespace.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void knativeBrokerTest() {
+    given(knative()
+            .client(knativeClient)
+            .brokers()
+            .verify("my-broker")
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="KnativeBrokerTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <knative client="knativeClient" namespace="test">
+          <verify-broker name="my-broker"/>
+        </knative>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: KnativeBrokerTest
+actions:
+  - knative:
+      client: "knativeClient"
+      namespace: "test"
+      verifyBroker:
+        name: "my-broker"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+[[knative-send-event]]
+== Send events
+
+Once a Knative broker is available we can start to produce some events with a Citrus test.
+Knative uses the CloudEvent data format out of the box.
+The test is able to set the CloudEvent attributes as well as the event data when pushing the event to the broker.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void produceEventTest() {
+    when(knative()
+            .event()
+            .send()
+            .brokerUrl("http://my-cluster.svc.cluster.local/my-namespace/my-broker")
+            .eventData("""
+            { "message": "Hello Knative event!" }
+            """));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ProduceEventTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <knative namespace="test">
+          <send-event broker="http://my-cluster.svc.cluster.local/my-namespace/my-broker">
+            <event>
+              <data>{ "message": "Hello Knative event!" }</data>
+            </event>
+          </send-event>
+        </knative>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ProduceEventTest
+actions:
+    - knative:
+      namespace: "test"
+      sendEvent:
+        broker: "my-broker"
+        event:
+          data: |
+            { "message": "Hello Knative event!" }
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+This action produces a new Knative event with some CloudEvent attributes default values set.
+The Http request to the Knative broker looks like this:
+
+[]
+----
+POST http://my-cluster.svc.cluster.local/my-namespace/my-broker
+Accept:text/plain, application/json, application/*+json, */*
+Host:broker-ingress.knative-eventing.svc.cluster.local
+Content-Type:application/json
+Ce-Id:2818d613-bc75-4b25-b570-b825bbe33378
+Ce-Type:org.citrusframework.event.test
+Ce-Specversion:1.0
+Ce-Source:citrus-test
+Content-Length:54
+
+{ "message": "Hello Knative event!" }
+----
+
+You can see the CloudEvent attributes set with `Ce-*` headers.
+You can customize these attributes on the send event test action.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void produceEventTest() {
+    when(knative()
+            .event()
+            .send()
+            .brokerUrl("http://my-cluster.svc.cluster.local/my-namespace/my-broker")
+            .attribute("ce-type", "org.citrusframework.knative.event")
+            .eventData("""
+            { "message": "Hello Knative event!" }
+            """));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ProduceEventTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <knative namespace="test">
+          <send-event broker="http://my-cluster.svc.cluster.local/my-namespace/my-broker">
+            <event>
+              <ce-attributes>
+                <ce-attribute name="ce-type" value="org.citrusframework.knative.event"/>
+              </ce-attributes>
+              <data>{ "message": "Hello Knative event!" }</data>
+            </event>
+          </send-event>
+        </knative>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ProduceEventTest
+actions:
+    - knative:
+      namespace: "test"
+      sendEvent:
+        broker: "my-broker"
+        event:
+          data: |
+            { "message": "Hello Knative event!" }
+          attributes:
+            - name: ce-type
+              value: "org.citrusframework.knative.event"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+[[knative-receive-event]]
+== Receive events
+
+The Knative broker dispatches events by invoking services.
+Usually this service is an arbitrary Kubernetes Service resource or any addressable resource on the Kubernetes cluster.
+The events that should be consumed by a service gets specified in a Knative Trigger resource.
+
+This means we need to consume Knative events with a Kubernetes service resource.
+Citrus provides special Kubernetes support that enables you to create a Kubernetes service resource on the cluster.
+Read more about it in chapter link:#kubernetes[Kubernetes support].
+
+You can create the Kubernetes service as follows:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void createServiceTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .service()
+            .create("my-service")
+            .portMapping(80, 8080)
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CreateServiceTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <kubernetes client="k8sClient" namespace="my-namespace">
+          <create-service name="my-service">
+            <ports>
+              <port-mapping port="80" target-port="8080"/>
+            </ports>
+          </create-service>
+        </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: CreateServiceTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      createService:
+        name: "my-service"
+        ports:
+          - port: "80"
+            targetPort: "8080"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+This creates the Kubernetes service named `my-service` in the namespace `my-namespace`.
+
+NOTE: The test requires a local HttServer instance to actually receive the requests on the given port mapping.
+Citrus automatically creates this local HttpServer instance.
+Please make sure to choose a free port on your host machine when defining the port mapping.
+
+NOTE: Before creating the HttpServer instance as part of the Kubernetes test action Citrus tries to resolve the HttpServer instance from the Citrus bean registry. This means you can also predefine the HttpServer instance as a usual bean in the registry.
+Just give the server name as an additional attribute to the Kubernetes service create test action so Citrus knows which server instance should be resolved via the bean registry.
+
+This creates a proper Kubernetes service and binds it to the local port where the local HttpServer instance is listening for incoming requests.
+Before we can start to actually consume events we need to create a Knative Trigger resource.
+You can create the Trigger resource as part of the test, too:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void createTriggerTest() {
+    given(knative()
+            .client(knativeClient)
+            .trigger()
+            .create("my-trigger")
+            .broker("my-broker")
+            .service("my-service")
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CreateTriggerTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <knative client="knativeClient" namespace="my-namespace">
+        <create-trigger name="my-trigger" broker="my-broker" service="my-service"/>
+      </knative>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: CreateTriggerTest
+actions:
+  - knative:
+      client: "knativeClient"
+      namespace: "my-namespace"
+      createTrigger:
+        name: "my-trigger"
+        broker: "my-broker"
+        service: "my-service"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+The Trigger resource receives the broker name that should be used as a source of events and the service name as a subject to being invoked when an event gets dispatched.
+The trigger name and the namespace defines where the Trigger resource is created on the Kubernetes cluster.
+
+You add a filter to the Trigger resource to filter events on CloudEvent attributes.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void createTriggerTest() {
+    given(knative()
+            .client(knativeClient)
+            .trigger()
+            .create("my-trigger")
+            .broker("my-broker")
+            .service("my-service")
+            .filter("type", "my.very.specific.event.type")
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CreateTriggerTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <knative client="knativeClient" namespace="my-namespace">
+        <create-trigger name="my-trigger" broker="my-broker" service="my-service">
+          <filter>
+            <attribute name="type" value="my.very.specific.event.type"/>
+          </filter>
+        </create-trigger>
+      </knative>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: CreateTriggerTest
+actions:
+  - knative:
+      client: "knativeClient"
+      namespace: "my-namespace"
+      createTrigger:
+        name: "my-trigger"
+        broker: "my-broker"
+        service: "my-service"
+        filter:
+          attributes:
+            - name: type
+              value: "my.very.specific.event.type"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+The filter is set on the CloudeEvent type attribute so the trigger will only dispatch events with this specific type.
+The created Trigger resource looks like follows:
+
+.Knative Trigger
+[source,yaml,indent=0]
+----
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: my-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: my.very.specific.event.type
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: my-service
+----
+
+This completes all resources that we need to consume events from the Knative eventing broker.
+The following test action receives and verifies a Knative event with an expected CloudEvent message holding expected attributes and event data.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void consumeEventTest() {
+    when(knative()
+            .event()
+            .receive()
+            .serviceName("my-service")
+            .attribute("ce-type", "org.citrusframework.knative.event")
+            .eventData("""
+            {
+                "message": "Hello Knative event!"
+            }
+            """));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ConsumeEventTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <knative namespace="my-namespace">
+          <receive-event service="my-service">
+            <event>
+              <ce-attributes>
+                <ce-attribute name="ce-type" value="org.citrusframework.knative.event"/>
+              </ce-attributes>
+              <data>{ "message": "Hello Knative event!" }</data>
+            </event>
+          </receive-event>
+        </knative>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ConsumeEventTest
+actions:
+    - knative:
+      namespace: "my-namespace"
+      receiveEvent:
+        service: "my-service"
+        event:
+          data: |
+            { "message": "Hello Knative event!" }
+          attributes:
+            - name: ce-type
+              value: "org.citrusframework.knative.event"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+[[knative-channels]]
+== Knative channels
+
+TODO
+
+[[knative-subscription]]
+== Knative subscription
+
+TODO

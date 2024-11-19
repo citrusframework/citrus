@@ -26,7 +26,7 @@ Please install gnu-sed on your machine (e.g. `brew install gnu-sed`) and set you
 To have this script handy all the time it is recommended to either add this `scripts/citrus` binary to the $PATH or add a
 symlink from `citrus` into a directory which is already on your execution path.
 
-[source,bash]
+[source,shell]
 ----
 # Navigate to the Citrus project directory
 cd $PROJECT_DIR
@@ -96,7 +96,7 @@ Remember a command must be the first argument, but there are additional possibil
 
 To add a new command, just drop a script file into `$PROJECT_DIR/scripts/commands` directory with following structure:
 
-[source,bash]
+[source,shell]
 ----
 #!/bin/bash
 

@@ -1,0 +1,1811 @@
+[[kubernetes]]
+= Kubernetes support
+
+http://kubernetes.io/[Kubernetes] is one of the hottest management platforms for containerized applications these days.
+Kubernetes lets you deploy, scale and manage your Docker containers on the platform.
+You get features like auto-scaling, self-healing, service discovery and load balancing.
+
+Citrus provides interaction with the Kubernetes REST API to access the Kubernetes cluster and its resources within a Citrus test case.
+
+NOTE: The Kubernetes test components in Citrus are kept in a separate Maven module. If not already done, you have to include the module as Maven dependency to your project
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-kubernetes</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+[[kubernetes-client]]
+== Kubernetes client
+
+Citrus operates with the Kubernetes remote REST API in order to interact with the Kubernetes platform.
+The Kubernetes client component holds the configuration to connect to a Kubernetes cluster:
+
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public KubernetesClient k8sClient() {
+    return new KubernetesClientBuilder()
+                .build();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public KubernetesClient k8sClient() {
+    return new KubernetesClientBuilder()
+                .build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus-k8s:client id="k8sClient"/>
+----
+
+The Kubernetes client is based on the https://github.com/fabric8io/kubernetes-client[Fabric8 Java Kubernetes client] implementation.
+Following from that the component can be configured in various ways.
+By default, the client reads the system properties as well as environment variables for default Kubernetes settings such as:
+
+* *kubernetes.master* / *KUBERNETES_MASTER*
+* *kubernetes.api.version* / *KUBERNETES_API_VERSION*
+* *kubernetes.trust.certificates* / *KUBERNETES_TRUST_CERTIFICATES*
+
+If you set these properties in your environment the client component will automatically pick up the configuration settings.
+Also, when using `kubectl` command line locally the client may automatically use the stored user authentication settings from there.
+
+For a complete list of settings and explanation of those please refer to the https://github.com/fabric8io/kubernetes-client[Fabric8 client documentation].
+
+In case you need to set the client configuration explicitly on your environment you can also use explicit settings on the Kubernetes client component:
+
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public KubernetesClient k8sClient() {
+    return new KubernetesClientBuilder()
+                .client(fabric8Client)
+                .url("http://localhost:8843")
+                .version("v1")
+                .username("user")
+                .password("s!cr!t")
+                .namespace("user_namespace")
+                .messageConverter(messageConverter)
+                .objectMapper("objectMapper")
+                .build();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public KubernetesClient k8sClient() {
+    return new KubernetesClientBuilder()
+                .client(fabric8Client)
+                .url("http://localhost:8843")
+                .version("v1")
+                .username("user")
+                .password("s!cr!t")
+                .namespace("user_namespace")
+                .messageConverter(messageConverter)
+                .objectMapper("objectMapper")
+                .build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus-k8s:client id="k8sClient"
+              client="fabric8Client"
+              url="http://localhost:8843"
+              version="v1"
+              username="user"
+              password="s!cr!t"
+              namespace="user_namespace"
+              message-converter="messageConverter"
+              object-mapper="objectMapper"/>
+----
+
+NOTE: You have the option to set an `oauthToken` for the client instead of using `username` and `password`.
+
+Now Citrus is able to access the Kubernetes remote API for executing commands such as list-pods, watch-services and so on.
+Citrus provides a set of actions that perform a Kubernetes command via REST.
+The results usually get validated in the Citrus test as usual.
+
+[[kubernetes-actions]]
+== Kubernetes actions
+
+Citrus provides a set of test actions specifically designed to manage resources on the Kubernetes cluster.
+Each test action requires a reference to the Kubernetes client.
+Usually this client is created once in the bean registry and used by many test actions.
+
+NOTE: All resources created on the Kubernetes cluster will be automatically removed by Citrus after the test.
+You can disable this default behavior via system property setting or environment variables (`citrus.kubernetes.auto.remove.resources=false` or `CITRUS_KUBERNETES_AUTO_REMOVE_RESOURCES=false`)
+
+[[kubernetes-create-labels]]
+== Create Labels
+
+Resources in Kubernetes are able to expose labels as part of the resource metadata.
+You can set labels on existing Kubernetes resources with this test action:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void createLabelsTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .pods()
+            .addLabel("my-pod")
+            .label("test", "citrus")
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CreateLabelsTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <create-labels type="POD" resource="my-pod">
+          <labels>
+            <label name="test" value="citrus"/>
+          </labels>
+        </create-labels>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: CreateLabelsTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      createLabels:
+        type: "POD"
+        resource: "my-pod"
+        labels:
+          - name: "test"
+            value: "citrus"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+[[kubernetes-create-annotations]]
+== Create Annotations
+
+Resources in Kubernetes are able to expose annotations as part of the resource metadata.
+You can set annotations on existing Kubernetes resources with this test action:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void createAnnotationsTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .pods()
+            .addAnnotation("my-pod")
+            .annotation("test", "citrus")
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CreateAnnotationsTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <create-annotations type="POD" resource="my-pod">
+          <annotations>
+            <annotation name="test" value="citrus"/>
+          </annotations>
+        </create-annotations>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: CreateAnnotationsTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      createAnnotations:
+        type: "POD"
+        resource: "my-pod"
+        labels:
+          - name: "test"
+            value: "citrus"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+[[kubernetes-create-service]]
+== Create Service
+
+You can create a Kubernetes service resource with this test action:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void createServiceTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .services()
+            .create("my-service")
+            .portMapping(80, 8080)
+            .withPodSelector(Collections.singletonMap("test", "citrus"))
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CreateServiceTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <create-service name="my-service">
+          <ports>
+            <port-mapping port="80" target-port="8080"/>
+          </ports>
+          <selector>
+            <label name="test" value="citrus"/>
+          </selector>
+        </create-service>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: CreateServiceTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      createService:
+        name: "my-service"
+        ports:
+          - port: "80"
+            targetPort: "8080"
+        selector:
+          labels:
+            - name: "test"
+              value: "citrus"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+The service is able to define port mappings as well as pod selectors based on labels.
+This exposes the service as a Kubernetes resource on the connected cluster in the given namespace.
+
+IMPORTANT: The Kubernetes service test action will automatically bind this service to a local HttpServer instance on the given port mapping.
+As a result the HttpServer instance is created and started as part of the test action.
+The HttpServer instance is added to the bean registry for further reference.
+The default HttpServer bean name is `citrus-k8s-service` or the service name chosen for the Kubernetes service.
+You can reference the HttpServer in following test actions to receive requests from the Kubernetes service.
+
+NOTE: The behavior to auto create the HttpServer instance can be disabled via system property or environment variable setting (`citrus.kubernetes.auto.create.server.binding=false` or `CITRUS_KUBERNETES_AUTO_CREATE_SERVER_BINDING=false` )
+You can also customize the HttpServer instance by referencing a previously created server from the bean registry.
+In this case the auto creation is skipped for this test action and the custom server reference is used.
+
+[[kubernetes-create-config-map]]
+== Create ConfigMap
+
+You can create a Kubernetes config map with this test action:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void createConfigMapTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .configMaps()
+            .create("my-config-map")
+            .properties(Collections.singletonMap("username", "foo"))
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CreateConfigMapTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <create-config-map name="my-config-map">
+          <properties>
+            <property name="username" value="foo"/>
+          </properties>
+        </create-config-map>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: CreateConfigMapTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      createConfigMap:
+        name: "my-config-map"
+        properties:
+          - name: username
+            value: foo
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+It is also possible to load the properties from a file resource:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void createConfigMapTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .configMaps()
+            .create("my-config-map")
+            .fromFile(Resources.create("application.properties"))
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CreateConfigMapTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <create-config-map name="my-config-map" file="application.properties"/>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: CreateConfigMapTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      createConfigMap:
+        name: "my-config-map"
+        file: "application.properties"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+[[kubernetes-create-secret]]
+== Create Secret
+
+You can create a Kubernetes secret with this test action:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void createSecretTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .secrets()
+            .create("my-secret")
+            .properties(Collections.singletonMap("password", "top_secret"))
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CreateSecretTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <create-secret name="my-secret">
+          <properties>
+            <property name="password" value="top_secret"/>
+          </properties>
+        </create-secret>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: CreateSecretTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      createSecret:
+        name: "my-secret"
+        properties:
+          - name: password
+            value: top_secret
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+It is also possible to load the properties from a file resource:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void createSecretTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .secrets()
+            .create("my-secret")
+            .fromFile(Resources.create("credentials.properties"))
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CreateSecretTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <create-secret name="my-secret" file="credentials.properties"/>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: CreateSecretTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      createSecret:
+        name: "my-secret"
+        file: "credentials.properties"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+[[kubernetes-create-resources]]
+== Create Resources
+
+You can create standards Kubernetes resources such as Pods as part of the test.
+The easiest way to define the resource specification is to give a YAML file that represents the resource.
+
+Of course, you can use Citrus test variables in the resource specification.
+
+.pod.yaml
+[source,yaml,indent=0]
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  labels:
+    name: my-pod
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      ports:
+        - containerPort: 80
+----
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void createPodResourceTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .resources()
+            .create()
+            .resource(Resources.create("pod.yaml"))
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CreatePodResourceTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <create-resource file="pod.yaml"/>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: CreatePodResourceTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      createResource:
+        file: "pod.yaml"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+[[kubernetes-delete-resources]]
+== Delete Resources
+
+You can delete any resource on the Kubernetes cluster.
+Of course your client connection needs to have sufficient permissions to perform the delete operation.
+The Kubernetes resource that should be deleted is identified by its name and an optional namespace.
+
+The next example deletes a service resource identified by its name.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void deleteServiceTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .services()
+            .delete("my-service")
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="DeleteServiceTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <delete-service name="my-service"/>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: DeleteServiceTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      deleteService:
+        name: "my-service"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+As an alternative to that you can also use a resource specification to delete the resource.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void deletePodResourceTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .resources()
+            .delete()
+            .resource(Resources.create("pod.yaml"))
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="DeletePodResourceTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <delete-resource file="pod.yaml"/>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: DeletePodResourceTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      deleteResource:
+        file: "pod.yaml"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+[[kubernetes-create-custom-resource]]
+== Create Custom Resource
+
+Given the following Kubernetes custom resource:
+
+.foo.yaml
+[source,yaml,indent=0]
+----
+apiVersion: citrus.dev/v1
+kind: Foo
+metadata:
+  name: my-foo
+  labels:
+    test: citrus
+spec:
+  message: Hello
+----
+
+You can create the Kubernetes custom resource with this test action:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void createCustomResourceTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .customResources()
+            .create()
+            .kind("Foo")
+            .apiVersion("citrus.dev/v1")
+            .file("foo.yaml")
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CreateCustomResourceTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <create-custom-resource kind="Foo" api-version="citrus.dev/v1" file="foo.yaml" />
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: CreateCustomResourceTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      createCustomResource:
+        kind: "Foo"
+        apiVersion: "citrus.dev/v1"
+        file: "foo.yaml"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+NOTE: When you have access to a Fabric8 Java model that represents the custom resource you can use the Java type to specify the Kind and ApiVersion while creating the resource.
+Also, you can use a Java object instance directly to create the resource with the Fabric8 Kubernetes client.
+
+[[kubernetes-delete-custom-resources]]
+== Delete Custom Resource
+
+When you want to delete a Kubernetes custom resource you need to specify the Kind as well as the ApiVersion in combination with the resource name on the cluster.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void createCustomResourceTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .customResources()
+            .delete()
+            .kind("Foo")
+            .apiVersion("citrus.dev/v1")
+            .name("foo")
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="DeleteCustomResourceTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <delete-custom-resource kind="Foo" api-version="citrus.dev/v1" name="foo" />
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: DeleteCustomResourceTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      deleteCustomResource:
+        kind: "Foo"
+        apiVersion: "citrus.dev/v1"
+        name: "foo"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+NOTE: When you have access to a Fabric8 Java model that represents the custom resource you can use the Java type to specify the Kind and ApiVersion while deleting the resource.
+
+[[kubernetes-verify-custom-resources]]
+== Verify Custom Resource
+
+You can verify the ready condition status for a Kubernetes custom resource.
+Usually the custom resource exposes a Status sub-resource with that expose a ready condition.
+You can verify this condition as part of a test like this:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void verifyCustomResourceTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .customResources()
+            .verify("foo")
+            .kind("Foo")
+            .apiVersion("citrus.dev/v1")
+            .isReady()
+            .maxAttempts(2)
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="VerifyCustomResourceTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <verify-custom-resource kind="Foo" api-version="citrus.dev/v1" name="foo" condition="Ready" />
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: VerifyCustomResourceTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      verifyCustomResource:
+        kind: "Foo"
+        apiVersion: "citrus.dev/v1"
+        name: "foo"
+        condition: "Ready"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+NOTE: Instead of specifying the resource name you can also use a label expression (name=value) to identify the custom resource on the cluster namespace.
+Citrus tries to find the resource with the matching label.
+
+[[kubernetes-verify-pods]]
+== Verify Pod Status
+
+Each Pod in Kubernetes exposes its Ready state condition as well as the phase (Running, Error, Initializing, Terminating, ...).
+You can verify this Pod status in your test case:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void verifyPodTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .pods()
+            .verify("my-pod")
+            .isRunning()
+            .maxAttempts(2)
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="VerifyPodTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <verify-pod name="my-pod" phase="Running" />
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: VerifyPodTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      verifyPod:
+        name: "my-pod"
+        phase: "Running"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+NOTE: When asserting the `Running` phase the verification also checks for all containers in the Pod to expose the condition `Ready`.
+
+[[kubernetes-verify-pod-logs]]
+== Verify Pod Logs
+
+You can read and verify the Pod logs as part of the test.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void verifyPodTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .pods()
+            .verify("my-pod")
+            .isRunning()
+            .waitForLogMessage("Something interesting")
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="VerifyPodTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <verify-pod name="my-pod" phase="Running" log-message="Something interesting"/>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: VerifyPodTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      verifyPod:
+        name: "my-pod"
+        phase: "Running"
+        logMessage: "Something interesting"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+This action scans the Pod logs for a message `Something interesting`.
+As soon as the log message has been located in the Pod logs the test action finishes with success.
+The action waits for the log message to appear in the Pod logs for given amount of time with a specified polling attempt configuration.
+
+[[kubernetes-spring]]
+== Spring bean config
+
+Citrus provides a "citrus-kubernetes" configuration namespace and schema definition for Kubernetes related components and actions.
+Include this namespace into your Spring configuration in order to use the Citrus Kubernetes configuration elements.
+
+[[kubernetes-spring-config]]
+=== Spring XML config namespace
+
+The namespace URI and schema location are added to the Spring configuration XML file as follows.
+
+[source,xml]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus-k8s="http://www.citrusframework.org/schema/kubernetes/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/kubernetes/config
+       http://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config.xsd">
+
+    [...]
+
+</beans>
+----
+
+After that you are able to use customized Citrus XML elements in order to define the Spring beans.
+
+[[kubernetes-spring-test]]
+=== Spring XML testcase namespace
+
+We have several Citrus test actions each representing a Kubernetes command.
+These actions can be part of a test case where you can manage Kubernetes pods inside the test.
+As a prerequisite we have to enable the Kubernetes specific test actions in our XML test as follows:
+
+[source,xml]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:k8s="http://www.citrusframework.org/schema/kubernetes/testcase"
+        xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/kubernetes/testcase
+        http://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase.xsd">
+
+    [...]
+
+</beans>
+----
+
+We added a special kubernetes namespace with prefix *k8s:* so now we can start to add Kubernetes test actions to the test case:
+
+.Spring XML
+[source,xml,indent=0]
+----
+<testcase name="KubernetesCommandIT">
+    <actions>
+      <k8s:info client="myK8sClient">
+        <k8s:validate>
+          <k8s:result>{
+            "result": {
+              "clientVersion": "1.4.27",
+              "apiVersion": "v1",
+              "kind":"Info",
+              "masterUrl": "${masterUrl}",
+              "namespace": "test"
+            }
+          }</k8s:result>
+        </k8s:validate>
+      </k8s:info>
+    </actions>
+</testcase>
+----
+
+In this very simple example we first ping the Kubernetes REST API to make sure we have connectivity up and running.
+The info command connects the REST API and returns a list of status information of the Kubernetes client.
+
+Based on that we can execute several Kubernetes commands in a test case and validate the Json results.
+
+Citrus supports the following Kubernetes API commands with respective test actions:
+
+* *k8s:info*
+* *k8s:list-pods*
+* *k8s:get-pod*
+* *k8s:delete-pod*
+* *k8s:list-services*
+* *k8s:get-service*
+* *k8s:delete-service*
+* *k8s:list-namespaces*
+* *k8s:list-events*
+* *k8s:list-endpoints*
+* *k8s:list-nodes*
+* *k8s:list-replication-controllers*
+* *k8s:watch-pods*
+* *k8s:watch-services*
+* *k8s:watch-namespaces*
+* *k8s:watch-nodes*
+* *k8s:watch-replication-controllers*
+
+We will discuss these commands in detail in the following sections.
+
+[[kubernetes-commands]]
+== Kubernetes commands
+
+The Citrus test may use Kubernetes commands that get run as test actions.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void kubernetesTest() {
+    kubernetes().info()
+        .validate(new CommandResultCallback<InfoResult>() {
+            @Override
+            public void doWithCommandResult(InfoResult info, TestContext context) {
+                Assert.assertEquals(info.getApiVersion(), "v1");
+            }
+    });
+
+    kubernetes().pods()
+                .list()
+                .withoutLabel("running")
+                .label("app", "myApp");
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<testcase name="KubernetesCommandIT">
+    <actions>
+      <k8s:info>
+        <k8s:validate>
+          <k8s:result>{
+            "result": {
+              "clientVersion": "1.4.27",
+              "apiVersion": "v1",
+              "kind":"Info",
+              "masterUrl": "${masterUrl}",
+              "namespace": "test"
+            }
+          }</k8s:result>
+        </k8s:validate>
+      </k8s:info>
+
+      <k8s:list-pods>
+        <k8s:validate>
+          <k8s:result>{
+            "result": {
+              "apiVersion":"v1",
+              "kind":"PodList",
+              "metadata":"@ignore@",
+              "items":[]
+            }
+          }</k8s:result>
+          <k8s:element path="$.result.items.size()" value="0"/>
+        </k8s:validate>
+      </k8s:list-pods>
+    </actions>
+</testcase>
+----
+
+In this very simple example we first ping the Kubernetes REST API to make sure we have connectivity up and running.
+The info command connects the REST API and returns a list of status information of the Kubernetes client.
+After that we get the list of available Kubernetes pods.
+
+As a tester we might be interested in validating the command results.
+So we can specify an optional *k8s:result* which is usually in Json format.
+With that we can apply the full Citrus Json validation power to the Kubernetes results.
+As usual, we can use test variables here and ignore some values explicitly such as the *metadata* value.
+Also, JsonPath expression validation and Json test message validation features in Citrus come in here to validate the results.
+
+The Java DSL Kubernetes commands provide an optional *CommandResultCallback* that is automatically called with the unmarshalled command result object.
+In the example above the _InfoResult_ model object is passed as argument to the callback.
+So the tester can access the command result and validate its properties with assertions.
+
+The option of Lamdba expressions allows us to use some syntactical sugar in Java when using the *CommandResultCallback*.
+
+.Java
+[source,java]
+----
+@CitrusTest
+public void kubernetesTest() {
+    kubernetes().info()
+                .validate((info, context) -> Assert.assertEquals(info.getApiVersion(), "v1"));
+}
+----
+
+NOTE: By default, Citrus tries to find a Kubernetes client component within the Citrus Spring application context.
+If not present Citrus will instantiate a default kubernetes client with all default settings.
+You can also explicitly set the kubernetes client instance when using the Java DSL Kubernetes command actions:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Autowired
+private KubernetesClient k8sClient;
+
+@CitrusTest
+public void kubernetesTest() {
+    kubernetes().client(k8sClient)
+                .info()
+                .validate((info, context) -> Assert.assertEquals(info.getApiVersion(), "v1"));
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<testcase name="KubernetesCommandIT">
+    <actions>
+      <k8s:info client="k8sClient">
+        <k8s:validate>
+          <k8s:result>{
+            "result": {
+              "clientVersion": "1.4.27",
+              "apiVersion": "v1",
+              "kind":"Info",
+              "masterUrl": "${masterUrl}",
+              "namespace": "test"
+            }
+          }</k8s:result>
+        </k8s:validate>
+      </k8s:info>
+    </actions>
+</testcase>
+----
+
+[[info-command]]
+=== Info command
+
+The info command just gets the client connection settings and provides them as a Json result to the action.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void infoTest() {
+    kubernetes().info()
+                .validate((info, context) -> Assert.assertEquals(info.getApiVersion(), "v1"));
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<k8s:info client="myK8sClient">
+  <k8s:validate>
+    <k8s:result>{
+      "result": {
+        "clientVersion": "1.4.27",
+        "apiVersion": "v1",
+        "kind":"Info",
+        "masterUrl": "${masterUrl}",
+        "namespace": "test"
+      }
+    }</k8s:result>
+  </k8s:validate>
+</k8s:info>
+----
+
+[[list-resources]]
+=== List resources
+
+We can list Kubernetes resources such as pods, services, endpoints and replication controllers.
+The list can be filtered by several properties such as
+
+* label
+* namespace
+
+The test action is able to define respective filters to the list, so we get only pods the match the given attributes:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void listPodsTest() {
+    kubernetes()
+        .client(k8sClient)
+        .pods()
+        .list()
+        .label("app=todo")
+        .validate("$..status.phase", "Running")
+        .validate((pods, context) -> {
+            Assert.assertFalse(CollectionUtils.isEmpty(pods.getResult().getItems()));
+        });
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<k8s:list-pods label="app=todo">
+    <k8s:validate>
+      <k8s:result>{
+        "result": {
+          "apiVersion":"${apiVersion}",
+          "kind":"PodList",
+          "metadata":"@ignore@",
+          "items":"@ignore@"
+        }
+      }</k8s:result>
+      <k8s:element path="$.result.items.size()" value="1"/>
+      <k8s:element path="$..status.phase" value="Running"/>
+    </k8s:validate>
+</k8s:list-pods>
+----
+
+As you can see we are able to give the pod label that is searched for in list of all pods.
+The list returned is validated either by giving an expected Json message or by adding JsonPath expressions with expected values to check.
+
+In Java DSL we can add a validation result callback that is provided with the unmarshalled result object for validation. Besides _label_ filtering we can also specify the _namespace_
+and the pod _name_ to search for.
+
+You can also define multiple labels as comma delimited list:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void listServicesTest() {
+    kubernetes()
+        .client(k8sClient)
+        .services()
+        .list()
+        .label("stage!=test,provider=fabric8")
+        .namespace("default");
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<k8s:list-services label="stage!=test,provider=fabric8" namespace="default"/>
+----
+
+As you can see we have combined to label filters `stage!=test` and `provider=fabric8` on pods in namespace `default`.
+The first label filter is negated so the label `stage` should *not* be `test` here.
+
+[[list-nodes-and-namespaces]]
+=== List nodes and namespaces
+
+Nodes and namespaces are special resources that are not filtered by their namespace as they are more global resources. The rest is pretty similar to listing pods or services. We can
+add filters such as `name` and `label`.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void listPodsTest() {
+    kubernetes()
+        .client(k8sClient)
+        .namespaces()
+        .list()
+        .label("provider=citrus")
+        .validate((pods, context) -> {
+            Assert.assertFalse(CollectionUtils.isEmpty(pods.getResult().getItems()));
+        });
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<k8s:list-namespaces label="provider=citrus">
+    <k8s:validate>
+      <k8s:element path="$.result.items.size()" value="1"/>
+    </k8s:validate>
+</k8s:list-namespaces>
+----
+
+[[get-resources]]
+=== Get resources
+
+We can get a very special Kubernetes resource such as a pod or service for detailed validation of that resource.
+We need to specify a resource name in order to select the resource from list of available resources in Kubernetes.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void getPodsTest() {
+    kubernetes()
+        .client(k8sClient)
+        .pods()
+        .get("citrus_pod")
+        .validate("$..status.phase", "Running")
+        .validate((pod, context) -> {
+            Assert.assertEquals(pods.getResult().getStatus().getPhase(), "Running");
+        });
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<k8s:get-pod name="citrus_pod">
+    <k8s:validate>
+      <k8s:result>{
+      "result": {
+        "apiVersion":"${apiVersion}",
+        "kind":"Pod",
+        "metadata": {
+            "annotations":"@ignore@",
+            "creationTimestamp":"@ignore@",
+            "finalizers":[],
+            "generateName":"@startsWith('hello-minikube-')@",
+            "labels":{
+              "pod-template-hash":"@ignore@",
+              "run":"hello-minikube"
+            },
+            "name":"${podName}",
+            "namespace":"default",
+            "ownerReferences":"@ignore@",
+            "resourceVersion":"@ignore@",
+            "selfLink":"/api/${apiVersion}/namespaces/default/pods/${podName}",
+            "uid":"@ignore@"
+        },
+        "spec": {
+          "containers": [{
+            "args":[],
+            "command":[],
+            "env":[],
+            "image":"gcr.io/google_containers/echoserver:1.4",
+            "imagePullPolicy":"IfNotPresent",
+            "name":"hello-minikube",
+            "ports":[{
+              "containerPort":8080,
+              "protocol":"TCP"
+            }],
+            "resources":{},
+            "terminationMessagePath":"/dev/termination-log",
+            "volumeMounts":"@ignore@"
+          }],
+          "dnsPolicy":"ClusterFirst",
+          "imagePullSecrets":"@ignore@",
+          "nodeName":"minikube",
+          "restartPolicy":"Always",
+          "securityContext":"@ignore@",
+          "serviceAccount":"default",
+          "serviceAccountName":"default",
+          "terminationGracePeriodSeconds":30,
+          "volumes":"@ignore@"
+        },
+        "status": "@ignore@"
+      }
+      }</k8s:result>
+      <k8s:element path="$..status.phase" value="Running"/>
+    </k8s:validate>
+</k8s:get-pod>
+----
+
+As you can see we are able to get the complete pod information from Kubernetes.
+The result is validated with Json message validator in Citrus.
+This means we can use _@ignore@_ as well as test variables and JsonPath expressions.
+
+[[create-resources]]
+=== Create resources
+
+We can create new Kubernetes resources within a Citrus test.
+This is very important in case we need to set up new pods or services for the test run.
+You can create new resources by giving a `.yaml` file holding all information how to create the new resource.
+See the following sample YAML for a new pod and service:
+
+.pod.yaml
+[source,yaml,indent=0]
+----
+kind: Pod
+apiVersion: v1
+metadata:
+  name: hello-netty-${randomId}
+  namespace: default
+  labels:
+    server: hello-netty
+spec:
+  containers:
+    - name: hello-netty
+      image: netty
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8080
+          protocol: TCP
+  restartPolicy: Always
+  terminationGracePeriodSeconds: 30
+  dnsPolicy: ClusterFirst
+  serviceAccountName: default
+  serviceAccount: default
+  nodeName: minikube
+----
+
+This YAML file specifies a new resource of kind _Pod_.
+We define the metadata as well as all containers that are part of this pod.
+The container is build from _jetty:9.3_ Docker image that should be pulled automatically from Docker Hub registry.
+We also expose port 8080 as _containerPort_ so the upcoming service configuration can provide this port to clients as Kubernetes service.
+
+.service.yaml
+[source,yaml,indent=0]
+----
+kind: Service
+apiVersion: v1
+metadata:
+  name: hello-netty
+  namespace: default
+  labels:
+    service: hello-netty
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 31123
+  selector:
+    server: hello-netty
+  type: NodePort
+  sessionAffinity: None
+----
+
+The service resource maps the port _8080_ and selects all pods with label _server=hello-netty_.
+This makes the jetty container available to clients.
+The service type is _NodePort_ which means that clients outside of Kubernetes are also able to access the service by using the port _nodePort=31123_.
+We can use Citrus functions such as _randomNumber_ in the YAML files.
+
+In the test case we can use these YAML files to create the resources in Kubernetes:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void createPodsTest() {
+    kubernetes()
+        .pods()
+        .create(new ClassPathResource("templates/hello-netty-pod.yml"))
+        .namespace("default");
+
+    kubernetes()
+        .services()
+        .create(new ClassPathResource("templates/hello-service.yml"))
+        .namespace("default");
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<testcase name="KubernetesIT">
+  <actions>
+    <k8s:create-pod namespace="default">
+      <k8s:template file="classpath:templates/hello-netty-pod.yml"/>
+    </k8s:create-pod>
+
+    <k8s:create-service namespace="default">
+      <k8s:template file="classpath:templates/hello-service.yml"/>
+    </k8s:create-service>
+  </actions>
+</testcase>
+----
+
+Creating new resources may take some time to finish.
+Kubernetes will have to pull images, build containers and start up everything.
+The `create` action is not waiting synchronously for all that to have happened.
+Therefore, we might add a list-pods action that waits for the new resources to appear.
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<repeat-onerror-until-true condition="@assertThat(greaterThan(9))@" auto-sleep="1000">
+  <k8s:list-pods label="server=hello-netty">
+    <k8s:validate>
+      <k8s:element path="$.result.items.size()" value="1"/>
+      <k8s:element path="$..status.phase" value="Running"/>
+    </k8s:validate>
+  </k8s:list-pods>
+</repeat-onerror-until-true>
+----
+
+With this repeat on error action we wait for the new _server=hello-netty_ labeled pod to be in state _Running_.
+
+[[delete-resources]]
+=== Delete resources
+
+With that command we are able to delete a resource in Kubernetes.
+Up to now deletion of pods and services is supported.
+We have to give a name of the resource that we want to delete.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void deletePodsTest() {
+    kubernetes()
+        .pods()
+        .delete("citrus_pod")
+        .validate((result, context) -> Assert.assertTrue(result.getResult().getSuccess()));
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<k8s:delete-pod name="citrus_pod">
+    <k8s:validate>
+      <k8s:element path="$.result.success" value="true"/>
+    </k8s:validate>
+</k8s:delete-pod>
+----
+
+[[watch-resources]]
+=== Watch resources
+
+NOTE: The watch operation is still in experimental state and may face severe adjustments and improvements in near future.
+
+When using a watch command we add a subscription to change events on a Kubernetes resources.
+So we can watch resources such as pods, services for future changes.
+Each change on that resource triggers a new watch event result that we can expect and validate.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void listPodsTest() {
+    kubernetes()
+        .pods()
+        .watch()
+        .label("provider=citrus")
+        .validate((watchEvent, context) -> {
+            Assert.assertFalse(watchEvent.hasError());
+            Assert.assertEquals(((WatchEventResult) watchEvent).getAction(), Watcher.Action.DELETED);
+        });
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<k8s:watch-pods label="provider=citrus">
+    <k8s:validate>
+      <k8s:element path="$.action" value="DELETED"/>
+    </k8s:validate>
+</k8s:watch-pods>
+----
+
+NOTE: The watch command may be triggered several times for multiple changes on the respective Kubernetes resource.
+The watch action will always handle one single event result.
+The first event trigger is forwarded to the action validation.
+All further watch events on that same resource are ignored.
+This means that you may need multiple watch actions in your test case in case you expect multiple watch events to be triggered.
+
+[[kubernetes-command-bus]]
+== Kubernetes command bus
+
+We have seen how to access the Kubernetes remote REST API by using special Citrus test actions in a test.
+As an alternative to that we can also use more generic send/receive actions in Citrus for accessing the Kubernetes API.
+
+The next example shows this in action:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void kubernetesSendReceiveTest() {
+    send(k8sClient)
+        .message()
+        .body("""
+        { "command": "info" }
+        """);
+
+    receive(k8sClient)
+        .message()
+        .body("""
+        {
+          "command": "info",
+          "result": {
+            "clientVersion": "1.4.27",
+            "apiVersion": "v1",
+            "kind":"Info",
+            "masterUrl": "${masterUrl}",
+            "namespace": "test"
+          }
+        }
+        """);
+
+    send(k8sClient)
+        .message()
+        .body("""
+        { "command": "list-pods" }
+        """);
+
+    receive(k8sClient)
+        .message()
+        .body("""
+        {
+          "command": "list-pods",
+          "result": {
+            "apiVersion":"v1",
+            "kind":"PodList",
+            "metadata":"@ignore@",
+            "items":[]
+          }
+        }
+        """)
+        .validate(json().expression("$.result.items.size()", 0));
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<testcase name="KubernetesSendReceiveIT">
+    <actions>
+      <send endpoint="k8sClient">
+        <message>
+          <data>
+            { "command": "info" }
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="k8sClient">
+        <message type="json">
+          <data>
+          {
+            "command": "info",
+            "result": {
+                "clientVersion": "1.4.27",
+                "apiVersion": "v1",
+                "kind":"Info",
+                "masterUrl": "${masterUrl}",
+                "namespace": "test"
+            }
+          }
+          </data>
+        </message>
+      </receive>
+
+      <echo>
+        <message>List all pods</message>
+      </echo>
+
+      <send endpoint="k8sClient">
+        <message>
+          <data>
+            { "command": "list-pods" }
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="k8sClient">
+        <message type="json">
+          <data>
+          {
+            "command": "list-pods",
+            "result": {
+                  "apiVersion":"v1",
+                  "kind":"PodList",
+                  "metadata":"@ignore@",
+                  "items":[]
+            }
+          }
+          </data>
+          <validate path="$.result.items.size()" value="0"/>
+        </message>
+      </receive>
+    </actions>
+</testcase>
+----
+
+As you can see we can use the send/receive actions to call Kubernetes API commands and receive the respective results in Json format, too.
+This gives us the well known Json validation mechanism in Citrus in order to validate the results from Kubernetes.
+This way you can load Kubernetes resources verifying its state and properties.
+Of course JsonPath expressions also come in here in order to validate Json elements explicitly.

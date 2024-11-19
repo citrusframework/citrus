@@ -8,7 +8,7 @@ Chances are very high that Java developers are familiar with at least one of the
 with JUnit and TestNG you can do with Citrus tests as well (e.g. Maven build integration, run tests from your favorite IDE,
 include tests into a continuous build tool).
 
-NOTE: Why is Citrus related to unit test frameworks although it represents a framework for integration testing? The answer to this question is quite simple: This is because Citrus wants to benefit from standard libraries such as JUnit
+NOTE: Why is Citrus related to unit test frameworks, although it represents a framework for integration testing? The answer to this question is quite simple: This is because Citrus wants to benefit from standard libraries such as JUnit
 and TestNG for Java test execution. Both unit testing frameworks offer various ways of execution and are widely supported
 by other tools (e.g. continuous build, build lifecycle, development IDE).
 
@@ -44,3 +44,4 @@ include::runtimes-cucumber.adoc[]
 include::runtimes-quarkus.adoc[]
 include::runtimes-main.adoc[]
 include::runtimes-sharded.adoc[]
+include::runtimes-jbang.adoc[]

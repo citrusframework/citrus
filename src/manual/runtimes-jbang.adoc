@@ -1,0 +1,272 @@
+[[runtime-jbang]]
+== JBang
+
+You can run Citrus tests with JBang.
+Running Citrus via JBang does not require any project setup which is fantastic for fast prototyping of integration tests.
+This means you can just run your test case sources directly with:
+
+Given this very simple Java Citrus test:
+
+.MyTest.java
+[source,java,indent=0]
+----
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
+
+import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariables;
+import static org.citrusframework.actions.EchoAction.Builder.echo;
+
+public class MyTest implements Runnable {
+
+    @CitrusResource
+    GherkinTestActionRunner t;
+
+    @Override
+    public void run() {
+        t.given(
+            createVariables().variable("message", "Citrus rocks!")
+        );
+
+        t.then(
+            echo().message("${message}")
+        );
+    }
+}
+----
+
+You can now run this test Java class without any prior project setup using JBang:
+
+.Run MyTest.java
+[source,shell]
+----
+jbang citrus@citrusframework/citrus run MyTest.java
+----
+
+The command above uses the JBang catalog located on the https://github.com/citrusframework/citrus[Citrus GitHub repository].
+The command will automatically setup everything needed to run the Citrus test.
+
+The command output will be like this:
+
+.Output
+[source,shell]
+----
+===============================================
+Default Suite
+Total tests run: 1, Passes: 1, Failures: 0, Skips: 0
+===============================================
+----
+
+[[runtime-jbang-install]]
+=== Install Citrus JBang app
+
+For a more convenient way to use the Citrus JBang scripts you can install Citrus as a JBang app.
+
+.Install Citrus app
+[source,shell]
+----
+jbang trust add https://github.com/citrusframework/citrus/
+jbang install citrus@citrusframework/citrus
+----
+
+Now you can just call:
+
+.Run MyTest.java
+[source,shell]
+----
+citrus run MyTest.java
+----
+
+[[runtime-jbang-run]]
+=== Run tests
+
+You can directly run test sources with Citrus JBang.
+This includes test sources written in Java, XML, YAML, Cucumber.
+
+==== Java test sources
+
+.MyTest.java
+[source,java,indent=0]
+----
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
+
+import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariables;
+import static org.citrusframework.actions.EchoAction.Builder.echo;
+
+public class MyTest implements Runnable {
+
+    @CitrusResource
+    GherkinTestActionRunner t;
+
+    @Override
+    public void run() {
+        t.given(
+            createVariables().variable("message", "Citrus rocks!")
+        );
+
+        t.then(
+            echo().message("${message}")
+        );
+    }
+}
+----
+
+.Run MyTest.java
+[source,shell]
+----
+citrus run MyTest.java
+----
+
+==== XML test sources
+
+.my-test.xml
+[source,xml,indent=0]
+----
+<test name="EchoTest" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>Sample test in XML</description>
+  <variables>
+    <variable name="message" value="Citrus rocks!"/>
+  </variables>
+  <actions>
+    <echo message="${message}"/>
+  </actions>
+</test>
+----
+
+.Run my-test.xml
+[source,shell]
+----
+citrus run my-test.xml
+----
+
+==== YAML test sources
+
+.my-test.yaml
+[source,yaml,indent=0]
+----
+name: EchoTest
+description: "Sample test in YAML"
+variables:
+  - name: "message"
+    value: "Citrus rocks!"
+actions:
+  - echo:
+      message: "${message}"
+----
+
+.Run my-test.yaml
+[source,shell]
+----
+citrus run my-test.yaml
+----
+
+==== Groovy test sources
+
+.my-test.groovy
+[source,groovy,indent=0]
+----
+import static org.citrusframework.actions.EchoAction.Builder.echo
+
+name "EchoTest"
+description "Sample test in Groovy"
+
+variables {
+    message="Citrus rocks!"
+}
+
+actions {
+    $(echo().message('${message}'))
+}
+----
+
+.Run my-test.groovy
+[source,shell]
+----
+citrus run my-test.groovy
+----
+
+==== Cucumber feature sources
+
+.my-test.feature
+[source,gherkin,indent=0]
+----
+Feature: EchoTest
+
+  Background:
+    Given variables
+    | message | Citrus rocks! |
+
+  Scenario: Print message
+    Then print '${message}'
+----
+
+.Run my-test.feature
+[source,shell]
+----
+citrus run my-test.feature
+----
+
+NOTE: Many of the predefined Cucumber steps in Citrus are provided in a separate Citrus child project called https://github.com/citrusframework/yaks[YAKS].
+You may need to add additional project dependencies for that steps to be loaded as part of the JBang script.
+You may add the additional modules to the `jbang.properties` as described in the next section.
+
+[[runtime-jbang-dependencies]]
+=== Additional JBang dependencies
+
+Citrus JBang comes with a set of default dependencies that makes the scripts run as tests.
+
+The default modules that you can use in Citrus JBang are:
+
+* org.citrusframework:citrus-base
+* org.citrusframework:citrus-jbang-connector
+* org.citrusframework:citrus-groovy
+* org.citrusframework:citrus-xml
+* org.citrusframework:citrus-yaml
+* org.citrusframework:citrus-http
+* org.citrusframework:citrus-validation-json
+* org.citrusframework:citrus-validation-xml
+
+This enables you to run Java, YAML, XML, Groovy tests out of the box.
+In case your tests uses an additional feature from the Citrus project you may need to add the module so JBang can load the dependency at startup.
+
+The easiest way to do this is to create a `jbang.properties` file that defines the additional dependencies:
+
+.jbang.properties
+[source,properties]
+----
+# Declare required additional dependencies
+run.deps=org.citrusframework:citrus-camel:4.5.0-SNAPSHOT,org.citrusframework:citrus-testcontainers:4.5.0-SNAPSHOT,org.citrusframework:citrus-kafka:4.5.0-SNAPSHOT
+----
+
+The file above adds the modules `citrus-camel`, `citrus-testcontainers` and `citrus-kafka` so you can use them in your JBang Citrus test source.
+
+The `jbang.properties` file may be located right next to the test source file or in your user home directory for global settings.
+
+IMPORTANT: In case you want to run Cucumber BDD Gherkin feature files and use the predefined steps included in the https://github.com/citrusframework/yaks[YAKS] project,
+you need to add this YAKS runtime dependency accordingly: `org.citrusframework.yaks:yaks-runtime-core:0.21.0-SNAPSHOT`
+
+[[runtime-jbang-clipboard]]
+=== Run from clipboard
+
+You can run tests from your current clipboard.
+Just use the file name `clipboard.xxx` where the file extension defines the type of the test source (`.java`, `.yaml`, `.xml`, `.groovy`, `.feature`).
+
+.Run YAML test from Clipboard
+[source,shell]
+----
+citrus run clipboard.yaml
+----
+
+[[runtime-jbang-list]]
+=== List tests
+
+The `ls` command lists all running Citrus tests.
+These tests may be started
+
+.List running tests
+[source,shell]
+----
+citrus ls
+----

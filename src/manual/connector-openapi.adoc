@@ -1,5 +1,5 @@
 [[openapi]]
-== OpenAPI support
+= OpenAPI support
 
 https://www.openapis.org/[OpenAPI] is a popular specification language to describe HTTP APIs and its exposure to clients.
 Citrus is able to leverage the specification to auto generate client and server request/response message data.
@@ -19,7 +19,7 @@ NOTE: The OpenAPI support in Citrus get enabled by adding a separate Maven modul
 ----
 
 [[openapi-specification]]
-=== OpenAPI specification
+== OpenAPI specification
 
 The OpenAPI test actions in Citrus uses a specification which usually is a json or yaml document shared between the components.
 
@@ -30,7 +30,7 @@ Or you may just point the OpenAPI components to a local specification file.
 Citrus supports OpenAPI on both client and server components so the next sections will describe the usage for each of those.
 
 [[openapi-client]]
-=== OpenAPI client
+== OpenAPI client
 
 On the client side Citrus uses the OpenAPI specification to generate a proper HTTP request that is sent to the server.
 The user just gives a valid operationId from the specification every thing else is automatically generated.
@@ -221,7 +221,7 @@ This completes the client side OpenAPI support.
 Now let's have a closer look at the server side OpenAPI support in the next section.
 
 [[openapi-server]]
-=== OpenAPI server
+== OpenAPI server
 
 On the server side Citrus is able to verify incoming requests based on the OpenAPI specification.
 The expected request message content as well as the expected resource URL path and the Content-Type are automatically validated.

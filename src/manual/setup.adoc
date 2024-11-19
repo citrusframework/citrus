@@ -97,7 +97,7 @@ as creating new tests from command line.
 The Maven project is now ready to use Citrus. You can start writing new test cases with the Citrus Maven plugin:
 
 .Create new test
-[source,bash]
+[source,shell]
 ----
 mvn citrus:create-test
 ----
@@ -133,13 +133,13 @@ You are now ready to call the usual Maven *verify* goal (`mvn verify`) in order 
 The Citrus integration tests are executed automatically during the build process.
 
 .Run all tests with Maven
-[source,bash]
+[source,shell]
 ----
 mvn verify
 ----
 
 .Run single test by its name
-[source,bash]
+[source,shell]
 ----
 mvn verify -Dit.test=MyFirstCitrusIT
 ----
@@ -211,7 +211,7 @@ Of course JUnit is also supported. This completes the Gradle build configuration
 You can use the Gradle wrapper for compile, package and test the sample with Gradle build command line.
 
 .Run the build with Gradle
-[source,bash]
+[source,shell]
 ----
 gradlew clean build
 ----
@@ -221,7 +221,7 @@ This executes all Citrus test cases during the build. You will be able to see Ci
 If you just want to execute all tests you can call:
 
 .Run all tests
-[source,bash]
+[source,shell]
 ----
 gradlew clean check
 ----

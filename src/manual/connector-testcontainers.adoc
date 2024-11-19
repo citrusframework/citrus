@@ -1,0 +1,611 @@
+[[testcontainers]]
+= Testcontainers support
+
+https://testcontainers.com/[Testcontainers] leverage Docker containers in your tests to provide lightweight infrastructure instances such
+as databases, message brokers and web browsers. Anything that you can run in a Docker container is subject to be managed by Testcontainers in your test. Citrus as a framework is able to start/stop your Testcontainers instances as part of the test.
+
+NOTE: The Testcontainers support is enabled by adding a separate Maven module as a project dependency
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-testcontainers</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+[[testcontainers-action]]
+== Start and stop Testcontainers
+
+The Testcontainers test action runs a container and exposes its connection settings as test variables.
+You can start any Docker container image as a Testcontainers instance.
+The Testcontainers project provides many modules that represent different test infrastructure technologies.
+
+Each of those modules can be started in Citrus with a special test action:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void testcontainersTest() {
+    given(testcontainers()
+            .start()
+            .image("busybox:latest")
+            .containerName("busybox-container")
+            .withCommand("echo", "Hello", "World")
+            .withLabel("app", "citrus"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <testcontainers>
+          <start>
+            <container name="busybox-container" image="busybox:latest" command="echo Hello World">
+              <labels>
+                <label name="app" value="citrus"/>
+              </labels>
+            </container>
+          </start>
+        </testcontainers>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: TestcontainersTest
+actions:
+  - testcontainers:
+      start:
+        container:
+          name: "busybox-container"
+          image: "busybox:latest"
+          command: "echo Hello World"
+          labels:
+            - name: app
+              value: citrus
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+In the test example uses the Docker image name `busybox:latest` to start the Testcontainer instance.
+You can set labels, annotations as well as the command that is run as entry point when starting the container.
+
+You can also leverage the Testcontainers API to specify the container details:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void testcontainersTest() {
+    GenericContainer<?> busyBox = new GenericContainer("busybox:latest")
+                .withCommand("echo", "Hello World");
+
+    given(testcontainers()
+            .start()
+            .container("my-container", busyBox));
+}
+----
+
+IMPORTANT: The Citrus test automatically exposes connection details of the running Testcontainers instance.
+The connection settings get exposed in the form of test variables.
+
+These are the test variables that get exposed representing connection settings for the Testcontainers instance.
+
+|===
+|Variable
+
+| CITRUS_TESTCONTAINERS_<CONTAINER_NAME>_HOST
+| CITRUS_TESTCONTAINERS_<CONTAINER_NAME>_PORT
+| CITRUS_TESTCONTAINERS_<CONTAINER_NAME>_CONTAINER_IP
+| CITRUS_TESTCONTAINERS_<CONTAINER_NAME>_CONTAINER_ID
+| CITRUS_TESTCONTAINERS_<CONTAINER_NAME>_CONTAINER_NAME
+
+|===
+
+You can use these test variables in the test to access the details of the running Testcontainers instance.
+Special containers may expose additional connection settings such as user credentials, endpoint URLs, managed ports and so on.
+Read about this in the individual supported Testcontainers module sections that follow in this guide.
+
+NOTE: Each Testcontainers instance that is started from Citrus is automatically removed after the test. This is the default behavior. However, you can disable the auto removal by setting this system property or environment variable: `citrus.testcontainers.auto.remove.resources=false` or `CITRUS_TESTCONTAINERS_AUTO_REMOVE_RESOURCES=false`
+
+You can also disable the auto removal of the started Testcontainers started by Citrus:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void testcontainersTest() {
+    GenericContainer<?> busyBox = new GenericContainer("busybox:latest")
+                .withCommand("echo", "Hello World");
+
+    given(testcontainers()
+            .start()
+            .autoRemove(false)
+            .container("my-container", busyBox));
+}
+----
+
+This keeps the started Testcontainers instance running even after the test has finished.
+When the whole test suite is finished the Testcontainers library may automatically stop and remove the container.
+
+You can explicitly stop a running Testcontainers instance by its name with this test action:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void testcontainersTest() {
+    given(testcontainers()
+            .stop()
+            .containerName("busybox-container"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <testcontainers>
+          <stop name="busybox-container"/>
+        </testcontainers>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: TestcontainersTest
+actions:
+  - testcontainers:
+      stop:
+        name: "busybox-container"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+This is how you can manage any Docker image as a Testcontainers instance.
+Citrus also provides special support for test infrastructure Testcontainers modules such as:
+
+* PostgreSQL
+* MongoDB
+* LocalStack
+* Kafka
+* Redpanda
+
+The following sections deal with these special Testcontainers modules.
+
+[[testcontainers-postgresql]]
+== PostgreSQL
+
+You can start a PostgreSQL instance with the following test action.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void testcontainersTest() {
+    given(testcontainers()
+            .postgreSQL()
+            .start()
+            .initScript(Resources.create("db.init.sql")));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <testcontainers>
+          <start>
+            <postgresql>
+              <init-script file="classpath:db.init.sql"/>
+            </postgresql>
+          </start>
+        </testcontainers>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: TestcontainersTest
+actions:
+  - testcontainers:
+      start:
+        postgresql:
+          initScript:
+            file: "db.init.sql"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+In the test example the PostgreSQL Testcontainers module is started.
+The given init script is used to initialize the database on startup.
+
+Citrus exposes special test variables that represent connection settings for the PostgreSQL container:
+
+|===
+|Variable
+
+| CITRUS_TESTCONTAINERS_POSTGRESQL_HOST
+| CITRUS_TESTCONTAINERS_POSTGRESQL_CONTAINER_IP
+| CITRUS_TESTCONTAINERS_POSTGRESQL_CONTAINER_ID
+| CITRUS_TESTCONTAINERS_POSTGRESQL_CONTAINER_NAME
+| CITRUS_TESTCONTAINERS_POSTGRESQL_SERVICE_PORT
+| CITRUS_TESTCONTAINERS_POSTGRESQL_PORT
+| CITRUS_TESTCONTAINERS_POSTGRESQL_LOCAL_URL
+| CITRUS_TESTCONTAINERS_POSTGRESQL_SERVICE_LOCAL_URL
+| CITRUS_TESTCONTAINERS_POSTGRESQL_SERVICE_NAME
+| CITRUS_TESTCONTAINERS_POSTGRESQL_SERVICE_URL
+| CITRUS_TESTCONTAINERS_POSTGRESQL_URL
+| CITRUS_TESTCONTAINERS_POSTGRESQL_DRIVER
+| CITRUS_TESTCONTAINERS_POSTGRESQL_DB_NAME
+| CITRUS_TESTCONTAINERS_POSTGRESQL_USERNAME
+| CITRUS_TESTCONTAINERS_POSTGRESQL_PASSWORD
+
+|===
+
+In addition to that the Citrus test action exposes a DataSource that connects to the PostgreSQL database and binds it as abean to the Citrus registry.
+This means that you can resolve the data source bean via the test context reference resolver.
+
+NOTE: You can set the name of the exposed data source bean on each Citrus Testcontainers test action for PostgreSQL.
+By default, Citrus exposed the data source bean with the name `postgreSQL`.
+
+[[testcontainers-mongodb]]
+== MongoDB
+
+You can start a MongoDB instance with the following test action.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void testcontainersTest() {
+    given(testcontainers()
+            .mongodb()
+            .start());
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <testcontainers>
+          <start>
+            <mongodb/>
+          </start>
+        </testcontainers>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: TestcontainersTest
+actions:
+  - testcontainers:
+      start:
+        mongodb: {}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+In the test example the MongoDB Testcontainers module is started.
+Citrus exposes special test variables that represent connection settings for the MongoDB container:
+
+|===
+|Variable
+
+| CITRUS_TESTCONTAINERS_MONGODB_HOST
+| CITRUS_TESTCONTAINERS_MONGODB_CONTAINER_IP
+| CITRUS_TESTCONTAINERS_MONGODB_CONTAINER_ID
+| CITRUS_TESTCONTAINERS_MONGODB_CONTAINER_NAME
+| CITRUS_TESTCONTAINERS_MONGODB_LOCAL_URL
+| CITRUS_TESTCONTAINERS_MONGODB_SERVICE_PORT
+| CITRUS_TESTCONTAINERS_MONGODB_PORT
+| CITRUS_TESTCONTAINERS_MONGODB_SERVICE_LOCAL_URL
+| CITRUS_TESTCONTAINERS_MONGODB_SERVICE_NAME
+| CITRUS_TESTCONTAINERS_MONGODB_SERVICE_URL
+| CITRUS_TESTCONTAINERS_MONGODB_URL
+| CITRUS_TESTCONTAINERS_MONGODB_CONNECTION_STRING
+
+|===
+
+You can use these test variables to connect to the MongoDB Testcontainers instance.
+
+[[testcontainers-localstack]]
+== LocalStack
+
+The LocalStack Testcontainers module allows you to start lightweight Amazon WebServices such as AWS S3, AWS SQS, AWS SNS or AWS Kinesis.
+You can start a LocslStack instance with the following test action.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void testcontainersTest() {
+    given(testcontainers()
+            .localstack()
+            .start()
+            .withService(LocalStackContainer.Service.S3));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <testcontainers>
+          <start>
+            <localstack services="S3"/>
+          </start>
+        </testcontainers>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: TestcontainersTest
+actions:
+  - testcontainers:
+      start:
+        localstack:
+          services:
+            - "S3"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+Each LocalStack instance receives a list of enables services.
+In the example above the AWS S3 service is enabled.
+
+Citrus exposes special test variables that represent connection settings for the LocalStack container:
+
+|===
+|Variable
+
+| CITRUS_TESTCONTAINERS_LOCALSTACK_HOST
+| CITRUS_TESTCONTAINERS_LOCALSTACK_CONTAINER_IP
+| CITRUS_TESTCONTAINERS_LOCALSTACK_CONTAINER_ID
+| CITRUS_TESTCONTAINERS_LOCALSTACK_CONTAINER_NAME
+| CITRUS_TESTCONTAINERS_LOCALSTACK_REGION
+| CITRUS_TESTCONTAINERS_LOCALSTACK_ACCESS_KEY
+| CITRUS_TESTCONTAINERS_LOCALSTACK_SECRET_KEY
+| CITRUS_TESTCONTAINERS_LOCALSTACK_SERVICE_PORT
+| CITRUS_TESTCONTAINERS_LOCALSTACK_SERVICE_LOCAL_URL
+| CITRUS_TESTCONTAINERS_LOCALSTACK_SERVICE_NAME
+| CITRUS_TESTCONTAINERS_LOCALSTACK_SERVICE_URL
+
+|===
+
+For each enabled service on the LocalStack instance these variables are exposed:
+
+|===
+|Variable
+
+| CITRUS_TESTCONTAINERS_LOCALSTACK_<SERVICE_NAME>_URL
+| CITRUS_TESTCONTAINERS_LOCALSTACK_<SERVICE_NAME>_LOCAL_URL
+| CITRUS_TESTCONTAINERS_LOCALSTACK_<SERVICE_NAME>_PORT
+
+|===
+
+You can use these test variables to connect to the LocalStack Testcontainers instance.
+As an example this S3 client connects to the LocalStack Testcontainers instance and creates a test bucket:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+private S3Client createS3Client(TestContext context) {
+    S3Client s3 = S3Client
+            .builder()
+            .endpointOverride(URI.create(context.getVariable("${CITRUS_TESTCONTAINERS_LOCALSTACK_S3_URL}")))
+            .credentialsProvider(StaticCredentialsProvider.create(
+                    AwsBasicCredentials.create(
+                            context.getVariable("${CITRUS_TESTCONTAINERS_LOCALSTACK_ACCESS_KEY}"),
+                            context.getVariable("${CITRUS_TESTCONTAINERS_LOCALSTACK_SECRET_KEY}"))
+            ))
+            .forcePathStyle(true)
+            .region(Region.of(context.getVariable("${CITRUS_TESTCONTAINERS_LOCALSTACK_REGION}")))
+            .build();
+
+    s3.createBucket(b -> b.bucket(context.getVariable("${aws.s3.bucketNameOrArn}")));
+
+    return s3;
+}
+----
+
+NOTE: You can access the Citrus TesContext via `@CitrusResource` injection in your test class or method.
+
+[[testcontainers-kafka]]
+== Kafka
+
+You can start a Kafka instance with the following test action.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void testcontainersTest() {
+    given(testcontainers()
+            .kafka()
+            .start());
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <testcontainers>
+          <start>
+            <kafka/>
+          </start>
+        </testcontainers>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: TestcontainersTest
+actions:
+  - testcontainers:
+      start:
+        kafka: {}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+In the test example the Kafka Testcontainers module is started.
+Citrus exposes special test variables that represent connection settings for the Kafka container:
+
+|===
+|Variable
+
+| CITRUS_TESTCONTAINERS_KAFKA_HOST
+| CITRUS_TESTCONTAINERS_KAFKA_CONTAINER_IP
+| CITRUS_TESTCONTAINERS_KAFKA_CONTAINER_ID
+| CITRUS_TESTCONTAINERS_KAFKA_CONTAINER_NAME
+| CITRUS_TESTCONTAINERS_KAFKA_LOCAL_BOOTSTRAP_SERVERS
+| CITRUS_TESTCONTAINERS_KAFKA_SERVICE_PORT
+| CITRUS_TESTCONTAINERS_KAFKA_PORT
+| CITRUS_TESTCONTAINERS_KAFKA_SERVICE_LOCAL_BOOTSTRAP_SERVERS
+| CITRUS_TESTCONTAINERS_KAFKA_SERVICE_NAME
+| CITRUS_TESTCONTAINERS_KAFKA_SERVICE_BOOTSTRAP_SERVERS
+| CITRUS_TESTCONTAINERS_KAFKA_BOOTSTRAP_SERVERS
+
+|===
+
+You can use these test variables to connect to the Kafka Testcontainers instance.
+
+[[testcontainers-redpanda]]
+== Redpanda
+
+You can start a Redpanda instance with the following test action.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void testcontainersTest() {
+    given(testcontainers()
+            .redpanda()
+            .start());
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <testcontainers>
+          <start>
+            <redpanda/>
+          </start>
+        </testcontainers>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: TestcontainersTest
+actions:
+  - testcontainers:
+      start:
+        redpanda: {}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+In the test example the Redpanda Testcontainers module is started.
+Citrus exposes special test variables that represent connection settings for the Redpanda container:
+
+|===
+|Variable
+
+| CITRUS_TESTCONTAINERS_REDPANDA_HOST
+| CITRUS_TESTCONTAINERS_REDPANDA_CONTAINER_IP
+| CITRUS_TESTCONTAINERS_REDPANDA_CONTAINER_ID
+| CITRUS_TESTCONTAINERS_REDPANDA_CONTAINER_NAME
+| CITRUS_TESTCONTAINERS_REDPANDA_LOCAL_BOOTSTRAP_SERVERS
+| CITRUS_TESTCONTAINERS_REDPANDA_SERVICE_PORT
+| CITRUS_TESTCONTAINERS_REDPANDA_PORT
+| CITRUS_TESTCONTAINERS_REDPANDA_SERVICE_LOCAL_BOOTSTRAP_SERVERS
+| CITRUS_TESTCONTAINERS_REDPANDA_SERVICE_NAME
+| CITRUS_TESTCONTAINERS_REDPANDA_SERVICE_BOOTSTRAP_SERVERS
+| CITRUS_TESTCONTAINERS_REDPANDA_BOOTSTRAP_SERVERS
+
+|===
+
+You can use these test variables to connect to the Redpanda Testcontainers instance.

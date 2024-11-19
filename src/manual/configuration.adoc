@@ -136,7 +136,7 @@ properties directly. The location of the `citrus-application.properties` file is
 `citrus.application.properties or environment variable `CITRUS_APPLICATION_PROPERTIES`.
           `
 .Custom property file location.
-[source,bash]
+[source,shell]
 ----
 CITRUS_APPLICATION_PROPERTIES=file:/custom/path/to/citrus-application.properties
 ----

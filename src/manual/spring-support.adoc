@@ -27,7 +27,7 @@ The location of this file can be customized by setting a System property `citrus
 variable `CITRUS_SPRING_APPLICATION_CONTEXT`.
 
 .Custom Spring XML bean definition context.
-[source,bash]
+[source,shell]
 ----
 CITRUS_SPRING_APPLICATION_CONTEXT=file:/custom/path/to/custom-beans.xml
 ----
@@ -69,7 +69,7 @@ configuration class. Please define the configuration class with the System prope
 the environment variable `CITRUS_SPRING_JAVA_CONFIG`.
 
 .Custom Spring Java configuration class.
-[source,bash]
+[source,shell]
 ----
 CITRUS_SPRING_JAVA_CONFIG=custom.package.to.MyCustomConfig
 ----

@@ -21,13 +21,13 @@ the test (e.g. JUnit or TestNG). This Java file does not have any test logic and
 the Java file from Citrus (e.g. Maven plugin).
 
 .Generate test files via Maven plugin
-[source,bash]
+[source,shell]
 ----
 mvn citrus:create-test
 ----
 
 .Interactive test creation
-[source,bash]
+[source,shell]
 ----
 Enter test name:: MyFirstCitrus_IT
 Enter test author: Unknown::

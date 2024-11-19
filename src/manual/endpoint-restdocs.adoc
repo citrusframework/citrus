@@ -80,7 +80,7 @@ target/citrus-docs
 The example above is the result of three test cases each of them performing a client Http request/response communication. Each test message exchange is documented with separate files:
 
 .curl-request.adoc
-[source,bash]
+[source,shell]
 ----
 $ curl 'http://localhost:8080/test' -i -X POST -H 'Accept: application/xml' -H 'CustomHeaderId: 123456789' -H 'Content-Type: application/xml;charset=UTF-8' -H 'Accept-Charset: utf-8' -d '<testRequestMessage>
     <text>Hello HttpServer>/text>
