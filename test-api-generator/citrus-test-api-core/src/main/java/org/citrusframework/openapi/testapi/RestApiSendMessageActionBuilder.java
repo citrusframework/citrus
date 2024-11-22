@@ -16,7 +16,19 @@
 
 package org.citrusframework.openapi.testapi;
 
+import static java.lang.String.format;
+import static org.citrusframework.openapi.util.OpenApiUtils.createFullPathOperationIdentifier;
+import static org.citrusframework.util.FileUtils.getDefaultCharset;
+import static org.citrusframework.util.StringUtils.isEmpty;
+
 import jakarta.servlet.http.Cookie;
+import java.lang.reflect.Array;
+import java.net.URLEncoder;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -27,24 +39,10 @@ import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiClientRequestActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiSpecificationSource;
 import org.citrusframework.spi.Resource;
-import org.citrusframework.spi.Resources;
+import org.citrusframework.spi.Resources.ClasspathResource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
-import java.lang.reflect.Array;
-import java.net.URLEncoder;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
-
-import static java.lang.String.format;
-import static org.citrusframework.openapi.util.OpenApiUtils.createFullPathOperationIdentifier;
-import static org.citrusframework.util.FileUtils.copyToByteArray;
-import static org.citrusframework.util.FileUtils.getDefaultCharset;
-import static org.citrusframework.util.StringUtils.isEmpty;
 
 public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionBuilder {
 
@@ -88,7 +86,7 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
         this.generatedApi = generatedApi;
         this.customizers = generatedApi.getCustomizers();
 
-        endpoint(generatedApi.getEndpoint());
+
 
         httpMessage.path(path);
 
@@ -208,6 +206,12 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
 
     @Override
     public SendMessageAction doBuild() {
+
+        // If no endpoint was set explicitly, use the default endpoint given by api
+        if (getEndpoint() == null && getEndpointUri() == null) {
+            endpoint(generatedApi.getEndpoint());
+        }
+
         if (!formParameters.isEmpty()) {
             getMessageBuilderSupport().body(formParameters);
         }
@@ -215,29 +219,20 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
         return super.doBuild();
     }
 
-    protected byte[] toBinary(Object object) {
+    protected Object toBinary(Object object) {
         if (object instanceof byte[] bytes) {
             return bytes;
         } else if (object instanceof Resource resource) {
-            return copyToByteArray(resource.getInputStream());
-        } else if (object instanceof String string) {
-
-            Resource resource = Resources.create(string);
-            if (resource != null && resource.exists()) {
-                return toBinary(resource);
-            }
-
-            try {
-                return Base64.getDecoder().decode(string);
-            } catch (IllegalArgumentException e) {
-                // Ignore decoding failure and treat as regular string
-            }
-
-            return string.getBytes(getDefaultCharset());
+            return new ClasspathResource(resource.getLocation());
+        }else if (object instanceof org.springframework.core.io.Resource resource) {
+            return resource;
+        } else if (object instanceof String location) {
+            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            return resolver.getResource(location);
         }
 
         throw new IllegalArgumentException(
-                "Cannot convert object to byte array. Only byte[], Resource, and String are supported: "
+                "Cannot convert object to binary. Only byte[], Resource, and String are supported: "
                         + object.getClass());
     }
 
@@ -257,7 +252,8 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
         return value;
     }
 
-    public static final class TestApiClientRequestMessageBuilder extends OpenApiClientRequestMessageBuilder {
+    public static final class TestApiClientRequestMessageBuilder extends
+        OpenApiClientRequestMessageBuilder {
 
         private final Map<String, ParameterData> pathParameters = new HashMap<>();
 

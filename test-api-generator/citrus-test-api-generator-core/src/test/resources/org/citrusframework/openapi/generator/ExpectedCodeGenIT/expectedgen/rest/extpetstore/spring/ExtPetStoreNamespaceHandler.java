@@ -1,20 +1,19 @@
 package org.citrusframework.openapi.generator.rest.extpetstore.spring;
 
+import static org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStoreOpenApi.extPetStoreSpecification;
+
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.testapi.RestApiSendMessageActionBuilder;
 import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.generator.rest.extpetstore.request.ExtPetApi;
 import org.citrusframework.openapi.testapi.spring.RestApiReceiveMessageActionParser;
 import org.citrusframework.openapi.testapi.spring.RestApiSendMessageActionParser;
-import org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStore;
+import org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStoreOpenApi;
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:44.158583300+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-19T06:57:24.834965400+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class ExtPetStoreNamespaceHandler extends NamespaceHandlerSupport {
-
-    private final OpenApiSpecification openApiSpecification = OpenApiSpecification.from(
-        ExtPetStore.extPetStoreApi());
 
     @Override
     public void init() {
@@ -42,6 +41,12 @@ public class ExtPetStoreNamespaceHandler extends NamespaceHandlerSupport {
                 ExtPetApi.GetPetByIdWithBearerAuthenticationReceiveActionBuilder.class,
                 new String[]{ "petId", "allDetails" },
             new String[]{ "details", "requesterInformation", "basicAuthBearer" });
+
+            registerOperationParsers(ExtPetApi.class,"get-pet-by-uuid", "getPetByUuid", "/pet/simple/object/uuid/{petUuid}",
+                ExtPetApi.GetPetByUuidSendActionBuilder.class,
+                ExtPetApi.GetPetByUuidReceiveActionBuilder.class,
+                new String[]{ "petUuid" },
+            new String[]{  });
 
             registerOperationParsers(ExtPetApi.class,"get-pet-with-cookie", "getPetWithCookie", "/pet/{petId}",
                 ExtPetApi.GetPetWithCookieSendActionBuilder.class,
@@ -224,7 +229,7 @@ public class ExtPetStoreNamespaceHandler extends NamespaceHandlerSupport {
         String[] constructorParameters,
         String[] nonConstructorParameters) {
 
-        RestApiSendMessageActionParser sendParser = new RestApiSendMessageActionParser(openApiSpecification, operationName,
+        RestApiSendMessageActionParser sendParser = new RestApiSendMessageActionParser(extPetStoreSpecification, operationName,
             path,
             apiClass,
             sendBeanClass,
@@ -234,7 +239,7 @@ public class ExtPetStoreNamespaceHandler extends NamespaceHandlerSupport {
         sendParser.setNonConstructorParameters(nonConstructorParameters);
         registerBeanDefinitionParser("send-"+elementName, sendParser);
 
-        RestApiReceiveMessageActionParser receiveParser = new RestApiReceiveMessageActionParser(openApiSpecification,
+        RestApiReceiveMessageActionParser receiveParser = new RestApiReceiveMessageActionParser(extPetStoreSpecification,
         operationName, apiClass, receiveBeanClass, "extpetstore.endpoint");
         registerBeanDefinitionParser("receive-"+elementName, receiveParser);
     }

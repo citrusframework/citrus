@@ -155,7 +155,7 @@
     <project.docs.version>${project.version}</project.docs.version>
     <java.version>17</java.version>
 
-    <maven.version>3.9.6</maven.version>
+    <maven.version>3.9.9</maven.version>
     <maven.compiler.version>3.11.0</maven.compiler.version>
     <maven.compiler.release>${java.version}</maven.compiler.release>
     <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -174,7 +174,7 @@
     <maven.jar.plugin.version>3.3.0</maven.jar.plugin.version>
     <maven.javadoc.plugin.version>3.11.2</maven.javadoc.plugin.version>
     <maven.nexus-staging.plugin.version>1.6.13</maven.nexus-staging.plugin.version>
-    <maven.plugin.plugin.version>3.9.0</maven.plugin.plugin.version>
+    <maven.plugin.plugin.version>3.15.1</maven.plugin.plugin.version>
     <maven.plugin.annotations.version>3.13.1</maven.plugin.annotations.version>
     <maven.plugin.testing.harness.version>3.3.0</maven.plugin.testing.harness.version>
     <maven.release.plugin.version>3.0.1</maven.release.plugin.version>
@@ -252,7 +252,8 @@
     <mockftpserver.version>3.2.0</mockftpserver.version>
     <netty.version>4.1.105.Final</netty.version>
     <okhttp.version>4.12.0</okhttp.version>
-    <org.openapitools.version>7.5.0</org.openapitools.version>
+    <org.openapitools.version>7.9.0</org.openapitools.version>
+    <jackson-databind-nullable>0.2.6</jackson-databind-nullable>
     <picoli-version>4.7.6</picoli-version>
     <postgresql.version>42.7.4</postgresql.version>
     <quarkus.platform.version>3.17.4</quarkus.platform.version>
@@ -1006,6 +1007,11 @@
         <groupId>com.fasterxml.jackson.dataformat</groupId>
         <artifactId>jackson-dataformat-yaml</artifactId>
         <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openapitools</groupId>
+        <artifactId>jackson-databind-nullable</artifactId>
+        <version>${jackson-databind-nullable}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.module</groupId>

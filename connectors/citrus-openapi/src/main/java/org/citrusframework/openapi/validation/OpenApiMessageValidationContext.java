@@ -23,13 +23,24 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
      */
     private final boolean schemaValidation;
 
+    private final String openApiSpecificationId;
+
+    private final String operationId;
+
     public OpenApiMessageValidationContext(Builder builder) {
         super();
 
-        // If not explicitly specified, goe for the default.
+        // If not explicitly specified, go for the default.
         this.schemaValidation = builder.schemaValidation != null ? builder.schemaValidation
                 : builder.openApiSpecification.isApiRequestValidationEnabled()
                 || builder.openApiSpecification.isApiResponseValidationEnabled();
+        this.openApiSpecificationId = builder.openApiSpecificationId;
+        this.operationId = builder.operationId;
+    }
+
+    @Override
+    public boolean requiresValidator() {
+        return true;
     }
 
     @Override
@@ -39,12 +50,12 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
 
     @Override
     public String getSchemaRepository() {
-        return null;
+        return openApiSpecificationId;
     }
 
     @Override
     public String getSchema() {
-        return null;
+        return operationId;
     }
 
     /**
@@ -55,6 +66,10 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
             SchemaValidationContext.Builder<OpenApiMessageValidationContext.Builder> {
 
         private OpenApiSpecification openApiSpecification;
+
+        private String openApiSpecificationId;
+
+        private String operationId;
 
         /**
          * Mapped as object to be able to indicate "not explicitly set" in which case the default is
@@ -71,12 +86,8 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
             return builder;
         }
 
-        public OpenApiMessageValidationContext.Builder expressions() {
-            return new OpenApiMessageValidationContext.Builder();
-        }
-
-        public OpenApiMessageValidationContext.Builder expression(String path, Object expectedValue) {
-            return new OpenApiMessageValidationContext.Builder().expression(path, expectedValue);
+        public static OpenApiMessageValidationContext.Builder openApi() {
+            return new Builder();
         }
 
         /**
@@ -88,18 +99,20 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
         }
 
         /**
-         * Not used for open api validation. Schema is automatically be derived from associated openApiSpecification.
+         * Not used for open api validation. Schema is automatically derived from associated openApiSpecification.
          */
         @Override
         public OpenApiMessageValidationContext.Builder schema(final String schemaName) {
+            this.operationId = schemaName;
             return this;
         }
 
         /**
-         * Not used for open api validation. Schema is automatically be derived from associated openApiSpecification.
+         * Not used for open api validation. Schema is automatically derived from associated openApiSpecification.
          */
         @Override
         public OpenApiMessageValidationContext.Builder schemaRepository(final String schemaRepository) {
+            openApiSpecificationId = schemaRepository;
             return this;
         }
 

@@ -70,6 +70,11 @@ public class ScriptValidationContext extends DefaultValidationContext {
         this.scriptType = builder.scriptType;
     }
 
+    @Override
+    public boolean requiresValidator() {
+        return true;
+    }
+
     /**
      * Constructs the actual validation script either from data or external resource.
      * @param context the current TestContext.

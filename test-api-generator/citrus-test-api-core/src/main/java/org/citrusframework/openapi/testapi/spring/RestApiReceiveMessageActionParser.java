@@ -24,21 +24,26 @@ import org.citrusframework.http.actions.HttpClientResponseActionBuilder.HttpMess
 import org.citrusframework.http.config.xml.HttpReceiveResponseActionParser;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
+import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiClientResponseActionBuilder.OpenApiClientResponseMessageBuilder;
 import org.citrusframework.openapi.actions.OpenApiSpecificationSource;
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.context.ValidationContext;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.w3c.dom.Element;
 
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
 import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
 import static org.springframework.beans.factory.support.BeanDefinitionBuilder.genericBeanDefinition;
 
@@ -49,6 +54,7 @@ import static org.springframework.beans.factory.support.BeanDefinitionBuilder.ge
  */
 public class RestApiReceiveMessageActionParser extends HttpReceiveResponseActionParser {
 
+    public static final String STATUS_CODE = "responseCode";
     /**
      * The generated api bean class.
      */
@@ -92,13 +98,24 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
         BeanDefinition beanDefinition = beanDefinitionBuilder.getBeanDefinition();
         OpenApiClientResponseMessageBuilder messageBuilder = (OpenApiClientResponseMessageBuilder) beanDefinition.getPropertyValues()
                 .get("messageBuilder");
-        messageBuilder.statusCode(element.getAttribute("statusCode"));
+
+        String statusCodeString = element.getAttribute(STATUS_CODE);
+        messageBuilder.statusCode(statusCodeString);
+
+        if (StringUtils.isNotEmpty(statusCodeString) &&  messageBuilder.getMessage() != null ) {
+            try {
+                HttpStatusCode httpStatusCode = HttpStatusCode.valueOf(
+                    parseInt(statusCodeString));
+                messageBuilder.getMessage().status(httpStatusCode);
+            } catch (Exception e) {
+                // Ignore
+            }
+        }
 
         beanDefinition.getPropertyValues().removePropertyValue("messageBuilder");
 
         BeanDefinitionBuilder actionBuilder = genericBeanDefinition(beanClass);
         actionBuilder.addConstructorArgValue(new RuntimeBeanReference(apiBeanClass));
-        actionBuilder.addConstructorArgValue(openApiSpecification);
         actionBuilder.addConstructorArgValue(messageBuilder);
 
         beanDefinitionBuilder.addConstructorArgValue(actionBuilder.getBeanDefinition());
@@ -110,8 +127,9 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
     /**
      * Sets the default endpoint for the message if not already specified.
      */
-    private void setDefaultEndpoint(BeanDefinitionBuilder beanDefinitionBuilder) {
-        if (!beanDefinitionBuilder.getBeanDefinition().getPropertyValues().contains("endpoint")) {
+    protected void setDefaultEndpoint(BeanDefinitionBuilder beanDefinitionBuilder) {
+        if (!beanDefinitionBuilder.getBeanDefinition().getPropertyValues().contains("endpoint")
+            && !beanDefinitionBuilder.getBeanDefinition().getPropertyValues().contains("endpointUri")) {
             beanDefinitionBuilder.addPropertyReference("endpoint", defaultApiEndpointName);
         }
     }

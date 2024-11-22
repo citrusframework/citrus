@@ -19,13 +19,13 @@
                 <variable name="petId" value="1234"/>
             </create-variables>
 
-            <petstore:send-get-pet-by-id petId="${petId}" fork="true" uri="http://localhost:${petstoreApplicationPort}"/>
+            <petstore:send-get-pet-by-id petId="${petId}" fork="true" uri="http://localhost:${otherPetstoreApplicationPort}"/>
 
-            <http:receive-request server="httpServer">
+            <http:receive-request server="otherHttpServer">
                 <http:GET path="/api/v3/pet/1234"/>
             </http:receive-request>
 
-            <http:send-response server="httpServer">
+            <http:send-response server="otherHttpServer">
                 <http:headers status="200" reason-phrase="OK">
                     <http:header name="Content-Type" value="application/json"/>
                 </http:headers>
@@ -34,7 +34,7 @@
                 </http:body>
             </http:send-response>
 
-            <petstore:receive-get-pet-by-id responseCode="200">
+            <petstore:receive-get-pet-by-id responseCode="200" uri="http://localhost:${otherPetstoreApplicationPort}">
                 <http:body>
                     <http:validate>
                         <http:json-path expression="$.name" value="@matches('hasso|cutie|fluffy')@"/>

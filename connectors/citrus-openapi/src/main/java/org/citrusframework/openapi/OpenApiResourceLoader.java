@@ -71,11 +71,25 @@ public final class OpenApiResourceLoader {
     }
 
     /**
+     * Loads the specification from an open api string.
+     */
+    public static OasDocument fromString(String openApi) {
+        return resolve(openApi, OAS_RESOLVER);
+    }
+
+    /**
      * Loads the raw specification from a file resource. Either classpath or file system resource path is supported.
      */
     public static String rawFromFile(String resource) {
         return fromFile(getFileResource(resource),
                 RAW_RESOLVER);
+    }
+
+    /**
+     * Loads the raw specification from an open api string.
+     */
+    public static String rawFromString(String openApi) {
+        return resolve(openApi, RAW_RESOLVER);
     }
 
     /**
@@ -192,12 +206,12 @@ public final class OpenApiResourceLoader {
         }
     }
 
-    private static <T> T resolve(String specification, Resolver<T> resolver) {
-        if (isJsonSpec(specification)) {
-            return resolver.resolveFromString(specification);
+    private static <T> T resolve(String openApi, Resolver<T> resolver) {
+        if (isJsonSpec(openApi)) {
+            return resolver.resolveFromString(openApi);
         }
 
-        final JsonNode node = OpenApiSupport.json().convertValue(OpenApiSupport.yaml().load(specification), JsonNode.class);
+        final JsonNode node = OpenApiSupport.json().convertValue(OpenApiSupport.yaml().load(openApi), JsonNode.class);
         return resolver.resolveFromNode(node);
     }
 

@@ -23,6 +23,7 @@ import org.citrusframework.openapi.OpenApiMessageType;
 import org.citrusframework.openapi.OpenApiSpecification;
 
 import static org.citrusframework.openapi.OpenApiMessageHeaders.OAS_MESSAGE_TYPE;
+import static org.citrusframework.openapi.OpenApiMessageHeaders.OAS_SPECIFICATION_ID;
 import static org.citrusframework.openapi.OpenApiMessageHeaders.OAS_UNIQUE_OPERATION_ID;
 
 /**
@@ -50,6 +51,7 @@ public class OpenApiOperationToMessageHeadersProcessor implements MessageProcess
         openApiSpecification
                 .getOperation(operationId, context)
                 .ifPresent(operationPathAdapter -> {
+                    message.setHeader(OAS_SPECIFICATION_ID, openApiSpecification.getUid());
                     // Store the uniqueId of the operation, rather than the operationId, to avoid clashes.
                     message.setHeader(OAS_UNIQUE_OPERATION_ID, operationPathAdapter.uniqueOperationId());
                     message.setHeader(OAS_MESSAGE_TYPE, type.toHeaderName());

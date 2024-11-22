@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * Category
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:43.309584600+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-23T14:15:17.563204500+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class Category {
   private Long id;
 
@@ -39,10 +39,10 @@ public class Category {
     return this;
   }
 
-   /**
+  /**
    * Get id
    * @return id
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public Long getId() {
@@ -54,17 +54,16 @@ public class Category {
     this.id = id;
   }
 
-
   public Category _name(String _name) {
     
     this._name = _name;
     return this;
   }
 
-   /**
+  /**
    * Get _name
    * @return _name
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public String getName() {
