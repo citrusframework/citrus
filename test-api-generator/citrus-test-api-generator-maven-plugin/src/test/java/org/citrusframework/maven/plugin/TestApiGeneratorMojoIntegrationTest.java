@@ -1,6 +1,34 @@
 package org.citrusframework.maven.plugin;
 
+import static com.google.common.collect.Streams.concat;
+import static java.lang.Boolean.TRUE;
+import static java.util.Arrays.stream;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.CITRUS_TEST_SCHEMA;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVars;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVarsToLowerCase;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.util.ReflectionTestUtils.getField;
+
 import jakarta.validation.constraints.NotNull;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
@@ -11,76 +39,84 @@ import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiConfig;
 import org.citrusframework.maven.plugin.stubs.CitrusOpenApiGeneratorMavenProjectStub;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static com.google.common.collect.Streams.concat;
-import static java.lang.Boolean.TRUE;
-import static java.util.Arrays.stream;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.CITRUS_TEST_SCHEMA;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVars;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVarsToLowerCase;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.springframework.test.util.ReflectionTestUtils.getField;
+import org.mockito.ArgumentCaptor;
+import org.openapitools.codegen.plugin.CodeGenMojo;
+import org.springframework.test.util.ReflectionTestUtils;
 
 public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
 
     public static final String OTHER_META_FILE_CONTENT = "somenamespace=somevalue";
 
-    public static final String OTHER_CITRUS_META_FILE_CONTENT = String.format("somenamespace/%s/aa=somevalue", CITRUS_TEST_SCHEMA);
+    public static final String OTHER_CITRUS_META_FILE_CONTENT = String.format(
+        "somenamespace/%s/aa=somevalue", CITRUS_TEST_SCHEMA);
 
     /**
-     * Array containing path templates for each generated file, specified with tokens. Tokens can be replaced with values of the respective
-     * testing scenario.
+     * Array containing path templates for each generated file, specified with tokens. Tokens can be
+     * replaced with values of the respective testing scenario.
      */
     private static final String[] STANDARD_FILE_PATH_TEMPLATES = new String[]{
-            "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%INVOKER_FOLDER%/%CAMEL_PREFIX%.java",
-            "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%INVOKER_FOLDER%/spring/%CAMEL_PREFIX%NamespaceHandler.java",
-            "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%INVOKER_FOLDER%/spring/%CAMEL_PREFIX%BeanConfiguration.java",
-            "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%MODEL_FOLDER%/PingReqType.java",
-            "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%MODEL_FOLDER%/PingRespType.java",
-            "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%REQUEST_FOLDER%/PingApi.java",
-            "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%REQUEST_FOLDER%/PungApi.java",
-            "%TARGET_FOLDER%/%GENERATED_RESOURCES_FOLDER%/%SCHEMA_FOLDER%/%LOWER_PREFIX%-api.xsd"
+        "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%INVOKER_FOLDER%/%CAMEL_PREFIX%OpenApi.java",
+        "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%INVOKER_FOLDER%/spring/%CAMEL_PREFIX%NamespaceHandler.java",
+        "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%INVOKER_FOLDER%/spring/%CAMEL_PREFIX%BeanConfiguration.java",
+        "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%MODEL_FOLDER%/PingReqType.java",
+        "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%MODEL_FOLDER%/PingRespType.java",
+        "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%REQUEST_FOLDER%/PingApi.java",
+        "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%REQUEST_FOLDER%/PungApi.java",
+        "%TARGET_FOLDER%/%GENERATED_RESOURCES_FOLDER%/%SCHEMA_FOLDER%/%LOWER_PREFIX%-api.xsd"
     };
 
     /**
-     * Array containing path templates for each generated spring meta file, specified with tokens. Tokens can be replaced with values of the respective
-     * testing scenario.
+     * Array containing path templates for each generated spring meta file, specified with tokens.
+     * Tokens can be replaced with values of the respective testing scenario.
      */
     private static final String[] SPRING_META_FILE_TEMPLATES = new String[]{
-            "%BASE_FOLDER%/%META_INF_FOLDER%/spring.handlers",
-            "%BASE_FOLDER%/%META_INF_FOLDER%/spring.schemas"
+        "%BASE_FOLDER%/%META_INF_FOLDER%/spring.handlers",
+        "%BASE_FOLDER%/%META_INF_FOLDER%/spring.schemas"
     };
 
     private TestApiGeneratorMojo fixture;
 
     static Stream<Arguments> executeMojoWithConfigurations() {
         return Stream.of(
-                arguments("pom-missing-prefix",
-                        new MojoExecutionException("Required parameter 'prefix' not set for api at index '0'!")),
-                arguments("pom-missing-source",
-                        new MojoExecutionException("Required parameter 'source' not set for api at index '0'!")),
-                arguments("pom-minimal-config", null),
-                arguments("pom-minimal-with-version-config", null),
-                arguments("pom-multi-config", null),
-                arguments("pom-full-config", null),
-                arguments("pom-full-with-version-config", null),
-                arguments("pom-soap-config", null)
+            arguments("pom-missing-prefix",
+                new MojoExecutionException(
+                    "Required parameter 'prefix' not set for api at index '0'!"),
+                emptyMap(), emptyMap(), emptyList()),
+            arguments("pom-missing-source",
+                new MojoExecutionException(
+                    "Required parameter 'source' not set for api at index '0'!"),
+                emptyMap(), emptyMap(), emptyList()),
+            arguments("pom-minimal-config", null,
+                emptyMap(), emptyMap(), emptyList()),
+            arguments("pom-minimal-with-version-config", null,
+                emptyMap(), emptyMap(), emptyList()),
+            arguments("pom-multi-config", null,
+                emptyMap(), emptyMap(), emptyList()),
+            arguments("pom-full-config", null,
+                Map.of("debugOpenAPI", "true", "debugModels", "true"),
+                Map.of("a", "b", "other", "otherOption"),
+                List.of("a=b", "c=d", "rootContextPath=/a/b/c/d")),
+            arguments("pom-full-with-version-config", null,
+                emptyMap(), emptyMap(), emptyList()),
+            arguments("pom-soap-config", null,
+                emptyMap(), emptyMap(), emptyList()),
+            arguments("pom-with-global-properties", null,
+                Map.of("debugOpenAPI", "true", "debugModels", "true"),
+                emptyMap(), emptyList()),
+            arguments("pom-with-global-config", null,
+                emptyMap(),
+                Map.of("a", "b", "other", "otherOption"), emptyList()),
+            arguments("pom-with-overriding-config", null,
+                Map.of("debugOpenAPI", "true", "debugModels", "true"),
+                Map.of("a", "b", "c", "d", "other", "otherOption"), emptyList()),
+            arguments("pom-with-additional-properties", null,
+                emptyMap(), emptyMap(),
+                List.of("a=b", "c=d"))
+
         );
     }
 
@@ -92,7 +128,9 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
 
     @ParameterizedTest
     @MethodSource
-    void executeMojoWithConfigurations(String configName, Exception expectedException) throws Exception {
+    void executeMojoWithConfigurations(String configName, Exception expectedException,
+        Map<?, ?> expectedGlobalProperties, Map<?, ?> expectedConfigOptions,
+        List<String> expectedAdditionalProperties) throws Exception {
         try {
             fixture = fixtureFromPom(configName);
         } catch (MojoExecutionException | MojoFailureException e) {
@@ -116,23 +154,50 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
                 assertFilesGenerated(apiConfig);
                 assertSpecificFileContent(apiConfig);
             }
+
+            ArgumentCaptor<CodeGenMojo> codegenMojoCaptor = ArgumentCaptor.captor();
+            verify(fixture, atLeastOnce()).delegateExecution(codegenMojoCaptor.capture());
+
+            CodeGenMojo codeGenMojo = codegenMojoCaptor.getValue();
+            @SuppressWarnings("rawtypes")
+            Map globalProperties = (Map) ReflectionTestUtils.getField(codeGenMojo,
+                "globalProperties");
+            @SuppressWarnings("rawtypes")
+            Map configOptions = (Map) ReflectionTestUtils.getField(codeGenMojo, "configOptions");
+
+            //noinspection unchecked
+            assertThat(globalProperties).containsExactlyInAnyOrderEntriesOf(expectedGlobalProperties);
+            //noinspection unchecked
+            assertThat(configOptions).containsAllEntriesOf(expectedConfigOptions);
+            //noinspection unchecked
+            List<String> additionalPropertyList = (List<String>) ReflectionTestUtils.getField(
+                codeGenMojo, "additionalProperties");
+
+            if (expectedAdditionalProperties.isEmpty()) {
+                assertThat(additionalPropertyList).isNull();
+            } else {
+                assertThat(additionalPropertyList).containsExactlyElementsOf(expectedAdditionalProperties);
+            }
+
         } else {
             // When/Then
             assertThatThrownBy(() -> fixture.execute())
-                    .isInstanceOf(expectedException.getClass())
-                    .hasMessage(expectedException.getMessage());
+                .isInstanceOf(expectedException.getClass())
+                .hasMessage(expectedException.getMessage());
         }
     }
 
     /**
-     * Writes values to spring meta files, to make sure existing non generated and existing generated values are treated properly.
+     * Writes values to spring meta files, to make sure existing non generated and existing
+     * generated values are treated properly.
      */
     private void writeSomeValuesToSpringMetaFiles(List<ApiConfig> apiConfigs) {
         for (ApiConfig apiConfig : apiConfigs) {
             for (String filePathTemplate : SPRING_META_FILE_TEMPLATES) {
                 String filePath = resolveFilePath(apiConfig, filePathTemplate);
                 File file = new File(filePath);
-                if (!file.getParentFile().exists() && !new File(filePath).getParentFile().mkdirs()) {
+                if (!file.getParentFile().exists() && !new File(filePath).getParentFile()
+                    .mkdirs()) {
                     Assertions.fail("Unable to prepare test data.");
                 }
 
@@ -172,42 +237,54 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
     }
 
     private void assertHandlersInSpringHandlers(ApiConfig apiConfig) throws IOException {
-        String targetNamespace = replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(), apiConfig.getPrefix(), apiConfig.getVersion());
+        String targetNamespace = replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(),
+            apiConfig.getPrefix(), apiConfig.getVersion());
         targetNamespace = targetNamespace.replace(":", "\\:");
-        String invokerPackage = replaceDynamicVarsToLowerCase(apiConfig.getInvokerPackage(), apiConfig.getPrefix(), apiConfig.getVersion());
+        String invokerPackage = replaceDynamicVarsToLowerCase(apiConfig.getInvokerPackage(),
+            apiConfig.getPrefix(), apiConfig.getVersion());
 
-        String text = String.format("%s=%s.citrus.extension.%sNamespaceHandler", targetNamespace, invokerPackage, apiConfig.getPrefix());
+        String text = String.format("%s=%s.spring.%sNamespaceHandler", targetNamespace,
+            invokerPackage, apiConfig.getPrefix());
 
         assertThat(getContentOfFile(apiConfig, "spring.handlers")).contains(text);
 
         // Other specific meta info should be retained
-        assertThat(getContentOfFile(apiConfig, "spring.handlers")).contains(OTHER_META_FILE_CONTENT);
+        assertThat(getContentOfFile(apiConfig, "spring.handlers")).contains(
+            OTHER_META_FILE_CONTENT);
         // Other citrus generated meta info should be deleted
-        assertThat(getContentOfFile(apiConfig, "spring.handlers")).doesNotContain(OTHER_CITRUS_META_FILE_CONTENT);
+        assertThat(getContentOfFile(apiConfig, "spring.handlers")).doesNotContain(
+            OTHER_CITRUS_META_FILE_CONTENT);
     }
 
     private void assertSchemasInSpringSchemas(ApiConfig apiConfig) throws IOException {
-        String targetNamespace = replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(), apiConfig.getPrefix(), apiConfig.getVersion());
+        String targetNamespace = replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(),
+            apiConfig.getPrefix(), apiConfig.getVersion());
         targetNamespace = targetNamespace.replace(":", "\\:");
-        String schemaPath = replaceDynamicVarsToLowerCase((String) getField(fixture, "schemaFolder"), apiConfig.getPrefix(), apiConfig.getVersion());
+        String schemaPath = replaceDynamicVarsToLowerCase(
+            (String) getField(fixture, "schemaFolder"), apiConfig.getPrefix(),
+            apiConfig.getVersion());
 
-        String text = String.format("%s.xsd=%s/%s-api.xsd", targetNamespace, schemaPath, apiConfig.getPrefix().toLowerCase());
+        String text = String.format("%s.xsd=%s/%s-api.xsd", targetNamespace, schemaPath,
+            apiConfig.getPrefix().toLowerCase());
 
         // Other specific meta info should be retained assertThat(getContentOfFile(apiConfig, "spring.schemas")).contains(OTHER_META_FILE_CONTENT);
-        assertThat(getContentOfFile(apiConfig, "spring.schemas")).contains(String.format("%s", text));
+        assertThat(getContentOfFile(apiConfig, "spring.schemas")).contains(
+            String.format("%s", text));
         // Other citrus generated meta info should be deleted
-        assertThat(getContentOfFile(apiConfig, "spring.schemas")).doesNotContain(OTHER_CITRUS_META_FILE_CONTENT);
+        assertThat(getContentOfFile(apiConfig, "spring.schemas")).doesNotContain(
+            OTHER_CITRUS_META_FILE_CONTENT);
     }
 
     private void assertTargetNamespace(ApiConfig apiConfig) throws IOException {
         assertThat(getContentOfFile(apiConfig, "-api.xsd"))
-                .contains(String.format("targetNamespace=\"%s\"",
-                        replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(), apiConfig.getPrefix(), apiConfig.getVersion())));
+            .contains(String.format("targetNamespace=\"%s\"",
+                replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(),
+                    apiConfig.getPrefix(), apiConfig.getVersion())));
     }
 
     private void assertEndpointName(ApiConfig apiConfig) throws IOException {
         assertThat(getContentOfFile(apiConfig, "BeanConfiguration"))
-                .contains(String.format("@Qualifier(\"%s\")", apiConfig.qualifiedEndpoint()));
+            .contains(String.format("@Qualifier(\"%s\")", apiConfig.qualifiedEndpoint()));
     }
 
     private String getContentOfFile(ApiConfig apiConfig, String fileIdentifier) throws IOException {
@@ -224,9 +301,10 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
 
     private String getTemplateContaining(String text) {
         return concat(stream(STANDARD_FILE_PATH_TEMPLATES), stream(SPRING_META_FILE_TEMPLATES))
-                .filter(path -> path.contains(text))
-                .findFirst()
-                .orElseThrow(() -> new AssertionError(String.format("Can't find file template with content: '%s'", text)));
+            .filter(path -> path.contains(text))
+            .findFirst()
+            .orElseThrow(() -> new AssertionError(
+                String.format("Can't find file template with content: '%s'", text)));
     }
 
     @NotNull
@@ -237,31 +315,37 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
         String camelCasePrefix = new String(prefixCharArray);
 
         String invokerFolder = toFolder(
-                replaceDynamicVarsToLowerCase(apiConfig.getInvokerPackage(), apiConfig.getPrefix(), apiConfig.getVersion()));
+            replaceDynamicVarsToLowerCase(apiConfig.getInvokerPackage(), apiConfig.getPrefix(),
+                apiConfig.getVersion()));
         String modelFolder = toFolder(
-                replaceDynamicVarsToLowerCase(apiConfig.getModelPackage(), apiConfig.getPrefix(), apiConfig.getVersion()));
+            replaceDynamicVarsToLowerCase(apiConfig.getModelPackage(), apiConfig.getPrefix(),
+                apiConfig.getVersion()));
         String requestFolder = toFolder(
-                replaceDynamicVarsToLowerCase(apiConfig.getApiPackage(), apiConfig.getPrefix(), apiConfig.getVersion()));
+            replaceDynamicVarsToLowerCase(apiConfig.getApiPackage(), apiConfig.getPrefix(),
+                apiConfig.getVersion()));
         String schemaFolder = toFolder(
-                replaceDynamicVars((String) getField(fixture, "schemaFolder"), apiConfig.getPrefix(), apiConfig.getVersion()));
+            replaceDynamicVars((String) getField(fixture, "schemaFolder"), apiConfig.getPrefix(),
+                apiConfig.getVersion()));
         String generatedSourcesFolder = toFolder(
-                replaceDynamicVars((String) getField(fixture, "sourceFolder"), apiConfig.getPrefix(), apiConfig.getVersion()));
+            replaceDynamicVars((String) getField(fixture, "sourceFolder"), apiConfig.getPrefix(),
+                apiConfig.getVersion()));
         String generatedResourcesFolder = toFolder(
-                replaceDynamicVars((String) getField(fixture, "resourceFolder"), apiConfig.getPrefix(), apiConfig.getVersion()));
+            replaceDynamicVars((String) getField(fixture, "resourceFolder"), apiConfig.getPrefix(),
+                apiConfig.getVersion()));
 
         return filePathTemplate
-                .replace("%BASE_FOLDER%", fixture.getMavenProject().getBasedir().getPath())
-                .replace("%TARGET_FOLDER%", fixture.getMavenProject().getBuild().getDirectory())
-                .replace("%SOURCE_FOLDER%", fixture.getMavenProject().getBuild().getSourceDirectory())
-                .replace("%GENERATED_SOURCES_FOLDER%", generatedSourcesFolder)
-                .replace("%GENERATED_RESOURCES_FOLDER%", generatedResourcesFolder)
-                .replace("%INVOKER_FOLDER%", invokerFolder)
-                .replace("%MODEL_FOLDER%", modelFolder)
-                .replace("%REQUEST_FOLDER%", requestFolder)
-                .replace("%SCHEMA_FOLDER%", schemaFolder)
-                .replace("%LOWER_PREFIX%", lowerCasePrefix)
-                .replace("%CAMEL_PREFIX%", camelCasePrefix)
-                .replace("%META_INF_FOLDER%", toFolder((String) getField(fixture, "metaInfFolder")));
+            .replace("%BASE_FOLDER%", fixture.getMavenProject().getBasedir().getPath())
+            .replace("%TARGET_FOLDER%", fixture.getMavenProject().getBuild().getDirectory())
+            .replace("%SOURCE_FOLDER%", fixture.getMavenProject().getBuild().getSourceDirectory())
+            .replace("%GENERATED_SOURCES_FOLDER%", generatedSourcesFolder)
+            .replace("%GENERATED_RESOURCES_FOLDER%", generatedResourcesFolder)
+            .replace("%INVOKER_FOLDER%", invokerFolder)
+            .replace("%MODEL_FOLDER%", modelFolder)
+            .replace("%REQUEST_FOLDER%", requestFolder)
+            .replace("%SCHEMA_FOLDER%", schemaFolder)
+            .replace("%LOWER_PREFIX%", lowerCasePrefix)
+            .replace("%CAMEL_PREFIX%", camelCasePrefix)
+            .replace("%META_INF_FOLDER%", toFolder((String) getField(fixture, "metaInfFolder")));
     }
 
     private String toFolder(String text) {
@@ -275,15 +359,18 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
     private TestApiGeneratorMojo fixtureFromPom(String configName) throws Exception {
         String goal = "create-test-api";
 
-        File pomFile = new File(getBasedir(), String.format("src/test/resources/%s/%s", getClass().getSimpleName(), configName + ".xml"));
+        File pomFile = new File(getBasedir(),
+            String.format("src/test/resources/%s/%s", getClass().getSimpleName(),
+                configName + ".xml"));
         assertThat(pomFile).exists();
 
         MavenProject mavenProject = new CitrusOpenApiGeneratorMavenProjectStub(configName);
 
-        TestApiGeneratorMojo testApiGeneratorMojo = (TestApiGeneratorMojo) lookupMojo(goal, pomFile);
+        TestApiGeneratorMojo testApiGeneratorMojo = (TestApiGeneratorMojo) lookupMojo(goal,
+            pomFile);
         testApiGeneratorMojo.setMavenProject(mavenProject);
         testApiGeneratorMojo.setMojoExecution(newMojoExecution(goal));
 
-        return testApiGeneratorMojo;
+        return spy(testApiGeneratorMojo);
     }
 }

@@ -16,6 +16,7 @@
 
 package org.citrusframework.openapi.testapi;
 
+import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiClientResponseActionBuilder;
@@ -45,7 +46,6 @@ public class RestApiReceiveMessageActionBuilder extends OpenApiClientResponseAct
 
         name(format("receive-%s", operationName));
 
-        endpoint(generatedApi.getEndpoint());
     }
 
     public RestApiReceiveMessageActionBuilder(GeneratedApi generatedApi,
@@ -61,8 +61,6 @@ public class RestApiReceiveMessageActionBuilder extends OpenApiClientResponseAct
         this.customizers = generatedApi.getCustomizers();
 
         name(format("receive-%s", operationName));
-
-        endpoint(generatedApi.getEndpoint());
     }
 
     public GeneratedApi getGeneratedApi() {
@@ -71,5 +69,16 @@ public class RestApiReceiveMessageActionBuilder extends OpenApiClientResponseAct
 
     public List<ApiActionBuilderCustomizer> getCustomizers() {
         return customizers;
+    }
+
+    @Override
+    public ReceiveMessageAction doBuild() {
+
+        // If no endpoint was set explicitly, use the default endpoint given by api
+        if (getEndpoint() == null && getEndpointUri() == null) {
+            endpoint(generatedApi.getEndpoint());
+        }
+
+        return super.doBuild();
     }
 }

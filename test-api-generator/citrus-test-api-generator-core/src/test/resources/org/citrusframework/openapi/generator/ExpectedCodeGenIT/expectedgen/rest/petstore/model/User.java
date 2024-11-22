@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * User
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:43.309584600+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-19T06:57:22.933962900+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class User {
   private Long id;
 
@@ -51,10 +51,10 @@ public class User {
     return this;
   }
 
-   /**
+  /**
    * Get id
    * @return id
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public Long getId() {
@@ -66,17 +66,16 @@ public class User {
     this.id = id;
   }
 
-
   public User username(String username) {
     
     this.username = username;
     return this;
   }
 
-   /**
+  /**
    * Get username
    * @return username
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public String getUsername() {
@@ -88,17 +87,16 @@ public class User {
     this.username = username;
   }
 
-
   public User firstName(String firstName) {
     
     this.firstName = firstName;
     return this;
   }
 
-   /**
+  /**
    * Get firstName
    * @return firstName
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public String getFirstName() {
@@ -110,17 +108,16 @@ public class User {
     this.firstName = firstName;
   }
 
-
   public User lastName(String lastName) {
     
     this.lastName = lastName;
     return this;
   }
 
-   /**
+  /**
    * Get lastName
    * @return lastName
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public String getLastName() {
@@ -132,17 +129,16 @@ public class User {
     this.lastName = lastName;
   }
 
-
   public User email(String email) {
     
     this.email = email;
     return this;
   }
 
-   /**
+  /**
    * Get email
    * @return email
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public String getEmail() {
@@ -154,17 +150,16 @@ public class User {
     this.email = email;
   }
 
-
   public User password(String password) {
     
     this.password = password;
     return this;
   }
 
-   /**
+  /**
    * Get password
    * @return password
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public String getPassword() {
@@ -176,17 +171,16 @@ public class User {
     this.password = password;
   }
 
-
   public User phone(String phone) {
     
     this.phone = phone;
     return this;
   }
 
-   /**
+  /**
    * Get phone
    * @return phone
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public String getPhone() {
@@ -198,17 +192,16 @@ public class User {
     this.phone = phone;
   }
 
-
   public User userStatus(Integer userStatus) {
     
     this.userStatus = userStatus;
     return this;
   }
 
-   /**
+  /**
    * User Status
    * @return userStatus
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public Integer getUserStatus() {

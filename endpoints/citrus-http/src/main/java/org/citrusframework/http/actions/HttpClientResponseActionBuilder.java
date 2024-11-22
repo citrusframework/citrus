@@ -157,6 +157,15 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageAction.Receiv
 
     @Override
     public ReceiveMessageAction doBuild() {
+        return createReceiveMessageAction();
+    }
+
+
+    /**
+     * Creates the actual SendMessageAction. Subclasses may override this method to provide specific
+     * implementations.
+     */
+    protected ReceiveMessageAction createReceiveMessageAction() {
         return new ReceiveMessageAction(this);
     }
 

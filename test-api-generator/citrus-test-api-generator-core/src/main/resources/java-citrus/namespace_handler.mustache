@@ -17,6 +17,8 @@
 }}
 package {{invokerPackage}}.spring;
 
+import static {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}OpenApi.{{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification;
+
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.testapi.RestApiSendMessageActionBuilder;
 import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
@@ -27,21 +29,12 @@ import {{package}}.{{classname}};
 {{/apiInfo}}
 import org.citrusframework.openapi.testapi.spring.RestApiReceiveMessageActionParser;
 import org.citrusframework.openapi.testapi.spring.RestApiSendMessageActionParser;
-import {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}};
+import {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}OpenApi;
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 {{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
 public class {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}NamespaceHandler extends NamespaceHandlerSupport {
-
-    {{#apiInfo}}
-        {{#apis}}
-            {{#-first}}
-    private final OpenApiSpecification openApiSpecification = OpenApiSpecification.from(
-        {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}.{{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Api());
-            {{/-first}}
-        {{/apis}}
-    {{/apiInfo}}
 
     @Override
     public void init() {
@@ -50,7 +43,7 @@ public class {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}NamespaceHandle
         {{#operations}}
         {{#operation}}
 
-            registerOperationParsers({{classname}}.class,"{{#lambda.kebabcase}}{{operationId}}{{/lambda.kebabcase}}", "{{operationId}}", "{{path}}",
+            registerOperationParsers({{classname}}.class,"{{#lambda.kebabcase}}{{operationId}}{{/lambda.kebabcase}}", "{{operationIdOriginal}}", "{{path}}",
                 {{classname}}.{{operationIdCamelCase}}SendActionBuilder.class,
                 {{classname}}.{{operationIdCamelCase}}ReceiveActionBuilder.class,
                 new String[]{ {{#requiredNonBodyParams}}"{{paramName}}{{^isString}}{{/isString}}"{{^-last}}, {{/-last}}{{/requiredNonBodyParams}} },
@@ -67,7 +60,7 @@ public class {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}NamespaceHandle
         String[] constructorParameters,
         String[] nonConstructorParameters) {
 
-        RestApiSendMessageActionParser sendParser = new RestApiSendMessageActionParser(openApiSpecification, operationName,
+        RestApiSendMessageActionParser sendParser = new RestApiSendMessageActionParser({{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification, operationName,
             path,
             apiClass,
             sendBeanClass,
@@ -77,7 +70,7 @@ public class {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}NamespaceHandle
         sendParser.setNonConstructorParameters(nonConstructorParameters);
         registerBeanDefinitionParser("send-"+elementName, sendParser);
 
-        RestApiReceiveMessageActionParser receiveParser = new RestApiReceiveMessageActionParser(openApiSpecification,
+        RestApiReceiveMessageActionParser receiveParser = new RestApiReceiveMessageActionParser({{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification,
         operationName, apiClass, receiveBeanClass, "{{apiEndpoint}}");
         registerBeanDefinitionParser("receive-"+elementName, receiveParser);
     }

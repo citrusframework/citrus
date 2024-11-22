@@ -17,6 +17,7 @@
 package org.citrusframework.openapi.model;
 
 import io.apicurio.datamodels.combined.visitors.CombinedVisitorAdapter;
+import io.apicurio.datamodels.openapi.io.OasDataModelWriter;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasParameter;
@@ -25,16 +26,23 @@ import io.apicurio.datamodels.openapi.models.OasPaths;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasResponses;
 import io.apicurio.datamodels.openapi.models.OasSchema;
+import io.apicurio.datamodels.openapi.v2.io.Oas20DataModelWriter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
+import io.apicurio.datamodels.openapi.v2.visitors.IOas20Visitor;
+import io.apicurio.datamodels.openapi.v2.visitors.Oas20Traverser;
+import io.apicurio.datamodels.openapi.v3.io.Oas30DataModelWriter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import io.apicurio.datamodels.openapi.v3.visitors.IOas30Visitor;
+import io.apicurio.datamodels.openapi.v3.visitors.Oas30Traverser;
+import io.apicurio.datamodels.openapi.visitors.OasTraverser;
 import jakarta.annotation.Nullable;
 import org.citrusframework.openapi.model.v2.Oas20ModelHelper;
 import org.citrusframework.openapi.model.v3.Oas30ModelHelper;
@@ -528,7 +536,7 @@ public final class OasModelHelper {
      * @param visitor     the visitor to apply to each OAS operation
      */
     public static void visitOasOperations(OasDocument oasDocument, OasOperationVisitor visitor) {
-        if (oasDocument == null || visitor == null) {
+        if (oasDocument == null || visitor == null || oasDocument.paths == null) {
             return;
         }
 
@@ -571,4 +579,30 @@ public final class OasModelHelper {
                 .flatMap(types -> Arrays.stream(types.split(","))).map(String::trim).toList();
     }
 
+    /**
+     * Converts an OpenAPI document into a JSON string representation.
+     * <p>
+     *
+     * @param openApiDoc the OpenAPI document to be converted to JSON. It must be of type {@link Oas20Document}
+     *                   or {@link Oas30Document}.
+     * @return the JSON string representation of the OpenAPI document.
+     * @throws IllegalArgumentException if the provided OpenAPI document is neither an instance of {@link Oas20Document}
+     *                                  nor {@link Oas30Document}.
+     */
+    public static String toJson(OasDocument openApiDoc) {
+        OasDataModelWriter writer;
+        OasTraverser oasTraverser;
+        if (openApiDoc instanceof  Oas20Document) {
+            writer = new Oas20DataModelWriter();
+            oasTraverser = new Oas20Traverser((IOas20Visitor) writer);
+        } else if (openApiDoc instanceof  Oas30Document) {
+            writer = new Oas30DataModelWriter();
+            oasTraverser = new Oas30Traverser((IOas30Visitor) writer);
+        } else {
+            throw new IllegalArgumentException(format("Unsupported Open API document type: %s", openApiDoc.getClass()));
+        }
+
+        oasTraverser.traverse(openApiDoc);
+        return writer.getResult().toString();
+    }
 }

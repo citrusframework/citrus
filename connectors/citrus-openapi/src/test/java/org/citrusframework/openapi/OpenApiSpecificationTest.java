@@ -155,16 +155,16 @@ public class OpenApiSpecificationTest {
                 testContextMock);
         assertTrue(pingOperationPathAdapter.isPresent());
         assertEquals(pingOperationPathAdapter.get().apiPath(), "/ping/{id}");
-        assertNull(pingOperationPathAdapter.get().contextPath());
-        assertEquals(pingOperationPathAdapter.get().fullPath(), "/ping/{id}");
+        assertEquals(pingOperationPathAdapter.get().contextPath(), "/services/rest/ping/v1");
+        assertEquals(pingOperationPathAdapter.get().fullPath(), "/services/rest/ping/v1/ping/{id}");
 
         Optional<OperationPathAdapter> pongOperationPathAdapter = specification.getOperation(
                 PONG_OPERATION_ID,
                 testContextMock);
         assertTrue(pongOperationPathAdapter.isPresent());
         assertEquals(pongOperationPathAdapter.get().apiPath(), "/pong/{id}");
-        assertNull(pongOperationPathAdapter.get().contextPath());
-        assertEquals(pongOperationPathAdapter.get().fullPath(), "/pong/{id}");
+        assertEquals(pongOperationPathAdapter.get().contextPath(), "/services/rest/ping/v1");
+        assertEquals(pongOperationPathAdapter.get().fullPath(), "/services/rest/ping/v1/pong/{id}");
     }
 
     @Test
@@ -230,8 +230,8 @@ public class OpenApiSpecificationTest {
                 testContextMock);
         assertTrue(pingOperationPathAdapter.isPresent());
         assertEquals(pingOperationPathAdapter.get().apiPath(), "/ping/{id}");
-        assertNull(pingOperationPathAdapter.get().contextPath());
-        assertEquals(pingOperationPathAdapter.get().fullPath(), "/ping/{id}");
+        assertEquals(pingOperationPathAdapter.get().contextPath(), "/services/rest/ping/v1");
+        assertEquals(pingOperationPathAdapter.get().fullPath(), "/services/rest/ping/v1/ping/{id}");
     }
 
     @Test(dataProvider = "lazyInitializationDataprovider")
@@ -337,18 +337,45 @@ public class OpenApiSpecificationTest {
                 testContextMock);
         assertTrue(pingOperationPathAdapter.isPresent());
         assertEquals(pingOperationPathAdapter.get().apiPath(), "/ping/{id}");
-        assertEquals(pingOperationPathAdapter.get().contextPath(), "/root");
-        assertEquals(pingOperationPathAdapter.get().fullPath(), "/root/ping/{id}");
+        assertEquals(pingOperationPathAdapter.get().contextPath(), "/root/services/rest/ping/v1");
+        assertEquals(pingOperationPathAdapter.get().fullPath(), "/root/services/rest/ping/v1/ping/{id}");
 
         Optional<OperationPathAdapter> pongOperationPathAdapter = specification.getOperation(
                 PONG_OPERATION_ID,
                 testContextMock);
         assertTrue(pongOperationPathAdapter.isPresent());
         assertEquals(pongOperationPathAdapter.get().apiPath(), "/pong/{id}");
+        assertEquals(pongOperationPathAdapter.get().contextPath(), "/root/services/rest/ping/v1");
+        assertEquals(pongOperationPathAdapter.get().fullPath(), "/root/services/rest/ping/v1/pong/{id}");
+    }
+
+    @Test
+    public void shouldSetRootContextPathNeglectingBasePathAndReinitialize() {
+        // Given/When
+        OpenApiSpecification specification = OpenApiSpecification.from(new ClasspathResource("classpath:org/citrusframework/openapi/ping/ping-api.yaml"));
+
+        // Then
+        assertPingApi(specification);
+
+        // When
+        specification.setNeglectBasePath(true);
+        specification.setRootContextPath("/root");
+
+        Optional<OperationPathAdapter> pingOperationPathAdapter = specification.getOperation(
+            PING_OPERATION_ID,
+            testContextMock);
+        assertTrue(pingOperationPathAdapter.isPresent());
+        assertEquals(pingOperationPathAdapter.get().apiPath(), "/ping/{id}");
+        assertEquals(pingOperationPathAdapter.get().contextPath(), "/root");
+        assertEquals(pingOperationPathAdapter.get().fullPath(), "/root/ping/{id}");
+
+        Optional<OperationPathAdapter> pongOperationPathAdapter = specification.getOperation(
+            PONG_OPERATION_ID,
+            testContextMock);
+        assertTrue(pongOperationPathAdapter.isPresent());
+        assertEquals(pongOperationPathAdapter.get().apiPath(), "/pong/{id}");
         assertEquals(pongOperationPathAdapter.get().contextPath(), "/root");
         assertEquals(pongOperationPathAdapter.get().fullPath(), "/root/pong/{id}");
-
-        // Verify initPathLookups is called, which would require a spy
     }
 
     @Test

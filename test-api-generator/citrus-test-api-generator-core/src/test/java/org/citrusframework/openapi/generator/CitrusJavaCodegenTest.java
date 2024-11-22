@@ -86,8 +86,8 @@ class CitrusJavaCodegenTest {
     @Test
     void testTypeMappings() {
         assertThat(codegen.typeMapping())
-                .containsEntry("binary", "Resource")
-                .containsEntry("file", "Resource");
+                .containsEntry("binary", "org.citrusframework.spi.Resource")
+                .containsEntry("file", "org.citrusframework.spi.Resource");
     }
 
     @Test

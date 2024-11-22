@@ -16,15 +16,23 @@
 
 package org.citrusframework.openapi.validation;
 
-import com.atlassian.oai.validator.OpenApiInteractionValidator;
-import com.atlassian.oai.validator.report.MessageResolver;
-import com.atlassian.oai.validator.schema.SchemaValidator;
-import com.atlassian.oai.validator.schema.SwaggerV20Library;
-import io.swagger.v3.oas.models.OpenAPI;
-import jakarta.annotation.Nonnull;
-
 import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledGlobally;
 import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
+
+import com.atlassian.oai.validator.OpenApiInteractionValidator;
+import com.atlassian.oai.validator.model.ApiOperation;
+import com.atlassian.oai.validator.model.Request;
+import com.atlassian.oai.validator.model.Response;
+import com.atlassian.oai.validator.report.MessageResolver;
+import com.atlassian.oai.validator.report.ValidationReport.Message;
+import com.atlassian.oai.validator.schema.SchemaValidator;
+import com.atlassian.oai.validator.schema.SwaggerV20Library;
+import com.atlassian.oai.validator.whitelist.ValidationErrorsWhitelist;
+import com.atlassian.oai.validator.whitelist.rule.WhitelistRule;
+import io.swagger.v3.oas.models.OpenAPI;
+import jakarta.annotation.Nonnull;
+import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * Represents the context for OpenAPI validation, providing configuration and validators for request and response validation.
@@ -32,6 +40,12 @@ import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEn
  * By default, these settings are initialized based on a global configuration.
  */
 public class OpenApiValidationContext {
+
+    private static final List<IgnoreByKeyWhitelistRule> WHITELIST_RULES = List.of(
+        // Filtered because in general OpenAPI is not required to specify all response codes.
+        // So this should not be considered as validation error.
+        IgnoreByKeyWhitelistRule.ignoreByKey("Allow unknown response status rule", "validation.response.status.unknown")
+    );
 
     private final OpenAPI openApi;
 
@@ -51,9 +65,19 @@ public class OpenApiValidationContext {
         return openApi;
     }
 
+    private static final ValidationErrorsWhitelist validationErrorsWhitelist;
+
+    static {
+        ValidationErrorsWhitelist whiteList = ValidationErrorsWhitelist.create();
+        for (IgnoreByKeyWhitelistRule rule : WHITELIST_RULES) {
+            whiteList = whiteList.withRule(rule.name, rule);
+        }
+        validationErrorsWhitelist = whiteList;
+    }
+
     public synchronized @Nonnull OpenApiInteractionValidator getOpenApiInteractionValidator() {
         if (openApiInteractionValidator == null) {
-            openApiInteractionValidator = new OpenApiInteractionValidator.Builder().withApi(openApi).build();
+            openApiInteractionValidator = new OpenApiInteractionValidator.Builder().withApi(openApi).withWhitelist(validationErrorsWhitelist).build();
         }
         return openApiInteractionValidator;
     }
@@ -80,4 +104,27 @@ public class OpenApiValidationContext {
     public void setRequestValidationEnabled(boolean requestValidationEnabled) {
         this.requestValidationEnabled = requestValidationEnabled;
     }
+
+    private static class IgnoreByKeyWhitelistRule implements WhitelistRule {
+
+        private final String name;
+
+        private final String key;
+
+        private IgnoreByKeyWhitelistRule(@Nonnull String name, @Nonnull String key) {
+            this.name = name;
+            this.key = key;
+        }
+
+        @Override
+        public boolean matches(Message message, @Nullable ApiOperation operation,
+            @Nullable Request request, @Nullable Response response) {
+            return key.equals(message.getKey());
+        }
+
+        public static IgnoreByKeyWhitelistRule ignoreByKey(String name, String key) {
+            return new IgnoreByKeyWhitelistRule(name, key);
+        }
+    }
+
 }

@@ -51,7 +51,7 @@
                 </http:body>
             </http:send-response>
 
-            <petstore:receive-upload-file>
+            <petstore:receive-upload-file responseCode="200">
                 <http:body>
                     <http:validate>
                         <http:json-path expression="$.code" value="12"/>

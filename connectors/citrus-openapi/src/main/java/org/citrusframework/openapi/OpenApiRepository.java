@@ -16,12 +16,11 @@
 
 package org.citrusframework.openapi;
 
-import jakarta.annotation.Nullable;
-import org.citrusframework.repository.BaseRepository;
-import org.citrusframework.spi.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Collections.synchronizedList;
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -29,8 +28,10 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
+import org.citrusframework.repository.BaseRepository;
+import org.citrusframework.spi.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * OpenApi repository holding a set of {@link OpenApiSpecification} known in the test scope.
@@ -44,9 +45,10 @@ public class OpenApiRepository extends BaseRepository {
     private static final String DEFAULT_NAME = "openApiSchemaRepository";
 
     /**
-     * List of schema resources
+     * List of specifications
      */
-    private final List<OpenApiSpecification> openApiSpecifications = new ArrayList<>();
+    private final List<OpenApiSpecification> openApiSpecifications = synchronizedList(
+        new ArrayList<>());
 
     /**
      * An optional context path, used for each api, without taking into account any
@@ -64,7 +66,8 @@ public class OpenApiRepository extends BaseRepository {
 
     /**
      * @param openApiResource the OpenAPI resource from which to determine the alias
-     * @return an {@code Optional} containing the resource alias if it can be resolved, otherwise an empty {@code Optional}
+     * @return an {@code Optional} containing the resource alias if it can be resolved, otherwise an
+     * empty {@code Optional}
      */
     // Package protection for testing
     static Optional<String> determineResourceAlias(Resource openApiResource) {
@@ -135,8 +138,8 @@ public class OpenApiRepository extends BaseRepository {
     }
 
     /**
-     * Adds an OpenAPI Specification specified by the given resource to the repository.
-     * If an alias is determined from the resource name, it is added to the specification.
+     * Adds an OpenAPI Specification specified by the given resource to the repository. If an alias
+     * is determined from the resource name, it is added to the specification.
      *
      * @param openApiResource the resource to add as an OpenAPI specification
      */
@@ -148,11 +151,21 @@ public class OpenApiRepository extends BaseRepository {
         openApiSpecification.setApiResponseValidationEnabled(responseValidationEnabled);
         openApiSpecification.setRootContextPath(rootContextPath);
 
+        addRepository(openApiSpecification);
+    }
+
+    /**
+     * Adds the given OpenAPI specification to this repository and invokes all registered
+     * {@link OpenApiSpecificationProcessor}.
+     *
+     * @param openApiSpecification the OpenAPI specification to add to the repository
+     */
+    public void addRepository(OpenApiSpecification openApiSpecification) {
         this.openApiSpecifications.add(openApiSpecification);
 
         OpenApiSpecificationProcessor.lookup()
-                .values()
-                .forEach(processor -> processor.process(openApiSpecification));
+            .values()
+            .forEach(processor -> processor.process(openApiSpecification));
     }
 
     public OpenApiRepository locations(List<String> locations) {
@@ -160,10 +173,22 @@ public class OpenApiRepository extends BaseRepository {
         return this;
     }
 
-    public @Nullable OpenApiSpecification openApi(String alias) {
+    public @Nullable OpenApiSpecification openApi(@NotNull String alias) {
+
+        if (alias.equals(getName())) {
+            if (openApiSpecifications.size() == 1) {
+                return openApiSpecifications.get(0);
+            } else {
+                throw new IllegalArgumentException(
+                    "The alias matches the repository name, but the repository contains multiple specifications. "
+                        + "Matching a specification by repository name is only allowed if there is exactly one specification in the repository."
+                );
+            }
+        }
+
         return getOpenApiSpecifications().stream()
-                .filter(spec -> spec.getAliases().contains(alias))
-                .findFirst()
-                .orElse(null);
+            .filter(spec -> spec.getAliases().contains(alias))
+            .findFirst()
+            .orElse(null);
     }
 }

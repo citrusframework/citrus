@@ -63,7 +63,7 @@ public class RandomElementTest {
         assertEquals(randomObject.get("nestedKey"), "nestedValue");
     }
 
-    @Test(expectedExceptions = UnsupportedOperationException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testRandomObjectPushValueThrowsException() {
         randomObject.push("value");
     }

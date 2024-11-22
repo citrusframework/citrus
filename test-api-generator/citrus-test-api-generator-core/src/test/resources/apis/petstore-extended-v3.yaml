@@ -6,9 +6,39 @@ info:
         such as updating a pet using form data and managing vaccination records.
     version: 1.0.0
 servers:
-    -   url: /api/v3/ext
+    -   url: http://localhost:9000/api/v3/ext
 
 paths:
+    /pet/simple/object/uuid/{petUuid}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by UUID
+            description: Returns pet by UUID.
+            operationId: getPetByUuid
+            parameters:
+                -   name: petUuid
+                    in: path
+                    description: UUID of pet to return
+                    required: true
+                    style: simple
+                    explode: false
+                    schema:
+                        type: string
+                        format: uuid
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
     /pet/simple/{petId}:
         get:
             tags:

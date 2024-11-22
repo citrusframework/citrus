@@ -1,5 +1,7 @@
 package org.citrusframework.openapi.generator.soap.bookservice.spring;
 
+import static org.citrusframework.openapi.generator.soap.bookservice.BookServiceOpenApi.bookServiceSpecification;
+
 import java.util.List;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.openapi.OpenApiRepository;
@@ -10,17 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.citrusframework.openapi.generator.soap.bookservice.BookService;
+import org.citrusframework.openapi.generator.soap.bookservice.BookServiceOpenApi;
 
 @Configuration
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:44.612584400+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-23T14:15:20.169378200+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class BookServiceBeanConfiguration {
 
     @Bean
     public OpenApiRepository bookServiceOpenApiRepository() {
         var openApiRepository = new OpenApiRepository();
-        openApiRepository.getOpenApiSpecifications().add(OpenApiSpecification.from(
-            BookService.bookServiceApi()));
+        openApiRepository.getOpenApiSpecifications().add(bookServiceSpecification);
         return openApiRepository;
     }
 

@@ -17,29 +17,30 @@
 package org.citrusframework.openapi.testapi;
 
 /**
- * Interface representing a generated API request corresponding to an operation in an OpenAPI specification.
- * Provides methods to retrieve metadata about the request such as operation name, HTTP method, and path.
+ * Interface representing information about a generated API operation as defined in an OpenAPI
+ * specification. It provides methods to access metadata related to the operation, including the
+ * operation name, HTTP method, and request path.
  */
-public interface GeneratedApiRequest {
+public interface GeneratedApiOperationInfo {
 
     /**
-     * Retrieves the name of the OpenAPI operation associated with the request.
+     * Retrieves the name of the OpenAPI operation.
      *
      * @return the name of the OpenAPI operation
      */
     String getOperationName();
 
     /**
-     * Retrieves the HTTP method used for the request.
+     * Retrieves the HTTP method corresponding to the operation.
      *
-     * @return the HTTP method used for the request (e.g., GET, POST)
+     * @return the HTTP method specified in the OpenAPI operation
      */
     String getMethod();
 
     /**
-     * Retrieves the path used for the request.
+     * Retrieves the path corresponding to the operation.
      *
-     * @return the path used for the request
+     * @return the path of the OpenAPI operation
      */
     String getPath();
 }

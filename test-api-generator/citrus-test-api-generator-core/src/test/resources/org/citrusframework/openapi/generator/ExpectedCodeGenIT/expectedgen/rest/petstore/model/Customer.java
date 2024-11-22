@@ -28,7 +28,7 @@ import org.citrusframework.openapi.generator.rest.petstore.model.Address;
 /**
  * Customer
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:43.309584600+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-23T14:15:17.563204500+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class Customer {
   private Long id;
 
@@ -45,10 +45,10 @@ public class Customer {
     return this;
   }
 
-   /**
+  /**
    * Get id
    * @return id
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public Long getId() {
@@ -60,17 +60,16 @@ public class Customer {
     this.id = id;
   }
 
-
   public Customer username(String username) {
     
     this.username = username;
     return this;
   }
 
-   /**
+  /**
    * Get username
    * @return username
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public String getUsername() {
@@ -81,7 +80,6 @@ public class Customer {
   public void setUsername(String username) {
     this.username = username;
   }
-
 
   public Customer address(List<Address> address) {
     
@@ -97,10 +95,10 @@ public class Customer {
     return this;
   }
 
-   /**
+  /**
    * Get address
    * @return address
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public List<Address> getAddress() {

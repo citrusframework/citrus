@@ -67,6 +67,16 @@ public final class OpenApiValidationContextLoader {
         return createValidationContext(new OpenApiLoader().loadApi(SpecSource.inline(OpenApiResourceLoader.rawFromFile(resource)), emptyList(), defaultParseOptions()));
     }
 
+    /**
+     * Creates an OpenApiValidationContext from an open api string.
+     *
+     * @param resource the file resource containing the OpenAPI specification
+     * @return the OpenApiValidationContext
+     */
+    public static OpenApiValidationContext fromString(@Nonnull String openApi) {
+        return createValidationContext(new OpenApiLoader().loadApi(SpecSource.inline(OpenApiResourceLoader.rawFromString(openApi)), emptyList(), defaultParseOptions()));
+    }
+
     private static OpenApiValidationContext createValidationContext(OpenAPI openApi) {
         return new OpenApiValidationContext(openApi);
     }
