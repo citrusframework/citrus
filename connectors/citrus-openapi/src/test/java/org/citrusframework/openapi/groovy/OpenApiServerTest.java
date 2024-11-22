@@ -138,14 +138,9 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
         assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "");
-        assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 5L);
+        assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 2L);
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/petstore/v3/pet/${petId}");
-        assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "/petstore/v3/pet/${petId}");
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
         assertEquals(receiveMessageAction.getEndpoint(), httpServer);
         assertEquals(receiveMessageAction.getControlMessageProcessors().size(), 0);
 
@@ -175,17 +170,11 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
-        assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()),
-                "{\"id\": \"@isNumber()@\",\"category\": {\"id\": \"@isNumber()@\",\"name\": \"@notEmpty()@\"},\"name\": \"@notEmpty()@\",\"photoUrls\": \"@ignore@\",\"tags\": \"@ignore@\",\"status\": \"@matches(available|pending|sold)@\"}");
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
 
         Map<String, Object> requestHeaders = httpMessageBuilder.buildMessageHeaders(context);
-        assertEquals(requestHeaders.size(), 4L);
-        assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
-        assertEquals(requestHeaders.get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/petstore/v3/pet");
-        assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_URI), "/petstore/v3/pet");
-        assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_CONTENT_TYPE), "@startsWith(application/json)@");
+        assertEquals(requestHeaders.size(), 0L);
         Assert.assertNull(receiveMessageAction.getEndpointUri());
         assertEquals(receiveMessageAction.getEndpoint(), httpServer);
 

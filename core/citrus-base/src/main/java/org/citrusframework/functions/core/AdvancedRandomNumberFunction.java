@@ -134,7 +134,7 @@ public class AdvancedRandomNumberFunction implements Function {
 
         return decimalPlaces == 0 ?
             format("%s", randomValue.longValue()) :
-            format(format("%%.%sf", decimalPlaces), randomValue.doubleValue());
+            format("%." + decimalPlaces + "f", randomValue.doubleValue());
     }
 
     // Pass in random for testing

@@ -61,6 +61,18 @@ public class StringUtils {
         return !isEmpty(str);
     }
 
+    /**
+     * Appends a URL segment to an existing URL path.
+     * <p>
+     * This method ensures that the provided segment is appended correctly to the base path,
+     * handling cases where there may or may not be existing separators (`/`). It avoids duplicate
+     * separators and ensures proper formatting of the resulting URL.
+     * </p>
+     *
+     * @param path    the base URL path to which the segment will be appended. If {@code null}, the segment will be returned.
+     * @param segment the segment to append to the base path. If {@code null}, the original path will be returned.
+     * @return the combined URL path with the appended segment, properly formatted.
+     */
     public static String appendSegmentToUrlPath(String path, String segment) {
         if (path == null) {
             return segment;

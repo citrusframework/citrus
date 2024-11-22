@@ -49,7 +49,8 @@ class OpenApiParameterFormatterTest {
                 arguments("Form/exploded/non object/single", new ParameterData("id", SINGLE, FORM, true, false), "id=5"),
                 arguments("Form/exploded/non object/array", new ParameterData("id", LIST, FORM, true, false), "id=3&id=4&id=5"),
                 arguments("Form/exploded/object/single", new ParameterData("id", USER, FORM, true, true), "firstName=Alex&role=admin"),
-                arguments("DeepObject/exploded/object/single", new ParameterData("id", USER, DEEPOBJECT, true, true), "id[firstName]=Alex&id[role]=admin")
+                arguments("DeepObject/exploded/object/single", new ParameterData("id", USER,
+                    DEEPOBJECT, true, true), "id[firstName]=Alex&id[role]=admin")
         );
     }
 

@@ -17,11 +17,11 @@
 }}
 package {{invokerPackage}};
 
-import java.net.URL;
+import org.citrusframework.openapi.OpenApiSpecification;
 
-public class {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}} {
+public class {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}OpenApi {
 
-    public static URL {{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Api() {
-        return {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}.class.getResource("{{prefix}}_openApi.yaml");
-    }
+    public static final OpenApiSpecification {{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification = OpenApiSpecification
+        .from({{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}OpenApi.class.getResource("{{prefix}}_openApi.yaml")){{#neglectBasePath}}.neglectBasePath({{neglectBasePath}}){{/neglectBasePath}}{{#rootContextPath}}.withRootContext("{{rootContextPath}}"){{/rootContextPath}};
+
 }

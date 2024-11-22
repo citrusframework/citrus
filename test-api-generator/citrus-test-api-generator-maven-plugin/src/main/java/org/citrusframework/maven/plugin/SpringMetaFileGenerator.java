@@ -32,6 +32,7 @@ import java.util.function.BiConsumer;
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.CITRUS_TEST_SCHEMA;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.CITRUS_TEST_SCHEMA_KEEP_HINT;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVars;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVarsToLowerCase;
 
@@ -80,7 +81,9 @@ public class SpringMetaFileGenerator {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (!line.contains(CITRUS_TEST_SCHEMA)) {
+                if (line.contains(CITRUS_TEST_SCHEMA_KEEP_HINT)) {
+                    filteredLines.add(reader.readLine());
+                } else if (!line.contains(CITRUS_TEST_SCHEMA)) {
                     filteredLines.add(line);
                 }
             }
@@ -122,7 +125,7 @@ public class SpringMetaFileGenerator {
         writeSpringMetaFile(springMetafileDirectory, filename, (fileWriter, apiConfig) -> {
             String targetXmlnsNamespace = replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(), apiConfig.getPrefix(), apiConfig.getVersion());
             String invokerPackage = replaceDynamicVarsToLowerCase(apiConfig.getInvokerPackage(), apiConfig.getPrefix(), apiConfig.getVersion());
-            String namespaceHandlerClass = invokerPackage + ".citrus.extension." + apiConfig.getPrefix() + "NamespaceHandler";
+            String namespaceHandlerClass = invokerPackage + ".spring." + apiConfig.getPrefix() + "NamespaceHandler";
             appendLine(fileWriter, format("%s=%s%n", targetXmlnsNamespace.replace("http://", "http\\://"), namespaceHandlerClass), filename);
         });
     }
@@ -139,6 +142,7 @@ public class SpringMetaFileGenerator {
             for (ApiConfig apiConfig : testApiGeneratorMojo.getApiConfigs()) {
                 contentFormatter.accept(fileWriter, apiConfig);
             }
+
         } catch (IOException e) {
             throw new MojoExecutionException("Unable to write spring meta file!", e);
         }

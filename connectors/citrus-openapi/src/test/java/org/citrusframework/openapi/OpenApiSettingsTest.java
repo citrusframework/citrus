@@ -22,6 +22,8 @@ import org.testng.annotations.Test;
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
 
 import static org.citrusframework.openapi.OpenApiSettings.GENERATE_OPTIONAL_FIELDS_PROPERTY;
+import static org.citrusframework.openapi.OpenApiSettings.NEGLECT_OPEN_API_BASE_PATH_ENV;
+import static org.citrusframework.openapi.OpenApiSettings.NEGLECT_OPEN_API_BASE_PATH_PROPERTY;
 import static org.citrusframework.openapi.OpenApiSettings.REQUEST_VALIDATION_ENABLED_PROPERTY;
 import static org.citrusframework.openapi.OpenApiSettings.RESPONSE_VALIDATION_ENABLED_PROPERTY;
 import static org.citrusframework.openapi.OpenApiSettings.VALIDATE_OPTIONAL_FIELDS_ENV;
@@ -35,6 +37,8 @@ public class OpenApiSettingsTest {
     private static final boolean RESPONSE_VALIDATION_ENABLED_GLOBALLY = OpenApiSettings.isResponseValidationEnabledGlobally();
     private static final boolean VALIDATE_OPTIONAL_FIELDS_ENABLED_GLOBALLY = OpenApiSettings.isValidateOptionalFieldsGlobally();
     private static final boolean GENERATE_OPTIONAL_FIELDS_ENABLED_GLOBALLY = OpenApiSettings.isGenerateOptionalFieldsGlobally();
+    private static final boolean NEGLECT_BASE_PATH_GLOBALLY = OpenApiSettings.isNeglectBasePathGlobally()
+        ;
     private final EnvironmentVariables environmentVariables = new EnvironmentVariables();
 
     @BeforeMethod
@@ -43,6 +47,7 @@ public class OpenApiSettingsTest {
         System.clearProperty(VALIDATE_OPTIONAL_FIELDS_PROPERTY);
         System.clearProperty(REQUEST_VALIDATION_ENABLED_PROPERTY);
         System.clearProperty(RESPONSE_VALIDATION_ENABLED_PROPERTY);
+        System.clearProperty(NEGLECT_OPEN_API_BASE_PATH_PROPERTY);
     }
 
     @AfterMethod
@@ -71,6 +76,12 @@ public class OpenApiSettingsTest {
             System.clearProperty(RESPONSE_VALIDATION_ENABLED_PROPERTY);
         } else {
             System.setProperty(RESPONSE_VALIDATION_ENABLED_PROPERTY, "true");
+        }
+
+        if (!NEGLECT_BASE_PATH_GLOBALLY) {
+            System.clearProperty(NEGLECT_OPEN_API_BASE_PATH_PROPERTY);
+        } else {
+            System.setProperty(NEGLECT_OPEN_API_BASE_PATH_PROPERTY, "true");
         }
     }
 
@@ -205,4 +216,38 @@ public class OpenApiSettingsTest {
     public void testValidateOptionalFieldsEnabledByDefault() {
         assertTrue(OpenApiSettings.isValidateOptionalFieldsGlobally());
     }
+
+    @Test
+    public void testNeglectBasePathEnabledByProperty() throws Exception {
+        environmentVariables.setup();
+        System.setProperty(NEGLECT_OPEN_API_BASE_PATH_PROPERTY, "true");
+        assertTrue(OpenApiSettings.isNeglectBasePathGlobally());
+    }
+
+    @Test
+    public void testNeglectBasePathDisabledByProperty() throws Exception {
+        environmentVariables.setup();
+        System.setProperty(NEGLECT_OPEN_API_BASE_PATH_PROPERTY, "false");
+        assertFalse(OpenApiSettings.isNeglectBasePathGlobally());
+    }
+
+    @Test
+    public void testNeglectBasePathDisabledByEnvVar() throws Exception {
+        environmentVariables.set(NEGLECT_OPEN_API_BASE_PATH_ENV, "false");
+        environmentVariables.setup();
+        assertFalse(OpenApiSettings.isNeglectBasePathGlobally());
+    }
+
+    @Test
+    public void testNeglectBasePathEnabledByEnvVar() throws Exception {
+        environmentVariables.set(NEGLECT_OPEN_API_BASE_PATH_ENV, "true");
+        environmentVariables.setup();
+        assertTrue(OpenApiSettings.isNeglectBasePathGlobally());
+    }
+
+    @Test
+    public void testNeglectBasePathDisabledByDefault() {
+        assertFalse(OpenApiSettings.isNeglectBasePathGlobally());
+    }
+
 }

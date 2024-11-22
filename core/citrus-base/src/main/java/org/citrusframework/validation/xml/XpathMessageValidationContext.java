@@ -53,6 +53,11 @@ public class XpathMessageValidationContext extends XmlMessageValidationContext {
         this.xPathExpressions = builder.expressions;
     }
 
+    @Override
+    public boolean requiresValidator() {
+        return true;
+    }
+
     /**
      * Fluent builder.
      */

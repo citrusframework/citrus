@@ -179,7 +179,7 @@ class OpenApiParameterFormatter {
         }
 
         if (!rootNode.isObject()) {
-            throw new IllegalArgumentException("The provided JSON is not a valid JSON object.");
+            throw new IllegalArgumentException("The provided string is not a valid JSON object.");
         }
 
         return convertNodeToMap((ObjectNode) rootNode);

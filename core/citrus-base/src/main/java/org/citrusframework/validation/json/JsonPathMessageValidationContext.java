@@ -54,6 +54,11 @@ public class JsonPathMessageValidationContext extends DefaultValidationContext {
         this(new Builder());
     }
 
+    @Override
+    public boolean requiresValidator() {
+        return true;
+    }
+
     /**
      * Fluent builder.
      */
@@ -119,4 +124,6 @@ public class JsonPathMessageValidationContext extends DefaultValidationContext {
     public static boolean isJsonPathExpression(String pathExpression) {
         return StringUtils.hasText(pathExpression) && (pathExpression.startsWith("$"));
     }
+
+
 }

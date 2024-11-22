@@ -1,5 +1,7 @@
 package org.citrusframework.openapi.generator.rest.petstore.spring;
 
+import static org.citrusframework.openapi.generator.rest.petstore.PetStoreOpenApi.petStoreSpecification;
+
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.testapi.RestApiSendMessageActionBuilder;
 import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
@@ -8,15 +10,12 @@ import org.citrusframework.openapi.generator.rest.petstore.request.StoreApi;
 import org.citrusframework.openapi.generator.rest.petstore.request.UserApi;
 import org.citrusframework.openapi.testapi.spring.RestApiReceiveMessageActionParser;
 import org.citrusframework.openapi.testapi.spring.RestApiSendMessageActionParser;
-import org.citrusframework.openapi.generator.rest.petstore.PetStore;
+import org.citrusframework.openapi.generator.rest.petstore.PetStoreOpenApi;
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:43.309584600+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-19T06:57:22.933962900+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class PetStoreNamespaceHandler extends NamespaceHandlerSupport {
-
-    private final OpenApiSpecification openApiSpecification = OpenApiSpecification.from(
-        PetStore.petStoreApi());
 
     @Override
     public void init() {
@@ -142,7 +141,7 @@ public class PetStoreNamespaceHandler extends NamespaceHandlerSupport {
         String[] constructorParameters,
         String[] nonConstructorParameters) {
 
-        RestApiSendMessageActionParser sendParser = new RestApiSendMessageActionParser(openApiSpecification, operationName,
+        RestApiSendMessageActionParser sendParser = new RestApiSendMessageActionParser(petStoreSpecification, operationName,
             path,
             apiClass,
             sendBeanClass,
@@ -152,7 +151,7 @@ public class PetStoreNamespaceHandler extends NamespaceHandlerSupport {
         sendParser.setNonConstructorParameters(nonConstructorParameters);
         registerBeanDefinitionParser("send-"+elementName, sendParser);
 
-        RestApiReceiveMessageActionParser receiveParser = new RestApiReceiveMessageActionParser(openApiSpecification,
+        RestApiReceiveMessageActionParser receiveParser = new RestApiReceiveMessageActionParser(petStoreSpecification,
         operationName, apiClass, receiveBeanClass, "petstore.endpoint");
         registerBeanDefinitionParser("receive-"+elementName, receiveParser);
     }

@@ -22,7 +22,7 @@
             </create-variables>
 
             <extpetstore:send-generate-vaccination-report
-                template="${templateData}"
+                template="classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/vaccinationTemplate.bin"
                 reqIntVal="1"
                 additionalData="${additionalData}"
                 optIntVal="100"
@@ -48,7 +48,7 @@
                                 .containsExactlyInAnyOrderEntriesOf(java.util.Map.of(
                                     "additionalData", """${additionalData}""",
                                     "reqIntVal", "1",
-                                    "template", new byte[]{36, 123, 116, 101, 109, 112, 108, 97, 116, 101, 68, 97, 116, 97, 125},
+                                    "template", new byte[]{1,2,3,4},
                                     "optIntVal", "100",
                                     "optBoolVal","true",
                                     "optDateVal","2024-12-1",

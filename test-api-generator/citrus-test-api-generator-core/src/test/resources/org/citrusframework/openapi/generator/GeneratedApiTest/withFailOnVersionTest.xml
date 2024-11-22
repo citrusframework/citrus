@@ -34,7 +34,7 @@
 
             <assert exception="org.citrusframework.exceptions.ValidationException" message="Values not equal for header element 'citrus_http_version', expected 'HTTP/1.0' but was 'HTTP/1.1'">
                 <when>
-                    <petstore:receive-get-pet-by-id >
+                    <petstore:receive-get-pet-by-id>
                         <http:headers version="HTTP/1.0" />
                     </petstore:receive-get-pet-by-id>
                 </when>

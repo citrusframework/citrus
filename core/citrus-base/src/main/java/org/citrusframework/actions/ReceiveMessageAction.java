@@ -16,6 +16,15 @@
 
 package org.citrusframework.actions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -44,23 +53,11 @@ import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
-import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
-import org.citrusframework.validation.xml.XpathMessageValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * This action receives messages from a service destination. Action uses a {@link org.citrusframework.endpoint.Endpoint}
@@ -245,14 +242,12 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 }
             } else {
                 boolean mustFindValidator = validationContexts.stream()
-                        .anyMatch(item -> JsonPathMessageValidationContext.class.isAssignableFrom(item.getClass()) ||
-                                XpathMessageValidationContext.class.isAssignableFrom(item.getClass()) ||
-                                ScriptValidationContext.class.isAssignableFrom(item.getClass()));
+                        .anyMatch(ValidationContext::requiresValidator);
 
-                List<MessageValidator<? extends ValidationContext>> validators =
+                List<MessageValidator<? extends ValidationContext>> activeValidators =
                         context.getMessageValidatorRegistry().findMessageValidators(messageType, message, mustFindValidator);
 
-                for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
+                for (MessageValidator<? extends ValidationContext> messageValidator : activeValidators) {
                     messageValidator.validateMessage(message, controlMessage, context, validationContexts);
                 }
             }
