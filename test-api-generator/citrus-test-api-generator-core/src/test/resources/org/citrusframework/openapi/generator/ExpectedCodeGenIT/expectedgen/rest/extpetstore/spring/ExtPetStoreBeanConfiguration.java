@@ -1,5 +1,7 @@
 package org.citrusframework.openapi.generator.rest.extpetstore.spring;
 
+import static org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStoreOpenApi.extPetStoreSpecification;
+
 import java.util.List;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.openapi.OpenApiRepository;
@@ -10,17 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStore;
+import org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStoreOpenApi;
 
 @Configuration
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:44.158583300+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-23T14:15:19.250811+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class ExtPetStoreBeanConfiguration {
 
     @Bean
     public OpenApiRepository extPetStoreOpenApiRepository() {
         var openApiRepository = new OpenApiRepository();
-        openApiRepository.getOpenApiSpecifications().add(OpenApiSpecification.from(
-            ExtPetStore.extPetStoreApi()));
+        openApiRepository.getOpenApiSpecifications().add(extPetStoreSpecification);
         return openApiRepository;
     }
 

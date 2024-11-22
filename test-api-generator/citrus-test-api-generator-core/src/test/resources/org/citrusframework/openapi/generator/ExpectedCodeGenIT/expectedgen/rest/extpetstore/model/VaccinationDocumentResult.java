@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * VaccinationDocumentResult
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:44.158583300+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-19T06:57:24.834965400+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class VaccinationDocumentResult {
   private String documentId;
 
@@ -37,10 +37,10 @@ public class VaccinationDocumentResult {
     return this;
   }
 
-   /**
+  /**
    * The unique ID of the uploaded vaccination document.
    * @return documentId
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public String getDocumentId() {

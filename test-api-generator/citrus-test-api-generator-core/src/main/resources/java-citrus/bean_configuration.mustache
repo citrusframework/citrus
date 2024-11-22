@@ -17,6 +17,8 @@
 }}
 package {{invokerPackage}}.spring;
 
+import static {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}OpenApi.{{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification;
+
 import java.util.List;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.openapi.OpenApiRepository;
@@ -31,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}};
+import {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}OpenApi;
 
 @Configuration
 {{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
@@ -40,8 +42,7 @@ public class {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}BeanConfigurati
     @Bean
     public OpenApiRepository {{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}OpenApiRepository() {
         var openApiRepository = new OpenApiRepository();
-        openApiRepository.getOpenApiSpecifications().add(OpenApiSpecification.from(
-            {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}.{{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Api()));
+        openApiRepository.getOpenApiSpecifications().add({{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification);
         return openApiRepository;
     }
 

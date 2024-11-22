@@ -12,6 +12,14 @@
             <plugin>
                 <artifactId>citrus-test-api-generator-maven-plugin</artifactId>
                 <configuration>
+                    <globalConfigOptions>
+                        <a>b</a>
+                        <other>otherOption</other>
+                    </globalConfigOptions>
+                    <globalProperties>
+                        <debugOpenAPI>true</debugOpenAPI>
+                        <debugModels>true</debugModels>
+                    </globalProperties>
                     <apis>
                         <api>
                             <apiPackage>org.mypackage.%PREFIX%.api</apiPackage>
@@ -21,6 +29,13 @@
                             <prefix>Full</prefix>
                             <source>api/test-api.yml</source>
                             <targetXmlnsNamespace>"http://myNamespace"</targetXmlnsNamespace>
+                            <additionalProperties>a=b,c=d</additionalProperties>
+                            <rootContextPath>/a/b/c/d</rootContextPath>
+                            <apiConfigOptions>
+                                <!-- TODO: document this feature -->
+                                <a>b</a>
+                                <c>d</c>
+                            </apiConfigOptions>
                         </api>
                     </apis>
                     <sourceFolder>generated-sources-mod</sourceFolder>

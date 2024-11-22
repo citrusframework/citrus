@@ -16,6 +16,10 @@
 
 package org.citrusframework.openapi.util;
 
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
+import static org.citrusframework.util.StringUtils.hasText;
+
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import jakarta.annotation.Nonnull;
@@ -23,10 +27,6 @@ import jakarta.annotation.Nullable;
 import org.citrusframework.openapi.OpenApiConstants;
 import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.spi.ReferenceResolver;
-
-import static java.lang.String.format;
-import static java.util.stream.Collectors.joining;
-import static org.citrusframework.util.StringUtils.hasText;
 
 public final class OpenApiUtils {
 
@@ -86,4 +86,5 @@ public final class OpenApiUtils {
                 .flatMap(spec -> spec.getAliases().stream())
                 .collect(joining(", "));
     }
+
 }

@@ -71,8 +71,10 @@ public interface RandomElement {
             if (value instanceof RandomObject randomObject) {
                 this.putAll(randomObject);
                 return;
+
             }
-            RandomElement.super.push(value);
+
+            throw new IllegalArgumentException("Value must be an instance of RandomObject");
         }
     }
 

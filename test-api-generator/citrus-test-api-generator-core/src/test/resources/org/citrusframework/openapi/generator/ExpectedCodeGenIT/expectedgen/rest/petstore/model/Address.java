@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * Address
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:43.309584600+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-23T14:15:17.563204500+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class Address {
   private String street;
 
@@ -43,10 +43,10 @@ public class Address {
     return this;
   }
 
-   /**
+  /**
    * Get street
    * @return street
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public String getStreet() {
@@ -58,17 +58,16 @@ public class Address {
     this.street = street;
   }
 
-
   public Address city(String city) {
     
     this.city = city;
     return this;
   }
 
-   /**
+  /**
    * Get city
    * @return city
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public String getCity() {
@@ -80,17 +79,16 @@ public class Address {
     this.city = city;
   }
 
-
   public Address state(String state) {
     
     this.state = state;
     return this;
   }
 
-   /**
+  /**
    * Get state
    * @return state
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public String getState() {
@@ -102,17 +100,16 @@ public class Address {
     this.state = state;
   }
 
-
   public Address zip(String zip) {
     
     this.zip = zip;
     return this;
   }
 
-   /**
+  /**
    * Get zip
    * @return zip
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public String getZip() {

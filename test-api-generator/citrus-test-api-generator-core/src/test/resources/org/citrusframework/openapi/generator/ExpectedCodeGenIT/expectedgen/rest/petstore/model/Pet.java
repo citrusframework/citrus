@@ -29,7 +29,7 @@ import org.citrusframework.openapi.generator.rest.petstore.model.Tag;
 /**
  * Pet
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:43.309584600+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-19T06:57:22.933962900+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class Pet {
   private Long id;
 
@@ -87,10 +87,10 @@ public class Pet {
     return this;
   }
 
-   /**
+  /**
    * Get id
    * @return id
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public Long getId() {
@@ -102,17 +102,16 @@ public class Pet {
     this.id = id;
   }
 
-
   public Pet _name(String _name) {
     
     this._name = _name;
     return this;
   }
 
-   /**
+  /**
    * Get _name
    * @return _name
-  **/
+   */
   @jakarta.annotation.Nonnull
 
   public String getName() {
@@ -124,17 +123,16 @@ public class Pet {
     this._name = _name;
   }
 
-
   public Pet category(Category category) {
     
     this.category = category;
     return this;
   }
 
-   /**
+  /**
    * Get category
    * @return category
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public Category getCategory() {
@@ -145,7 +143,6 @@ public class Pet {
   public void setCategory(Category category) {
     this.category = category;
   }
-
 
   public Pet photoUrls(List<String> photoUrls) {
     
@@ -161,10 +158,10 @@ public class Pet {
     return this;
   }
 
-   /**
+  /**
    * Get photoUrls
    * @return photoUrls
-  **/
+   */
   @jakarta.annotation.Nonnull
 
   public List<String> getPhotoUrls() {
@@ -175,7 +172,6 @@ public class Pet {
   public void setPhotoUrls(List<String> photoUrls) {
     this.photoUrls = photoUrls;
   }
-
 
   public Pet tags(List<Tag> tags) {
     
@@ -191,10 +187,10 @@ public class Pet {
     return this;
   }
 
-   /**
+  /**
    * Get tags
    * @return tags
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public List<Tag> getTags() {
@@ -206,17 +202,16 @@ public class Pet {
     this.tags = tags;
   }
 
-
   public Pet status(StatusEnum status) {
     
     this.status = status;
     return this;
   }
 
-   /**
+  /**
    * pet status in the store
    * @return status
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public StatusEnum getStatus() {

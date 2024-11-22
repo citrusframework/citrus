@@ -16,6 +16,17 @@
 
 package org.citrusframework.openapi.generator;
 
+import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toMap;
+import static org.citrusframework.util.ReflectionHelper.copyFields;
+import static org.citrusframework.util.StringUtils.appendSegmentToUrlPath;
+import static org.citrusframework.util.StringUtils.convertFirstChartToUpperCase;
+import static org.openapitools.codegen.CliOption.newString;
+import static org.openapitools.codegen.utils.CamelizeOption.LOWERCASE_FIRST_LETTER;
+import static org.openapitools.codegen.utils.StringUtils.camelize;
+
 import io.swagger.v3.core.util.Yaml;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -24,6 +35,15 @@ import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.servers.Server;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.testapi.RestApiSendMessageActionBuilder;
@@ -41,30 +61,21 @@ import org.openapitools.codegen.model.OperationsMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
-
-import static java.lang.Boolean.TRUE;
-import static java.lang.String.format;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toMap;
-import static org.citrusframework.util.ReflectionHelper.copyFields;
-import static org.citrusframework.util.StringUtils.appendSegmentToUrlPath;
-import static org.citrusframework.util.StringUtils.convertFirstChartToUpperCase;
-import static org.openapitools.codegen.CliOption.newString;
-import static org.openapitools.codegen.utils.CamelizeOption.LOWERCASE_FIRST_LETTER;
-import static org.openapitools.codegen.utils.StringUtils.camelize;
-
 public class CitrusJavaCodegen extends AbstractJavaCodegen {
 
     private static final Logger logger = LoggerFactory.getLogger(CitrusJavaCodegen.class);
+
+    /**
+     * The root context path used as prefix to the OpenAPI paths. Note that this need to be
+     * explicitly be defined by configuration and may differ from any server node that may
+     * be specified in the OpenAPI.
+     */
+    public static final String ROOT_CONTEXT_PATH = "rootContextPath";
+
+    /**
+     * Property to indicate, that the base path must be neglected when building the full path for an operation.
+     */
+    public static final String NEGLECT_BASE_PATH = "neglectBasePath";
 
     public static final String CODEGEN_NAME = "java-citrus";
     public static final String API_TYPE_REST = "REST";
@@ -127,10 +138,6 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
 
     public String getApiPrefix() {
         return apiPrefix;
-    }
-
-    public void setApiPrefix(String apiPrefix) {
-        this.apiPrefix = apiPrefix;
     }
 
     public String getHttpClient() {
@@ -255,8 +262,8 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
     }
 
     private void configureTypeMappings() {
-        this.typeMapping.put("binary", "Resource");
-        this.typeMapping.put("file", "Resource");
+        this.typeMapping.put("binary", "org.citrusframework.spi.Resource");
+        this.typeMapping.put("file", "org.citrusframework.spi.Resource");
     }
 
     /**
@@ -313,7 +320,7 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
 
     private void setupApiPrefix() {
         if (additionalProperties.containsKey(PREFIX)) {
-            this.setApiPrefix(additionalProperties.get(PREFIX).toString());
+            apiPrefix  = additionalProperties.get(PREFIX).toString();
             additionalProperties.put(PREFIX, apiPrefix);
             additionalProperties.put(PREFIX + "LowerCase", apiPrefix.toLowerCase());
         } else {
@@ -386,7 +393,7 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
     }
 
     /**
-     * Store a copy of the source open api as resource.
+     * Save a copy of the source OpenAPI as a resource, allowing it to be registered as an OpenAPI repository.
      */
     private void writeApiToResourceFolder() {
         String directoryPath = appendSegmentToUrlPath(getOutputDir(), getResourceFolder());
@@ -446,7 +453,7 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
 
     private void addDefaultSupportingFiles() {
         supportingFiles.add(new SupportingFile("api_locator.mustache", invokerFolder,
-                convertFirstChartToUpperCase(apiPrefix) + ".java"));
+                convertFirstChartToUpperCase(apiPrefix) + "OpenApi.java"));
         supportingFiles.add(new SupportingFile("bean_configuration.mustache", springFolder,
                 convertFirstChartToUpperCase(apiPrefix) + "BeanConfiguration.java"));
     }

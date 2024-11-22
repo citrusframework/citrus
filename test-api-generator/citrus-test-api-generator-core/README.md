@@ -1,4 +1,10 @@
-TODO
+TODO document the OpenApiSpecification retrieval strategy
+    - An OpenApiRepository does not have a unique name (and can exist in several versions). Therefore,
+      retrieval of a specifc spec from a repository is not trivial. For this, the alias concept has 
+      been introduced. Aliases are determined from the spec (e.g. the name of the spec, the resource 
+      name from which the spec was loaded without extension). Also, the name of the repository itself
+      can be used for retrieval, IF the repository contains only one spec. Otherwise, this would not be
+      ambiguous.
 TODO: document properties for security and others
 TODO: document default properties for the endpoint -> prefix with lowercase 
 
@@ -14,7 +20,7 @@ A type-safe method providing the correct java type and a non type-safe method us
 1. **Type-Safe Parameter Method**: This method accepts the required parameters directly.
 2. **String-Based Parameter Method**: This method accepts parameters as strings to allow for dynamic content.
 
-Method names of non type-safe methods are prepended with a `$`. This is mainly to avoid conflicts for 
+Method names of non type-safe methods are prepended with a `$`. This is mainly to avoid conflicts.
 
 ### Structure of the Generated API Class
 

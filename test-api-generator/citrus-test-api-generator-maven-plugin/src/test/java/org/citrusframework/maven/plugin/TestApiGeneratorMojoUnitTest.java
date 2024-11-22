@@ -1,6 +1,29 @@
 package org.citrusframework.maven.plugin;
 
+import static java.lang.Boolean.TRUE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_API_PACKAGE;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_API_TYPE;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_INVOKER_PACKAGE;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_META_INF_FOLDER;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_MODEL_PACKAGE;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_RESOURCE_FOLDER;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_SCHEMA_FOLDER_TEMPLATE;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_SOURCE_FOLDER;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_TARGET_NAMESPACE_TEMPLATE;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVars;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVarsToLowerCase;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.Mockito.doReturn;
+import static org.springframework.test.util.ReflectionTestUtils.getField;
+
 import jakarta.validation.constraints.NotNull;
+import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -19,28 +42,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.codegen.plugin.CodeGenMojo;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Stream;
-
-import static java.lang.Boolean.TRUE;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_API_PACKAGE;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_API_TYPE;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_INVOKER_PACKAGE;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_META_INF_FOLDER;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_MODEL_PACKAGE;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_RESOURCE_FOLDER;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_SCHEMA_FOLDER_TEMPLATE;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_SOURCE_FOLDER;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_TARGET_NAMESPACE_TEMPLATE;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVars;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVarsToLowerCase;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.Mockito.doReturn;
-import static org.springframework.test.util.ReflectionTestUtils.getField;
-
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings({"JUnitMalformedDeclaration", "JUnitMixedFramework"})
 class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
@@ -58,54 +59,55 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
 
     static Stream<Arguments> replaceDynamicVarsInPattern() {
         return Stream.of(
-                arguments("%PREFIX%-aa-%VERSION%", "MyPrefix", "1", false, "MyPrefix-aa-1"),
-                arguments("%PREFIX%-aa-%VERSION%", "MyPrefix", null, false, "MyPrefix-aa"),
-                arguments("%PREFIX%/aa/%VERSION%", "MyPrefix", "1", false, "MyPrefix/aa/1"),
-                arguments("%PREFIX%/aa/%VERSION%", "MyPrefix", null, false, "MyPrefix/aa"),
-                arguments("%PREFIX%.aa.%VERSION%", "MyPrefix", "1", true, "myprefix.aa.1"),
-                arguments("%PREFIX%.aa.%VERSION%", "MyPrefix", null, true, "myprefix.aa")
+            arguments("%PREFIX%-aa-%VERSION%", "MyPrefix", "1", false, "MyPrefix-aa-1"),
+            arguments("%PREFIX%-aa-%VERSION%", "MyPrefix", null, false, "MyPrefix-aa"),
+            arguments("%PREFIX%/aa/%VERSION%", "MyPrefix", "1", false, "MyPrefix/aa/1"),
+            arguments("%PREFIX%/aa/%VERSION%", "MyPrefix", null, false, "MyPrefix/aa"),
+            arguments("%PREFIX%.aa.%VERSION%", "MyPrefix", "1", true, "myprefix.aa.1"),
+            arguments("%PREFIX%.aa.%VERSION%", "MyPrefix", null, true, "myprefix.aa")
         );
     }
 
     static Stream<Arguments> configureMojo() {
         return Stream.of(
-                arguments("DefaultConfigWithoutVersion", createMinimalApiConfig(null),
-                        createMinimalCodeGenMojoParams(
-                                "schema/xsd",
-                                "org.citrusframework.automation.mydefaultprefix",
-                                "org.citrusframework.automation.mydefaultprefix.model",
-                                "org.citrusframework.automation.mydefaultprefix.api",
-                                "http://www.citrusframework.org/citrus-test-schema/mydefaultprefix-api"
-                        )),
-                arguments("DefaultConfigWithVersion", createMinimalApiConfig("v1"),
-                        createMinimalCodeGenMojoParams(
-                                "schema/xsd/v1",
-                                "org.citrusframework.automation.mydefaultprefix.v1",
-                                "org.citrusframework.automation.mydefaultprefix.v1.model",
-                                "org.citrusframework.automation.mydefaultprefix.v1.api",
-                                "http://www.citrusframework.org/citrus-test-schema/v1/mydefaultprefix-api"
-                        )),
-                arguments("CustomConfigWithoutVersion", createFullApiConfig(null),
-                        createCustomCodeGenMojoParams(
-                                "schema/xsd",
-                                "my.mycustomprefix.invoker.package",
-                                "my.mycustomprefix.model.package",
-                                "my.mycustomprefix.api.package",
-                                "myNamespace/citrus-test-schema/mycustomprefix"
-                        )),
-                arguments("CustomConfigWithVersion", createFullApiConfig("v1"),
-                        createCustomCodeGenMojoParams(
-                                "schema/xsd/v1",
-                                "my.mycustomprefix.v1.invoker.package",
-                                "my.mycustomprefix.v1.model.package",
-                                "my.mycustomprefix.v1.api.package",
-                                "myNamespace/citrus-test-schema/mycustomprefix/v1"
-                        ))
+            arguments("DefaultConfigWithoutVersion", createMinimalApiConfig(null),
+                createMinimalCodeGenMojoParams(
+                    "schema/xsd",
+                    "org.citrusframework.automation.mydefaultprefix",
+                    "org.citrusframework.automation.mydefaultprefix.model",
+                    "org.citrusframework.automation.mydefaultprefix.api",
+                    "http://www.citrusframework.org/citrus-test-schema/mydefaultprefix-api"
+                )),
+            arguments("DefaultConfigWithVersion", createMinimalApiConfig("v1"),
+                createMinimalCodeGenMojoParams(
+                    "schema/xsd/v1",
+                    "org.citrusframework.automation.mydefaultprefix.v1",
+                    "org.citrusframework.automation.mydefaultprefix.v1.model",
+                    "org.citrusframework.automation.mydefaultprefix.v1.api",
+                    "http://www.citrusframework.org/citrus-test-schema/v1/mydefaultprefix-api"
+                )),
+            arguments("CustomConfigWithoutVersion", createFullApiConfig(null),
+                createCustomCodeGenMojoParams(
+                    "schema/xsd",
+                    "my.mycustomprefix.invoker.package",
+                    "my.mycustomprefix.model.package",
+                    "my.mycustomprefix.api.package",
+                    "myNamespace/citrus-test-schema/mycustomprefix"
+                )),
+            arguments("CustomConfigWithVersion", createFullApiConfig("v1"),
+                createCustomCodeGenMojoParams(
+                    "schema/xsd/v1",
+                    "my.mycustomprefix.v1.invoker.package",
+                    "my.mycustomprefix.v1.model.package",
+                    "my.mycustomprefix.v1.api.package",
+                    "myNamespace/citrus-test-schema/mycustomprefix/v1"
+                ))
         );
     }
 
     /**
-     * Create an {@link ApiConfig} with the minimal configuration, that is required. All other values will be chosen as defaults.
+     * Create an {@link ApiConfig} with the minimal configuration, that is required. All other
+     * values will be chosen as defaults.
      */
     @NotNull
     private static ApiConfig createMinimalApiConfig(String version) {
@@ -133,12 +135,17 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
         apiConfig.setUseTags(false);
         apiConfig.setType(ApiType.SOAP);
         apiConfig.setVersion(version);
+        apiConfig.setApiConfigOptions(Map.of("optA", "A", "optB", "B"));
+        apiConfig.setAdditionalProperties(List.of("a=b", "c=d"));
+        apiConfig.setRootContextPath("/a/b/c/d");
 
         return apiConfig;
     }
 
     @NotNull
-    private static CodeGenMojoParams createMinimalCodeGenMojoParams(String schemaFolder, String invokerPackage, String modelPackage, String apiPackage, String targetXmlnsNamespace) {
+    private static CodeGenMojoParams createMinimalCodeGenMojoParams(String schemaFolder,
+        String invokerPackage, String modelPackage, String apiPackage,
+        String targetXmlnsNamespace) {
 
         Map<String, Object> configOptionsControlMap = new HashMap<>();
         configOptionsControlMap.put("prefix", "MyDefaultPrefix");
@@ -153,11 +160,13 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
         configOptionsControlMap.put("apiType", "REST");
         configOptionsControlMap.put("useTags", true);
 
-        return new CodeGenMojoParams("target", "myDefaultSource", configOptionsControlMap);
+        return new CodeGenMojoParams("target", "myDefaultSource", configOptionsControlMap, Collections.emptyList());
     }
 
     @NotNull
-    private static CodeGenMojoParams createCustomCodeGenMojoParams(String schemaFolder, String invokerPackage, String modelPackage, String apiPackage, String targetXmlnsNamespace) {
+    private static CodeGenMojoParams createCustomCodeGenMojoParams(String schemaFolder,
+        String invokerPackage, String modelPackage, String apiPackage,
+        String targetXmlnsNamespace) {
 
         Map<String, Object> configOptionsControlMap = new HashMap<>();
         configOptionsControlMap.put("prefix", "MyCustomPrefix");
@@ -171,8 +180,11 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
         configOptionsControlMap.put("targetXmlnsNamespace", targetXmlnsNamespace);
         configOptionsControlMap.put("apiType", "SOAP");
         configOptionsControlMap.put("useTags", false);
+        configOptionsControlMap.put("optA", "A");
+        configOptionsControlMap.put("optB", "B");
 
-        return new CodeGenMojoParams("target", "myCustomSource", configOptionsControlMap);
+        return new CodeGenMojoParams("target", "myCustomSource", configOptionsControlMap,
+            List.of("a=b", "c=d", "rootContextPath=/a/b/c/d"));
     }
 
     @BeforeEach
@@ -182,20 +194,22 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
 
     @ParameterizedTest
     @MethodSource
-    void replaceDynamicVarsInPattern(String pattern, String prefix, String version, boolean toLowerCasePrefix, String expectedResult) {
+    void replaceDynamicVarsInPattern(String pattern, String prefix, String version,
+        boolean toLowerCasePrefix, String expectedResult) {
 
         if (toLowerCasePrefix) {
             assertThat(
-                    replaceDynamicVarsToLowerCase(pattern, prefix, version)).isEqualTo(expectedResult);
+                replaceDynamicVarsToLowerCase(pattern, prefix, version)).isEqualTo(expectedResult);
         } else {
             assertThat(
-                    replaceDynamicVars(pattern, prefix, version)).isEqualTo(expectedResult);
+                replaceDynamicVars(pattern, prefix, version)).isEqualTo(expectedResult);
         }
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource
-    void configureMojo(String name, ApiConfig apiConfig, CodeGenMojoParams controlParams) throws MojoExecutionException {
+    void configureMojo(String name, ApiConfig apiConfig, CodeGenMojoParams controlParams)
+        throws MojoExecutionException {
         doReturn("target").when(buildMock).getDirectory();
         doReturn(buildMock).when(mavenProjectMock).getBuild();
         fixture.setMavenProject(mavenProjectMock);
@@ -210,11 +224,23 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
         assertThat(getField(codeGenMojo, "generatorName")).isEqualTo("java-citrus");
 
         //noinspection unchecked
+        if (controlParams.additionalProperties.isEmpty()) {
+            //noinspection unchecked
+            assertThat((List<String>) getField(codeGenMojo, "additionalProperties"))
+                .isNull();
+        } else {
+            //noinspection unchecked
+            assertThat((List<String>) getField(codeGenMojo, "additionalProperties"))
+                .containsExactlyElementsOf(controlParams.additionalProperties);
+        }
+
+        //noinspection unchecked
         assertThat((Map<Object, Object>) getField(codeGenMojo, "configOptions"))
-                .containsExactlyInAnyOrderEntriesOf(controlParams.configOptions);
+            .containsExactlyInAnyOrderEntriesOf(controlParams.configOptions);
     }
 
-    private record CodeGenMojoParams(String output, String source, Map<String, Object> configOptions) {
+    private record CodeGenMojoParams(String output, String source,
+                                     Map<String, Object> configOptions, List<String> additionalProperties) {
 
     }
 
@@ -245,7 +271,8 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
 
         @Test
         void targetXmlnsNamespaceDefault() {
-            assertThat(configFixture.getTargetXmlnsNamespace()).isEqualTo(DEFAULT_TARGET_NAMESPACE_TEMPLATE);
+            assertThat(configFixture.getTargetXmlnsNamespace()).isEqualTo(
+                DEFAULT_TARGET_NAMESPACE_TEMPLATE);
         }
 
         @Test
@@ -261,7 +288,8 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
 
         @Test
         void schemaFolderDefault() {
-            assertThat((String) getField(fixture, "schemaFolder")).isEqualTo(DEFAULT_SCHEMA_FOLDER_TEMPLATE);
+            assertThat((String) getField(fixture, "schemaFolder")).isEqualTo(
+                DEFAULT_SCHEMA_FOLDER_TEMPLATE);
         }
 
         @Test
@@ -271,12 +299,14 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
 
         @Test
         void resourceFolderDefault() {
-            assertThat((String) getField(fixture, "resourceFolder")).isEqualTo(DEFAULT_RESOURCE_FOLDER);
+            assertThat((String) getField(fixture, "resourceFolder")).isEqualTo(
+                DEFAULT_RESOURCE_FOLDER);
         }
 
         @Test
         void metaInfFolderDefault() {
-            assertThat((String) getField(fixture, "metaInfFolder")).isEqualTo(DEFAULT_META_INF_FOLDER);
+            assertThat((String) getField(fixture, "metaInfFolder")).isEqualTo(
+                DEFAULT_META_INF_FOLDER);
         }
     }
 }

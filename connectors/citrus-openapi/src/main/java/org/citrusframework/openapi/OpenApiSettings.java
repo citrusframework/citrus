@@ -37,6 +37,9 @@ public class OpenApiSettings {
     public static final String RESPONSE_VALIDATION_ENABLED_PROPERTY = "citrus.openapi.validation.enabled.response";
     public static final String RESPONSE_VALIDATION_ENABLED_ENV = "CITRUS_OPENAPI_VALIDATION_DISABLE_RESPONSE";
 
+    public static final String NEGLECT_OPEN_API_BASE_PATH_PROPERTY  = "citrus.openapi.neglect.base.path";
+    public static final String NEGLECT_OPEN_API_BASE_PATH_ENV = "CITRUS_OPENAPI_NEGLECT_BASE_PATH";
+
     private OpenApiSettings() {
         // static access only
     }
@@ -61,5 +64,11 @@ public class OpenApiSettings {
         return parseBoolean(System.getProperty(
                 RESPONSE_VALIDATION_ENABLED_PROPERTY, System.getenv(RESPONSE_VALIDATION_ENABLED_ENV) != null ?
                         System.getenv(RESPONSE_VALIDATION_ENABLED_ENV) : "true"));
+    }
+
+    public static boolean isNeglectBasePathGlobally() {
+        return parseBoolean(System.getProperty(
+            NEGLECT_OPEN_API_BASE_PATH_PROPERTY, System.getenv(NEGLECT_OPEN_API_BASE_PATH_ENV) != null ?
+                System.getenv(NEGLECT_OPEN_API_BASE_PATH_ENV) : "false"));
     }
 }

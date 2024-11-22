@@ -23,6 +23,8 @@ import static java.util.Collections.emptyMap;
 import static org.citrusframework.util.StringUtils.isEmpty;
 import static org.citrusframework.util.StringUtils.isNotEmpty;
 
+import static {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}OpenApi.{{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification;
+
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -31,11 +33,13 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.UUID;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.testapi.ApiActionBuilderCustomizer;
+import org.citrusframework.openapi.testapi.GeneratedApiOperationInfo;
 import org.citrusframework.openapi.testapi.ParameterStyle;
 import {{requestBuilderClass}};
 import {{responseBuilderClass}};
@@ -45,8 +49,10 @@ import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 
-import {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}};
-{{#isRest}}import {{modelPackage}}.*;{{/isRest}}
+import {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}OpenApi;
+{{#imports}}
+import {{import}};
+{{/imports}}
 
 @SuppressWarnings("unused")
 {{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
@@ -80,8 +86,6 @@ public class {{classname}} implements GeneratedApi
 
     private final Endpoint endpoint;
 
-    private final OpenApiSpecification openApiSpecification;
-
     public {{classname}}(Endpoint endpoint)  {
         this(endpoint, emptyList());
     }
@@ -89,12 +93,6 @@ public class {{classname}} implements GeneratedApi
     public {{classname}}(Endpoint endpoint, List<ApiActionBuilderCustomizer> customizers)  {
         this.endpoint = endpoint;
         this.customizers = customizers;
-
-        URL resource = {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}.class.getResource("{{prefix}}_openApi.yaml");
-        if (resource == null) {
-            throw new IllegalStateException(format("Cannot find resource '%s'. This resource is typically created during API generation and should therefore be present. Check API generation.", "{{prefix}}_openApi.yaml"));
-        }
-        openApiSpecification = OpenApiSpecification.from(resource);
     }
 
     public static {{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}(Endpoint endpoint) {
@@ -147,7 +145,7 @@ public class {{classname}} implements GeneratedApi
      */
     public {{operationIdCamelCase}}SendActionBuilder send{{operationIdCamelCase}}({{#requiredNonBodyParams}}{{{dataType}}} {{paramName}}{{^-last}}, {{/-last}}{{/requiredNonBodyParams}})   {
         {{#authWithParameters}}
-            {{operationIdCamelCase}}SendActionBuilder builder =  new {{operationIdCamelCase}}SendActionBuilder(this, openApiSpecification{{#requiredNonBodyParams}}, {{paramName}}{{/requiredNonBodyParams}});
+            {{operationIdCamelCase}}SendActionBuilder builder =  new {{operationIdCamelCase}}SendActionBuilder(this{{#requiredNonBodyParams}}, {{paramName}}{{/requiredNonBodyParams}});
                 {{#hasApiKeyAuth}}
             builder.setBase64EncodeApiKey(base64EncodeApiKey);
                 {{/hasApiKeyAuth}}
@@ -164,7 +162,7 @@ public class {{classname}} implements GeneratedApi
             return builder;
         {{/authWithParameters}}
         {{^authWithParameters}}
-            return new {{operationIdCamelCase}}SendActionBuilder(this, openApiSpecification{{#requiredNonBodyParams}}, {{paramName}}{{/requiredNonBodyParams}});
+            return new {{operationIdCamelCase}}SendActionBuilder(this{{#requiredNonBodyParams}}, {{paramName}}{{/requiredNonBodyParams}});
         {{/authWithParameters}}
     }
     {{#needsConstructorWithAllStringParameter}}
@@ -174,7 +172,7 @@ public class {{classname}} implements GeneratedApi
      */
     public {{operationIdCamelCase}}SendActionBuilder send{{operationIdCamelCase}}$({{#requiredNonBodyParams}}{{^isArray}}String {{paramName}}Expression{{/isArray}}{{#isArray}}List<String> {{paramName}}Expression{{/isArray}}{{^-last}}, {{/-last}} {{/requiredNonBodyParams}})   {
         {{#authWithParameters}}
-            {{operationIdCamelCase}}SendActionBuilder builder =  new {{operationIdCamelCase}}SendActionBuilder(openApiSpecification, this{{#requiredNonBodyParams}}, {{paramName}}Expression{{/requiredNonBodyParams}});
+            {{operationIdCamelCase}}SendActionBuilder builder =  new {{operationIdCamelCase}}SendActionBuilder({{#requiredNonBodyParams}}{{paramName}}Expression, {{/requiredNonBodyParams}}this);
             {{#hasApiKeyAuth}}
             builder.setBase64EncodeApiKey(base64EncodeApiKey);
             {{/hasApiKeyAuth}}
@@ -193,17 +191,17 @@ public class {{classname}} implements GeneratedApi
             return builder;
         {{/authWithParameters}}
         {{^authWithParameters}}
-            return new {{operationIdCamelCase}}SendActionBuilder(openApiSpecification, this{{#requiredNonBodyParams}}, {{paramName}}Expression{{/requiredNonBodyParams}});
+            return new {{operationIdCamelCase}}SendActionBuilder({{#requiredNonBodyParams}}{{paramName}}Expression, {{/requiredNonBodyParams}}this);
         {{/authWithParameters}}
     }
     {{/needsConstructorWithAllStringParameter}}
 
     public {{operationIdCamelCase}}ReceiveActionBuilder receive{{operationIdCamelCase}}(@NotNull HttpStatus statusCode)   {
-        return new {{operationIdCamelCase}}ReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
+        return new {{operationIdCamelCase}}ReceiveActionBuilder(this, Integer.toString(statusCode.value()));
     }
 
     public {{operationIdCamelCase}}ReceiveActionBuilder receive{{operationIdCamelCase}}(@NotNull String statusCode)   {
-        return new {{operationIdCamelCase}}ReceiveActionBuilder(this, openApiSpecification,  statusCode);
+        return new {{operationIdCamelCase}}ReceiveActionBuilder(this,  statusCode);
     }
 
     {{/operation}}
@@ -211,11 +209,11 @@ public class {{classname}} implements GeneratedApi
 {{#operations}}
     {{#operation}}
     public static class {{operationIdCamelCase}}SendActionBuilder extends
-                {{requestBuilderClassName}} {
+                {{requestBuilderClassName}} implements GeneratedApiOperationInfo {
 
         private static final String METHOD = "{{httpMethod}}";
 
-        private static final String ENDPOINT = "{{basePath}}{{path}}";
+        private static final String ENDPOINT = "{{rootContextPath}}{{path}}";
 
         private static final String OPERATION_NAME = "{{operationId}}";
         {{#hasApiKeyAuth}}
@@ -255,8 +253,8 @@ public class {{classname}} implements GeneratedApi
         /**
          * Constructor with type safe required parameters.
          */
-        public {{operationIdCamelCase}}SendActionBuilder({{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, OpenApiSpecification openApiSpecification{{#requiredNonBodyParams}}, {{{dataType}}} {{paramName}}{{/requiredNonBodyParams}}) {
-            super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+        public {{operationIdCamelCase}}SendActionBuilder({{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}{{#requiredNonBodyParams}}, {{{dataType}}} {{paramName}}{{/requiredNonBodyParams}}) {
+            super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, {{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification, METHOD, ENDPOINT, OPERATION_NAME);
             {{#requiredNonBodyParams}}
             {{#isQueryParam}}
             queryParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
@@ -284,8 +282,8 @@ public class {{classname}} implements GeneratedApi
                Note that the change in the order of parameters is intentional to be able to differentiate
                constructors with Collections parameters which would otherwise have the same erasure type.
             }}
-            public {{operationIdCamelCase}}SendActionBuilder(OpenApiSpecification openApiSpecification, {{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}{{#requiredNonBodyParams}}, {{^isArray}}String {{paramName}}Expression{{/isArray}}{{#isArray}}List<String> {{paramName}}Expression{{/isArray}}{{/requiredNonBodyParams}}) {
-            super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, openApiSpecification,  METHOD, ENDPOINT, OPERATION_NAME);
+            public {{operationIdCamelCase}}SendActionBuilder({{#requiredNonBodyParams}}{{^isArray}}String {{paramName}}Expression{{/isArray}}{{#isArray}}List<String> {{paramName}}Expression{{/isArray}}, {{/requiredNonBodyParams}}{{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}) {
+            super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, {{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification,  METHOD, ENDPOINT, OPERATION_NAME);
         {{#requiredNonBodyParams}}
             {{#isQueryParam}}
             queryParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
@@ -306,6 +304,21 @@ public class {{classname}} implements GeneratedApi
         }
         {{/needsConstructorWithAllStringParameter}}
 
+        @Override
+        public String getOperationName() {
+            return OPERATION_NAME;
+        }
+
+        @Override
+        public String getMethod() {
+            return METHOD;
+        }
+
+        @Override
+        public String getPath() {
+            return ENDPOINT;
+        }
+
         {{#requiredNonBodyParams}}
             {{#-first}}
         /**
@@ -313,8 +326,8 @@ public class {{classname}} implements GeneratedApi
          */
             {{/-first}}
         {{/requiredNonBodyParams}}
-        public {{operationIdCamelCase}}SendActionBuilder({{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, OpenApiSpecification openApiSpecification, TestApiClientRequestMessageBuilder messageBuilder{{#requiredNonBodyParams}}, {{^isArray}}String {{paramName}}Expression{{/isArray}}{{#isArray}}List<String> {{paramName}}{{/isArray}}{{/requiredNonBodyParams}}) {
-            super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, openApiSpecification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
+        public {{operationIdCamelCase}}SendActionBuilder({{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, TestApiClientRequestMessageBuilder messageBuilder{{#requiredNonBodyParams}}, {{^isArray}}String {{paramName}}Expression{{/isArray}}{{#isArray}}List<String> {{paramName}}{{/isArray}}{{/requiredNonBodyParams}}) {
+            super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, {{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
         {{#requiredNonBodyParams}}
             {{#isQueryParam}}
             queryParameter("{{baseName}}", {{paramName}}{{^isArray}}Expression{{/isArray}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
@@ -580,20 +593,35 @@ public class {{classname}} implements GeneratedApi
     }
 
     public static class {{operationIdCamelCase}}ReceiveActionBuilder extends
-                        {{responseBuilderClassName}} {
+                        {{responseBuilderClassName}} implements GeneratedApiOperationInfo {
 
         private static final String METHOD = "{{httpMethod}}";
 
-        private static final String ENDPOINT = "{{basePath}}{{path}}";
+        private static final String ENDPOINT = "{{#rootContextPath}}{{rootContextPath}}{{/rootContextPath}}{{^neglectBasePath}}{{basePathWithoutHost}}{{/neglectBasePath}}{{path}}";
 
         private static final String OPERATION_NAME = "{{operationId}}";
 
-        public {{operationIdCamelCase}}ReceiveActionBuilder({{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, OpenApiSpecification openApiSpecification,  String statusCode) {
-            super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
+        public {{operationIdCamelCase}}ReceiveActionBuilder({{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}},  String statusCode) {
+            super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, {{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
         }
 
-        public {{operationIdCamelCase}}ReceiveActionBuilder({{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, OpenApiSpecification openApiSpecification, OpenApiClientResponseMessageBuilder messageBuilder) {
-            super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, openApiSpecification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
+        public {{operationIdCamelCase}}ReceiveActionBuilder({{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, OpenApiClientResponseMessageBuilder messageBuilder) {
+            super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, {{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
+        }
+
+        @Override
+        public String getOperationName() {
+            return OPERATION_NAME;
+        }
+
+        @Override
+        public String getMethod() {
+            return METHOD;
+        }
+
+        @Override
+        public String getPath() {
+            return ENDPOINT;
         }
 
         @Override

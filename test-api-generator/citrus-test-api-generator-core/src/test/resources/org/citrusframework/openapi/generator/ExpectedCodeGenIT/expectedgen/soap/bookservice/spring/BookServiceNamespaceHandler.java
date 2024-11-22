@@ -6,15 +6,12 @@ import org.citrusframework.openapi.testapi.SoapApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.generator.soap.bookservice.request.BookServiceSoapApi;
 import org.citrusframework.openapi.testapi.spring.SoapApiReceiveMessageActionParser;
 import org.citrusframework.openapi.testapi.spring.SoapApiSendMessageActionParser;
-import org.citrusframework.openapi.generator.soap.bookservice.BookService;
+import org.citrusframework.openapi.generator.soap.bookservice.BookServiceOpenApi;
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:44.612584400+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-23T14:15:20.169378200+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class BookServiceNamespaceHandler extends NamespaceHandlerSupport {
-
-    private final OpenApiSpecification openApiSpecification = OpenApiSpecification.from(
-        BookService.bookServiceApi());
 
     @Override
     public void init() {

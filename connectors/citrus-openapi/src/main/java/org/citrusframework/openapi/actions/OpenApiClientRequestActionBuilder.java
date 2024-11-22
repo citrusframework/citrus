@@ -134,6 +134,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                                         "Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(
                                                 operationId, openApiSpecification.getSpecUrl()));
                             });
+            context.setVariable(openApiSpecification.getUid(), openApiSpecification);
 
             return super.build(context, messageType);
         }

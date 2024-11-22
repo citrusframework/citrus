@@ -27,21 +27,12 @@ import {{package}}.{{classname}};
 {{/apiInfo}}
 import org.citrusframework.openapi.testapi.spring.SoapApiReceiveMessageActionParser;
 import org.citrusframework.openapi.testapi.spring.SoapApiSendMessageActionParser;
-import {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}};
+import {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}OpenApi;
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 {{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
 public class {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}NamespaceHandler extends NamespaceHandlerSupport {
-
-    {{#apiInfo}}
-        {{#apis}}
-            {{#-first}}
-    private final OpenApiSpecification openApiSpecification = OpenApiSpecification.from(
-        {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}.{{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Api());
-            {{/-first}}
-        {{/apis}}
-    {{/apiInfo}}
 
     @Override
     public void init() {

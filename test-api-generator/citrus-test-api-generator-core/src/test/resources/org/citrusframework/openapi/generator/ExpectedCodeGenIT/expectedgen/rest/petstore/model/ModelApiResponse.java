@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * ModelApiResponse
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-10-28T13:20:43.309584600+01:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-19T06:57:22.933962900+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class ModelApiResponse {
   private Integer code;
 
@@ -41,10 +41,10 @@ public class ModelApiResponse {
     return this;
   }
 
-   /**
+  /**
    * Get code
    * @return code
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public Integer getCode() {
@@ -56,17 +56,16 @@ public class ModelApiResponse {
     this.code = code;
   }
 
-
   public ModelApiResponse type(String type) {
     
     this.type = type;
     return this;
   }
 
-   /**
+  /**
    * Get type
    * @return type
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public String getType() {
@@ -78,17 +77,16 @@ public class ModelApiResponse {
     this.type = type;
   }
 
-
   public ModelApiResponse _message(String _message) {
     
     this._message = _message;
     return this;
   }
 
-   /**
+  /**
    * Get _message
    * @return _message
-  **/
+   */
   @jakarta.annotation.Nullable
 
   public String getMessage() {

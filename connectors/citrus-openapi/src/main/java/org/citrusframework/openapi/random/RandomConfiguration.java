@@ -24,6 +24,7 @@ public class RandomConfiguration {
 
     public static final RandomConfiguration RANDOM_CONFIGURATION = new RandomConfiguration();
 
+    // Patterns for random generation (potentially simplified)
     private static final String EMAIL_PATTERN = "[a-z]{5,15}\\.?[a-z]{5,15}\\@[a-z]{5,15}\\.[a-z]{2}";
     private static final String URI_PATTERN = "((http|https)://[a-zA-Z0-9-]+(\\.[a-zA-Z]{2,})+(/[a-zA-Z0-9-]+){1,6})|(file:///[a-zA-Z0-9-]+(/[a-zA-Z0-9-]+){1,6})";
     private static final String HOSTNAME_PATTERN = "(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])";

@@ -60,32 +60,46 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void shouldExecuteGetPetById() {
+        executeGetPetById(HttpStatus.OK);
+    }
+
+    /**
+     * Sending an open api response with a status not specified in the spec should not fail.
+     * This is because the OpenAPI spec does not strictly require modelling of all possible
+     * responses. 
+     */
+    @CitrusTest
+    public void shouldExecuteGetPetByIdWithUnknownResponse() {
+        executeGetPetById(HttpStatus.CREATED);
+    }
+
+    private void executeGetPetById(HttpStatus httpStatus) {
         variable("petId", "1001");
 
         when(http()
-                .client(httpClient)
-                .send()
-                .get("/pet/${petId}")
-                .message()
-                .accept(APPLICATION_JSON_VALUE)
-                .fork(true));
+            .client(httpClient)
+            .send()
+            .get("/pet/${petId}")
+            .message()
+            .accept(APPLICATION_JSON_VALUE)
+            .fork(true));
 
         then(openapi("petstore-v3")
-                .server(httpServer)
-                .receive("getPetById")
-                .message()
+            .server(httpServer)
+            .receive("getPetById")
+            .message()
         );
 
         then(openapi("petstore-v3")
-                .server(httpServer)
-                .send("getPetById", HttpStatus.OK));
+            .server(httpServer)
+            .send("getPetById", httpStatus));
 
         then(http()
-                .client(httpClient)
-                .receive()
-                .response(HttpStatus.OK)
-                .message()
-                .body("""
+            .client(httpClient)
+            .receive()
+            .response(httpStatus)
+            .message()
+            .body("""
                                 {
                                   "id": "@isNumber()@",
                                   "name": "@notEmpty()@",
