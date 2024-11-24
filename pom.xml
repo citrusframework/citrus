@@ -253,7 +253,7 @@
     <netty.version>4.1.105.Final</netty.version>
     <okhttp.version>4.12.0</okhttp.version>
     <org.openapitools.version>7.9.0</org.openapitools.version>
-    <jackson-databind-nullable>0.2.6</jackson-databind-nullable>
+    <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
     <picoli-version>4.7.6</picoli-version>
     <postgresql.version>42.7.5</postgresql.version>
     <quarkus.platform.version>3.17.4</quarkus.platform.version>
@@ -1028,7 +1028,7 @@
       <dependency>
         <groupId>org.openapitools</groupId>
         <artifactId>jackson-databind-nullable</artifactId>
-        <version>${jackson-databind-nullable}</version>
+        <version>${jackson-databind-nullable.version}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.module</groupId>
