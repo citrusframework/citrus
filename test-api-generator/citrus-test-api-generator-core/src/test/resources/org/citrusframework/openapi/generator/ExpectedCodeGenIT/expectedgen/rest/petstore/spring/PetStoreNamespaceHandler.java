@@ -14,7 +14,7 @@ import org.citrusframework.openapi.generator.rest.petstore.PetStoreOpenApi;
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-19T06:57:22.933962900+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-25T13:12:55.767401300+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class PetStoreNamespaceHandler extends NamespaceHandlerSupport {
 
     @Override

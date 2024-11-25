@@ -29,7 +29,7 @@ import org.citrusframework.openapi.generator.rest.extpetstore.model.Tag;
 /**
  * Pet
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-19T06:57:24.834965400+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-25T13:12:56.748927500+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class Pet {
   private Long id;
 

@@ -22,6 +22,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.citrusframework.openapi.generator.CitrusJavaCodegen.API_ENDPOINT;
 import static org.citrusframework.openapi.generator.CitrusJavaCodegen.API_TYPE;
 import static org.citrusframework.openapi.generator.CitrusJavaCodegen.PREFIX;
+import static org.citrusframework.openapi.generator.CitrusJavaCodegen.ROOT_CONTEXT_PATH;
 import static org.citrusframework.openapi.generator.CitrusJavaCodegen.TARGET_XMLNS_NAMESPACE;
 import static org.springframework.util.ReflectionUtils.findField;
 import static org.springframework.util.ReflectionUtils.makeAccessible;
@@ -262,7 +263,7 @@ public class TestApiGeneratorMojo extends AbstractMojo {
                 properties.addAll(apiConfig.additionalProperties);
             }
             apiConfig.additionalProperties = properties;
-            apiConfig.additionalProperties.add(String.format("%s=%s",CodeGenMojoWrapper.ROOT_CONTEXT_PATH, apiConfig.rootContextPath));
+            apiConfig.additionalProperties.add(String.format("%s=%s", ROOT_CONTEXT_PATH, apiConfig.rootContextPath));
         }
 
         propagateBuildContext(codeGenMojo);
