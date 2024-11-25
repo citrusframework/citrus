@@ -16,10 +16,6 @@
 
 package org.citrusframework.openapi.yaml;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
@@ -36,9 +32,13 @@ import org.citrusframework.openapi.actions.OpenApiServerActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiServerRequestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.actions.Message;
 import org.citrusframework.yaml.actions.Receive;
 import org.citrusframework.yaml.actions.Send;
-import org.citrusframework.yaml.actions.Message;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
@@ -232,6 +232,7 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
     /**
      * Converts current builder to client builder.
+     *
      * @return
      */
     private OpenApiClientActionBuilder asClientBuilder() {
@@ -245,6 +246,7 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
     /**
      * Converts current builder to server builder.
+     *
      * @return
      */
     private OpenApiServerActionBuilder asServerBuilder() {

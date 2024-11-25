@@ -22,7 +22,7 @@ import org.citrusframework.context.TestContext;
 /**
  * Typical implementation of repeat iteration loop. Nested test actions are executed until
  * aborting condition evaluates to true.
- *
+ * <p>
  * Index is incremented each iteration and stored as test variable accessible in the nested test actions
  * as normal variable. Index starts with 1 by default.
  *

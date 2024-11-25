@@ -130,6 +130,7 @@ public class HttpMessageController {
 
         HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
         UrlPathHelper pathHelper = new UrlPathHelper();
+        pathHelper.setRemoveSemicolonContent(!endpointConfiguration.isHandleSemicolonPathContent());
 
         Enumeration<String> allHeaders = servletRequest.getHeaderNames();
         for (String headerName : CollectionUtils.toArray(allHeaders, new String[] {})) {

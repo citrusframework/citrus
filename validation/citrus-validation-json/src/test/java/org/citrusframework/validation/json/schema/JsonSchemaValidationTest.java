@@ -34,6 +34,7 @@ import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.report.GraciousProcessingReport;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -58,10 +59,19 @@ public class JsonSchemaValidationTest {
 
     private JsonSchemaValidation fixture;
 
+    private AutoCloseable mocks;
+
     @BeforeMethod
     void beforeMethodSetup() {
-        MockitoAnnotations.openMocks(this);
+        mocks = MockitoAnnotations.openMocks(this);
         fixture = new JsonSchemaValidation(jsonSchemaFilterMock);
+    }
+
+    @AfterMethod
+    void afterMethod() throws Exception {
+        if (mocks != null) {
+            mocks.close();
+        }
     }
 
     @Test
@@ -263,7 +273,7 @@ public class JsonSchemaValidationTest {
     @Test
     public void testLookup() {
         Map<String, SchemaValidator<? extends SchemaValidationContext>> validators = SchemaValidator.lookup();
-        assertEquals(validators.size(), 1L);
+        assertEquals(1L, validators.size());
         assertNotNull(validators.get("defaultJsonSchemaValidator"));
         assertEquals(validators.get("defaultJsonSchemaValidator").getClass(), JsonSchemaValidation.class);
     }

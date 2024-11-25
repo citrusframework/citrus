@@ -60,9 +60,7 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
             return;
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Reading path elements.");
-        }
+        logger.debug("Reading path elements.");
 
         Map<String, Object> jsonPathExpressions = new LinkedHashMap<>();
         Map<String, Object> xpathExpressions = new LinkedHashMap<>();

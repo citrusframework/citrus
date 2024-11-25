@@ -16,15 +16,15 @@
 
 package org.citrusframework.actions;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.variable.VariableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Action creating new test variables during a test. Existing test variables are overwritten
@@ -64,7 +64,7 @@ public class CreateVariablesAction extends AbstractTestAction {
             //check if value is variable or function (and resolve it if yes)
             value = context.replaceDynamicContentInString(value);
 
-            logger.info("Setting variable: " + key + " to value: " + value);
+            logger.info("Setting variable: {} to value: {}", key, value);
 
             context.setVariable(key, value);
         }

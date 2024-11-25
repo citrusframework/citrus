@@ -22,7 +22,7 @@ import org.citrusframework.context.TestContext;
  * Condition checks whether a message is present in test context message store. Messages are automatically
  * stored in that store when sending and receiving messages with respective test actions. So this condition
  * can be used to wait for a message to arrive or being sent out.
- *
+ * <p>
  * Message to check is identified by its name in the message store.
  *
  * @since 2.6.2

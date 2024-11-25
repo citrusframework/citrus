@@ -47,7 +47,7 @@ public class StopTimerAction extends AbstractTestAction {
     public void doExecute(TestContext context) {
         if (timerId != null) {
             boolean success = context.stopTimer(timerId);
-            logger.info(String.format("Stopping timer %s - stop successful: %s", timerId, success));
+            logger.info("Stopping timer {} - stop successful: {}", timerId, success);
         } else {
             context.stopTimers();
             logger.info("Stopping all timers");

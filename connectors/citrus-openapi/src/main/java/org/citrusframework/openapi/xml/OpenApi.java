@@ -16,10 +16,6 @@
 
 package org.citrusframework.openapi.xml;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -45,6 +41,10 @@ import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.xml.actions.Message;
 import org.citrusframework.xml.actions.Receive;
 import org.citrusframework.xml.actions.Send;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @XmlRootElement(name = "openapi")
 public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolverAware {
@@ -257,6 +257,7 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
     /**
      * Converts current builder to client builder.
+     *
      * @return
      */
     private OpenApiClientActionBuilder asClientBuilder() {
@@ -270,6 +271,7 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
     /**
      * Converts current builder to server builder.
+     *
      * @return
      */
     private OpenApiServerActionBuilder asServerBuilder() {

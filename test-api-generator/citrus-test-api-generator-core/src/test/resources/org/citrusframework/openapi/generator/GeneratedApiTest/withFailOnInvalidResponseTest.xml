@@ -1,0 +1,42 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:petstore="http://www.citrusframework.org/citrus-test-schema/petstore-api"
+    xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/petstore-api
+    http://www.citrusframework.org/citrus-test-schema/petstore-api/petstore-api.xsd http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd"
+>
+    <testcase name="withFailOnInvalidResponseTest">
+        <actions>
+            <create-variables>
+                <variable name="petId" value="citrus:randomNumber(10)"/>
+            </create-variables>
+
+            <petstore:send-get-pet-by-id petId="${petId}" fork="true"/>
+
+            <http:receive-request server="httpServer">
+                <http:GET path="/api/v3/pet/${petId}"/>
+            </http:receive-request>
+
+            <http:send-response server="httpServer">
+                <http:headers status="200">
+                    <http:header name="Content-Type" value="application/json"/>
+                </http:headers>
+                <http:body type="json">
+                    <http:resource file="classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/invalidGetPetById_response.json"/>
+                </http:body>
+            </http:send-response>
+
+            <assert exception="org.citrusframework.exceptions.ValidationException" message="@contains('Object has missing required properties ([&quot;name&quot;]): []')@">
+                <when>
+                    <petstore:receive-get-pet-by-id />
+                </when>
+            </assert>
+        </actions>
+    </testcase>
+</spring:beans>

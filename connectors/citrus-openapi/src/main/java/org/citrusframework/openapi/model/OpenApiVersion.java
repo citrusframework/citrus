@@ -16,11 +16,11 @@
 
 package org.citrusframework.openapi.model;
 
-import java.util.Arrays;
-
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
+
+import java.util.Arrays;
 
 /**
  * List of supported OpenAPI specification versions and their corresponding model document types.
@@ -37,8 +37,8 @@ public enum OpenApiVersion {
 
     static OpenApiVersion fromDocumentType(OasDocument model) {
         return Arrays.stream(values())
-            .filter(version -> version.documentType.isInstance(model))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Unable get OpenAPI version from given document type"));
+                .filter(version -> version.documentType.isInstance(model))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Unable get OpenAPI version from given document type"));
     }
 }

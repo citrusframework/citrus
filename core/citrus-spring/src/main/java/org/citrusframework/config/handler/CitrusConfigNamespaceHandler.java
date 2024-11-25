@@ -16,8 +16,6 @@
 
 package org.citrusframework.config.handler;
 
-import java.util.Map;
-
 import org.citrusframework.config.xml.DefaultMessageQueueParser;
 import org.citrusframework.config.xml.DirectEndpointAdapterParser;
 import org.citrusframework.config.xml.DirectEndpointParser;
@@ -43,6 +41,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
+
+import java.util.Map;
 
 /**
  * Namespace handler for components in Citrus configuration.
@@ -88,9 +88,7 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
 
         actionParserMap.forEach((k, p) -> {
             registerBeanDefinitionParser(k, p);
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Register bean definition parser %s from resource %s", p.getClass(), k));
-            }
+            logger.debug("Register bean definition parser {} from resource {}", p.getClass(), k);
         });
     }
 }

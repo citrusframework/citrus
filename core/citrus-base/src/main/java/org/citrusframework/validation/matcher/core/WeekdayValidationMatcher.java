@@ -107,7 +107,7 @@ public class WeekdayValidationMatcher implements ValidationMatcher, ControlExpre
         SATURDAY(Calendar.SATURDAY),
         SUNDAY(Calendar.SUNDAY);
 
-        private int constantValue;
+        private final int constantValue;
 
         Weekday(int constant) {
             this.constantValue = constant;

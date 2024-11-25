@@ -127,9 +127,7 @@ public final class BooleanExpressionParser {
 
             result = parseBoolean(evaluateExpressionStack(operators, values));
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Boolean expression {} evaluates to {}", expression, result);
-            }
+            logger.debug("Boolean expression {} evaluates to {}", expression, result);
         } catch (final NoSuchElementException e) {
             throw new CitrusRuntimeException("Unable to parse boolean expression '" + expression + "'. Maybe expression is incomplete!", e);
         }

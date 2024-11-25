@@ -38,15 +38,15 @@ public enum MessageHeaderType {
     public static final String TYPE_SUFFIX = "}:";
 
     /** Properties */
-    private String name;
-    private Class<?> clazz;
+    private final String name;
+    private final Class<?> clazz;
 
     /**
      * Default constructor using fields.
      * @param name
      * @param clazz
      */
-    private MessageHeaderType(String name, Class<?> clazz) {
+    MessageHeaderType(String name, Class<?> clazz) {
         this.name = name;
         this.clazz = clazz;
     }

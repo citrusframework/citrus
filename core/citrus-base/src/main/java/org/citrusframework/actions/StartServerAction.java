@@ -16,11 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
-
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.server.Server;
@@ -28,6 +23,11 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Action starting a {@link Server} instance.
@@ -54,7 +54,7 @@ public class StartServerAction extends AbstractTestAction {
     public void doExecute(TestContext context) {
         for (Server server : servers) {
             server.start();
-            logger.info("Started server: " + server.getName());
+            logger.info("Started server: {}", server.getName());
         }
     }
 

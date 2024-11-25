@@ -16,17 +16,6 @@
 
 package org.citrusframework.context;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
@@ -68,6 +57,17 @@ import org.citrusframework.variable.VariableUtils;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Class holding and managing test variables. The test context also provides utility methods
@@ -255,7 +255,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Setting variable: %s with value: '%s'", VariableUtils.cutOffVariablesPrefix(variableName), value));
+            logger.debug("Setting variable: {} with value: '{}'", VariableUtils.cutOffVariablesPrefix(variableName), value);
         }
 
         variables.put(VariableUtils.cutOffVariablesPrefix(variableName), value);
@@ -849,7 +849,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
                 messageListeners.onInboundMessage(message, this);
             }
         } else if (logger.isDebugEnabled()) {
-            logger.debug(String.format("%s message:%n%s", operation, Optional.ofNullable(message).map(Message::toString).orElse("")));
+            logger.debug("{} message:%n{}", operation, Optional.ofNullable(message).map(Message::toString).orElse(""));
         }
     }
 

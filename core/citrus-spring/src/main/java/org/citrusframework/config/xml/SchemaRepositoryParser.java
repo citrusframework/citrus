@@ -16,11 +16,6 @@
 
 package org.citrusframework.config.xml;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
@@ -33,6 +28,11 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Bean definition parser for schema-repository configuration.
@@ -84,7 +84,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
         }
 
         BeanDefinitionParser parser = TYPE_RESOLVER.resolve(type);
-        logger.info(String.format("Found schema repository bean definition parser %s from resource %s", parser.getClass(), RESOURCE_PATH + "/" + type));
+        logger.info("Found schema repository bean definition parser {} from resource {}", parser.getClass(), RESOURCE_PATH + "/" + type);
         SCHEMA_REPOSITORY_PARSER.put(type, parser);
         return parser;
     }
