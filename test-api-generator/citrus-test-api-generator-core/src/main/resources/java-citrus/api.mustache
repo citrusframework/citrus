@@ -213,7 +213,7 @@ public class {{classname}} implements GeneratedApi
 
         private static final String METHOD = "{{httpMethod}}";
 
-        private static final String ENDPOINT = "{{rootContextPath}}{{path}}";
+        private static final String ENDPOINT = "{{#rootContextPath}}{{rootContextPath}}{{/rootContextPath}}{{^neglectBasePath}}{{basePathWithoutHost}}{{/neglectBasePath}}{{path}}";
 
         private static final String OPERATION_NAME = "{{operationId}}";
         {{#hasApiKeyAuth}}

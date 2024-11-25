@@ -16,6 +16,8 @@
 
 package org.citrusframework.groovy.dsl.container;
 
+import static org.citrusframework.util.TestUtils.HTTPS_CITRUSFRAMEWORK_ORG;
+
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.EchoAction;
@@ -30,7 +32,9 @@ import org.citrusframework.groovy.dsl.AbstractGroovyActionDslTest;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.DefaultMessageStore;
 import org.citrusframework.message.MessageStore;
+import org.citrusframework.util.TestUtils;
 import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 public class WaitForTest extends AbstractGroovyActionDslTest {
@@ -42,7 +46,11 @@ public class WaitForTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadWaitFor() {
-        String httpUrl = "https://citrusframework.org";
+
+        if (!TestUtils.isNetworkReachable()) {
+            throw new SkipException("Test skipped because citrus is not reachable. We are probably running behind a proxy.");
+        }
+
         String filePath = "classpath:org/citrusframework/groovy/test-request-payload.xml";
 
         MessageStore messageStore = new DefaultMessageStore();
@@ -70,11 +78,11 @@ public class WaitForTest extends AbstractGroovyActionDslTest {
         validateWaitAction(action, "10000", "2000", condition);
 
         action = (Wait) result.getTestAction(actionIndex++);
-        condition = getHttpCondition(httpUrl, DEFAULT_RESPONSE_CODE, DEFAULT_TIMEOUT);
+        condition = getHttpCondition(HTTPS_CITRUSFRAMEWORK_ORG, DEFAULT_RESPONSE_CODE, DEFAULT_TIMEOUT);
         validateWaitAction(action, DEFAULT_WAIT_TIME, DEFAULT_INTERVAL, condition);
 
         action = (Wait) result.getTestAction(actionIndex++);
-        condition = getHttpCondition(httpUrl + "/doesnotexist", "404", "2000");
+        condition = getHttpCondition(HTTPS_CITRUSFRAMEWORK_ORG + "/doesnotexist", "404", "2000");
         ((HttpCondition)condition).setMethod("GET");
         validateWaitAction(action, "3000", DEFAULT_INTERVAL, condition);
 
@@ -143,4 +151,7 @@ public class WaitForTest extends AbstractGroovyActionDslTest {
             Assert.assertEquals(((EchoAction) condition.getAction()).getMessage(), ((EchoAction)((ActionCondition) expectedCondition).getAction()).getMessage());
         }
     }
+
+
+
 }

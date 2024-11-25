@@ -16,13 +16,9 @@
 
 package org.citrusframework.util;
 
-import org.citrusframework.CitrusSettings;
-import org.citrusframework.Completable;
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -30,6 +26,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import org.citrusframework.CitrusSettings;
+import org.citrusframework.Completable;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for test cases providing several utility
@@ -37,6 +39,8 @@ import java.util.concurrent.TimeoutException;
  *
  */
 public abstract class TestUtils {
+
+    public static final String HTTPS_CITRUSFRAMEWORK_ORG = "https://citrusframework.org";
 
     /** Used to identify waiting task threads pool */
     public static final String WAIT_THREAD_PREFIX = "citrus-waiting-";
@@ -136,5 +140,19 @@ public abstract class TestUtils {
             waitThread.setName(WAIT_THREAD_PREFIX.concat(waitThread.getName()));
         }
         return waitThread;
+    }
+
+    public static boolean isNetworkReachable() {
+        try {
+            URL url = new URL(HTTPS_CITRUSFRAMEWORK_ORG);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+            int responseCode = connection.getResponseCode();
+            return responseCode == HttpURLConnection.HTTP_OK;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }
