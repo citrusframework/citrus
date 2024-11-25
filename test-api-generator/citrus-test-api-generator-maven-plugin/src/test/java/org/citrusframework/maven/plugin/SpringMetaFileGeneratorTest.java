@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,7 +38,7 @@ class SpringMetaFileGeneratorTest {
         MavenProject mavenProject = mock();
         doReturn(new File(userDir)).when(mavenProject).getBasedir();
         doReturn(mavenProject).when(testApiGeneratorMojo).getMavenProject();
-        doReturn("SpringMetaFileGeneratorTest/META-INF").when(testApiGeneratorMojo).metaInfFolder();
+        doReturn("/test-classes/SpringMetaFileGeneratorTest/META-INF").when(testApiGeneratorMojo).metaInfFolder();
 
         ApiConfig apiConfig = new ApiConfig();
         apiConfig.setPrefix("PrefixA");

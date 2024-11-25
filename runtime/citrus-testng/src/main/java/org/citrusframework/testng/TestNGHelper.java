@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestCaseRunner;
@@ -45,6 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.IHookCallBack;
 import org.testng.ITestResult;
+import org.testng.SkipException;
 
 public final class TestNGHelper {
 
@@ -71,10 +71,41 @@ public final class TestNGHelper {
      */
     public static void invokeTestMethod(Object target, ITestResult testResult, Method method,
                                         TestLoader testLoader, TestContext context, int invocationCount) {
-        Object[] params = TestNGParameterHelper.resolveParameter(target, testResult, method, context, invocationCount);
-        testLoader.configureTestCase(t -> TestNGParameterHelper.injectTestParameters(method, t, params));
-        testLoader.doWithTestCase(t -> ReflectionHelper.invokeMethod(method, target, params));
-        testLoader.load();
+
+        try {
+            Object[] params = TestNGParameterHelper.resolveParameter(target, testResult, method,
+                context, invocationCount);
+            testLoader.configureTestCase(
+                t -> TestNGParameterHelper.injectTestParameters(method, t, params));
+            testLoader.doWithTestCase(t -> ReflectionHelper.invokeMethod(method, target, params));
+            testLoader.load();
+        } catch (CitrusRuntimeException e) {
+            SkipException skipException = getCauseOfType(e, SkipException.class);
+            if (skipException != null)  {
+                throw skipException;
+            }
+
+            throw e;
+        }
+    }
+
+    /**
+     * Recursively checks if the cause of the given exception matches the target exception.
+     *
+     * @param exception The exception to check.
+     * @param targetCause The exception cause to search for.
+     * @return true if the target cause is found in the exception chain, false otherwise.
+     */
+    public static <T extends Throwable> T getCauseOfType(Throwable exception, Class<T> targetCause) {
+        if (exception == null) {
+            return null;
+        }
+
+        if (targetCause.isInstance(exception)) {
+            return targetCause.cast(exception);
+        }
+
+        return getCauseOfType(exception.getCause(), targetCause);
     }
 
     /**
