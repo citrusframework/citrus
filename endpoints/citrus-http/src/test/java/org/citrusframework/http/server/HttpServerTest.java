@@ -16,8 +16,7 @@
 
 package org.citrusframework.http.server;
 
-import java.util.Random;
-
+import org.apache.hc.core5.http.ContentType;
 import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointAdapter;
@@ -29,7 +28,6 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.util.SocketUtils;
-import org.apache.hc.core5.http.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -39,10 +37,16 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.util.Random;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.testng.Assert.fail;
 
 /**
  * Simple unit test for HttpServer
@@ -79,7 +83,7 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
         try {
             client.send(new HttpMessage().method(HttpMethod.GET), context);
 
-            Assert.fail("Server supposed to be in shutdown state, but was accessible via client request");
+            fail("Server supposed to be in shutdown state, but was accessible via client request");
         } catch (ResourceAccessException e) {
             Assert.assertTrue(e.getMessage().contains("Connection refused"));
         }
@@ -224,4 +228,26 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
         verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
     }
 
+    @Test
+    public void testHttpResponseErrorHandlerWithPropagateStrategy() {
+        TestContext context = testContextFactory.getObject();
+
+        reset(mockResponseEndpointAdapter);
+        doReturn(new HttpMessage().status(INTERNAL_SERVER_ERROR))
+                .when(mockResponseEndpointAdapter).handleMessage(any(Message.class));
+
+        client.send(new HttpMessage()
+                .path("/hello")
+                .method(HttpMethod.GET), context);
+
+        Message response = client.receive(context);
+
+        assertThat(response)
+                .isInstanceOf(HttpMessage.class)
+                .satisfies(
+                        r -> assertThat(((HttpMessage) r).getStatusCode()).isEqualTo(INTERNAL_SERVER_ERROR)
+                );
+
+        verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
+    }
 }

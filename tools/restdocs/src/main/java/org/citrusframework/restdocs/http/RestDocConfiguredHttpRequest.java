@@ -70,6 +70,11 @@ public class RestDocConfiguredHttpRequest implements HttpRequest {
     }
 
     @Override
+    public HttpHeaders getHeaders() {
+        return delegate.getHeaders();
+    }
+
+    @Override
     public HttpMethod getMethod() {
         return delegate.getMethod();
     }
@@ -80,7 +85,7 @@ public class RestDocConfiguredHttpRequest implements HttpRequest {
     }
 
     @Override
-    public HttpHeaders getHeaders() {
-        return delegate.getHeaders();
+    public Map<String, Object> getAttributes() {
+        return delegate.getAttributes();
     }
 }

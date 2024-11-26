@@ -16,12 +16,16 @@
 
 package org.citrusframework.http.client;
 
-import java.io.IOException;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.ErrorHandlingStrategy;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.lang.Nullable;
 import org.springframework.web.client.DefaultResponseErrorHandler;
+
+import java.io.IOException;
+import java.net.URI;
 
 /**
  * @since 2.7
@@ -32,17 +36,15 @@ public class HttpResponseErrorHandler extends DefaultResponseErrorHandler {
 
     /**
      * Default constructor using error handling strategy.
-     * @param errorHandlingStrategy
      */
     public HttpResponseErrorHandler(ErrorHandlingStrategy errorHandlingStrategy) {
         this.errorHandlingStrategy = errorHandlingStrategy;
     }
 
     @Override
-    public void handleError(ClientHttpResponse response) throws IOException {
+    protected void handleError(ClientHttpResponse response, HttpStatusCode statusCode, @Nullable URI url, @Nullable HttpMethod method) throws IOException {
         if (errorHandlingStrategy.equals(ErrorHandlingStrategy.PROPAGATE)) {
-            throw new HttpErrorPropagatingException(response.getStatusCode(), response.getStatusText(),
-                    response.getHeaders(), getResponseBody(response), getCharset(response));
+            throw new HttpErrorPropagatingException(response.getStatusCode(), response.getStatusText(), response.getHeaders(), getResponseBody(response), getCharset(response));
         } else if (errorHandlingStrategy.equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
             super.handleError(response);
         } else {

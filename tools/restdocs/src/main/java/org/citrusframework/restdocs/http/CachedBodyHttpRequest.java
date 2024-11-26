@@ -21,6 +21,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpRequest;
 
 import java.net.URI;
+import java.util.Map;
 
 /**
  * Helper Http request wrapper implementation provides access to the request body for usage
@@ -43,6 +44,11 @@ public class CachedBodyHttpRequest implements HttpRequest {
     }
 
     @Override
+    public HttpHeaders getHeaders() {
+        return delegate.getHeaders();
+    }
+
+    @Override
     public HttpMethod getMethod() {
         return delegate.getMethod();
     }
@@ -53,7 +59,7 @@ public class CachedBodyHttpRequest implements HttpRequest {
     }
 
     @Override
-    public HttpHeaders getHeaders() {
-        return delegate.getHeaders();
+    public Map<String, Object> getAttributes() {
+        return delegate.getAttributes();
     }
 }
