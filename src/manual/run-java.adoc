@@ -452,7 +452,7 @@ public class MyConfig {
     private MessageQueue queue = new DefaultMessageQueue("fooQueue");
 
     @BindToRegistry
-    public void foo() {
+    public FooEndpoint foo() {
         return new FooEndpoint();
     }
 }

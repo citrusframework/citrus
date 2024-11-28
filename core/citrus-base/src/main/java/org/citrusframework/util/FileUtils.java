@@ -136,7 +136,7 @@ public abstract class FileUtils {
      */
     public static String readToString(InputStream inputStream, Charset charset) throws IOException {
         if (inputStream == null) {
-            throw new CitrusRuntimeException("Failed to read resource %s - input stream is empty");
+            throw new CitrusRuntimeException("Failed to read resource from input stream - input stream is empty");
         }
 
         return new String(inputStream.readAllBytes(), charset);
