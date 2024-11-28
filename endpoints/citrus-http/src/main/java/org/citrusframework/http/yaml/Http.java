@@ -273,7 +273,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             receive.setTimeout(request.timeout);
         }
 
-        request.getValidates().forEach(receive.getValidate()::add);
+        request.getValidate().forEach(receive.getValidate()::add);
 
         if (request.extract != null) {
             receive.setExtract(request.extract);
@@ -503,7 +503,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
         protected Receive.Selector selector;
 
-        protected List<Receive.Validate> validates;
+        protected List<Receive.Validate> validate;
 
         protected Message.Extract extract;
 
@@ -627,12 +627,16 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             this.selector = selector;
         }
 
-        public List<Receive.Validate> getValidates() {
-            if (validates == null) {
-                validates = new ArrayList<>();
+        public List<Receive.Validate> getValidate() {
+            if (validate == null) {
+                validate = new ArrayList<>();
             }
 
-            return validates;
+            return validate;
+        }
+
+        public void setValidate(List<Receive.Validate> validate) {
+            this.validate = validate;
         }
 
         public Message.Extract getExtract() {
@@ -752,6 +756,10 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             }
 
             return validate;
+        }
+
+        public void setValidate(List<Receive.Validate> validate) {
+            this.validate = validate;
         }
 
         public Message.Extract getExtract() {

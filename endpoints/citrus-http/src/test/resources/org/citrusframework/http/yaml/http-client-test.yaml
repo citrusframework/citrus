@@ -41,6 +41,10 @@ actions:
           body:
             data: |
               <order><id>${id}</id><item>foo</item></order>
+        validate:
+          - xpath:
+              - expression: //order/item
+                value: foo
         extract:
           body:
             - variable: "orderId"

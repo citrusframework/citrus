@@ -50,6 +50,10 @@ actions:
           body:
             data: |
               <user><id>1001</id><name>new_user</name></user>
+        validate:
+          - xpath:
+              - expression: //user/name
+                value: new_user
         extract:
           body:
             - variable: "userId"
