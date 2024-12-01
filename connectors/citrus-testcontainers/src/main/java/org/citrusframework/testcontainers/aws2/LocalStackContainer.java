@@ -42,7 +42,7 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
     private static final String HOSTNAME_EXTERNAL_ENV = "HOSTNAME_EXTERNAL";
 
     private static final String DOCKER_IMAGE_NAME = LocalStackSettings.getImageName();
-    private static final String DOCKER_IMAGE_TAG = LocalStackSettings.VERSION_DEFAULT;
+    private static final String DOCKER_IMAGE_TAG = LocalStackSettings.getVersion();
 
     private final Set<Service> services = new HashSet<>();
     private String secretKey = "secretkey";
@@ -210,6 +210,13 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
 
         public static String serviceName(Service service) {
             return service.serviceName;
+        }
+
+        public static Service fromServiceName(String serviceName) {
+            return Arrays.stream(Service.values())
+                    .filter(service -> service.serviceName.equals(serviceName))
+                    .findFirst()
+                    .orElseThrow(() -> new CitrusRuntimeException("Unknown AWS LocalStack service name: %s".formatted(serviceName)));
         }
     }
 }

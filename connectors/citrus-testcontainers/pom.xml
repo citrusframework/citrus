@@ -56,6 +56,13 @@
       <artifactId>commons-dbcp2</artifactId>
     </dependency>
 
+    <!-- Optional Quarkus Test integration -->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-test-common</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- AWS Localstack -->
     <dependency>
       <groupId>software.amazon.awssdk</groupId>

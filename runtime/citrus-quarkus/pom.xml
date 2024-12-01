@@ -14,41 +14,6 @@
   <description>Citrus Quarkus Extension</description>
   <packaging>pom</packaging>
 
-  <properties>
-    <quarkus.platform.version>3.16.0</quarkus.platform.version>
-  </properties>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-arc</artifactId>
-        <version>${quarkus.platform.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-arc-deployment</artifactId>
-        <version>${quarkus.platform.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-junit5</artifactId>
-        <version>${quarkus.platform.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-test-common</artifactId>
-        <version>${quarkus.platform.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-jacoco</artifactId>
-        <version>${quarkus.platform.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
   <build>
     <pluginManagement>
       <plugins>

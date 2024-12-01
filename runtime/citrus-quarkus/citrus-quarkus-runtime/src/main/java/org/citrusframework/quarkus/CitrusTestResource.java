@@ -16,10 +16,13 @@
 
 package org.citrusframework.quarkus;
 
-import java.util.Collections;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
-import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
+import io.quarkus.test.common.QuarkusTestResourceConfigurableLifecycleManager;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.GherkinTestActionRunner;
@@ -30,19 +33,51 @@ import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 
 /**
  * Quarkus test resource that takes care of injecting Citrus resources
  * such as TestContext, TestCaseRunner, CitrusEndpoints and many more.
- *
  */
-public class CitrusTestResource implements QuarkusTestResourceLifecycleManager {
+public class CitrusTestResource implements QuarkusTestResourceConfigurableLifecycleManager<CitrusSupport> {
 
     private Citrus citrus;
 
     private TestCaseRunner runner;
 
     private TestContext context;
+
+    private final Set<ApplicationPropertiesSupplier> applicationPropertiesSupplier = new HashSet<>();
+
+    @Override
+    public void init(CitrusSupport config) {
+        for (Class<? extends ApplicationPropertiesSupplier> supplierType : config.applicationPropertiesSupplier()) {
+            try {
+                registerApplicationPropertiesSupplier(supplierType.getDeclaredConstructor().newInstance());
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+                throw new CitrusRuntimeException("Failed to instantiate application properties supplier from type: %s"
+                        .formatted(supplierType), e);
+            }
+        }
+    }
+
+    @Override
+    public void init(Map<String, String> initArgs) {
+        String[] qualifiedClassNames = initArgs.getOrDefault(ApplicationPropertiesSupplier.INIT_ARG, "").split(",");
+        for (String qualifiedClassName : qualifiedClassNames) {
+            try {
+                Class<?> cls = Class.forName(qualifiedClassName, true, Thread.currentThread().getContextClassLoader());
+                Object instance = cls.getDeclaredConstructor().newInstance();
+                if (instance instanceof ApplicationPropertiesSupplier supplier) {
+                    applicationPropertiesSupplier.add(supplier);
+                }
+            } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
+                     IllegalAccessException | NoSuchMethodException e) {
+                throw new CitrusRuntimeException("Failed to instantiate application property supplier from type: %s"
+                        .formatted(qualifiedClassName), e);
+            }
+        }
+    }
 
     @Override
     public Map<String, String> start() {
@@ -51,7 +86,9 @@ public class CitrusTestResource implements QuarkusTestResourceLifecycleManager {
             citrus.beforeSuite("citrus-quarkus");
         }
 
-        return Collections.emptyMap();
+        Map<String, String> applicationProperties = new HashMap<>();
+        applicationPropertiesSupplier.forEach(supplier -> applicationProperties.putAll(supplier.get()));
+        return applicationProperties;
     }
 
     @Override
@@ -64,6 +101,7 @@ public class CitrusTestResource implements QuarkusTestResourceLifecycleManager {
 
         runner = null;
         context = null;
+        applicationPropertiesSupplier.clear();
     }
 
     @Override
@@ -91,4 +129,13 @@ public class CitrusTestResource implements QuarkusTestResourceLifecycleManager {
         testInjector.injectIntoFields(runner, new TestInjector.AnnotatedAndMatchesType(CitrusResource.class, TestCaseRunner.class));
         testInjector.injectIntoFields(context, new TestInjector.AnnotatedAndMatchesType(CitrusResource.class, TestContext.class));
     }
+
+    /**
+     * Add new application properties supplier.
+     * @param supplier
+     */
+    public void registerApplicationPropertiesSupplier(ApplicationPropertiesSupplier supplier) {
+        applicationPropertiesSupplier.add(supplier);
+    }
+
 }

@@ -19,14 +19,20 @@ package org.citrusframework.quarkus.app;
 import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
-import org.jboss.logging.Logger;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
 public class DemoApplication {
 
-    private static final Logger logger = Logger.getLogger(DemoApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(DemoApplication.class);
+
+    @ConfigProperty(name = "greeting.message")
+    String message;
 
     void onStart(@Observes StartupEvent ev) {
         logger.info("Demo application started!");
+        logger.info(message);
     }
 }

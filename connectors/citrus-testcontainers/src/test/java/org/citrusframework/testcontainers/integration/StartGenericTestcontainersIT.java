@@ -41,7 +41,7 @@ public class StartGenericTestcontainersIT extends AbstractTestcontainersIT {
     @Test
     @CitrusTest
     public void shouldStartContainer() {
-        GenericContainer<?> busyBox = new GenericContainer("busybox:latest")
+        GenericContainer<?> busyBox = new GenericContainer<>("busybox:latest")
                 .withCommand("echo", "Hello World");
 
         given(doFinally().actions(testcontainers().stop()
