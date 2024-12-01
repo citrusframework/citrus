@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.quarkus;
+package org.citrusframework.testcontainers.kafka.quarkus;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -22,17 +22,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import io.quarkus.test.common.QuarkusTestResource;
+import org.citrusframework.testcontainers.quarkus.ContainerLifecycleListener;
+import org.testcontainers.containers.KafkaContainer;
 
-/**
- * Special Citrus annotation that enables Citrus support on QuarkusTest framework.
- */
-@QuarkusTestResource(value = CitrusTestResource.class, restrictToAnnotatedClass = true)
+@QuarkusTestResource(KafkaContainerResource.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface CitrusSupport {
+public @interface KafkaContainerSupport {
 
     /**
-     * Supplier capable of setting application properties for the Quarkus application under test.
+     * Container lifecycle listeners
      */
-    Class<? extends ApplicationPropertiesSupplier>[] applicationPropertiesSupplier() default {};
+    Class<? extends ContainerLifecycleListener<KafkaContainer>>[] containerLifecycleListener() default {};
 }

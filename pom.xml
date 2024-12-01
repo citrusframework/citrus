@@ -195,7 +195,7 @@
     <ascii-table-version>1.8.0</ascii-table-version>
     <assertj.version>3.26.3</assertj.version>
     <awaitility.version>4.2.2</awaitility.version>
-    <aws-java-sdk2.version>2.29.21</aws-java-sdk2.version>
+    <aws-java-sdk2.version>2.27.19</aws-java-sdk2.version>
     <bouncycastle.version>1.79</bouncycastle.version>
     <byte.buddy.version>1.15.10</byte.buddy.version>
     <commons.dbcp2.version>2.12.0</commons.dbcp2.version>
@@ -244,13 +244,14 @@
     <k8s.model.version>6.13.4</k8s.model.version>
     <kafka.version>3.9.0</kafka.version>
     <knative-client.version>6.13.4</knative-client.version>
-    <log4j2.version>2.22.1</log4j2.version>
+    <log4j2.version>2.23.1</log4j2.version>
     <mockito.version>5.14.2</mockito.version>
     <mockftpserver.version>3.2.0</mockftpserver.version>
     <netty.version>4.1.105.Final</netty.version>
     <okhttp.version>4.12.0</okhttp.version>
     <picoli-version>4.7.6</picoli-version>
     <postgresql.version>42.7.4</postgresql.version>
+    <quarkus.platform.version>3.16.4</quarkus.platform.version>
     <saaj.version>3.0.4</saaj.version>
     <selenium.version>4.27.0</selenium.version>
     <slf4j.version>2.0.11</slf4j.version>
@@ -622,6 +623,33 @@
         <artifactId>s3</artifactId>
         <version>${aws-java-sdk2.version}</version>
         <scope>test</scope>
+      </dependency>
+
+      <!-- Quarkus -->
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-arc</artifactId>
+        <version>${quarkus.platform.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-arc-deployment</artifactId>
+        <version>${quarkus.platform.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-junit5</artifactId>
+        <version>${quarkus.platform.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-test-common</artifactId>
+        <version>${quarkus.platform.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-jacoco</artifactId>
+        <version>${quarkus.platform.version}</version>
       </dependency>
 
       <!-- Citrus http dependencies -->

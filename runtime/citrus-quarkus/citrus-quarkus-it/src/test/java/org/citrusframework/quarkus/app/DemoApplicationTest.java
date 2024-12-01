@@ -16,6 +16,9 @@
 
 package org.citrusframework.quarkus.app;
 
+import java.util.Collections;
+import java.util.Map;
+
 import io.quarkus.test.junit.QuarkusTest;
 import org.citrusframework.Citrus;
 import org.citrusframework.TestCaseRunner;
@@ -28,6 +31,7 @@ import org.citrusframework.endpoint.direct.DirectEndpointBuilder;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfig;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
+import org.citrusframework.quarkus.ApplicationPropertiesSupplier;
 import org.citrusframework.quarkus.CitrusSupport;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
@@ -41,8 +45,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
-@CitrusSupport
-class DemoApplicationTest {
+@CitrusSupport(applicationPropertiesSupplier = DemoApplicationTest.class)
+public class DemoApplicationTest implements ApplicationPropertiesSupplier {
 
     @CitrusFramework
     private Citrus citrus;
@@ -110,5 +114,10 @@ class DemoApplicationTest {
                         .message()
                         .body("${greeting}")
         );
+    }
+
+    @Override
+    public Map<String, String> get() {
+        return Collections.singletonMap("greeting.message", "Hello, Citrus rocks!");
     }
 }

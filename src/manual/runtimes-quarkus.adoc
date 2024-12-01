@@ -1,7 +1,10 @@
 [[runtime-quarkus]]
 == QuarkusTest runtime
 
-Quarkus has emerged into a popular enterprise Java framework. For unit and integration testing the Quarkus framework provides a special integrations with JUnit Jupiter. Citrus adds a Quarkus test resource that developers can use to include Citrus capabilities into arbitrary Quarkus tests.
+Quarkus has emerged into a popular enterprise Java framework.
+For unit and integration testing the Quarkus framework provides integrations with JUnit Jupiter.
+Citrus adds a Quarkus test resource implementation that allows developers to combine Citrus with Quarkus during testing.
+You can use the Citrus test resource annotations on your Quarkus tests and include Citrus capabilities into arbitrary Quarkus tests.
 
 NOTE: The Citrus QuarkusTest extension is shipped in a separate Maven module. You need to include the module as a dependency in your project accordingly.
 
@@ -15,9 +18,11 @@ NOTE: The Citrus QuarkusTest extension is shipped in a separate Maven module. Yo
 </dependency>
 ----
 
-Usually a Quarkus test is annotated with the `@QuarkusTest` or `QuarkusIntegrationTest` annotation. Users may add an annotation named `@CitrusSupport` in order to also enable Citrus capabilities on the test.
+Usually a Quarkus test is annotated with the `@QuarkusTest` or `QuarkusIntegrationTest` annotation.
+Users just add an annotation named `@CitrusSupport` to also enable Citrus capabilities on the test.
 
-The Citrus support will automatically hook into the QuarkusTest lifecycle management making sure to call the Citrus before/after suite and before/after test handlers.
+The Citrus support will automatically hook into the QuarkusTest lifecycle management to inject Citrus resources with `@CitrusResource` annotation.
+Also, the Citrus extension makes sure to start a proper Citrus instance and call before/after suite and before/after test handlers.
 
 This way you are able to combine Citrus with `@QuarkusTest` annotated classes very easily.
 
@@ -56,11 +61,15 @@ public class DemoApplicationTest {
 }
 ----
 
-The `@CitrusSupport` annotation enables the Citrus features on the test. First of all users may inject Citrus related resources such as `TestCaseRunner` or `TestContext`.
+The `@CitrusSupport` annotation enables the Citrus features on the test.
+First of all users may inject Citrus related resources such as `TestCaseRunner` or the `TestContext`.
 
-The `TestCaseRunner` reference runs arbitrary Citrus actions as part of the test.
+As usual the `TestCaseRunner` is the entrance to the Citrus domain specific language for running arbitrary Citrus actions as part of the test.
 
-The test is also able to configure Message endpoints.
+[[runtime-quarkus-endpoint-config]]
+=== Endpoint configuration
+
+The test is able to configure Message endpoints to connect to different messaging transports as part of the test.
 
 .Configure message endpoints
 [source,java]
@@ -96,6 +105,298 @@ public class DemoApplicationTest {
 }
 ----
 
-Creating new message endpoints is very easy. Just use the proper endpoint builder and optionally bind the new endpoint to the Citrus bean registry via `BindToRegistry` annotation.
-
+Creating new message endpoints is very easy.
+Just use the proper endpoint builder and optionally bind the new endpoint to the Citrus bean registry via `@BindToRegistry` annotation.
 You may then use the message endpoint in all `send` and `receive` test actions in order to exchange messages.
+
+You may move the endpoint configuration into a separate class and load the endpoints with the configuration class as follows:
+
+.EndpointConfig.class
+[source,java]
+----
+public class EndpointConfig {
+
+    @BindToRegistry
+    public KafkaEndpoint bookings() {
+        return new KafkaEndpointBuilder()
+            .topic("bookings")
+            .build();
+    }
+}
+----
+
+The endpoint configuration class uses `@BindToRegistry` members or methods to add beans to the Citrus registry.
+The configuration class may be referenced by many tests then using the `@CitrusConfiguration` annotation.
+
+.Load endpoint config classes
+[source,java]
+----
+@QuarkusTest
+@CitrusSupport
+@CitrusConfiguration(classes = EndpointConfig.class)
+public class DemoApplicationTest {
+
+    @CitrusResource
+    private KafkaEndpoint bookings;
+
+    @CitrusResource
+    private TestCaseRunner t;
+
+    @Test
+    void shouldVerifyDemoApp() {
+        t.when(
+            send()
+                .endpoint(bookings)
+                .message()
+                .body("How about Citrus!?")
+        );
+
+        t.when(
+            receive()
+                .endpoint(bookings)
+                .message()
+                .body("Citrus rocks!")
+        );
+    }
+}
+----
+
+Citrus loads the configuration class and injects the `KafkaEndpoint` instance to the test with `@CitrusResource`  annotation.
+
+[[runtime-quarkus-dynamic-tests]]
+=== Load dynamic tests
+
+Citrus supports many test languages besides writing tests in pure Java.
+Users can load tests written in XML, YAML, Groovy and many more via dynamic tests.
+
+.Load YAML tests
+[source,java]
+----
+@QuarkusTest
+@CitrusSupport
+@CitrusConfiguration(classes = EndpointConfig.class)
+public class DemoApplicationTest {
+
+    @CitrusTestFactory
+    public Stream<DynamicTest> loadYamlTests() {
+        return CitrusTestFactorySupport.factory(TestLoader.YAML).packageScan("some.package.name");
+    }
+}
+----
+
+The example above loads YAML test case definitions and runs those as dynamic tests with JUnit Jupiter.
+The package scan loads all files in the given folder and runs the tests via Citrus.
+All YAML tests are able to reference the message endpoints configured in the configuration class `EndpointConfig.class`.
+
+A sample YAML test may look like this:
+
+.my-test.yaml
+[source,yaml]
+----
+name: my-test
+actions:
+  - send:
+      endpoint: bookings
+      message:
+        body:
+          data: How about Citrus!?
+  - receive:
+      endpoint: bookings
+      timeout: 5000
+      message:
+        body:
+          data: Citrus rocks!
+----
+
+[[runtime-quarkus-application-properties]]
+=== Set application properties
+
+The `@QuarkusTest` annotation will automatically start the application under test.
+Citrus provides the ability to programmatically set application properties before the Quarkus application is started.
+This is important when you need to overwrite configuration based on test message endpoints configured in the test.
+
+The next example shows a Citrus enabled Quarkus test that supplies a set of application properties to configure the application under test.
+
+.Supply application properties
+[source,java]
+----
+@QuarkusTest
+@CitrusSupport(applicationPropertiesSupplier = DemoAppConfigurationSupplier.class)
+@CitrusConfiguration(classes = EndpointConfig.class)
+public class DemoApplicationTest {
+
+    // ...
+}
+----
+
+The `DemoAppConfiguration` class implements the `Supplier` interface and set a config property.
+This property will be set on the application under test.
+
+.DemoAppConfigurationSupplier.class
+[source,java]
+----
+public class DemoAppConfigurationSupplier implements ApplicationPropertiesSupplier {
+
+    @Override
+    public Map<String, String> get() {
+        Map<String, String> conf = new Hasmap<>();
+        conf.put("quarkus.log.level", "INFO");
+        conf.put("greeting.message", "Hello, Citrus rocks!");
+        return conf;
+    }
+}
+----
+
+The application properties supplier is able to set Quarkus properties as well as application domain properties.
+The example above sets `greeting.message` property which can be referenced in the Quarkus application:
+
+.DemoApplication
+[source,java]
+----
+@ApplicationScoped
+public class DemoApplication {
+
+    private static final Logger logger = Logger.getLogger(DemoApplication.class);
+
+    @ConfigProperty(name = "greeting.message")
+    String message;
+
+    void onStart(@Observes StartupEvent ev) {
+        logger.info(message);
+    }
+}
+----
+
+[[runtime-quarkus-testcontainers]]
+=== Testcontainers support
+
+Citrus integrates with Testcontainers to easily start/stop Testcontainers instances as part of the test.
+You can leverage the Citrus Testcontainers features within a Quarkus test very easily.
+Citrus implements Quarkus test resources for each of the supported containers (AWS LocalStack, Kafka, Redpanda, ...).
+
+The following example starts an AWS LocalStack Testcontainers instance and uses the S3 service on that container to upload a file to the S3 bucket.
+The Quarkus application under test should handle this S3 file then.
+
+.AwsS3SourceTest
+[source,java]
+----
+@QuarkusTest
+@CitrusSupport
+@LocalStackContainerSupport(services = LocalStackContainer.Service.S3, containerLifecycleListener = AwsS3SourceTest.class)
+public class AwsS3SourceTest implements ContainerLifecycleListener<LocalStackContainer> {
+
+    @CitrusResource
+    private TestCaseRunner tc;
+
+    @CitrusResource
+    private LocalStackContainer localStackContainer;
+
+    @Test
+    public void shouldHandleUploadedS3File() {
+        tc.given(this::uploadS3File);
+
+        // verify that the Quarkus application has handled the S3 file
+    }
+
+    private void uploadS3File(TestContext context) {
+        S3Client s3Client = createS3Client(localStackContainer);
+
+        CreateMultipartUploadResponse initResponse = s3Client.createMultipartUpload(b -> b.bucket(s3BucketName).key(s3Key));
+        String etag = s3Client.uploadPart(b -> b.bucket(s3BucketName)
+                        .key(s3Key)
+                        .uploadId(initResponse.uploadId())
+                        .partNumber(1),
+                RequestBody.fromString(s3Data)).eTag();
+        s3Client.completeMultipartUpload(b -> b.bucket(s3BucketName)
+                .multipartUpload(CompletedMultipartUpload.builder()
+                        .parts(Collections.singletonList(CompletedPart.builder()
+                                .partNumber(1)
+                                .eTag(etag).build())).build())
+                .key(s3Key)
+                .uploadId(initResponse.uploadId()));
+    }
+
+    @Override
+    public Map<String, String> started(LocalStackContainer container) {
+        S3Client s3Client = createS3Client(container);
+
+        s3Client.createBucket(b -> b.bucket(s3BucketName));
+
+        Map<String, String> conf = new HashMap<>();
+        conf.put("my.app.aws-s3-source.accessKey", container.getAccessKey());
+        conf.put("my.app.aws-s3-source.secretKey", container.getSecretKey());
+        conf.put("my.app.aws-s3-source.region", container.getRegion());
+        conf.put("my.app.aws-s3-source.bucketNameOrArn", s3BucketName);
+        conf.put("my.app.aws-s3-source.uriEndpointOverride", container.getServiceEndpoint().toString());
+        conf.put("my.app.aws-s3-source.overrideEndpoint", "true");
+        conf.put("my.app.aws-s3-source.forcePathStyle", "true");
+
+        return conf;
+    }
+
+    private static S3Client createS3Client(LocalStackContainer container) {
+        return S3Client.builder()
+                .endpointOverride(container.getServiceEndpoint())
+                .credentialsProvider(
+                        StaticCredentialsProvider.create(
+                                AwsBasicCredentials.create(container.getAccessKey(), container.getSecretKey())
+                        )
+                )
+                .forcePathStyle(true)
+                .region(Region.of(container.getRegion()))
+                .build();
+    }
+}
+----
+
+A few things happened in this example and let's explain those features one after another.
+First thing to notice is the `@LocalStackContainerSupport` annotation that makes Citrus run the AWS LocalStack Testcontainers instance.
+Also, the annotation provides the enabled services on that container (`services = LocalStackContainer.Service.S3`).
+This starts the Testcontainers instance as part of the Quarkus test.
+
+The test also implements the `ContainerLifecycleListener` interface.
+This enables the test to handle the container instance after it has been started.
+This is a good place to create an S3 client and the bucket for the test.
+
+.Create S3 client
+[source,java]
+----
+@Override
+public Map<String, String> started(LocalStackContainer container) {
+    S3Client s3Client = createS3Client(container);
+
+    s3Client.createBucket(b -> b.bucket(s3BucketName));
+
+    Map<String, String> conf = new HashMap<>();
+    conf.put("my.app.aws-s3-source.accessKey", container.getAccessKey());
+    conf.put("my.app.aws-s3-source.secretKey", container.getSecretKey());
+    conf.put("my.app.aws-s3-source.region", container.getRegion());
+    conf.put("my.app.aws-s3-source.bucketNameOrArn", s3BucketName);
+    conf.put("my.app.aws-s3-source.uriEndpointOverride", container.getServiceEndpoint().toString());
+    conf.put("my.app.aws-s3-source.overrideEndpoint", "true");
+    conf.put("my.app.aws-s3-source.forcePathStyle", "true");
+
+    return conf;
+}
+----
+
+Also, the started listener may return some application properties that get set for the Quarkus application under test.
+This is the opportunity to set the Testcontainers connection settings for the Quarkus application.
+
+Obviously the Quarkus application uses some property based configuration with the `my.app.*` properties.
+The test is able to reference the Testcontainers exposed settings as values for these properties (e.g. `my.app.aws-s3-source.accessKey=container.getAccessKey()`).
+
+With this configuration in place the test is able to upload and S3 file to the test bucket on the Testcontainers instance with the `uploadS3File()` method.
+This should trigger the Quarkus application under test to handle the new file accordingly.
+We can add some verification and assertion steps to verify that the Quarkus application has handled the S3 file.
+
+This is how Citrus is able to start Testcontainers instances as part of a Quarkus test.
+The application properties supplier as well as the container lifecycle listener interfaces allow us to connect the Quarkus application with the Testcontainers instance.
+The test is able to use the services on the Testcontainers instance to trigger some test data that is consumed by the application under test.
+
+Please also have a look into the other provided Testcontainers annotations in Citrus:
+
+* @LocalStackContainerSupport
+* @KakfaContainerSupport
+* @RedpandaContainerSupport
+* @TestcontainersSupport

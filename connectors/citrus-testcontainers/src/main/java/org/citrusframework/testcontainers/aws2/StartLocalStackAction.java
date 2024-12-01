@@ -27,12 +27,8 @@ import org.testcontainers.containers.wait.strategy.Wait;
 
 public class StartLocalStackAction extends StartTestcontainersAction<LocalStackContainer> {
 
-    private final Set<LocalStackContainer.Service> services;
-
     public StartLocalStackAction(Builder builder) {
         super(builder);
-
-        this.services = builder.services;
     }
 
     @Override

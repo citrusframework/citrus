@@ -96,7 +96,7 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
         }
     }
 
-    protected C getContainer() {
+    public C getContainer() {
         return container;
     }
 
@@ -267,37 +267,46 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
         protected void prepareBuild() {
         }
 
-        @Override
-        public T build() {
-            prepareBuild();
+        protected C buildContainer() {
+            C container = (C) new GenericContainer<>(image);
 
-            if (container == null) {
-                container = (C) new GenericContainer<>(image);
-
-                if (network != null) {
-                    container.withNetwork(network);
-                    if (serviceName != null) {
-                        container.withNetworkAliases(serviceName);
-                    } else if (containerName != null) {
-                        container.withNetworkAliases(containerName);
-                    }
+            if (network != null) {
+                container.withNetwork(network);
+                if (serviceName != null) {
+                    container.withNetworkAliases(serviceName);
+                } else if (containerName != null) {
+                    container.withNetworkAliases(containerName);
                 }
-
-                container.withStartupTimeout(startupTimeout);
             }
 
+            container.withStartupTimeout(startupTimeout);
+
+            return container;
+        }
+
+        protected void configureContainer(C container) {
             container.withLabels(labels);
             container.withEnv(env);
 
             exposedPorts.forEach(container::addExposedPort);
             container.setPortBindings(portBindings);
 
-            volumeMounts.forEach((mountableFile, containerPath) ->
-                    container.withCopyFileToContainer(mountableFile, containerPath));
+            volumeMounts.forEach(container::withCopyFileToContainer);
 
             if (!commandLine.isEmpty()) {
                 container.withCommand(commandLine.toArray(String[]::new));
             }
+        }
+
+        @Override
+        public T build() {
+            prepareBuild();
+
+            if (container == null) {
+                container = buildContainer();
+            }
+
+            configureContainer(container);
 
             if (containerName == null && image != null) {
                 if (image.contains(":")) {
