@@ -27,6 +27,7 @@ import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.AbstractTestcontainersAction;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
 import org.citrusframework.testcontainers.aws2.LocalStackContainer;
+import org.citrusframework.testcontainers.aws2.LocalStackSettings;
 import org.citrusframework.testcontainers.aws2.StartLocalStackAction;
 import org.citrusframework.testcontainers.kafka.StartKafkaAction;
 import org.citrusframework.testcontainers.mongodb.StartMongoDBAction;
@@ -49,6 +50,8 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         if (container.getVersion() != null) {
             builder.version(container.getVersion());
         }
+
+        builder.autoCreateClients(container.isAutoCreateClients());
 
         configureStartActionBuilder(builder, container);
 
@@ -309,9 +312,19 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
     public static class LocalStack extends Container {
 
+        protected boolean autoCreateClients = LocalStackSettings.isAutoCreateClients();
+
         protected String version;
 
         protected List<String> services;
+
+        public boolean isAutoCreateClients() {
+            return autoCreateClients;
+        }
+
+        public void setAutoCreateClients(boolean autoCreateClients) {
+            this.autoCreateClients = autoCreateClients;
+        }
 
         public String getVersion() {
             return version;

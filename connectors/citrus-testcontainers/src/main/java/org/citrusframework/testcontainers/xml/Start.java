@@ -35,6 +35,7 @@ import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.AbstractTestcontainersAction;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
 import org.citrusframework.testcontainers.aws2.LocalStackContainer;
+import org.citrusframework.testcontainers.aws2.LocalStackSettings;
 import org.citrusframework.testcontainers.aws2.StartLocalStackAction;
 import org.citrusframework.testcontainers.kafka.StartKafkaAction;
 import org.citrusframework.testcontainers.mongodb.StartMongoDBAction;
@@ -60,6 +61,8 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         if (container.getVersion() != null) {
             builder.version(container.getVersion());
         }
+
+        builder.autoCreateClients(container.isAutoCreateClients());
 
         configureStartActionBuilder(builder, container);
 
@@ -438,6 +441,9 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         @XmlAttribute
         protected String version;
 
+        @XmlAttribute(name = "auto-create-clients")
+        protected boolean autoCreateClients = LocalStackSettings.isAutoCreateClients();
+
         @XmlAttribute(name = "services")
         protected String serviceList;
 
@@ -467,6 +473,14 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         public void setServices(Services services) {
             this.services = services;
+        }
+
+        public boolean isAutoCreateClients() {
+            return autoCreateClients;
+        }
+
+        public void setAutoCreateClients(boolean autoCreateClients) {
+            this.autoCreateClients = autoCreateClients;
         }
 
         @XmlAccessorType(XmlAccessType.FIELD)
