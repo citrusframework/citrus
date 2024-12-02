@@ -1981,6 +1981,7 @@
                 <xs:attribute name="service-name" type="xs:string"/>
                 <xs:attribute name="version" type="xs:string"/>
                 <xs:attribute name="auto-remove" type="xs:boolean"/>
+                <xs:attribute name="auto-create-clients" type="xs:boolean"/>
                 <xs:attribute name="services" type="xs:string"/>
                 <xs:attribute name="image" type="xs:string"/>
                 <xs:attribute name="command" type="xs:string"/>

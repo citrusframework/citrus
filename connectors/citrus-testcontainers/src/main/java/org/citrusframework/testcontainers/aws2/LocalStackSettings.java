@@ -49,6 +49,10 @@ public class LocalStackSettings {
     private static final String CONTAINER_NAME_ENV = LOCALSTACK_ENV_PREFIX + "CONTAINER_NAME";
     public static final String CONTAINER_NAME_DEFAULT = "aws2Container";
 
+    private static final String AUTO_CREATE_CLIENTS_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "auto.create.clients";
+    private static final String AUTO_CREATE_CLIENTS_ENV = LOCALSTACK_ENV_PREFIX + "AUTO_CREATE_CLIENTS";
+    public static final String AUTO_CREATE_CLIENTS_DEFAULT = "true";
+
     private static final String STARTUP_TIMEOUT_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "startup.timeout";
     private static final String STARTUP_TIMEOUT_ENV = LOCALSTACK_ENV_PREFIX + "STARTUP_TIMEOUT";
 
@@ -98,6 +102,15 @@ public class LocalStackSettings {
     public static String getContainerName() {
         return System.getProperty(CONTAINER_NAME_PROPERTY,
                 System.getenv(CONTAINER_NAME_ENV) != null ? System.getenv(CONTAINER_NAME_ENV) : CONTAINER_NAME_DEFAULT);
+    }
+
+    /**
+     * Auto create clients for enabled services and add them as beans to the Citrus registry.
+     * @return the enabled/disabled flag.
+     */
+    public static boolean isAutoCreateClients() {
+        return Boolean.parseBoolean(System.getProperty(AUTO_CREATE_CLIENTS_PROPERTY,
+                System.getenv(AUTO_CREATE_CLIENTS_ENV) != null ? System.getenv(AUTO_CREATE_CLIENTS_ENV) : AUTO_CREATE_CLIENTS_DEFAULT));
     }
 
     /**

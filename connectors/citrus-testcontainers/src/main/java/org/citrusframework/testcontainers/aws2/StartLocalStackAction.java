@@ -18,22 +18,50 @@ package org.citrusframework.testcontainers.aws2;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 public class StartLocalStackAction extends StartTestcontainersAction<LocalStackContainer> {
 
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(StartLocalStackAction.class);
+
+    private final boolean autoCreateClients;
+
     public StartLocalStackAction(Builder builder) {
         super(builder);
+        this.autoCreateClients = builder.autoCreateClients;
     }
 
     @Override
     protected void exposeConnectionSettings(LocalStackContainer container, TestContext context) {
         LocalStackSettings.exposeConnectionSettings(container, serviceName, context);
+
+        if (autoCreateClients) {
+            for (LocalStackContainer.Service service : container.getServices()) {
+                String clientName = "%sClient".formatted(service.getServiceName());
+                if (context.getReferenceResolver().isResolvable(clientName)) {
+                    // client bean with same name already exists - do not overwrite
+                    continue;
+                }
+
+                Optional<ClientFactory<?>> clientFactory = ClientFactory.lookup(context.getReferenceResolver(), service);
+                if (clientFactory.isPresent()) {
+                    Object client = clientFactory.get().createClient(container);
+                    container.addClient(service, client);
+                    context.getReferenceResolver().bind(clientName, client);
+                } else {
+                    logger.warn("Missing client factory for service '%s' - no client created for this service".formatted(service));
+                }
+            }
+        }
     }
 
     /**
@@ -44,6 +72,8 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
         private String localStackVersion = LocalStackSettings.getVersion();
 
         private final Set<LocalStackContainer.Service> services = new HashSet<>();
+
+        private boolean autoCreateClients = LocalStackSettings.isAutoCreateClients();
 
         public Builder() {
             withStartupTimeout(LocalStackSettings.getStartupTimeout());
@@ -67,6 +97,11 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
         public Builder withServices(Set<LocalStackContainer.Service> services) {
             this.services.addAll(services);
            return this;
+        }
+
+        public Builder autoCreateClients(boolean enabled) {
+            this.autoCreateClients = enabled;
+            return this;
         }
 
         @Override
