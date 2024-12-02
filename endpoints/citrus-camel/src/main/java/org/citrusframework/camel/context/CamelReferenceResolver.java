@@ -121,6 +121,10 @@ public class CamelReferenceResolver implements ReferenceResolver {
         this.camelContext = camelContext;
     }
 
+    public CamelContext getCamelContext() {
+        return camelContext;
+    }
+
     public ReferenceResolver getFallback() {
         return fallback;
     }

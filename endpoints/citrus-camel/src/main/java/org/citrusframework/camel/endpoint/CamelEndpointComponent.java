@@ -21,6 +21,7 @@ import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.camel.CamelSettings;
+import org.citrusframework.camel.context.CamelReferenceResolver;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpointComponent;
 import org.citrusframework.endpoint.Endpoint;
@@ -54,9 +55,11 @@ public class CamelEndpointComponent extends AbstractEndpointComponent {
         }
 
         if (context.getReferenceResolver() != null) {
-            if (context.getReferenceResolver().resolveAll(CamelContext.class).size() == 1) {
+            if (context.getReferenceResolver() instanceof CamelReferenceResolver camelReferenceResolver) {
+                endpoint.getEndpointConfiguration().setCamelContext(camelReferenceResolver.getCamelContext());
+            } else if (context.getReferenceResolver().resolveAll(CamelContext.class).size() == 1) {
                 endpoint.getEndpointConfiguration().setCamelContext(context.getReferenceResolver().resolve(CamelContext.class));
-            } else if (context.getReferenceResolver().isResolvable(CamelSettings.getContextName())) {
+            } else if (context.getReferenceResolver().isResolvable(CamelSettings.getContextName(), CamelContext.class)) {
                 endpoint.getEndpointConfiguration().setCamelContext(context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
             } else {
                 endpoint.getEndpointConfiguration().setCamelContext(new DefaultCamelContext());

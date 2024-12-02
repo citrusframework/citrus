@@ -46,9 +46,9 @@ public class CreateCamelContextAction  extends AbstractCamelAction {
 
             if (referenceResolver instanceof CamelReferenceResolver camelReferenceResolver) {
                 camelReferenceResolver.setCamelContext(camelContext);
-                camelReferenceResolver.getFallback().bind(contextName, context);
+                camelReferenceResolver.getFallback().bind(contextName, camelContext);
             } else {
-                referenceResolver.bind(contextName, context);
+                referenceResolver.bind(contextName, camelContext);
                 context.setReferenceResolver(new CamelReferenceResolver(camelContext)
                         .withFallback(referenceResolver));
             }
