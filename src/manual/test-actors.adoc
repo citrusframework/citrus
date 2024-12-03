@@ -1,67 +1,304 @@
 [[test-actors]]
 = Test actors
 
-The concept of test actors came to our mind when reusing Citrus test cases in end-to-end test scenarios. Usually Citrus simulates all interface partners within a test case which is great for continuous integration testing. In end-to-end integration test scenarios some of our interface partners may be real and alive. Some other interface partners still require Citrus simulation logic.
+The concept of test actors is a way to enable/disable a group of tests actions and message endpoints based on configuration.
+Test actors help you to use the same tests in different environments where some of the participating services may be available or need to be simulated by Citrus.
+In particular in end-to-end test scenarios some interface partners may be deployed and ready for participating in the test.
+In other environments no interface partners are available and Citrus needs to simulate all interfaces accordingly.
+Test actors allows us to use the very same test definition in both environments by just adjusting the Citrus configuration.
 
-It would be great if we could reuse the Citrus integration tests in this test setup as we have the complete test flow of messages available in the Citrus tests. We only have to remove the simulated send/receive actions for those real interface partner applications which are available in our end-to-end test setup.
+Usually Citrus simulates all interface partners within a test case which is great for continuous integration testing where just the System Under Test is deployed and all surrounding infrastructure and partners get simulated.
+In end-to-end integration test scenarios some of our interface partners may be deployed and online.
+Some other interface partners still require Citrus simulation logic.
 
-With test actors we have the opportunity to link test actions, in particular send/receive message actions, to a test actor. The test actor can be disabled in configuration very easy and following from that all linked send/receive actions are disabled, too. One Citrus test case is runnable with different test setup scenarios where different partner applications on the one hand are available as real life applications and on the other hand require simulation.
+It would be great if we were able to reuse the Citrus integration tests in all of these described test environments.
+The Citrus test describes the complete test flow of messages, we only have to remove the simulated send/receive actions for those interface partner applications that are deployed and available in an end-to-end test setup.
 
-[[define-test-actors]]
-== Define test actors
+With test actors we have the opportunity to link test actions, in particular send/receive message actions, to a named actor.
+The test actor can be enabled/disabled via configuration and following from that all linked test actions are enabled/disabled, too.
 
-First thing to do is to define one or more test actors in Citrus configuration. A test actor represents a participating party (e.g. interface partner, backend application). We write the test actors into the central Spring application context. We can use a special Citrus Spring XML schema so definitions are quite easy:
+This means the same Citrus test case is runnable with different test actor configurations where some services are deployed as real applications and others may require simulation by Citrus.
 
-[source,xml]
+[[test-actors-create]]
+== Create test actors
+
+First thing to do is to define one or more test actors in the Citrus configuration.
+A test actor represents a participating party (e.g. interface partner, backend application, service).
+
+We define the test actors as beans and add them to the Citrus bean registry.
+
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus:actor id="travelagency" name="TRAVEL_AGENCY"/>
-<citrus:actor id="royalairline" name="ROYAL_AIRLINE"/>
-<citrus:actor id="smartariline" name="SMART_AIRLINE"/>
+@BindToRegistry(name = "travel_agency")
+public TestActor travelAgencyActor() {
+    return new TestActor("travel_agency");
+}
+
+@BindToRegistry(name = "royal_airline")
+public TestActor royalAirlineActor() {
+    return new TestActor("royal_airline");
+}
+
+@BindToRegistry(name = "smart_ariline")
+public TestActor smartAirlineActor() {
+    return new TestActor("smart_ariline");
+}
 ----
 
-The listing above defines three test actors participating in our test scenario. A travel agency application which is simulated by Citrus as a calling client, the smart airline application and a royal airline application. Now we have the test actors defined we can link those to message sender/receiver instances and/or test actions within our test case.
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean(name = "travel_agency")
+public TestActor travelAgencyActor() {
+    return new TestActor("travel_agency");
+}
 
-[[link-test-actors]]
-== Link test actors
+@Bean(name = "royal_airline")
+public TestActor royalAirlineActor() {
+    return new TestActor("royal_airline");
+}
 
-We need to link the test actors to message send and receive actions in our test cases. We can do this in two different ways. First we can set a test actor reference on a message sender and message receiver.
+@Bean(name = "smart_ariline")
+public TestActor smartAirlineActor() {
+    return new TestActor("smart_ariline");
+}
+----
 
-[source,xml]
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:citrus="http://www.citrusframework.org/schema/config">
+    <citrus:actor id="travel_agency" name="TRAVEL_AGENCY"/>
+    <citrus:actor id="royal_airline" name="ROYAL_AIRLINE"/>
+    <citrus:actor id="smart_ariline" name="SMART_AIRLINE"/>
+</spring:beans>
+----
+
+The listing above defines three test actors participating in our test scenario.
+A `travel_agency` application which is simulated by Citrus as a calling client, the `smart_airline` application and a `royal_airline` application.
+Now we have the test actors defined we can link those to message sender/receiver instances and/or test actions within our test case.
+
+[[test-actors-reference]]
+== Reference test actors
+
+We need to reference the test actor and set it on a message send or receive action in our test case.
+We can do this in two different ways.
+First of all we can set a test actor reference on a message endpoint.
+
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public JmsSyncEndpoint royalAirlineBookingEndpoint() {
+    return JmsEndpoints.jms()
+                .synchronous()
+                .destination("${royal.airline.request.queue}")
+                .actor(royalAirlineActor())
+                .build();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public JmsSyncEndpoint royalAirlineBookingEndpoint() {
+    return JmsEndpoints.jms()
+                .synchronous()
+                .destination("${royal.airline.request.queue}")
+                .actor(royalAirlineActor())
+                .build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus-jms:sync-endpoint id="royalAirlineBookingEndpoint"
         destination-name="${royal.airline.request.queue}"
-        actor="royalairline"/>
+        actor="royal_airline"/>
 ----
 
-Now all test actions that are using these message receiver and message sender instances are linked to the test actor. In addition to that you can also explicitly link test actions to test actors in a test.
+Now all test actions that are using this message endpoint are linked to the test actor.
+In addition to that you can also explicitly link test actions to a test actor.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<receive endpoint="royalAirlineBookingEndpoint" actor="royalairline">
-    <message>
-        [...]
-    </message>
-</receive>
+@CitrusTest
+public void airlineTest() {
+    $(receive("royalAirlineBookingEndpoint")
+        .message()
+        .body("...")
+        .actor("royal_airline")
+    );
 
-<send endpoint="royalAirlineBookingEndpoint" actor="royalairline">
-    <message>
-        [...]
-    </message>
-</send>
+    $(send("royalAirlineBookingEndpoint")
+        .message()
+        .body("...")
+        .actor("royal_airline")
+    );
+}
 ----
 
-This explicitly links test actors to test actions so you can decide which link should be set without having to rely on the message receiver and sender configuration.
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="AirlineTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="royalAirlineBookingEndpoint" actor="royal_airline">
+            <message>
+                <!-- ... -->
+            </message>
+        </receive>
 
-[[disable-test-actors]]
+        <send endpoint="royalAirlineBookingEndpoint" actor="royal_airline">
+            <message>
+                <!-- ... -->
+            </message>
+        </send>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: AirlineTest
+actions:
+  - receive:
+      endpoint: "royalAirlineBookingEndpoint"
+      actor: "royal_airline"
+      message: {}
+  - send:
+      endpoint: "royalAirlineBookingEndpoint"
+      actor: "royal_airline"
+      message: {}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="AirlineTest">
+        <actions>
+            <receive endpoint="royalAirlineBookingEndpoint" actor="royal_airline">
+                <message>
+                    <!-- ... -->
+                </message>
+            </receive>
+
+            <send endpoint="royalAirlineBookingEndpoint" actor="royal_airline">
+                <message>
+                    <!-- ... -->
+                </message>
+            </send>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+This explicitly links the test actor named `royal_ariline` to test actions.
+The test actor may be enabled/disabled according to the test environment.
+All linked test actions and message endpoints will be skipped when the referenced test actor is disabled.
+
+[[test-actors-disable]]
 == Disable test actors
 
-Usually both airline applications are simulated in our integration tests. But this time we want to change this by introducing a royal airline application which is online as a real application instance. So we need to skip all simulated message interactions for the royal airline application in our Citrus tests. This is easy as we have linked all send/receive actions to one of our test actors. So we can disable the royal airline test actor in our configuration:
+By default, test actors are enabled.
+In some environments it may be required to disable the test actor and all its linked test actions and message endpoints though.
 
-[source,xml]
+In the airline example usually both airline applications are simulated in the integration tests.
+Assume that there is a test environment where one of the simulated applications (e.g. the `royal_airline` application) is available as a real application instance deployed.
+In this scenario the Citrus tests should skip all simulated message interactions for the `royal_airline` application and the real application instance in the test environment should consume the messages instead.
+
+This is easy as we have linked all send/receive actions to one of our test actors.
+So we can disable the `royal_airline` test actor in our configuration:
+
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus:actor id="royalairline" name="ROYAL_AIRLINE" disabled="true"/>
+@BindToRegistry(name = "travel_agency")
+public TestActor travelAgencyActor() {
+    return new TestActor("travel_agency");
+}
+
+@BindToRegistry(name = "royal_airline")
+public TestActor royalAirlineActor() {
+    TestActor royalAirlineActor = new TestActor("royal_airline");
+    royalAirlineActor.setDisabled(true);
+    return royalAirlineActor;
+}
+
+@BindToRegistry(name = "smart_ariline")
+public TestActor smartAirlineActor() {
+    return new TestActor("smart_ariline");
+}
 ----
 
-Any test action linked to this test actor is now skipped. As we introduced a real royal airline application in our test scenario the requests get answered and the test should be successful within this end-to-end test scenario. The travel agency and the smart airline still get simulated by Citrus. This is a perfect way of reusing integration tests in different test scenarios where you enable and disable simulated participating parties in Citrus.
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean(name = "travel_agency")
+public TestActor travelAgencyActor() {
+    return new TestActor("travel_agency");
+}
 
-IMPORTANT: Server ports may be of special interest when dealing with different test scenarios. You may have to also disable a Citrus embedded Jetty server instance in order to avoid port binding conflicts and you may have to wire endpoint URIs accordingly before executing a test. The real life application may not use the same port and ip as the Citrus embedded servers for simulation.
+@Bean(name = "royal_airline")
+public TestActor royalAirlineActor() {
+    TestActor royalAirlineActor = new TestActor("royal_airline");
+    royalAirlineActor.setDisabled(true);
+    return royalAirlineActor;
+}
+
+@Bean(name = "smart_ariline")
+public TestActor smartAirlineActor() {
+    return new TestActor("smart_ariline");
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:citrus="http://www.citrusframework.org/schema/config">
+    <citrus:actor id="travel_agency" name="TRAVEL_AGENCY"/>
+    <citrus:actor id="royal_airline" name="ROYAL_AIRLINE" disabled="true"/>
+    <citrus:actor id="smart_ariline" name="SMART_AIRLINE"/>
+</spring:beans>
+----
+
+Any test action linked to this test actor `royal_airline` is now skipped in the test execution.
+The real `royal_airline` application available in our test scenario will handle the requests instead.
+The `travel_agency` and the `smart_airline` applications still get simulated by Citrus.
+
+This is a perfect way of reusing integration tests in different test scenarios where you enable and disable simulated participating parties in Citrus.
+
+IMPORTANT: Server ports may be of special interest when dealing with different test scenarios.
+You may have to also disable a Citrus embedded Jetty server instance in order to avoid port binding conflicts.
+You may have to wire endpoint URIs accordingly before executing a test.
+The real life application may not use the same port and IP address as the Citrus embedded servers for simulation.
+
+[[test-actors-environment-setting]]
+== Test actor environment settings
+
+You can enable/disable the test actor also by using System property or environment variable settings.
+The property and environment variable names follow a specific formatting that includes the test actor name:
+
+* `citrus.test.actor.<name>.enabled=true/false`
+* `CITRUS_TEST_ACTOR_<NAME>_ENABLED=true/false`
+
+When the environment setting is available on the test host the test actor with the referenced name is enabled/disabled.
+
+You can set these properties in the `citrus-application.properties` for instance:
+
+.citrus-application.properties
+[source,properties]
+----
+citrus.test.actor.royal_airline.enabled=false
+----
+
+This disables the test actor named `royal_airline` and skips all its linked test actions and message endpoints.
