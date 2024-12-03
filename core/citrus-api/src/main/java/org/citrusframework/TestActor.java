@@ -73,7 +73,8 @@ public class TestActor {
         if (name != null && !name.isBlank()) {
             // Check enabled state in System properties or environment variables for this test actor using its name
             enabled = Boolean.parseBoolean(System.getProperty(TEST_ACTOR_ENABLED_PROPERTY.formatted(name.trim().toLowerCase()),
-                    Optional.ofNullable(System.getenv(TEST_ACTOR_ENABLED_ENV.formatted(name.trim().toUpperCase()))).orElse("true")));
+                    Optional.ofNullable(System.getenv(TEST_ACTOR_ENABLED_ENV.formatted(
+                            name.trim().replaceAll("\\W", "_").toUpperCase()))).orElse("true")));
         }
 
         return !enabled || disabled;

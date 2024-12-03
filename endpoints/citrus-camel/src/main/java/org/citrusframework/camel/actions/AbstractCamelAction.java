@@ -21,6 +21,7 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.camel.CamelSettings;
+import org.citrusframework.camel.CamelTestActor;
 import org.citrusframework.camel.context.CamelReferenceResolver;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
@@ -65,6 +66,10 @@ public abstract class AbstractCamelAction extends AbstractTestAction implements 
 
         protected ReferenceResolver referenceResolver;
         protected CamelContext camelContext;
+
+        public Builder() {
+            actor(new CamelTestActor());
+        }
 
         /**
          * Sets the Camel context.

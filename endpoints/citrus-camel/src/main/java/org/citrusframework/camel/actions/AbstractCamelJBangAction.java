@@ -19,6 +19,7 @@ package org.citrusframework.camel.actions;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.camel.jbang.CamelJBang;
+import org.citrusframework.camel.jbang.CamelJBangTestActor;
 
 /**
  * Abstract action to access Camel JBang tooling. Action provides common Camel JBang settings such as explicit Camel version.
@@ -68,6 +69,10 @@ public abstract class AbstractCamelJBangAction extends AbstractTestAction {
 
         protected String camelVersion;
         protected String kameletsVersion;
+
+        public Builder() {
+            actor(new CamelJBangTestActor());
+        }
 
         /**
          * Sets explicit Camel version.
