@@ -41,47 +41,54 @@ public class TestcontainersActor extends TestActor {
     /** Docker's connection state, checks connectivity to Docker engine */
     private static AtomicBoolean connected;
 
-    private final DockerClient dockerClient;
-
     public TestcontainersActor() {
         this(null);
     }
 
     public TestcontainersActor(DockerClient dockerClient) {
-        setName("testcontainers");
+        super("testcontainers");
 
-        if (dockerClient != null) {
-            this.dockerClient = dockerClient;
-        } else {
-            DockerClientConfig clientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
-            this.dockerClient = DockerClientImpl.getInstance(clientConfig,
-                    new OkDockerHttpClient.Builder().dockerHost(clientConfig.getDockerHost()).build()
-            );
+        synchronized (logger) {
+            if (connected == null) {
+                if (dockerClient != null) {
+                    connected = new AtomicBoolean(verifyConnected(dockerClient));
+                } else {
+                    DockerClientConfig clientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
+                    DockerClient tempClient = DockerClientImpl.getInstance(clientConfig,
+                            new OkDockerHttpClient.Builder().dockerHost(clientConfig.getDockerHost()).build()
+                    );
+                    connected = new AtomicBoolean(verifyConnected(tempClient));
+                }
+            }
         }
     }
 
     @Override
     public boolean isDisabled() {
+        if (!TestContainersSettings.isEnabled()) {
+            return true;
+        }
+
+        return !connected.get() || super.isDisabled();
+    }
+
+    public static boolean verifyConnected(DockerClient dockerClient) {
+        try {
+            Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
+                dockerClient.pingCmd().exec();
+                return true;
+            });
+
+            return (future.get(TestContainersSettings.getConnectTimeout(), TimeUnit.MILLISECONDS));
+        } catch (Exception e) {
+            logger.warn("Skipping Docker test execution as no proper Docker environment is available on host system!", e);
+            return false;
+        }
+    }
+
+    public static void resetConnectionState() {
         synchronized (logger) {
-            if (connected == null) {
-                if (TestContainersSettings.isEnabled()) {
-                    try {
-                        Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
-                            dockerClient.pingCmd().exec();
-                            return true;
-                        });
-
-                        connected = new AtomicBoolean((future.get(TestContainersSettings.getConnectTimeout(), TimeUnit.MILLISECONDS)));
-                    } catch (Exception e) {
-                        logger.warn("Skipping Docker test execution as no proper Docker environment is available on host system!", e);
-                        connected = new AtomicBoolean(false);
-                    }
-                } else {
-                    return false;
-                }
-            }
-
-            return !connected.get();
+            connected = null;
         }
     }
 }

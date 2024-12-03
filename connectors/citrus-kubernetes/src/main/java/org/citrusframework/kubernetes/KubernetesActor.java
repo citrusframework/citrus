@@ -38,40 +38,48 @@ public class KubernetesActor extends TestActor {
     /** Kubernetes' connection state, checks connectivity to Kubernetes cluster */
     private static AtomicBoolean connected;
 
-    private final KubernetesClient kubernetesClient;
-
     public KubernetesActor(KubernetesClient kubernetesClient) {
-        setName("k8s");
+        super("k8s");
 
-        if (kubernetesClient != null) {
-            this.kubernetesClient = kubernetesClient;
-        } else {
-            this.kubernetesClient = new KubernetesClientBuilder().build();
+        synchronized (logger) {
+            if (connected == null) {
+                if (kubernetesClient != null) {
+                    connected = new AtomicBoolean(verifyConnected(kubernetesClient));
+                } else {
+                    try (KubernetesClient tempClient = new KubernetesClientBuilder().build()) {
+                        connected = new AtomicBoolean(verifyConnected(tempClient));
+                    }
+                }
+            }
         }
     }
 
     @Override
     public boolean isDisabled() {
+        if (!KubernetesSettings.isEnabled()) {
+            return true;
+        }
+
+        return !connected.get() || super.isDisabled();
+    }
+
+    public static boolean verifyConnected(KubernetesClient kubernetesClient) {
+        try {
+            Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
+                kubernetesClient.pods().list();
+                return true;
+            });
+
+            return future.get(KubernetesSettings.getConnectTimeout(), TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            logger.warn("Skipping Kubernetes action as no proper Kubernetes environment is available on host system!", e);
+            return false;
+        }
+    }
+
+    public static void resetConnectionState() {
         synchronized (logger) {
-            if (connected == null) {
-                if (KubernetesSettings.isEnabled()) {
-                    try {
-                        Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
-                            kubernetesClient.pods().list();
-                            return true;
-                        });
-
-                        connected = new AtomicBoolean((future.get(KubernetesSettings.getConnectTimeout(), TimeUnit.MILLISECONDS)));
-                    } catch (Exception e) {
-                        logger.warn("Skipping Kubernetes action as no proper Kubernetes environment is available on host system!", e);
-                        connected = new AtomicBoolean(false);
-                    }
-                } else {
-                    return false;
-                }
-            }
-
-            return !connected.get();
+            connected = null;
         }
     }
 }
