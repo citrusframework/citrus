@@ -1962,6 +1962,13 @@
                       </xs:sequence>
                     </xs:complexType>
                   </xs:element>
+                  <xs:element name="wait-for" minOccurs="0">
+                    <xs:complexType>
+                      <xs:attribute name="log-message" type="xs:string"/>
+                      <xs:attribute name="url" type="xs:string"/>
+                      <xs:attribute name="disabled" type="xs:boolean"/>
+                    </xs:complexType>
+                  </xs:element>
                   <xs:element name="volume-mounts" minOccurs="0">
                     <xs:complexType>
                       <xs:sequence>

@@ -16,10 +16,13 @@
 
 package org.citrusframework.testcontainers.yaml;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.citrusframework.TestActor;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.Resources;
@@ -34,6 +37,7 @@ import org.citrusframework.testcontainers.mongodb.StartMongoDBAction;
 import org.citrusframework.testcontainers.postgresql.StartPostgreSQLAction;
 import org.citrusframework.testcontainers.redpanda.StartRedpandaAction;
 import org.citrusframework.util.ObjectHelper;
+import org.citrusframework.util.StringUtils;
 
 public class Start extends AbstractTestcontainersAction.Builder<StartTestcontainersAction<?>, Start> implements ReferenceResolverAware {
 
@@ -174,6 +178,20 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         container.getLabels().forEach(label -> builder.withLabel(label.getName(), label.getValue()));
 
+        if (container.getWaitFor() != null) {
+            if (container.getWaitFor().isDisabled()) {
+                builder.waitStrategyDisabled();
+            } else if (StringUtils.hasText(container.getWaitFor().getLogMessage())) {
+                builder.waitFor(container.getWaitFor().getLogMessage());
+            } else if (StringUtils.hasText(container.getWaitFor().getUrl())) {
+                try {
+                    builder.waitFor(new URL(container.getWaitFor().getUrl()));
+                } catch (MalformedURLException e) {
+                    throw new CitrusRuntimeException("Invalid Http(s) URL to wait for: %s".formatted(container.getWaitFor().getUrl()), e);
+                }
+            }
+        }
+
         container.getExposedPorts().forEach(builder::addExposedPort);
 
         container.getPortBindings().forEach(builder::addPortBinding);
@@ -199,6 +217,8 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         protected List<Variable> env;
 
         protected List<Label> labels;
+
+        protected WaitFor waitFor;
 
         protected List<Integer> exposedPorts;
 
@@ -274,6 +294,14 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
                 labels = new ArrayList<>();
             }
             return labels;
+        }
+
+        public void setWaitFor(WaitFor waitFor) {
+            this.waitFor = waitFor;
+        }
+
+        public WaitFor getWaitFor() {
+            return waitFor;
         }
 
         public List<Integer> getExposedPorts() {
@@ -469,6 +497,39 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
                 this.value = value;
             }
 
+        }
+    }
+
+    public static class WaitFor {
+
+        private String logMessage;
+
+        private String url;
+
+        private boolean disabled;
+
+        public String getLogMessage() {
+            return logMessage;
+        }
+
+        public void setLogMessage(String logMessage) {
+            this.logMessage = logMessage;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public boolean isDisabled() {
+            return disabled;
+        }
+
+        public void setDisabled(boolean disabled) {
+            this.disabled = disabled;
         }
     }
 

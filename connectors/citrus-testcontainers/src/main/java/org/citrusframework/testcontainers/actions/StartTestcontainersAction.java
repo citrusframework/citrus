@@ -16,6 +16,7 @@
 
 package org.citrusframework.testcontainers.actions;
 
+import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +31,9 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.containers.wait.strategy.WaitStrategy;
+import org.testcontainers.containers.wait.strategy.WaitStrategyTarget;
 import org.testcontainers.utility.MountableFile;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
@@ -126,6 +130,8 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
         protected final List<String> portBindings = new ArrayList<>();
 
         protected final Map<MountableFile, String> volumeMounts = new HashMap<>();
+
+        protected WaitStrategy waitStrategy;
 
         private boolean autoRemoveResources = TestContainersSettings.isAutoRemoveResources();
 
@@ -244,6 +250,43 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
             return self;
         }
 
+        public B waitFor(WaitStrategy waitStrategy) {
+            this.waitStrategy = waitStrategy;
+            return self;
+        }
+
+        public B waitFor(URL url) {
+            if ("https".equals(url.getProtocol())) {
+                this.waitStrategy = Wait.forHttps(url.getPath());
+            } else {
+                this.waitStrategy = Wait.forHttp(url.getPath());
+            }
+            return self;
+        }
+
+        public B waitFor(String logMessage) {
+            return waitFor(logMessage, 1);
+        }
+
+        public B waitFor(String logMessage, int times) {
+            this.waitStrategy = Wait.forLogMessage(logMessage, times);
+            return self;
+        }
+
+        public B waitStrategyDisabled() {
+            this.waitStrategy = new WaitStrategy() {
+                @Override
+                public void waitUntilReady(WaitStrategyTarget waitStrategyTarget) {
+                }
+
+                @Override
+                public WaitStrategy withStartupTimeout(Duration startupTimeout) {
+                    return this;
+                }
+            };
+            return self;
+        }
+
         public B withVolumeMount(MountableFile mountableFile, String containerPath) {
             this.volumeMounts.put(mountableFile, containerPath);
             return self;
@@ -279,8 +322,6 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
                 }
             }
 
-            container.withStartupTimeout(startupTimeout);
-
             return container;
         }
 
@@ -292,6 +333,12 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
             container.setPortBindings(portBindings);
 
             volumeMounts.forEach(container::withCopyFileToContainer);
+
+            if (waitStrategy != null) {
+                container.waitingFor(waitStrategy);
+            }
+
+            container.withStartupTimeout(startupTimeout);
 
             if (!commandLine.isEmpty()) {
                 container.withCommand(commandLine.toArray(String[]::new));
