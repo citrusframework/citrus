@@ -255,9 +255,13 @@ public class Message {
             "payload"
     })
     public static class Body {
+        @XmlElement
         protected ScriptDefinitionType builder;
+        @XmlElement
         protected Body.Resource resource;
+        @XmlElement
         protected String data;
+        @XmlElement
         protected Body.Payload payload;
 
         public ScriptDefinitionType getBuilder() {
@@ -410,9 +414,7 @@ public class Message {
         }
 
         @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "", propOrder = {
-                "value"
-        })
+        @XmlType(name = "")
         public static class Expression {
             @XmlValue
             protected String value;

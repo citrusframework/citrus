@@ -350,9 +350,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         }
 
         @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "", propOrder = {
-                "value"
-        })
+        @XmlType(name = "")
         public static class Script {
 
             @XmlValue

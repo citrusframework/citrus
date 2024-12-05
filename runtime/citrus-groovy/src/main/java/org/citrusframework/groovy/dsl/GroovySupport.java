@@ -21,6 +21,7 @@ import java.util.Arrays;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.script.GroovyActionBuilder;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
@@ -39,6 +40,14 @@ public class GroovySupport {
      */
     public static GroovySupport groovy() {
         return new GroovySupport();
+    }
+
+    /**
+     * Delegates to Groovy test actions.
+     * @return
+     */
+    public GroovyActionBuilder actions() {
+        return GroovyActionBuilder.groovy();
     }
 
     /**

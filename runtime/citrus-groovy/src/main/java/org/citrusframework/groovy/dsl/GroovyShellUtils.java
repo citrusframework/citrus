@@ -85,7 +85,10 @@ public class GroovyShellUtils {
                 ((GroovyScript) script).setDelegate(delegate);
             }
 
-            ((GroovyScript) script).setCitrusFramework(citrus);
+            if (citrus != null) {
+                ((GroovyScript) script).setCitrusFramework(citrus);
+            }
+
             ((GroovyScript) script).setContext(context);
         }
 

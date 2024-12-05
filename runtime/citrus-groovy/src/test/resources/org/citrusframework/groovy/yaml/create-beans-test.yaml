@@ -1,0 +1,11 @@
+name: "CreateBeansTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in YAML
+actions:
+  - groovy:
+      beans:
+        script: |
+          beans {
+            bean(org.citrusframework.validation.DefaultTextEqualsMessageValidator.class)
+          }
