@@ -24,6 +24,12 @@ package org.citrusframework.openapi.testapi;
 public interface GeneratedApiOperationInfo {
 
     /**
+     * Retrieves the {@link GeneratedApi} which owns this operation.
+     * @return
+     */
+    GeneratedApi getGeneratedApi();
+
+    /**
      * Retrieves the name of the OpenAPI operation.
      *
      * @return the name of the OpenAPI operation

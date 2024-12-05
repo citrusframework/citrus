@@ -3,6 +3,7 @@ package org.citrusframework.openapi.actions;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.openapi.AutoFillType;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.spi.Resources;
 import org.testng.Assert;
@@ -16,11 +17,12 @@ public class OpenApiClientRequestMessageBuilderTest {
             Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-derivation-for-message-builder-test.json"));
 
     @Test
-    public void shouldAddRandomDataForOperation() {
+    public void shouldAddRandomDataForOperationWhenAutoFillAll() {
         Message message = openapi()
                 .specification(petstoreSpec)
                 .client()
                 .send("addPet") // operationId
+                .autoFill(AutoFillType.ALL)
                 .build()
                 .getMessageBuilder()
                 .build(new TestContext(), "");
@@ -31,8 +33,53 @@ public class OpenApiClientRequestMessageBuilderTest {
         Assert.assertNotNull(payload);
         Assert.assertTrue(payload instanceof String);
         // test header
-        Object header = httpMessage.getHeader("X-SAMPLE-HEADER");
-        Assert.assertNotNull(header);
+        Assert.assertNotNull(httpMessage.getHeader("X-SAMPLE-HEADER"));
+        Assert.assertNotNull(httpMessage.getQueryParams().get("sample-param"));
+        Assert.assertNotNull(httpMessage.getQueryParams().get("non-required-sample-param"));
+    }
+
+    @Test
+    public void shouldAddRandomDataForOperationWhenAutoFillRequired() {
+            Message message = openapi()
+                .specification(petstoreSpec)
+                .client()
+                .send("addPet") // operationId
+            .autoFill(AutoFillType.REQUIRED)
+                .build()
+                .getMessageBuilder()
+                .build(new TestContext(), "");
+            Assert.assertTrue(message instanceof HttpMessage);
+            HttpMessage httpMessage = (HttpMessage) message;
+            // test payload
+            Object payload = httpMessage.getPayload();
+            Assert.assertNotNull(payload);
+            Assert.assertTrue(payload instanceof String);
+            // test header
+            Assert.assertNotNull(httpMessage.getHeader("X-SAMPLE-HEADER"));
+            Assert.assertNotNull(httpMessage.getQueryParams().get("sample-param"));
+            Assert.assertNull(httpMessage.getQueryParams().get("non-required-sample-param"));
+    }
+
+    @Test
+    public void shouldNotAddRandomDataForOperationWhenAutoFillNone() {
+        Message message = openapi()
+            .specification(petstoreSpec)
+            .client()
+            .send("addPet") // operationId
+            .autoFill(AutoFillType.NONE)
+            .build()
+            .getMessageBuilder()
+            .build(new TestContext(), "");
+        Assert.assertTrue(message instanceof HttpMessage);
+        HttpMessage httpMessage = (HttpMessage) message;
+        // test payload
+        Object payload = httpMessage.getPayload();
+        Assert.assertNotNull(payload);
+        Assert.assertTrue(payload instanceof String);
+        // test header
+        Assert.assertNull(httpMessage.getHeader("X-SAMPLE-HEADER"));
+        Assert.assertNull(httpMessage.getQueryParams().get("sample-param"));
+        Assert.assertNull(httpMessage.getQueryParams().get("non-required-sample-param"));
     }
 
     @Test

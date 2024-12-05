@@ -36,7 +36,7 @@ public class SoapApiReceiveMessageActionBuilder extends ReceiveSoapMessageAction
 
         endpoint(generatedApi.getEndpoint());
 
-        name(format("send-%s:%s", generatedApi.getClass().getSimpleName().toLowerCase(), soapAction));
+        name(format("receive-%s:%s", generatedApi.getClass().getSimpleName().toLowerCase(), soapAction));
     }
 
     public GeneratedApi getGeneratedApi() {
@@ -49,6 +49,12 @@ public class SoapApiReceiveMessageActionBuilder extends ReceiveSoapMessageAction
 
     @Override
     public ReceiveSoapMessageAction doBuild() {
+
+        // If no endpoint was set explicitly, use the default endpoint given by api
+        if (getEndpoint() == null && getEndpointUri() == null) {
+            endpoint(generatedApi.getEndpoint());
+        }
+
         return new ReceiveSoapMessageAction(this);
     }
 }

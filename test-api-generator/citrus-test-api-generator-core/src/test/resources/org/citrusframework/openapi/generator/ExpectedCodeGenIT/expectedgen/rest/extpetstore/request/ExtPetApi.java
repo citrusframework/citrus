@@ -42,7 +42,7 @@ import java.util.UUID;
 import org.citrusframework.openapi.generator.rest.extpetstore.model.VaccinationDocumentResult;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-25T13:12:56.748927500+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-12-05T10:01:39.457218800+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class ExtPetApi implements GeneratedApi
 {
 
@@ -1054,7 +1054,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -1097,7 +1097,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -1138,7 +1138,7 @@ public class ExtPetApi implements GeneratedApi
         public GetPetByIdWithApiKeyAuthenticationSendActionBuilder(ExtPetApi extPetApi, Long petId, Boolean allDetails) {
             super(extPetApi, extPetStoreSpecification, METHOD, ENDPOINT, OPERATION_NAME);
             pathParameter("petId", petId, ParameterStyle.SIMPLE, false, false);
-            queryParameter("allDetails", allDetails, ParameterStyle.FORM, true, false);
+                queryParameter("allDetails", allDetails, ParameterStyle.FORM, true, false);
         }
 
         /**
@@ -1250,7 +1250,7 @@ public class ExtPetApi implements GeneratedApi
             cookieParameter("api_key_cookie", getOrDefault(apiKeyCookie, defaultApiKeyCookie, base64EncodeApiKey));
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -1293,7 +1293,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -1326,7 +1326,7 @@ public class ExtPetApi implements GeneratedApi
         public GetPetByIdWithBasicAuthenticationSendActionBuilder(ExtPetApi extPetApi, Long petId, Boolean allDetails) {
             super(extPetApi, extPetStoreSpecification, METHOD, ENDPOINT, OPERATION_NAME);
             pathParameter("petId", petId, ParameterStyle.SIMPLE, false, false);
-            queryParameter("allDetails", allDetails, ParameterStyle.FORM, true, false);
+                queryParameter("allDetails", allDetails, ParameterStyle.FORM, true, false);
         }
 
         /**
@@ -1431,7 +1431,7 @@ public class ExtPetApi implements GeneratedApi
             addBasicAuthHeader(basicUsername, basicPassword, getMessageBuilderSupport());
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -1474,7 +1474,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -1502,7 +1502,7 @@ public class ExtPetApi implements GeneratedApi
         public GetPetByIdWithBearerAuthenticationSendActionBuilder(ExtPetApi extPetApi, Long petId, Boolean allDetails) {
             super(extPetApi, extPetStoreSpecification, METHOD, ENDPOINT, OPERATION_NAME);
             pathParameter("petId", petId, ParameterStyle.SIMPLE, false, false);
-            queryParameter("allDetails", allDetails, ParameterStyle.FORM, true, false);
+                queryParameter("allDetails", allDetails, ParameterStyle.FORM, true, false);
         }
 
         /**
@@ -1592,7 +1592,7 @@ public class ExtPetApi implements GeneratedApi
             }
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -1635,7 +1635,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -1700,7 +1700,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -1743,7 +1743,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -1830,7 +1830,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -1873,7 +1873,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -1895,7 +1895,7 @@ public class ExtPetApi implements GeneratedApi
          */
         public GetPetWithDeepObjectTypeQuerySendActionBuilder(ExtPetApi extPetApi, PetIdentifier petId) {
             super(extPetApi, extPetStoreSpecification, METHOD, ENDPOINT, OPERATION_NAME);
-            queryParameter("petId", petId, ParameterStyle.DEEPOBJECT, true, true);
+                queryParameter("petId", petId, ParameterStyle.DEEPOBJECT, true, true);
         }
 
         /**
@@ -1943,7 +1943,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -1986,7 +1986,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2056,7 +2056,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2099,7 +2099,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2169,7 +2169,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2212,7 +2212,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2282,7 +2282,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2325,7 +2325,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2347,7 +2347,7 @@ public class ExtPetApi implements GeneratedApi
          */
         public GetPetWithFormStyleExplodedObjectQuerySendActionBuilder(ExtPetApi extPetApi, PetIdentifier petId) {
             super(extPetApi, extPetStoreSpecification, METHOD, ENDPOINT, OPERATION_NAME);
-            queryParameter("petId", petId, ParameterStyle.FORM, true, true);
+                queryParameter("petId", petId, ParameterStyle.FORM, true, true);
         }
 
         /**
@@ -2395,7 +2395,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2438,7 +2438,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2460,7 +2460,7 @@ public class ExtPetApi implements GeneratedApi
          */
         public GetPetWithFormStyleExplodedQuerySendActionBuilder(ExtPetApi extPetApi, List<Integer> petId) {
             super(extPetApi, extPetStoreSpecification, METHOD, ENDPOINT, OPERATION_NAME);
-            queryParameter("petId", petId, ParameterStyle.FORM, true, false);
+                queryParameter("petId", petId, ParameterStyle.FORM, true, false);
         }
 
         /**
@@ -2508,7 +2508,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2551,7 +2551,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2573,7 +2573,7 @@ public class ExtPetApi implements GeneratedApi
          */
         public GetPetWithFormStyleObjectQuerySendActionBuilder(ExtPetApi extPetApi, PetIdentifier petId) {
             super(extPetApi, extPetStoreSpecification, METHOD, ENDPOINT, OPERATION_NAME);
-            queryParameter("petId", petId, ParameterStyle.FORM, false, true);
+                queryParameter("petId", petId, ParameterStyle.FORM, false, true);
         }
 
         /**
@@ -2621,7 +2621,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2664,7 +2664,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2686,7 +2686,7 @@ public class ExtPetApi implements GeneratedApi
          */
         public GetPetWithFormStyleQuerySendActionBuilder(ExtPetApi extPetApi, List<Integer> petId) {
             super(extPetApi, extPetStoreSpecification, METHOD, ENDPOINT, OPERATION_NAME);
-            queryParameter("petId", petId, ParameterStyle.FORM, false, false);
+                queryParameter("petId", petId, ParameterStyle.FORM, false, false);
         }
 
         /**
@@ -2734,7 +2734,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2777,7 +2777,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2847,7 +2847,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2890,7 +2890,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -2960,7 +2960,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3003,7 +3003,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3073,7 +3073,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3116,7 +3116,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3186,7 +3186,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3229,7 +3229,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3299,7 +3299,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3342,7 +3342,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3412,7 +3412,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3455,7 +3455,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3525,7 +3525,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3568,7 +3568,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3638,7 +3638,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3681,7 +3681,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3751,7 +3751,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3794,7 +3794,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3864,7 +3864,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3907,7 +3907,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -3977,7 +3977,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4020,7 +4020,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4090,7 +4090,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4133,7 +4133,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4203,7 +4203,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4246,7 +4246,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4316,7 +4316,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4359,7 +4359,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4429,7 +4429,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4472,7 +4472,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4542,7 +4542,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4585,7 +4585,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4649,7 +4649,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4692,7 +4692,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4802,7 +4802,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4845,7 +4845,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -4868,10 +4868,10 @@ public class ExtPetApi implements GeneratedApi
         public UpdatePetWithArrayQueryDataSendActionBuilder(ExtPetApi extPetApi, Long petId, String _name, String status, List<String> tags, List<String> nicknames, String sampleStringHeader) {
             super(extPetApi, extPetStoreSpecification, METHOD, ENDPOINT, OPERATION_NAME);
             pathParameter("petId", petId, ParameterStyle.SIMPLE, false, false);
-            queryParameter("name", _name, ParameterStyle.FORM, true, false);
-            queryParameter("status", status, ParameterStyle.FORM, true, false);
-            queryParameter("tags", tags, ParameterStyle.FORM, true, false);
-            queryParameter("nicknames", nicknames, ParameterStyle.FORM, true, false);
+                queryParameter("name", _name, ParameterStyle.FORM, true, false);
+                queryParameter("status", status, ParameterStyle.FORM, true, false);
+                queryParameter("tags", tags, ParameterStyle.FORM, true, false);
+                queryParameter("nicknames", nicknames, ParameterStyle.FORM, true, false);
             headerParameter("sampleStringHeader", sampleStringHeader, ParameterStyle.SIMPLE, false, false);
         }
 
@@ -4973,7 +4973,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -5016,7 +5016,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -5150,7 +5150,7 @@ public class ExtPetApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -5193,7 +5193,7 @@ public class ExtPetApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();

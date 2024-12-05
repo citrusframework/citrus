@@ -70,10 +70,6 @@ public class CamelJBangIT extends TestNGCitrusSupport {
             throw new SkipException("Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
         }
 
-        if (!TestUtils.isNetworkReachable()) {
-            throw new SkipException("Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
-        }
-
         given(doFinally().actions(
             catchException().actions(camel().jbang().stop("route"))
         ));

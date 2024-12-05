@@ -40,6 +40,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.joining;
 import static org.citrusframework.openapi.testapi.ParameterStyle.DEEPOBJECT;
+import static org.citrusframework.openapi.testapi.ParameterStyle.NONE;
 
 class OpenApiParameterFormatter {
 
@@ -62,6 +63,11 @@ class OpenApiParameterFormatter {
                               boolean explode,
                               boolean isObject) {
         List<String> values = toList(parameterValue, isObject);
+
+        if (NONE.equals(parameterStyle))  {
+            return parameterName + "="+ (parameterValue != null ? parameterValue.toString() : null);
+        }
+
         if (DEEPOBJECT.equals(parameterStyle)) {
             return formatDeepObject(parameterName, values);
         }
@@ -100,7 +106,7 @@ class OpenApiParameterFormatter {
             case MATRIX -> matrixFormatParameters(parameterName, explode, isObject);
             case LABEL -> labelFormatParameters(explode);
             case FORM -> formFormatParameters(parameterName, explode, isObject);
-            case SIMPLE, DEEPOBJECT -> DEFAULT_FORMAT_PARAMETERS;
+            case NONE, SIMPLE, DEEPOBJECT -> DEFAULT_FORMAT_PARAMETERS;
         };
     }
 

@@ -16,6 +16,14 @@
 
 package org.citrusframework.openapi.model;
 
+import static java.lang.String.format;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.citrusframework.openapi.OpenApiConstants.TYPE_ARRAY;
+import static org.citrusframework.openapi.OpenApiConstants.TYPE_OBJECT;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
+
 import io.apicurio.datamodels.combined.visitors.CombinedVisitorAdapter;
 import io.apicurio.datamodels.openapi.io.OasDataModelWriter;
 import io.apicurio.datamodels.openapi.models.OasDocument;
@@ -44,10 +52,6 @@ import io.apicurio.datamodels.openapi.v3.visitors.IOas30Visitor;
 import io.apicurio.datamodels.openapi.v3.visitors.Oas30Traverser;
 import io.apicurio.datamodels.openapi.visitors.OasTraverser;
 import jakarta.annotation.Nullable;
-import org.citrusframework.openapi.model.v2.Oas20ModelHelper;
-import org.citrusframework.openapi.model.v3.Oas30ModelHelper;
-import org.citrusframework.util.StringUtils;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -59,14 +63,9 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
-
-import static java.lang.String.format;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.citrusframework.openapi.OpenApiConstants.TYPE_ARRAY;
-import static org.citrusframework.openapi.OpenApiConstants.TYPE_OBJECT;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
+import org.citrusframework.openapi.model.v2.Oas20ModelHelper;
+import org.citrusframework.openapi.model.v3.Oas30ModelHelper;
+import org.citrusframework.util.StringUtils;
 
 public final class OasModelHelper {
 
@@ -299,7 +298,7 @@ public final class OasModelHelper {
                 operation.responses);
 
         // For a given status code, do not fall back
-        if (statusCode != null) {
+        if (StringUtils.isNotEmpty(statusCode)) {
             return Optional.ofNullable(responseMap.get(statusCode));
         }
 
@@ -605,4 +604,5 @@ public final class OasModelHelper {
         oasTraverser.traverse(openApiDoc);
         return writer.getResult().toString();
     }
+
 }
