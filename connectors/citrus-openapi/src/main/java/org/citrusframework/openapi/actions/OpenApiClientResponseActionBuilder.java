@@ -16,10 +16,21 @@
 
 package org.citrusframework.openapi.actions;
 
+import static org.citrusframework.message.MessageType.JSON;
+import static org.citrusframework.openapi.OpenApiMessageType.RESPONSE;
+import static org.citrusframework.openapi.model.OasModelHelper.resolveSchema;
+import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import jakarta.annotation.Nullable;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.context.TestContext;
@@ -31,23 +42,10 @@ import org.citrusframework.message.Message;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.openapi.model.OperationPathAdapter;
-import org.citrusframework.openapi.validation.OpenApiOperationToMessageHeadersProcessor;
 import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
+import org.citrusframework.openapi.validation.OpenApiOperationToMessageHeadersProcessor;
 import org.citrusframework.openapi.validation.OpenApiValidationContext;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Pattern;
-
-import static org.citrusframework.message.MessageType.JSON;
-import static org.citrusframework.openapi.OpenApiMessageType.RESPONSE;
-import static org.citrusframework.openapi.model.OasModelHelper.resolveSchema;
-import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
 
 /**
  * @since 4.1
@@ -80,6 +78,14 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
         super(messageBuilder, message);
         this.openApiSpecificationSource = openApiSpec;
         this.operationId = operationId;
+
+        // Set json as default instead of xml. This is most common for rest.
+        // TODO: we need to specify the type on message builder support level. So actually we need to
+        // 1. determine the response from operationId and statusCode
+        // 2. If status code is missing, take the most probable as response as determined by OasModelHelper.getResponseForRandomGeneration
+        // 3. Determine message type from response and set it on builder support
+        // If we do not set a proper type here, validations may not even be executed. E.g. simple json message validation.
+        this.getMessageBuilderSupport().type(JSON);
     }
 
     public static void fillMessageTypeFromResponse(OpenApiSpecification openApiSpecification,
@@ -95,9 +101,7 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
                     OasSchema resolvedSchema = resolveSchema(openApiSpecification.getOpenApiDoc(null), oasSchema);
                     if (OasModelHelper.isObjectType(resolvedSchema) || OasModelHelper.isObjectArrayType(resolvedSchema)) {
                         Collection<String> responseTypes = OasModelHelper.getResponseTypes(operation,response);
-                        if (responseTypes.contains(MediaType.APPLICATION_JSON_VALUE)) {
-                            httpMessage.setHeader(HttpHeaders.CONTENT_TYPE,
-                                    MediaType.APPLICATION_JSON_VALUE);
+                        if (responseTypes.contains(APPLICATION_JSON_VALUE)) {
                             httpMessage.setType(JSON);
                         }
                     }

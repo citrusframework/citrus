@@ -37,7 +37,7 @@ import java.time.OffsetDateTime;
 import org.citrusframework.openapi.generator.rest.petstore.model.User;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-25T13:12:55.767401300+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-12-05T10:01:38.788098300+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class UserApi implements GeneratedApi
 {
 
@@ -252,7 +252,7 @@ public class UserApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -295,7 +295,7 @@ public class UserApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -356,7 +356,7 @@ public class UserApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -399,7 +399,7 @@ public class UserApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -456,7 +456,7 @@ public class UserApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -499,7 +499,7 @@ public class UserApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -556,7 +556,7 @@ public class UserApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -599,7 +599,7 @@ public class UserApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -664,7 +664,7 @@ public class UserApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -707,7 +707,7 @@ public class UserApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -754,7 +754,7 @@ public class UserApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -797,7 +797,7 @@ public class UserApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -868,7 +868,7 @@ public class UserApi implements GeneratedApi
         public SendMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -911,7 +911,7 @@ public class UserApi implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();

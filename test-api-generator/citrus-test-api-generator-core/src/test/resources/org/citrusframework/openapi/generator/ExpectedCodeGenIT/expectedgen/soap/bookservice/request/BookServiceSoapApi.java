@@ -6,6 +6,7 @@ import static java.util.Collections.emptyMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.citrusframework.openapi.testapi.GeneratedApiOperationInfo;
 import org.citrusframework.ws.actions.ReceiveSoapMessageAction;
 import org.citrusframework.ws.actions.SendSoapMessageAction;
 import org.citrusframework.endpoint.Endpoint;
@@ -15,7 +16,7 @@ import org.citrusframework.openapi.testapi.SoapApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.testapi.SoapApiSendMessageActionBuilder;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-25T13:12:57.221987500+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-12-05T10:01:39.805235400+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class BookServiceSoapApi implements GeneratedApi
 {
 
@@ -90,7 +91,8 @@ public class BookServiceSoapApi implements GeneratedApi
         return new GetBookReceiveActionBuilder(this);
     }
 
-    public static class AddBookSendActionBuilder extends SoapApiSendMessageActionBuilder {
+    public static class AddBookSendActionBuilder extends SoapApiSendMessageActionBuilder implements
+        GeneratedApiOperationInfo {
 
         private static final String SOAP_ACTION = "http://www.citrusframework.com/BookService/AddBook";
 
@@ -99,17 +101,33 @@ public class BookServiceSoapApi implements GeneratedApi
         }
 
         @Override
+        public String getOperationName() {
+            return SOAP_ACTION;
+        }
+
+        @Override
+        public String getMethod() {
+            return "POST";
+        }
+
+        @Override
+        public String getPath() {
+            return SOAP_ACTION;
+        }
+
+        @Override
         public SendSoapMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
         }
     }
 
-    public static class AddBookReceiveActionBuilder extends SoapApiReceiveMessageActionBuilder {
+    public static class AddBookReceiveActionBuilder extends SoapApiReceiveMessageActionBuilder implements
+        GeneratedApiOperationInfo {
 
         private static final String SOAP_ACTION = "http://www.citrusframework.com/BookService/AddBook";
 
@@ -118,10 +136,25 @@ public class BookServiceSoapApi implements GeneratedApi
         }
 
         @Override
+        public String getOperationName() {
+            return SOAP_ACTION;
+        }
+
+        @Override
+        public String getMethod() {
+          return "POST";
+        }
+
+        @Override
+        public String getPath() {
+            return SOAP_ACTION;
+        }
+
+        @Override
         public ReceiveSoapMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -129,7 +162,8 @@ public class BookServiceSoapApi implements GeneratedApi
 
     }
 
-    public static class GetAllBooksSendActionBuilder extends SoapApiSendMessageActionBuilder {
+    public static class GetAllBooksSendActionBuilder extends SoapApiSendMessageActionBuilder implements
+        GeneratedApiOperationInfo {
 
         private static final String SOAP_ACTION = "http://www.citrusframework.com/BookService/GetAllBooks";
 
@@ -138,17 +172,33 @@ public class BookServiceSoapApi implements GeneratedApi
         }
 
         @Override
+        public String getOperationName() {
+            return SOAP_ACTION;
+        }
+
+        @Override
+        public String getMethod() {
+            return "POST";
+        }
+
+        @Override
+        public String getPath() {
+            return SOAP_ACTION;
+        }
+
+        @Override
         public SendSoapMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
         }
     }
 
-    public static class GetAllBooksReceiveActionBuilder extends SoapApiReceiveMessageActionBuilder {
+    public static class GetAllBooksReceiveActionBuilder extends SoapApiReceiveMessageActionBuilder implements
+        GeneratedApiOperationInfo {
 
         private static final String SOAP_ACTION = "http://www.citrusframework.com/BookService/GetAllBooks";
 
@@ -157,10 +207,25 @@ public class BookServiceSoapApi implements GeneratedApi
         }
 
         @Override
+        public String getOperationName() {
+            return SOAP_ACTION;
+        }
+
+        @Override
+        public String getMethod() {
+          return "POST";
+        }
+
+        @Override
+        public String getPath() {
+            return SOAP_ACTION;
+        }
+
+        @Override
         public ReceiveSoapMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();
@@ -168,7 +233,8 @@ public class BookServiceSoapApi implements GeneratedApi
 
     }
 
-    public static class GetBookSendActionBuilder extends SoapApiSendMessageActionBuilder {
+    public static class GetBookSendActionBuilder extends SoapApiSendMessageActionBuilder implements
+        GeneratedApiOperationInfo {
 
         private static final String SOAP_ACTION = "http://www.citrusframework.com/BookService/GetBook";
 
@@ -177,17 +243,33 @@ public class BookServiceSoapApi implements GeneratedApi
         }
 
         @Override
+        public String getOperationName() {
+            return SOAP_ACTION;
+        }
+
+        @Override
+        public String getMethod() {
+            return "POST";
+        }
+
+        @Override
+        public String getPath() {
+            return SOAP_ACTION;
+        }
+
+        @Override
         public SendSoapMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
         }
     }
 
-    public static class GetBookReceiveActionBuilder extends SoapApiReceiveMessageActionBuilder {
+    public static class GetBookReceiveActionBuilder extends SoapApiReceiveMessageActionBuilder implements
+        GeneratedApiOperationInfo {
 
         private static final String SOAP_ACTION = "http://www.citrusframework.com/BookService/GetBook";
 
@@ -196,10 +278,25 @@ public class BookServiceSoapApi implements GeneratedApi
         }
 
         @Override
+        public String getOperationName() {
+            return SOAP_ACTION;
+        }
+
+        @Override
+        public String getMethod() {
+          return "POST";
+        }
+
+        @Override
+        public String getPath() {
+            return SOAP_ACTION;
+        }
+
+        @Override
         public ReceiveSoapMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();

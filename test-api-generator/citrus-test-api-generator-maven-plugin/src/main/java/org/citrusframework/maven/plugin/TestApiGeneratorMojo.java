@@ -30,7 +30,13 @@ import static org.springframework.util.ReflectionUtils.setField;
 
 import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,28 +50,31 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
+import org.citrusframework.openapi.generator.WsdlToOpenApiTransformer;
+import org.citrusframework.openapi.generator.exception.WsdlToOpenApiTransformationException;
 import org.citrusframework.util.StringUtils;
 import org.openapitools.codegen.plugin.CodeGenMojo;
 import org.sonatype.plexus.build.incremental.BuildContext;
 import org.sonatype.plexus.build.incremental.DefaultBuildContext;
 
 /**
- * The Citrus OpenAPI Generator Maven Plugin is designed to facilitate the integration of multiple OpenAPI specifications
- * into the Citrus testing framework by automatically generating necessary test classes and XSDs. This plugin wraps the
- * {@code CodeGenMojo} and extends its functionality to support multiple API configurations.
+ * The Citrus OpenAPI Generator Maven Plugin is designed to facilitate the integration of multiple
+ * OpenAPI specifications into the Citrus testing framework by automatically generating necessary
+ * test classes and XSDs. This plugin wraps the {@code CodeGenMojo} and extends its functionality to
+ * support multiple API configurations.
  * <p>
- * Features:
- * - Multiple API Configurations: Easily configure multiple OpenAPI specifications to generate test APIs with specific prefixes.
- * - Citrus Integration: Generates classes and XSDs tailored for use within the Citrus framework, streamlining the process
- * of creating robust integration tests.
+ * Features: - Multiple API Configurations: Easily configure multiple OpenAPI specifications to
+ * generate test APIs with specific prefixes. - Citrus Integration: Generates classes and XSDs
+ * tailored for use within the Citrus framework, streamlining the process of creating robust
+ * integration tests.
  * </p>
  */
 @Mojo(
-        name = "create-test-api",
-        defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES,
-        requiresDependencyCollection = ResolutionScope.TEST,
-        requiresDependencyResolution = ResolutionScope.TEST,
-        threadSafe = true
+    name = "create-test-api",
+    defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES,
+    requiresDependencyCollection = ResolutionScope.TEST,
+    requiresDependencyResolution = ResolutionScope.TEST,
+    threadSafe = true
 )
 public class TestApiGeneratorMojo extends AbstractMojo {
 
@@ -79,23 +88,25 @@ public class TestApiGeneratorMojo extends AbstractMojo {
     public static final ApiType DEFAULT_API_TYPE = ApiType.REST;
 
     /**
-     * Marker fragment in the schema name of a generated schema. Used to distinguish generated from non generated values, when manipulating
-     * spring meta-data files.
+     * Marker fragment in the schema name of a generated schema. Used to distinguish generated from
+     * non generated values, when manipulating spring meta-data files.
      */
     public static final String CITRUS_TEST_SCHEMA = "citrus-test-schema";
 
     /**
-     * Marker text to mark the next line of a spring.handlers or spring.schemas file not to be removed by the generator.
+     * Marker text to mark the next line of a spring.handlers or spring.schemas file not to be
+     * removed by the generator.
      */
     public static final String CITRUS_TEST_SCHEMA_KEEP_HINT = "citrus-test-schema-keep";
 
     /**
-     * Specifies the default target namespace template. When changing the default value, it's important to maintain the 'citrus-test-schema'
-     * part, as this name serves to differentiate between generated and non-generated schemas. This differentiation aids in the creation of
+     * Specifies the default target namespace template. When changing the default value, it's
+     * important to maintain the 'citrus-test-schema' part, as this name serves to differentiate
+     * between generated and non-generated schemas. This differentiation aids in the creation of
      * supporting Spring files such as 'spring.handlers' and 'spring.schemas'.
      */
     public static final String DEFAULT_TARGET_NAMESPACE_TEMPLATE =
-            "http://www.citrusframework.org/" + CITRUS_TEST_SCHEMA + "/%VERSION%/%PREFIX%-api";
+        "http://www.citrusframework.org/" + CITRUS_TEST_SCHEMA + "/%VERSION%/%PREFIX%-api";
 
     /**
      * TODO: document this
@@ -105,27 +116,32 @@ public class TestApiGeneratorMojo extends AbstractMojo {
     public static final String DEFAULT_META_INF_FOLDER = "src/test/resources/META-INF";
 
     /**
-     * sourceFolder: specifies the location to which the sources are generated. Defaults to 'generated-test-sources'.
+     * sourceFolder: specifies the location to which the sources are generated. Defaults to
+     * 'generated-test-sources'.
      */
     public static final String SOURCE_FOLDER_PROPERTY = "citrus.test.api.generator.source.folder";
 
     /**
-     * resourceFolder: specifies the location to which the resources are generated. Defaults to 'generated-test-resources'.
+     * resourceFolder: specifies the location to which the resources are generated. Defaults to
+     * 'generated-test-resources'.
      */
     public static final String RESOURCE_FOLDER_PROPERTY = "citrus.test.api.generator.resource.folder";
 
     /**
-     * schemaFolder: specifies the location for the generated xsd schemas. Defaults to 'schema/xsd/%VERSION%'
+     * schemaFolder: specifies the location for the generated xsd schemas. Defaults to
+     * 'schema/xsd/%VERSION%'
      */
     public static final String API_SCHEMA_FOLDER = "citrus.test.api.generator.schema.folder";
 
     /**
-     * metaInfFolder: specifies the location to which the resources are generated. Defaults to 'generated-resources'.
+     * metaInfFolder: specifies the location to which the resources are generated. Defaults to
+     * 'generated-resources'.
      */
     public static final String META_INF_FOLDER = "citrus.test.api.generator.meta.inf.folder";
 
     /**
-     * resourceFolder: specifies the location to which the resources are generated. Defaults to 'generated-resources'.
+     * resourceFolder: specifies the location to which the resources are generated. Defaults to
+     * 'generated-resources'.
      */
     public static final String GENERATE_SPRING_INTEGRATION_FILES = "citrus.test.api.generator.generate.spring.integration.files";
 
@@ -179,14 +195,15 @@ public class TestApiGeneratorMojo extends AbstractMojo {
         }
 
         return text.replace("%PREFIX%", prefix)
-                .replace(".%VERSION%", version != null ? "." + version : "")
-                .replace("/%VERSION%", version != null ? "/" + version : "")
-                .replace("-%VERSION%", version != null ? "-" + version : "")
-                .replace("%VERSION%", version != null ? version : "");
+            .replace(".%VERSION%", version != null ? "." + version : "")
+            .replace("/%VERSION%", version != null ? "/" + version : "")
+            .replace("-%VERSION%", version != null ? "-" + version : "")
+            .replace("%VERSION%", version != null ? version : "");
     }
 
     /**
-     * Replace the placeholders '%PREFIX%' and '%VERSION%' in the given text, performing a toLowerCase on the prefix.
+     * Replace the placeholders '%PREFIX%' and '%VERSION%' in the given text, performing a
+     * toLowerCase on the prefix.
      */
     static String replaceDynamicVarsToLowerCase(String text, String prefix, String version) {
         return replaceDynamicVars(text, prefix.toLowerCase(), version);
@@ -235,25 +252,25 @@ public class TestApiGeneratorMojo extends AbstractMojo {
     }
 
     @VisibleForTesting
-    void delegateExecution(CodeGenMojo codeGenMojo) {
-        try {
-            codeGenMojo.execute();
-        } catch (MojoExecutionException e) {
-            throw new RuntimeException(e);
-        }
+    void delegateExecution(CodeGenMojo codeGenMojo) throws MojoExecutionException {
+        codeGenMojo.execute();
     }
 
     CodeGenMojo configureCodeGenMojo(ApiConfig apiConfig) throws MojoExecutionException {
+
+        if (apiConfig.getSource().toUpperCase().trim().endsWith(".WSDL")) {
+            apiConfig.source = convertToOpenApi(apiConfig.getSource());
+        }
         CodeGenMojo codeGenMojo = new CodeGenMojoWrapper()
-                .resourceFolder(resourceFolder)
-                .sourceFolder(sourceFolder)
-                .schemaFolder(schemaFolder(apiConfig))
-                .output(new File(mavenProject.getBuild().getDirectory()))
-                .mojoExecution(mojoExecution)
-                .project(mavenProject)
-                .inputSpec(apiConfig.getSource())
-                .globalProperties(globalProperties)
-                .configOptions(apiConfig.toConfigOptionsProperties(globalConfigOptions));
+            .resourceFolder(resourceFolder)
+            .sourceFolder(sourceFolder)
+            .schemaFolder(schemaFolder(apiConfig))
+            .output(new File(mavenProject.getBuild().getDirectory()))
+            .mojoExecution(mojoExecution)
+            .project(mavenProject)
+            .inputSpec(apiConfig.getSource())
+            .globalProperties(globalProperties)
+            .configOptions(apiConfig.toConfigOptionsProperties(globalConfigOptions));
 
         codeGenMojo.setPluginContext(getPluginContext());
 
@@ -263,13 +280,62 @@ public class TestApiGeneratorMojo extends AbstractMojo {
                 properties.addAll(apiConfig.additionalProperties);
             }
             apiConfig.additionalProperties = properties;
-            apiConfig.additionalProperties.add(String.format("%s=%s", ROOT_CONTEXT_PATH, apiConfig.rootContextPath));
+            apiConfig.additionalProperties.add(
+                format("%s=%s", ROOT_CONTEXT_PATH, apiConfig.rootContextPath));
         }
 
         propagateBuildContext(codeGenMojo);
         propagateAdditionalProperties(codeGenMojo, apiConfig.additionalProperties);
 
         return codeGenMojo;
+    }
+
+    private String convertToOpenApi(String source) throws MojoExecutionException {
+        String apiFile = source;
+        String path = source.replace("\\", "/");
+
+        int lastSegmentIndex = path.lastIndexOf("/");
+        if (lastSegmentIndex > 0) {
+            apiFile = path.substring(lastSegmentIndex + 1);
+        }
+
+        File resourceFile;
+        if (new File(source).isAbsolute()) {
+            resourceFile = new File(source);
+            if (!resourceFile.exists()) {
+                throw new MojoExecutionException(
+                    "File not found at the provided absolute path: " + source);
+            }
+        } else {
+            URL resourceUrl = getClass().getClassLoader().getResource(source);
+            if (resourceUrl == null) {
+                throw new MojoExecutionException("Resource not found in classpath: " + source);
+            }
+            resourceFile = new File(resourceUrl.getFile());
+        }
+
+        File tmpDir = new File(mavenProject.getBuild().getDirectory() + "/wsdlToOpenApi");
+        if (!tmpDir.exists() && !tmpDir.mkdirs()) {
+            throw new MojoExecutionException(
+                "Unable to create directory for temporary storage of converted WSDL: "
+                    + tmpDir.getAbsolutePath());
+        }
+
+        try {
+            WsdlToOpenApiTransformer transformer = new WsdlToOpenApiTransformer(
+                resourceFile.toURI());
+
+            String openApiContent = transformer.transformToOpenApi();
+
+            Path openApiPath = Paths.get(tmpDir.getAbsolutePath(), apiFile);
+            Files.writeString(openApiPath, openApiContent, StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING);
+
+            return openApiPath.toString();
+        } catch (WsdlToOpenApiTransformationException | IOException e) {
+            throw new MojoExecutionException(
+                String.format("Unable to transform WSDL %s to OpenAPI", source), e);
+        }
     }
 
     /**
@@ -279,28 +345,34 @@ public class TestApiGeneratorMojo extends AbstractMojo {
     private void propagateBuildContext(CodeGenMojo codeGenMojo) {
 
         Field buildContextField = findField(CodeGenMojo.class, "buildContext");
-        makeAccessible(requireNonNull(buildContextField, "Could not retrieve 'buildContext' field from CodeGenMojo delegate."));
+        makeAccessible(requireNonNull(buildContextField,
+            "Could not retrieve 'buildContext' field from CodeGenMojo delegate."));
         setField(buildContextField, codeGenMojo, buildContext);
     }
 
     /**
      * Reflectively inject the additionProperties.
      */
-    private void propagateAdditionalProperties(CodeGenMojo codeGenMojo, List<String> additionalProperties) {
+    private void propagateAdditionalProperties(CodeGenMojo codeGenMojo,
+        List<String> additionalProperties) {
 
         Field buildContextField = findField(CodeGenMojo.class, "additionalProperties");
-        makeAccessible(requireNonNull(buildContextField, "Could not retrieve 'additionalProperties' field from CodeGenMojo delegate."));
+        makeAccessible(requireNonNull(buildContextField,
+            "Could not retrieve 'additionalProperties' field from CodeGenMojo delegate."));
         setField(buildContextField, codeGenMojo, additionalProperties);
     }
 
-    private void validateApiConfig(int apiIndex, ApiConfig apiConfig) throws MojoExecutionException {
+    private void validateApiConfig(int apiIndex, ApiConfig apiConfig)
+        throws MojoExecutionException {
         requireNonBlankParameter("prefix", apiIndex, apiConfig.getPrefix());
         requireNonBlankParameter("source", apiIndex, apiConfig.getSource());
     }
 
-    private void requireNonBlankParameter(String name, int index, String parameterValue) throws MojoExecutionException {
+    private void requireNonBlankParameter(String name, int index, String parameterValue)
+        throws MojoExecutionException {
         if (isBlank(parameterValue)) {
-            throw new MojoExecutionException(format("Required parameter '%s' not set for api at index '%d'!", name, index));
+            throw new MojoExecutionException(
+                format("Required parameter '%s' not set for api at index '%d'!", name, index));
         }
     }
 
@@ -311,20 +383,22 @@ public class TestApiGeneratorMojo extends AbstractMojo {
     // TODO: document all configuration properties
 
     /**
-     * Note that the default values are not properly set by maven processor. Therefore, the default values have been assigned additionally
-     * on field level.
+     * Note that the default values are not properly set by maven processor. Therefore, the default
+     * values have been assigned additionally on field level.
      */
     public static class ApiConfig {
 
         public static final String DEFAULT_ENDPOINT = "PREFIX_ENDPOINT";
 
         /**
-         * prefix: specifies the prefixed used for the test api. Typically, an acronym for the application which is being tested.
+         * prefix: specifies the prefixed used for the test api. Typically, an acronym for the
+         * application which is being tested.
          */
         public static final String API_PREFIX_PROPERTY = "citrus.test.api.generator.prefix";
 
         /**
-         * rootContextPath: specifies the context path that will be prepended to all OpenAPI operation paths.
+         * rootContextPath: specifies the context path that will be prepended to all OpenAPI
+         * operation paths.
          */
         public static final String ROOT_CONTEXT_PATH = "citrus.test.api.generator.root-context-path";
 
@@ -349,8 +423,9 @@ public class TestApiGeneratorMojo extends AbstractMojo {
         public static final String API_TYPE_PROPERTY = "citrus.test.api.generator.type";
 
         /**
-         * useTags: specifies whether tags should be used by the generator. Defaults to 'true'. If useTags is set to true, the generator
-         * will organize the generated code based on the tags defined in your API specification.
+         * useTags: specifies whether tags should be used by the generator. Defaults to 'true'. If
+         * useTags is set to true, the generator will organize the generated code based on the tags
+         * defined in your API specification.
          */
         public static final String API_USE_TAGS_PROPERTY = "citrus.test.api.generator.use.tags";
 
@@ -501,7 +576,8 @@ public class TestApiGeneratorMojo extends AbstractMojo {
         }
 
         public String qualifiedEndpoint() {
-            return DEFAULT_ENDPOINT.equals(endpoint) ? getPrefix().toLowerCase() + "Endpoint" : endpoint;
+            return DEFAULT_ENDPOINT.equals(endpoint) ? getPrefix().toLowerCase() + "Endpoint"
+                : endpoint;
         }
 
         public void setRootContextPath(String rootContextPath) {
@@ -523,13 +599,13 @@ public class TestApiGeneratorMojo extends AbstractMojo {
             configOptionsProperties.put(API_ENDPOINT, qualifiedEndpoint());
             configOptionsProperties.put(API_TYPE, type.toString());
             configOptionsProperties.put(TARGET_XMLNS_NAMESPACE,
-                    replaceDynamicVarsToLowerCase(targetXmlnsNamespace, prefix, version));
+                replaceDynamicVarsToLowerCase(targetXmlnsNamespace, prefix, version));
             configOptionsProperties.put("invokerPackage",
-                    replaceDynamicVarsToLowerCase(invokerPackage, prefix, version));
+                replaceDynamicVarsToLowerCase(invokerPackage, prefix, version));
             configOptionsProperties.put("apiPackage",
-                    replaceDynamicVarsToLowerCase(apiPackage, prefix, version));
+                replaceDynamicVarsToLowerCase(apiPackage, prefix, version));
             configOptionsProperties.put("modelPackage",
-                    replaceDynamicVarsToLowerCase(modelPackage, prefix, version));
+                replaceDynamicVarsToLowerCase(modelPackage, prefix, version));
             configOptionsProperties.put("useTags", useTags);
 
             if (globalConfigOptions != null) {

@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * VaccinationDocumentResult
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-11-25T13:12:56.748927500+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-12-05T10:01:39.457218800+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class VaccinationDocumentResult {
   private String documentId;
 

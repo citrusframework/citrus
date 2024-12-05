@@ -34,6 +34,7 @@ import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.openapi.AutoFillType;
 import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiClientResponseActionBuilder;
@@ -74,6 +75,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
         when(openapi(petstoreSpec)
             .client(httpClient)
             .send("getPetById")
+            .autoFill(AutoFillType.ALL)
             .message()
             .fork(true));
 
@@ -105,6 +107,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
         when(openapi(petstoreSpec)
             .client(httpClient)
             .send("getPetById")
+            .autoFill(AutoFillType.ALL)
             .message()
             .fork(true));
 
@@ -180,6 +183,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
         when(openapi(petstoreSpec)
             .client(httpClient)
             .send("getPetById")
+            .autoFill(AutoFillType.ALL)
             .message()
             .fork(true));
 
@@ -210,6 +214,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
         when(openapi(petstoreSpec)
             .client(httpClient)
             .send("addPet")
+            .autoFill(AutoFillType.ALL)
             .fork(true));
 
         then(http().server(httpServer)

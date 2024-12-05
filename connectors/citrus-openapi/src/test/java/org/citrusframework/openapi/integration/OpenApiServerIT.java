@@ -23,6 +23,7 @@ import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
+import org.citrusframework.openapi.AutoFillType;
 import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.openapi.actions.OpenApiActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiServerRequestActionBuilder;
@@ -279,6 +280,30 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
                 .server(httpServer)
                 .send("getPetById", HttpStatus.OK);
         sendMessageActionBuilder.message().body(Resources.create(INVALID_PET_PATH));
+
+        assertThrows(TestCaseFailedException.class, () -> then(sendMessageActionBuilder));
+    }
+
+    @CitrusTest
+    public void shouldFailOnMissingPayload() {
+        variable("petId", "1001");
+
+        when(http()
+            .client(httpClient)
+            .send()
+            .get("/pet/${petId}")
+            .message()
+            .accept(APPLICATION_JSON_VALUE)
+            .fork(true));
+
+        then(openapi("petstore-v3")
+            .server(httpServer)
+            .receive("getPetById"));
+
+        OpenApiServerResponseActionBuilder sendMessageActionBuilder = openapi("petstore-v3")
+            .server(httpServer)
+            .send("getPetById", HttpStatus.OK)
+            .autoFill(AutoFillType.NONE);
 
         assertThrows(TestCaseFailedException.class, () -> then(sendMessageActionBuilder));
     }

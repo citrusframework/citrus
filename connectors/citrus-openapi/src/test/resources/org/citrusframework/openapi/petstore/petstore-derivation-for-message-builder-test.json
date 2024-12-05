@@ -49,6 +49,14 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "non-required-sample-param",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "tags": [

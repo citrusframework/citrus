@@ -188,12 +188,11 @@ public class OpenApiClientTest extends AbstractGroovyActionDslTest {
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
 
-        assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 5L);
+        assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 4L);
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE), 200);
         assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
-        assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), APPLICATION_JSON_VALUE);
         assertNull(receiveMessageAction.getEndpoint());
         assertEquals(receiveMessageAction.getEndpointUri(), "httpClient");
         assertEquals(receiveMessageAction.getMessageProcessors().size(), 1);

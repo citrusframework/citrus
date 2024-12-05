@@ -76,6 +76,11 @@ class GeneratedSoapApiIT {
         }
 
         @Test
+        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withNestedReceiveDefaultClientSoapTest")
+        void withNestedReceiveInXmlWithDefaultClientTest() {
+        }
+
+        @Test
         void java(@CitrusResource TestCaseRunner runner) {
             String request = """
                     <AddBook>

@@ -168,7 +168,7 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
     private BeanDefinitionBuilder wrapSendAndReceiveActionInSequence(boolean fork,
         Element receive,
         ParserContext parserContext,
-        BeanDefinitionBuilder beanDefinitionBuilder) {
+        BeanDefinitionBuilder sendActionBeanDefinitionBuilder) {
 
         Class<? extends AbstractTestContainerFactoryBean<?, ?>> containerClass = createSequenceContainer(
             fork);
@@ -176,13 +176,23 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
         BeanDefinitionBuilder sequenceBuilder = genericBeanDefinition(containerClass);
 
         RestApiReceiveMessageActionParser receiveApiResponseActionParser = getRestApiReceiveMessageActionParser(
-            beanDefinitionBuilder);
+            sendActionBeanDefinitionBuilder);
 
         BeanDefinition receiveResponseBeanDefinition = receiveApiResponseActionParser.parse(receive,
             parserContext);
 
+        // Nested elements do not have reasonable names.
+        String sendName = (String) sendActionBeanDefinitionBuilder.getBeanDefinition().getPropertyValues()
+            .get("name");
+        if (sendName != null) {
+            String receiveName = sendName.replace(":send", ":receive");
+            if (!sendName.equals(receiveName)) {
+                receiveResponseBeanDefinition.getPropertyValues().add("name", receiveName);
+            }
+        }
+
         ManagedList<BeanDefinition> actions = new ManagedList<>();
-        actions.add(beanDefinitionBuilder.getBeanDefinition());
+        actions.add(sendActionBeanDefinitionBuilder.getBeanDefinition());
         actions.add(receiveResponseBeanDefinition);
 
         sequenceBuilder.addPropertyValue("actions", actions);

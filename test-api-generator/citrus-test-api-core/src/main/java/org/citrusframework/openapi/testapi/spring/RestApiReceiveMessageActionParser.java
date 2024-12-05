@@ -39,12 +39,14 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
 import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
+import static org.citrusframework.util.StringUtils.hasText;
 import static org.springframework.beans.factory.support.BeanDefinitionBuilder.genericBeanDefinition;
 
 /**
@@ -120,6 +122,13 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
 
         beanDefinitionBuilder.addConstructorArgValue(actionBuilder.getBeanDefinition());
         setDefaultEndpoint(beanDefinitionBuilder);
+
+        // By default, the type is xml. This not a common case in rest, which is why we switch to json here,
+        // if no explicit type is specified.
+        Attr type = element.getAttributeNode("type");
+        if (type == null) {
+            beanDefinitionBuilder.addPropertyValue("messageType", "json");
+        }
 
         return beanDefinitionBuilder;
     }

@@ -23,6 +23,7 @@ import static java.util.Collections.emptyMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.citrusframework.openapi.testapi.GeneratedApiOperationInfo;
 import org.citrusframework.ws.actions.ReceiveSoapMessageAction;
 import org.citrusframework.ws.actions.SendSoapMessageAction;
 import org.citrusframework.endpoint.Endpoint;
@@ -106,7 +107,8 @@ public class {{classname}} implements GeneratedApi
 {{/operations}}
 {{#operations}}
     {{#operation}}
-    public static class {{operationIdCamelCase}}SendActionBuilder extends {{requestBuilderClassName}} {
+    public static class {{operationIdCamelCase}}SendActionBuilder extends {{requestBuilderClassName}} implements
+        GeneratedApiOperationInfo {
 
         private static final String SOAP_ACTION = "{{summary}}";
 
@@ -115,17 +117,33 @@ public class {{classname}} implements GeneratedApi
         }
 
         @Override
+        public String getOperationName() {
+            return SOAP_ACTION;
+        }
+
+        @Override
+        public String getMethod() {
+            return "POST";
+        }
+
+        @Override
+        public String getPath() {
+            return SOAP_ACTION;
+        }
+
+        @Override
         public SendSoapMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
         }
     }
 
-    public static class {{operationIdCamelCase}}ReceiveActionBuilder extends {{responseBuilderClassName}} {
+    public static class {{operationIdCamelCase}}ReceiveActionBuilder extends {{responseBuilderClassName}} implements
+        GeneratedApiOperationInfo {
 
         private static final String SOAP_ACTION = "{{summary}}";
 
@@ -134,10 +152,25 @@ public class {{classname}} implements GeneratedApi
         }
 
         @Override
+        public String getOperationName() {
+            return SOAP_ACTION;
+        }
+
+        @Override
+        public String getMethod() {
+          return "POST";
+        }
+
+        @Override
+        public String getPath() {
+            return SOAP_ACTION;
+        }
+
+        @Override
         public ReceiveSoapMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();

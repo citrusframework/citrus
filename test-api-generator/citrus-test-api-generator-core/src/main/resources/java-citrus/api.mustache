@@ -257,19 +257,19 @@ public class {{classname}} implements GeneratedApi
             super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, {{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification, METHOD, ENDPOINT, OPERATION_NAME);
             {{#requiredNonBodyParams}}
             {{#isQueryParam}}
-            queryParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+                queryParameter("{{baseName}}", {{paramName}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isQueryParam}}
             {{#isPathParam}}
-            pathParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            pathParameter("{{baseName}}", {{paramName}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isPathParam}}
             {{#isHeaderParam}}
-            headerParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            headerParameter("{{baseName}}", {{paramName}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isHeaderParam}}
             {{#isFormParam}}
             formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}){{/isBinary}} {{^isBinary}}{{paramName}}{{/isBinary}});
             {{/isFormParam}}
             {{#isCookieParam}}
-            cookieParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            cookieParameter("{{baseName}}", {{paramName}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isCookieParam}}
             {{/requiredNonBodyParams}}
         }
@@ -286,19 +286,19 @@ public class {{classname}} implements GeneratedApi
             super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, {{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification,  METHOD, ENDPOINT, OPERATION_NAME);
         {{#requiredNonBodyParams}}
             {{#isQueryParam}}
-            queryParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            queryParameter("{{baseName}}", {{paramName}}Expression, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isQueryParam}}
             {{#isPathParam}}
-            pathParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            pathParameter("{{baseName}}", {{paramName}}Expression, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isPathParam}}
             {{#isHeaderParam}}
-            headerParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            headerParameter("{{baseName}}", {{paramName}}Expression, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isHeaderParam}}
             {{#isFormParam}}
             formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}Expression){{/isBinary}} {{^isBinary}}{{paramName}}Expression{{/isBinary}});
             {{/isFormParam}}
             {{#isCookieParam}}
-            cookieParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            cookieParameter("{{baseName}}", {{paramName}}Expression, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isCookieParam}}
         {{/requiredNonBodyParams}}
         }
@@ -330,19 +330,19 @@ public class {{classname}} implements GeneratedApi
             super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, {{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
         {{#requiredNonBodyParams}}
             {{#isQueryParam}}
-            queryParameter("{{baseName}}", {{paramName}}{{^isArray}}Expression{{/isArray}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            queryParameter("{{baseName}}", {{paramName}}{{^isArray}}Expression{{/isArray}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isQueryParam}}
             {{#isPathParam}}
-            pathParameter("{{baseName}}", {{paramName}}{{^isArray}}Expression{{/isArray}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            pathParameter("{{baseName}}", {{paramName}}{{^isArray}}Expression{{/isArray}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isPathParam}}
             {{#isHeaderParam}}
-            headerParameter("{{baseName}}", {{paramName}}{{^isArray}}Expression{{/isArray}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            headerParameter("{{baseName}}", {{paramName}}{{^isArray}}Expression{{/isArray}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isHeaderParam}}
             {{#isFormParam}}
             formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}{{^isArray}}Expression{{/isArray}}){{/isBinary}} {{^isBinary}}{{paramName}}{{^isArray}}Expression{{/isArray}}{{/isBinary}});
             {{/isFormParam}}
             {{#isCookieParam}}
-            cookieParameter("{{baseName}}", {{paramName}}{{^isArray}}Expression{{/isArray}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            cookieParameter("{{baseName}}", {{paramName}}{{^isArray}}Expression{{/isArray}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isCookieParam}}
         {{/requiredNonBodyParams}}
         }
@@ -353,19 +353,19 @@ public class {{classname}} implements GeneratedApi
         }}
         public {{operationIdCamelCase}}SendActionBuilder {{paramName}}({{#isArray}}{{baseType}}...{{/isArray}}{{^isArray}}{{dataType}} {{/isArray}}{{paramName}}) {
             {{#isQueryParam}}
-            queryParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            queryParameter("{{baseName}}", {{paramName}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isQueryParam}}
             {{#isPathParam}}
-            pathParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            pathParameter("{{baseName}}", {{paramName}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isPathParam}}
             {{#isHeaderParam}}
-            headerParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            headerParameter("{{baseName}}", {{paramName}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isHeaderParam}}
             {{#isFormParam}}
             formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}){{/isBinary}} {{^isBinary}}{{paramName}}{{/isBinary}});
             {{/isFormParam}}
             {{#isCookieParam}}
-            cookieParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            cookieParameter("{{baseName}}", {{paramName}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isCookieParam}}
             return this;
         }
@@ -376,19 +376,19 @@ public class {{classname}} implements GeneratedApi
         }}
         public {{operationIdCamelCase}}SendActionBuilder {{paramName}}(String{{#isArray}}...{{/isArray}}{{^isArray}} {{/isArray}}{{paramName}}Expression) {
             {{#isQueryParam}}
-            queryParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            queryParameter("{{baseName}}", {{paramName}}Expression, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isQueryParam}}
             {{#isPathParam}}
-            pathParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            pathParameter("{{baseName}}", {{paramName}}Expression, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isPathParam}}
             {{#isHeaderParam}}
-            headerParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            headerParameter("{{baseName}}", {{paramName}}Expression, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isHeaderParam}}
             {{#isFormParam}}
             formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}Expression){{/isBinary}} {{^isBinary}}{{paramName}}Expression{{/isBinary}});
             {{/isFormParam}}
             {{#isCookieParam}}
-            cookieParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            cookieParameter("{{baseName}}", {{paramName}}Expression, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isCookieParam}}
                 return this;
         }
@@ -403,19 +403,19 @@ public class {{classname}} implements GeneratedApi
         }}
         public {{operationIdCamelCase}}SendActionBuilder {{paramName}}({{#isArray}}{{baseType}}...{{/isArray}}{{^isArray}}{{dataType}} {{/isArray}}{{paramName}}) {
         {{#isQueryParam}}
-            queryParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            queryParameter("{{baseName}}", {{paramName}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
         {{/isQueryParam}}
         {{#isPathParam}}
-            pathParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            pathParameter("{{baseName}}", {{paramName}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
         {{/isPathParam}}
         {{#isHeaderParam}}
-            headerParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            headerParameter("{{baseName}}", {{paramName}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
         {{/isHeaderParam}}
         {{#isFormParam}}
             formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}){{/isBinary}} {{^isBinary}}{{paramName}}{{/isBinary}});
         {{/isFormParam}}
         {{#isCookieParam}}
-            cookieParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            cookieParameter("{{baseName}}", {{paramName}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
         {{/isCookieParam}}
             return this;
         }
@@ -429,19 +429,19 @@ public class {{classname}} implements GeneratedApi
         }}
         public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}({{#isArray}}{{baseType}}...{{/isArray}}{{^isArray}}{{dataType}} {{/isArray}}{{paramName}}) {
         {{#isQueryParam}}
-            queryParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            queryParameter("{{baseName}}", {{paramName}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
         {{/isQueryParam}}
         {{#isPathParam}}
             pathParameter("{{baseName}}", {{paramName}});
         {{/isPathParam}}
         {{#isHeaderParam}}
-            headerParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            headerParameter("{{baseName}}", {{paramName}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
         {{/isHeaderParam}}
         {{#isFormParam}}
             formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}){{/isBinary}} {{^isBinary}}{{paramName}}{{/isBinary}});
         {{/isFormParam}}
         {{#isCookieParam}}
-            cookieParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            cookieParameter("{{baseName}}", {{paramName}}, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
         {{/isCookieParam}}
         }
         {{^isBaseTypeString}}
@@ -455,19 +455,19 @@ public class {{classname}} implements GeneratedApi
         }}
         public {{operationIdCamelCase}}SendActionBuilder {{paramName}}(String{{#isArray}}...{{/isArray}}{{^isArray}} {{/isArray}}{{paramName}}Expression) {
             {{#isQueryParam}}
-            queryParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            queryParameter("{{baseName}}", {{paramName}}Expression, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isQueryParam}}
             {{#isPathParam}}
             pathParameter("{{baseName}}", {{paramName}}Expression);
             {{/isPathParam}}
             {{#isHeaderParam}}
-            headerParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            headerParameter("{{baseName}}", {{paramName}}Expression, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isHeaderParam}}
             {{#isFormParam}}
             formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}Expression){{/isBinary}} {{^isBinary}}{{paramName}}Expression{{/isBinary}});
             {{/isFormParam}}
             {{#isCookieParam}}
-            cookieParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            cookieParameter("{{baseName}}", {{paramName}}Expression, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isCookieParam}}
             return this;
         }
@@ -482,19 +482,19 @@ public class {{classname}} implements GeneratedApi
         }}
         public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}(String{{#isArray}}...{{/isArray}}{{^isArray}} {{/isArray}}{{paramName}}Expression) {
             {{#isQueryParam}}
-            queryParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            queryParameter("{{baseName}}", {{paramName}}Expression, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isQueryParam}}
             {{#isPathParam}}
             pathParameter("{{baseName}}", {{paramName}}Expression);
             {{/isPathParam}}
             {{#isHeaderParam}}
-            headerParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            headerParameter("{{baseName}}", {{paramName}}Expression, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isHeaderParam}}
             {{#isFormParam}}
             formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}Expression){{/isBinary}} {{^isBinary}}{{paramName}}Expression{{/isBinary}});
             {{/isFormParam}}
             {{#isCookieParam}}
-            cookieParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            cookieParameter("{{baseName}}", {{paramName}}Expression, {{#style}}ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}{{/style}}{{^style}}ParameterStyle.NONE{{/style}}, {{isExplode}}, {{#schema.isModel}}{{schema.isModel}}{{/schema.isModel}}{{^schema.isModel}}false{{/schema.isModel}});
             {{/isCookieParam}}
         }
         {{/isBaseTypeString}}
@@ -585,7 +585,7 @@ public class {{classname}} implements GeneratedApi
         {{/authMethods}}
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
             }
 
             return super.doBuild();
@@ -628,7 +628,7 @@ public class {{classname}} implements GeneratedApi
         public ReceiveMessageAction doBuild() {
 
             if (getCustomizers() != null) {
-                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
             }
 
             return super.doBuild();

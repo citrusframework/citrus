@@ -57,6 +57,7 @@ import org.citrusframework.openapi.generator.rest.petstore.request.PetApi.GetPet
 import org.citrusframework.openapi.generator.rest.petstore.spring.PetStoreBeanConfiguration;
 import org.citrusframework.openapi.testapi.ApiActionBuilderCustomizer;
 import org.citrusframework.openapi.testapi.GeneratedApi;
+import org.citrusframework.openapi.testapi.GeneratedApiOperationInfo;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.validation.json.JsonPathVariableExtractor;
 import org.citrusframework.validation.script.ScriptValidationContext;
@@ -225,15 +226,15 @@ class GeneratedRestApiIT {
 
                 @Override
                 public <T extends SendMessageActionBuilder<?, ?, ?>> void customizeRequestBuilder(
-                    GeneratedApi generatedApi, T builder) {
-                    ApiActionBuilderCustomizer.super.customizeRequestBuilder(generatedApi,
+                    GeneratedApiOperationInfo generatedApiOperationInfo, T builder) {
+                    ApiActionBuilderCustomizer.super.customizeRequestBuilder(generatedApiOperationInfo,
                         builder);
                 }
 
                 @Override
                 public <T extends ReceiveMessageActionBuilder<?, ?, ?>> void customizeResponseBuilder(
-                    GeneratedApi generatedApi, T builder) {
-                    ApiActionBuilderCustomizer.super.customizeResponseBuilder(generatedApi,
+                    GeneratedApiOperationInfo generatedApiOperationInfo, T builder) {
+                    ApiActionBuilderCustomizer.super.customizeResponseBuilder(generatedApiOperationInfo,
                         builder);
                 }
 

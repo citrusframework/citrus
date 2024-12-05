@@ -17,6 +17,7 @@
 package org.citrusframework.openapi.testapi;
 
 public enum ParameterStyle {
+    NONE,
     SIMPLE,
     LABEL,
     MATRIX,
