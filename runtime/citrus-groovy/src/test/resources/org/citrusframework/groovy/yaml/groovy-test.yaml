@@ -7,17 +7,21 @@ variables:
     value: "Hello Citrus!"
 actions:
   - groovy:
-      script: |
-        println 'Hello Citrus'
+      script:
+        value: |
+          println 'Hello Citrus'
   - groovy:
-      useScriptTemplate: false
-      script: |
-        println 'Hello Citrus'
+      script:
+        value: |
+          println 'Hello Citrus'
+        useScriptTemplate: false
   - groovy:
-      scriptTemplate: "classpath:org/citrusframework/script/custom-script-template.groovy"
-      script: |
-        Assert.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
-        Assert.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
-        Assert.assertEquals(context.getVariable("greetingText"), "${greetingText}")
+      script:
+        template: "classpath:org/citrusframework/script/custom-script-template.groovy"
+        value: |
+          Assert.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
+          Assert.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
+          Assert.assertEquals(context.getVariable("greetingText"), "${greetingText}")
   - groovy:
-      file: "classpath:org/citrusframework/script/example.groovy"
+      script:
+        file: "classpath:org/citrusframework/script/example.groovy"

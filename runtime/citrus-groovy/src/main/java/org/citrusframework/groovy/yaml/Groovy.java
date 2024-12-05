@@ -16,33 +16,112 @@
 
 package org.citrusframework.groovy.yaml;
 
+import org.citrusframework.AbstractTestActionBuilder;
+import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestActionContainerBuilder;
+import org.citrusframework.TestActor;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.script.CreateBeansAction;
+import org.citrusframework.script.CreateEndpointsAction;
 import org.citrusframework.script.GroovyAction;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
 
-public class Groovy implements TestActionBuilder<GroovyAction> {
+public class Groovy implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
-    private final GroovyAction.Builder builder = new GroovyAction.Builder();
+    private AbstractTestActionBuilder<?, ?> builder;
 
-    public void setScript(String value) {
-        if (value.length() > 0) {
-            builder.script(value);
+    private String description;
+    private String actor;
+
+    private ReferenceResolver referenceResolver;
+
+    public void setDescription(String value) {
+        this.description = description;
+    }
+
+    public void setActor(String actor) {
+        this.actor = actor;
+    }
+
+    public void setScript(Script script) {
+        GroovyAction.Builder builder = new GroovyAction.Builder();
+
+        if (script.getValue() != null) {
+            builder.script(script.getValue());
         }
+
+        if (script.getFile() != null) {
+            builder.scriptResourcePath(script.getFile());
+        }
+
+        if (script.getTemplate() != null) {
+            builder.template(script.getTemplate());
+        }
+
+        builder.useScriptTemplate(script.isUseScriptTemplate());
+
+        this.builder = builder;
     }
 
-    public void setFile(String file) {
-        builder.scriptResourcePath(file);
+    public void setEndpoints(Script script) {
+        CreateEndpointsAction.Builder builder = new CreateEndpointsAction.Builder();
+
+        if (script.getValue() != null) {
+            builder.script(script.getValue());
+        }
+
+        if (script.getFile() != null) {
+            builder.scriptResourcePath(script.getFile());
+        }
+
+        this.builder = builder;
     }
 
-    public void setScriptTemplate(String template) {
-        builder.template(template);
-    }
+    public void setBeans(Script script) {
+        CreateBeansAction.Builder builder = new CreateBeansAction.Builder();
 
-    public void setUseScriptTemplate(boolean enabled) {
-        builder.useScriptTemplate(enabled);
+        if (script.getValue() != null) {
+            builder.script(script.getValue());
+        }
+
+        if (script.getFile() != null) {
+            builder.scriptResourcePath(script.getFile());
+        }
+
+        this.builder = builder;
     }
 
     @Override
-    public GroovyAction build() {
+    public TestAction build() {
+        if (builder == null) {
+            throw new CitrusRuntimeException("Missing Groovy action - please provide proper action details");
+        }
+
+        if (builder instanceof TestActionContainerBuilder<?,?>) {
+            ((TestActionContainerBuilder<?,?>) builder).getActions().stream()
+                    .filter(action -> action instanceof ReferenceResolverAware)
+                    .forEach(action -> ((ReferenceResolverAware) action).setReferenceResolver(referenceResolver));
+        }
+
+        if (builder instanceof ReferenceResolverAware) {
+            ((ReferenceResolverAware) builder).setReferenceResolver(referenceResolver);
+        }
+
+        builder.description(description);
+
+        if (referenceResolver != null) {
+            if (actor != null) {
+                builder.actor(referenceResolver.resolve(actor, TestActor.class));
+            }
+        }
+
         return builder.build();
+    }
+
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 }

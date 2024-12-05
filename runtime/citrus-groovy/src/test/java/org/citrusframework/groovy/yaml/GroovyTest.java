@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class GroovyTest extends AbstractYamlActionTest {
 
     @Test
-    public void shouldLoadGroovy() {
+    public void shouldLoadGroovyActions() {
         YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/yaml/groovy-test.yaml");
 
         testLoader.load();

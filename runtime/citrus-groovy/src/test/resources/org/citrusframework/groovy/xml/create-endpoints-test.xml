@@ -14,38 +14,33 @@
   ~ limitations under the License.
   -->
 
-<test name="GroovyTest" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
+<test name="CreateEndpointsTest" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
-  <variables>
-    <variable name="greetingText" value="Hello Citrus!"/>
-  </variables>
   <actions>
     <groovy>
-      <script>
-        println 'Hello Citrus'
-      </script>
+      <endpoints>
+        <script>
+          endpoints {
+            direct('hello')
+              .asynchronous()
+              .queue('say-hello')
+
+            direct() {
+              asynchronous()
+                .name('goodbye')
+                .queue('say-goodbye')
+            }
+          }
+        </script>
+      </endpoints>
     </groovy>
 
     <groovy>
-      <script use-script-template="false">
-        println 'Hello Citrus'
-      </script>
-    </groovy>
-
-    <groovy>
-      <script script-template="classpath:org/citrusframework/script/custom-script-template.groovy">
-        <![CDATA[
-          Assert.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
-          Assert.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
-          Assert.assertEquals(context.getVariable("greetingText"), "${greetingText}")
-        ]]>
-      </script>
-    </groovy>
-
-    <groovy>
-      <script file="classpath:org/citrusframework/script/example.groovy"/>
+      <endpoints>
+        <script file="classpath:org/citrusframework/groovy/dsl/endpoints.groovy"/>
+      </endpoints>
     </groovy>
   </actions>
 </test>

@@ -64,9 +64,7 @@ public class ControlBus {
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-            "type"
-    })
+    @XmlType(name = "")
     public static class Language {
         @XmlAttribute
         protected String type = "simple";

@@ -20,19 +20,36 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
 import groovy.lang.Closure;
+import groovy.lang.DelegatesTo;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.GroovyRuntimeException;
 import groovy.lang.MissingMethodException;
 import org.citrusframework.Citrus;
+import org.citrusframework.CitrusContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessageQueue;
+import org.citrusframework.spi.ReferenceResolver;
 
 public class BeansConfiguration extends GroovyObjectSupport {
 
-    private final Citrus citrus;
+    private final ReferenceResolver referenceResolver;
 
     public BeansConfiguration(Citrus citrus) {
-        this.citrus = citrus;
+        this(citrus.getCitrusContext());
+    }
+
+    public BeansConfiguration(CitrusContext citrusContext) {
+        this(citrusContext.getReferenceResolver());
+    }
+
+    public BeansConfiguration(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
+    }
+
+    public void beans(@DelegatesTo(BeansConfiguration.class) Closure<?> callable) {
+        callable.setResolveStrategy(Closure.DELEGATE_FIRST);
+        callable.setDelegate(this);
+        callable.call();
     }
 
     public void bean(Class<?> type) {
@@ -41,18 +58,31 @@ public class BeansConfiguration extends GroovyObjectSupport {
 
     public void bean(String name, Class<?> type) {
         try {
-            citrus.getCitrusContext().bind(name, type.getConstructor().newInstance());
+            referenceResolver.bind(name, type.getConstructor().newInstance());
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new CitrusRuntimeException(String.format("Failed to instantiate bean of type '%s' - no default constructor available", type));
+        }
+    }
+
+    public void bean(String name, Class<?> type, Closure<?> callable) {
+        try {
+            Object bean = type.getDeclaredConstructor().newInstance();
+            callable.setResolveStrategy(Closure.DELEGATE_ONLY);
+            callable.setDelegate(bean);
+            callable.call();
+
+            referenceResolver.bind(name, bean);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new CitrusRuntimeException(String.format("Failed to instantiate bean of type '%s' - no default constructor available", type));
         }
     }
 
     public void queue(String name) {
-        citrus.getCitrusContext().bind(name, new DefaultMessageQueue(name));
+        referenceResolver.bind(name, new DefaultMessageQueue(name));
     }
 
     public void propertyMissing(String name, Object value) {
-        citrus.getCitrusContext().bind(name, value);
+        referenceResolver.bind(name, value);
     }
 
     public Object methodMissing(String name, Object argLine) {
@@ -71,7 +101,7 @@ public class BeansConfiguration extends GroovyObjectSupport {
                     closure.setDelegate(bean);
                     closure.call();
 
-                    citrus.getCitrusContext().bind(name, bean);
+                    referenceResolver.bind(name, bean);
                     return bean;
                 } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
                     throw new GroovyRuntimeException(String.format("Failed to instantiate bean of type '%s'", type), e);
@@ -82,7 +112,7 @@ public class BeansConfiguration extends GroovyObjectSupport {
                 closure.setResolveStrategy(Closure.DELEGATE_ONLY);
 
                 Object bean = closure.call();
-                citrus.getCitrusContext().bind(name, bean);
+                referenceResolver.bind(name, bean);
             }
         }
 

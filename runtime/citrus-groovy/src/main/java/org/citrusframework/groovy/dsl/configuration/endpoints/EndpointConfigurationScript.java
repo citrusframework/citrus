@@ -17,34 +17,54 @@
 package org.citrusframework.groovy.dsl.configuration.endpoints;
 
 import org.citrusframework.Citrus;
+import org.citrusframework.CitrusContext;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.groovy.dsl.GroovyShellUtils;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
-public class EndpointConfigurationScript {
+public class EndpointConfigurationScript implements ReferenceResolverAware {
 
-    private final Citrus citrus;
+    private ReferenceResolver referenceResolver;
 
     private final String script;
 
     public EndpointConfigurationScript(String script, Citrus citrus) {
+        this(script, citrus.getCitrusContext());
+    }
+
+    public EndpointConfigurationScript(String script, CitrusContext citrusContext) {
+        this(script, citrusContext.getReferenceResolver());
+    }
+
+    public EndpointConfigurationScript(String script, ReferenceResolver referenceResolver) {
         this.script = script;
-        this.citrus = citrus;
+        this.referenceResolver = referenceResolver;
+    }
+
+    public EndpointConfigurationScript(String script) {
+        this.script = script;
     }
 
     public void execute(TestContext context) {
         EndpointsConfiguration configuration = new EndpointsConfiguration();
         ImportCustomizer ic = new ImportCustomizer();
-        GroovyShellUtils.run(ic, configuration, context.replaceDynamicContentInString(script), citrus, context);
+        GroovyShellUtils.run(ic, configuration, context.replaceDynamicContentInString(script), null, context);
 
         configuration.getEndpoints().forEach(endpoint -> {
             onCreate(endpoint);
             if (endpoint instanceof InitializingPhase) {
                 ((InitializingPhase) endpoint).initialize();
             }
-            citrus.getCitrusContext().bind(endpoint.getName(), endpoint);
+
+            if (referenceResolver != null) {
+                referenceResolver.bind(endpoint.getName(), endpoint);
+            } else {
+                context.getReferenceResolver().bind(endpoint.getName(), endpoint);
+            }
         });
     }
 
@@ -53,5 +73,10 @@ public class EndpointConfigurationScript {
      * @param endpoint
      */
     protected void onCreate(Endpoint endpoint) {
+    }
+
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 }

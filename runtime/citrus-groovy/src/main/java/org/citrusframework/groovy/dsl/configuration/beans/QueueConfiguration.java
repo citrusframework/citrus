@@ -17,17 +17,27 @@
 package org.citrusframework.groovy.dsl.configuration.beans;
 
 import org.citrusframework.Citrus;
+import org.citrusframework.CitrusContext;
 import org.citrusframework.message.DefaultMessageQueue;
+import org.citrusframework.spi.ReferenceResolver;
 
 public class QueueConfiguration {
 
-    private final Citrus citrus;
+    private final ReferenceResolver referenceResolver;
 
     public QueueConfiguration(Citrus citrus) {
-        this.citrus = citrus;
+        this(citrus.getCitrusContext());
+    }
+
+    public QueueConfiguration(CitrusContext citrusContext) {
+        this(citrusContext.getReferenceResolver());
+    }
+
+    public QueueConfiguration(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 
     public void queue(String name) {
-        citrus.getCitrusContext().bind(name, new DefaultMessageQueue(name));
+        referenceResolver.bind(name, new DefaultMessageQueue(name));
     }
 }

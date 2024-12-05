@@ -1,0 +1,22 @@
+name: "CreateEndpointsTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in YAML
+actions:
+  - groovy:
+      endpoints:
+        script: |
+          endpoints {
+            direct('hello')
+              .asynchronous()
+              .queue('say-hello')
+
+            direct() {
+              asynchronous()
+                .name('goodbye')
+                .queue('say-goodbye')
+            }
+          }
+  - groovy:
+      endpoints:
+        file: "classpath:org/citrusframework/groovy/dsl/endpoints.groovy"

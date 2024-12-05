@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class GroovyTest extends AbstractXmlActionTest {
 
     @Test
-    public void shouldLoadGroovy() {
+    public void shouldLoadGroovyActions() {
         XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/xml/groovy-test.xml");
 
         testLoader.load();
