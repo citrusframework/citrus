@@ -132,4 +132,5 @@ public class RandomObjectGeneratorTest {
 
         verify(randomModelBuilderSpy, never()).object(any());
     }
+
 }

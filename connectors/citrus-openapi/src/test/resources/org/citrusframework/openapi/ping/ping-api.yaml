@@ -175,7 +175,7 @@ components:
             properties:
                 type:
                     type: string
-                    enum: [ MultiplesType ]
+                    enum: [ MultipleOfType ]
                 manyPi:
                     type: number
                     format: double

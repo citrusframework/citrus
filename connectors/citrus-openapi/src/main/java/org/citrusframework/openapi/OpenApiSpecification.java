@@ -24,7 +24,6 @@ import static org.citrusframework.openapi.OpenApiSettings.isGenerateOptionalFiel
 import static org.citrusframework.openapi.OpenApiSettings.isNeglectBasePathGlobally;
 import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledGlobally;
 import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
-import static org.citrusframework.openapi.OpenApiSettings.isValidateOptionalFieldsGlobally;
 import static org.citrusframework.openapi.model.OasModelHelper.getBasePath;
 import static org.citrusframework.util.StringUtils.appendSegmentToUrlPath;
 import static org.citrusframework.util.StringUtils.hasText;
@@ -142,7 +141,6 @@ public class OpenApiSpecification {
     private OasDocument openApiDoc;
     private OpenApiValidationContext openApiValidationContext;
     private boolean generateOptionalFields = isGenerateOptionalFieldsGlobally();
-    private boolean validateOptionalFields = isValidateOptionalFieldsGlobally();
 
     /**
      * Flag to indicate, whether request validation is enabled on api level. Api level overrules
@@ -254,7 +252,7 @@ public class OpenApiSpecification {
     }
 
     public String getUid() {
-        return uid;
+       return uid;
     }
 
     public synchronized OasDocument getOpenApiDoc(TestContext context) {
@@ -470,14 +468,6 @@ public class OpenApiSpecification {
         this.generateOptionalFields = generateOptionalFields;
     }
 
-    public boolean isValidateOptionalFields() {
-        return validateOptionalFields;
-    }
-
-    public void setValidateOptionalFields(boolean validateOptionalFields) {
-        this.validateOptionalFields = validateOptionalFields;
-    }
-
     public String getRootContextPath() {
         return rootContextPath;
     }
@@ -536,11 +526,15 @@ public class OpenApiSpecification {
 
         // This is ugly, but we need not make sure that the openApiDoc is initialized, which might
         // happen, when instance is created with org.citrusframework.openapi.OpenApiSpecification.from(java.lang.String)
+       initOpenApiDoc(context);
+
+        return Optional.ofNullable(operationIdToOperationPathAdapter.get(operationId));
+    }
+
+    public void initOpenApiDoc(TestContext context) {
         if (openApiDoc == null) {
             getOpenApiDoc(context);
         }
-
-        return Optional.ofNullable(operationIdToOperationPathAdapter.get(operationId));
     }
 
     public OpenApiSpecification withRootContext(String rootContextPath) {

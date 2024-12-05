@@ -115,7 +115,9 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
                 Map.of("a", "b", "c", "d", "other", "otherOption"), emptyList()),
             arguments("pom-with-additional-properties", null,
                 emptyMap(), emptyMap(),
-                List.of("a=b", "c=d"))
+                List.of("a=b", "c=d")),
+            arguments("pom-soap-from-wsdl-config", null,
+                emptyMap(), emptyMap(), emptyList())
 
         );
     }
@@ -212,15 +214,18 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
     }
 
     private void assertFilesGenerated(ApiConfig apiConfig) {
-        for (String filePathTemplate : STANDARD_FILE_PATH_TEMPLATES) {
-            String filePath = resolveFilePath(apiConfig, filePathTemplate);
-            assertThat(new File(filePath)).isFile().exists();
-        }
 
-        if (TRUE.equals(getField(fixture, "generateSpringIntegrationFiles"))) {
-            for (String filePathTemplate : SPRING_META_FILE_TEMPLATES) {
+        if (apiConfig.getSource().contains("test-api.yml")) {
+            for (String filePathTemplate : STANDARD_FILE_PATH_TEMPLATES) {
                 String filePath = resolveFilePath(apiConfig, filePathTemplate);
                 assertThat(new File(filePath)).isFile().exists();
+            }
+
+            if (TRUE.equals(getField(fixture, "generateSpringIntegrationFiles"))) {
+                for (String filePathTemplate : SPRING_META_FILE_TEMPLATES) {
+                    String filePath = resolveFilePath(apiConfig, filePathTemplate);
+                    assertThat(new File(filePath)).isFile().exists();
+                }
             }
         }
     }

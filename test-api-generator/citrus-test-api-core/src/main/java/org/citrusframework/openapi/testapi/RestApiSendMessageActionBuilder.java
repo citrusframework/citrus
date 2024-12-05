@@ -17,6 +17,7 @@
 package org.citrusframework.openapi.testapi;
 
 import static java.lang.String.format;
+import static org.citrusframework.openapi.testapi.OpenApiParameterFormatter.formatArray;
 import static org.citrusframework.openapi.util.OpenApiUtils.createFullPathOperationIdentifier;
 import static org.citrusframework.util.FileUtils.getDefaultCharset;
 import static org.citrusframework.util.StringUtils.isEmpty;
@@ -35,6 +36,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.actions.HttpClientRequestActionBuilder;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.openapi.AutoFillType;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiClientRequestActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiSpecificationSource;
@@ -85,8 +87,6 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
 
         this.generatedApi = generatedApi;
         this.customizers = generatedApi.getCustomizers();
-
-
 
         httpMessage.path(path);
 
@@ -139,7 +139,7 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
             return;
         }
 
-        String formatted = OpenApiParameterFormatter.formatArray(name, value, parameterStyle, explode, isObject);
+        String formatted = formatArray(name, value, parameterStyle, explode, isObject);
         String[] queryParamValues = formatted.split("&");
         for (String queryParamValue : queryParamValues) {
             String[] keyValue = queryParamValue.split("=");
@@ -160,7 +160,7 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
             return;
         }
 
-        headerParameter(name, OpenApiParameterFormatter.formatArray(name, value, parameterStyle, explode, isObject));
+        headerParameter(name, formatArray(name, value, parameterStyle, explode, isObject));
     }
 
     protected void cookieParameter(String name, Object value) {
@@ -176,7 +176,7 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
             return;
         }
 
-        String formatted = OpenApiParameterFormatter.formatArray(name, value, parameterStyle, explode, isObject);
+        String formatted = formatArray(name, value, parameterStyle, explode, isObject);
         String[] keyValue = formatted.split("=");
 
         // URL Encoding is mandatory especially in the case of multiple values, as multiple values
@@ -261,6 +261,8 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
                                                   OpenApiSpecificationSource openApiSpec,
                                                   String operationId) {
             super(httpMessage, openApiSpec, operationId);
+            // Disable autofill by default, as the api enforces required parameters.
+            autoFill(AutoFillType.NONE);
         }
 
         private static void encodeArrayStyleCookies(HttpMessage message) {
@@ -287,7 +289,7 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
             ParameterData parameterData = pathParameters.get(name);
             String formatted = name;
             if (parameterData != null) {
-                formatted = OpenApiParameterFormatter.formatArray(name, parameterData.value, parameterData.parameterStyle,
+                formatted = formatArray(name, parameterData.value, parameterData.parameterStyle,
                         parameterData.explode, parameterData.isObject);
             }
 

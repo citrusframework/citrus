@@ -29,4 +29,8 @@ public final class SystemProvider {
     public Optional<String> getProperty(String propertyName) {
         return ofNullable(System.getProperty(propertyName));
     }
+
+    public void setProperty(String propertyName, String propertyValue) {
+        System.setProperty(propertyName, propertyValue);
+    }
 }
