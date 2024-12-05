@@ -282,6 +282,26 @@
                             </configOptions>
                         </configuration>
                     </execution>
+<!--                    <execution>-->
+<!--                        <id>generate-openapi-files-for-ef</id>-->
+<!--                        <phase>compile</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>generate</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <inputSpec>${project.basedir}/src/test/resources/apis/ef-service-api.yaml</inputSpec>-->
+<!--                            <configOptions>-->
+<!--                                <apiType>REST</apiType>-->
+<!--                                <invokerPackage>org.citrusframework.openapi.generator.rest.ef</invokerPackage>-->
+<!--                                <apiPackage>org.citrusframework.openapi.generator.rest.ef.request</apiPackage>-->
+<!--                                <modelPackage>-->
+<!--                                    org.citrusframework.openapi.generator.rest.ef.model-->
+<!--                                </modelPackage>-->
+<!--                                <prefix>Nords</prefix>-->
+<!--                                <apiEndpoint>nords.endpoint</apiEndpoint>-->
+<!--                            </configOptions>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
                 </executions>
             </plugin>
         </plugins>

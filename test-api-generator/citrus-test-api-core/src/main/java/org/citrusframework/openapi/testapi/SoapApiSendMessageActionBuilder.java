@@ -16,11 +16,11 @@
 
 package org.citrusframework.openapi.testapi;
 
-import org.citrusframework.ws.actions.SendSoapMessageAction.Builder;
+import static java.lang.String.format;
 
 import java.util.List;
-
-import static java.lang.String.format;
+import org.citrusframework.ws.actions.SendSoapMessageAction;
+import org.citrusframework.ws.actions.SendSoapMessageAction.Builder;
 
 public class SoapApiSendMessageActionBuilder extends Builder {
 
@@ -34,7 +34,7 @@ public class SoapApiSendMessageActionBuilder extends Builder {
         this.generatedApi = generatedApi;
         this.customizers = generatedApi.getCustomizers();
 
-        endpoint(generatedApi.getEndpoint());
+        getMessageBuilderSupport().soapAction(soapAction);
 
         name(format("send-%s:%s", generatedApi.getClass().getSimpleName().toLowerCase(),soapAction));
     }
@@ -45,5 +45,16 @@ public class SoapApiSendMessageActionBuilder extends Builder {
 
     public List<ApiActionBuilderCustomizer> getCustomizers() {
         return customizers;
+    }
+
+    @Override
+    public SendSoapMessageAction doBuild() {
+
+        // If no endpoint was set explicitly, use the default endpoint given by api
+        if (getEndpoint() == null && getEndpointUri() == null) {
+            endpoint(generatedApi.getEndpoint());
+        }
+
+        return super.doBuild();
     }
 }

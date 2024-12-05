@@ -25,9 +25,9 @@ import org.citrusframework.actions.SendMessageAction.SendMessageActionBuilder;
  */
 public interface ApiActionBuilderCustomizer {
 
-    default <T extends SendMessageActionBuilder<?, ?, ?>> void customizeRequestBuilder(GeneratedApi generatedApi, T builder) {
+    default <T extends SendMessageActionBuilder<?, ?, ?>> void customizeRequestBuilder(GeneratedApiOperationInfo generatedApiOperationInfo, T builder) {
     }
 
-    default <T extends ReceiveMessageActionBuilder<?, ?, ?>> void customizeResponseBuilder(GeneratedApi generatedApi, T builder) {
+    default <T extends ReceiveMessageActionBuilder<?, ?, ?>> void customizeResponseBuilder(GeneratedApiOperationInfo generatedApiOperationInfo, T builder) {
     }
 }

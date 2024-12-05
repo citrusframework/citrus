@@ -16,9 +16,28 @@
 
 package org.citrusframework.openapi.actions;
 
+import static java.lang.Integer.parseInt;
+import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
+import static org.citrusframework.openapi.OpenApiMessageType.RESPONSE;
+import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
+import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
+
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.context.TestContext;
@@ -30,6 +49,8 @@ import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaderBuilder;
 import org.citrusframework.message.builder.DefaultHeaderBuilder;
+import org.citrusframework.openapi.AutoFillType;
+import org.citrusframework.openapi.OpenApiSettings;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OasAdapter;
 import org.citrusframework.openapi.model.OasModelHelper;
@@ -37,26 +58,6 @@ import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.citrusframework.openapi.validation.OpenApiOperationToMessageHeadersProcessor;
 import org.citrusframework.openapi.validation.OpenApiValidationContext;
 import org.springframework.http.HttpStatus;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
-
-import static java.lang.Integer.parseInt;
-import static java.util.Collections.singletonList;
-import static java.util.Collections.singletonMap;
-import static org.citrusframework.openapi.OpenApiMessageType.RESPONSE;
-import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
-import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
 /**
  * @since 4.1
@@ -72,25 +73,32 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
      * Default constructor initializes http response message builder.
      */
     public OpenApiServerResponseActionBuilder(OpenApiSpecificationSource openApiSpecificationSource,
-                                              String operationId,
-                                              String statusCode,
-                                              String accept) {
+        String operationId,
+        String statusCode,
+        String accept) {
         this(new HttpMessage(), openApiSpecificationSource, operationId, statusCode, accept);
     }
 
     public OpenApiServerResponseActionBuilder(HttpMessage httpMessage,
-                                              OpenApiSpecificationSource openApiSpecificationSource,
-                                              String operationId,
-                                              String statusCode,
-                                              String accept) {
-        super(new OpenApiServerResponseMessageBuilder(httpMessage, openApiSpecificationSource, operationId, statusCode, accept), httpMessage);
+        OpenApiSpecificationSource openApiSpecificationSource,
+        String operationId,
+        String statusCode,
+        String accept) {
+        super(new OpenApiServerResponseMessageBuilder(httpMessage, openApiSpecificationSource,
+            operationId, statusCode, accept), httpMessage);
         this.openApiSpecificationSource = openApiSpecificationSource;
         this.operationId = operationId;
     }
 
+    public OpenApiServerResponseActionBuilder autoFill(AutoFillType autoFill) {
+        ((OpenApiServerResponseMessageBuilder)this.messageBuilderSupport.getMessageBuilder()).autoFill(autoFill);
+        return this;
+    }
+
     @Override
     public SendMessageAction doBuild() {
-        OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(referenceResolver);
+        OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(
+            referenceResolver);
 
         // Honor default enablement of schema validation
         OpenApiValidationContext openApiValidationContext = openApiSpecification.getOpenApiValidationContext();
@@ -98,8 +106,10 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             schemaValidation = openApiValidationContext.isResponseValidationEnabled();
         }
 
-        if (schemaValidation && !messageProcessors.contains(openApiOperationToMessageHeadersProcessor)) {
-            openApiOperationToMessageHeadersProcessor = new OpenApiOperationToMessageHeadersProcessor(openApiSpecification, operationId, RESPONSE);
+        if (schemaValidation && !messageProcessors.contains(
+            openApiOperationToMessageHeadersProcessor)) {
+            openApiOperationToMessageHeadersProcessor = new OpenApiOperationToMessageHeadersProcessor(
+                openApiSpecification, operationId, RESPONSE);
             process(openApiOperationToMessageHeadersProcessor);
         }
 
@@ -121,8 +131,9 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
         return messageBuilderSupport;
     }
 
-    public OpenApiServerResponseActionBuilder enableRandomGeneration(boolean enable) {
-        ((OpenApiServerResponseMessageBuilder) getMessageBuilderSupport().getMessageBuilder()).enableRandomGeneration(enable);
+    public OpenApiServerResponseActionBuilder enableRandomGeneration(AutoFillType autoFillType) {
+        ((OpenApiServerResponseMessageBuilder) getMessageBuilderSupport().getMessageBuilder()).autoFill(
+            autoFillType);
         return this;
     }
 
@@ -134,13 +145,14 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
         private final String operationId;
         private final String statusCode;
         private final String accept;
-        private boolean randomGenerationEnabled = true;
+
+        private AutoFillType autoFillType = OpenApiSettings.getResponseAutoFillRandomValues();
 
         public OpenApiServerResponseMessageBuilder(HttpMessage httpMessage,
-                                                   OpenApiSpecificationSource openApiSpecificationSource,
-                                                   String operationId,
-                                                   String statusCode,
-                                                   String accept) {
+            OpenApiSpecificationSource openApiSpecificationSource,
+            String operationId,
+            String statusCode,
+            String accept) {
             super(httpMessage);
             this.openApiSpecificationSource = openApiSpecificationSource;
             this.operationId = operationId;
@@ -148,14 +160,16 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             this.accept = accept;
         }
 
-        public OpenApiServerResponseMessageBuilder enableRandomGeneration(boolean enable) {
-            this.randomGenerationEnabled = enable;
+        // TODO: properly document autofill feature
+        public OpenApiServerResponseMessageBuilder autoFill(AutoFillType autoFillType) {
+            this.autoFillType = autoFillType;
             return this;
         }
 
         @Override
         public Message build(TestContext context, String messageType) {
-            OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(context.getReferenceResolver());
+            OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(
+                context.getReferenceResolver());
             if (STATUS_CODE_PATTERN.matcher(statusCode).matches()) {
                 getMessage().status(HttpStatus.valueOf(parseInt(statusCode)));
             } else {
@@ -165,15 +179,13 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             List<MessageHeaderBuilder> initialHeaderBuilders = new ArrayList<>(getHeaderBuilders());
             getHeaderBuilders().clear();
 
-            if (randomGenerationEnabled) {
-                openApiSpecification.getOperation(operationId, context)
-                        .ifPresentOrElse(operationPathAdapter ->
-                                fillRandomData(openApiSpecification, operationPathAdapter, context), () -> {
-                            throw new CitrusRuntimeException(
-                                    "Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(
-                                            operationId, openApiSpecification.getSpecUrl()));
-                        });
-            }
+            openApiSpecification.getOperation(operationId, context)
+                .ifPresentOrElse(operationPathAdapter ->
+                    fillRandomData(openApiSpecification, operationPathAdapter, context), () -> {
+                    throw new CitrusRuntimeException(
+                        "Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(
+                            operationId, openApiSpecification.getSpecUrl()));
+                });
 
             // Initial header builder need to be prepended, so that they can overwrite randomly generated headers.
             getHeaderBuilders().addAll(initialHeaderBuilders);
@@ -181,55 +193,74 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             return super.build(context, messageType);
         }
 
-        private void fillRandomData(OpenApiSpecification openApiSpecification, OperationPathAdapter operationPathAdapter, TestContext context) {
+        private void fillRandomData(OpenApiSpecification openApiSpecification,
+            OperationPathAdapter operationPathAdapter, TestContext context) {
 
             if (operationPathAdapter.operation().responses != null) {
                 buildResponse(context, openApiSpecification, operationPathAdapter.operation());
             }
         }
 
-        private void buildResponse(TestContext context, OpenApiSpecification openApiSpecification, OasOperation operation) {
+        private void buildResponse(TestContext context, OpenApiSpecification openApiSpecification,
+            OasOperation operation) {
             Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
-                    openApiSpecification.getOpenApiDoc(context), operation, statusCode, null);
+                openApiSpecification.getOpenApiDoc(context), operation, statusCode, null);
 
             if (responseForRandomGeneration.isPresent()) {
-                buildRandomHeaders(context, openApiSpecification, responseForRandomGeneration.get());
-                buildRandomPayload(openApiSpecification, operation, responseForRandomGeneration.get());
+                OasResponse oasResponse = responseForRandomGeneration.get();
+
+                if (autoFillType != AutoFillType.NONE) {
+                    buildRandomHeaders(context, openApiSpecification, oasResponse);
+                    buildRandomPayload(openApiSpecification, operation, oasResponse);
+                }
+
+                // Always override existing headers by context variables. This way we can also override random values.
+                Map<String, OasSchema> headers = OasModelHelper.getHeaders(oasResponse);
+                headers.entrySet().stream()
+                    .filter(entry -> context.getVariables().containsKey(entry.getKey()))
+                    .forEach((entry -> addHeaderBuilder(
+                        new DefaultHeaderBuilder(singletonMap(entry.getKey(),
+                            CitrusSettings.VARIABLE_PREFIX + entry.getKey()
+                                + CitrusSettings.VARIABLE_SUFFIX)))));
+
             }
         }
 
-        private void buildRandomHeaders(TestContext context, OpenApiSpecification openApiSpecification, OasResponse response) {
+        private void buildRandomHeaders(TestContext context,
+            OpenApiSpecification openApiSpecification, OasResponse response) {
+            if (autoFillType == AutoFillType.NONE) {
+                return;
+            }
+
             Set<String> filteredHeaders = new HashSet<>(getMessage().getHeaders().keySet());
-            Predicate<Entry<String, OasSchema>> filteredHeadersPredicate = entry -> !filteredHeaders.contains(entry.getKey());
+            Predicate<Entry<String, OasSchema>> filteredHeadersPredicate = entry -> !filteredHeaders.contains(
+                entry.getKey());
 
-            Map<String, OasSchema> requiredHeaders = OasModelHelper.getRequiredHeaders(response);
-            requiredHeaders.entrySet().stream()
-                    .filter(filteredHeadersPredicate)
-                    .forEach(entry -> addHeaderBuilder(new DefaultHeaderBuilder(
-                            singletonMap(entry.getKey(), createRandomValueExpression(entry.getKey(),
-                                    entry.getValue(),
-                                    openApiSpecification,
-                                    context))))
-                    );
+            Map<String, OasSchema> headersToFill;
+            if (openApiSpecification.isGenerateOptionalFields()) {
+                headersToFill = OasModelHelper.getHeaders(response);
+            } else {
+                headersToFill = OasModelHelper.getRequiredHeaders(response);
+            }
 
-            // Also filter the required headers, as they have already been processed
-            filteredHeaders.addAll(requiredHeaders.keySet());
+            headersToFill.entrySet().stream()
+                .filter(filteredHeadersPredicate)
+                .forEach(entry -> addHeaderBuilder(new DefaultHeaderBuilder(
+                    singletonMap(entry.getKey(), createRandomValueExpression(entry.getKey(),
+                        entry.getValue(),
+                        openApiSpecification,
+                        context))))
+                );
 
-            Map<String, OasSchema> headers = OasModelHelper.getHeaders(response);
-            headers.entrySet().stream()
-                    .filter(filteredHeadersPredicate)
-                    .filter(entry -> context.getVariables().containsKey(entry.getKey()))
-                    .forEach((entry -> addHeaderBuilder(
-                            new DefaultHeaderBuilder(singletonMap(entry.getKey(),
-                                    CitrusSettings.VARIABLE_PREFIX + entry.getKey()
-                                            + CitrusSettings.VARIABLE_SUFFIX)))));
         }
 
-        private void buildRandomPayload(OpenApiSpecification openApiSpecification, OasOperation operation, OasResponse response) {
+        private void buildRandomPayload(OpenApiSpecification openApiSpecification,
+            OasOperation operation, OasResponse response) {
             Optional<OasAdapter<OasSchema, String>> schemaForMediaTypeOptional;
             if (statusCode.startsWith("2")) {
                 // if status code is good, and we have an accept, try to get the media type. Note that only json and plain text can be generated randomly.
-                schemaForMediaTypeOptional = OasModelHelper.getSchema(operation, response, accept != null ? singletonList(accept) : null);
+                schemaForMediaTypeOptional = OasModelHelper.getSchema(operation, response,
+                    accept != null ? singletonList(accept) : null);
             } else {
                 // In the bad case, we cannot expect, that the accept type is the type which we must generate.
                 // We request the type supported by the response and the random generator (json and plain text).
@@ -238,30 +269,38 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
 
             if (schemaForMediaTypeOptional.isPresent()) {
                 OasAdapter<OasSchema, String> schemaForMediaType = schemaForMediaTypeOptional.get();
-                if (getMessage().getPayload() == null || (getMessage().getPayload() instanceof String string && string.isEmpty())) {
+                if (getMessage().getPayload() == null || (
+                    getMessage().getPayload() instanceof String string && string.isEmpty())) {
                     createRandomPayload(getMessage(), openApiSpecification, schemaForMediaType);
                 }
 
                 // If we have a schema and a media type and the content type has not yet been set, do it.
                 // If schema is null, we do not set the content type, as there is no content.
-                if (!getMessage().getHeaders().containsKey(HttpMessageHeaders.HTTP_CONTENT_TYPE) && schemaForMediaType.adapted() != null && schemaForMediaType.node() != null) {
-                    addHeaderBuilder(new DefaultHeaderBuilder(singletonMap(HttpMessageHeaders.HTTP_CONTENT_TYPE, schemaForMediaType.adapted())));
+                if (!getMessage().getHeaders().containsKey(HttpMessageHeaders.HTTP_CONTENT_TYPE)
+                    && schemaForMediaType.adapted() != null && schemaForMediaType.node() != null) {
+                    addHeaderBuilder(new DefaultHeaderBuilder(
+                        singletonMap(HttpMessageHeaders.HTTP_CONTENT_TYPE,
+                            schemaForMediaType.adapted())));
                 }
             }
         }
 
-        private void createRandomPayload(HttpMessage message, OpenApiSpecification openApiSpecification, OasAdapter<OasSchema, String> schemaForMediaType) {
+        private void createRandomPayload(HttpMessage message,
+            OpenApiSpecification openApiSpecification,
+            OasAdapter<OasSchema, String> schemaForMediaType) {
             if (schemaForMediaType.node() == null) {
                 // No schema means no payload, no type
                 message.setPayload(null);
             } else {
                 if (TEXT_PLAIN_VALUE.equals(schemaForMediaType.adapted())) {
                     // Schema but plain text
-                    message.setPayload(createOutboundPayload(schemaForMediaType.node(), openApiSpecification));
+                    message.setPayload(
+                        createOutboundPayload(schemaForMediaType.node(), openApiSpecification));
                     message.setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, TEXT_PLAIN_VALUE);
                 } else if (APPLICATION_JSON_VALUE.equals(schemaForMediaType.adapted())) {
                     // Json Schema
-                    message.setPayload(createOutboundPayload(schemaForMediaType.node(), openApiSpecification));
+                    message.setPayload(
+                        createOutboundPayload(schemaForMediaType.node(), openApiSpecification));
                     message.setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, APPLICATION_JSON_VALUE);
                 }
             }

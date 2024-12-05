@@ -381,16 +381,12 @@ public class OpenApiSpecificationTest {
     @Test
     public void shouldSeAndProvideProperties() {
 
-        openApiSpecification.setValidateOptionalFields(true);
         openApiSpecification.setGenerateOptionalFields(true);
 
-        assertTrue(openApiSpecification.isValidateOptionalFields());
         assertTrue(openApiSpecification.isGenerateOptionalFields());
 
-        openApiSpecification.setValidateOptionalFields(false);
         openApiSpecification.setGenerateOptionalFields(false);
 
-        assertFalse(openApiSpecification.isValidateOptionalFields());
         assertFalse(openApiSpecification.isGenerateOptionalFields());
     }
 

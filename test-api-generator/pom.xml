@@ -15,10 +15,6 @@
     <description>Citrus Test API Generator</description>
     <packaging>pom</packaging>
 
-    <properties>
-        <maven.deploy.skip>true</maven.deploy.skip>
-    </properties>
-
     <modules>
         <module>citrus-test-api-core</module>
         <module>citrus-test-api-generator-core</module>

@@ -67,17 +67,23 @@ public class SoapApiSendMessageActionParser extends SendSoapMessageActionParser 
     }
 
     @Override
+    public BeanDefinition parse(Element element, ParserContext parserContext) {
+        BeanDefinition beanDefinition = super.parse(element, parserContext);
+        Element receive = getChildElementByTagName(element, "receive");
+        if (receive != null) {
+            boolean fork = parseBoolean(element.getAttribute("fork"));
+            return wrapSendAndReceiveActionInSequence(fork, receive, parserContext, beanDefinition);
+        }
+
+        return beanDefinition;
+    }
+
+    @Override
     public BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinitionBuilder = super.parseComponent(element, parserContext);
 
         BeanDefinitionBuilder actionBuilder = createTestApiActionBuilder();
         beanDefinitionBuilder.addConstructorArgValue(actionBuilder.getBeanDefinition());
-
-        Element receive = getChildElementByTagName(element, "receive");
-        if (receive != null) {
-            boolean fork = parseBoolean(element.getAttribute("fork"));
-            return wrapSendAndReceiveActionInSequence(fork, receive, parserContext, beanDefinitionBuilder);
-        }
 
         return beanDefinitionBuilder;
     }
@@ -111,10 +117,10 @@ public class SoapApiSendMessageActionParser extends SendSoapMessageActionParser 
      * and receiving messages and adds them to a container that executes these actions in sequence
      * or asynchronously, depending on the {@code fork} parameter.
      */
-    private BeanDefinitionBuilder wrapSendAndReceiveActionInSequence(boolean fork,
+    private BeanDefinition wrapSendAndReceiveActionInSequence(boolean fork,
                                                                      Element receive,
                                                                      ParserContext parserContext,
-                                                                     BeanDefinitionBuilder beanDefinitionBuilder) {
+                                                                     BeanDefinition sendBeanDefinition) {
         Class<? extends AbstractTestContainerFactoryBean<?, ?>> containerClass = fork ? AsyncFactoryBean.class
                 : SequenceFactoryBean.class;
 
@@ -125,12 +131,12 @@ public class SoapApiSendMessageActionParser extends SendSoapMessageActionParser 
         BeanDefinition receiveResponseBeanDefinition = receiveApiResponseActionParser.parse(receive, parserContext);
 
         ManagedList<BeanDefinition> actions = new ManagedList<>();
-        actions.add(beanDefinitionBuilder.getBeanDefinition());
+        actions.add(sendBeanDefinition);
         actions.add(receiveResponseBeanDefinition);
 
         sequenceBuilder.addPropertyValue("actions", actions);
 
-        return sequenceBuilder;
+        return sequenceBuilder.getBeanDefinition();
     }
 
     /**
