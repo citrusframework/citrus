@@ -16,20 +16,20 @@
 
 package org.citrusframework.util;
 
-import java.nio.charset.StandardCharsets;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.spi.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * @since 2.7
  */
 public class FileUtilsTest extends UnitTestSupport {
     @Test
-    public void testGetFileResource() throws Exception {
+    public void testGetFileResource() {
         Resource resource = FileUtils.getFileResource("classpath:citrus-context.xml", context);
 
         Assert.assertNotNull(resource);
@@ -37,7 +37,7 @@ public class FileUtilsTest extends UnitTestSupport {
     }
 
     @Test
-    public void testGetFileResourceExplicitCharset() throws Exception {
+    public void testGetFileResourceExplicitCharset() {
         Resource resource = FileUtils.getFileResource("classpath:citrus-context.xml" + FileUtils.FILE_PATH_CHARSET_PARAMETER + "ISO-8859-1", context);
 
         Assert.assertNotNull(resource);
@@ -45,13 +45,13 @@ public class FileUtilsTest extends UnitTestSupport {
     }
 
     @Test
-    public void testGetCharset() throws Exception {
+    public void testGetCharset() {
         Assert.assertEquals(FileUtils.getCharset("/path/to/some/file.txt").displayName(), CitrusSettings.CITRUS_FILE_ENCODING);
         Assert.assertEquals(FileUtils.getCharset("/path/to/some/file.txt" + FileUtils.FILE_PATH_CHARSET_PARAMETER + "ISO-8859-1"), StandardCharsets.ISO_8859_1);
     }
 
     @Test
-    public void testGetBaseName() throws Exception {
+    public void testGetBaseName() {
         Assert.assertNull(FileUtils.getBaseName(null));
         Assert.assertEquals(FileUtils.getBaseName(""), "");
         Assert.assertEquals(FileUtils.getBaseName("foo"), "foo");
@@ -61,7 +61,7 @@ public class FileUtilsTest extends UnitTestSupport {
     }
 
     @Test
-    public void testGetFileName() throws Exception {
+    public void testGetFileName() {
         Assert.assertEquals(FileUtils.getFileName(null), "");
         Assert.assertEquals(FileUtils.getFileName(""), "");
         Assert.assertEquals(FileUtils.getFileName("foo"), "foo");

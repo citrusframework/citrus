@@ -16,14 +16,14 @@
 
 package org.citrusframework.variable;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.NoSuchVariableException;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 /**
  * Utility class manipulating test variables.
@@ -118,15 +118,11 @@ public final class VariableUtils {
      * @return flag true/false
      */
     public static boolean isVariableName(final String expression) {
-        if (expression == null || expression.length() == 0) {
+        if (expression == null || expression.isEmpty()) {
             return false;
         }
 
-        if (expression.startsWith(CitrusSettings.VARIABLE_PREFIX) && expression.endsWith(CitrusSettings.VARIABLE_SUFFIX)) {
-            return true;
-        }
-
-        return false;
+        return expression.startsWith(CitrusSettings.VARIABLE_PREFIX) && expression.endsWith(CitrusSettings.VARIABLE_SUFFIX);
     }
 
    /**
@@ -176,7 +172,7 @@ public final class VariableUtils {
 
            final String value = context.getVariable(variableNameBuf.toString());
            if (value == null) {
-               throw new NoSuchVariableException("Variable: " + variableNameBuf.toString() + " could not be found");
+               throw new NoSuchVariableException("Variable: " + variableNameBuf + " could not be found");
            }
 
            newStr.append(str, startIndex, searchIndex);

@@ -18,9 +18,6 @@ package org.citrusframework.http.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Enumeration;
-
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.http.controller.HttpMessageController;
 import org.citrusframework.message.RawMessage;
@@ -32,6 +29,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.io.IOException;
+import java.util.Enumeration;
 
 import static java.lang.System.lineSeparator;
 
@@ -80,9 +80,7 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
             logger.debug("Received Http request");
             messageListener.onInboundMessage(new RawMessage(request), contextFactory.getObject());
         } else {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Received Http request:" + NEWLINE + request);
-            }
+            logger.debug("Received Http request:{}{}", NEWLINE, request);
         }
     }
 
@@ -95,9 +93,7 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
             logger.debug("Sending Http response");
             messageListener.onOutboundMessage(new RawMessage(response), contextFactory.getObject());
         } else {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Sending Http response:" + NEWLINE + response);
-            }
+            logger.debug("Sending Http response:{}{}", NEWLINE, response);
         }
     }
 

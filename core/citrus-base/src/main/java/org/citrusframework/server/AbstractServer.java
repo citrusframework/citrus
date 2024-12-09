@@ -16,9 +16,6 @@
 
 package org.citrusframework.server;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.common.ShutdownPhase;
 import org.citrusframework.context.TestContextFactory;
@@ -35,6 +32,9 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Abstract base class for {@link Server} implementations.
@@ -85,9 +85,7 @@ public abstract class AbstractServer extends AbstractEndpoint
 
     @Override
     public void start() {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Starting server: " + getName() + " ...");
-        }
+        logger.debug("Starting server: {} ...", getName());
 
         startup();
 
@@ -99,15 +97,13 @@ public abstract class AbstractServer extends AbstractEndpoint
         thread.setDaemon(false);
         thread.start();
 
-        logger.info("Started server: " + getName());
+        logger.info("Started server: {}", getName());
     }
 
     @Override
     public void stop() {
         if (isRunning()) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Stopping server: " + getName() + " ...");
-            }
+            logger.debug("Stopping server: {} ...", getName());
 
             shutdown();
 
@@ -117,7 +113,7 @@ public abstract class AbstractServer extends AbstractEndpoint
 
             thread = null;
 
-            logger.info("Stopped server: " + getName());
+            logger.info("Stopped server: {}", getName());
         }
     }
 

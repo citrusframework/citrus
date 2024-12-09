@@ -16,14 +16,14 @@
 
 package org.citrusframework.config.xml.parser;
 
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.Optional;
 
 public interface CitrusXmlConfigParser {
 
@@ -45,7 +45,7 @@ public interface CitrusXmlConfigParser {
         Map<String, T> parser = TYPE_RESOLVER.resolveAll(category, TypeResolver.DEFAULT_TYPE_PROPERTY, null);
 
         if (logger.isDebugEnabled()) {
-            parser.forEach((k, v) -> logger.debug(String.format("Found XML config parser '%s/%s' as %s", category, k, v.getClass())));
+            parser.forEach((k, v) -> logger.debug("Found XML config parser '{}/{}' as {}", category, k, v.getClass()));
         }
 
         return parser;
@@ -64,7 +64,7 @@ public interface CitrusXmlConfigParser {
             T instance = TYPE_RESOLVER.resolve(category + "/" + name);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve XML config parser from resource '%s/%s/%s'", RESOURCE_PATH, category, name));
+            logger.warn("Failed to resolve XML config parser from resource '{}/{}/{}'", RESOURCE_PATH, category, name);
         }
 
         return Optional.empty();

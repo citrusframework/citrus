@@ -34,8 +34,6 @@ public class IgnoreValidationMatcher implements ValidationMatcher {
 
     @Override
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Ignoring value for field '%s'", fieldName));
-        }
+        logger.debug("Ignoring value for field '{}'", fieldName);
     }
 }

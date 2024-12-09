@@ -67,12 +67,12 @@ public class DirectSyncConsumer extends DirectConsumer implements ReplyProducer 
         ObjectHelper.assertNotNull(replyQueue, "Failed to find reply channel for message correlation key: " + correlationKey);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending message to reply channel: '" + replyQueue + "'");
-            logger.debug("Message to send is:\n" + message.toString());
+            logger.debug("Sending message to reply channel: '{}'", replyQueue);
+            logger.debug("Message to send is:\n{}", message);
         }
 
         replyQueue.send(message);
-        logger.info("Message was sent to reply channel: '" + replyQueue + "'");
+        logger.info("Message was sent to reply channel: '{}'", replyQueue);
     }
 
     /**
@@ -94,8 +94,7 @@ public class DirectSyncConsumer extends DirectConsumer implements ReplyProducer 
             correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
             correlationManager.store(correlationKey, replyQueue);
         } else {
-            logger.warn("Unable to retrieve reply message channel for message \n" +
-                    receivedMessage + "\n - no reply channel found in message headers!");
+            logger.warn("Unable to retrieve reply message channel for message \n{}\n - no reply channel found in message headers!", receivedMessage);
         }
     }
 

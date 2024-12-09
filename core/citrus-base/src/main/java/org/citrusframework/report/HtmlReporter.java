@@ -16,16 +16,6 @@
 
 package org.citrusframework.report;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-
 import org.apache.commons.codec.binary.Base64;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
@@ -36,6 +26,16 @@ import org.citrusframework.util.PropertyUtils;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
 
 /**
  * Basic logging reporter generating a HTML report with detailed test results.
@@ -243,7 +243,7 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
         }
 
         return "<tr><td colspan=\"2\">" +
-        		"<div class=\"error-detail\"><pre>" + stackTraceBuilder.toString() +
+        		"<div class=\"error-detail\"><pre>" + stackTraceBuilder +
         		"</pre>" + getCodeSnippetHtml(cause) + "</div></td></tr>";
     }
 

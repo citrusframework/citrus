@@ -16,15 +16,15 @@
 
 package org.citrusframework.condition;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Tests if a HTTP Endpoint is reachable. The test is successful if the endpoint responds with the expected response
@@ -76,9 +76,7 @@ public class HttpCondition extends AbstractCondition {
      */
     private int invokeUrl(TestContext context) {
         URL contextUrl = getUrl(context);
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Probing Http request url '%s'", contextUrl.toExternalForm()));
-        }
+        logger.debug("Probing Http request url '{}'", contextUrl.toExternalForm());
 
         int responseCode = -1;
 
@@ -90,7 +88,7 @@ public class HttpCondition extends AbstractCondition {
 
             responseCode = httpURLConnection.getResponseCode();
         } catch (IOException e) {
-            logger.warn(String.format("Could not access Http url '%s' - %s", contextUrl.toExternalForm(), e.getMessage()));
+            logger.warn("Could not access Http url '{}' - {}", contextUrl.toExternalForm(), e.getMessage());
         } finally {
             if (httpURLConnection != null) {
                 httpURLConnection.disconnect();

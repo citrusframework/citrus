@@ -25,8 +25,6 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 /**
  * Namespace handler registers bean definition parser
  * for Citrus testcase schema elements.
- *
- * @since 2007
  */
 public class CitrusTestCaseNamespaceHandler extends NamespaceHandlerSupport {
 

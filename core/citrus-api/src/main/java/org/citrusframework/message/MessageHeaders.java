@@ -37,6 +37,9 @@ public final class MessageHeaders {
     /** Unique message id */
     public static final String ID = MESSAGE_PREFIX + "id";
 
+    /** Correlated message id */
+    public static final String CORRELATED_MESSAGE_ID = MESSAGE_PREFIX + "correlated_message_id";
+
     /** Time message was created */
     public static final String TIMESTAMP = MESSAGE_PREFIX + "timestamp";
 

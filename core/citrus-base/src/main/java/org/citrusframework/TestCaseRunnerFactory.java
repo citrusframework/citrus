@@ -25,7 +25,7 @@ import org.citrusframework.spi.ResourcePathTypeResolver;
  * Citrus' built-in runner, but it also offers the flexibility to replace the default runner with a
  * custom implementation. To do this, it leverages the Citrus {@link ResourcePathTypeResolver}
  * mechanism.
- *
+ * <p>
  * To provide a custom runner, the following file needs to be added to the classpath:
  * <p>
  * <code>

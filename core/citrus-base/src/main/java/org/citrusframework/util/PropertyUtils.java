@@ -16,11 +16,11 @@
 
 package org.citrusframework.util;
 
-import java.io.IOException;
-import java.util.Properties;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
+
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Utility class supporting property replacement in template files.
@@ -99,7 +99,7 @@ public final class PropertyUtils {
 
             if (!properties.containsKey(propertyName.toString())) {
                 throw new CitrusRuntimeException("No such property '"
-                        + PROPERTY_MARKER + propertyName.toString() + PROPERTY_MARKER + "'");
+                        + PROPERTY_MARKER + propertyName + PROPERTY_MARKER + "'");
             }
 
             newStr.append(line, startIndex, searchIndex);
