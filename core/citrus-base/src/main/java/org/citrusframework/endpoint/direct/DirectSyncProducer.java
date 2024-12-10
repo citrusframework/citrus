@@ -16,8 +16,6 @@
 
 package org.citrusframework.endpoint.direct;
 
-import java.util.UUID;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.MessageTimeoutException;
 import org.citrusframework.exceptions.ReplyMessageTimeoutException;
@@ -29,6 +27,8 @@ import org.citrusframework.message.correlation.PollingCorrelationManager;
 import org.citrusframework.messaging.ReplyConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.UUID;
 
 public class DirectSyncProducer extends DirectProducer implements ReplyConsumer {
     /** Logger */
@@ -62,11 +62,11 @@ public class DirectSyncProducer extends DirectProducer implements ReplyConsumer 
         String destinationQueueName = getDestinationQueueName();
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending message to queue: '" + destinationQueueName + "'");
-            logger.debug("Message to send is:\n" + message.toString());
+            logger.debug("Sending message to queue: '{}'", destinationQueueName);
+            logger.debug("Message to send is:\n{}", message.toString());
         }
 
-        logger.info("Message was sent to queue: '" + destinationQueueName + "'");
+        logger.info("Message was sent to queue: '{}'", destinationQueueName);
 
         MessageQueue replyQueue = getReplyQueue(message, context);
         getDestinationQueue(context).send(message);
@@ -89,7 +89,7 @@ public class DirectSyncProducer extends DirectProducer implements ReplyConsumer 
      */
     private MessageQueue getReplyQueue(Message message, TestContext context) {
         if (message.getHeader(DirectMessageHeaders.REPLY_QUEUE) == null) {
-            MessageQueue temporaryQueue = new DefaultMessageQueue(getName() + "." + UUID.randomUUID().toString());
+            MessageQueue temporaryQueue = new DefaultMessageQueue(getName() + "." + UUID.randomUUID());
             message.setHeader(DirectMessageHeaders.REPLY_QUEUE, temporaryQueue);
             return temporaryQueue;
         }

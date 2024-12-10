@@ -83,9 +83,7 @@ public class Wait extends AbstractTestAction {
         while (timeLeft > 0) {
             timeLeft -= intervalMs;
 
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Waiting for condition %s", condition.getName()));
-            }
+            logger.debug("Waiting for condition {}", condition.getName());
 
             var executor = newSingleThreadExecutor();
             long checkStartTime = System.currentTimeMillis();

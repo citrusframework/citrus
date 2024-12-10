@@ -105,7 +105,7 @@ public class MessagePayloadUtils {
                     if (nextStartElementPos > i + 1) {
                         String textBetweenElements = s.substring(i + 1, nextStartElementPos);
 
-                        if (textBetweenElements.replaceAll("\\s", "").length() == 0) {
+                        if (textBetweenElements.replaceAll("\\s", "").isEmpty()) {
                             sb.append(System.lineSeparator());
                         } else {
                             sb.append(textBetweenElements.trim());
@@ -211,5 +211,39 @@ public class MessagePayloadUtils {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * Normalizes the given text by replacing all whitespace characters (identified by {@link Character#isWhitespace) by a single space
+     * and replacing windows style line endings with unix style line endings.
+     */
+    public static String normalizeWhitespace(String text, boolean normalizeWhitespace, boolean normalizeLineEndingsToUnix) {
+        if (text == null || text.isEmpty()) {
+            return text;
+        }
+
+        if (normalizeWhitespace) {
+            StringBuilder result = new StringBuilder();
+            boolean lastWasSpace = true;
+            for (int i = 0; i < text.length(); i++) {
+                char c = text.charAt(i);
+                if (Character.isWhitespace(c)) {
+                    if (!lastWasSpace) {
+                        result.append(' ');
+                    }
+                    lastWasSpace = true;
+                } else {
+                    result.append(c);
+                    lastWasSpace = false;
+                }
+            }
+            return result.toString().trim();
+        }
+
+        if (normalizeLineEndingsToUnix) {
+            return text.replaceAll("\\r(\\n)?", "\n");
+        }
+
+        return text;
     }
 }

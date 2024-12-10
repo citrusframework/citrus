@@ -27,7 +27,7 @@ public enum ErrorHandlingStrategy {
     PROPAGATE("propagateError");
 
     /** Name representation */
-    private String name;
+    private final String name;
 
     /**
      * Default constructor using String name representation field.

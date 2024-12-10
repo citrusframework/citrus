@@ -17,6 +17,7 @@
 package org.citrusframework.functions;
 
 import org.citrusframework.functions.core.AbsoluteFunction;
+import org.citrusframework.functions.core.AdvancedRandomNumberFunction;
 import org.citrusframework.functions.core.AvgFunction;
 import org.citrusframework.functions.core.CeilingFunction;
 import org.citrusframework.functions.core.ChangeDateFunction;
@@ -33,6 +34,7 @@ import org.citrusframework.functions.core.MaxFunction;
 import org.citrusframework.functions.core.MinFunction;
 import org.citrusframework.functions.core.RandomEnumValueFunction;
 import org.citrusframework.functions.core.RandomNumberFunction;
+import org.citrusframework.functions.core.RandomPatternFunction;
 import org.citrusframework.functions.core.RandomStringFunction;
 import org.citrusframework.functions.core.RandomUUIDFunction;
 import org.citrusframework.functions.core.ReadFileResourceFunction;
@@ -44,10 +46,10 @@ import org.citrusframework.functions.core.SubstringFunction;
 import org.citrusframework.functions.core.SumFunction;
 import org.citrusframework.functions.core.SystemPropertyFunction;
 import org.citrusframework.functions.core.TranslateFunction;
+import org.citrusframework.functions.core.UnixTimestampFunction;
 import org.citrusframework.functions.core.UpperCaseFunction;
 import org.citrusframework.functions.core.UrlDecodeFunction;
 import org.citrusframework.functions.core.UrlEncodeFunction;
-import org.citrusframework.functions.core.UnixTimestampFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +65,9 @@ public class DefaultFunctionLibrary extends FunctionLibrary {
         setName("citrusFunctionLibrary");
 
         getMembers().put("randomNumber", new RandomNumberFunction());
+        getMembers().put("randomNumberGenerator", new AdvancedRandomNumberFunction());
         getMembers().put("randomString", new RandomStringFunction());
+        getMembers().put("randomPattern", new RandomPatternFunction());
         getMembers().put("concat", new ConcatFunction());
         getMembers().put("currentDate", new CurrentDateFunction());
         getMembers().put("substring", new SubstringFunction());
@@ -104,9 +108,7 @@ public class DefaultFunctionLibrary extends FunctionLibrary {
     private void lookupFunctions() {
         Function.lookup().forEach((k, m) -> {
             getMembers().put(k, m);
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Register function '%s' as %s", k, m.getClass()));
-            }
+            logger.debug("Register function '{}' as {}", k, m.getClass());
         });
     }
 }

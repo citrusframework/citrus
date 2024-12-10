@@ -87,13 +87,13 @@ public class Timer extends AbstractActionContainer implements StopTimer {
                 try {
                     indexCount++;
                     updateIndexCountInTestContext(context);
-                    logger.debug(String.format("Timer event fired #%s - executing nested actions", indexCount));
+                    logger.debug("Timer event fired #{} - executing nested actions", indexCount);
 
                     for (TestActionBuilder<?> actionBuilder : actions)  {
                         executeAction(actionBuilder.build(), context);
                     }
                     if (indexCount >= repeatCount) {
-                        logger.debug(String.format("Timer complete: %s iterations reached", repeatCount));
+                        logger.debug("Timer complete: {} iterations reached", repeatCount);
                         stopTimer();
                     }
                 } catch (Exception e) {
@@ -111,7 +111,7 @@ public class Timer extends AbstractActionContainer implements StopTimer {
                 } else {
                     timerException = new CitrusRuntimeException(e);
                 }
-                logger.error(String.format("Timer stopped as a result of nested action error (%s)", e.getMessage()));
+                logger.error("Timer stopped as a result of nested action error ({})", e.getMessage());
                 stopTimer();
 
                 if (fork) {

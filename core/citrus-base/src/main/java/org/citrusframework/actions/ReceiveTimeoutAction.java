@@ -16,9 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
@@ -28,9 +25,12 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageSelectorBuilder;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.SelectiveConsumer;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.citrusframework.util.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Action expecting a timeout on a message destination, this means that no message
@@ -85,9 +85,7 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
             }
 
             if (receivedMessage != null) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Received message:\n" + receivedMessage.print(context));
-                }
+                logger.debug("Received message:\n{}", receivedMessage.print(context));
 
                 throw new CitrusRuntimeException("Message timeout validation failed! " +
                 		"Received message while waiting for timeout on destination");

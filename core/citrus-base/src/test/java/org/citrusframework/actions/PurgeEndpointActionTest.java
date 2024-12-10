@@ -16,8 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.util.Collections;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.Endpoint;
@@ -27,6 +25,8 @@ import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
+
+import java.util.Collections;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
@@ -85,7 +85,7 @@ public class PurgeEndpointActionTest extends UnitTestSupport {
     }
 
 	@Test
-    public void testPurgeWithMessageSelector() throws Exception {
+    public void testPurgeWithMessageSelector() {
         reset(mockEndpoint, consumer, selectiveConsumer);
 
         when(mockEndpoint.getName()).thenReturn("mockEndpoint");
@@ -102,7 +102,7 @@ public class PurgeEndpointActionTest extends UnitTestSupport {
     }
 
     @Test
-    public void testPurgeWithMessageSelectorMap() throws Exception {
+    public void testPurgeWithMessageSelectorMap() {
         reset(mockEndpoint, consumer, selectiveConsumer);
 
         when(mockEndpoint.getName()).thenReturn("mockEndpoint");

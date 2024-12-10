@@ -57,7 +57,7 @@ public class AbstractXmlActionTest extends AbstractTestNGUnitTest {
             CitrusAnnotations.parseConfiguration(invocationOnMock.getArgument(0, Object.class), citrusContext);
             return null;
         }).when(citrusContext).parseConfiguration((Object) any());
-        doAnswer(invocationOnMock-> {
+        doAnswer(invocationOnMock -> {
             context.getReferenceResolver().bind(invocationOnMock.getArgument(0), invocationOnMock.getArgument(1));
             return null;
         }).when(citrusContext).addComponent(anyString(), any());

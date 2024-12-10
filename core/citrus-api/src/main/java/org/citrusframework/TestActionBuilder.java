@@ -16,13 +16,13 @@
 
 package org.citrusframework;
 
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Test action builder.
@@ -64,7 +64,7 @@ public interface TestActionBuilder<T extends TestAction> {
         Map<String, TestActionBuilder<?>> builders = TYPE_RESOLVER.resolveAll();
 
         if (logger.isDebugEnabled()) {
-            builders.forEach((k, v) -> logger.debug(String.format("Found test action builder '%s' as %s", k, v.getClass())));
+            builders.forEach((k, v) -> logger.debug("Found test action builder '{}' as {}", k, v.getClass()));
         }
         return builders;
     }
@@ -73,7 +73,7 @@ public interface TestActionBuilder<T extends TestAction> {
      * Resolves test action builder from resource path lookup with given resource name. Scans classpath for test action builder meta information
      * with given name and returns instance of the builder. Returns optional instead of throwing exception when no test action builder
      * could be found.
-     *
+     * <p>
      * Given builder name is a combination of resource file name and type property separated by '.' character.
      * @param builder
      * @return
@@ -82,7 +82,7 @@ public interface TestActionBuilder<T extends TestAction> {
         try {
             return Optional.of(TYPE_RESOLVER.resolve(builder));
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, builder));
+            logger.warn("Failed to resolve test action builder from resource '{}/{}'", RESOURCE_PATH, builder);
         }
 
         return Optional.empty();

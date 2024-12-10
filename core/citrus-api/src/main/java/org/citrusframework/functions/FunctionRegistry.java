@@ -16,11 +16,11 @@
 
 package org.citrusframework.functions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.NoSuchFunctionLibraryException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Function registry holding all available function libraries.
@@ -38,7 +38,7 @@ public class FunctionRegistry {
      * @return flag (true/false)
      */
     public boolean isFunction(final String variableExpression) {
-        if (variableExpression == null || variableExpression.length() == 0) {
+        if (variableExpression == null || variableExpression.isEmpty()) {
             return false;
         }
 

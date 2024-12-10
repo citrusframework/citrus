@@ -16,8 +16,6 @@
 
 package org.citrusframework.variable;
 
-import java.util.Optional;
-
 import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -27,6 +25,8 @@ import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 /**
  * Class extracting variables form messages. Implementing classes may read
@@ -56,7 +56,7 @@ public interface VariableExtractor extends MessageProcessor {
             Builder<T, B> instance = TYPE_RESOLVER.resolve(extractor);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve variable extractor from resource '%s/%s'", RESOURCE_PATH, extractor));
+            logger.warn("Failed to resolve variable extractor from resource '{}/{}'", RESOURCE_PATH, extractor);
         }
 
         return Optional.empty();
