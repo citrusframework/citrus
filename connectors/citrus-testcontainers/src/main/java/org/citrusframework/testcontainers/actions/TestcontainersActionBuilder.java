@@ -17,7 +17,10 @@
 package org.citrusframework.testcontainers.actions;
 
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.testcontainers.aws2.StartLocalStackAction;
+import org.citrusframework.testcontainers.compose.ComposeDownAction;
+import org.citrusframework.testcontainers.compose.ComposeUpAction;
 import org.citrusframework.testcontainers.kafka.StartKafkaAction;
 import org.citrusframework.testcontainers.mongodb.StartMongoDBAction;
 import org.citrusframework.testcontainers.postgresql.StartPostgreSQLAction;
@@ -85,6 +88,15 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
         return new KafkaActionBuilder();
     }
 
+
+    /**
+     * Manage Docker compose.
+     * @return
+     */
+    public ComposeActionBuilder compose() {
+        return new ComposeActionBuilder();
+    }
+
     @Override
     public TestcontainersAction build() {
         ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
@@ -123,6 +135,48 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
          */
         public StopTestcontainersAction.Builder stop() {
             StopTestcontainersAction.Builder builder = new StopTestcontainersAction.Builder();
+            delegate = builder;
+            return builder;
+        }
+    }
+
+    public class ComposeActionBuilder {
+        /**
+         * Start compose testcontainers instance.
+         */
+        public ComposeUpAction.Builder up() {
+            ComposeUpAction.Builder builder = new ComposeUpAction.Builder();
+            delegate = builder;
+            return builder;
+        }
+
+        /**
+         * Start compose testcontainers instance.
+         */
+        public ComposeUpAction.Builder up(String filePath) {
+            ComposeUpAction.Builder builder = new ComposeUpAction.Builder()
+                    .file(filePath);
+            delegate = builder;
+            return builder;
+        }
+
+
+
+        /**
+         * Start compose testcontainers instance.
+         */
+        public ComposeUpAction.Builder up(Resource fileResource) {
+            ComposeUpAction.Builder builder = new ComposeUpAction.Builder()
+                    .file(fileResource);
+            delegate = builder;
+            return builder;
+        }
+
+        /**
+         * Stop compose testcontainers instance.
+         */
+        public ComposeDownAction.Builder down() {
+            ComposeDownAction.Builder builder = new ComposeDownAction.Builder();
             delegate = builder;
             return builder;
         }

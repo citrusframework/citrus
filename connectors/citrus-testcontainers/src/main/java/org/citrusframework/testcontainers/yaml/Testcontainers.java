@@ -44,6 +44,10 @@ public class Testcontainers implements TestActionBuilder<TestcontainersAction>, 
         return this;
     }
 
+    public void setCompose(Compose builder) {
+        this.builder = builder;
+    }
+
     public void setStart(Start builder) {
         this.builder = builder;
     }

@@ -1,0 +1,29 @@
+name: "ComposeTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - testcontainers:
+      compose:
+        up:
+          file: "classpath:org/citrusframework/testcontainers/integration/compose/compose.yaml"
+  - waitFor:
+      http:
+        url: "http://localhost:8880"
+  - http:
+      client: "http://localhost:8880"
+      sendRequest:
+        GET: {}
+  - http:
+      client: "http://localhost:8880"
+      receiveResponse:
+        response:
+          status: "200"
+          reasonPhrase: "OK"
+          body:
+            resource:
+              file: "classpath:org/citrusframework/testcontainers/integration/compose/html/index.html"
+finally:
+  - testcontainers:
+      compose:
+        down: {}
