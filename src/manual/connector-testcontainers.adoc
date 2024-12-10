@@ -609,3 +609,127 @@ Citrus exposes special test variables that represent connection settings for the
 |===
 
 You can use these test variables to connect to the Redpanda Testcontainers instance.
+
+[[testcontainers-compose]]
+== Docker compose
+
+The Testcontainers project provides the opportunity to interact with Docker compose.
+In Citrus you can start a Docker compose specification (`compose.yaml`) as part of the test.
+
+IMPORTANT: By default, the Testcontainers compose container uses your local Docker compose executable binary. This means you need to have Docker compose installed on your machine. You can verify the installation with (`docker compose version`).
+
+NOTE: If for some reason you are not able to install Docker compose you may also disable the `useComposeBinary` setting in Citrus (e.g. via System property or environment variable). The Testcontainers library will then use arbitrary Docker containers in combination with an ambassador container that stars and manages the services defined in the Docker compose specification.
+
+A Docker compose specification may look like this:
+
+.compose.yaml
+[source,yaml,indent=0]
+----
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - '8080:80'
+    volumes:
+      - ./html:/usr/share/nginx/html:ro
+----
+
+The specification defines one or more services that are started as part of the `compose up` command:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void composeTest() {
+    given(testcontainers()
+            .compose()
+            .up()
+            .file("compose.yaml"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ComposeTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <testcontainers>
+          <compose>
+            <up file="compose.yaml"/>
+          </compose>
+        </testcontainers>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ComposeTest
+actions:
+  - testcontainers:
+      compose:
+        up:
+          file: "compose.yaml"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+NOTE: The Docker containers started with Docker compose will be automatically stopped and removed after the test.
+You can change this behavior by setting one of the System property or environment variable settings: `citrus.testcontainers.compose.auto.remove.resources=false` or `CITRUS_TESTCONTAINERS_COMPOSE_AUTO_REMOVE_RESOURCES=false`
+
+You may explicitly stop all Docker containers with the `compose down` command:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void composeTest() {
+    given(testcontainers()
+            .compose()
+            .down());
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ComposeTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <testcontainers>
+          <compose>
+            <down/>
+          </compose>
+        </testcontainers>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ComposeTest
+actions:
+  - testcontainers:
+      compose:
+        down: {}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+IMPORTANT: The `compose down` test action searches for a single Testcontainers compose container that has been started before.
+In case you are operating with multiple `compose up` commands in a test you may identify each of those compose containers with a unique name and reference this name in the `compose down` test action.

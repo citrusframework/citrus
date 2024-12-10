@@ -29,11 +29,11 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testcontainers.TestContainersSettings;
+import org.citrusframework.testcontainers.WaitStrategyHelper;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.containers.wait.strategy.WaitStrategy;
-import org.testcontainers.containers.wait.strategy.WaitStrategyTarget;
 import org.testcontainers.utility.MountableFile;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
@@ -256,11 +256,7 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
         }
 
         public B waitFor(URL url) {
-            if ("https".equals(url.getProtocol())) {
-                this.waitStrategy = Wait.forHttps(url.getPath());
-            } else {
-                this.waitStrategy = Wait.forHttp(url.getPath());
-            }
+            this.waitStrategy = WaitStrategyHelper.waitFor(url);
             return self;
         }
 
@@ -274,16 +270,7 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
         }
 
         public B waitStrategyDisabled() {
-            this.waitStrategy = new WaitStrategy() {
-                @Override
-                public void waitUntilReady(WaitStrategyTarget waitStrategyTarget) {
-                }
-
-                @Override
-                public WaitStrategy withStartupTimeout(Duration startupTimeout) {
-                    return this;
-                }
-            };
+            this.waitStrategy = WaitStrategyHelper.getNoopStrategy();
             return self;
         }
 

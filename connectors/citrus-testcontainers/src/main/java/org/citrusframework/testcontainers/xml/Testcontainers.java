@@ -50,6 +50,11 @@ public class Testcontainers implements TestActionBuilder<TestcontainersAction>, 
         return this;
     }
 
+    @XmlElement(name = "compose")
+    public void setCompose(Compose builder) {
+        this.builder = builder;
+    }
+
     @XmlElement(name = "start")
     public void setStart(Start builder) {
         this.builder = builder;

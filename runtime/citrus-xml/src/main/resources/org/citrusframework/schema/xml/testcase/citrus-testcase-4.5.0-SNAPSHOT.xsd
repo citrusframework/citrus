@@ -1918,6 +1918,42 @@
     <xs:sequence>
     <xs:element name="description" type="xs:string" minOccurs="0"/>
     <xs:choice>
+      <xs:element name="compose">
+        <xs:complexType>
+          <xs:choice>
+            <xs:element name="up">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="exposedService" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="wait-for" minOccurs="0">
+                          <xs:complexType>
+                            <xs:attribute name="log-message" type="xs:string"/>
+                            <xs:attribute name="url" type="xs:string"/>
+                            <xs:attribute name="disabled" type="xs:boolean"/>
+                          </xs:complexType>
+                        </xs:element>
+                      </xs:sequence>
+                      <xs:attribute name="name" use="required" type="xs:string"/>
+                      <xs:attribute name="port" use="required" type="xs:string"/>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="name" type="xs:string"/>
+                <xs:attribute name="file" type="xs:string"/>
+                <xs:attribute name="auto-remove" type="xs:boolean"/>
+                <xs:attribute name="startup-timeout" type="xs:int"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="down">
+              <xs:complexType>
+                <xs:attribute name="name" type="xs:string"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="start">
         <xs:complexType>
           <xs:choice>
