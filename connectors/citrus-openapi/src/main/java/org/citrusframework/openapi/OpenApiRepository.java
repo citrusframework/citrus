@@ -28,6 +28,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.citrusframework.openapi.validation.OpenApiValidationPolicy;
 import org.citrusframework.repository.BaseRepository;
 import org.citrusframework.spi.Resource;
 import org.slf4j.Logger;
@@ -59,6 +60,8 @@ public class OpenApiRepository extends BaseRepository {
     private boolean requestValidationEnabled = true;
 
     private boolean responseValidationEnabled = true;
+
+    private OpenApiValidationPolicy openApiValidationPolicy = OpenApiSettings.getOpenApiValidationPolicy();
 
     public OpenApiRepository() {
         super(DEFAULT_NAME);
@@ -137,6 +140,16 @@ public class OpenApiRepository extends BaseRepository {
         this.responseValidationEnabled = responseValidationEnabled;
     }
 
+    public OpenApiValidationPolicy getOpenApiValidationPolicy() {
+        return openApiValidationPolicy;
+    }
+
+    public void setOpenApiValidationPolicy(
+        OpenApiValidationPolicy openApiValidationPolicy) {
+        this.openApiValidationPolicy = openApiValidationPolicy;
+    }
+
+
     /**
      * Adds an OpenAPI Specification specified by the given resource to the repository. If an alias
      * is determined from the resource name, it is added to the specification.
@@ -145,7 +158,8 @@ public class OpenApiRepository extends BaseRepository {
      */
     @Override
     public void addRepository(Resource openApiResource) {
-        OpenApiSpecification openApiSpecification = OpenApiSpecification.from(openApiResource);
+        OpenApiSpecification openApiSpecification = OpenApiSpecification.from(openApiResource,
+            openApiValidationPolicy);
         determineResourceAlias(openApiResource).ifPresent(openApiSpecification::addAlias);
         openApiSpecification.setApiRequestValidationEnabled(requestValidationEnabled);
         openApiSpecification.setApiResponseValidationEnabled(responseValidationEnabled);

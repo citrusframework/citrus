@@ -1,5 +1,7 @@
 package org.citrusframework.openapi.actions;
 
+import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
@@ -8,8 +10,6 @@ import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.spi.Resources;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi;
 
 public class OpenApiClientRequestMessageBuilderTest {
 
