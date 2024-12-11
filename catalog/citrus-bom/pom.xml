@@ -20,7 +20,7 @@
 
   <groupId>org.citrusframework</groupId>
   <artifactId>citrus-bom</artifactId>
-  <version>4.5.0-SNAPSHOT</version>
+  <version>4.6.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Citrus :: Catalog :: BOM</name>
   <description>This Bill of Materials POM can be used to ease dependency management when referencing multiple Citrus artifacts using Gradle or Maven</description>
@@ -147,239 +147,239 @@
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-api</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-base</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-core</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-spring</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
 
       <!-- Runtimes -->
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-cucumber</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-testng</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-junit</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-junit5</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-quarkus</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-main</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-arquillian</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-groovy</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-xml</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-yaml</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
 
       <!-- Endpoints -->
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-camel</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-ftp</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-http</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-openapi</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-jms</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-kafka</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-jmx</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-mail</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-rmi</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-ssh</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-vertx</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-websocket</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-ws</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-zookeeper</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-spring-integration</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
 
       <!-- Validation -->
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-validation-xml</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-validation-json</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-validation-text</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-validation-binary</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-validation-groovy</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-validation-hamcrest</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
 
       <!-- Connectors -->
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-docker</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-selenium</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-kubernetes</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-knative</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-testcontainers</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-sql</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-jbang-connector</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
 
       <!-- Tools -->
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-restdocs</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-maven-plugin</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
 
       <!-- Catalog -->
       <dependency>
         <groupId>org.citrusframework</groupId>
         <artifactId>citrus-endpoint-catalog</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.6.0-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

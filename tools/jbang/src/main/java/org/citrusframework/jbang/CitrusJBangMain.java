@@ -37,7 +37,7 @@ public class CitrusJBangMain implements Callable<Integer> {
                 .addSubcommand("ls", new CommandLine(new ListTests(main)))
                 .addSubcommand("completion", new CommandLine(new Complete(main)));
 
-        commandLine.getCommandSpec().versionProvider(() -> new String[] { "4.5.0-SNAPSHOT" });
+        commandLine.getCommandSpec().versionProvider(() -> new String[] { "4.6.0-SNAPSHOT" });
 
         int exitCode = commandLine.execute(args);
         System.exit(exitCode);

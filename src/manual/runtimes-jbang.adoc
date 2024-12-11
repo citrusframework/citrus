@@ -237,7 +237,7 @@ The easiest way to do this is to create a `jbang.properties` file that defines t
 [source,properties]
 ----
 # Declare required additional dependencies
-run.deps=org.citrusframework:citrus-camel:4.5.0-SNAPSHOT,org.citrusframework:citrus-testcontainers:4.5.0-SNAPSHOT,org.citrusframework:citrus-kafka:4.5.0-SNAPSHOT
+run.deps=org.citrusframework:citrus-camel:4.6.0-SNAPSHOT,org.citrusframework:citrus-testcontainers:4.6.0-SNAPSHOT,org.citrusframework:citrus-kafka:4.6.0-SNAPSHOT
 ----
 
 The file above adds the modules `citrus-camel`, `citrus-testcontainers` and `citrus-kafka` so you can use them in your JBang Citrus test source.

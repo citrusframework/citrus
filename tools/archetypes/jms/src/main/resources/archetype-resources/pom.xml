@@ -17,7 +17,7 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
 
-    <citrus.version>4.5.0-SNAPSHOT</citrus.version>
+    <citrus.version>4.6.0-SNAPSHOT</citrus.version>
 
     <activemq.artemis.version>2.31.2</activemq.artemis.version>
     <slf4j.version>2.0.11</slf4j.version>
