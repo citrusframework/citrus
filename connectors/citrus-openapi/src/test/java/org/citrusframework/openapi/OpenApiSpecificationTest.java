@@ -16,7 +16,28 @@
 
 package org.citrusframework.openapi;
 
+import static org.citrusframework.openapi.validation.OpenApiValidationPolicy.IGNORE;
+import static org.citrusframework.openapi.validation.OpenApiValidationPolicy.REPORT;
+import static org.citrusframework.openapi.validation.OpenApiValidationPolicy.STRICT;
+import static org.citrusframework.util.FileUtils.readToString;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.Mockito.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertThrows;
+import static org.testng.Assert.assertTrue;
+
 import io.apicurio.datamodels.openapi.models.OasDocument;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+import javax.net.ssl.HttpsURLConnection;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpClient;
@@ -33,24 +54,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import javax.net.ssl.HttpsURLConnection;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Optional;
-
-import static org.citrusframework.util.FileUtils.readToString;
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
-import static org.mockito.Mockito.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 public class OpenApiSpecificationTest {
 
@@ -179,6 +182,54 @@ public class OpenApiSpecificationTest {
         assertNotNull(specification);
         assertEquals(specification.getSpecUrl(), resource.getLocation());
         assertPingApi(specification);
+    }
+
+    @Test
+    public void shouldInitializeFaultyFromResource() {
+        // Given
+        Resource resource = new ClasspathResource("classpath:org/citrusframework/openapi/faulty/faulty-ping-api.yaml");
+
+        // When
+        OpenApiSpecification specification = OpenApiSpecification.from(resource);
+
+        // Then
+        assertNotNull(specification);
+        assertEquals(specification.getSpecUrl(), resource.getLocation());
+
+        assertNotNull(specification.getOpenApiDoc(null));
+    }
+
+    @Test
+    public void shouldFailOnStrictPolicy() {
+        // Given
+        Resource resource = new ClasspathResource("classpath:org/citrusframework/openapi/faulty/faulty-ping-api.yaml");
+
+        // When
+        assertThrows( () -> OpenApiSpecification.from(resource, STRICT));
+    }
+
+    @Test
+    public void shouldSuccessOnIgnorePolicy() {
+        // Given
+        Resource resource = new ClasspathResource("classpath:org/citrusframework/openapi/faulty/faulty-ping-api.yaml");
+
+        // When
+        OpenApiSpecification specification = OpenApiSpecification.from(resource, IGNORE);
+
+        // Then
+        assertNotNull(specification.getOpenApiDoc(null));
+    }
+
+    @Test
+    public void shouldSuccessOnReportPolicy() {
+        // Given
+        Resource resource = new ClasspathResource("classpath:org/citrusframework/openapi/faulty/faulty-ping-api.yaml");
+
+        // When
+        OpenApiSpecification specification = OpenApiSpecification.from(resource, REPORT);
+
+        // Then
+        assertNotNull(specification.getOpenApiDoc(null));
     }
 
     @Test

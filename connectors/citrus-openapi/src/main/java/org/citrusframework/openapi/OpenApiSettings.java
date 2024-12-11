@@ -18,6 +18,8 @@ package org.citrusframework.openapi;
 
 import static java.lang.Boolean.parseBoolean;
 
+import org.citrusframework.openapi.validation.OpenApiValidationPolicy;
+
 /**
  * The {@code OpenApiSettings} class provides configuration settings for enabling or disabling
  * OpenAPI request and response validation globally. The settings can be controlled through
@@ -37,11 +39,14 @@ public class OpenApiSettings {
     public static final String NEGLECT_OPEN_API_BASE_PATH_PROPERTY  = "citrus.openapi.neglect.base.path";
     public static final String NEGLECT_OPEN_API_BASE_PATH_ENV = "CITRUS_OPENAPI_NEGLECT_BASE_PATH";
 
-    public static final String REQUEST_AUTO_FILL_RANDOM_VALUES = "citrus.openapi.request.fill.random.values";
+    public static final String REQUEST_AUTO_FILL_RANDOM_VALUES_PROPERTY = "citrus.openapi.request.fill.random.values";
     public static final String REQUEST_AUTO_FILL_RANDOM_VALUES_ENV = "CITRUS_OPENAPI_REQUEST_FILL_RANDOM_VALUES";
 
-    public static final String RESPONSE_AUTO_FILL_RANDOM_VALUES = "citrus.openapi.response.fill.random.values";
+    public static final String RESPONSE_AUTO_FILL_RANDOM_VALUES_PROPERTY = "citrus.openapi.response.fill.random.values";
     public static final String RESPONSE_AUTO_FILL_RANDOM_VALUES_ENV = "CITRUS_OPENAPI_RESPONSE_FILL_RANDOM_VALUES";
+
+    public static final String OPEN_API_VALIDATION_POLICY_PROPERTY = "citrus.openapi.validation.policy";
+    public static final String OPEN_API_VALIDATION_POLICY_ENV = "CITRUS_OPENAPI_VALIDATION_POLICY";
 
     private OpenApiSettings() {
         // static access only
@@ -75,7 +80,7 @@ public class OpenApiSettings {
      */
     public static AutoFillType getRequestAutoFillRandomValues() {
         return AutoFillType.valueOf(System.getProperty(
-            REQUEST_AUTO_FILL_RANDOM_VALUES, System.getenv(REQUEST_AUTO_FILL_RANDOM_VALUES_ENV) != null ?
+            REQUEST_AUTO_FILL_RANDOM_VALUES_PROPERTY, System.getenv(REQUEST_AUTO_FILL_RANDOM_VALUES_ENV) != null ?
                 System.getenv(REQUEST_AUTO_FILL_RANDOM_VALUES_ENV) : AutoFillType.REQUIRED.name()));
     }
 
@@ -84,7 +89,17 @@ public class OpenApiSettings {
      */
     public static AutoFillType getResponseAutoFillRandomValues() {
         return AutoFillType.valueOf(System.getProperty(
-            RESPONSE_AUTO_FILL_RANDOM_VALUES, System.getenv(RESPONSE_AUTO_FILL_RANDOM_VALUES_ENV) != null ?
+            RESPONSE_AUTO_FILL_RANDOM_VALUES_PROPERTY, System.getenv(RESPONSE_AUTO_FILL_RANDOM_VALUES_ENV) != null ?
                 System.getenv(RESPONSE_AUTO_FILL_RANDOM_VALUES_ENV) : AutoFillType.REQUIRED.name()));
     }
+
+    /**
+     * The default OpenApiValidationPolicy for OpenAPI parsed for validation purposes.
+     */
+    public static OpenApiValidationPolicy getOpenApiValidationPolicy() {
+        return OpenApiValidationPolicy.valueOf(System.getProperty(
+            OPEN_API_VALIDATION_POLICY_PROPERTY, System.getenv(OPEN_API_VALIDATION_POLICY_ENV) != null ?
+                System.getenv(OPEN_API_VALIDATION_POLICY_ENV) : OpenApiValidationPolicy.REPORT.name()));
+    }
+
 }

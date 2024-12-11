@@ -19,16 +19,18 @@ package org.citrusframework.openapi;
 import static org.citrusframework.openapi.OpenApiSettings.GENERATE_OPTIONAL_FIELDS_PROPERTY;
 import static org.citrusframework.openapi.OpenApiSettings.NEGLECT_OPEN_API_BASE_PATH_ENV;
 import static org.citrusframework.openapi.OpenApiSettings.NEGLECT_OPEN_API_BASE_PATH_PROPERTY;
-import static org.citrusframework.openapi.OpenApiSettings.REQUEST_AUTO_FILL_RANDOM_VALUES;
+import static org.citrusframework.openapi.OpenApiSettings.OPEN_API_VALIDATION_POLICY_PROPERTY;
+import static org.citrusframework.openapi.OpenApiSettings.REQUEST_AUTO_FILL_RANDOM_VALUES_PROPERTY;
 import static org.citrusframework.openapi.OpenApiSettings.REQUEST_AUTO_FILL_RANDOM_VALUES_ENV;
 import static org.citrusframework.openapi.OpenApiSettings.REQUEST_VALIDATION_ENABLED_PROPERTY;
-import static org.citrusframework.openapi.OpenApiSettings.RESPONSE_AUTO_FILL_RANDOM_VALUES;
+import static org.citrusframework.openapi.OpenApiSettings.RESPONSE_AUTO_FILL_RANDOM_VALUES_PROPERTY;
 import static org.citrusframework.openapi.OpenApiSettings.RESPONSE_AUTO_FILL_RANDOM_VALUES_ENV;
 import static org.citrusframework.openapi.OpenApiSettings.RESPONSE_VALIDATION_ENABLED_PROPERTY;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+import org.citrusframework.openapi.validation.OpenApiValidationPolicy;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -42,6 +44,7 @@ public class OpenApiSettingsTest {
     private static final AutoFillType REQUEST_AUTO_FILL_RANDOM_VALUES_ENABLED_GLOBALLY = OpenApiSettings.getRequestAutoFillRandomValues();
     private static final AutoFillType RESPONSE_AUTO_FILL_RANDOM_VALUES_ENABLED_GLOBALLY = OpenApiSettings.getResponseAutoFillRandomValues();
     private static final boolean NEGLECT_BASE_PATH_GLOBALLY = OpenApiSettings.isNeglectBasePathGlobally();
+    private static final OpenApiValidationPolicy OPEN_API_VALIDATION_POLICY_GLOBALLY = OpenApiSettings.getOpenApiValidationPolicy();
 
     private final EnvironmentVariables environmentVariables = new EnvironmentVariables();
 
@@ -51,8 +54,9 @@ public class OpenApiSettingsTest {
         System.clearProperty(REQUEST_VALIDATION_ENABLED_PROPERTY);
         System.clearProperty(RESPONSE_VALIDATION_ENABLED_PROPERTY);
         System.clearProperty(NEGLECT_OPEN_API_BASE_PATH_PROPERTY);
-        System.clearProperty(REQUEST_AUTO_FILL_RANDOM_VALUES);
-        System.clearProperty(RESPONSE_AUTO_FILL_RANDOM_VALUES);
+        System.clearProperty(REQUEST_AUTO_FILL_RANDOM_VALUES_PROPERTY);
+        System.clearProperty(RESPONSE_AUTO_FILL_RANDOM_VALUES_PROPERTY);
+        System.clearProperty(OPEN_API_VALIDATION_POLICY_PROPERTY);
     }
 
     @AfterMethod
@@ -83,10 +87,12 @@ public class OpenApiSettingsTest {
             System.setProperty(NEGLECT_OPEN_API_BASE_PATH_PROPERTY, "true");
         }
 
-        System.setProperty(RESPONSE_AUTO_FILL_RANDOM_VALUES,
+        System.setProperty(RESPONSE_AUTO_FILL_RANDOM_VALUES_PROPERTY,
             RESPONSE_AUTO_FILL_RANDOM_VALUES_ENABLED_GLOBALLY.toString());
-        System.setProperty(REQUEST_AUTO_FILL_RANDOM_VALUES,
+        System.setProperty(REQUEST_AUTO_FILL_RANDOM_VALUES_PROPERTY,
             REQUEST_AUTO_FILL_RANDOM_VALUES_ENABLED_GLOBALLY.toString());
+        System.setProperty(OPEN_API_VALIDATION_POLICY_PROPERTY,
+            OPEN_API_VALIDATION_POLICY_GLOBALLY.toString());
     }
 
     @Test
@@ -224,14 +230,14 @@ public class OpenApiSettingsTest {
     @Test
     public void testRequestAutoFillRandomValuesAllByProperty() throws Exception {
         environmentVariables.setup();
-        System.setProperty(REQUEST_AUTO_FILL_RANDOM_VALUES, "ALL");
+        System.setProperty(REQUEST_AUTO_FILL_RANDOM_VALUES_PROPERTY, "ALL");
         assertEquals(OpenApiSettings.getRequestAutoFillRandomValues(), AutoFillType.ALL);
     }
 
     @Test
     public void testRequestAutoFillRandomValuesNoneByProperty() throws Exception {
         environmentVariables.setup();
-        System.setProperty(REQUEST_AUTO_FILL_RANDOM_VALUES, "NONE");
+        System.setProperty(REQUEST_AUTO_FILL_RANDOM_VALUES_PROPERTY, "NONE");
         assertEquals(OpenApiSettings.getRequestAutoFillRandomValues(), AutoFillType.NONE);
     }
 
@@ -252,14 +258,14 @@ public class OpenApiSettingsTest {
     @Test
     public void testResponseAutoFillRandomValuesAllByProperty() throws Exception {
         environmentVariables.setup();
-        System.setProperty(RESPONSE_AUTO_FILL_RANDOM_VALUES, "ALL");
+        System.setProperty(RESPONSE_AUTO_FILL_RANDOM_VALUES_PROPERTY, "ALL");
         assertEquals(OpenApiSettings.getResponseAutoFillRandomValues(), AutoFillType.ALL);
     }
 
     @Test
     public void testResponseAutoFillRandomValuesNoneByProperty() throws Exception {
         environmentVariables.setup();
-        System.setProperty(RESPONSE_AUTO_FILL_RANDOM_VALUES, "NONE");
+        System.setProperty(RESPONSE_AUTO_FILL_RANDOM_VALUES_PROPERTY, "NONE");
         assertEquals(OpenApiSettings.getResponseAutoFillRandomValues(), AutoFillType.NONE);
     }
 
@@ -277,4 +283,30 @@ public class OpenApiSettingsTest {
         assertEquals(OpenApiSettings.getResponseAutoFillRandomValues(), AutoFillType.NONE);
     }
 
+    @Test
+    public void testOpenApiValidationPolicyIgnoreByProperty() throws Exception {
+        environmentVariables.setup();
+        System.setProperty(OPEN_API_VALIDATION_POLICY_PROPERTY, "IGNORE");
+        assertEquals(OpenApiSettings.getOpenApiValidationPolicy(), OpenApiValidationPolicy.IGNORE);
+    }
+
+    @Test
+    public void testOpenApiValidationPolicyStrictByProperty() throws Exception {
+        environmentVariables.setup();
+        System.setProperty(OPEN_API_VALIDATION_POLICY_PROPERTY, "STRICT");
+        assertEquals(OpenApiSettings.getOpenApiValidationPolicy(), OpenApiValidationPolicy.STRICT);
+    }
+
+    @Test
+    public void testOpenApiValidationPolicyReportByProperty() throws Exception {
+        environmentVariables.setup();
+        System.setProperty(OPEN_API_VALIDATION_POLICY_PROPERTY, "REPORT");
+        assertEquals(OpenApiSettings.getOpenApiValidationPolicy(), OpenApiValidationPolicy.REPORT);
+    }
+
+    @Test
+    public void testOpenApiValidationPolicyReportByDefault() throws Exception {
+        environmentVariables.setup();
+        assertEquals(OpenApiSettings.getOpenApiValidationPolicy(), OpenApiValidationPolicy.REPORT);
+    }
 }
