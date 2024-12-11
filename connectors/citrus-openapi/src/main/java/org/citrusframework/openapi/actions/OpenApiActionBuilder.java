@@ -16,6 +16,9 @@
 
 package org.citrusframework.openapi.actions;
 
+import static org.citrusframework.openapi.OpenApiSettings.getOpenApiValidationPolicy;
+
+import java.net.URL;
 import org.citrusframework.TestAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -24,8 +27,6 @@ import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;
-
-import java.net.URL;
 
 /**
  * Action executes client and server operations using given OpenApi specification.
@@ -69,11 +70,11 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
     }
 
     public OpenApiActionBuilder specification(URL specUrl) {
-        return specification(OpenApiSpecification.from(specUrl));
+        return specification(OpenApiSpecification.from(specUrl, getOpenApiValidationPolicy()));
     }
 
     public OpenApiActionBuilder specification(String specUrl) {
-        return specification(OpenApiSpecification.from(specUrl));
+        return specification(OpenApiSpecification.from(specUrl, getOpenApiValidationPolicy()));
     }
 
     public OpenApiClientActionBuilder client() {
