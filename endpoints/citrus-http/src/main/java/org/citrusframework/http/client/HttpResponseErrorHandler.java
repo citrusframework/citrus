@@ -46,7 +46,7 @@ public class HttpResponseErrorHandler extends DefaultResponseErrorHandler {
         if (errorHandlingStrategy.equals(ErrorHandlingStrategy.PROPAGATE)) {
             throw new HttpErrorPropagatingException(response.getStatusCode(), response.getStatusText(), response.getHeaders(), getResponseBody(response), getCharset(response));
         } else if (errorHandlingStrategy.equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
-            super.handleError(response);
+            super.handleError(response, statusCode, url, method);
         } else {
             throw new CitrusRuntimeException("Unsupported error strategy: " + errorHandlingStrategy);
         }
