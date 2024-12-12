@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.18">
+<meta name="generator" content="Asciidoctor 2.0.23">
 <meta name="author" content="Authors: The Citrus Community">
 <title>Citrus</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -141,7 +141,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #content::before{content:none}
 #header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
 #header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
-#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header>h1:only-child{border-bottom:1px solid #dddddf;padding-bottom:8px}
 #header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
 #header .details span:first-child{margin-left:-.125em}
 #header .details span.email a{color:rgba(0,0,0,.85)}
@@ -163,6 +163,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #toctitle{color:#7a2518;font-size:1.2em}
 @media screen and (min-width:768px){#toctitle{font-size:1.375em}
 body.toc2{padding-left:15em;padding-right:0}
+body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
 #toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
 #toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
 #toc.toc2>ul{font-size:.9em;margin-bottom:0}
@@ -209,13 +210,10 @@ table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
 .admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
 .admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
 .exampleblock>.content{border:1px solid #e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;border-radius:4px}
-.exampleblock>.content>:first-child{margin-top:0}
-.exampleblock>.content>:last-child{margin-bottom:0}
 .sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
-.sidebarblock>:first-child{margin-top:0}
-.sidebarblock>:last-child{margin-bottom:0}
 .sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
-.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child,.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
 .literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
 @media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
 @media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
@@ -331,7 +329,7 @@ a.image{text-decoration:none;display:inline-block}
 a.image object{pointer-events:none}
 sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
 sup.footnote a,sup.footnoteref a{text-decoration:none}
-sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+sup.footnote a:active,sup.footnoteref a:active,#footnotes .footnote a:first-of-type:active{text-decoration:underline}
 #footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
 #footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
 #footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
@@ -394,7 +392,7 @@ b.conum *{color:inherit!important}
 dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
 h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
 p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
-p,blockquote,dt,td.content,span.alt,summary{font-size:1.0625rem}
+p,blockquote,dt,td.content,td.hdlist1,span.alt,summary{font-size:1.0625rem}
 p{margin-bottom:1.25rem}
 .sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
 .exampleblock>.content{background:#fffef7;border-color:#e0e0dc;box-shadow:0 1px 4px #e0e0dc}
@@ -663,8 +661,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 4.4.0,</span>
-<span id="revdate">2024-11-19</span>
+<span id="revnumber">version 4.5.0,</span>
+<span id="revdate">2024-12-12</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -689,9 +687,8 @@ $(addBlockSwitches);
 <li><a href="#runtime-junit4">4.3. JUnit4</a></li>
 <li><a href="#runtimes-cucumber">4.4. Cucumber</a></li>
 <li><a href="#runtime-quarkus">4.5. QuarkusTest runtime</a></li>
-<li><a href="#runtime-main">4.6. Main CLI runtime</a></li>
-<li><a href="#runtime-sharded">4.7. Sharding Test Cases</a></li>
-<li><a href="#runtime-jbang">4.8. JBang</a></li>
+<li><a href="#runtime-sharded">4.6. Sharding Test Cases</a></li>
+<li><a href="#runtime-jbang">4.7. JBang</a></li>
 </ul>
 </li>
 <li><a href="#run-java">5. Running tests in Java</a>
@@ -1049,6 +1046,7 @@ $(addBlockSwitches);
 <li><a href="#testcontainers-localstack">39.4. LocalStack</a></li>
 <li><a href="#testcontainers-kafka">39.5. Kafka</a></li>
 <li><a href="#testcontainers-redpanda">39.6. Redpanda</a></li>
+<li><a href="#testcontainers-compose">39.7. Docker compose</a></li>
 </ul>
 </li>
 <li><a href="#functions">40. Functions</a>
@@ -1125,9 +1123,10 @@ $(addBlockSwitches);
 </li>
 <li><a href="#test-actors">43. Test actors</a>
 <ul class="sectlevel2">
-<li><a href="#define-test-actors">43.1. Define test actors</a></li>
-<li><a href="#link-test-actors">43.2. Link test actors</a></li>
-<li><a href="#disable-test-actors">43.3. Disable test actors</a></li>
+<li><a href="#test-actors-create">43.1. Create test actors</a></li>
+<li><a href="#test-actors-reference">43.2. Reference test actors</a></li>
+<li><a href="#test-actors-disable">43.3. Disable test actors</a></li>
+<li><a href="#test-actors-environment-setting">43.4. Test actor environment settings</a></li>
 </ul>
 </li>
 <li><a href="#test-suite-actions">44. Test suite actions</a>
@@ -1187,7 +1186,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 4.4.0</strong></p>
+<p><strong>Version: 4.5.0</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -2875,7 +2874,10 @@ to write feature stories in Gherkin syntax that trigger the predefined steps.</p
 <div class="sect2">
 <h3 id="runtime-quarkus"><a class="anchor" href="#runtime-quarkus"></a><a class="link" href="#runtime-quarkus">4.5. QuarkusTest runtime</a></h3>
 <div class="paragraph">
-<p>Quarkus has emerged into a popular enterprise Java framework. For unit and integration testing the Quarkus framework provides a special integrations with JUnit Jupiter. Citrus adds a Quarkus test resource that developers can use to include Citrus capabilities into arbitrary Quarkus tests.</p>
+<p>Quarkus has emerged into a popular enterprise Java framework.
+For unit and integration testing the Quarkus framework provides integrations with JUnit Jupiter.
+Citrus adds a Quarkus test resource implementation that allows developers to combine Citrus with Quarkus during testing.
+You can use the Citrus test resource annotations on your Quarkus tests and include Citrus capabilities into arbitrary Quarkus tests.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2900,10 +2902,12 @@ The Citrus QuarkusTest extension is shipped in a separate Maven module. You need
 </div>
 </div>
 <div class="paragraph">
-<p>Usually a Quarkus test is annotated with the <code>@QuarkusTest</code> or <code>QuarkusIntegrationTest</code> annotation. Users may add an annotation named <code>@CitrusSupport</code> in order to also enable Citrus capabilities on the test.</p>
+<p>Usually a Quarkus test is annotated with the <code>@QuarkusTest</code> or <code>QuarkusIntegrationTest</code> annotation.
+Users just add an annotation named <code>@CitrusSupport</code> to also enable Citrus capabilities on the test.</p>
 </div>
 <div class="paragraph">
-<p>The Citrus support will automatically hook into the QuarkusTest lifecycle management making sure to call the Citrus before/after suite and before/after test handlers.</p>
+<p>The Citrus support will automatically hook into the QuarkusTest lifecycle management to inject Citrus resources with <code>@CitrusResource</code> annotation.
+Also, the Citrus extension makes sure to start a proper Citrus instance and call before/after suite and before/after test handlers.</p>
 </div>
 <div class="paragraph">
 <p>This way you are able to combine Citrus with <code>@QuarkusTest</code> annotated classes very easily.</p>
@@ -2944,13 +2948,16 @@ The Citrus QuarkusTest extension is shipped in a separate Maven module. You need
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>@CitrusSupport</code> annotation enables the Citrus features on the test. First of all users may inject Citrus related resources such as <code>TestCaseRunner</code> or <code>TestContext</code>.</p>
+<p>The <code>@CitrusSupport</code> annotation enables the Citrus features on the test.
+First of all users may inject Citrus related resources such as <code>TestCaseRunner</code> or the <code>TestContext</code>.</p>
 </div>
 <div class="paragraph">
-<p>The <code>TestCaseRunner</code> reference runs arbitrary Citrus actions as part of the test.</p>
+<p>As usual the <code>TestCaseRunner</code> is the entrance to the Citrus domain specific language for running arbitrary Citrus actions as part of the test.</p>
 </div>
+<div class="sect3">
+<h4 id="runtime-quarkus-endpoint-config"><a class="anchor" href="#runtime-quarkus-endpoint-config"></a><a class="link" href="#runtime-quarkus-endpoint-config">4.5.1. Endpoint configuration</a></h4>
 <div class="paragraph">
-<p>The test is also able to configure Message endpoints.</p>
+<p>The test is able to configure Message endpoints to connect to different messaging transports as part of the test.</p>
 </div>
 <div class="listingblock">
 <div class="title">Configure message endpoints</div>
@@ -2987,14 +2994,333 @@ The Citrus QuarkusTest extension is shipped in a separate Maven module. You need
 </div>
 </div>
 <div class="paragraph">
-<p>Creating new message endpoints is very easy. Just use the proper endpoint builder and optionally bind the new endpoint to the Citrus bean registry via <code>BindToRegistry</code> annotation.</p>
+<p>Creating new message endpoints is very easy.
+Just use the proper endpoint builder and optionally bind the new endpoint to the Citrus bean registry via <code>@BindToRegistry</code> annotation.
+You may then use the message endpoint in all <code>send</code> and <code>receive</code> test actions in order to exchange messages.</p>
 </div>
 <div class="paragraph">
-<p>You may then use the message endpoint in all <code>send</code> and <code>receive</code> test actions in order to exchange messages.</p>
+<p>You may move the endpoint configuration into a separate class and load the endpoints with the configuration class as follows:</p>
+</div>
+<div class="listingblock">
+<div class="title">EndpointConfig.class</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">EndpointConfig</span> {
+
+    <span class="annotation">@BindToRegistry</span>
+    <span class="directive">public</span> KafkaEndpoint bookings() {
+        <span class="keyword">return</span> <span class="keyword">new</span> KafkaEndpointBuilder()
+            .topic(<span class="string"><span class="delimiter">&quot;</span><span class="content">bookings</span><span class="delimiter">&quot;</span></span>)
+            .build();
+    }
+}</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="runtime-main"><a class="anchor" href="#runtime-main"></a><a class="link" href="#runtime-main">4.6. Main CLI runtime</a></h3>
+<div class="paragraph">
+<p>The endpoint configuration class uses <code>@BindToRegistry</code> members or methods to add beans to the Citrus registry.
+The configuration class may be referenced by many tests then using the <code>@CitrusConfiguration</code> annotation.</p>
+</div>
+<div class="listingblock">
+<div class="title">Load endpoint config classes</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@QuarkusTest</span>
+<span class="annotation">@CitrusSupport</span>
+<span class="annotation">@CitrusConfiguration</span>(classes = EndpointConfig.class)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">DemoApplicationTest</span> {
+
+    <span class="annotation">@CitrusResource</span>
+    <span class="directive">private</span> KafkaEndpoint bookings;
+
+    <span class="annotation">@CitrusResource</span>
+    <span class="directive">private</span> TestCaseRunner t;
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> shouldVerifyDemoApp() {
+        t.when(
+            send()
+                .endpoint(bookings)
+                .message()
+                .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">How about Citrus!?</span><span class="delimiter">&quot;</span></span>)
+        );
+
+        t.when(
+            receive()
+                .endpoint(bookings)
+                .message()
+                .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Citrus rocks!</span><span class="delimiter">&quot;</span></span>)
+        );
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Citrus loads the configuration class and injects the <code>KafkaEndpoint</code> instance to the test with <code>@CitrusResource</code>  annotation.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="runtime-quarkus-dynamic-tests"><a class="anchor" href="#runtime-quarkus-dynamic-tests"></a><a class="link" href="#runtime-quarkus-dynamic-tests">4.5.2. Load dynamic tests</a></h4>
+<div class="paragraph">
+<p>Citrus supports many test languages besides writing tests in pure Java.
+Users can load tests written in XML, YAML, Groovy and many more via dynamic tests.</p>
+</div>
+<div class="listingblock">
+<div class="title">Load YAML tests</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@QuarkusTest</span>
+<span class="annotation">@CitrusSupport</span>
+<span class="annotation">@CitrusConfiguration</span>(classes = EndpointConfig.class)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">DemoApplicationTest</span> {
+
+    <span class="annotation">@CitrusTestFactory</span>
+    <span class="directive">public</span> Stream&lt;DynamicTest&gt; loadYamlTests() {
+        <span class="keyword">return</span> CitrusTestFactorySupport.factory(TestLoader.YAML).packageScan(<span class="string"><span class="delimiter">&quot;</span><span class="content">some.package.name</span><span class="delimiter">&quot;</span></span>);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The example above loads YAML test case definitions and runs those as dynamic tests with JUnit Jupiter.
+The package scan loads all files in the given folder and runs the tests via Citrus.
+All YAML tests are able to reference the message endpoints configured in the configuration class <code>EndpointConfig.class</code>.</p>
+</div>
+<div class="paragraph">
+<p>A sample YAML test may look like this:</p>
+</div>
+<div class="listingblock">
+<div class="title">my-test.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">my-test</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">send:</span><span class="content">
+      endpoint: bookings
+      message:
+        body:
+          data: How about Citrus!?</span></span>
+  - <span class="string"><span class="content">receive:</span><span class="content">
+      endpoint: bookings
+      timeout: 5000
+      message:
+        body:
+          data: Citrus rocks!</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="runtime-quarkus-application-properties"><a class="anchor" href="#runtime-quarkus-application-properties"></a><a class="link" href="#runtime-quarkus-application-properties">4.5.3. Set application properties</a></h4>
+<div class="paragraph">
+<p>The <code>@QuarkusTest</code> annotation will automatically start the application under test.
+Citrus provides the ability to programmatically set application properties before the Quarkus application is started.
+This is important when you need to overwrite configuration based on test message endpoints configured in the test.</p>
+</div>
+<div class="paragraph">
+<p>The next example shows a Citrus enabled Quarkus test that supplies a set of application properties to configure the application under test.</p>
+</div>
+<div class="listingblock">
+<div class="title">Supply application properties</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@QuarkusTest</span>
+<span class="annotation">@CitrusSupport</span>(applicationPropertiesSupplier = DemoAppConfigurationSupplier.class)
+<span class="annotation">@CitrusConfiguration</span>(classes = EndpointConfig.class)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">DemoApplicationTest</span> {
+
+    <span class="comment">// ...</span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>DemoAppConfiguration</code> class implements the <code>Supplier</code> interface and set a config property.
+This property will be set on the application under test.</p>
+</div>
+<div class="listingblock">
+<div class="title">DemoAppConfigurationSupplier.class</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">DemoAppConfigurationSupplier</span> <span class="directive">implements</span> ApplicationPropertiesSupplier {
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; get() {
+        <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; conf = <span class="keyword">new</span> Hasmap&lt;&gt;();
+        conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">quarkus.log.level</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">INFO</span><span class="delimiter">&quot;</span></span>);
+        conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">greeting.message</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello, Citrus rocks!</span><span class="delimiter">&quot;</span></span>);
+        <span class="keyword">return</span> conf;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The application properties supplier is able to set Quarkus properties as well as application domain properties.
+The example above sets <code>greeting.message</code> property which can be referenced in the Quarkus application:</p>
+</div>
+<div class="listingblock">
+<div class="title">DemoApplication</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ApplicationScoped</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">DemoApplication</span> {
+
+    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">Logger</span> logger = <span class="predefined-type">Logger</span>.getLogger(DemoApplication.class);
+
+    <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">greeting.message</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined-type">String</span> message;
+
+    <span class="type">void</span> onStart(<span class="annotation">@Observes</span> StartupEvent ev) {
+        logger.info(message);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="runtime-quarkus-testcontainers"><a class="anchor" href="#runtime-quarkus-testcontainers"></a><a class="link" href="#runtime-quarkus-testcontainers">4.5.4. Testcontainers support</a></h4>
+<div class="paragraph">
+<p>Citrus integrates with Testcontainers to easily start/stop Testcontainers instances as part of the test.
+You can leverage the Citrus Testcontainers features within a Quarkus test very easily.
+Citrus implements Quarkus test resources for each of the supported containers (AWS LocalStack, Kafka, Redpanda, &#8230;&#8203;).</p>
+</div>
+<div class="paragraph">
+<p>The following example starts an AWS LocalStack Testcontainers instance and uses the S3 service on that container to upload a file to the S3 bucket.
+The Quarkus application under test should handle this S3 file then.</p>
+</div>
+<div class="listingblock">
+<div class="title">AwsS3SourceTest</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@QuarkusTest</span>
+<span class="annotation">@CitrusSupport</span>
+<span class="annotation">@LocalStackContainerSupport</span>(services = LocalStackContainer.Service.S3, containerLifecycleListener = AwsS3SourceTest.class)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">AwsS3SourceTest</span> <span class="directive">implements</span> ContainerLifecycleListener&lt;LocalStackContainer&gt; {
+
+    <span class="annotation">@CitrusResource</span>
+    <span class="directive">private</span> TestCaseRunner tc;
+
+    <span class="annotation">@CitrusResource</span>
+    <span class="directive">private</span> LocalStackContainer localStackContainer;
+
+    <span class="annotation">@Test</span>
+    <span class="directive">public</span> <span class="type">void</span> shouldHandleUploadedS3File() {
+        tc.given(<span class="local-variable">this</span>::uploadS3File);
+
+        <span class="comment">// verify that the Quarkus application has handled the S3 file</span>
+    }
+
+    <span class="directive">private</span> <span class="type">void</span> uploadS3File(TestContext context) {
+        S3Client s3Client = createS3Client(localStackContainer);
+
+        CreateMultipartUploadResponse initResponse = s3Client.createMultipartUpload(b -&gt; b.bucket(s3BucketName).key(s3Key));
+        <span class="predefined-type">String</span> etag = s3Client.uploadPart(b -&gt; b.bucket(s3BucketName)
+                        .key(s3Key)
+                        .uploadId(initResponse.uploadId())
+                        .partNumber(<span class="integer">1</span>),
+                RequestBody.fromString(s3Data)).eTag();
+        s3Client.completeMultipartUpload(b -&gt; b.bucket(s3BucketName)
+                .multipartUpload(CompletedMultipartUpload.builder()
+                        .parts(<span class="predefined-type">Collections</span>.singletonList(CompletedPart.builder()
+                                .partNumber(<span class="integer">1</span>)
+                                .eTag(etag).build())).build())
+                .key(s3Key)
+                .uploadId(initResponse.uploadId()));
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; started(LocalStackContainer container) {
+        S3Client s3Client = createS3Client(container);
+
+        s3Client.createBucket(b -&gt; b.bucket(s3BucketName));
+
+        <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; conf = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;&gt;();
+        conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.app.aws-s3-source.accessKey</span><span class="delimiter">&quot;</span></span>, container.getAccessKey());
+        conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.app.aws-s3-source.secretKey</span><span class="delimiter">&quot;</span></span>, container.getSecretKey());
+        conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.app.aws-s3-source.region</span><span class="delimiter">&quot;</span></span>, container.getRegion());
+        conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.app.aws-s3-source.bucketNameOrArn</span><span class="delimiter">&quot;</span></span>, s3BucketName);
+        conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.app.aws-s3-source.uriEndpointOverride</span><span class="delimiter">&quot;</span></span>, container.getServiceEndpoint().toString());
+        conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.app.aws-s3-source.overrideEndpoint</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span>);
+        conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.app.aws-s3-source.forcePathStyle</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span>);
+
+        <span class="keyword">return</span> conf;
+    }
+
+    <span class="directive">private</span> <span class="directive">static</span> S3Client createS3Client(LocalStackContainer container) {
+        <span class="keyword">return</span> S3Client.builder()
+                .endpointOverride(container.getServiceEndpoint())
+                .credentialsProvider(
+                        StaticCredentialsProvider.create(
+                                AwsBasicCredentials.create(container.getAccessKey(), container.getSecretKey())
+                        )
+                )
+                .forcePathStyle(<span class="predefined-constant">true</span>)
+                .region(<span class="predefined-type">Region</span>.of(container.getRegion()))
+                .build();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A few things happened in this example and let&#8217;s explain those features one after another.
+First thing to notice is the <code>@LocalStackContainerSupport</code> annotation that makes Citrus run the AWS LocalStack Testcontainers instance.
+Also, the annotation provides the enabled services on that container (<code>services = LocalStackContainer.Service.S3</code>).
+This starts the Testcontainers instance as part of the Quarkus test.</p>
+</div>
+<div class="paragraph">
+<p>The test also implements the <code>ContainerLifecycleListener</code> interface.
+This enables the test to handle the container instance after it has been started.
+This is a good place to create an S3 client and the bucket for the test.</p>
+</div>
+<div class="listingblock">
+<div class="title">Create S3 client</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Override</span>
+<span class="directive">public</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; started(LocalStackContainer container) {
+    S3Client s3Client = createS3Client(container);
+
+    s3Client.createBucket(b -&gt; b.bucket(s3BucketName));
+
+    <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; conf = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;&gt;();
+    conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.app.aws-s3-source.accessKey</span><span class="delimiter">&quot;</span></span>, container.getAccessKey());
+    conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.app.aws-s3-source.secretKey</span><span class="delimiter">&quot;</span></span>, container.getSecretKey());
+    conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.app.aws-s3-source.region</span><span class="delimiter">&quot;</span></span>, container.getRegion());
+    conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.app.aws-s3-source.bucketNameOrArn</span><span class="delimiter">&quot;</span></span>, s3BucketName);
+    conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.app.aws-s3-source.uriEndpointOverride</span><span class="delimiter">&quot;</span></span>, container.getServiceEndpoint().toString());
+    conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.app.aws-s3-source.overrideEndpoint</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span>);
+    conf.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.app.aws-s3-source.forcePathStyle</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span>);
+
+    <span class="keyword">return</span> conf;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Also, the started listener may return some application properties that get set for the Quarkus application under test.
+This is the opportunity to set the Testcontainers connection settings for the Quarkus application.</p>
+</div>
+<div class="paragraph">
+<p>Obviously the Quarkus application uses some property based configuration with the <code>my.app.*</code> properties.
+The test is able to reference the Testcontainers exposed settings as values for these properties (e.g. <code>my.app.aws-s3-source.accessKey=container.getAccessKey()</code>).</p>
+</div>
+<div class="paragraph">
+<p>With this configuration in place the test is able to upload and S3 file to the test bucket on the Testcontainers instance with the <code>uploadS3File()</code> method.
+This should trigger the Quarkus application under test to handle the new file accordingly.
+We can add some verification and assertion steps to verify that the Quarkus application has handled the S3 file.</p>
+</div>
+<div class="paragraph">
+<p>This is how Citrus is able to start Testcontainers instances as part of a Quarkus test.
+The application properties supplier as well as the container lifecycle listener interfaces allow us to connect the Quarkus application with the Testcontainers instance.
+The test is able to use the services on the Testcontainers instance to trigger some test data that is consumed by the application under test.</p>
+</div>
+<div class="paragraph">
+<p>Please also have a look into the other provided Testcontainers annotations in Citrus:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>@LocalStackContainerSupport</p>
+</li>
+<li>
+<p>@KakfaContainerSupport</p>
+</li>
+<li>
+<p>@RedpandaContainerSupport</p>
+</li>
+<li>
+<p>@TestcontainersSupport
+== Main CLI runtime</p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
 <p>Citrus provides a main class that you can run from command line.</p>
 </div>
@@ -3028,8 +3354,9 @@ project.
 </div>
 </div>
 </div>
+</div>
 <div class="sect2">
-<h3 id="runtime-sharded"><a class="anchor" href="#runtime-sharded"></a><a class="link" href="#runtime-sharded">4.7. Sharding Test Cases</a></h3>
+<h3 id="runtime-sharded"><a class="anchor" href="#runtime-sharded"></a><a class="link" href="#runtime-sharded">4.6. Sharding Test Cases</a></h3>
 <div class="paragraph">
 <p>Sharding is a powerful option within the Citrus framework designed to facilitate the loading and execution of test cases in a distributed manner.
 Sharding test execution is expected to save roughly <code>[TIME] * 1 / 2</code> of execution time per runner.</p>
@@ -3038,7 +3365,7 @@ Sharding test execution is expected to save roughly <code>[TIME] * 1 / 2</code> 
 <p>This chapter provides an overview of the available functionality and guides you through the process of configuring and using test loaders with sharding.</p>
 </div>
 <div class="sect3">
-<h4 id="runtime-sharded-configuration"><a class="anchor" href="#runtime-sharded-configuration"></a><a class="link" href="#runtime-sharded-configuration">4.7.1. Configuration</a></h4>
+<h4 id="runtime-sharded-configuration"><a class="anchor" href="#runtime-sharded-configuration"></a><a class="link" href="#runtime-sharded-configuration">4.6.1. Configuration</a></h4>
 <div class="paragraph">
 <p>First of all, you need to wrap your test case loading with the <code>org.citrusframework.sharding.Shard#createShard(Stream&lt;T&gt; items)</code> method.
 Have a look at the previous runtime chapters to get to know how to do this with the test framework of your choice.</p>
@@ -3097,7 +3424,7 @@ The following two key configuration parameters are required for sharded test loa
 </div>
 </div>
 <div class="sect2">
-<h3 id="runtime-jbang"><a class="anchor" href="#runtime-jbang"></a><a class="link" href="#runtime-jbang">4.8. JBang</a></h3>
+<h3 id="runtime-jbang"><a class="anchor" href="#runtime-jbang"></a><a class="link" href="#runtime-jbang">4.7. JBang</a></h3>
 <div class="paragraph">
 <p>You can run Citrus tests with JBang.
 Running Citrus via JBang does not require any project setup which is fantastic for fast prototyping of integration tests.
@@ -3159,7 +3486,7 @@ Total tests run: 1, Passes: 1, Failures: 0, Skips: 0
 </div>
 </div>
 <div class="sect3">
-<h4 id="runtime-jbang-install"><a class="anchor" href="#runtime-jbang-install"></a><a class="link" href="#runtime-jbang-install">4.8.1. Install Citrus JBang app</a></h4>
+<h4 id="runtime-jbang-install"><a class="anchor" href="#runtime-jbang-install"></a><a class="link" href="#runtime-jbang-install">4.7.1. Install Citrus JBang app</a></h4>
 <div class="paragraph">
 <p>For a more convenient way to use the Citrus JBang scripts you can install Citrus as a JBang app.</p>
 </div>
@@ -3181,7 +3508,7 @@ jbang install citrus@citrusframework/citrus</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="runtime-jbang-run"><a class="anchor" href="#runtime-jbang-run"></a><a class="link" href="#runtime-jbang-run">4.8.2. Run tests</a></h4>
+<h4 id="runtime-jbang-run"><a class="anchor" href="#runtime-jbang-run"></a><a class="link" href="#runtime-jbang-run">4.7.2. Run tests</a></h4>
 <div class="paragraph">
 <p>You can directly run test sources with Citrus JBang.
 This includes test sources written in Java, XML, YAML, Cucumber.</p>
@@ -3333,7 +3660,7 @@ You may add the additional modules to the <code>jbang.properties</code> as descr
 </div>
 </div>
 <div class="sect3">
-<h4 id="runtime-jbang-dependencies"><a class="anchor" href="#runtime-jbang-dependencies"></a><a class="link" href="#runtime-jbang-dependencies">4.8.3. Additional JBang dependencies</a></h4>
+<h4 id="runtime-jbang-dependencies"><a class="anchor" href="#runtime-jbang-dependencies"></a><a class="link" href="#runtime-jbang-dependencies">4.7.3. Additional JBang dependencies</a></h4>
 <div class="paragraph">
 <p>Citrus JBang comes with a set of default dependencies that makes the scripts run as tests.</p>
 </div>
@@ -3379,7 +3706,7 @@ In case your tests uses an additional feature from the Citrus project you may ne
 <div class="title">jbang.properties</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="properties"># Declare required additional dependencies
-run.deps=org.citrusframework:citrus-camel:4.5.0-SNAPSHOT,org.citrusframework:citrus-testcontainers:4.5.0-SNAPSHOT,org.citrusframework:citrus-kafka:4.5.0-SNAPSHOT</code></pre>
+run.deps=org.citrusframework:citrus-camel:4.6.0-SNAPSHOT,org.citrusframework:citrus-testcontainers:4.6.0-SNAPSHOT,org.citrusframework:citrus-kafka:4.6.0-SNAPSHOT</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3403,7 +3730,7 @@ you need to add this YAKS runtime dependency accordingly: <code>org.citrusframew
 </div>
 </div>
 <div class="sect3">
-<h4 id="runtime-jbang-clipboard"><a class="anchor" href="#runtime-jbang-clipboard"></a><a class="link" href="#runtime-jbang-clipboard">4.8.4. Run from clipboard</a></h4>
+<h4 id="runtime-jbang-clipboard"><a class="anchor" href="#runtime-jbang-clipboard"></a><a class="link" href="#runtime-jbang-clipboard">4.7.4. Run from clipboard</a></h4>
 <div class="paragraph">
 <p>You can run tests from your current clipboard.
 Just use the file name <code>clipboard.xxx</code> where the file extension defines the type of the test source (<code>.java</code>, <code>.yaml</code>, <code>.xml</code>, <code>.groovy</code>, <code>.feature</code>).</p>
@@ -3416,7 +3743,7 @@ Just use the file name <code>clipboard.xxx</code> where the file extension defin
 </div>
 </div>
 <div class="sect3">
-<h4 id="runtime-jbang-list"><a class="anchor" href="#runtime-jbang-list"></a><a class="link" href="#runtime-jbang-list">4.8.5. List tests</a></h4>
+<h4 id="runtime-jbang-list"><a class="anchor" href="#runtime-jbang-list"></a><a class="link" href="#runtime-jbang-list">4.7.5. List tests</a></h4>
 <div class="paragraph">
 <p>The <code>ls</code> command lists all running Citrus tests.
 These tests may be started</p>
@@ -3972,7 +4299,7 @@ You can use the environment settings <code>citrus.java.config</code> and/or <cod
     <span class="directive">private</span> MessageQueue queue = <span class="keyword">new</span> DefaultMessageQueue(<span class="string"><span class="delimiter">&quot;</span><span class="content">fooQueue</span><span class="delimiter">&quot;</span></span>);
 
     <span class="annotation">@BindToRegistry</span>
-    <span class="directive">public</span> <span class="type">void</span> foo() {
+    <span class="directive">public</span> FooEndpoint foo() {
         <span class="keyword">return</span> <span class="keyword">new</span> FooEndpoint();
     }
 }</code></pre>
@@ -19290,7 +19617,7 @@ Where <code>T</code> is the current timestamp and <code>n</code> is the maximum 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>eventLookbackWindow</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>event-lookback-window</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">This defines how far back in time the selector should search for messages.
-  When using XML configuration, the event lookback window must be specified as an &lt;&lt;<a href="https://en.wikipedia.org/wiki/ISO_8601,ISO-8601" class="bare">https://en.wikipedia.org/wiki/ISO_8601,ISO-8601</a> duration string&gt;&gt;.
+  When using XML configuration, the event lookback window must be specified as an <a href="#https://en.wikipedia.org/wiki/ISO_8601">ISO-8601 duration string</a>.
   For example, <code>PT1S</code> represents a duration of 1 second.</p></td>
 </tr>
 <tr>
@@ -19305,7 +19632,7 @@ Where <code>T</code> is the current timestamp and <code>n</code> is the maximum 
 <td class="tableblock halign-left valign-top"><p class="tableblock">The timeout duration for each poll operation when consuming messages from Kafka.
   This value determines how long the consumer will wait for new records in each poll cycle.
   It is not the overall receive action timeout!
-  When using XML configuration, the poll timeout must be specified as an &lt;&lt;<a href="https://en.wikipedia.org/wiki/ISO_8601,ISO-8601" class="bare">https://en.wikipedia.org/wiki/ISO_8601,ISO-8601</a> duration string&gt;&gt;.
+  When using XML configuration, the poll timeout must be specified as an <a href="#https://en.wikipedia.org/wiki/ISO_8601">ISO-8601 duration string</a>.
   For example, <code>PT0.100S</code> represents a duration of 1 millisecond.</p></td>
 </tr>
 </tbody>
@@ -37599,6 +37926,174 @@ Citrus exposes special test variables that represent connection settings for the
 <p>You can use these test variables to connect to the Redpanda Testcontainers instance.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="testcontainers-compose"><a class="anchor" href="#testcontainers-compose"></a><a class="link" href="#testcontainers-compose">39.7. Docker compose</a></h3>
+<div class="paragraph">
+<p>The Testcontainers project provides the opportunity to interact with Docker compose.
+In Citrus you can start a Docker compose specification (<code>compose.yaml</code>) as part of the test.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+By default, the Testcontainers compose container uses your local Docker compose executable binary. This means you need to have Docker compose installed on your machine. You can verify the installation with (<code>docker compose version</code>).
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If for some reason you are not able to install Docker compose you may also disable the <code>useComposeBinary</code> setting in Citrus (e.g. via System property or environment variable). The Testcontainers library will then use arbitrary Docker containers in combination with an ambassador container that stars and manages the services defined in the Docker compose specification.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A Docker compose specification may look like this:</p>
+</div>
+<div class="listingblock">
+<div class="title">compose.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">services</span>:
+  <span class="key">web</span>:
+    <span class="key">image</span>: <span class="string"><span class="content">nginx:latest</span></span>
+    <span class="key">ports</span>:
+      - <span class="string"><span class="content">'8080:80'</span></span>
+    <span class="key">volumes</span>:
+      - <span class="string"><span class="content">./html:/usr/share/nginx/html:ro</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The specification defines one or more services that are started as part of the <code>compose up</code> command:</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> composeTest() {
+    given(testcontainers()
+            .compose()
+            .up()
+            .file(<span class="string"><span class="delimiter">&quot;</span><span class="content">compose.yaml</span><span class="delimiter">&quot;</span></span>));
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ComposeTest</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;actions&gt;</span>
+        <span class="tag">&lt;testcontainers&gt;</span>
+          <span class="tag">&lt;compose&gt;</span>
+            <span class="tag">&lt;up</span> <span class="attribute-name">file</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">compose.yaml</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+          <span class="tag">&lt;/compose&gt;</span>
+        <span class="tag">&lt;/testcontainers&gt;</span>
+    <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">ComposeTest</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">testcontainers:</span><span class="content">
+      compose:
+        up:
+          file: &quot;compose.yaml&quot;</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The Docker containers started with Docker compose will be automatically stopped and removed after the test.
+You can change this behavior by setting one of the System property or environment variable settings: <code>citrus.testcontainers.compose.auto.remove.resources=false</code> or <code>CITRUS_TESTCONTAINERS_COMPOSE_AUTO_REMOVE_RESOURCES=false</code>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You may explicitly stop all Docker containers with the <code>compose down</code> command:</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> composeTest() {
+    given(testcontainers()
+            .compose()
+            .down());
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ComposeTest</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;actions&gt;</span>
+        <span class="tag">&lt;testcontainers&gt;</span>
+          <span class="tag">&lt;compose&gt;</span>
+            <span class="tag">&lt;down</span><span class="tag">/&gt;</span>
+          <span class="tag">&lt;/compose&gt;</span>
+        <span class="tag">&lt;/testcontainers&gt;</span>
+    <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">ComposeTest</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">testcontainers:</span><span class="content">
+      compose:
+        down: {}</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The <code>compose down</code> test action searches for a single Testcontainers compose container that has been started before.
+In case you are operating with multiple <code>compose up</code> commands in a test you may identify each of those compose containers with a unique name and reference this name in the <code>compose down</code> test action.
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -39481,76 +39976,295 @@ However when more complex JSON payloads apply for translation we might reach the
 <h2 id="test-actors"><a class="anchor" href="#test-actors"></a><a class="link" href="#test-actors">43. Test actors</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The concept of test actors came to our mind when reusing Citrus test cases in end-to-end test scenarios. Usually Citrus simulates all interface partners within a test case which is great for continuous integration testing. In end-to-end integration test scenarios some of our interface partners may be real and alive. Some other interface partners still require Citrus simulation logic.</p>
+<p>The concept of test actors is a way to enable/disable a group of tests actions and message endpoints based on configuration.
+Test actors help you to use the same tests in different environments where some of the participating services may be available or need to be simulated by Citrus.
+In particular in end-to-end test scenarios some interface partners may be deployed and ready for participating in the test.
+In other environments no interface partners are available and Citrus needs to simulate all interfaces accordingly.
+Test actors allows us to use the very same test definition in both environments by just adjusting the Citrus configuration.</p>
 </div>
 <div class="paragraph">
-<p>It would be great if we could reuse the Citrus integration tests in this test setup as we have the complete test flow of messages available in the Citrus tests. We only have to remove the simulated send/receive actions for those real interface partner applications which are available in our end-to-end test setup.</p>
+<p>Usually Citrus simulates all interface partners within a test case which is great for continuous integration testing where just the System Under Test is deployed and all surrounding infrastructure and partners get simulated.
+In end-to-end integration test scenarios some of our interface partners may be deployed and online.
+Some other interface partners still require Citrus simulation logic.</p>
 </div>
 <div class="paragraph">
-<p>With test actors we have the opportunity to link test actions, in particular send/receive message actions, to a test actor. The test actor can be disabled in configuration very easy and following from that all linked send/receive actions are disabled, too. One Citrus test case is runnable with different test setup scenarios where different partner applications on the one hand are available as real life applications and on the other hand require simulation.</p>
+<p>It would be great if we were able to reuse the Citrus integration tests in all of these described test environments.
+The Citrus test describes the complete test flow of messages, we only have to remove the simulated send/receive actions for those interface partner applications that are deployed and available in an end-to-end test setup.</p>
+</div>
+<div class="paragraph">
+<p>With test actors we have the opportunity to link test actions, in particular send/receive message actions, to a named actor.
+The test actor can be enabled/disabled via configuration and following from that all linked test actions are enabled/disabled, too.</p>
+</div>
+<div class="paragraph">
+<p>This means the same Citrus test case is runnable with different test actor configurations where some services are deployed as real applications and others may require simulation by Citrus.</p>
 </div>
 <div class="sect2">
-<h3 id="define-test-actors"><a class="anchor" href="#define-test-actors"></a><a class="link" href="#define-test-actors">43.1. Define test actors</a></h3>
+<h3 id="test-actors-create"><a class="anchor" href="#test-actors-create"></a><a class="link" href="#test-actors-create">43.1. Create test actors</a></h3>
 <div class="paragraph">
-<p>First thing to do is to define one or more test actors in Citrus configuration. A test actor represents a participating party (e.g. interface partner, backend application). We write the test actors into the central Spring application context. We can use a special Citrus Spring XML schema so definitions are quite easy:</p>
+<p>First thing to do is to define one or more test actors in the Citrus configuration.
+A test actor represents a participating party (e.g. interface partner, backend application, service).</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
+<p>We define the test actors as beans and add them to the Citrus bean registry.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Citrus Bean</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus:actor</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">travelagency</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">TRAVEL_AGENCY</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-<span class="tag">&lt;citrus:actor</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royalairline</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ROYAL_AIRLINE</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-<span class="tag">&lt;citrus:actor</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">smartariline</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">SMART_AIRLINE</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@BindToRegistry</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">travel_agency</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> TestActor travelAgencyActor() {
+    <span class="keyword">return</span> <span class="keyword">new</span> TestActor(<span class="string"><span class="delimiter">&quot;</span><span class="content">travel_agency</span><span class="delimiter">&quot;</span></span>);
+}
+
+<span class="annotation">@BindToRegistry</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> TestActor royalAirlineActor() {
+    <span class="keyword">return</span> <span class="keyword">new</span> TestActor(<span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span>);
+}
+
+<span class="annotation">@BindToRegistry</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">smart_ariline</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> TestActor smartAirlineActor() {
+    <span class="keyword">return</span> <span class="keyword">new</span> TestActor(<span class="string"><span class="delimiter">&quot;</span><span class="content">smart_ariline</span><span class="delimiter">&quot;</span></span>);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring Bean</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Bean</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">travel_agency</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> TestActor travelAgencyActor() {
+    <span class="keyword">return</span> <span class="keyword">new</span> TestActor(<span class="string"><span class="delimiter">&quot;</span><span class="content">travel_agency</span><span class="delimiter">&quot;</span></span>);
+}
+
+<span class="annotation">@Bean</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> TestActor royalAirlineActor() {
+    <span class="keyword">return</span> <span class="keyword">new</span> TestActor(<span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span>);
+}
+
+<span class="annotation">@Bean</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">smart_ariline</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> TestActor smartAirlineActor() {
+    <span class="keyword">return</span> <span class="keyword">new</span> TestActor(<span class="string"><span class="delimiter">&quot;</span><span class="content">smart_ariline</span><span class="delimiter">&quot;</span></span>);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:citrus</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/config</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;citrus:actor</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">travel_agency</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">TRAVEL_AGENCY</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;citrus:actor</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ROYAL_AIRLINE</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;citrus:actor</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">smart_ariline</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">SMART_AIRLINE</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The listing above defines three test actors participating in our test scenario. A travel agency application which is simulated by Citrus as a calling client, the smart airline application and a royal airline application. Now we have the test actors defined we can link those to message sender/receiver instances and/or test actions within our test case.</p>
+<p>The listing above defines three test actors participating in our test scenario.
+A <code>travel_agency</code> application which is simulated by Citrus as a calling client, the <code>smart_airline</code> application and a <code>royal_airline</code> application.
+Now we have the test actors defined we can link those to message sender/receiver instances and/or test actions within our test case.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="link-test-actors"><a class="anchor" href="#link-test-actors"></a><a class="link" href="#link-test-actors">43.2. Link test actors</a></h3>
+<h3 id="test-actors-reference"><a class="anchor" href="#test-actors-reference"></a><a class="link" href="#test-actors-reference">43.2. Reference test actors</a></h3>
 <div class="paragraph">
-<p>We need to link the test actors to message send and receive actions in our test cases. We can do this in two different ways. First we can set a test actor reference on a message sender and message receiver.</p>
+<p>We need to reference the test actor and set it on a message send or receive action in our test case.
+We can do this in two different ways.
+First of all we can set a test actor reference on a message endpoint.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Citrus Bean</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@BindToRegistry</span>
+<span class="directive">public</span> JmsSyncEndpoint royalAirlineBookingEndpoint() {
+    <span class="keyword">return</span> JmsEndpoints.jms()
+                .synchronous()
+                .destination(<span class="string"><span class="delimiter">&quot;</span><span class="content">${royal.airline.request.queue}</span><span class="delimiter">&quot;</span></span>)
+                .actor(royalAirlineActor())
+                .build();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring Bean</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Bean</span>
+<span class="directive">public</span> JmsSyncEndpoint royalAirlineBookingEndpoint() {
+    <span class="keyword">return</span> JmsEndpoints.jms()
+                .synchronous()
+                .destination(<span class="string"><span class="delimiter">&quot;</span><span class="content">${royal.airline.request.queue}</span><span class="delimiter">&quot;</span></span>)
+                .actor(royalAirlineActor())
+                .build();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-jms:sync-endpoint</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royalAirlineBookingEndpoint</span><span class="delimiter">&quot;</span></span>
         <span class="attribute-name">destination-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${royal.airline.request.queue}</span><span class="delimiter">&quot;</span></span>
-        <span class="attribute-name">actor</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royalairline</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+        <span class="attribute-name">actor</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Now all test actions that are using these message receiver and message sender instances are linked to the test actor. In addition to that you can also explicitly link test actions to test actors in a test.</p>
+<p>Now all test actions that are using this message endpoint are linked to the test actor.
+In addition to that you can also explicitly link test actions to a test actor.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;receive</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royalAirlineBookingEndpoint</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">actor</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royalairline</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;message&gt;</span>
-        [...]
-    <span class="tag">&lt;/message&gt;</span>
-<span class="tag">&lt;/receive&gt;</span>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> airlineTest() {
+    <span class="error">$</span>(receive(<span class="string"><span class="delimiter">&quot;</span><span class="content">royalAirlineBookingEndpoint</span><span class="delimiter">&quot;</span></span>)
+        .message()
+        .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">...</span><span class="delimiter">&quot;</span></span>)
+        .actor(<span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span>)
+    );
 
-<span class="tag">&lt;send</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royalAirlineBookingEndpoint</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">actor</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royalairline</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;message&gt;</span>
-        [...]
-    <span class="tag">&lt;/message&gt;</span>
-<span class="tag">&lt;/send&gt;</span></code></pre>
+    <span class="error">$</span>(send(<span class="string"><span class="delimiter">&quot;</span><span class="content">royalAirlineBookingEndpoint</span><span class="delimiter">&quot;</span></span>)
+        .message()
+        .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">...</span><span class="delimiter">&quot;</span></span>)
+        .actor(<span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span>)
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">AirlineTest</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;actions&gt;</span>
+        <span class="tag">&lt;receive</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royalAirlineBookingEndpoint</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">actor</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;message&gt;</span>
+                <span class="comment">&lt;!-- ... --&gt;</span>
+            <span class="tag">&lt;/message&gt;</span>
+        <span class="tag">&lt;/receive&gt;</span>
+
+        <span class="tag">&lt;send</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royalAirlineBookingEndpoint</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">actor</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;message&gt;</span>
+                <span class="comment">&lt;!-- ... --&gt;</span>
+            <span class="tag">&lt;/message&gt;</span>
+        <span class="tag">&lt;/send&gt;</span>
+    <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">AirlineTest</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">receive:</span><span class="content">
+      endpoint: &quot;royalAirlineBookingEndpoint&quot;
+      actor: &quot;royal_airline&quot;
+      message: {}</span></span>
+  - <span class="string"><span class="content">send:</span><span class="content">
+      endpoint: &quot;royalAirlineBookingEndpoint&quot;
+      actor: &quot;royal_airline&quot;
+      message: {}</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;testcase</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">AirlineTest</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+        <span class="tag">&lt;actions&gt;</span>
+            <span class="tag">&lt;receive</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royalAirlineBookingEndpoint</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">actor</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+                <span class="tag">&lt;message&gt;</span>
+                    <span class="comment">&lt;!-- ... --&gt;</span>
+                <span class="tag">&lt;/message&gt;</span>
+            <span class="tag">&lt;/receive&gt;</span>
+
+            <span class="tag">&lt;send</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royalAirlineBookingEndpoint</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">actor</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+                <span class="tag">&lt;message&gt;</span>
+                    <span class="comment">&lt;!-- ... --&gt;</span>
+                <span class="tag">&lt;/message&gt;</span>
+            <span class="tag">&lt;/send&gt;</span>
+        <span class="tag">&lt;/actions&gt;</span>
+    <span class="tag">&lt;/testcase&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This explicitly links test actors to test actions so you can decide which link should be set without having to rely on the message receiver and sender configuration.</p>
+<p>This explicitly links the test actor named <code>royal_ariline</code> to test actions.
+The test actor may be enabled/disabled according to the test environment.
+All linked test actions and message endpoints will be skipped when the referenced test actor is disabled.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="disable-test-actors"><a class="anchor" href="#disable-test-actors"></a><a class="link" href="#disable-test-actors">43.3. Disable test actors</a></h3>
+<h3 id="test-actors-disable"><a class="anchor" href="#test-actors-disable"></a><a class="link" href="#test-actors-disable">43.3. Disable test actors</a></h3>
 <div class="paragraph">
-<p>Usually both airline applications are simulated in our integration tests. But this time we want to change this by introducing a royal airline application which is online as a real application instance. So we need to skip all simulated message interactions for the royal airline application in our Citrus tests. This is easy as we have linked all send/receive actions to one of our test actors. So we can disable the royal airline test actor in our configuration:</p>
+<p>By default, test actors are enabled.
+In some environments it may be required to disable the test actor and all its linked test actions and message endpoints though.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
+<p>In the airline example usually both airline applications are simulated in the integration tests.
+Assume that there is a test environment where one of the simulated applications (e.g. the <code>royal_airline</code> application) is available as a real application instance deployed.
+In this scenario the Citrus tests should skip all simulated message interactions for the <code>royal_airline</code> application and the real application instance in the test environment should consume the messages instead.</p>
+</div>
+<div class="paragraph">
+<p>This is easy as we have linked all send/receive actions to one of our test actors.
+So we can disable the <code>royal_airline</code> test actor in our configuration:</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Citrus Bean</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus:actor</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royalairline</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ROYAL_AIRLINE</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">disabled</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@BindToRegistry</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">travel_agency</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> TestActor travelAgencyActor() {
+    <span class="keyword">return</span> <span class="keyword">new</span> TestActor(<span class="string"><span class="delimiter">&quot;</span><span class="content">travel_agency</span><span class="delimiter">&quot;</span></span>);
+}
+
+<span class="annotation">@BindToRegistry</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> TestActor royalAirlineActor() {
+    TestActor royalAirlineActor = <span class="keyword">new</span> TestActor(<span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span>);
+    royalAirlineActor.setDisabled(<span class="predefined-constant">true</span>);
+    <span class="keyword">return</span> royalAirlineActor;
+}
+
+<span class="annotation">@BindToRegistry</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">smart_ariline</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> TestActor smartAirlineActor() {
+    <span class="keyword">return</span> <span class="keyword">new</span> TestActor(<span class="string"><span class="delimiter">&quot;</span><span class="content">smart_ariline</span><span class="delimiter">&quot;</span></span>);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring Bean</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Bean</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">travel_agency</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> TestActor travelAgencyActor() {
+    <span class="keyword">return</span> <span class="keyword">new</span> TestActor(<span class="string"><span class="delimiter">&quot;</span><span class="content">travel_agency</span><span class="delimiter">&quot;</span></span>);
+}
+
+<span class="annotation">@Bean</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> TestActor royalAirlineActor() {
+    TestActor royalAirlineActor = <span class="keyword">new</span> TestActor(<span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span>);
+    royalAirlineActor.setDisabled(<span class="predefined-constant">true</span>);
+    <span class="keyword">return</span> royalAirlineActor;
+}
+
+<span class="annotation">@Bean</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">smart_ariline</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> TestActor smartAirlineActor() {
+    <span class="keyword">return</span> <span class="keyword">new</span> TestActor(<span class="string"><span class="delimiter">&quot;</span><span class="content">smart_ariline</span><span class="delimiter">&quot;</span></span>);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:citrus</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/config</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;citrus:actor</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">travel_agency</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">TRAVEL_AGENCY</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;citrus:actor</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">royal_airline</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ROYAL_AIRLINE</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">disabled</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;citrus:actor</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">smart_ariline</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">SMART_AIRLINE</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Any test action linked to this test actor is now skipped. As we introduced a real royal airline application in our test scenario the requests get answered and the test should be successful within this end-to-end test scenario. The travel agency and the smart airline still get simulated by Citrus. This is a perfect way of reusing integration tests in different test scenarios where you enable and disable simulated participating parties in Citrus.</p>
+<p>Any test action linked to this test actor <code>royal_airline</code> is now skipped in the test execution.
+The real <code>royal_airline</code> application available in our test scenario will handle the requests instead.
+The <code>travel_agency</code> and the <code>smart_airline</code> applications still get simulated by Citrus.</p>
+</div>
+<div class="paragraph">
+<p>This is a perfect way of reusing integration tests in different test scenarios where you enable and disable simulated participating parties in Citrus.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -39559,10 +40273,45 @@ However when more complex JSON payloads apply for translation we might reach the
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Server ports may be of special interest when dealing with different test scenarios. You may have to also disable a Citrus embedded Jetty server instance in order to avoid port binding conflicts and you may have to wire endpoint URIs accordingly before executing a test. The real life application may not use the same port and ip as the Citrus embedded servers for simulation.
+Server ports may be of special interest when dealing with different test scenarios.
+You may have to also disable a Citrus embedded Jetty server instance in order to avoid port binding conflicts.
+You may have to wire endpoint URIs accordingly before executing a test.
+The real life application may not use the same port and IP address as the Citrus embedded servers for simulation.
 </td>
 </tr>
 </table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="test-actors-environment-setting"><a class="anchor" href="#test-actors-environment-setting"></a><a class="link" href="#test-actors-environment-setting">43.4. Test actor environment settings</a></h3>
+<div class="paragraph">
+<p>You can enable/disable the test actor also by using System property or environment variable settings.
+The property and environment variable names follow a specific formatting that includes the test actor name:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>citrus.test.actor.&lt;name&gt;.enabled=true/false</code></p>
+</li>
+<li>
+<p><code>CITRUS_TEST_ACTOR_&lt;NAME&gt;_ENABLED=true/false</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When the environment setting is available on the test host the test actor with the referenced name is enabled/disabled.</p>
+</div>
+<div class="paragraph">
+<p>You can set these properties in the <code>citrus-application.properties</code> for instance:</p>
+</div>
+<div class="listingblock">
+<div class="title">citrus-application.properties</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties">citrus.test.actor.royal_airline.enabled=false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This disables the test actor named <code>royal_airline</code> and skips all its linked test actions and message endpoints.</p>
 </div>
 </div>
 </div>
@@ -42130,8 +42879,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 4.4.0<br>
-Last updated 2024-11-19 22:02:16 +0100
+Version 4.5.0<br>
+Last updated 2024-12-11 14:40:12 +0100
 </div>
 </div>
 <style>
