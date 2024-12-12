@@ -32,7 +32,7 @@
 
             <http:receive-request server="httpServer">
                 <http:PUT path="/api/v3/ext/pet/form/1234">
-                    <http:headers content-type="application/x-www-form-urlencoded;charset=UTF-8" accept="@contains('application/json')@"/>
+                    <http:headers content-type="application/x-www-form-urlencoded" accept="@contains('application/json')@"/>
                     <http:body>
                         <http:validate>
                             <http:script type="groovy">
