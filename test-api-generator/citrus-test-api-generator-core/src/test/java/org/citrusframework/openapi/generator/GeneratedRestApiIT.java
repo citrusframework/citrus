@@ -56,7 +56,6 @@ import org.citrusframework.openapi.generator.rest.petstore.request.PetApi;
 import org.citrusframework.openapi.generator.rest.petstore.request.PetApi.GetPetByIdReceiveActionBuilder;
 import org.citrusframework.openapi.generator.rest.petstore.spring.PetStoreBeanConfiguration;
 import org.citrusframework.openapi.testapi.ApiActionBuilderCustomizer;
-import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.citrusframework.openapi.testapi.GeneratedApiOperationInfo;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.validation.json.JsonPathVariableExtractor;
@@ -227,14 +226,16 @@ class GeneratedRestApiIT {
                 @Override
                 public <T extends SendMessageActionBuilder<?, ?, ?>> void customizeRequestBuilder(
                     GeneratedApiOperationInfo generatedApiOperationInfo, T builder) {
-                    ApiActionBuilderCustomizer.super.customizeRequestBuilder(generatedApiOperationInfo,
+                    ApiActionBuilderCustomizer.super.customizeRequestBuilder(
+                        generatedApiOperationInfo,
                         builder);
                 }
 
                 @Override
                 public <T extends ReceiveMessageActionBuilder<?, ?, ?>> void customizeResponseBuilder(
                     GeneratedApiOperationInfo generatedApiOperationInfo, T builder) {
-                    ApiActionBuilderCustomizer.super.customizeResponseBuilder(generatedApiOperationInfo,
+                    ApiActionBuilderCustomizer.super.customizeResponseBuilder(
+                        generatedApiOperationInfo,
                         builder);
                 }
 
@@ -2925,16 +2926,21 @@ class GeneratedRestApiIT {
                 .message()
                 .contentType(APPLICATION_FORM_URLENCODED_VALUE)
                 .validate((Message message, TestContext context) ->
-                    assertThat(message.getPayload(String.class))
-                        .contains("name=Thunder")
-                        .contains("status=sold")
-                        .contains("nicknames=Wind")
-                        .contains("nicknames=Storm")
-                        .contains("tags=tag2")
-                        .contains("tags=tag2Value")
-                        .contains("age=5")
-                        .contains(
-                            "nicknames=Wei%257B%253A%252F%253F%2523%255B%255D%2540%2521%2524%2526%2527%2528%2529*%252B%252C%253B%253D%2525%2522%253C%253E%255E%2560%257B%257C%257D%257E%2B%257Drd")
+                    {
+                        Object messagePayload = message.getPayload();
+                        assertThat(messagePayload).isInstanceOf(Map.class);
+                        //noinspection unchecked
+                        assertThat(
+                            (Map<String, List<String>>) messagePayload).containsExactlyInAnyOrderEntriesOf(
+                            Map.of(
+                                "tags", List.of("tag1", "tag2Value"),
+                                "nicknames", List.of("Wind", "Storm",
+                                    "Wei%7B%3A%2F%3F%23%5B%5D%40%21%24%26%27%28%29*%2B%2C%3B%3D%25%22%3C%3E%5E%60%7B%7C%7D%7E+%7Drd"),
+                                "status", List.of("sold"),
+                                "age", List.of("5"),
+                                "owners", List.of("2"),
+                                "name", List.of("Thunder")));
+                    }
                 ));
 
             runner.then(http().server(httpServer)
@@ -2976,17 +2982,21 @@ class GeneratedRestApiIT {
                 .put("/api/v3/ext/pet/form/1234")
                 .message()
                 .contentType(APPLICATION_FORM_URLENCODED_VALUE)
-                .validate((Message message, TestContext context) ->
-                    assertThat(message.getPayload(String.class))
-                        .contains("name=Thunder")
-                        .contains("status=sold")
-                        .contains("nicknames=Wind")
-                        .contains("nicknames=Storm")
-                        .contains("tags=tag2")
-                        .contains("tags=tag2Value")
-                        .contains("age=5")
-                        .contains(
-                            "nicknames=Wei%257B%253A%252F%253F%2523%255B%255D%2540%2521%2524%2526%2527%2528%2529*%252B%252C%253B%253D%2525%2522%253C%253E%255E%2560%257B%257C%257D%257E%2B%257Drd")
+                .validate((Message message, TestContext context) -> {
+                        Object messagePayload = message.getPayload();
+                        assertThat(messagePayload).isInstanceOf(Map.class);
+                        //noinspection unchecked
+                        assertThat(
+                            (Map<String, List<String>>) messagePayload).containsExactlyInAnyOrderEntriesOf(
+                            Map.of(
+                                "tags", List.of("tag1", "tag2Value"),
+                                "nicknames", List.of("Wind", "Storm",
+                                    "Wei%7B%3A%2F%3F%23%5B%5D%40%21%24%26%27%28%29*%2B%2C%3B%3D%25%22%3C%3E%5E%60%7B%7C%7D%7E+%7Drd"),
+                                "status", List.of("sold"),
+                                "age", List.of("5"),
+                                "owners", List.of("2"),
+                                "name", List.of("Thunder")));
+                    }
                 ));
 
             runner.then(http().server(httpServer)
