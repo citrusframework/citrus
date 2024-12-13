@@ -18,9 +18,9 @@ package org.citrusframework.openapi.model;
 
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.citrusframework.openapi.OpenApiConstants.TYPE_ARRAY;
 import static org.citrusframework.openapi.OpenApiConstants.TYPE_OBJECT;
+import static org.citrusframework.util.StringUtils.hasText;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
@@ -52,6 +52,7 @@ import io.apicurio.datamodels.openapi.v3.visitors.IOas30Visitor;
 import io.apicurio.datamodels.openapi.v3.visitors.Oas30Traverser;
 import io.apicurio.datamodels.openapi.visitors.OasTraverser;
 import jakarta.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -244,6 +245,18 @@ public final class OasModelHelper {
         throw new IllegalArgumentException(format("Unsupported operation response type: %s", response.getClass()));
     }
 
+    public static Optional<OasAdapter<OasSchema, String>> getRandomizableSchema(OasOperation oasOperation, OasResponse response, String acceptedMediaTypes) {
+        List<String> acceptedRandomizableMediaTypes = OasModelHelper.toAcceptedRandomizableMediaTypes(
+            acceptedMediaTypes);
+
+        if (oasOperation instanceof Oas20Operation oas20Operation && response instanceof Oas20Response oas20Response) {
+            return Oas20ModelHelper.getSchema(oas20Operation, oas20Response, acceptedRandomizableMediaTypes);
+        } else if (oasOperation instanceof Oas30Operation oas30Operation && response instanceof Oas30Response oas30Response) {
+            return Oas30ModelHelper.getSchema(oas30Operation, oas30Response, acceptedRandomizableMediaTypes);
+        }
+        throw new IllegalArgumentException(format("Unsupported operation response type: %s", response.getClass()));
+    }
+
     public static Optional<OasSchema> getParameterSchema(OasParameter parameter) {
         return delegate(parameter, Oas20ModelHelper::getParameterSchema, Oas30ModelHelper::getParameterSchema);
     }
@@ -302,18 +315,21 @@ public final class OasModelHelper {
             return Optional.ofNullable(responseMap.get(statusCode));
         }
 
-        // Only accept responses that provide a schema for which we can actually provide a random message
-        Predicate<OasResponse> acceptedSchemas = resp -> getSchema(operation, resp, accept != null ? singletonList(accept) : DEFAULT_ACCEPTED_MEDIA_TYPES).isPresent();
-
         // Fallback 1: Pick the default if it exists
         Optional<OasResponse> response = Optional.ofNullable(responseMap.get(DEFAULT));
 
         if (response.isEmpty()) {
             // Fallback 2: Pick the response object related to the first 2xx, providing an accepted schema
+
+            // Only accept responses that provide a schema for which we can actually provide a random message.
+            // That is json and plain/text. We prefer json.
+            List<String> acceptedMediaTypesForRandomGeneration = toAcceptedRandomizableMediaTypes(accept);
+
+            Predicate<OasResponse> acceptableResponseWithRandomizableSchema = resp -> getSchema(operation, resp, acceptedMediaTypesForRandomGeneration).isPresent();
             response = responseMap.values().stream()
                     .filter(r -> r.getStatusCode() != null && r.getStatusCode().startsWith("2"))
                     .map(OasResponse.class::cast)
-                    .filter(acceptedSchemas)
+                    .filter(acceptableResponseWithRandomizableSchema)
                     .findFirst();
         }
 
@@ -571,7 +587,7 @@ public final class OasModelHelper {
      */
     public static List<String> resolveAllTypes(@Nullable List<String> acceptedMediaTypes) {
         if (acceptedMediaTypes == null) {
-            return null;
+            return emptyList();
         }
 
         return acceptedMediaTypes.stream()
@@ -603,6 +619,30 @@ public final class OasModelHelper {
 
         oasTraverser.traverse(openApiDoc);
         return writer.getResult().toString();
+    }
+
+    /**
+     * Converts the given accept header value into a list of accepted media types
+     * that can be used for randomizable content generation.
+     *
+     * <p>If the accept header is non-empty, the method resolves and filters
+     * the media types to include only those that contain "json" or "text/plain", as these are the
+     * only ones we can generate randomly. If the accept header is empty or null, it defaults to a
+     * predefined list of accepted media types.
+     *
+     * @param accept the value of the accept header, specifying preferred media types
+     * @return a list of media types suitable for randomizable content generation
+     */
+    public static List<String> toAcceptedRandomizableMediaTypes(String accept) {
+        List<String> acceptedMediaTypesForRandomGeneration = new ArrayList<>();
+        if (hasText(accept)) {
+            List<String> acceptedMediaTypes = OasModelHelper.resolveAllTypes(List.of(accept));
+            acceptedMediaTypes.stream().filter(mediaType -> hasText(mediaType) && mediaType.contains("json")).forEach(acceptedMediaTypesForRandomGeneration::add);
+            acceptedMediaTypes.stream().filter(mediaType -> hasText(mediaType) && mediaType.contains("text/plain")).forEach(acceptedMediaTypesForRandomGeneration::add);
+        } else {
+            acceptedMediaTypesForRandomGeneration.addAll(DEFAULT_ACCEPTED_MEDIA_TYPES);
+        }
+        return acceptedMediaTypesForRandomGeneration;
     }
 
 }

@@ -77,7 +77,7 @@ public final class Oas20ModelHelper {
 
     public static Optional<OasAdapter<OasSchema, String>> getSchema(Oas20Operation oas20Operation, Oas20Response response, List<String> acceptedMediaTypes) {
         acceptedMediaTypes = OasModelHelper.resolveAllTypes(acceptedMediaTypes);
-        acceptedMediaTypes = acceptedMediaTypes != null ? acceptedMediaTypes : OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES;
+        acceptedMediaTypes = acceptedMediaTypes.isEmpty() ? OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES : acceptedMediaTypes;
 
         OasSchema selectedSchema = response.schema;
         String selectedMediaType = null;
