@@ -17,7 +17,6 @@
 package org.citrusframework.openapi.actions;
 
 import static java.lang.Integer.parseInt;
-import static java.util.Collections.singletonList;
 import static java.util.Collections.singletonMap;
 import static org.citrusframework.openapi.OpenApiMessageType.RESPONSE;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
@@ -259,12 +258,11 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             Optional<OasAdapter<OasSchema, String>> schemaForMediaTypeOptional;
             if (statusCode.startsWith("2")) {
                 // if status code is good, and we have an accept, try to get the media type. Note that only json and plain text can be generated randomly.
-                schemaForMediaTypeOptional = OasModelHelper.getSchema(operation, response,
-                    accept != null ? singletonList(accept) : null);
+                schemaForMediaTypeOptional = OasModelHelper.getRandomizableSchema(operation, response, accept);
             } else {
                 // In the bad case, we cannot expect, that the accept type is the type which we must generate.
                 // We request the type supported by the response and the random generator (json and plain text).
-                schemaForMediaTypeOptional = OasModelHelper.getSchema(operation, response, null);
+                schemaForMediaTypeOptional = OasModelHelper.getRandomizableSchema(operation, response, null);
             }
 
             if (schemaForMediaTypeOptional.isPresent()) {
@@ -292,16 +290,19 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
                 // No schema means no payload, no type
                 message.setPayload(null);
             } else {
-                if (TEXT_PLAIN_VALUE.equals(schemaForMediaType.adapted())) {
-                    // Schema but plain text
-                    message.setPayload(
-                        createOutboundPayload(schemaForMediaType.node(), openApiSpecification));
-                    message.setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, TEXT_PLAIN_VALUE);
-                } else if (APPLICATION_JSON_VALUE.equals(schemaForMediaType.adapted())) {
+                String mediaTypeName = schemaForMediaType.adapted();
+
+                // Support any json for now. Especially: application/json, application/json;charset=UTF-8
+                if (mediaTypeName.toUpperCase().contains("JSON")) {
                     // Json Schema
                     message.setPayload(
                         createOutboundPayload(schemaForMediaType.node(), openApiSpecification));
                     message.setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, APPLICATION_JSON_VALUE);
+                } else if (TEXT_PLAIN_VALUE.equals(schemaForMediaType.adapted())) {
+                    // Schema but plain text
+                    message.setPayload(
+                        createOutboundPayload(schemaForMediaType.node(), openApiSpecification));
+                    message.setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, TEXT_PLAIN_VALUE);
                 }
             }
         }

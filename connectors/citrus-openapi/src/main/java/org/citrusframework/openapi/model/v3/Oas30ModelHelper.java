@@ -137,7 +137,7 @@ public final class Oas30ModelHelper {
 
     public static Optional<OasAdapter<OasSchema, String>> getSchema(Oas30Operation ignoredOas30Operation, Oas30Response response, List<String> acceptedMediaTypes) {
         acceptedMediaTypes = OasModelHelper.resolveAllTypes(acceptedMediaTypes);
-        acceptedMediaTypes = acceptedMediaTypes != null ? acceptedMediaTypes : OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES;
+        acceptedMediaTypes = acceptedMediaTypes.isEmpty()  ? OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES : acceptedMediaTypes;
 
         Map<String, Oas30MediaType> content = response.content;
         if (content == null) {
