@@ -400,3 +400,5 @@ Please also have a look into the other provided Testcontainers annotations in Ci
 * @KakfaContainerSupport
 * @RedpandaContainerSupport
 * @TestcontainersSupport
+
+All of these annotations allow you to start Testcontainers instances as part of your Quarkus test and provides the opportunity to participate in the container lifecycle to access managed ports and connectivity settings for instance.

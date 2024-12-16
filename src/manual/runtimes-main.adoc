@@ -1,7 +1,10 @@
 [[runtime-main]]
 == Main CLI runtime
 
-Citrus provides a main class that you can run from command line.
+Citrus provides a main Java class that you can run from command line.
+The Citrus Main CLI class supports some command line arguments that you can use to specify which tests to run.
+
+NOTE: Please also have a look into link:runtimes-jbang.adoc[Citrus JBang CLI support] as it makes running Citrus tests from a command line even more comfortable as it also takes care of setting up Java and the Citrus Maven project for free. With JBang running Citrus tests becomes as easy as running a single file (`.java`, `.xml`, `.groovy`, `.yaml`) from the command line.
 
 NOTE: The Main CLI support is shipped in a separate Maven module. You need to include the module as a dependency in your
 project.
@@ -16,8 +19,39 @@ project.
 </dependency>
 ----
 
+You can call the Citrus Main CLI and provide some arguments.
+
 .Run Citrus main
-[source,shell]
+[source,java]
+----
+CitrusApp.main(new String[] { "--help" });
 ----
 
+This calls the Citrus Main CLI and prints the help message, so you can see which command line arguments you can choose from.
+
+[source,shell]
 ----
+Citrus application option usage:
+  -h or --help = Displays cli option usage
+  -d or --duration = Maximum time in milliseconds the server should be up and running - server will terminate automatically when time exceeds
+  -c or --config = Custom configuration class
+  -s or --skipTests = Skip test execution
+  -p or --package = Test package to execute
+  -D or --properties = Default system properties to set
+  --exit = Force system exit when finished
+  -e or --engine = Set test engine name used to run the tests
+  -t or --test = Test class/method to execute
+  -j or --jar = External test jar to load tests from
+----
+
+The `--engine` argument specifies which test framework to use when running the tests.
+Citrus supports these test engines as an argument value:
+
+- JUnit Jupiter (`junit5` or `junit-jupiter`)
+- Cucumber (`cucumber`)
+- TestNG (`testng`)
+- JUnit 4 (`junit`)
+
+You may now use `--package`, `--test` and `--jar` to give a Java package name or test class name to run.
+With `--config` you can give a fully qualified class name that points to a Citrus endpoint configuration class.
+The configuration class is automatically loaded when the Main CLI is running.
