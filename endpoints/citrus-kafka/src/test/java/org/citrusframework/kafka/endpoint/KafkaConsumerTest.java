@@ -16,6 +16,30 @@
 
 package org.citrusframework.kafka.endpoint;
 
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -27,39 +51,20 @@ import org.citrusframework.message.Message;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static java.util.Collections.emptySet;
-import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
-import static java.util.Collections.singletonMap;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
-
 public class KafkaConsumerTest extends AbstractTestNGUnitTest {
 
     private final org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumerMock = mock(KafkaConsumer.class);
 
     @Test
-    public void testReceiveMessage() {
+    public void receiveMessage() {
         String topic = "default";
 
         KafkaEndpoint endpoint = KafkaEndpoint.builder()
-                .kafkaConsumer(kafkaConsumerMock)
-                .topic(topic)
-                .build();
+            .kafkaConsumer(kafkaConsumerMock)
+            .topic(topic)
+            .build();
 
-        TopicPartition partition = new TopicPartition(topic, 0);
+        var partition = new TopicPartition(topic, 0);
 
         reset(kafkaConsumerMock);
 
@@ -83,15 +88,15 @@ public class KafkaConsumerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testReceiveMessage_inRandomConsumerGroup() {
+    public void receiveMessage_inRandomConsumerGroup() {
         String topic = "default";
 
         KafkaEndpoint endpoint = KafkaEndpoint.builder()
-                .kafkaConsumer(kafkaConsumerMock)
-                .topic(topic)
-                .build();
+            .kafkaConsumer(kafkaConsumerMock)
+            .topic(topic)
+            .build();
 
-        TopicPartition partition = new TopicPartition(topic, 0);
+        var partition = new TopicPartition(topic, 0);
 
         reset(kafkaConsumerMock);
 
@@ -115,14 +120,14 @@ public class KafkaConsumerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testReceiveMessageTimeout() {
+    public void receiveMessage_runIntoTimeout() {
         String topic = "test";
 
         KafkaEndpoint endpoint = KafkaEndpoint.builder()
-                .kafkaConsumer(kafkaConsumerMock)
-                .server("localhost:9092")
-                .topic(topic)
-                .build();
+            .kafkaConsumer(kafkaConsumerMock)
+            .server("localhost:9092")
+            .topic(topic)
+            .build();
 
         reset(kafkaConsumerMock);
         when(kafkaConsumerMock.subscription()).thenReturn(singleton(topic));
@@ -140,16 +145,16 @@ public class KafkaConsumerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testWithCustomTimeout() {
+    public void receiveMessage_customTimeout_runIntoTimeout() {
         String topic = "timeout";
 
         KafkaEndpoint endpoint = KafkaEndpoint.builder()
-                .kafkaConsumer(kafkaConsumerMock)
-                .timeout(10_000L)
-                .topic(topic)
-                .build();
+            .kafkaConsumer(kafkaConsumerMock)
+            .timeout(10_000L)
+            .topic(topic)
+            .build();
 
-        TopicPartition partition = new TopicPartition(topic, 0);
+        var partition = new TopicPartition(topic, 0);
 
         reset(kafkaConsumerMock);
         when(kafkaConsumerMock.subscription()).thenReturn(singleton(topic));
@@ -165,16 +170,16 @@ public class KafkaConsumerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testWithMessageHeaders() {
+    public void receiveMessage_withMessageHeaders() {
         String topic = "headers";
 
         KafkaEndpoint endpoint = KafkaEndpoint.builder()
-                .kafkaConsumer(kafkaConsumerMock)
-                .server("localhost:9092")
-                .topic(topic)
-                .build();
+            .kafkaConsumer(kafkaConsumerMock)
+            .server("localhost:9092")
+            .topic(topic)
+            .build();
 
-        TopicPartition partition = new TopicPartition(topic, 0);
+        var partition = new TopicPartition(topic, 0);
 
         reset(kafkaConsumerMock);
         when(kafkaConsumerMock.subscription()).thenReturn(singleton(topic));
@@ -192,5 +197,61 @@ public class KafkaConsumerTest extends AbstractTestNGUnitTest {
         assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         assertNotNull(receivedMessage.getHeader("Operation"));
         assertEquals(receivedMessage.getHeader("Operation"), "sayHello");
+    }
+
+    @Test
+    public void getConsumer_returnsSetConsumer() {
+        var kafkaConsumerMock = mock(KafkaConsumer.class);
+        KafkaEndpoint endpoint = KafkaEndpoint.builder()
+            .kafkaConsumer(kafkaConsumerMock)
+            .build();
+
+        var result = endpoint.createConsumer().getConsumer();
+        assertThat(result)
+            .isEqualTo(kafkaConsumerMock);
+    }
+
+    @Test
+    public void getConsumer_createsConsumerIfNonSet() {
+        KafkaEndpoint endpoint = KafkaEndpoint.builder()
+            .kafkaConsumer(null) // null for explicity
+            .build();
+
+        var result = endpoint.createConsumer().getConsumer();
+        assertThat(result)
+            .isNotNull();
+    }
+
+    @Test
+    @SuppressWarnings({"unchecked"})
+    public void stop_unsubscribesAndClosesConsumer() {
+        var kafkaConsumerMock = mock(KafkaConsumer.class);
+        doReturn(Set.of("subscription")).when(kafkaConsumerMock).subscription();
+
+        KafkaEndpoint endpoint = KafkaEndpoint.builder()
+            .kafkaConsumer(kafkaConsumerMock)
+            .build();
+
+        endpoint.createConsumer().stop();
+        verify(kafkaConsumerMock).unsubscribe();
+        verify(kafkaConsumerMock).close(Duration.ofSeconds(10));
+    }
+
+    @Test
+    @SuppressWarnings({"unchecked"})
+    public void stop_closesConsumerEvenAfterUnsubscriptionError() {
+        var kafkaConsumerMock = mock(KafkaConsumer.class);
+        var unsubscribeException = new RuntimeException();
+        doReturn(Set.of("subscription")).when(kafkaConsumerMock).subscription();
+        doThrow(unsubscribeException).when(kafkaConsumerMock).unsubscribe();
+
+        KafkaEndpoint endpoint = KafkaEndpoint.builder()
+            .kafkaConsumer(kafkaConsumerMock)
+            .build();
+
+        assertThatThrownBy(() -> endpoint.createConsumer().stop())
+            .isEqualTo(unsubscribeException);
+
+        verify(kafkaConsumerMock).close(Duration.ofSeconds(10));
     }
 }

@@ -34,7 +34,7 @@ public abstract class AbstractMessageConsumer implements Consumer {
     /**
      * Default constructor using receive timeout setting.
      */
-    public AbstractMessageConsumer(String name, EndpointConfiguration endpointConfiguration) {
+    protected AbstractMessageConsumer(String name, EndpointConfiguration endpointConfiguration) {
         this.name = name;
         this.endpointConfiguration = endpointConfiguration;
     }

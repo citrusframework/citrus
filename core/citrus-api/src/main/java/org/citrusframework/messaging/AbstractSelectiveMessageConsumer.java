@@ -34,7 +34,7 @@ public abstract class AbstractSelectiveMessageConsumer extends AbstractMessageCo
      * @param name
      * @param endpointConfiguration
      */
-    public AbstractSelectiveMessageConsumer(String name, EndpointConfiguration endpointConfiguration) {
+    protected AbstractSelectiveMessageConsumer(String name, EndpointConfiguration endpointConfiguration) {
         super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
     }
