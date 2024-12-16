@@ -37,7 +37,8 @@
                                actor="testActor"/>
 
   <citrus-kafka:endpoint id="kafkaEndpoint4"
-                               random-consumer-group="true" />
+                               random-consumer-group="true"
+                               thread-safe-consumer="true"/>
 
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 

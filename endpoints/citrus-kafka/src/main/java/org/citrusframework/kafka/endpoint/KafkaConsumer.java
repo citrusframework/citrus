@@ -16,17 +16,6 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.message.Message;
-import org.citrusframework.messaging.AbstractSelectiveMessageConsumer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import static java.util.UUID.randomUUID;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG;
@@ -38,6 +27,16 @@ import static org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_
 import static org.apache.kafka.clients.consumer.ConsumerConfig.MAX_POLL_RECORDS_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG;
 import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
+
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.message.Message;
+import org.citrusframework.messaging.AbstractSelectiveMessageConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class KafkaConsumer extends AbstractSelectiveMessageConsumer {
 
@@ -65,20 +64,20 @@ public class KafkaConsumer extends AbstractSelectiveMessageConsumer {
     public Message receive(TestContext testContext, long timeout) {
         logger.debug("Receiving single message");
         return KafkaMessageSingleConsumer.builder()
-                .consumer(consumer)
-                .endpointConfiguration(getEndpointConfiguration())
-                .build()
-                .receive(testContext, timeout);
+            .consumer(consumer)
+            .endpointConfiguration(getEndpointConfiguration())
+            .build()
+            .receive(testContext, timeout);
     }
 
     @Override
     public Message receive(String selector, TestContext testContext, long timeout) {
         logger.debug("Receiving selected message: {}", selector);
         return KafkaMessageFilteringConsumer.builder()
-                .consumer(consumer)
-                .endpointConfiguration(getEndpointConfiguration())
-                .build()
-                .receive(selector, testContext, timeout);
+            .consumer(consumer)
+            .endpointConfiguration(getEndpointConfiguration())
+            .build()
+            .receive(selector, testContext, timeout);
     }
 
     @Override
@@ -95,7 +94,7 @@ public class KafkaConsumer extends AbstractSelectiveMessageConsumer {
                 consumer.unsubscribe();
             }
         } finally {
-            consumer.close(Duration.ofMillis(10 * 1000L));
+            consumer.close(Duration.ofSeconds(10));
         }
     }
 

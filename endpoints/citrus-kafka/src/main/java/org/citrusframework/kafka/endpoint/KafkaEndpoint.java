@@ -16,20 +16,20 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import jakarta.annotation.Nullable;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.citrusframework.actions.ReceiveMessageAction;
-import org.citrusframework.common.ShutdownPhase;
-import org.citrusframework.endpoint.AbstractEndpoint;
-
-import java.time.Duration;
-
 import static java.lang.Boolean.TRUE;
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderEquals;
 import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
 import static org.citrusframework.util.StringUtils.hasText;
+
+import jakarta.annotation.Nullable;
+import java.time.Duration;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.common.ShutdownPhase;
+import org.citrusframework.endpoint.AbstractEndpoint;
 
 /**
  * Kafka message endpoint capable of sending/receiving messages from Kafka message destination.
@@ -46,6 +46,8 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
     private @Nullable KafkaProducer kafkaProducer;
     private @Nullable KafkaConsumer kafkaConsumer;
 
+    private final ThreadLocal<KafkaConsumer> threadLocalKafkaConsumer;
+
     public static SimpleKafkaEndpointBuilder builder() {
         return new SimpleKafkaEndpointBuilder();
     }
@@ -54,7 +56,7 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
      * Default constructor initializing endpoint configuration.
      */
     public KafkaEndpoint() {
-        super(new KafkaEndpointConfiguration());
+        this(new KafkaEndpointConfiguration());
     }
 
     /**
@@ -62,15 +64,16 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
      */
     public KafkaEndpoint(KafkaEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
+
+        threadLocalKafkaConsumer = ThreadLocal.withInitial(() -> new KafkaConsumer(getConsumerName(), getEndpointConfiguration()));
     }
 
     static KafkaEndpoint newKafkaEndpoint(
-            @Nullable org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumer,
-            @Nullable org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer,
-            @Nullable Boolean randomConsumerGroup,
-            @Nullable String server,
-            @Nullable Long timeout,
-            @Nullable String topic
+        @Nullable Boolean randomConsumerGroup,
+        @Nullable String server,
+        @Nullable Long timeout,
+        @Nullable String topic,
+        boolean useThreadSafeConsumer
     ) {
         var kafkaEndpoint = new KafkaEndpoint();
 
@@ -88,6 +91,29 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
             kafkaEndpoint.getEndpointConfiguration().setTopic(topic);
         }
 
+        kafkaEndpoint.getEndpointConfiguration().setUseThreadSafeConsumer(useThreadSafeConsumer);
+
+        return kafkaEndpoint;
+    }
+
+    /**
+     * @deprecated {@link org.apache.kafka.clients.consumer.KafkaConsumer} is <b>not</b> thread-safe
+     * and manual consumer management is error-prone. Use
+     * {@link #newKafkaEndpoint(Boolean, String, Long, String, boolean)} instead to obtain properly
+     * managed consumer instances. This method will be removed in a future release.
+     */
+    @Deprecated(forRemoval = true)
+    static KafkaEndpoint newKafkaEndpoint(
+        @Nullable org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumer,
+        @Nullable org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer,
+        @Nullable Boolean randomConsumerGroup,
+        @Nullable String server,
+        @Nullable Long timeout,
+        @Nullable String topic,
+        boolean useThreadSafeConsumer
+    ) {
+        var kafkaEndpoint = newKafkaEndpoint(randomConsumerGroup, server, timeout, topic, useThreadSafeConsumer);
+
         // Make sure these come at the end, so endpoint configuration is already initialized
         if (nonNull(kafkaConsumer)) {
             kafkaEndpoint.createConsumer().setConsumer(kafkaConsumer);
@@ -99,19 +125,11 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
         return kafkaEndpoint;
     }
 
-    @Nullable
-    KafkaProducer getKafkaProducer() {
-        return kafkaProducer;
-    }
-
-    @Nullable
-    KafkaConsumer getKafkaConsumer() {
-        return kafkaConsumer;
-    }
-
     @Override
     public KafkaConsumer createConsumer() {
-        if (kafkaConsumer == null) {
+        if (getEndpointConfiguration().useThreadSafeConsumer()) {
+            return threadLocalKafkaConsumer.get();
+        } else if (isNull(kafkaConsumer)) {
             kafkaConsumer = new KafkaConsumer(getConsumerName(), getEndpointConfiguration());
         }
 
@@ -134,20 +152,24 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
 
     @Override
     public void destroy() {
-        if (kafkaConsumer != null) {
+        if (getEndpointConfiguration().useThreadSafeConsumer()) {
+            threadLocalKafkaConsumer.get()
+                .stop();
+            threadLocalKafkaConsumer.remove();
+        } else if (nonNull(kafkaConsumer)) {
             kafkaConsumer.stop();
         }
     }
 
     public ReceiveMessageAction.ReceiveMessageActionBuilderSupport findKafkaEventHeaderEquals(Duration lookbackWindow, String key, String value) {
         return receive(this)
-                .selector(
-                        KafkaMessageFilter.kafkaMessageFilter()
-                                .eventLookbackWindow(lookbackWindow)
-                                .kafkaMessageSelector(kafkaHeaderEquals(key, value))
-                                .build()
-                )
-                .getMessageBuilderSupport();
+            .selector(
+                KafkaMessageFilter.kafkaMessageFilter()
+                    .eventLookbackWindow(lookbackWindow)
+                    .kafkaMessageSelector(kafkaHeaderEquals(key, value))
+                    .build()
+            )
+            .getMessageBuilderSupport();
     }
 
     public static class SimpleKafkaEndpointBuilder {
@@ -158,7 +180,13 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
         private String server;
         private Long timeout;
         private String topic;
+        private boolean useThreadSafeConsumer = false;
 
+        /**
+         * @deprecated {@link org.apache.kafka.clients.consumer.KafkaConsumer} is <b>not</b> thread-safe and manual consumer management is error-prone.
+         * This method will be removed in a future release.
+         */
+        @Deprecated(forRemoval = true)
         public SimpleKafkaEndpointBuilder kafkaConsumer(org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumer) {
             this.kafkaConsumer = kafkaConsumer;
             return this;
@@ -189,8 +217,13 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
             return this;
         }
 
+        public SimpleKafkaEndpointBuilder useThreadSafeConsumer() {
+            this.useThreadSafeConsumer = true;
+            return this;
+        }
+
         public KafkaEndpoint build() {
-            return KafkaEndpoint.newKafkaEndpoint(kafkaConsumer, kafkaProducer, randomConsumerGroup, server, timeout, topic);
+            return newKafkaEndpoint(kafkaConsumer, kafkaProducer, randomConsumerGroup, server, timeout, topic, useThreadSafeConsumer);
         }
     }
 }

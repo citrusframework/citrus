@@ -103,11 +103,15 @@ public KafkaEndpoint helloKafkaEndpoint() {
           consumer-group="citrus_group"/>
 ----
 
-Note that for effective message consumption it is advisable to use random consumer groups.
-Both the Java and XML DSL support random consumer groups, when enabled: `randomConsumerGroup(true)` or `random-consumer-group="true"`.
-
 The endpoint is now ready to be used inside a test case.
 The test simply references the endpoint by its name when sending or receiving.
+
+IMPORTANT: The `org.apache.kafka.clients.consumer.KafkaConsumer<K,V>` is **not thread-safe**.
+When using <<kafka-message-selector,selective message consumption>>, it is recommended to configure `useThreadSafeConsumer` respectively `thread-safe-consumer` for the Kafka endpoint.
+Otherwise, you cannot execute tests in parallel.
+
+NOTE: For effective message consumption, it is additionally advisable to use random consumer groups.
+Both the Java and XML DSL support random consumer groups, when enabled: `randomConsumerGroup(true)` or `random-consumer-group="true"`.
 
 In case of a send operation the endpoint creates a Kafka producer and will simply publish the records to the defined Kafka topic.
 As the communication is asynchronous by default, the producer does not wait for a response.
@@ -198,7 +202,7 @@ So you might run into message timeouts when using multiple Kafka endpoints with 
 | `random-consumer-group`
 | No
 | `false`
-| Whether to use random consumer gorup names.
+| Whether to use random consumer group names.
   Note that these will all be prefixed by `citrus_kafka_` and end with a random 10 characters alphabetic suffix.
 
 | `key-serializer`
@@ -242,6 +246,12 @@ So you might run into message timeouts when using multiple Kafka endpoints with 
 | -
 | Map of producer property settings to apply to the Kafka producer configuration.
   This enables you to overwrite any producer setting with respective property key value pairs.
+
+| `thread-safe-consumer`
+| No
+| `false`
+| Whether to use separate ``org.apache.kafka.clients.consumer.KafkaConsumer<K,V>``'s per thread.
+  Required for parallel test execution, because the consumer is **not thread-safe**.
 
 |===
 

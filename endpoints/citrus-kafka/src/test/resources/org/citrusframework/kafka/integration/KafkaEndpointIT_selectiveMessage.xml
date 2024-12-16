@@ -31,10 +31,6 @@
         <message>Test 1: Send Kafka message and receive that message based on header equality</message>
       </echo>
 
-      <purge-endpoint>
-        <endpoint name="helloKafkaEndpoint"/>
-      </purge-endpoint>
-
       <send endpoint="helloKafkaEndpoint">
         <description>Send Kafka request: Citrus -> Kafka broker</description>
         <message>

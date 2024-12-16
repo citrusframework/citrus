@@ -72,7 +72,12 @@ class KafkaMessageSingleConsumer extends AbstractMessageConsumer {
 
         consumer.commitSync(Duration.ofMillis(getEndpointConfiguration().getTimeout()));
 
-        logger.info("Received Kafka message on topic: '{}", topic);
+        if (logger.isDebugEnabled()) {
+            logger.info("Received Kafka message on topic '{}': {}", topic, received);
+        } else {
+            logger.info("Received Kafka message on topic '{}'", topic);
+        }
+
         return received;
     }
 

@@ -70,6 +70,7 @@ public class KafkaEndpointParserTest extends AbstractBeanDefinitionParserTest {
         assertEquals(kafkaEndpoint.getEndpointConfiguration().getValueSerializer(), StringSerializer.class);
         assertEquals(kafkaEndpoint.getEndpointConfiguration().getKeyDeserializer(), StringDeserializer.class);
         assertEquals(kafkaEndpoint.getEndpointConfiguration().getValueDeserializer(), StringDeserializer.class);
+        assertEquals(kafkaEndpoint.getEndpointConfiguration().useThreadSafeConsumer(), false);
 
         // 2nd message receiver
         kafkaEndpoint = endpoints.get("kafkaEndpoint2");
@@ -90,6 +91,7 @@ public class KafkaEndpointParserTest extends AbstractBeanDefinitionParserTest {
         assertEquals(kafkaEndpoint.getEndpointConfiguration().getValueSerializer(), ByteArraySerializer.class);
         assertEquals(kafkaEndpoint.getEndpointConfiguration().getKeyDeserializer(), IntegerDeserializer.class);
         assertEquals(kafkaEndpoint.getEndpointConfiguration().getValueDeserializer(), ByteArrayDeserializer.class);
+        assertEquals(kafkaEndpoint.getEndpointConfiguration().useThreadSafeConsumer(), false);
 
         // 3rd message receiver
         kafkaEndpoint = endpoints.get("kafkaEndpoint3");
@@ -102,6 +104,7 @@ public class KafkaEndpointParserTest extends AbstractBeanDefinitionParserTest {
         assertEquals(kafkaEndpoint.getEndpointConfiguration().getConsumerProperties().get(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG), true);
         assertEquals(kafkaEndpoint.getEndpointConfiguration().getProducerProperties().size(), 1);
         assertEquals(kafkaEndpoint.getEndpointConfiguration().getProducerProperties().get(ProducerConfig.MAX_REQUEST_SIZE_CONFIG), 1024);
+        assertEquals(kafkaEndpoint.getEndpointConfiguration().useThreadSafeConsumer(), false);
 
         // 4th message receiver
         kafkaEndpoint = endpoints.get("kafkaEndpoint4");
@@ -109,5 +112,6 @@ public class KafkaEndpointParserTest extends AbstractBeanDefinitionParserTest {
             .startsWith(KAFKA_PREFIX)
             .hasSize(23)
             .containsPattern(".*[a-z]{10}$");
+        assertEquals(kafkaEndpoint.getEndpointConfiguration().useThreadSafeConsumer(), true);
     }
 }

@@ -94,6 +94,8 @@ public class KafkaEndpointConfiguration extends AbstractPollableEndpointConfigur
      */
     private int partition = 0;
 
+    private boolean useThreadSafeConsumer;
+
     public String getClientId() {
         return clientId;
     }
@@ -220,5 +222,13 @@ public class KafkaEndpointConfiguration extends AbstractPollableEndpointConfigur
 
     public void setPartition(int partition) {
         this.partition = partition;
+    }
+
+    public boolean useThreadSafeConsumer() {
+        return useThreadSafeConsumer;
+    }
+
+    public void setUseThreadSafeConsumer(boolean useThreadSafeConsumer) {
+        this.useThreadSafeConsumer = useThreadSafeConsumer;
     }
 }

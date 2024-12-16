@@ -66,6 +66,8 @@ public class KafkaEndpointParser extends AbstractEndpointParser {
         setPropertyValue(endpointConfiguration, element.getAttribute("key-deserializer"), "keyDeserializer");
         setPropertyValue(endpointConfiguration, element.getAttribute("value-serializer"), "valueSerializer");
         setPropertyValue(endpointConfiguration, element.getAttribute("value-deserializer"), "valueDeserializer");
+
+        setPropertyValue(endpointConfiguration, element.getAttribute("thread-safe-consumer"), "useThreadSafeConsumer");
     }
 
     @Override
