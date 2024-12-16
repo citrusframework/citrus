@@ -662,7 +662,7 @@ $(addBlockSwitches);
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
 <span id="revnumber">version 4.5.0,</span>
-<span id="revdate">2024-12-12</span>
+<span id="revdate">2024-12-16</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -687,8 +687,9 @@ $(addBlockSwitches);
 <li><a href="#runtime-junit4">4.3. JUnit4</a></li>
 <li><a href="#runtimes-cucumber">4.4. Cucumber</a></li>
 <li><a href="#runtime-quarkus">4.5. QuarkusTest runtime</a></li>
-<li><a href="#runtime-sharded">4.6. Sharding Test Cases</a></li>
-<li><a href="#runtime-jbang">4.7. JBang</a></li>
+<li><a href="#runtime-main">4.6. Main CLI runtime</a></li>
+<li><a href="#runtime-sharded">4.7. Sharding Test Cases</a></li>
+<li><a href="#runtime-jbang">4.8. JBang</a></li>
 </ul>
 </li>
 <li><a href="#run-java">5. Running tests in Java</a>
@@ -3316,13 +3317,32 @@ The test is able to use the services on the Testcontainers instance to trigger s
 <p>@RedpandaContainerSupport</p>
 </li>
 <li>
-<p>@TestcontainersSupport
-== Main CLI runtime</p>
+<p>@TestcontainersSupport</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Citrus provides a main class that you can run from command line.</p>
+<p>All of these annotations allow you to start Testcontainers instances as part of your Quarkus test and provides the opportunity to participate in the container lifecycle to access managed ports and connectivity settings for instance.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="runtime-main"><a class="anchor" href="#runtime-main"></a><a class="link" href="#runtime-main">4.6. Main CLI runtime</a></h3>
+<div class="paragraph">
+<p>Citrus provides a main Java class that you can run from command line.
+The Citrus Main CLI class supports some command line arguments that you can use to specify which tests to run.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Please also have a look into <a href="runtimes-jbang.adoc">Citrus JBang CLI support</a> as it makes running Citrus tests from a command line even more comfortable as it also takes care of setting up Java and the Citrus Maven project for free. With JBang running Citrus tests becomes as easy as running a single file (<code>.java</code>, <code>.xml</code>, <code>.groovy</code>, <code>.yaml</code>) from the command line.
+</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -3347,16 +3367,61 @@ project.
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>You can call the Citrus Main CLI and provide some arguments.</p>
+</div>
 <div class="listingblock">
 <div class="title">Run Citrus main</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell"></code></pre>
+<pre class="CodeRay highlight"><code data-lang="java">CitrusApp.main(<span class="keyword">new</span> <span class="predefined-type">String</span><span class="type">[]</span> { <span class="string"><span class="delimiter">&quot;</span><span class="content">--help</span><span class="delimiter">&quot;</span></span> });</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>This calls the Citrus Main CLI and prints the help message, so you can see which command line arguments you can choose from.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">Citrus application option usage:
+  -h or --help = Displays cli option usage
+  -d or --duration = Maximum time in milliseconds the server should be up and running - server will terminate automatically when time exceeds
+  -c or --config = Custom configuration class
+  -s or --skipTests = Skip test execution
+  -p or --package = Test package to execute
+  -D or --properties = Default system properties to set
+  --exit = Force system exit when finished
+  -e or --engine = Set test engine name used to run the tests
+  -t or --test = Test class/method to execute
+  -j or --jar = External test jar to load tests from</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>--engine</code> argument specifies which test framework to use when running the tests.
+Citrus supports these test engines as an argument value:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>JUnit Jupiter (<code>junit5</code> or <code>junit-jupiter</code>)</p>
+</li>
+<li>
+<p>Cucumber (<code>cucumber</code>)</p>
+</li>
+<li>
+<p>TestNG (<code>testng</code>)</p>
+</li>
+<li>
+<p>JUnit 4 (<code>junit</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You may now use <code>--package</code>, <code>--test</code> and <code>--jar</code> to give a Java package name or test class name to run.
+With <code>--config</code> you can give a fully qualified class name that points to a Citrus endpoint configuration class.
+The configuration class is automatically loaded when the Main CLI is running.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="runtime-sharded"><a class="anchor" href="#runtime-sharded"></a><a class="link" href="#runtime-sharded">4.6. Sharding Test Cases</a></h3>
+<h3 id="runtime-sharded"><a class="anchor" href="#runtime-sharded"></a><a class="link" href="#runtime-sharded">4.7. Sharding Test Cases</a></h3>
 <div class="paragraph">
 <p>Sharding is a powerful option within the Citrus framework designed to facilitate the loading and execution of test cases in a distributed manner.
 Sharding test execution is expected to save roughly <code>[TIME] * 1 / 2</code> of execution time per runner.</p>
@@ -3365,7 +3430,7 @@ Sharding test execution is expected to save roughly <code>[TIME] * 1 / 2</code> 
 <p>This chapter provides an overview of the available functionality and guides you through the process of configuring and using test loaders with sharding.</p>
 </div>
 <div class="sect3">
-<h4 id="runtime-sharded-configuration"><a class="anchor" href="#runtime-sharded-configuration"></a><a class="link" href="#runtime-sharded-configuration">4.6.1. Configuration</a></h4>
+<h4 id="runtime-sharded-configuration"><a class="anchor" href="#runtime-sharded-configuration"></a><a class="link" href="#runtime-sharded-configuration">4.7.1. Configuration</a></h4>
 <div class="paragraph">
 <p>First of all, you need to wrap your test case loading with the <code>org.citrusframework.sharding.Shard#createShard(Stream&lt;T&gt; items)</code> method.
 Have a look at the previous runtime chapters to get to know how to do this with the test framework of your choice.</p>
@@ -3424,7 +3489,7 @@ The following two key configuration parameters are required for sharded test loa
 </div>
 </div>
 <div class="sect2">
-<h3 id="runtime-jbang"><a class="anchor" href="#runtime-jbang"></a><a class="link" href="#runtime-jbang">4.7. JBang</a></h3>
+<h3 id="runtime-jbang"><a class="anchor" href="#runtime-jbang"></a><a class="link" href="#runtime-jbang">4.8. JBang</a></h3>
 <div class="paragraph">
 <p>You can run Citrus tests with JBang.
 Running Citrus via JBang does not require any project setup which is fantastic for fast prototyping of integration tests.
@@ -3486,7 +3551,7 @@ Total tests run: 1, Passes: 1, Failures: 0, Skips: 0
 </div>
 </div>
 <div class="sect3">
-<h4 id="runtime-jbang-install"><a class="anchor" href="#runtime-jbang-install"></a><a class="link" href="#runtime-jbang-install">4.7.1. Install Citrus JBang app</a></h4>
+<h4 id="runtime-jbang-install"><a class="anchor" href="#runtime-jbang-install"></a><a class="link" href="#runtime-jbang-install">4.8.1. Install Citrus JBang app</a></h4>
 <div class="paragraph">
 <p>For a more convenient way to use the Citrus JBang scripts you can install Citrus as a JBang app.</p>
 </div>
@@ -3508,7 +3573,7 @@ jbang install citrus@citrusframework/citrus</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="runtime-jbang-run"><a class="anchor" href="#runtime-jbang-run"></a><a class="link" href="#runtime-jbang-run">4.7.2. Run tests</a></h4>
+<h4 id="runtime-jbang-run"><a class="anchor" href="#runtime-jbang-run"></a><a class="link" href="#runtime-jbang-run">4.8.2. Run tests</a></h4>
 <div class="paragraph">
 <p>You can directly run test sources with Citrus JBang.
 This includes test sources written in Java, XML, YAML, Cucumber.</p>
@@ -3660,7 +3725,7 @@ You may add the additional modules to the <code>jbang.properties</code> as descr
 </div>
 </div>
 <div class="sect3">
-<h4 id="runtime-jbang-dependencies"><a class="anchor" href="#runtime-jbang-dependencies"></a><a class="link" href="#runtime-jbang-dependencies">4.7.3. Additional JBang dependencies</a></h4>
+<h4 id="runtime-jbang-dependencies"><a class="anchor" href="#runtime-jbang-dependencies"></a><a class="link" href="#runtime-jbang-dependencies">4.8.3. Additional JBang dependencies</a></h4>
 <div class="paragraph">
 <p>Citrus JBang comes with a set of default dependencies that makes the scripts run as tests.</p>
 </div>
@@ -3730,7 +3795,7 @@ you need to add this YAKS runtime dependency accordingly: <code>org.citrusframew
 </div>
 </div>
 <div class="sect3">
-<h4 id="runtime-jbang-clipboard"><a class="anchor" href="#runtime-jbang-clipboard"></a><a class="link" href="#runtime-jbang-clipboard">4.7.4. Run from clipboard</a></h4>
+<h4 id="runtime-jbang-clipboard"><a class="anchor" href="#runtime-jbang-clipboard"></a><a class="link" href="#runtime-jbang-clipboard">4.8.4. Run from clipboard</a></h4>
 <div class="paragraph">
 <p>You can run tests from your current clipboard.
 Just use the file name <code>clipboard.xxx</code> where the file extension defines the type of the test source (<code>.java</code>, <code>.yaml</code>, <code>.xml</code>, <code>.groovy</code>, <code>.feature</code>).</p>
@@ -3743,7 +3808,7 @@ Just use the file name <code>clipboard.xxx</code> where the file extension defin
 </div>
 </div>
 <div class="sect3">
-<h4 id="runtime-jbang-list"><a class="anchor" href="#runtime-jbang-list"></a><a class="link" href="#runtime-jbang-list">4.7.5. List tests</a></h4>
+<h4 id="runtime-jbang-list"><a class="anchor" href="#runtime-jbang-list"></a><a class="link" href="#runtime-jbang-list">4.8.5. List tests</a></h4>
 <div class="paragraph">
 <p>The <code>ls</code> command lists all running Citrus tests.
 These tests may be started</p>
