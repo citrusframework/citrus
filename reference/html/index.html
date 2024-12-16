@@ -19393,11 +19393,11 @@ property keys with respective values for producer and consumer config maps.</p>
 }
 
 <span class="directive">private</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Object</span>&gt; getProducerProps() {
-    ...
+    <span class="comment">// ...</span>
 }
 
 <span class="directive">private</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Object</span>&gt; getConsumerProps() {
-    ...
+    <span class="comment">// ...</span>
 }</code></pre>
 </div>
 </div>
@@ -19498,7 +19498,7 @@ the Kafka endpoint configuration.
 </div>
 </div>
 <div class="paragraph">
-<p>In case of a receive operation message headers are valuable validation objects that can be used to verify the message content with
+<p>In case of a receiving operation message headers are valuable validation objects that can be used to verify the message content with
 an expected behavior.</p>
 </div>
 <div class="listingblock primary">
@@ -19622,7 +19622,7 @@ Instead, selective message consumption starts at an offset <code>Ox = OT-n</code
 Where <code>T</code> is the current timestamp and <code>n</code> is the maximum timespan in which the wanted event is expected to have been published.</p>
 </div>
 <div class="sect3">
-<h4 id="basic-usage"><a class="anchor" href="#basic-usage"></a><a class="link" href="#basic-usage">13.5.1. Basic Usage</a></h4>
+<h4 id="kafka-message-selector-basic"><a class="anchor" href="#kafka-message-selector-basic"></a><a class="link" href="#kafka-message-selector-basic">13.5.1. Basic Usage</a></h4>
 <div class="paragraph">
 <p>The Kafka Message Selector can be used in various ways, depending on your preferred syntax and test framework.</p>
 </div>
@@ -19663,7 +19663,7 @@ Where <code>T</code> is the current timestamp and <code>n</code> is the maximum 
 </div>
 </div>
 <div class="sect3">
-<h4 id="configuration"><a class="anchor" href="#configuration"></a><a class="link" href="#configuration">13.5.2. Configuration</a></h4>
+<h4 id="kafka-message-selector-configuration"><a class="anchor" href="#kafka-message-selector-configuration"></a><a class="link" href="#kafka-message-selector-configuration">13.5.2. Configuration</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -19682,7 +19682,7 @@ Where <code>T</code> is the current timestamp and <code>n</code> is the maximum 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>eventLookbackWindow</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>event-lookback-window</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">This defines how far back in time the selector should search for messages.
-  When using XML configuration, the event lookback window must be specified as an <a href="#https://en.wikipedia.org/wiki/ISO_8601">ISO-8601 duration string</a>.
+  When using XML configuration, the event lookback window must be specified as an <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO-8601 duration string</a>.
   For example, <code>PT1S</code> represents a duration of 1 second.</p></td>
 </tr>
 <tr>
@@ -19697,7 +19697,7 @@ Where <code>T</code> is the current timestamp and <code>n</code> is the maximum 
 <td class="tableblock halign-left valign-top"><p class="tableblock">The timeout duration for each poll operation when consuming messages from Kafka.
   This value determines how long the consumer will wait for new records in each poll cycle.
   It is not the overall receive action timeout!
-  When using XML configuration, the poll timeout must be specified as an <a href="#https://en.wikipedia.org/wiki/ISO_8601">ISO-8601 duration string</a>.
+  When using XML configuration, the poll timeout must be specified as an <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO-8601 duration string</a>.
   For example, <code>PT0.100S</code> represents a duration of 1 millisecond.</p></td>
 </tr>
 </tbody>
@@ -19786,7 +19786,7 @@ If the <code>value</code> is <code>null</code> however, all headers with the exa
 </table>
 </div>
 <div class="sect3">
-<h4 id="best-practices"><a class="anchor" href="#best-practices"></a><a class="link" href="#best-practices">13.5.4. Best Practices</a></h4>
+<h4 id="kafka-message-selector-best-practices"><a class="anchor" href="#kafka-message-selector-best-practices"></a><a class="link" href="#kafka-message-selector-best-practices">13.5.4. Best Practices</a></h4>
 <div class="paragraph">
 <p><strong>Set Appropriate Lookback Window:</strong> Choose a lookback window that balances between finding the desired message and performance.
 A larger window might find older messages but could impact performance.</p>
@@ -19859,7 +19859,7 @@ about dynamic endpoints in chapter <a href="#dynamic-endpoint-components">dynami
 <h3 id="embedded-kafka-server"><a class="anchor" href="#embedded-kafka-server"></a><a class="link" href="#embedded-kafka-server">13.7. Embedded Kafka Server</a></h3>
 <div class="paragraph">
 <p>The Kafka message broker is composed of a Zookeeper server and a Kafka server. Citrus provides an embedded server (<strong>for testing purpose only!</strong>)
-that is able to be started within your integration test environment. The server cluster is configured with one single Zookeeper
+that is able to start within your integration test environment. The server cluster is configured with one single Zookeeper
 server and a single Kafka server. You can define server ports and broker properties such as topics, number of partitions and
 broker ids. Given topics are automatically added via admin client on the Kafka server with given amount of partitions.</p>
 </div>
