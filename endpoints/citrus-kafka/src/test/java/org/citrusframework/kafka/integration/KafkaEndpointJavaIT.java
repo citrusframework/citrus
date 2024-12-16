@@ -20,6 +20,7 @@ import org.assertj.core.api.ThrowableAssert;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
+import org.citrusframework.internal.GitHubIssue;
 import org.citrusframework.kafka.endpoint.KafkaEndpoint;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector;
 import org.citrusframework.kafka.message.KafkaMessage;
@@ -33,6 +34,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.citrusframework.actions.SleepAction.Builder.sleep;
+import static org.citrusframework.container.Parallel.Builder.parallel;
 import static org.citrusframework.kafka.endpoint.KafkaMessageFilter.kafkaMessageFilter;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.ValueMatchingStrategy.ENDS_WITH;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.ValueMatchingStrategy.STARTS_WITH;
@@ -274,4 +276,35 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         );
     }
 
+    @CitrusTest
+    @GitHubIssue(1281)
+    public void parallel_access_thread_safety() {
+        var body = "parallel_access_thread_safety";
+
+        var key = "Name";
+
+        var brother1 = "Elladan";
+        var brother2 = "Elrohir";
+
+        when(
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).setHeader(key, brother1))
+        );
+
+        when(
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).setHeader(key, brother2))
+        );
+
+
+        then(
+                parallel()
+                        .actions(
+                                kafkaWithRandomConsumerGroupEndpoint.findKafkaEventHeaderEquals(Duration.ofSeconds(1L), key, brother1)
+                                        .body(body),
+                                kafkaWithRandomConsumerGroupEndpoint.findKafkaEventHeaderEquals(Duration.ofSeconds(1L), key, brother2)
+                                        .body(body)
+                        )
+        );
+    }
 }
