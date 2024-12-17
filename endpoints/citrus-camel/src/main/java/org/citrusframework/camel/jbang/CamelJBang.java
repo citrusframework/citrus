@@ -159,6 +159,7 @@ public class CamelJBang {
         return version;
     }
 
+
     /**
      * Get details for integration previously run via JBang Camel app. Integration is identified by its process id.
      * @param pid
@@ -236,5 +237,27 @@ public class CamelJBang {
         this.dumpIntegrationOutput = enabled;
         return this;
     }
+
+    public List<String> getPlugins() {
+        ProcessAndOutput p = camelApp.run("plugin","get");
+        String output = p.getOutput();
+        List<String> installedPlugins = new ArrayList<>();
+        if (output.isBlank()) {
+            return installedPlugins;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(output.getBytes(StandardCharsets.UTF_8))))) {
+            reader.readLine();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                List<String> values = new ArrayList<>(Arrays.asList(line.trim().split("\\s+")));
+                installedPlugins.add(values.get(0));
+            }
+            return installedPlugins;
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to list plugins from JBang", e);
+        }
+    }
+
 
 }
