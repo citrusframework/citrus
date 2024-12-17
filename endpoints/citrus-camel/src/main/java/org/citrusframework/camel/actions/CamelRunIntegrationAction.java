@@ -16,9 +16,11 @@
 
 package org.citrusframework.camel.actions;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.jbang.CamelJBangSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -128,7 +131,24 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
                 throw new CitrusRuntimeException(String.format("Failed to start Camel integration - exit code %s", pao.getProcess().exitValue()));
             }
 
+            // Wait for first log to unsure the run process is correctly launched before setting the pid in context
+            int maxAttempts = CamelSettings.getMaxAttempts();
+            long delayBetweenAttempts = CamelSettings.getDelayBetweenAttempts();
+            for (int i = 0; i < maxAttempts; i++) {
+                String log = pao.getOutput();
+                if (log.length() > 0) {
+                    break;
+                }
+
+                try {
+                    Thread.sleep(delayBetweenAttempts);
+                } catch (InterruptedException e) {
+                    logger.warn("Interrupted while waiting for Camel integration '%s' first log".formatted(name), e);
+                }
+            }
+
             Long pid = pao.getProcessId(integrationToRun.getFileName().toString());
+
             context.setVariable(name + ":pid", pid);
             context.setVariable(name + ":process:" + pid, pao);
 
