@@ -1050,6 +1050,131 @@
           </xs:annotation>
           <xs:complexType>
             <xs:choice>
+              <xs:element name="plugin">
+                <xs:complexType>
+                  <xs:choice>
+                    <xs:element name="add">
+                      <xs:complexType>
+                        <xs:annotation>
+                          <xs:documentation>Add a camel jbang plugin.</xs:documentation>
+                        </xs:annotation>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="args" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="kubernetes">
+                      <xs:complexType>
+                        <xs:choice>
+                          <xs:element name="run">
+                            <xs:complexType>
+                              <xs:annotation>
+                                <xs:documentation>Run a Camel integration in Kubernetes.</xs:documentation>
+                              </xs:annotation>
+                              <xs:sequence>
+                                <xs:element name="integration">
+                                  <xs:complexType>
+                                    <xs:attribute type="xs:string" name="file"/>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element type="xs:string" name="runtime"/>
+                                <xs:element type="xs:string" name="image-registry"/>
+                                <xs:element type="xs:string" name="image-builder"/>
+                                <xs:element type="xs:string" name="cluster-type"/>
+                                <xs:element name="build-properties" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="property" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                          <xs:attribute name="name" use="required" type="xs:string"/>
+                                          <xs:attribute name="value" use="required" type="xs:string"/>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="properties" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="property" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                          <xs:attribute name="name" use="required" type="xs:string"/>
+                                          <xs:attribute name="value" use="required" type="xs:string"/>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="traits" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="trait" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                          <xs:attribute name="name" use="required" type="xs:string"/>
+                                          <xs:attribute name="value" use="required" type="xs:string"/>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="args" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="argument" type="xs:string" maxOccurs="unbounded"/>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="wait-for-running-state" type="xs:boolean"/>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="verify">
+                            <xs:annotation>
+                              <xs:documentation>Verifies a Camel integration in kubernetes, for instance its status or the presence of a log message</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="args" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="argument" type="xs:string" maxOccurs="unbounded"/>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="integration" type="xs:string"/>
+                              <xs:attribute name="label" type="xs:string"/>
+                              <xs:attribute name="namespace" type="xs:string"/>
+                              <xs:attribute name="log-message" type="xs:string"/>
+                              <xs:attribute name="max-attempts" type="xs:int"/>
+                              <xs:attribute name="delay-between-attempts" type="xs:int"/>
+                              <xs:attribute name="print-logs" type="xs:boolean"/>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="delete">
+                            <xs:complexType>
+                              <xs:annotation>
+                                <xs:documentation>Delete kubernetes resources deployed from a Camel project or Camel integration.</xs:documentation>
+                              </xs:annotation>
+                              <xs:sequence>
+                                <xs:element name="integration">
+                                  <xs:complexType>
+                                    <xs:attribute type="xs:string" name="file"/>
+                                    <xs:attribute type="xs:string" name="name"/>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="cluster-type" type="xs:string"/>
+                              <xs:attribute name="namespace" type="xs:string"/>
+                              <xs:attribute name="working-dir" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:choice>
+                      </xs:complexType>
+
+                    </xs:element>
+                  </xs:choice>
+                </xs:complexType>
+              </xs:element>
               <xs:element name="run">
                 <xs:annotation>
                   <xs:documentation>Runs a Camel integration via JBang</xs:documentation>

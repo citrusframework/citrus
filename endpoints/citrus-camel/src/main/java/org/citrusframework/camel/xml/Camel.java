@@ -30,17 +30,21 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActor;
 import org.citrusframework.camel.actions.AbstractCamelAction;
 import org.citrusframework.camel.actions.CamelControlBusAction;
+import org.citrusframework.camel.actions.AddCamelPluginAction;
 import org.citrusframework.camel.actions.CamelRunIntegrationAction;
 import org.citrusframework.camel.actions.CamelStopIntegrationAction;
 import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
 import org.citrusframework.camel.actions.CreateCamelComponentAction;
 import org.citrusframework.camel.actions.CreateCamelContextAction;
 import org.citrusframework.camel.actions.CreateCamelRouteAction;
+import org.citrusframework.camel.actions.CamelKubernetesDeleteAction;
+import org.citrusframework.camel.actions.CamelKubernetesRunIntegrationAction;
 import org.citrusframework.camel.actions.RemoveCamelRouteAction;
 import org.citrusframework.camel.actions.StartCamelContextAction;
 import org.citrusframework.camel.actions.StartCamelRouteAction;
 import org.citrusframework.camel.actions.StopCamelContextAction;
 import org.citrusframework.camel.actions.StopCamelRouteAction;
+import org.citrusframework.camel.actions.CamelKubernetesVerifyAction;
 import org.citrusframework.camel.util.CamelUtils;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
@@ -249,8 +253,88 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
             builder.kameletsVersion(jbang.getKameletsVersion());
 
             this.builder = builder;
-        }
+        } else if (jbang.getPlugin() != null) {
 
+            if (jbang.getPlugin().getAdd() != null) {
+                AddCamelPluginAction.Builder builder = new AddCamelPluginAction.Builder();
+                builder.pluginName(jbang.getPlugin().getAdd().getName());
+                if (jbang.getPlugin().getAdd().getArgLine() != null) {
+                    builder.withArgs(jbang.getPlugin().getAdd().getArgLine().split(" "));
+                }
+                this.builder = builder;
+            } else if (jbang.getPlugin().getKubernetes() != null) {
+                if (jbang.getPlugin().getKubernetes().getRun() != null) {
+                    CamelKubernetesRunIntegrationAction.Builder builder = new CamelKubernetesRunIntegrationAction.Builder();
+
+                    if (jbang.getPlugin().getKubernetes().getRun().getIntegration().getFile() != null) {
+                        builder.integration(Resources.create(jbang.getPlugin().getKubernetes().getRun().getIntegration().getFile()));
+                    }
+
+                    builder.runtime(jbang.getPlugin().getKubernetes().getRun().getRuntime())
+                            .imageBuilder(jbang.getPlugin().getKubernetes().getRun().getImageBuilder())
+                            .imageRegistry(jbang.getPlugin().getKubernetes().getRun().getImageRegistry())
+                            .clusterType(jbang.getPlugin().getKubernetes().getRun().getClusterType());
+
+                    if (jbang.getPlugin().getKubernetes().getRun().getBuildProperties() != null) {
+                        jbang.getPlugin().getKubernetes().getRun().getBuildProperties()
+                                .getProperties()
+                                .forEach(property -> builder.withBuildProperties(property.getName() + "=\"" + property.getValue() + "\""));
+                    }
+                    if (jbang.getPlugin().getKubernetes().getRun().getProperties() != null) {
+                        jbang.getPlugin().getKubernetes().getRun().getProperties()
+                                .getProperties()
+                                .forEach(property -> builder.withProperties(property.getName() + "=\"" + property.getValue() + "\""));
+                    }
+                    if (jbang.getPlugin().getKubernetes().getRun().getTraits() != null) {
+                        jbang.getPlugin().getKubernetes().getRun().getTraits()
+                                .getTraits()
+                                .forEach(trait -> builder.withTrait(trait.getName() + "=\"" + trait.getValue() + "\""));
+                    }
+                    if (jbang.getPlugin().getKubernetes().getRun().getArgs() != null) {
+                        builder.withArgs(jbang.getPlugin().getKubernetes().getRun().getArgs().getArgs().toArray(String[]::new));
+                    }
+
+
+                    builder.waitForRunningState(jbang.getPlugin().getKubernetes().getRun().isWaitForRunningState());
+
+                    this.builder = builder;
+                } else if (jbang.getPlugin().getKubernetes().getVerify() != null) {
+                    CamelKubernetesVerifyAction.Builder builder = new CamelKubernetesVerifyAction.Builder();
+
+                    builder.integration(jbang.getPlugin().getKubernetes().getVerify().getIntegration())
+                            .label(jbang.getPlugin().getKubernetes().getVerify().getLabel())
+                            .namespace(jbang.getPlugin().getKubernetes().getVerify().getNamespace())
+                            .printLogs(jbang.getPlugin().getKubernetes().getVerify().isPrintLogs())
+                            .maxAttempts(jbang.getPlugin().getKubernetes().getVerify().getMaxAttempts())
+                            .delayBetweenAttempts(jbang.getPlugin().getKubernetes().getVerify().getDelayBetweenAttempts());
+                    if (jbang.getPlugin().getKubernetes().getVerify().getLogMessage() != null) {
+                        builder.waitForLogMessage(jbang.getPlugin().getKubernetes().getVerify().getLogMessage());
+                    }
+                    if (jbang.getPlugin().getKubernetes().getVerify().getArgs() != null) {
+                        builder.withArgs(jbang.getPlugin().getKubernetes().getVerify().getArgs().getArgs().toArray(String[]::new));
+                    }
+                    this.builder = builder;
+                } else if (jbang.getPlugin().getKubernetes().getDelete() != null) {
+                    CamelKubernetesDeleteAction.Builder builder = new CamelKubernetesDeleteAction.Builder();
+
+                    if (jbang.getPlugin().getKubernetes().getDelete().getIntegration() != null) {
+                        if (jbang.getPlugin().getKubernetes().getDelete().getIntegration().getFile() != null) {
+                            builder.integration(Resources.create(jbang.getPlugin().getKubernetes().getDelete().getIntegration().getFile()));
+                        }
+                        if (jbang.getPlugin().getKubernetes().getDelete().getIntegration().getName() != null) {
+                            builder.integration(jbang.getPlugin().getKubernetes().getDelete().getIntegration().getName());
+                        }
+                    }
+                    builder.clusterType(jbang.getPlugin().getKubernetes().getDelete().getClusterType())
+                            .namespace(jbang.getPlugin().getKubernetes().getDelete().getNamespace())
+                            .workingDir(jbang.getPlugin().getKubernetes().getDelete().getWorkingDir());
+                    this.builder = builder;
+                }
+
+            }
+
+
+        }
         return this;
     }
 
