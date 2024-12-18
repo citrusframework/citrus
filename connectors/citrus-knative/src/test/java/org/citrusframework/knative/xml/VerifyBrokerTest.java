@@ -18,7 +18,7 @@ package org.citrusframework.knative.xml;
 
 import io.fabric8.knative.eventing.v1.Broker;
 import io.fabric8.knative.eventing.v1.BrokerBuilder;
-import io.fabric8.knative.internal.pkg.apis.ConditionBuilder;
+import io.fabric8.knative.pkg.apis.ConditionBuilder;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.knative.actions.eventing.VerifyBrokerAction;

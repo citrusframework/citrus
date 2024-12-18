@@ -16,8 +16,8 @@
 
 package org.citrusframework.knative.yaml;
 
-import io.fabric8.knative.internal.pkg.apis.duck.v1.DestinationBuilder;
-import io.fabric8.knative.internal.pkg.apis.duck.v1.KReferenceBuilder;
+import io.fabric8.knative.duck.v1.DestinationBuilder;
+import io.fabric8.knative.duck.v1.KReferenceBuilder;
 import io.fabric8.knative.messaging.v1.Subscription;
 import io.fabric8.knative.messaging.v1.SubscriptionBuilder;
 import org.citrusframework.TestCase;
