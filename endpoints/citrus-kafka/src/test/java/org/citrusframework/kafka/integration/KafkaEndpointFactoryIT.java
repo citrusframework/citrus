@@ -27,4 +27,3 @@ public class KafkaEndpointFactoryIT extends TestNGCitrusSpringSupport {
     @CitrusTestSource(type = TestLoader.SPRING, name = "KafkaEndpointFactoryIT")
     public void testKafkaEndpointFactory() {}
 }
-

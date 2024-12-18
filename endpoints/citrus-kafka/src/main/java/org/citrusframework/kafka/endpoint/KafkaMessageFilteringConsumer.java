@@ -34,13 +34,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
 import static java.lang.String.format;
+import static java.lang.Thread.currentThread;
 import static java.time.Instant.now;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
@@ -140,13 +140,13 @@ class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
     private List<ConsumerRecord<Object, Object>> findMessageWithTimeout(String topic, long timeout) {
         logger.trace("Applied timeout is {} ms", timeout);
 
-        ExecutorService executorService = newSingleThreadExecutor();
+        var executorService = newSingleThreadExecutor();
         final Future<List<ConsumerRecord<Object, Object>>> handler = executorService.submit(() -> findMessagesSatisfyingMatcher(topic));
 
         try {
             return handler.get(timeout, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            currentThread().interrupt();
             throw new CitrusRuntimeException("Thread was interrupted while waiting for Kafka message", e);
         } catch (ExecutionException e) {
             throw new CitrusRuntimeException(format("Failed to receive message on Kafka topic '%s'", topic), e);
@@ -157,8 +157,8 @@ class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
 
             throw new MessageTimeoutException(timeout, topic, e);
         } finally {
-            executorService.shutdownNow();
             consumer.unsubscribe();
+            executorService.shutdownNow();
         }
     }
 
