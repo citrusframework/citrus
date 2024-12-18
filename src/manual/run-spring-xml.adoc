@@ -1,0 +1,476 @@
+[[run-spring-xml-tests]]
+== Spring Bean XML
+
+IMPORTANT: The Spring bean XML domain specific language for writing tests is deprecated.
+Please consider using the arbitrary XML test language syntax instead (see chapter link:#run-xml-tests[Run XML tests]])
+
+The Spring bean XML domain specific language is a variation of the arbitrary XML domain specific language in Citrus.
+The Spring XML file holds all test actions in the form of Spring XML beans.
+
+NOTE: You need to have the runtime module `citrus-spring` enabled in your project to use the Spring bean XML test case language.
+
+Citrus uses Spring bean definition parsers to load the XML test actions.
+The Spring application context loads the Spring XML test case file as a set of Spring bean configurations.
+Citrus runs the resulting test Spring bean as a normal unit test using one of the provided runtimes like link:#runtime-junit5[JUnit Jupiter] or link:#runtime-testng[TestNG].
+
+You define the complete test logic in the Spring bean XML file:
+
+.MyFirstCitrus_IT.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+    <testcase name="MyFirstCitrus_IT">
+      <description>
+          First example showing the basic test case definition elements!
+      </description>
+      <variables>
+        <variable name="text" value="Hello Test Framework"/>
+      </variables>
+      <actions>
+        <echo>
+          <message>${text}</message>
+        </echo>
+      </actions>
+    </testcase>
+</spring:beans>
+----
+
+All Spring XML test definitions use a custom Spring XML schema that aims to reach the convenience of a domain specific language (DSL).
+
+The definition uses the `&lt;spring:beans&gt;` root element that declares all XML namespaces used in the file.
+This is because the XML file will be loaded as a Spring bean definition.
+The root element defines a `testcase` element which represents the actual Citrus test.
+
+The test case itself gets a mandatory name that must be unique throughout all test cases in a project.
+You will receive errors when using duplicate test names.
+The test name has to follow the common Java naming conventions and rules for Java classes.
+This means names must not contain whitespace characters except `'-'`, `'.'` and `'_'`.
+
+For example, *_TestFeature_1_* is valid but *_Test Feature 1_* is not because of the space characters.
+
+[[run-spring-xml-java-class]]
+=== Java test runner
+
+Despite the fact that the complete test logic is defined in XML we need a Java class to actually load the XML file and run the test as part of
+JUnit, Cucumber or TestNG depending on the test engine you choose.
+The Java class acts as a wrapper to load the XML file and execute the test.
+
+The Spring XML test case definition in Citrus uses two files that are connected via naming conventions.
+In a Maven project these two files would be:
+
+.XML test case files
+[source]
+----
+src/test/java/org/citrusframework/MyFirstCitrus_IT.java
+src/test/resources/org/citrusframework/MyFirstCitrus_IT.xml
+----
+
+The files above represent a test called `MyFirstCitrus_IT`.
+The `.java` file defines the runtime that should be used to execute the test.
+This Java file does not have any test logic and is not likely to be changed.
+In fact, you can generate the Java file from Citrus (e.g. Maven plugin).
+
+.Generate test files via Maven plugin
+[source,shell]
+----
+mvn citrus:create-test
+----
+
+.Interactive test creation
+[source,shell]
+----
+Enter test name:: MyFirstCitrus_IT
+Enter test author: Unknown::
+Enter test description:: Sample XML test
+Enter test package: org.citrusframework::
+Choose unit test framework: (testng/junit4/junit5) testng::
+Choose target code base type: (java/xml) java:: xml
+Create test with XML schema? (y/n) n::
+Create test with WSDL? (y/n) n::
+Create test with Swagger API? (y/n) n::
+
+Confirm test creation:
+type: xml
+framework: testng
+name: MyFirstCitrus_IT
+author: Unknown
+description:
+package: org.citrusframework
+ (y/n) y:: y
+
+[INFO] Successfully created new test case org.citrusframework.MyFirstCitrus_IT
+----
+
+The command above creates the two test files (`.java` and `.xml`) using an interactive mode.
+The user provides the test case information such as test name, package, runtime and so on.
+
+.MyFirstCitrus_IT.java
+[source,java]
+----
+package org.citrusframework;
+
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.testng.TestNGCitrusSupport;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+public class MyFirstCitrus_IT extends TestNGCitrusSpringSupport {
+
+    @Test
+    @CitrusTestSource(type = "spring", name="MyFirstCitrus_IT")
+    public void myFirstCitrus_IT() {
+    }
+}
+----
+
+The purpose of the generated Java class is to load the XML file as a Spring bean test and execute the test case.
+
+The default naming convention requires the XML file with the test name in the same package as the generated Java class.
+This makes sure that the Java class is able to find the XML file when loading and running the test.
+
+[[run-spring-xml-test-meta-info]]
+=== Test meta information
+
+The user is able to provide some additional information about the test case.
+The meta-info section at the very beginning of the test case holds information like author, status or creation date.
+
+.Test meta information
+[source,xml]
+----
+<testcase name="metaInfoTest">
+    <meta-info>
+        <author>Christoph Deppisch</author>
+        <creationdate>2008-01-11</creationdate>
+        <status>FINAL</status>
+        <last-updated-by>Christoph Deppisch</last-updated-by>
+        <last-updated-on>2008-01-11T10:00:00</last-updated-on>
+    </meta-info>
+    <description>
+        ...
+    </description>
+    <actions>
+        ...
+    </actions>
+</testcase>
+----
+
+The status allows the following values:
+
+* DRAFT
+* READY_FOR_REVIEW
+* DISABLED
+* FINAL
+
+This information gives the reader first impression about the test and is also used to generate test documentation.
+By default, Citrus is able to generate test reports in HTML and Excel in order to list all tests with their metadata information and description.
+
+NOTE: Tests with the status DISABLED will not be executed during a test suite run.
+So someone can just start adding planned test cases that are not finished yet in status DRAFT.
+In case a test is not runnable yet because it is not finished, someone may disable a test temporarily to avoid causing failures during a test run.
+
+The test description should give a short introduction to the intended use case scenario that will be tested.
+The user should get a short summary of what the test case is trying to verify.
+You can use free text in your test description no limit to the number of characters.
+Please be aware of the XML validation rules of well-formed XML (e.g. special character escaping).
+The usage of CDATA sections for large descriptions may be a good idea, too.
+
+[[run-spring-xml-test-finally]]
+=== Finally block
+
+Java developers might be familiar with the concept of try-catch-finally blocks. The *_finally_* section contains a list of
+test actions that will be executed guaranteed at the very end of the test case even if errors did occur during the execution before.
+
+This is the right place to tidy up things that were previously created by the test like cleaning up the database for instance.
+
+.Finally block
+[source,xml]
+----
+<finally>
+    <echo>
+        <message>Do finally - regardless of what has happened before</message>
+    </echo>
+</finally>
+----
+
+As an example imagine that you have prepared some data inside the database at the beginning of the test and you need to make
+sure the data is cleaned up at the end of the test case.
+
+.Finally block example
+[source,xml]
+----
+<testcase name="finallyTest">
+    <variables>
+        <variable name="orderId" value="citrus:randomNumber(5)"/>
+        <variable name="date" value="citrus:currentDate('dd.MM.yyyy')"/>
+    </variables>
+    <actions>
+        <sql datasource="testDataSource">
+            <statement>
+                INSERT INTO ORDERS VALUES (${orderId}, 1, 1, '${date}')
+            </statement>
+        </sql>
+
+        <echo>
+            <message>
+                ORDER creation time: ${date}
+            </message>
+        </echo>
+    </actions>
+    <finally>
+        <sql datasource="testDataSource">
+            <statement>
+              DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'
+            </statement>
+        </sql>
+    </finally>
+</testcase>
+----
+
+In the example the first action creates an entry in the database using an *_INSERT_* statement.
+To be sure that the entry in the database is deleted after the test, the finally section contains the respective *_DELETE_* statement that is always
+executed regardless the test case state (successful or failed).
+
+[[run-spring-xml-test-variables-cdata]]
+=== Variables with CDATA sections
+
+When using the XML test definition you must obey the XML rules for variable values.
+First of all you need to escape XML reserved characters such as `<`, `&` or `"` with `&lt;`, `&amp;` or `&quot;`.
+Other values such as XML snippets would also interfere with the XML well-formed paradigm.
+You can use CDATA sections within the variable value element as a solution.
+
+.Variable CDATA sections
+[source,xml]
+----
+<variables>
+  <variable name="persons">
+    <value>
+      <data>
+        <![CDATA[
+          <persons>
+            <person>
+              <name>Theodor</name>
+              <age>10</age>
+            </person>
+            <person>
+              <name>Alvin</name>
+              <age>9</age>
+            </person>
+          </persons>
+        ]]>
+      </data>
+    </value>
+  </variable>
+</variables>
+----
+
+That is how you can use structured variable values in the XML DSL.
+
+[[run-spring-xml-variables-groovy]]
+=== Variables with Groovy
+
+You can also use a script to create variable values.
+This is extremely handy when you have very complex variable values.
+Just code a small Groovy script for instance in order to define the variable value.
+A small sample should give you the idea how that works:
+
+.Groovy variable script
+[source,xml]
+----
+<variables>
+  <variable name="avg">
+    <value>
+      <script type="groovy">
+        <![CDATA[
+          a = 4
+          b = 6
+          return (a + b) / 2
+        ]]>
+      </script>
+    </value>
+  </variable>
+  <variable name="sum">
+    <value>
+      <script type="groovy">
+        <![CDATA[
+          5 + 5
+        ]]>
+      </script>
+    </value>
+  </variable>
+</variables>
+----
+
+Just use the script code right inside the variable value definition.
+The value of the variable is the result of the last operation performed within the script.
+For longer script code the use of `&lt;![CDATA[ ]]&gt;` sections is recommended.
+
+Citrus uses the JavaScript engine mechanism to evaluate the script code.
+By default, Groovy is supported as a script engine implementation.
+You can add additional engine implementations to your project and support other script types, too.
+
+[[run-spring-xml-templates]]
+=== Templates
+
+Templates group action sequences to a logical unit.
+You can think of templates as reusable components that are used in several XML tests.
+The maintenance is much more efficient because you need to apply changes only on the templates and all referenced use cases are updated automatically.
+
+The template always has a unique name.
+Inside a test case we call the template by this unique name.
+Have a look at a first example:
+
+.XML templates
+[source,xml]
+----
+<template name="doCreateVariables">
+    <create-variables>
+        <variable name="var" value="123456789"/>
+    </create-variables>
+
+    <call-template name="doTraceVariables"/>
+</template>
+
+<template name="doTraceVariables">
+    <echo>
+        <message>Current time is: ${time}</message>
+    </echo>
+
+    <trace-variables/>
+</template>
+----
+
+The code example above describes two template definitions.
+Templates hold a sequence of test actions or call other templates themselves as seen in the example above.
+
+NOTE: The `<call-template>` action calls other templates by their name.
+The called template not necessarily has to be located in the same test case XML file.
+The template might be defined in a separate XML file other than the test case itself:
+
+.Call XML templates
+[source,xml]
+----
+<testcase name="templateTest">
+    <variables>
+        <variable name="myTime" value="citrus:currentDate()"/>
+    </variables>
+    <actions>
+        <call-template name="doCreateVariables"/>
+
+        <call-template name="doTraceVariables">
+            <parameter name="time" value="${myTime}">
+        </call-template>
+    </actions>
+</testcase>
+----
+
+There is an open question when dealing with templates that are defined somewhere else outside the test case.
+How to handle variables? A templates may use different variable names then the test and vice versa.
+No doubt the template will fail as soon as special variables with respective values are not present.
+Unknown variables cause the template and the whole test to fail with errors.
+
+So a first approach would be to harmonize variable usage across templates and test cases, so that templates and test cases
+do use the same variable naming.
+But this approach might lead to high calibration effort.
+Therefore, templates support parameters to solve this problem.
+When a template is called the calling actor is able to set some parameters.
+Let us discuss an example for this issue.
+
+The template "doDateConversion" in the next sample uses the variable ${date}.
+The calling test case can set this variable as a parameter without actually declaring the variable in the test itself:
+
+.Template parameter
+[source,xml]
+----
+<call-template name="doDateConversion">
+    <parameter name="date" value="${sampleDate}"/>
+</call-template>
+----
+
+The variable *sampleDate* is already present in the test case and gets translated into the *date* parameter.
+Following from that the template works fine although test and template do work on different variable namings.
+
+With template parameters you are able to solve the calibration effort when working with templates and variables.
+It is always a good idea to check the used variables/parameters inside a template when calling it.
+There might be a variable that is not declared yet inside your test.
+So you need to define this value as a parameter.
+
+Template parameters may contain more complex values like XML fragments.
+The call-template action offers following CDATA variation for defining complex parameter values:
+
+.Complex parameter values
+[source,xml]
+----
+<call-template name="printXMLPayload">
+    <parameter name="payload">
+      <value>
+        <![CDATA[
+          <HelloRequest xmlns="http://citrusframework.org/schemas/samples/sayHello.xsd">
+            <Text>Hello South ${var}</Text>
+          </HelloRequest>
+        ]]>
+      </value>
+    </parameter>
+</call-template>
+----
+
+IMPORTANT: When a template works on variable values and parameters changes to these variables will automatically affect the
+variables in the whole test. So if you change a variable's value inside a template and the variable is defined inside the
+test case the changes will affect the variable in a global context. We have to be careful with this when executing a template
+several times in a test, especially in combination with parallel containers (see link:#containers-parallel[containers-parallel]).
+
+.Global scope parameter
+[source,xml]
+----
+<parallel>
+    <call-template name="print">
+        <parameter name="param1" value="1"/>
+        <parameter name="param2" value="Hello Europe"/>
+    </call-template>
+    <call-template name="print">
+        <parameter name="param1" value="2"/>
+        <parameter name="param2" value="Hello Asia"/>
+    </call-template>
+    <call-template name="print">
+        <parameter name="param1" value="3"/>
+        <parameter name="param2" value="Hello Africa"/>
+    </call-template>
+</parallel>
+----
+
+In the listing above a template *print* is called several times in a parallel container.
+The parameter values will be handled in a global context, so it is quite likely to happen that the template instances influence each other during execution. We might get such print messages:
+
+.Output
+[source,xml]
+----
+2. Hello Europe
+2. Hello Africa
+3. Hello Africa
+----
+
+Index parameters do not fit and the message *'Hello Asia'* is completely gone.
+This is because templates overwrite parameters to each other as they are executed in parallel at the same time.
+To avoid this behavior we need to tell the template that it should handle parameters as well as variables in a local context.
+This will enforce that each template instance is working on a dedicated local context. See the *global-context* attribute that is set to *false* in this example:
+
+.Local scope parameter
+[source,xml]
+----
+<template name="print" global-context="false">
+    <echo>
+        <message>${param1}.${param2}</message>
+    </echo>
+</template>
+----
+
+After that template instances won't influence each other anymore.
+But notice that variable changes inside the template then do not affect the test case neither.

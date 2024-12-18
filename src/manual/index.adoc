@@ -28,7 +28,7 @@ include::preface.adoc[]
 include::introduction.adoc[]
 include::setup.adoc[]
 include::runtimes.adoc[]
-include::run-java.adoc[]
+include::run.adoc[]
 include::test-variables.adoc[]
 
 include::validation.adoc[]
@@ -78,7 +78,6 @@ include::meta-info.adoc[]
 include::message-tracing.adoc[]
 include::reporting.adoc[]
 
-include::run-xml.adoc[]
 include::configuration.adoc[]
 include::spring-support.adoc[]
 

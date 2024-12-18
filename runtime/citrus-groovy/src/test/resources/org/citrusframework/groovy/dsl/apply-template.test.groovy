@@ -17,6 +17,7 @@
 package org.citrusframework.groovy.dsl
 
 import static org.citrusframework.container.Template.Builder.applyTemplate
+
 name "ApplyTemplateTest"
 author "Christoph"
 status "FINAL"

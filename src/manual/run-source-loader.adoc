@@ -1,0 +1,131 @@
+[[run-test-source-loader]]
+== Test source loader
+
+Besides writing Citrus tests directly in Java you can code tests in domain specific languages using one of the supported tests sources:
+
+* Java runnable
+* XML
+* YAML
+* Cucumber
+* Groovy
+* Spring XML
+
+The test case definition file is loaded by Citrus and run as a normal test.
+In Citrus the `@CitrusTestSource` annotation in the Java class defines the test source location to be loaded.
+This annotation makes Citrus search for the XML, YAML, Groovy, Cucumber, Spring XML files that represent the Citrus test.
+
+The next example shows how the annotation is used in a normal Java test to load XML test case definitions.
+
+.MyFirstCitrus_IT.java
+[source,java]
+----
+package org.citrusframework;
+
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.testng.TestNGCitrusSupport;
+import org.testng.annotations.Test;
+
+public class MyFirstCitrus_IT extends TestNGCitrusSpringSupport {
+
+    @Test
+    @CitrusTestSource(type = "xml", name="MyFirstCitrus_IT")
+    public void myFirstCitrus_IT() {
+    }
+}
+----
+
+In the basic example above this means that Citrus searches for an XML test file in *org/citrusframework/MyFirstCitrus_IT.xml* .
+
+You can customize this path and tell Citrus to search for another XML file by using the `@CitrusTestSource` annotation properties.
+
+Following annotation properties are available:
+
+[horizontal]
+type:: Type of the test source to load (spring, groovy, xml, ...)
+name:: List of test case names to execute. Names also define XML file names to look for (*.xml* file extension is not needed here).
+packageName:: Custom package location for the XML files to load
+packageScan:: List of packages that are automatically scanned for XML test files to execute. For each XML file found separate
+test is executed. Note that this performs a Java Classpath package scan so all XML files in package are assumed to be valid Citrus
+XML test cases. In order to minimize the amount of accidentally loaded XML files the scan will only load XML files with `\\**/*Test.xml` and `**/*IT.xml`
+file name pattern.
+
+.Customize @CitrusTestSource
+[source,java]
+----
+public class Sample_IT extends TestNGCitrusSpringSupport {
+
+    @Test
+    @CitrusTestSource(type = "xml", name = "CustomName_IT", packageName = "com.other.test.package")
+    public void customXmlTest() {}
+}
+----
+
+The annotation above loads a different XML test file named `CustomName_IT` in package `com.other.test.package`.
+
+You can also load multiple XML files and run each of them.
+
+.Load multiple XML files
+[source,java]
+----
+public class Sample_IT extends TestNGCitrusSpringSupport {
+
+    @Test
+    @CitrusTestSource(type = "xml", name = { "Test_1", "Test_2" })
+    public void multipleTests() {}
+}
+----
+
+This tells Citrus to search for the files `Test_1.xml` and `Test_2.xml`. Citrus loads the files and runs each of them as
+a separate test. You can also load all test in a package with a `packageScan`.
+
+.Load multiple XML files
+[source,java]
+----
+public class Sample_IT extends TestNGCitrusSpringSupport {
+
+    @Test
+    @CitrusTestSource(type = "xml", packageScan =  { "com.some.test.package", "com.other.test.package" })
+    public void packageScanTest() {}
+}
+----
+
+This loads all XML files in the given packages and executes each of them as a separate test.
+
+You can also mix the various `@CitrusTestSource` annotations in a single Java class.
+The class can have several methods with different annotations. Each annotated method represents one or more Citrus XML test cases.
+
+.@CitrusTestSource annotations
+[source,java]
+----
+public class SampleIT extends TestNGCitrusSpringSupport {
+
+    @Test
+    @CitrusTestSource(type = "xml", name = "SampleIT")
+    public void sampleTest() {}
+
+    @Test
+    @CitrusTestSource(type = "xml", name = { "Test_1", "Test_2" })
+    public void multipleTests() {}
+
+    @Test
+    @CitrusTestSource(type = "xml", name = "CustomName_IT", packageName = "com.other.test.package")
+    public void customXmlTest() {}
+
+    @Test
+    @CitrusTestSource(type = "xml", packageScan =  { "com.some.test.package", "com.other.test.package" })
+    public void packageScanTest() {}
+}
+----
+
+You are free to combine these test annotations as you like in your class.
+Each XML test loaded as part of the class will be reported separately as a unit test.
+So the test reports will have the exact number of tests executed with proper success and failed stats.
+You can use the reports as normal unit test reports, for instance in a continuous build.
+
+NOTE: When test execution takes place each test method annotation is evaluated in sequence.
+XML test cases that match several times, for instance by explicit name reference and a package scan will be executed several times respectively.
+
+TIP: The best thing about using the *@CitrusTestSource* annotation is that you can continue to use the test framework capabilities
+(e.g. test groups, invocation count, thread pools, data providers, and so on).
+
+The following chapters describe the different supported test sources that you can load as a Citrus test.

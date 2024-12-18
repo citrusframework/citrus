@@ -1,10 +1,10 @@
 [[runtime-main]]
-== Main CLI runtime
+== Main CLI
 
 Citrus provides a main Java class that you can run from command line.
 The Citrus Main CLI class supports some command line arguments that you can use to specify which tests to run.
 
-NOTE: Please also have a look into link:runtimes-jbang.adoc[Citrus JBang CLI support] as it makes running Citrus tests from a command line even more comfortable as it also takes care of setting up Java and the Citrus Maven project for free. With JBang running Citrus tests becomes as easy as running a single file (`.java`, `.xml`, `.groovy`, `.yaml`) from the command line.
+NOTE: Please also have a look into link:#runtime-jbang[Citrus JBang CLI support] as it makes running Citrus tests from a command line even more comfortable as it also takes care of setting up Java and the Citrus Maven project for free. With JBang running Citrus tests becomes as easy as running a single file (`.java`, `.xml`, `.groovy`, `.yaml`) from the command line.
 
 NOTE: The Main CLI support is shipped in a separate Maven module. You need to include the module as a dependency in your
 project.

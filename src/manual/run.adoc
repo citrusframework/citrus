@@ -1,0 +1,14 @@
+[[run]]
+= Run tests
+
+You can write Citrus tests in various programming languages.
+The following chapters describe the individual domain specific languages that support you in writing tests in Citrus.
+
+NOTE: We do our best to make all features equal in all supported languages. Some feature may only make sense in a specific test project setup and are not applicable to all languages (e.g. test behaviors only run in Java classes).
+
+include::run-java.adoc[]
+include::run-source-loader.adoc[]
+include::run-xml.adoc[]
+include::run-yaml.adoc[]
+include::run-groovy.adoc[]
+include::run-spring-xml.adoc[]

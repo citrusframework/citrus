@@ -1,21 +1,29 @@
 [[run-java]]
-= Running tests in Java
+== Run Java tests
 
-The Citrus test holds a sequence of test actions. Each action represents a very special purpose such as sending or
-receiving a message.
+You can code the Citrus test as you would do with any other unit test framework (e.g. link:#runtime-junit5[JUnit Jupiter] or link:#runtime-testng[TestNG]).
+In fact Citrus builds on top of those famous unit testing frameworks because the tooling and adoption throughout the industry is very high for these libraries.
+
+Citrus has a set of test engines that you can use to run Citrus tests with your favorite unit test framework.
+For instance Citrus provides a JUnit Jupiter extension that you can use to code Citrus tests in Java.
+Or you can use the Citrus Cucumber integration to run your tests as Gherkin feature files.
+
+No matter what test engine you choose the Citrus test will assist you in writing tests through a Java domain specific language.
+This is a set of predefined methods, builders and classes that you can use to code the test in Java.
+In conclusion the Citrus test holds a sequence of test actions and each action performs a very special step in your test such as sending or receiving a message.
 
 Despite the fact that message exchange is one of the main actions in an integration test framework for message-based applications
 Citrus is more than just that. Each test case in Citrus is able to perform various actions such as connecting to the database,
 transforming data, adding iterations and conditional steps.
 
 With the default Citrus actions provided out of the box users can accomplish very complex use cases in integration testing.
-In Citrus you can configure and add test actions in Java using a test action runner API that leverages a fluent builder pattern API.
+As a tester you can configure test actions in Java using a test action runner API that leverages a fluent builder pattern.
 
 [[java-test-runner]]
-== Test action runner
+=== Test action runner
 
-The test action runner is the entry to the fluent Java API. You can configure test actions with a fluent builder style API and
-immediately run the actions with the runner.
+The test action runner is the entry to the fluent Citrus Java API.
+You can configure test actions with a builder pattern style API and immediately runs the test actions.
 
 See the following example to see the Java domain specific language in action.
 
@@ -52,7 +60,7 @@ test execution through resource injection. Read more about this in link:#junit4-
 support.
 
 [[java-test-runner-gherkin]]
-== Gherkin test action runner
+=== Gherkin test action runner
 
 The test action runner is also available as Gherkin style runner with `given()`, `when()`, `then()` methods. The Gherkin test action runner
 follows the Behavior Driven Development concepts of structuring the test into the three parts: *Given* a certain context, *when* an event
@@ -82,7 +90,7 @@ public class Service_IT extends TestNGCitrusSupport {
 ----
 
 [[java-test-meta-information]]
-== Test meta information
+=== Test meta information
 
 The user is able to provide some additional information about the test case. The meta-info section at the very beginning of the
 test case holds information like author, status or creation date.
@@ -118,7 +126,7 @@ The test description should give a short introduction to the intended use case s
 a short summary of what the test case is trying to verify.
 
 [[java-test-finally]]
-== Finally block
+=== Finally block
 
 Java developers might be familiar with the concept of try-catch-finally blocks. The *_finally_* section contains a list of
 test actions that will be executed guaranteed at the very end of the test case even if errors did occur during the execution before.
@@ -166,14 +174,14 @@ public void finallyBlockTest() {
 ----
 
 In the example the first action creates an entry in the database using an *_INSERT_* statement. To be sure that the entry
-in the database is deleted after the test, the finally section contains the respective *_DELETE_* statement that is always
+in the database is deleted after the test, the `finally` section contains the respective *_DELETE_* statement that is always
 executed regardless the test case state (successful or failed).
 
-NOTE: The finally section must be placed at the very beginning of the test. This is because the test action runner
+NOTE: The `finally` section must be placed at the very beginning of the test. This is because the test action runner
 is immediately executing each test action as it is called within the Java DSL methods. This is the only way the test case
 can perform the final actions also in case of previous error.
 
-A finally block placed at the very end of the test will not take action unless put in a traditional Java try-finally-block:
+A `finally` block placed at the very end of the test will not take action unless put in a traditional Java try-finally-block:
 
 .Traditional try-finally block
 [source,java]
@@ -202,10 +210,10 @@ public void finallyBlockTest() {
 Using the traditional Java `try-finally` feels more natural no doubt. Please notice that the Citrus report and logging will
 not account the traditional finally block actions then. Good news is whatever layout you choose the outcome is always the same.
 
-The finally block is executed safely even in case some previous test action raises an error for some reason.
+The `finally` block is executed safely even in case some previous test action raises an error for some reason.
 
 [[java-test-behaviors]]
-== Test behaviors
+=== Test behaviors
 
 The concept of test behaviors is a good way to reuse test action blocks in the Java DSL. Test behaviors combine action
 sequences to a logical unit. The behavior defines a set of test actions that can be applied multiple times to different
@@ -285,9 +293,8 @@ change a variable value inside a behavior and the variable is defined inside the
 the variable in a global test context. This means we have to be careful when executing a behavior several times in a test,
 especially in combination with parallel containers (see link:#containers-parallel[containers-parallel]).
 
-
 [[java-custom-actions]]
-== Run custom code
+=== Run custom code
 
 In general, you are able to mix Citrus Java DSL actions with custom Java code as you like.
 
@@ -353,7 +360,7 @@ This is why you should wrap custom code in a test action and run that code via t
 a test action implementation and reference the logic from multiple tests.
 
 [[java-bind-to-registry]]
-== Bind objects to registry
+=== Bind objects to registry
 
 The Citrus context is a place where objects can register themselves in order to enable dependency injection and instance sharing
 in multiple tests. Once you register the object in the context others can resolve the reference with its given name.
@@ -403,7 +410,7 @@ The `@CitrusEndpoint` annotation injects the endpoint resolving the instance wit
 Test methods can use this endpoint in the following send and receive actions.
 
 [[java-bind-to-registry-annotation]]
-=== @BindToRegistry
+==== @BindToRegistry
 
 An alternative to using the `bind()` method on the CitrusContext is to use the `@BindToRegistry` annotation.
 Methods and fields annotated will automatically register in the CitrusContext registry.
@@ -430,7 +437,7 @@ The annotation is able to specify an explicit binding name.
 The annotation works with public methods and fields in tests.
 
 [[java-configuration-class]]
-=== Configuration classes
+==== Configuration classes
 
 As an alternative to adding the registry binding configuration directly to the test you can load configuration classes.
 
@@ -459,7 +466,7 @@ public class MyConfig {
 ----
 
 [[java-configuration-class-annotation]]
-=== @CitrusConfiguration
+==== @CitrusConfiguration
 
 Each test is able to use the `@CitrusConfiguration` annotation to add registry bindings, too.
 
@@ -490,13 +497,13 @@ The `@CitrusConfiguration` annotation is able to load configuration classes and 
 The test can inject endpoints and other components using the `@CitrusEndpoint` and `@CitrusResource` annotation on fields.
 
 [[java-resource-injection]]
-== Resource injection
+=== Resource injection
 
 Resource injection is a convenient mechanism to access Citrus internal objects such as TestRunner or TestContext instances. The following sections
 deal with resource injection of different objects.
 
 [[java-resource-injection-citrus]]
-=== Inject Citrus framework
+==== Inject Citrus framework
 
 You can access the Citrus framework instance in order to access all components and functionalities. Just use the `@CitrusFramework`
 annotation in your test class.
@@ -524,7 +531,7 @@ IMPORTANT: The Citrus context is a shared component. Components added will perfo
 affect all tests.
 
 [[java-resource-injection-runner]]
-=== Test action runner injection
+==== Test action runner injection
 
 The test action runner is the entry to the fluent Java API. You can inject the runner as a method parameter.
 
@@ -554,7 +561,7 @@ Now each method uses its own runner instance which makes sure that parallel test
 the risk of side effects on other tests running at the same time.
 
 [[java-resource-injection-test-context]]
-=== Test context injection
+==== Test context injection
 
 The Citrus test context combines a set of central objects and functionalities that a test is able to make use of. The test context
 holds all variables and is able to resolve functions and validation matchers.
@@ -619,7 +626,7 @@ public class TestContextInjection_IT extends JUnit4CitrusSupport {
 ----
 
 [[java-resource-injection-endpoint]]
-=== Endpoint injection
+==== Endpoint injection
 
 Endpoints play a significant role when sending/receiving messages over various transports. An endpoint defines how to connect
 to a message transport (e.g. Http endpoint URL, JMS message broker connection, Kafka connection and topic selection).

@@ -176,7 +176,7 @@ public class DataProviderIT extends TestNGCitrusSupport {
 }
 ----
 
-All the available configuration options are documented withing the chapter link:runtimes-sharded.adoc[Sharding Test Cases]
+All the available configuration options are documented withing the chapter link:#runtime-sharded[Sharding Test Cases]
 
 [[testng-parallel]]
 === Run tests in parallel

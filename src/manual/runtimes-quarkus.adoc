@@ -1,5 +1,5 @@
 [[runtime-quarkus]]
-== QuarkusTest runtime
+== QuarkusTest
 
 Quarkus has emerged into a popular enterprise Java framework.
 For unit and integration testing the Quarkus framework provides integrations with JUnit Jupiter.

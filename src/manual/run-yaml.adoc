@@ -1,0 +1,339 @@
+[[run-yaml-tests]]
+== YAML
+
+As an alternative to coding tests in a programming language you can specify the test logic in YAML only, too.
+The YAML language gives you some XSD schema and a set of elements that you can choose from to specify test actions.
+
+As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. link:#runtime-junit5[JUnit Jupiter] or link:#runtime-testng[TestNG]).
+You can then use the `@CitrusTestSource` annotation to load the YAML file that represents the test case.
+
+.MyFirstYamlIT.java
+[source,java]
+----
+package org.citrusframework;
+
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.testng.TestNGCitrusSupport;
+import org.testng.annotations.Test;
+
+public class MyFirstYamlIT extends TestNGCitrusSpringSupport {
+
+    @Test
+    @CitrusTestSource(type = "yaml", name="my-test.yaml")
+    public void myFirstXmlIT() {
+    }
+}
+----
+
+The test logic itself is defined in the YAML file like this:
+
+.my-test.yaml
+[source,yaml]
+----
+name: EchoTest
+author: Christoph
+status: FINAL
+description: "Sample test in YAML"
+variables:
+  - name: "message"
+    value: "Hello from Citrus!"
+actions:
+  - echo:
+      message: "${message}"
+----
+
+[[run-yaml-groovy-configuration]]
+=== Configuration scripts
+
+The YAML test is able to create endpoints and other configuration entities as part of the test.
+The test leverages the Groovy programming language that provides a comfortable way to define beans in the Citrus registry.
+You can set any of the supported properties on the configuration components.
+
+.my-test.yaml
+[source,yaml]
+----
+name: EchoTest
+author: Christoph
+status: FINAL
+description: "Sample test in YAML"
+variables:
+  - name: "message"
+    value: "Hello from Citrus!"
+actions:
+  - groovy:
+      endpoints:
+        script: |
+          configuration {
+              queues {
+                  queue('say-hello')
+              }
+
+              endpoints {
+                  direct('hello')
+                      .asynchronous()
+                      .queue('say-hello')
+              }
+          }
+  - send:
+      endpoint: "hello"
+      message>:
+        body:
+          data: Hello Citrus!
+----
+
+The test above creates a new `direct` endpoint called `hello` that uses an im-memory queue `say-hello`.
+The send action is able to reference the endpoint by its name to send a message body to the queue.
+
+[[run-yaml-templates]]
+=== Templates
+
+Templates group action sequences to a logical unit.
+You can think of templates as reusable components that are used in several tests.
+The maintenance is much more efficient because you need to apply changes only on the templates and all referenced use cases are updated automatically.
+
+The template gets identified by a unique name.
+Inside a test case we apply the template referencing this unique name.
+Have a look at a first example:
+
+.echo-template.yaml
+[source,yaml]
+----
+name: echo
+description: Sample template in YAML
+parameters:
+  - name: message
+    value: "Citrus rocks!"
+actions:
+  - echo:
+      message: "${message}"
+----
+
+The code example above describes a template called `echo`.
+Templates hold a sequence of test actions or calls other templates themselves.
+The template may define a set of parameters that represent customizable user input when applying the template.
+
+The template is available for multiple tests that may apply the template as part of their test action sequence.
+
+.Apply templates
+[source,yaml]
+----
+name: ApplyTemplateTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - applyTemplate:
+      name: echo
+  - applyTemplate:
+      name: echo
+      parameters:
+        - name: message
+          value: "Hello from Citrus!"
+----
+
+The example references the `echo` template and call it as part of the test with `<apply-template/>`.
+You can customize the template parameter to overwrite the default variable `text` with a custom value.
+
+The example above assumes that you have added the template to the Citrus bean registry with the name `echo`.
+If this is not the case you may also reference the file resource path when applying the template:
+
+.Apply templates
+[source,yaml]
+----
+name: ApplyTemplateTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - applyTemplate:
+      file: "classpath:templates/yaml/echo-template.yaml"
+      parameters:
+        - name: message
+          value: "Citrus rocks!"
+----
+
+[[run-yaml-template-parameters]]
+==== Template parameters
+
+How to handle test variables when dealing with templates, in particular when templates are defined in separate source files?
+A template may use different variable names compared to those names used a test and vice versa.
+The template fails immediately when respective variables are not present.
+Therefore, templates introduce the concept of parameters to declare its variable names.
+
+Assume you have the following template:
+
+.sayHello template
+[source,yaml]
+----
+name: sayHello
+description: Sample template in YAML
+parameters:
+  - name: user
+    value: "Citrus"
+actions:
+  - echo:
+      message: "Hello ${user}!"
+----
+
+The template `sayHello` in the example uses the variable `${user}`.
+
+In case the test case already uses the template parameter as a value you do not need to set this variable explicitly on the apply template action.
+
+.Implicit template parameter
+[source,yaml]
+----
+name: SayHelloTemplateTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+variables:
+  - name: "user"
+    value: "Christoph"
+actions:
+  - applyTemplate:
+      name: sayHello
+----
+
+.Output
+[source,text]
+----
+Hello Christoph!
+----
+
+NOTE: The implicit template parameter may break as soon as the template or the test changes its parameter or variable name.
+
+The test case may also explicitly set the template parameter when applying the template:
+
+.Explicit template parameter
+[source,yaml]
+----
+name: SayHelloTemplateTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+variables:
+  - name: "username"
+    value: "Mickey"
+actions:
+  - applyTemplate:
+      name: sayHello
+      parameters:
+        - name: user
+          value: "${username}"
+----
+
+.Output
+[source,text]
+----
+Hello Mickey!
+----
+
+The variable *username* is already present in the test case and gets translated into the *user* parameter.
+Following from that the template works fine although test and template do work on different variable names.
+
+With template parameters you are able to solve the calibration effort when working with templates and variables.
+It is always a good idea to check the used variables/parameters inside a template when calling it.
+There might be a variable that is not declared yet inside your test.
+So you need to define this value as a parameter.
+
+[[run-yaml-template-paremeter-scope]]
+==== Template parameter scope
+
+A template is able to change a test variable value for the rest of the test case.
+It is important to know about this when changing test variables in a template as it affects the descendant test actions.
+Especially when running test actions or templates in parallel to each other this might lead to unexpected behavior.
+You may choose the template parameter scope for this scenario.
+
+IMPORTANT: When a template works on variable values and parameters changes to these variables will automatically affect the
+variables in the whole test. So if you change a variable's value inside a template and the variable is defined inside the
+test case the changes will affect the variable in a global context. We have to be careful with this when executing a template
+several times in a test, especially in combination with parallel containers (see link:#containers-parallel[containers-parallel]).
+
+.print template
+[source,yaml]
+----
+name: print
+description: Sample template in YAML
+parameters:
+  - name: index
+    value: "0"
+  - name: area
+    value: "Atlantis"
+actions:
+  - echo:
+      message: "#${index} Hello ${area}!"
+----
+
+.Global scope parameter (default)
+[source,yaml]
+----
+name: SayHelloTemplateTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+variables:
+  - name: "username"
+    value: "Mickey"
+actions:
+  - parallel:
+      actions:
+      - applyTemplate:
+          name: print
+          parameters:
+            - name: index
+              value: "1"
+            - name: area
+              value: "Europe"
+      - applyTemplate:
+          name: print
+          parameters:
+            - name: index
+              value: "2"
+            - name: area
+              value: "Asia"
+      - applyTemplate:
+          name: print
+          parameters:
+            - name: index
+              value: "3"
+            - name: area
+              value: "Africa"
+----
+
+In the listing above a template *print* is called several times in a parallel container.
+The parameter values will be handled in a global context, so it is quite likely to happen that the template instances influence each other during execution.
+We might get such print messages:
+
+.Output
+[source,text]
+----
+#2 Hello Europe!
+#2 Hello Africa!
+#3 Hello Africa!
+----
+
+Index parameters do not fit and the message *'Hello Asia'* is completely gone.
+This is because templates overwrite parameters to each other as they are executed in parallel at the same time.
+To avoid this behavior we need to tell the template that it should handle parameters as well as variables in a local context.
+This will enforce that each template instance is working on a dedicated local context.
+See the *globalContext* key that is set to *false* in this example:
+
+.print template
+[source,yaml]
+----
+name: print
+description: Sample template in YAML
+globalContext: false
+parameters:
+  - name: index
+    value: "0"
+  - name: area
+    value: "Atlantis"
+actions:
+  - echo:
+      message: "#${index} Hello ${area}!"
+
+----
+
+After that template instances will not influence each other anymore.
+But notice that variable changes inside the template then do not affect the test case neither.
