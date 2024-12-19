@@ -19,7 +19,7 @@ package org.citrusframework.knative.integration;
 import io.fabric8.knative.client.KnativeClient;
 import io.fabric8.knative.eventing.v1.Broker;
 import io.fabric8.knative.eventing.v1.BrokerBuilder;
-import io.fabric8.knative.internal.pkg.apis.ConditionBuilder;
+import io.fabric8.knative.pkg.apis.ConditionBuilder;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;

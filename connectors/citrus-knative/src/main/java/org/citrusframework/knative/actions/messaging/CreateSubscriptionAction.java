@@ -16,7 +16,7 @@
 
 package org.citrusframework.knative.actions.messaging;
 
-import io.fabric8.knative.internal.pkg.apis.duck.v1.KReferenceBuilder;
+import io.fabric8.knative.duck.v1.KReferenceBuilder;
 import io.fabric8.knative.messaging.v1.Subscription;
 import io.fabric8.knative.messaging.v1.SubscriptionBuilder;
 import io.fabric8.kubernetes.client.dsl.Updatable;

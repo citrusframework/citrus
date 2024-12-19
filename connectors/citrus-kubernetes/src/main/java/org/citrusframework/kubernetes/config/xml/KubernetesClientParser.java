@@ -16,7 +16,6 @@
 
 package org.citrusframework.kubernetes.config.xml;
 
-import io.fabric8.kubernetes.client.Config;
 import org.citrusframework.config.xml.AbstractEndpointParser;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
@@ -50,7 +49,7 @@ public class KubernetesClientParser extends AbstractEndpointParser {
             throw new IllegalArgumentException("Parameters not set correctly - check if either an oauthToke or password and username is set");
         }
 
-        BeanDefinitionBuilder configBuilder = BeanDefinitionBuilder.genericBeanDefinition(Config.class);
+        BeanDefinitionBuilder configBuilder = BeanDefinitionBuilder.genericBeanDefinition(K8sClientConfig.class);
         setPropertyValue(configBuilder, element.getAttribute("url"), "masterUrl");
         setPropertyValue(configBuilder, element.getAttribute("version"), "apiVersion");
         setPropertyValue(configBuilder, username, "username");
