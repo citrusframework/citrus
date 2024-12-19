@@ -17,6 +17,7 @@
 package org.citrusframework.camel.actions;
 
 import java.util.Map;
+import java.util.Objects;
 
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
@@ -124,15 +125,8 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
         for (int i = 0; i < maxAttempts; i++) {
             if (context.getVariables().containsKey(name + ":pid")) {
                 Long pid = context.getVariable(name + ":pid", Long.class);
-                Map<String, String> properties = camelJBang().get(pid);
-                if ((phase.equals("Stopped") && properties.isEmpty()) || (!properties.isEmpty() && properties.get("STATUS").equals(phase))) {
-                    logger.info(String.format("Verified Camel integration '%s' state '%s' - All values OK!", name, phase));
+                if (findProcessAndVerifyStatus(pid, name, phase)) {
                     return pid;
-                } else if (phase.equals("Error")) {
-                    logger.info(String.format("Camel integration '%s' is in state 'Error'", name));
-                    if (stopOnErrorStatus) {
-                        throw new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' - is in state 'Error'", name));
-                    }
                 }
 
                 if (context.getVariables().containsKey(name + ":process:" + pid)) {
@@ -143,6 +137,15 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
                         logger.info(pao.getOutput());
 
                         throw new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' - exit code %s", name, pao.getProcess().exitValue()));
+                    }
+
+                    // Verify that current processId is the same as the one saved in test context
+                    Long appPid = pao.getProcessId();
+                    if (!Objects.equals(pid, appPid)) {
+                        // seems like there is another pid (descendant process) that should be verified
+                        if (findProcessAndVerifyStatus(appPid, name, phase)) {
+                            return appPid;
+                        }
                     }
                 }
             }
@@ -160,6 +163,21 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
                 new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' - " +
                         "is not in state '%s' after %d attempts", name, phase, maxAttempts)));
 
+    }
+
+    private boolean findProcessAndVerifyStatus(Long pid, String name, String phase) {
+        Map<String, String> properties = camelJBang().get(pid);
+        if ((phase.equals("Stopped") && properties.isEmpty()) || (!properties.isEmpty() && properties.get("STATUS").equals(phase))) {
+            logger.info(String.format("Verified Camel integration '%s' state '%s' - All values OK!", name, phase));
+            return true;
+        } else if (properties.getOrDefault("STATUS", "").equals("Error")) {
+            logger.info(String.format("Camel integration '%s' is in state 'Error'", name));
+            if (stopOnErrorStatus) {
+                throw new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' - is in state 'Error'", name));
+            }
+        }
+
+        return false;
     }
 
     public String getIntegrationName() {
