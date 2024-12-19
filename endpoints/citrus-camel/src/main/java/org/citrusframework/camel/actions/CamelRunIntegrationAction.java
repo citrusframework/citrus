@@ -121,14 +121,11 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
 
             ProcessAndOutput pao = camelJBang().run(name, integrationToRun, resourceFiles, args.toArray(String[]::new));
 
-            if (!pao.getProcess().isAlive()) {
-                logger.info("Failed to start Camel integration '%s'".formatted(name));
-                logger.info(pao.getOutput());
+            verifyProcessIsAlive(pao, name);
 
-                throw new CitrusRuntimeException(String.format("Failed to start Camel integration - exit code %s", pao.getProcess().exitValue()));
-            }
+            pao.setApp(integrationToRun.getFileName().toString());
+            Long pid = pao.getProcessId();
 
-            Long pid = pao.getProcessId(integrationToRun.getFileName().toString());
             context.setVariable(name + ":pid", pid);
             context.setVariable(name + ":process:" + pid, pao);
 
@@ -151,6 +148,15 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to create temporary file from Camel integration");
+        }
+    }
+
+    private static void verifyProcessIsAlive(ProcessAndOutput pao, String name) {
+        if (!pao.getProcess().isAlive()) {
+            logger.info("Failed to start Camel integration '%s'".formatted(name));
+            logger.info(pao.getOutput());
+
+            throw new CitrusRuntimeException(String.format("Failed to start Camel integration - exit code %s", pao.getProcess().exitValue()));
         }
     }
 
