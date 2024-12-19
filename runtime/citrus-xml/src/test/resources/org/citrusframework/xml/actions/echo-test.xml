@@ -21,11 +21,7 @@
       http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
 
-  <variables>
-    <variable name="text" value="Hello from Citrus!"/>
-  </variables>
-
   <actions>
-    <echo message="${text}"/>
+    <echo message="Hello from Citrus!"/>
   </actions>
 </test>
