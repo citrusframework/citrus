@@ -36,7 +36,9 @@ import static org.awaitility.Awaitility.await;
  */
 public class ProcessAndOutput {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger LOG = LoggerFactory.getLogger(ProcessAndOutput.class);
 
     private final Process process;
@@ -140,6 +142,7 @@ public class ProcessAndOutput {
      * Get the process id of first descendant or the parent process itself in case there is no descendant process.
      * On Linux the shell command represents the parent process and the JBang command as descendant process.
      * Typically, we need the JBang command process id.
+     *
      * @return
      */
     public Long getProcessId() {
@@ -150,9 +153,11 @@ public class ProcessAndOutput {
      * Get the process id of first descendant or the parent process itself in case there is no descendant process.
      * On Linux the shell command represents the parent process and the JBang command as descendant process.
      * Typically, we need the JBang command process id.
+     *
      * @return
      */
     public Long getProcessId(String app) {
+
         try {
             if (app != null && isUnix()) {
                 // wait for descendant process to be available
@@ -173,6 +178,17 @@ public class ProcessAndOutput {
         }
     }
 
+    /**
+     * Get the process id of the parent process.
+     * Typically, we need the JBang command process id.
+     *
+     * @return
+     */
+    public Long getParentProcessId() {
+        return process.pid();
+    }
+
+
     private static boolean isUnix() {
         String os = System.getProperty("os.name").toLowerCase();
         return os.contains("nix") || os.contains("nux") || os.contains("aix");
@@ -180,6 +196,7 @@ public class ProcessAndOutput {
 
     /**
      * Sets the application name that identifies this process.
+     *
      * @param app
      */
     public void setApp(String app) {
