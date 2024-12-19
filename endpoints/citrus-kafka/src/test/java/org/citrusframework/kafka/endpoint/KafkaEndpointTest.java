@@ -122,9 +122,14 @@ public class KafkaEndpointTest {
                 .startsWith(KAFKA_PREFIX)
                 .hasSize(23)
                 .containsPattern(".*[a-z]{10}$")
+                // Make sure the random group id is propagated to new consumers
                 .satisfies(
-                        // Additionally make sure that gets passed downstream
                         groupId -> assertThat(fixture.createConsumer().getConsumer())
+                                .extracting("delegate")
+                                .extracting("groupId")
+                                .asInstanceOf(OPTIONAL)
+                                .hasValue(groupId),
+                        groupId -> assertThat(fixture.createConsumer().createManagedConsumer())
                                 .extracting("delegate")
                                 .extracting("groupId")
                                 .asInstanceOf(OPTIONAL)

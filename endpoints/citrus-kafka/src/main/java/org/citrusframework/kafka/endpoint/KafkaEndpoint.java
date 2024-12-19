@@ -65,8 +65,6 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
     }
 
     static KafkaEndpoint newKafkaEndpoint(
-            @Nullable org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumer,
-            @Nullable org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer,
             @Nullable Boolean randomConsumerGroup,
             @Nullable String server,
             @Nullable Long timeout,
@@ -76,7 +74,7 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
 
         if (TRUE.equals(randomConsumerGroup)) {
             kafkaEndpoint.getEndpointConfiguration()
-                .setConsumerGroup(KAFKA_PREFIX + RandomStringUtils.insecure().nextAlphabetic(10).toLowerCase());
+                    .setConsumerGroup(KAFKA_PREFIX + RandomStringUtils.insecure().nextAlphabetic(10).toLowerCase());
         }
         if (hasText(server)) {
             kafkaEndpoint.getEndpointConfiguration().setServer(server);
@@ -87,6 +85,25 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
         if (hasText(topic)) {
             kafkaEndpoint.getEndpointConfiguration().setTopic(topic);
         }
+
+        return kafkaEndpoint;
+    }
+
+    /**
+     * @deprecated {@link org.apache.kafka.clients.consumer.KafkaConsumer} is <b>not</b> thread-safe and manual consumer management is error-prone.
+     * Use {@link #newKafkaEndpoint(Boolean, String, Long, String)} instead to obtain properly managed consumer instances.
+     * This method will be removed in a future release.
+     */
+    @Deprecated(forRemoval = true)
+    static KafkaEndpoint newKafkaEndpoint(
+            @Nullable org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumer,
+            @Nullable org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer,
+            @Nullable Boolean randomConsumerGroup,
+            @Nullable String server,
+            @Nullable Long timeout,
+            @Nullable String topic
+    ) {
+        var kafkaEndpoint = newKafkaEndpoint(randomConsumerGroup, server, timeout, topic);
 
         // Make sure these come at the end, so endpoint configuration is already initialized
         if (nonNull(kafkaConsumer)) {
@@ -159,6 +176,11 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
         private Long timeout;
         private String topic;
 
+        /**
+         * @deprecated {@link org.apache.kafka.clients.consumer.KafkaConsumer} is <b>not</b> thread-safe and manual consumer management is error-prone.
+         * This method will be removed in a future release.
+         */
+        @Deprecated(forRemoval = true)
         public SimpleKafkaEndpointBuilder kafkaConsumer(org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumer) {
             this.kafkaConsumer = kafkaConsumer;
             return this;
@@ -190,7 +212,7 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
         }
 
         public KafkaEndpoint build() {
-            return KafkaEndpoint.newKafkaEndpoint(kafkaConsumer, kafkaProducer, randomConsumerGroup, server, timeout, topic);
+            return newKafkaEndpoint(kafkaConsumer, kafkaProducer, randomConsumerGroup, server, timeout, topic);
         }
     }
 }
