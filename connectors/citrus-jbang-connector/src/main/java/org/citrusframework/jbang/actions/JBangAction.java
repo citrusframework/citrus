@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
@@ -82,8 +81,6 @@ public class JBangAction extends AbstractTestAction {
                 .app(app)
                 .withSystemProperties(systemProperties)
                 .run(context.replaceDynamicContentInString(scriptOrFile), context.resolveDynamicValuesInList(args));
-
-        result.setApp(Objects.requireNonNullElse(app, scriptName));
 
         if (printOutput) {
             logger.info("JBang script '%s' output:".formatted(scriptName));
