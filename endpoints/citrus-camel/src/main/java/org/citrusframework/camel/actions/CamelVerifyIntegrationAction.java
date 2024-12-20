@@ -16,8 +16,8 @@
 
 package org.citrusframework.camel.actions;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
@@ -129,7 +129,7 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
                     return pid;
                 }
 
-                if (context.getVariables().containsKey(name + ":process:" + pid)) {
+                if (context.getVariables().containsKey("%s:process:%d".formatted(name, pid))) {
                     // check if process is still alive
                     ProcessAndOutput pao = context.getVariable(name + ":process:" + pid, ProcessAndOutput.class);
                     if (!pao.getProcess().isAlive()) {
@@ -139,14 +139,18 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
                         throw new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' - exit code %s", name, pao.getProcess().exitValue()));
                     }
 
-                    // Verify that current processId is the same as the one saved in test context
-                    Long appPid = pao.getProcessId();
-                    if (!Objects.equals(pid, appPid)) {
-                        // seems like there is another pid (descendant process) that should be verified
-                        if (findProcessAndVerifyStatus(appPid, name, phase)) {
-                            return appPid;
+                    // Check if there is a descendant process for the process saved in test context
+                    List<Long> descendants = pao.getDescendants();
+                    for (Long descendantPid : descendants) {
+                        // seems like there is descendant pid that should be verified
+                        if (findProcessAndVerifyStatus(descendantPid, name, phase)) {
+                            // Update pid in test context so upcoming checks can use the descendant pid
+                            context.setVariable("%s:process:%d".formatted(name, descendantPid), pao);
+                            return descendantPid;
                         }
                     }
+                } else {
+                    logger.warn(String.format("Missing process and output for '%s:process:%d'", name, pid));
                 }
             }
 
@@ -175,6 +179,10 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
             if (stopOnErrorStatus) {
                 throw new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' - is in state 'Error'", name));
             }
+        }
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Camel integration '%s' (pid:%d) not in state '%s'", name, pid, phase));
         }
 
         return false;
