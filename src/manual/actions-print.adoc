@@ -11,10 +11,10 @@ Tester might use it to print out debug messages and variables as shown the next 
 ----
 @CitrusTest
 public void printTest() {
-    variable("date", "citrus:currentDate()");
+    variable("today", "citrus:currentDate()");
 
     $(print().message("Hello Test Framework"));
-    $(print().message("Current date is: ${date}"));
+    $(print().message("Current date is: ${today}"));
 }
 ----
 
@@ -31,7 +31,7 @@ public void printTest() {
         </print>
 
         <print>
-            <message>Current date is: ${date}</message>
+            <message>Current date is: ${today}</message>
         </print>
     </actions>
 </test>
@@ -48,7 +48,7 @@ actions:
   - print:
       message: "Hello Test Framework"
   - print:
-      message: "Current date is: ${date}"
+      message: "Current date is: ${today}"
 ----
 
 .Spring XML

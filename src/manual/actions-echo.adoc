@@ -8,10 +8,10 @@ The <echo> action prints messages to the console/logger. This functionality is u
 ----
 @CitrusTest
 public void echoTest() {
-    variable("date", "citrus:currentDate()");
+    variable("today", "citrus:currentDate()");
 
     $(echo().message("Hello Test Framework"));
-    $(echo().message("Current date is: ${date}"));
+    $(echo().message("Current date is: ${today}"));
 }
 ----
 
@@ -28,7 +28,7 @@ public void echoTest() {
         </echo>
 
         <echo>
-            <message>Current date is: ${date}</message>
+            <message>Current date is: ${today}</message>
         </echo>
     </actions>
 </test>
@@ -45,7 +45,7 @@ actions:
   - echo:
       message: "Hello Test Framework"
   - echo:
-      message: "Current date is: ${date}"
+      message: "Current date is: ${today}"
 ----
 
 .Spring XML
