@@ -108,7 +108,7 @@ public abstract class AbstractKubernetesAction extends AbstractTestAction implem
                 }
             }
 
-            if (getActor() == null) {
+            if (getActor() == null && KubernetesSettings.isUseDefaultKubernetesActor()) {
                 actor(new KubernetesActor(kubernetesClient));
             }
 
