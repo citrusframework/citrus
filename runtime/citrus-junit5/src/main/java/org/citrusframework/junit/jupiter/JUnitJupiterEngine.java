@@ -84,7 +84,10 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
 
         try (LauncherSession session = LauncherFactory.openSession()) {
             Launcher launcher = session.getLauncher();
-            launcher.registerTestExecutionListeners(testExecutionListeners.toArray(TestExecutionListener[]::new));
+            if (!testExecutionListeners.isEmpty()) {
+                launcher.registerTestExecutionListeners(
+                    testExecutionListeners.toArray(TestExecutionListener[]::new));
+            }
 
             if (printSummary) {
                 launcher.registerTestExecutionListeners(listener);
