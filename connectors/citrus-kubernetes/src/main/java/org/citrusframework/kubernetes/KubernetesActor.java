@@ -38,6 +38,10 @@ public class KubernetesActor extends TestActor {
     /** Kubernetes' connection state, checks connectivity to Kubernetes cluster */
     private static AtomicBoolean connected;
 
+    public KubernetesActor() {
+        this(null);
+    }
+
     public KubernetesActor(KubernetesClient kubernetesClient) {
         super("k8s");
 
@@ -66,7 +70,12 @@ public class KubernetesActor extends TestActor {
     public static boolean verifyConnected(KubernetesClient kubernetesClient) {
         try {
             Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
-                kubernetesClient.pods().list();
+                var pods = kubernetesClient.pods();
+                if (pods == null) {
+                    logger.warn("Skipping Kubernetes action as no proper Kubernetes environment is available on host system!");
+                    return false;
+                }
+                pods.list();
                 return true;
             });
 

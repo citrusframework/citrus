@@ -53,6 +53,7 @@ public class TestcontainersActorTest {
     public void shouldVerifyConnectedState() {
         try {
             when(dockerClient.pingCmd()).thenReturn(connected);
+            TestcontainersActor.resetConnectionState();
             Assert.assertFalse(new TestcontainersActor(dockerClient).isDisabled());
         } finally {
             TestcontainersActor.resetConnectionState();
@@ -74,9 +75,11 @@ public class TestcontainersActorTest {
         try {
             System.setProperty("citrus.testcontainers.enabled", "false");
             when(dockerClient.pingCmd()).thenReturn(connected);
+            TestcontainersActor.resetConnectionState();
             Assert.assertTrue(new TestcontainersActor(dockerClient).isDisabled());
         } finally {
             System.setProperty("citrus.testcontainers.enabled", Boolean.toString(initial));
+            TestcontainersActor.resetConnectionState();
             reset(dockerClient);
         }
 
@@ -87,6 +90,7 @@ public class TestcontainersActorTest {
             Assert.assertTrue(new TestcontainersActor(dockerClient).isDisabled());
         } finally {
             System.setProperty("citrus.test.actor.testcontainers.enabled", Boolean.toString(initial));
+            TestcontainersActor.resetConnectionState();
         }
     }
 }

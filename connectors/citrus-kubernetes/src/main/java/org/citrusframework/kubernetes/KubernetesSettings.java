@@ -43,6 +43,10 @@ public class KubernetesSettings {
     private static final String ENABLED_ENV = KUBERNETES_ENV_PREFIX + "ENABLED";
     private static final String ENABLED_DEFAULT = "true";
 
+    private static final String USE_DEFAULT_ACTOR_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "use.default.actor";
+    private static final String USE_DEFAULT_ACTOR_ENV = KUBERNETES_ENV_PREFIX + "USE_DEFAULT_ACTOR";
+    private static final String USE_DEFAULT_ACTOR_DEFAULT = "false";
+
     private static final String AUTO_CREATE_SERVER_BINDING_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "auto.create.server.binding";
     private static final String AUTO_CREATE_SERVER_BINDING_ENV = KUBERNETES_ENV_PREFIX + "AUTO_CREATE_SERVER_BINDING";
     private static final String AUTO_CREATE_SERVER_BINDING_DEFAULT = "true";
@@ -308,5 +312,14 @@ public class KubernetesSettings {
     public static String getTestIdLabel() {
         return System.getProperty(TEST_ID_LABEL_PROPERTY,
                 System.getenv(TEST_ID_LABEL_ENV) != null ? System.getenv(TEST_ID_LABEL_ENV) : TEST_ID_LABEL_DEFAULT);
+    }
+
+    /**
+     * True when all Kubernetes test actions should use a default test actor.
+     * @return
+     */
+    public static boolean isUseDefaultKubernetesActor() {
+        return Boolean.parseBoolean(System.getProperty(USE_DEFAULT_ACTOR_PROPERTY,
+                System.getenv(USE_DEFAULT_ACTOR_ENV) != null ? System.getenv(USE_DEFAULT_ACTOR_ENV) : USE_DEFAULT_ACTOR_DEFAULT));
     }
 }
