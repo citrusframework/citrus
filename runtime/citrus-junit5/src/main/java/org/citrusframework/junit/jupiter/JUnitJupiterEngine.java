@@ -44,7 +44,6 @@ import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
-import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,9 +95,10 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
             launcher.execute(request);
         }
 
-        if (printSummary && listener != null) {
-            TestExecutionSummary summary = listener.getSummary();
-            summary.printTo(new PrintWriter(System.out));
+        if (printSummary) {
+          Optional.ofNullable(listener)
+              .map(SummaryGeneratingListener::getSummary)
+              .ifPresent(summary -> summary.printTo(new PrintWriter(System.out)));
         }
     }
 
