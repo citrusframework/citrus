@@ -108,7 +108,7 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
                 .toList();
 
         for (TestSource source : testSources) {
-            logger.info(String.format("Running test source %s", source.getName()));
+            logger.info("Running test source {}", source.getName());
 
             JUnitCitrusTest.setSourceName(source.getName());
             JUnitCitrusTest.setSource(Optional.ofNullable(source.getFilePath()).orElse(""));
@@ -126,7 +126,7 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
         List<DiscoverySelector> selectors = new ArrayList<>();
         for (String packageName : packagesToRun) {
             if (StringUtils.hasText(packageName)) {
-                logger.info(String.format("Running tests in package %s", packageName));
+                logger.info("Running tests in package {}", packageName);
             }
 
             List<TestClass> classesToRun;
@@ -152,7 +152,7 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
                             }
                             return clazz;
                         } catch (ClassNotFoundException | MalformedURLException e) {
-                            logger.warn("Unable to read test class: " + testClass.getName());
+                            logger.warn("Unable to read test class: {}", testClass.getName());
                             return Void.class;
                         }
                     })
@@ -161,7 +161,7 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
 
             requestBuilder.selectors(selectors);
 
-            logger.info(String.format("Found %s test classes to execute", selectors.size()));
+            logger.info("Found {} test classes to execute", selectors.size());
         }
     }
 
@@ -174,9 +174,11 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
 
         List<DiscoverySelector> selectors = new ArrayList<>();
         for (TestClass testClass : testClasses) {
-            logger.info(String.format("Running test %s",
-                    Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
-                            .orElseGet(testClass::getName)));
+            if (logger.isInfoEnabled()) {
+                logger.info("Running test {}", Optional.ofNullable(testClass.getMethod())
+                    .map(method -> testClass.getName() + "#" + method)
+                    .orElseGet(testClass::getName));
+            }
 
             try {
                 Class<?> clazz;
@@ -194,7 +196,7 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
                 }
 
             } catch (ClassNotFoundException | MalformedURLException e) {
-                logger.warn("Unable to read test class: " + testClass.getName());
+                logger.warn("Unable to read test class: {}", testClass.getName());
             }
         }
 
