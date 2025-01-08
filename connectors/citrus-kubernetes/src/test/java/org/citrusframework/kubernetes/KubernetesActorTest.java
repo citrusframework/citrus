@@ -29,6 +29,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+@Test(singleThreaded = true)
 public class KubernetesActorTest {
 
     private final KubernetesMockServer k8sServer = new KubernetesMockServer(new Context(), new MockWebServer(),
@@ -47,9 +48,9 @@ public class KubernetesActorTest {
         k8sServer.destroy();
     }
 
-    @Test
     public void shouldVerifyConnectedState() {
         try {
+            KubernetesActor.resetConnectionState();
             Assert.assertFalse(new KubernetesActor(k8sClient).isDisabled());
         } finally {
             KubernetesActor.resetConnectionState();
@@ -63,14 +64,15 @@ public class KubernetesActorTest {
         }
     }
 
-    @Test
     public void shouldOverruleConnectedState() {
         boolean initial = KubernetesSettings.isEnabled();
         try {
+            KubernetesActor.resetConnectionState();
             System.setProperty("citrus.kubernetes.enabled", "false");
             Assert.assertTrue(new KubernetesActor(k8sClient).isDisabled());
         } finally {
             System.setProperty("citrus.kubernetes.enabled", Boolean.toString(initial));
+            KubernetesActor.resetConnectionState();
         }
 
         initial = Boolean.parseBoolean(System.getProperty("citrus.test.actor.k8s.enabled", "true"));
@@ -79,6 +81,7 @@ public class KubernetesActorTest {
             Assert.assertTrue(new KubernetesActor(k8sClient).isDisabled());
         } finally {
             System.setProperty("citrus.test.actor.k8s.enabled", Boolean.toString(initial));
+            KubernetesActor.resetConnectionState();
         }
     }
 }
