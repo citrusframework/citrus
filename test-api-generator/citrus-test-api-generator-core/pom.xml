@@ -7,7 +7,7 @@
     <parent>
         <artifactId>citrus-test-api-generator</artifactId>
         <groupId>org.citrusframework</groupId>
-        <version>4.5.0-SNAPSHOT</version>
+        <version>4.5.0-PF-RC3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -154,7 +154,7 @@
                             <artifactId>openapi-generator</artifactId>
                             <version>${org.openapitools.version}</version>
                             <includes>
-                                Java/*Annotation*.mustache,Java/*Model*.mustache,Java/model*.mustache,Java/pojo*.mustache,Java/enum_outer_doc.mustache
+                                Java/*Annotation*.mustache,Java/*Model*.mustache,Java/model*.mustache,Java/pojo*.mustache,Java/enum_outer_doc.mustache,Java/nullable_var_annotations.mustache
                             </includes>
                         </artifactItem>
                     </artifactItems>

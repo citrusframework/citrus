@@ -1,11 +1,21 @@
 package org.citrusframework.openapi.generator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.citrusframework.openapi.generator.CitrusJavaCodegen.CODEGEN_NAME;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.servers.Server;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.citrusframework.openapi.generator.CitrusJavaCodegen.CustomCodegenOperation;
 import org.citrusframework.openapi.generator.CitrusJavaCodegen.CustomCodegenParameter;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,17 +25,6 @@ import org.openapitools.codegen.CodegenConfigLoader;
 import org.openapitools.codegen.CodegenOperation;
 import org.openapitools.codegen.CodegenParameter;
 import org.openapitools.codegen.CodegenProperty;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.citrusframework.openapi.generator.CitrusJavaCodegen.CODEGEN_NAME;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 /**
  * This test validates the code generation process.
@@ -176,5 +175,23 @@ class CitrusJavaCodegenTest {
                 .isInstanceOf(CustomCodegenOperation.class)
                 .hasFieldOrPropertyWithValue("httpMethod", "GET")
                 .hasFieldOrPropertyWithValue("path", "/path");
+    }
+
+    @Test
+    void shouldReturnCorrectInvokerFolder() {
+        String expectedPath = "src/main/java/org/openapitools";
+        assertThat(codegen.invokerFolder().replace('\\', '/')).isEqualTo(expectedPath);
+    }
+
+    @Test
+    void shouldReturnCorrectSpringFolder() {
+        String expectedPath = "src/main/java/org/openapitools/spring";
+        assertThat(codegen.springFolder().replace('\\', '/')).isEqualTo(expectedPath);
+    }
+
+    @Test
+    void shouldReturnCorrectSchemaFolder() {
+        String expectedPath = "src/main/resources/schema/xsd";
+        assertThat(codegen.schemaFolder().replace('\\', '/')).isEqualTo(expectedPath);
     }
 }
