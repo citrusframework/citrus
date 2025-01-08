@@ -57,4 +57,4 @@ jobs:
           
           jbang --version
           
-          ./mvnw --no-transfer-progress -T1C -Djava.version=${{ matrix.version }} install
+          ./mvnw --no-transfer-progress -Djava.version=${{ matrix.version }} install

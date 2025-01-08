@@ -65,4 +65,4 @@ jobs:
           
           jbang --version
           
-          ./mvnw --no-transfer-progress -T1C install
+          ./mvnw --no-transfer-progress install
