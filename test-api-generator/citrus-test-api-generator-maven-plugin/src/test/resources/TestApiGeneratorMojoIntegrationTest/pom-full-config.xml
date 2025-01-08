@@ -35,13 +35,15 @@
                                 <!-- TODO: document this feature -->
                                 <a>b</a>
                                 <c>d</c>
+                                <!-- TODO document this feature and the fact, that each base mojo property can be configured via these options -->
+                                <output>target/pom-full-config/target/generated-sources-mod/openapi-mod</output>
+                                <sourceFolder>src/main/java-mod</sourceFolder>
+                                <resourceFolder>src/main/resource-mod</resourceFolder>
                             </apiConfigOptions>
                         </api>
                     </apis>
-                    <sourceFolder>generated-sources-mod</sourceFolder>
-                    <resourceFolder>generated-resources-mod</resourceFolder>
                     <schemaFolder>myschema/xsd</schemaFolder>
-                    <metaInfFolder>main-mod/resources-mod/META-INF-MOD</metaInfFolder>
+                    <metaInfFolder>src/main/resource-mod/META-INF-MOD</metaInfFolder>
                 </configuration>
                 <executions>
                     <execution>

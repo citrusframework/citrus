@@ -16,9 +16,12 @@
 
 package org.citrusframework.maven.plugin;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiConfig;
+import static java.lang.String.format;
+import static java.util.Collections.emptyList;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.CITRUS_TEST_SCHEMA;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.CITRUS_TEST_SCHEMA_KEEP_HINT;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVars;
+import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVarsToLowerCase;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,13 +31,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
-
-import static java.lang.String.format;
-import static java.util.Collections.emptyList;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.CITRUS_TEST_SCHEMA;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.CITRUS_TEST_SCHEMA_KEEP_HINT;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVars;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVarsToLowerCase;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiConfig;
 
 /**
  * Utility class responsible for generating the Spring meta files 'spring.handlers' and 'spring.schemas', used
@@ -50,6 +49,8 @@ import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynam
 public class SpringMetaFileGenerator {
 
     private final TestApiGeneratorMojo testApiGeneratorMojo;
+
+    private String lineEnding = "\n";
 
     public SpringMetaFileGenerator(TestApiGeneratorMojo testApiGeneratorMojo) {
         this.testApiGeneratorMojo = testApiGeneratorMojo;
@@ -72,7 +73,7 @@ public class SpringMetaFileGenerator {
      * @return a list of filtered lines, excluding lines indicating a generated test API
      * @throws CitrusRuntimeException if an error occurs while reading the file
      */
-    private static List<String> readAndFilterLines(File file) {
+    private List<String> readAndFilterLines(File file) {
         if (!file.exists()) {
             return emptyList();
         }
@@ -81,6 +82,11 @@ public class SpringMetaFileGenerator {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
+
+                if (lineEnding.contains("\r")) {
+                    lineEnding = "\r\n";
+                }
+
                 if (line.contains(CITRUS_TEST_SCHEMA_KEEP_HINT)) {
                     filteredLines.add(reader.readLine());
                 } else if (!line.contains(CITRUS_TEST_SCHEMA)) {
@@ -95,11 +101,12 @@ public class SpringMetaFileGenerator {
     }
 
     public void generateSpringIntegrationMetaFiles() throws MojoExecutionException {
-        String springMetafileDirectory = format("%s/%s", testApiGeneratorMojo.getMavenProject().getBasedir(), testApiGeneratorMojo.metaInfFolder());
-        File metaFolder = new File(springMetafileDirectory);
+
+        File metaFolder = new File(testApiGeneratorMojo.getMavenProject().getBasedir(), testApiGeneratorMojo.getMetaInfFolder());
+
         if (!metaFolder.exists() && !metaFolder.mkdirs()) {
             throw new CitrusRuntimeException(
-                    format("Unable to create spring meta file directory: '%s'", springMetafileDirectory));
+                    format("Unable to create spring meta file directory: '%s'", testApiGeneratorMojo.getMetaInfFolder()));
         }
 
         try {
@@ -136,7 +143,7 @@ public class SpringMetaFileGenerator {
 
         try (FileWriter fileWriter = new FileWriter(handlerFile)) {
             for (String line : filteredLines) {
-                fileWriter.write(format("%s%n", line));
+                fileWriter.write(format("%s%s", line, lineEnding));
             }
 
             for (ApiConfig apiConfig : testApiGeneratorMojo.getApiConfigs()) {

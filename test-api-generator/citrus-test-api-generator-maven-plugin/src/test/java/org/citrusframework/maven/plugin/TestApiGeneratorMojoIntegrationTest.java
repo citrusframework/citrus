@@ -13,7 +13,6 @@ import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynam
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVarsToLowerCase;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
@@ -39,7 +38,6 @@ import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiConfig;
 import org.citrusframework.maven.plugin.stubs.CitrusOpenApiGeneratorMavenProjectStub;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -331,16 +329,41 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
         String schemaFolder = toFolder(
             replaceDynamicVars((String) getField(fixture, "schemaFolder"), apiConfig.getPrefix(),
                 apiConfig.getVersion()));
-        String generatedSourcesFolder = toFolder(
-            replaceDynamicVars((String) getField(fixture, "sourceFolder"), apiConfig.getPrefix(),
-                apiConfig.getVersion()));
-        String generatedResourcesFolder = toFolder(
-            replaceDynamicVars((String) getField(fixture, "resourceFolder"), apiConfig.getPrefix(),
-                apiConfig.getVersion()));
+
+
+        Map<String, String> apiConfigOptions = apiConfig.getApiConfigOptions();
+
+        String targetFolder = fixture.getMavenProject().getBuild().getDirectory();
+        String generatedSourcesFolder = "generated-sources/openapi/src/main/java";
+        String generatedResourcesFolder = "generated-sources/openapi/src/main/resources";
+
+        if (apiConfigOptions != null) {
+            String output = apiConfigOptions.get("output");
+            if (output != null) {
+                // Due to the special nature of the nested build directories, explicit output paths need
+                // to be prefixed with the path to the nested target folder - e.g. target/pom-full-config.
+                // These two segments are also specified in the baseFolderPath and thus need to be removed
+                // for proper resolution.
+                Path baseFolderPath = Path.of(fixture.getMavenProject().getBasedir().getPath());
+                Path outputPath = Path.of(output);
+                targetFolder = baseFolderPath.getParent().getParent().resolve(outputPath).toString();
+            }
+
+            String sourceFolder = apiConfigOptions.get("sourceFolder");
+            if (sourceFolder != null) {
+                generatedSourcesFolder = sourceFolder;
+            }
+
+            String resourceFolder = apiConfigOptions.get("resourceFolder");
+            if (resourceFolder != null) {
+                generatedResourcesFolder = resourceFolder;
+            }
+
+        }
 
         return filePathTemplate
             .replace("%BASE_FOLDER%", fixture.getMavenProject().getBasedir().getPath())
-            .replace("%TARGET_FOLDER%", fixture.getMavenProject().getBuild().getDirectory())
+            .replace("%TARGET_FOLDER%", targetFolder)
             .replace("%SOURCE_FOLDER%", fixture.getMavenProject().getBuild().getSourceDirectory())
             .replace("%GENERATED_SOURCES_FOLDER%", generatedSourcesFolder)
             .replace("%GENERATED_RESOURCES_FOLDER%", generatedResourcesFolder)
@@ -350,7 +373,7 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
             .replace("%SCHEMA_FOLDER%", schemaFolder)
             .replace("%LOWER_PREFIX%", lowerCasePrefix)
             .replace("%CAMEL_PREFIX%", camelCasePrefix)
-            .replace("%META_INF_FOLDER%", toFolder((String) getField(fixture, "metaInfFolder")));
+            .replace("%META_INF_FOLDER%", fixture.getMetaInfFolder());
     }
 
     private String toFolder(String text) {

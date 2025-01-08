@@ -16,6 +16,7 @@
 
 package org.citrusframework.maven.plugin;
 
+import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -29,6 +30,7 @@ import static org.springframework.util.ReflectionUtils.makeAccessible;
 import static org.springframework.util.ReflectionUtils.setField;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -41,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -78,8 +81,8 @@ import org.sonatype.plexus.build.incremental.DefaultBuildContext;
 )
 public class TestApiGeneratorMojo extends AbstractMojo {
 
-    public static final String DEFAULT_SOURCE_FOLDER = "generated-test-sources";
-    public static final String DEFAULT_RESOURCE_FOLDER = "generated-test-resources";
+    public static final String RESOURCE_FOLDER = "resourceFolder";
+
     public static final String DEFAULT_BASE_PACKAGE = "org.citrusframework.automation.%PREFIX%.%VERSION%";
     public static final String DEFAULT_INVOKER_PACKAGE = DEFAULT_BASE_PACKAGE;
     public static final String DEFAULT_API_PACKAGE = DEFAULT_BASE_PACKAGE + ".api";
@@ -107,19 +110,6 @@ public class TestApiGeneratorMojo extends AbstractMojo {
      */
     public static final String DEFAULT_TARGET_NAMESPACE_TEMPLATE =
         "http://www.citrusframework.org/" + CITRUS_TEST_SCHEMA + "/%VERSION%/%PREFIX%-api";
-
-    /**
-     * TODO: document this
-     * The default META-INF folder. Note that it points into the test resources, to allow for non generated
-     * schemas/handlers. See also {@link TestApiGeneratorMojo}#DEFAULT_TARGET_NAMESPACE_TEMPLATE.
-     */
-    public static final String DEFAULT_META_INF_FOLDER = "src/test/resources/META-INF";
-
-    /**
-     * sourceFolder: specifies the location to which the sources are generated. Defaults to
-     * 'generated-test-sources'.
-     */
-    public static final String SOURCE_FOLDER_PROPERTY = "citrus.test.api.generator.source.folder";
 
     /**
      * resourceFolder: specifies the location to which the resources are generated. Defaults to
@@ -154,25 +144,24 @@ public class TestApiGeneratorMojo extends AbstractMojo {
     @Parameter(defaultValue = "${mojoExecution}", readonly = true)
     private MojoExecution mojoExecution;
 
-    @Parameter(property = SOURCE_FOLDER_PROPERTY, defaultValue = DEFAULT_SOURCE_FOLDER)
-    @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})  // Maven injected
-    private String sourceFolder = DEFAULT_SOURCE_FOLDER;
-
-    @Parameter(property = RESOURCE_FOLDER_PROPERTY, defaultValue = DEFAULT_RESOURCE_FOLDER)
-    @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})  // Maven injected
-    private String resourceFolder = DEFAULT_RESOURCE_FOLDER;
+    @Parameter(name = "output", property = "openapi.generator.maven.plugin.output")
+    private File output;
 
     @Parameter(property = API_SCHEMA_FOLDER, defaultValue = DEFAULT_SCHEMA_FOLDER_TEMPLATE)
     @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})  // Maven injected
     private String schemaFolder = DEFAULT_SCHEMA_FOLDER_TEMPLATE;
 
-    @Parameter(property = META_INF_FOLDER, defaultValue = DEFAULT_META_INF_FOLDER)
+    @Parameter(property = META_INF_FOLDER)
     @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})  // Maven injected
-    private String metaInfFolder = DEFAULT_META_INF_FOLDER;
+    private String metaInfFolder;
 
     @Parameter(property = GENERATE_SPRING_INTEGRATION_FILES, defaultValue = "true")
     @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})  // Maven injected
     private boolean generateSpringIntegrationFiles = true;
+
+    @Parameter(name = "skip", property = "codegen.skip", defaultValue = "false")
+    @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})  // Maven injected
+    private Boolean skip;
 
     @Parameter
     private List<ApiConfig> apis;
@@ -221,10 +210,6 @@ public class TestApiGeneratorMojo extends AbstractMojo {
         return apis;
     }
 
-    public String metaInfFolder() {
-        return metaInfFolder;
-    }
-
     @VisibleForTesting
     void setMojoExecution(MojoExecution mojoExecution) {
         this.mojoExecution = mojoExecution;
@@ -239,16 +224,36 @@ public class TestApiGeneratorMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException {
+
         for (int index = 0; index < apis.size(); index++) {
             ApiConfig apiConfig = apis.get(index);
             validateApiConfig(index, apiConfig);
             delegateExecution(configureCodeGenMojo(apiConfig));
-
         }
 
-        if (generateSpringIntegrationFiles) {
+        if (!TRUE.equals(skip) && generateSpringIntegrationFiles) {
             new SpringMetaFileGenerator(this).generateSpringIntegrationMetaFiles();
         }
+    }
+
+    @Nonnull
+    public String getMetaInfFolder() {
+        if (metaInfFolder == null) {
+            Path basePath = Paths.get(mavenProject.getBasedir().toURI());
+            Path metaInfResourceFolderPath = Paths.get(
+                new File(mavenProject.getBuild().getDirectory(),
+                    LifecyclePhase.GENERATE_TEST_SOURCES.id()
+                        .equals(mojoExecution.getLifecyclePhase()) ?
+                        "generated-test-sources/openapi/src/main/resources"
+                        : "generated-sources/openapi/src/main/resources").toURI());
+            Resource metaInfResource = new Resource();
+            metaInfResource.setDirectory(metaInfResourceFolderPath.toString());
+            mavenProject.addResource(metaInfResource);
+            metaInfFolder =
+                basePath.relativize(metaInfResourceFolderPath) + File.separator
+                    + "META-INF";
+        }
+        return metaInfFolder;
     }
 
     @VisibleForTesting
@@ -261,16 +266,19 @@ public class TestApiGeneratorMojo extends AbstractMojo {
         if (apiConfig.getSource().toUpperCase().trim().endsWith(".WSDL")) {
             apiConfig.source = convertToOpenApi(apiConfig.getSource());
         }
+
+        Map<String, String> apiConfigOptions = createApiConfigOptions(apiConfig);
+
         CodeGenMojo codeGenMojo = new CodeGenMojoWrapper()
-            .resourceFolder(resourceFolder)
-            .sourceFolder(sourceFolder)
             .schemaFolder(schemaFolder(apiConfig))
-            .output(new File(mavenProject.getBuild().getDirectory()))
+            .skip(skip)
+            .output(output)
             .mojoExecution(mojoExecution)
             .project(mavenProject)
             .inputSpec(apiConfig.getSource())
             .globalProperties(globalProperties)
-            .configOptions(apiConfig.toConfigOptionsProperties(globalConfigOptions));
+            .configOptions(apiConfigOptions);
+
 
         codeGenMojo.setPluginContext(getPluginContext());
 
@@ -288,6 +296,19 @@ public class TestApiGeneratorMojo extends AbstractMojo {
         propagateAdditionalProperties(codeGenMojo, apiConfig.additionalProperties);
 
         return codeGenMojo;
+    }
+
+    private Map<String, String> createApiConfigOptions(ApiConfig apiConfig) {
+        Map<String, String> configOptions = new HashMap<>();
+
+        if (LifecyclePhase.GENERATE_TEST_SOURCES.id().equals(mojoExecution.getLifecyclePhase())) {
+            configOptions.put("addCompileSourceRoot", "false");
+            configOptions.put("addTestCompileSourceRoot", "true");
+        }
+
+        //noinspection unchecked
+        configOptions.putAll(apiConfig.toConfigOptionsProperties(globalConfigOptions));
+        return configOptions;
     }
 
     private String convertToOpenApi(String source) throws MojoExecutionException {
@@ -588,6 +609,10 @@ public class TestApiGeneratorMojo extends AbstractMojo {
             this.apiConfigOptions = apiConfigOptions;
         }
 
+        public Map<String, String> getApiConfigOptions() {
+            return apiConfigOptions;
+        }
+
         public void setAdditionalProperties(List<String> additionalProperties) {
             this.additionalProperties = additionalProperties;
         }
@@ -618,7 +643,6 @@ public class TestApiGeneratorMojo extends AbstractMojo {
 
             return configOptionsProperties;
         }
-
 
     }
 }

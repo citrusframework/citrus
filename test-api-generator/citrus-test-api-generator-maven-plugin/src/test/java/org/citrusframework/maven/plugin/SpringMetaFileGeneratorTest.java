@@ -38,7 +38,7 @@ class SpringMetaFileGeneratorTest {
         MavenProject mavenProject = mock();
         doReturn(new File(userDir)).when(mavenProject).getBasedir();
         doReturn(mavenProject).when(testApiGeneratorMojo).getMavenProject();
-        doReturn("/test-classes/SpringMetaFileGeneratorTest/META-INF").when(testApiGeneratorMojo).metaInfFolder();
+        doReturn("/test-classes/SpringMetaFileGeneratorTest/META-INF").when(testApiGeneratorMojo).getMetaInfFolder();
 
         ApiConfig apiConfig = new ApiConfig();
         apiConfig.setPrefix("PrefixA");

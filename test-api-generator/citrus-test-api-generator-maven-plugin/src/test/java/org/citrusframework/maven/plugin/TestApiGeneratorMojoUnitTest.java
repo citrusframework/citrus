@@ -5,11 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_API_PACKAGE;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_API_TYPE;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_INVOKER_PACKAGE;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_META_INF_FOLDER;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_MODEL_PACKAGE;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_RESOURCE_FOLDER;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_SCHEMA_FOLDER_TEMPLATE;
-import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_SOURCE_FOLDER;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_TARGET_NAMESPACE_TEMPLATE;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVars;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVarsToLowerCase;
@@ -38,15 +35,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.codegen.plugin.CodeGenMojo;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings({"JUnitMalformedDeclaration", "JUnitMixedFramework"})
+@SuppressWarnings({"JUnitMalformedDeclaration"})
 class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
 
-    private TestApiGeneratorMojo fixture;
+    @InjectMocks
+    private TestApiGeneratorMojo fixture = new TestApiGeneratorMojo();
 
     @Mock
     private Build buildMock;
@@ -135,7 +134,10 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
         apiConfig.setUseTags(false);
         apiConfig.setType(ApiType.SOAP);
         apiConfig.setVersion(version);
-        apiConfig.setApiConfigOptions(Map.of("optA", "A", "optB", "B"));
+        apiConfig.setApiConfigOptions(
+            Map.of("optA", "A", "optB", "B", "output", "my-target", "sourceFolder",
+                "mySourceFolder",
+                "resourceFolder", "myResourceFolder"));
         apiConfig.setAdditionalProperties(List.of("a=b", "c=d"));
         apiConfig.setRootContextPath("/a/b/c/d");
 
@@ -153,14 +155,13 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
         configOptionsControlMap.put("invokerPackage", invokerPackage);
         configOptionsControlMap.put("apiPackage", apiPackage);
         configOptionsControlMap.put("modelPackage", modelPackage);
-        configOptionsControlMap.put("resourceFolder", "generated-test-resources");
-        configOptionsControlMap.put("sourceFolder", "generated-test-sources");
         configOptionsControlMap.put("apiEndpoint", "mydefaultprefixEndpoint");
         configOptionsControlMap.put("targetXmlnsNamespace", targetXmlnsNamespace);
         configOptionsControlMap.put("apiType", "REST");
         configOptionsControlMap.put("useTags", true);
 
-        return new CodeGenMojoParams("target", "myDefaultSource", configOptionsControlMap, Collections.emptyList());
+        return new CodeGenMojoParams("myDefaultSource", configOptionsControlMap,
+            Collections.emptyList());
     }
 
     @NotNull
@@ -174,22 +175,18 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
         configOptionsControlMap.put("invokerPackage", invokerPackage);
         configOptionsControlMap.put("modelPackage", modelPackage);
         configOptionsControlMap.put("apiPackage", apiPackage);
-        configOptionsControlMap.put("resourceFolder", "generated-test-resources");
-        configOptionsControlMap.put("sourceFolder", "generated-test-sources");
+        configOptionsControlMap.put("resourceFolder", "myResourceFolder");
+        configOptionsControlMap.put("sourceFolder", "mySourceFolder");
         configOptionsControlMap.put("apiEndpoint", "myEndpoint");
         configOptionsControlMap.put("targetXmlnsNamespace", targetXmlnsNamespace);
         configOptionsControlMap.put("apiType", "SOAP");
         configOptionsControlMap.put("useTags", false);
         configOptionsControlMap.put("optA", "A");
         configOptionsControlMap.put("optB", "B");
+        configOptionsControlMap.put("output", "my-target");
 
-        return new CodeGenMojoParams("target", "myCustomSource", configOptionsControlMap,
+        return new CodeGenMojoParams("myCustomSource", configOptionsControlMap,
             List.of("a=b", "c=d", "rootContextPath=/a/b/c/d"));
-    }
-
-    @BeforeEach
-    void beforeEach() {
-        fixture = new TestApiGeneratorMojo();
     }
 
     @ParameterizedTest
@@ -210,20 +207,22 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
     @MethodSource
     void configureMojo(String name, ApiConfig apiConfig, CodeGenMojoParams controlParams)
         throws MojoExecutionException {
-        doReturn("target").when(buildMock).getDirectory();
-        doReturn(buildMock).when(mavenProjectMock).getBuild();
         fixture.setMavenProject(mavenProjectMock);
         fixture.setMojoExecution(mojoExecutionMock);
 
         CodeGenMojo codeGenMojo = fixture.configureCodeGenMojo(apiConfig);
         assertThat(getField(codeGenMojo, "project")).isEqualTo(mavenProjectMock);
         assertThat(getField(codeGenMojo, "mojo")).isEqualTo(mojoExecutionMock);
-        assertThat(((File) getField(codeGenMojo, "output"))).hasName(controlParams.output);
+
+        if (controlParams.configOptions.get("output") != null) {
+            assertThat(((File) getField(codeGenMojo, "output")).getPath()).isEqualTo(
+                controlParams.configOptions.get("output"));
+        }
+
         assertThat(getField(codeGenMojo, "inputSpec")).isEqualTo(controlParams.source);
         assertThat(getField(codeGenMojo, "generateSupportingFiles")).isEqualTo(TRUE);
         assertThat(getField(codeGenMojo, "generatorName")).isEqualTo("java-citrus");
 
-        //noinspection unchecked
         if (controlParams.additionalProperties.isEmpty()) {
             //noinspection unchecked
             assertThat((List<String>) getField(codeGenMojo, "additionalProperties"))
@@ -239,8 +238,8 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
             .containsExactlyInAnyOrderEntriesOf(controlParams.configOptions);
     }
 
-    private record CodeGenMojoParams(String output, String source,
-                                     Map<String, Object> configOptions, List<String> additionalProperties) {
+    private record CodeGenMojoParams(String source, Map<String, Object> configOptions,
+                                     List<String> additionalProperties) {
 
     }
 
@@ -293,20 +292,14 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
         }
 
         @Test
-        void sourceFolderDefault() {
-            assertThat((String) getField(fixture, "sourceFolder")).isEqualTo(DEFAULT_SOURCE_FOLDER);
-        }
-
-        @Test
-        void resourceFolderDefault() {
-            assertThat((String) getField(fixture, "resourceFolder")).isEqualTo(
-                DEFAULT_RESOURCE_FOLDER);
-        }
-
-        @Test
         void metaInfFolderDefault() {
-            assertThat((String) getField(fixture, "metaInfFolder")).isEqualTo(
-                DEFAULT_META_INF_FOLDER);
+            File baseDirFile = new File("/a/b/c");
+            doReturn(new File(baseDirFile, "target").getPath()).when(buildMock).getDirectory();
+            doReturn(buildMock).when(mavenProjectMock).getBuild();
+            doReturn(baseDirFile).when(mavenProjectMock).getBasedir();
+
+            assertThat(fixture.getMetaInfFolder().replace("\\", "/")).isEqualTo(
+                ("target/generated-sources/openapi/src/main/resources/META-INF"));
         }
     }
 }
