@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * Address
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-12-05T10:01:38.788098300+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-09T10:28:06.562367500+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class Address {
   private String street;
 

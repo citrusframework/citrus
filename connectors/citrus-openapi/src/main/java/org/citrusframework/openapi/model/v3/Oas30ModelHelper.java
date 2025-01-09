@@ -16,6 +16,7 @@
 
 package org.citrusframework.openapi.model.v3;
 
+import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
@@ -33,7 +34,6 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30RequestBody;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
@@ -80,8 +80,8 @@ public final class Oas30ModelHelper {
                 .map(serverUrl -> {
                     try {
                         return URI.create(serverUrl).toURL().getProtocol();
-                    } catch (MalformedURLException e) {
-                        logger.warn(NO_URL_ERROR_MESSAGE, serverUrl);
+                    } catch (Exception e) {
+                        logger.warn(format(NO_URL_ERROR_MESSAGE, serverUrl), e);
                         return null;
                     }
                 })

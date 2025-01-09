@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.citrusframework.openapi.generator.soap.bookservice.BookServiceOpenApi;
 
 @Configuration
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2024-12-05T10:01:39.805235400+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-09T10:28:07.680135700+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class BookServiceBeanConfiguration {
 
     @Bean
