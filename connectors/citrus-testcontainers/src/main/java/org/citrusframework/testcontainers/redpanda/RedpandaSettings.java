@@ -55,11 +55,11 @@ public class RedpandaSettings {
     }
 
     /**
-     * Redpanda version setting.
+     * Redpanda image name setting.
      * @return
      */
     public static String getImageName() {
-        return System.getProperty(IMAGE_NAME_PROPERTY,
+        return TestContainersSettings.getDockerRegistry() + System.getProperty(IMAGE_NAME_PROPERTY,
                 System.getenv(IMAGE_NAME_ENV) != null ? System.getenv(IMAGE_NAME_ENV) : IMAGE_NAME_DEFAULT);
     }
 

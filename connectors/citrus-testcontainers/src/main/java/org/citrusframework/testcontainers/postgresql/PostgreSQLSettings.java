@@ -28,6 +28,10 @@ public class PostgreSQLSettings {
     private static final String POSTGRESQL_PROPERTY_PREFIX = TestContainersSettings.TESTCONTAINERS_PROPERTY_PREFIX + "postgresql.";
     private static final String POSTGRESQL_ENV_PREFIX = TestContainersSettings.TESTCONTAINERS_ENV_PREFIX + "POSTGRESQL_";
 
+    private static final String IMAGE_NAME_PROPERTY = POSTGRESQL_PROPERTY_PREFIX + "image.name";
+    private static final String IMAGE_NAME_ENV = POSTGRESQL_ENV_PREFIX + "IMAGE_NAME";
+    private static final String IMAGE_NAME_DEFAULT = "postgres";
+
     private static final String POSTGRESQL_VERSION_PROPERTY = POSTGRESQL_PROPERTY_PREFIX + "version";
     private static final String POSTGRESQL_VERSION_ENV = POSTGRESQL_ENV_PREFIX + "POSTGRESQL_VERSION";
     private static final String POSTGRESQL_VERSION_DEFAULT = PostgreSQLContainer.DEFAULT_TAG;
@@ -58,6 +62,15 @@ public class PostgreSQLSettings {
 
     private PostgreSQLSettings() {
         // prevent instantiation of utility class
+    }
+
+    /**
+     * PostgreSQL image name setting.
+     * @return
+     */
+    public static String getImageName() {
+        return TestContainersSettings.getDockerRegistry() + System.getProperty(IMAGE_NAME_PROPERTY,
+                System.getenv(IMAGE_NAME_ENV) != null ? System.getenv(IMAGE_NAME_ENV) : IMAGE_NAME_DEFAULT);
     }
 
     /**

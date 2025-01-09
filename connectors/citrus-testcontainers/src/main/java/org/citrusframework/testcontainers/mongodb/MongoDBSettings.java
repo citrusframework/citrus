@@ -28,6 +28,10 @@ public class MongoDBSettings {
     private static final String MONGODB_PROPERTY_PREFIX = TestContainersSettings.TESTCONTAINERS_PROPERTY_PREFIX + "mongodb.";
     private static final String MONGODB_ENV_PREFIX = TestContainersSettings.TESTCONTAINERS_ENV_PREFIX + "MONGODB_";
 
+    private static final String IMAGE_NAME_PROPERTY = MONGODB_PROPERTY_PREFIX + "image.name";
+    private static final String IMAGE_NAME_ENV = MONGODB_ENV_PREFIX + "IMAGE_NAME";
+    private static final String IMAGE_NAME_DEFAULT = "mongo";
+
     private static final String VERSION_PROPERTY = MONGODB_PROPERTY_PREFIX + "version";
     private static final String VERSION_ENV = MONGODB_ENV_PREFIX + "VERSION";
     private static final String VERSION_DEFAULT = "4.0.10";
@@ -46,6 +50,15 @@ public class MongoDBSettings {
 
     private MongoDBSettings() {
         // prevent instantiation of utility class
+    }
+
+    /**
+     * MongoDB image name setting.
+     * @return
+     */
+    public static String getImageName() {
+        return TestContainersSettings.getDockerRegistry() + System.getProperty(IMAGE_NAME_PROPERTY,
+                System.getenv(IMAGE_NAME_ENV) != null ? System.getenv(IMAGE_NAME_ENV) : IMAGE_NAME_DEFAULT);
     }
 
     /**

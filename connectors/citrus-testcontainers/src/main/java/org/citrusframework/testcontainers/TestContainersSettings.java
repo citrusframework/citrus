@@ -29,6 +29,19 @@ public final class TestContainersSettings {
     private static final String ENABLED_ENV = TESTCONTAINERS_ENV_PREFIX + "ENABLED";
     private static final String ENABLED_DEFAULT = "true";
 
+    public static final String DOCKER_REGISTRY = "docker.io";
+    private static final String REGISTRY_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "registry";
+    private static final String REGISTRY_ENV = TESTCONTAINERS_ENV_PREFIX + "REGISTRY";
+    private static final String REGISTRY_DEFAULT = DOCKER_REGISTRY;
+
+    private static final String REGISTRY_MIRROR_ENABLED_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "registry.mirror.enabled";
+    private static final String REGISTRY_MIRROR_ENABLED_ENV = TESTCONTAINERS_ENV_PREFIX + "REGISTRY_MIRROR_ENABLED";
+    private static final String REGISTRY_MIRROR_ENABLED_DEFAULT = "false";
+
+    private static final String REGISTRY_MIRROR_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "registry.mirror";
+    private static final String REGISTRY_MIRROR_ENV = TESTCONTAINERS_ENV_PREFIX + "REGISTRY_MIRROR";
+    private static final String REGISTRY_MIRROR_DEFAULT = "mirror.gcr.io";
+
     private static final String AUTO_REMOVE_RESOURCES_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "auto.remove.resources";
     private static final String AUTO_REMOVE_RESOURCES_ENV = TESTCONTAINERS_ENV_PREFIX + "AUTO_REMOVE_RESOURCES";
     private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "true";
@@ -77,6 +90,31 @@ public final class TestContainersSettings {
     }
 
     /**
+     * Docker registry.
+     * @return
+     */
+    public static String getRegistry() {
+        return System.getProperty(REGISTRY_PROPERTY, Optional.ofNullable(System.getenv(REGISTRY_ENV)).orElse(REGISTRY_DEFAULT));
+    }
+
+    /**
+     * True when using Docker registry mirror.
+     * @return
+     */
+    public static boolean isRegistryMirrorEnabled() {
+        return Boolean.parseBoolean(System.getProperty(REGISTRY_MIRROR_ENABLED_PROPERTY,
+                Optional.ofNullable(System.getenv(REGISTRY_MIRROR_ENABLED_ENV)).orElse(REGISTRY_MIRROR_ENABLED_DEFAULT)));
+    }
+
+    /**
+     * Docker registry mirror.
+     * @return
+     */
+    public static String getRegistryMirror() {
+        return System.getProperty(REGISTRY_MIRROR_PROPERTY, Optional.ofNullable(System.getenv(REGISTRY_MIRROR_ENV)).orElse(REGISTRY_MIRROR_DEFAULT));
+    }
+
+    /**
      * True when using KubeDock services.
      * @return
      */
@@ -117,5 +155,22 @@ public final class TestContainersSettings {
     public static long getConnectTimeout() {
         return Long.parseLong(System.getProperty(CONNECT_TIMEOUT_PROPERTY,
                 System.getenv(CONNECT_TIMEOUT_ENV) != null ? System.getenv(CONNECT_TIMEOUT_ENV) : CONNECT_TIMEOUT_DEFAULT));
+    }
+
+    /**
+     * Gets the Docker registry to use for pulling Testcontainers images.
+     * Uses registry mirror if enabled.
+     * The default Docker registry is left empty.
+     * @return
+     */
+    public static String getDockerRegistry() {
+        String registry = "";
+        if (TestContainersSettings.isRegistryMirrorEnabled()) {
+            registry = TestContainersSettings.getRegistryMirror() + "/";
+        } else if (!TestContainersSettings.DOCKER_REGISTRY.equals(TestContainersSettings.getRegistry())) {
+            registry = TestContainersSettings.getRegistry() + "/";
+        }
+
+        return registry;
     }
 }

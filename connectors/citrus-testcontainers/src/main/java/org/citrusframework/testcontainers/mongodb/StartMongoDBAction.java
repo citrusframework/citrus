@@ -17,7 +17,6 @@
 package org.citrusframework.testcontainers.mongodb;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
 import org.citrusframework.testcontainers.postgresql.PostgreSQLSettings;
@@ -63,7 +62,7 @@ public class StartMongoDBAction extends StartTestcontainersAction<MongoDBContain
             }
 
             if (image == null) {
-                image("mongo");
+                image(MongoDBSettings.getImageName());
             }
 
             withLabel("app", "citrus");
