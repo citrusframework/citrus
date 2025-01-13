@@ -266,7 +266,7 @@
     <swagger.parser.version>2.1.22</swagger.parser.version>
     <testcontainers.version>1.20.4</testcontainers.version>
     <testng.version>7.10.2</testng.version>
-    <vertx.version>4.5.10</vertx.version>
+    <vertx.version>4.5.11</vertx.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
     <xbean-spring.version>4.26</xbean-spring.version>
     <xmlbeans.version>5.2.1</xmlbeans.version>
