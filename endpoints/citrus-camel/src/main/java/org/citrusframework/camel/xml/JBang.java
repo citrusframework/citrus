@@ -110,6 +110,9 @@ public class JBang {
         @XmlAttribute(name = "wait-for-running-state")
         protected boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
 
+        @XmlAttribute(name = "dump-integration-output")
+        protected boolean dumpIntegrationOutput = CamelJBangSettings.isDumpIntegrationOutput();
+
         @XmlElement
         protected Args args;
 
@@ -138,6 +141,14 @@ public class JBang {
 
         public void setWaitForRunningState(boolean waitForRunningState) {
             this.waitForRunningState = waitForRunningState;
+        }
+
+        public boolean isDumpIntegrationOutput() {
+            return dumpIntegrationOutput;
+        }
+
+        public void setDumpIntegrationOutput(boolean dumpIntegrationOutput) {
+            this.dumpIntegrationOutput = dumpIntegrationOutput;
         }
 
         public void setResources(Resources resources) {

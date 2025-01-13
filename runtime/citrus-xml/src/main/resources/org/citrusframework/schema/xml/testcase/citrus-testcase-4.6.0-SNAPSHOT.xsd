@@ -1098,6 +1098,7 @@
                   <xs:attribute name="args" type="xs:string"/>
                   <xs:attribute name="auto-remove" type="xs:boolean"/>
                   <xs:attribute name="wait-for-running-state" type="xs:boolean"/>
+                  <xs:attribute name="dump-integration-output" type="xs:boolean"/>
                 </xs:complexType>
               </xs:element>
               <xs:element name="stop">

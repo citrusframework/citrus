@@ -87,18 +87,6 @@ public class CamelJBang {
     /**
      * Run given integration with JBang Camel app.
      * @param name
-     * @param path
-     * @param resources
-     * @param args
-     * @return
-     */
-    public ProcessAndOutput run(String name, Path path, List<String> resources, String... args) {
-        return run(name, path.toAbsolutePath().toString(), resources, args);
-    }
-
-    /**
-     * Run given integration with JBang Camel app.
-     * @param name
      * @param file
      * @param resources
      * @param args

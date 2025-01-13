@@ -118,8 +118,9 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
             camelJBang().dumpIntegrationOutput(dumpIntegrationOutput);
             camelJBang().camelApp().withEnvs(context.resolveDynamicValuesInMap(envVars));
             camelJBang().camelApp().withSystemProperties(context.resolveDynamicValuesInMap(systemProperties));
+            camelJBang().camelApp().workingDir(integrationToRun.toAbsolutePath().getParent());
 
-            ProcessAndOutput pao = camelJBang().run(name, integrationToRun, resourceFiles, args.toArray(String[]::new));
+            ProcessAndOutput pao = camelJBang().run(name, integrationToRun.getFileName().toString(), resourceFiles, args.toArray(String[]::new));
 
             verifyProcessIsAlive(pao, name);
 

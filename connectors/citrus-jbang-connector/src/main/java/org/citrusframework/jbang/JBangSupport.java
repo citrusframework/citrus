@@ -74,6 +74,8 @@ public class JBangSupport {
 
     private String app;
 
+    private Path workingDir;
+
     /**
      * Prevent direct instantiation.
      */
@@ -91,10 +93,10 @@ public class JBangSupport {
     }
 
     /**
-     * Get JBang version.
+     * Get the JBang version.
      */
     public String version() {
-        ProcessAndOutput p = execute(jBang("version"), null);
+        ProcessAndOutput p = execute(jBang("version"), null, null);
         return p.getOutput();
     }
 
@@ -108,7 +110,6 @@ public class JBangSupport {
 
     /**
      * Adds system property to command line.
-     * @return
      */
     public JBangSupport withSystemProperty(String name, String value) {
         this.systemProperties.put(name, value);
@@ -117,7 +118,6 @@ public class JBangSupport {
 
     /**
      * Adds system properties to command line.
-     * @return
      */
     public JBangSupport withSystemProperties(Map<String, String> systemProperties) {
         this.systemProperties.putAll(systemProperties);
@@ -126,7 +126,6 @@ public class JBangSupport {
 
     /**
      * Adds environment variables to command line.
-     * @return
      */
     public JBangSupport withEnv(String name, String value) {
         this.systemProperties.put(name, value);
@@ -135,15 +134,27 @@ public class JBangSupport {
 
     /**
      * Adds environment variables to command line.
-     * @return
      */
     public JBangSupport withEnvs(Map<String, String> envVars) {
         this.envVars.putAll(envVars);
         return this;
     }
 
+    /**
+     * Sets the JBang application name to call.
+     * @param name
+     */
     public JBangSupport app(String name) {
         this.app = name;
+        return this;
+    }
+
+    /**
+     * Sets the working directory of the JBang process.
+     * @param workingDir
+     */
+    public JBangSupport workingDir(Path workingDir) {
+        this.workingDir = workingDir;
         return this;
     }
 
@@ -159,7 +170,7 @@ public class JBangSupport {
      * Command can be a script file or an app command.
      */
     public ProcessAndOutput run(String command, List<String> args) {
-        return execute(jBang(systemProperties, constructAllArgs(command, args)), envVars);
+        return execute(jBang(systemProperties, constructAllArgs(command, args)), workingDir, envVars);
     }
 
     /**
@@ -175,7 +186,7 @@ public class JBangSupport {
      * Command can be a script file or an app command.
      */
     public ProcessAndOutput runAsync(String command, List<String> args) {
-        return executeAsync(jBang(systemProperties, constructAllArgs(command, args)), envVars);
+        return executeAsync(jBang(systemProperties, constructAllArgs(command, args)), workingDir, envVars);
     }
 
     /**
@@ -193,7 +204,7 @@ public class JBangSupport {
      * Redirect the process output to given file.
      */
     public ProcessAndOutput runAsync(String command, File output, List<String> args) {
-        return executeAsync(jBang(systemProperties, constructAllArgs(command, args)), output, envVars);
+        return executeAsync(jBang(systemProperties, constructAllArgs(command, args)), workingDir, output, envVars);
     }
 
     private List<String> constructAllArgs(String command, List<String> args) {
@@ -268,7 +279,7 @@ public class JBangSupport {
     }
 
     private static ProcessAndOutput getVersion() {
-        return execute(jBang("version"), null);
+        return execute(jBang("version"), null, null);
     }
 
     /**
@@ -280,7 +291,7 @@ public class JBangSupport {
      */
     private static void addTrust(String url) {
         if (trustUrls.add(url)) {
-            ProcessAndOutput result = execute(jBang("trust", "add", url), null);
+            ProcessAndOutput result = execute(jBang("trust", "add", url), null, null);
             int exitValue = result.getProcess().exitValue();
             if (exitValue != OK_EXIT_CODE && exitValue != 1) {
                 throw new CitrusRuntimeException("Error while trusting JBang URLs. Exit code: " + exitValue);
@@ -341,10 +352,11 @@ public class JBangSupport {
      * Execute JBang command using the process API. Waits for the process to complete and returns the process instance so
      * caller is able to access the exit code and process output.
      * @param command
+     * @param workingDir
      * @param envVars
      * @return
      */
-    private static ProcessAndOutput execute(List<String> command, Map<String, String> envVars) {
+    private static ProcessAndOutput execute(List<String> command, Path workingDir, Map<String, String> envVars) {
         try {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Executing JBang command: %s".formatted(String.join(" ", command)));
@@ -355,6 +367,10 @@ public class JBangSupport {
 
             if (envVars != null) {
                 pBuilder.environment().putAll(envVars);
+            }
+
+            if (workingDir != null) {
+                pBuilder.directory(workingDir.toFile());
             }
 
             Process p = pBuilder.start();
@@ -382,16 +398,21 @@ public class JBangSupport {
      * Execute JBang command using the process API. Waits for the process to complete and returns the process instance so
      * caller is able to access the exit code and process output.
      * @param command
+     * @param workingDir
      * @param envVars
      * @return
      */
-    private static ProcessAndOutput executeAsync(List<String> command, Map<String, String> envVars) {
+    private static ProcessAndOutput executeAsync(List<String> command, Path workingDir, Map<String, String> envVars) {
         try {
             ProcessBuilder pBuilder = new ProcessBuilder(command)
                     .redirectErrorStream(true);
 
             if (envVars != null) {
                 pBuilder.environment().putAll(envVars);
+            }
+
+            if (workingDir != null) {
+                pBuilder.directory(workingDir.toFile());
             }
 
             Process p = pBuilder.start();
@@ -409,7 +430,7 @@ public class JBangSupport {
      * @param envVars
      * @return
      */
-    private static ProcessAndOutput executeAsync(List<String> command, File outputFile, Map<String, String> envVars) {
+    private static ProcessAndOutput executeAsync(List<String> command, Path workingDir, File outputFile, Map<String, String> envVars) {
         try {
             ProcessBuilder pBuilder = new ProcessBuilder(command)
                 .redirectErrorStream(true)
@@ -417,6 +438,10 @@ public class JBangSupport {
 
             if (envVars != null) {
                 pBuilder.environment().putAll(envVars);
+            }
+
+            if (workingDir != null) {
+                pBuilder.directory(workingDir.toFile());
             }
 
             Process p = pBuilder.start();

@@ -65,7 +65,7 @@ For a more convenient way to use the Citrus JBang scripts you can install Citrus
 [source,shell]
 ----
 jbang trust add https://github.com/citrusframework/citrus/
-jbang install citrus@citrusframework/citrus
+jbang app install citrus@citrusframework/citrus
 ----
 
 Now you can just call:
