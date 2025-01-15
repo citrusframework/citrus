@@ -65,11 +65,7 @@ public class OpenApiSchemaValidation extends
 
         if (validationReportData != null && validationReportData.report != null) {
             if (validationReportData.report.hasErrors()) {
-                String path = "no Path because no httpMessage";
-                if(message instanceof HttpMessage){
-                    path = ((HttpMessage) message).getPath();
-                }
-                logger.error("Failed to validate Json schema for message:\n{}\nand origin path:\n{}", message.getPayload(String.class), path);
+                logger.error("Failed to validate Json schema for message:\n{}\nand origin path:\n{}", httpMessage.getPayload(String.class), httpMessage.getPath());
                 throw new ValidationException(constructErrorMessage(validationReportData));
             }
         }
