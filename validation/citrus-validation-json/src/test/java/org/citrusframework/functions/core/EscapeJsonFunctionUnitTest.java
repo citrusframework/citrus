@@ -2,7 +2,6 @@ package org.citrusframework.functions.core;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.Function;
-
 import org.mockito.Mock;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
