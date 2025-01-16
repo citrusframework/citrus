@@ -544,6 +544,21 @@ If you want to deal with escaped XML in your test case you may want to use this 
 
 *&lt;Message&gt;Hallo Test Framework&lt;/Message&gt;*
 
+[[functions-escape-json]]
+== escapeJson()
+If you want to deal with escaped JSON in your test case you may want to use this function. It automatically escapes all JSON special characters (especially double quotes).
+[source,xml]
+----
+<echo>
+    <message>
+        <![CDATA[
+            citrus:escapeJson("{\"exampleJson\": \"exampleValue\"}")
+        ]]>
+    </message>
+</echo>
+----
+`{"exampleJson": "exampleValue"}`
+
 [[functions-cdata-section]]
 == cdataSection()
 
