@@ -52,9 +52,9 @@ import org.slf4j.LoggerFactory;
  * Nested test actions are executed in sequence.
  *
  * The template execution may affect existing variable values in the calling test case. So
- * variables may have different values in the test case after template execution. Therefore
+ * variables may have different values in the test case after template execution. Therefore,
  * users can create a local test context by setting globalContext to false. Templates then will
- * have no affect on the variables used in the test case.
+ * have no effect on the variables used in the test case.
  *
  * @since 2007
  */

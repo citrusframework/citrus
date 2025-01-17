@@ -72,7 +72,7 @@ public class KubernetesActor extends TestActor {
             Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
                 var pods = kubernetesClient.pods();
                 if (pods == null) {
-                    logger.warn("Skipping Kubernetes action as no proper Kubernetes environment is available on host system!");
+                    logger.warn("Skipping Kubernetes actions as no proper Kubernetes environment is available on host system!");
                     return false;
                 }
                 pods.list();
@@ -81,7 +81,8 @@ public class KubernetesActor extends TestActor {
 
             return future.get(KubernetesSettings.getConnectTimeout(), TimeUnit.MILLISECONDS);
         } catch (Exception e) {
-            logger.warn("Skipping Kubernetes action as no proper Kubernetes environment is available on host system!", e);
+            logger.warn(("Skipping Kubernetes actions as no proper Kubernetes environment is available on host system! " +
+                    "Caused by: %s - %s").formatted(e.getClass(), e.getMessage()));
             return false;
         }
     }

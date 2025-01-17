@@ -19,11 +19,14 @@ package org.citrusframework.camel.actions;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import jakarta.xml.bind.JAXBException;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.dsl.yaml.YamlRoutesBuilderLoader;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.xml.CamelRouteContextFactoryBean;
+import org.apache.camel.support.ResourceHelper;
 import org.citrusframework.camel.util.CamelUtils;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -85,6 +88,14 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
                 } catch (JAXBException e) {
                     throw new CitrusRuntimeException("Failed to create the JAXB unmarshaller", e);
                 }
+            } else if (IsYamlRoutePredicate.getInstance().test(routeSpec)) {
+                try (YamlRoutesBuilderLoader routesBuilderLoader = new YamlRoutesBuilderLoader()) {
+                    routesBuilderLoader.setCamelContext(camelContext);
+                    routesBuilderLoader.loadRoutesBuilder(ResourceHelper.fromString(routeId + "camel.yaml", routeSpec))
+                            .addRoutesToCamelContext(camelContext);
+                } catch (Exception e) {
+                    throw new CitrusRuntimeException("Failed to load YAML route via routes loader", e);
+                }
             } else {
                 routeBuilder = new RouteBuilder(camelContext) {
                     @Override
@@ -102,7 +113,6 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
                         }
                     }
                 };
-
             }
         }
 
@@ -233,7 +243,11 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Failed to read Camel route from file resource", e);
             }
-            this.routeId = FileUtils.getBaseName(FileUtils.getFileName(routeResource.getLocation()));
+
+            if (routeId == null) {
+                this.routeId = FileUtils.getBaseName(FileUtils.getFileName(routeResource.getLocation()));
+            }
+
             return this;
         }
 
@@ -282,6 +296,28 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
         @Override
         public CreateCamelRouteAction doBuild() {
             return new CreateCamelRouteAction(this);
+        }
+    }
+
+    private static class IsYamlRoutePredicate implements Predicate<String> {
+
+        private static final IsYamlRoutePredicate INSTANCE = new IsYamlRoutePredicate();
+
+        private IsYamlRoutePredicate() {
+            // Singleton
+        }
+
+        public static IsYamlRoutePredicate getInstance() {
+            return INSTANCE;
+        }
+
+        @Override
+        public boolean test(String toTest) {
+            if (toTest == null) {
+                return false;
+            }
+
+            return toTest.trim().startsWith("- route:") || toTest.trim().startsWith("- from:");
         }
     }
 }

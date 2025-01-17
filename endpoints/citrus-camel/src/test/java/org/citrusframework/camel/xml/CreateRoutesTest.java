@@ -44,7 +44,7 @@ public class CreateRoutesTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getName(), "CamelCreateRouteTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
+        Assert.assertEquals(result.getActionCount(), 3L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CreateCamelRouteAction.class);
         Assert.assertEquals(result.getTestAction(0).getName(), "create-routes");
 
@@ -59,12 +59,25 @@ public class CreateRoutesTest extends AbstractXmlActionTest {
         Assert.assertEquals(action.getRoutes().get(0).getRouteId(), "route_1");
         Assert.assertEquals(action.getRoutes().get(1).getRouteId(), "route_2");
 
-        action = (CreateCamelRouteAction) result.getTestAction(actionIndex);
+        action = (CreateCamelRouteAction) result.getTestAction(actionIndex++);
         Assert.assertNotNull(action.getCamelContext());
         Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("camelContext", CamelContext.class));
         Assert.assertNull(action.getRouteSpec());
         Assert.assertNotNull(action.getRoutes());
         Assert.assertEquals(action.getRoutes().size(), 1L);
         Assert.assertEquals(action.getRoutes().get(0).getEndpointUrl(), "direct:test3");
+
+        action = (CreateCamelRouteAction) result.getTestAction(actionIndex);
+        Assert.assertNotNull(action.getCamelContext());
+        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("camelContext", CamelContext.class));
+        Assert.assertEquals(action.getRouteSpec().replaceAll("\\s", ""), ("""
+          - from:
+              uri: direct:test4
+              steps:
+                - to:
+                    uri: mock:test4
+        """).replaceAll("\\s", ""));
+        Assert.assertNotNull(action.getRoutes());
+        Assert.assertEquals(action.getRoutes().size(), 0L);
     }
 }

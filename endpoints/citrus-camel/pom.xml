@@ -55,6 +55,10 @@
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
+      <artifactId>camel-yaml-dsl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
       <artifactId>camel-endpointdsl</artifactId>
       <scope>provided</scope>
     </dependency>

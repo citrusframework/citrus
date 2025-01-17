@@ -159,6 +159,18 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
             }
         }
 
+        if (createRoutes.route != null) {
+            if (StringUtils.hasText(createRoutes.getRoute().getId())) {
+                builder.routeId(createRoutes.getRoute().getId());
+            }
+
+            if (StringUtils.hasText(createRoutes.getRoute().getFile())) {
+                builder.route(Resources.create(createRoutes.getRoute().getFile()));
+            } else if (StringUtils.hasText(createRoutes.getRoute().getRoute())) {
+                builder.route(createRoutes.getRoute().getRoute().trim());
+            }
+        }
+
         this.builder = builder;
         return this;
     }

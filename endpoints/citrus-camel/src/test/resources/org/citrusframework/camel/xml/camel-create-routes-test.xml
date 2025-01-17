@@ -44,5 +44,17 @@
         </route>
       </create-routes>
     </camel>
+
+    <camel camel-context="camelContext">
+      <create-routes>
+        <route id="test4">
+          - from:
+              uri: direct:test4
+              steps:
+                - to:
+                    uri: mock:test4
+        </route>
+      </create-routes>
+    </camel>
   </actions>
 </test>

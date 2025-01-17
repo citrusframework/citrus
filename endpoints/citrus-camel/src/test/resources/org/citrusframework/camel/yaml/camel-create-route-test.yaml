@@ -25,3 +25,14 @@ actions:
             <from uri="direct:test3"/>
             <to uri="mock:test3"/>
           </route>
+
+  - camel:
+      camelContext: "camelContext"
+      createRoutes:
+        id: test4
+        route: |
+          - from:
+              uri: direct:test4
+              steps:
+                - to:
+                    uri: mock:test4

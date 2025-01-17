@@ -17,6 +17,7 @@
 package org.citrusframework.camel.yaml;
 
 import org.citrusframework.camel.actions.CreateCamelRouteAction;
+import org.citrusframework.spi.Resources;
 
 public class CreateRoutes implements CamelActionBuilderWrapper<CreateCamelRouteAction.Builder> {
     private final CreateCamelRouteAction.Builder builder = new CreateCamelRouteAction.Builder();
@@ -25,8 +26,16 @@ public class CreateRoutes implements CamelActionBuilderWrapper<CreateCamelRouteA
         builder.route(routeContext);
     }
 
+    public void setFile(String file) {
+        builder.route(Resources.create(file));
+    }
+
     public void setRoute(String routeSpec) {
         builder.route(routeSpec);
+    }
+
+    public void setId(String routeId) {
+        builder.routeId(routeId);
     }
 
     @Override

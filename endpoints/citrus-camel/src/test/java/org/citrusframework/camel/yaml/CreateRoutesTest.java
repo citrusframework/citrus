@@ -44,7 +44,7 @@ public class CreateRoutesTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getName(), "CamelCreateRouteTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
+        Assert.assertEquals(result.getActionCount(), 3L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CreateCamelRouteAction.class);
         Assert.assertEquals(result.getTestAction(0).getName(), "create-routes");
 
@@ -65,13 +65,25 @@ public class CreateRoutesTest extends AbstractYamlActionTest {
                 "</routeContext>").replaceAll("\\s", ""));
         Assert.assertEquals(action.getRoutes().size(), 0);
 
-        action = (CreateCamelRouteAction) result.getTestAction(actionIndex);
+        action = (CreateCamelRouteAction) result.getTestAction(actionIndex++);
         Assert.assertNotNull(action.getCamelContext());
         Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("camelContext", CamelContext.class));
         Assert.assertEquals(action.getRouteSpec().replaceAll("\\s", ""), ("<route>" +
                         "<from uri=\"direct:test3\"/>" +
                         "<to uri=\"mock:test3\"/>" +
                     "</route>").replaceAll("\\s", ""));
+        Assert.assertEquals(action.getRoutes().size(), 0);
+
+        action = (CreateCamelRouteAction) result.getTestAction(actionIndex);
+        Assert.assertNotNull(action.getCamelContext());
+        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("camelContext", CamelContext.class));
+        Assert.assertEquals(action.getRouteSpec().replaceAll("\\s", ""), ("""
+          - from:
+              uri: direct:test4
+              steps:
+                - to:
+                    uri: mock:test4
+        """).replaceAll("\\s", ""));
         Assert.assertEquals(action.getRoutes().size(), 0);
 
     }

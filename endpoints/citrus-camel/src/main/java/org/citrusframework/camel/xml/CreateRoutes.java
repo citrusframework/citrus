@@ -19,16 +19,23 @@ package org.citrusframework.camel.xml;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAnyElement;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlValue;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "routeSpec"
+        "routeSpec",
+        "route"
 })
 public class CreateRoutes {
 
     @XmlAnyElement(lax = true)
     protected org.w3c.dom.Element routeSpec;
+
+    @XmlElement
+    protected RouteSpec route;
 
     public org.w3c.dom.Element getRouteSpec() {
         return routeSpec;
@@ -36,5 +43,51 @@ public class CreateRoutes {
 
     public void setRouteSpec(org.w3c.dom.Element routeSpec) {
         this.routeSpec = routeSpec;
+    }
+
+    public void setRoute(RouteSpec route) {
+        this.route = route;
+    }
+
+    public RouteSpec getRoute() {
+        return route;
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+    })
+    public static class RouteSpec {
+        @XmlAttribute
+        protected String id;
+
+        @XmlAttribute
+        protected String file;
+
+        @XmlValue
+        protected String route;
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setFile(String file) {
+            this.file = file;
+        }
+
+        public String getFile() {
+            return file;
+        }
+
+        public void setRoute(String route) {
+            this.route = route;
+        }
+
+        public String getRoute() {
+            return route;
+        }
     }
 }
