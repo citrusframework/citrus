@@ -17,7 +17,6 @@
 package org.citrusframework.testcontainers.redpanda;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
 import org.citrusframework.testcontainers.postgresql.PostgreSQLSettings;
@@ -76,7 +75,16 @@ public class StartRedpandaAction extends StartTestcontainersAction<RedpandaConta
             if (referenceResolver != null && referenceResolver.isResolvable(containerName, RedpandaContainer.class)) {
                 redpandaContainer = referenceResolver.resolve(containerName, RedpandaContainer.class);
             } else {
-                redpandaContainer = new RedpandaContainer(DockerImageName.parse(image).withTag(redpandaVersion))
+                DockerImageName imageName;
+                if (TestContainersSettings.isRegistryMirrorEnabled()) {
+                    // make sure the mirror image is declared as compatible with original image
+                    imageName = DockerImageName.parse(image).withTag(redpandaVersion)
+                            .asCompatibleSubstituteFor(DockerImageName.parse("redpandadata/redpanda"));
+                } else {
+                    imageName = DockerImageName.parse(image).withTag(redpandaVersion);
+                }
+
+                redpandaContainer = new RedpandaContainer(imageName)
                         .withNetwork(network)
                         .withNetworkAliases(serviceName)
                         .waitingFor(Wait.forLogMessage(".*Successfully started Redpanda!.*", 1)

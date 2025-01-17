@@ -74,7 +74,16 @@ public class StartKafkaAction extends StartTestcontainersAction<KafkaContainer> 
             if (referenceResolver != null && referenceResolver.isResolvable(containerName, KafkaContainer.class)) {
                 kafkaContainer = referenceResolver.resolve(containerName, KafkaContainer.class);
             } else {
-                kafkaContainer = new KafkaContainer(DockerImageName.parse(image).withTag(kafkaVersion))
+                DockerImageName imageName;
+                if (TestContainersSettings.isRegistryMirrorEnabled()) {
+                    // make sure the mirror image is declared as compatible with original image
+                    imageName = DockerImageName.parse(image).withTag(kafkaVersion)
+                            .asCompatibleSubstituteFor(DockerImageName.parse("confluentinc/cp-kafka"));
+                } else {
+                    imageName = DockerImageName.parse(image).withTag(kafkaVersion);
+                }
+
+                kafkaContainer = new KafkaContainer(imageName)
                         .withNetwork(network)
                         .withNetworkAliases(serviceName)
                         .withStartupTimeout(startupTimeout);

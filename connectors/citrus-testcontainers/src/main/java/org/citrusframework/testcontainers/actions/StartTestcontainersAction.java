@@ -300,7 +300,8 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
 
         protected C buildContainer() {
             String imageName;
-            if (StringUtils.hasText(TestContainersSettings.getRegistry()) && !image.startsWith(TestContainersSettings.getDockerRegistry())) {
+            if (StringUtils.hasText(TestContainersSettings.getRegistry()) &&
+                    !image.startsWith(TestContainersSettings.getDockerRegistry())) {
                 imageName = TestContainersSettings.getDockerRegistry() + image;
             } else {
                 imageName = image;

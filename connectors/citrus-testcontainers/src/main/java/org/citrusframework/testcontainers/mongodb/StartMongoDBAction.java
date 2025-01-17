@@ -75,7 +75,16 @@ public class StartMongoDBAction extends StartTestcontainersAction<MongoDBContain
             if (referenceResolver != null && referenceResolver.isResolvable(containerName, MongoDBContainer.class)) {
                 mongoDBContainer = referenceResolver.resolve(containerName, MongoDBContainer.class);
             } else {
-                mongoDBContainer = new MongoDBContainer(DockerImageName.parse(image).withTag(mongoDBVersion))
+                DockerImageName imageName;
+                if (TestContainersSettings.isRegistryMirrorEnabled()) {
+                    // make sure the mirror image is declared as compatible with original image
+                    imageName = DockerImageName.parse(image).withTag(mongoDBVersion)
+                            .asCompatibleSubstituteFor(DockerImageName.parse("mongo"));
+                } else {
+                    imageName = DockerImageName.parse(image).withTag(mongoDBVersion);
+                }
+
+                mongoDBContainer = new MongoDBContainer(imageName)
                         .withNetwork(network)
                         .withNetworkAliases(serviceName)
                         .waitingFor(Wait.forLogMessage("(?i).*waiting for connections.*", 1)

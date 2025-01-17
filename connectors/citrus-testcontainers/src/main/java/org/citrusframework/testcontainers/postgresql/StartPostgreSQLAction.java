@@ -169,8 +169,17 @@ public class StartPostgreSQLAction extends StartTestcontainersAction<PostgreSQLC
             if (referenceResolver != null && referenceResolver.isResolvable(containerName, PostgreSQLContainer.class)) {
                 postgreSQLContainer = referenceResolver.resolve(containerName, PostgreSQLContainer.class);
             } else {
-                postgreSQLContainer = new PostgreSQLContainer<>(
-                        DockerImageName.parse(image).withTag(postgreSQLVersion))
+                DockerImageName imageName;
+                if (TestContainersSettings.isRegistryMirrorEnabled()) {
+                    // make sure the mirror image is declared as compatible with original image
+                    imageName = DockerImageName.parse(image).withTag(postgreSQLVersion)
+                            .asCompatibleSubstituteFor(DockerImageName.parse("postgres"));
+                } else {
+                    imageName =
+                        DockerImageName.parse(image).withTag(postgreSQLVersion);
+                }
+
+                postgreSQLContainer = new PostgreSQLContainer<>(imageName)
                         .withUsername(username)
                         .withPassword(password)
                         .withDatabaseName(databaseName)
