@@ -55,28 +55,22 @@ public class SleepAction extends AbstractTestAction {
         String duration = context.resolveDynamicValue(time);
 
         try {
-            logger.info(String.format("Sleeping %s %s", duration, timeUnit));
-
+            Duration ms;
             if (duration.indexOf(".") > 0) {
-                switch (timeUnit) {
-                    case MILLISECONDS:
-                        TimeUnit.MILLISECONDS.sleep(Math.round(Double.parseDouble(duration)));
-                        break;
-                    case SECONDS:
-                        TimeUnit.MILLISECONDS.sleep(Math.round(Double.parseDouble(duration) * 1000));
-                        break;
-                    case MINUTES:
-                        TimeUnit.MILLISECONDS.sleep(Math.round(Double.parseDouble(duration) * 60 * 1000));
-                        break;
-                    default:
-                        throw new CitrusRuntimeException("Unsupported time expression for sleep action - " +
-                                "please use one of milliseconds, seconds, minutes");
-                }
+                ms = switch (timeUnit) {
+                    case MILLISECONDS -> Duration.ofMillis(Math.round(Double.parseDouble(duration)));
+                    case SECONDS -> Duration.ofMillis(Math.round(Double.parseDouble(duration) * 1000));
+                    case MINUTES -> Duration.ofMillis(Math.round(Double.parseDouble(duration) * 60 * 1000));
+                    default -> throw new CitrusRuntimeException("Unsupported time expression for sleep action - " +
+                            "please use one of milliseconds, seconds, minutes");
+                };
             } else {
-                timeUnit.sleep(Long.parseLong(duration));
+                ms = Duration.ofMillis(TimeUnit.MILLISECONDS.convert(Long.parseLong(duration), timeUnit));
             }
 
-            logger.info(String.format("Returning after %s %s", duration, timeUnit));
+            logger.info(String.format("Sleeping %s ms", ms.toMillis()));
+            TimeUnit.MILLISECONDS.sleep(ms.toMillis());
+            logger.info(String.format("Returning after %s ms", ms.toMillis()));
         } catch (InterruptedException e) {
             throw new CitrusRuntimeException(e);
         }
