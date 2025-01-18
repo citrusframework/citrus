@@ -28,6 +28,8 @@ public class DefaultClientFactoryFinder {
             case S3 -> Optional.of(new S3ClientFactory());
             case SQS -> Optional.of(new SqsClientFactory());
             case SNS -> Optional.of(new SnsClientFactory());
+            case KINESIS -> Optional.of(new KinesisClientFactory());
+            case EVENT_BRIDGE -> Optional.of(new EventBridgeClientFactory());
             case DYNAMODB -> Optional.of(new DynamoDbClientFactory());
             default -> Optional.empty();
         };
