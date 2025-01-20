@@ -77,8 +77,8 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
 
         testSuiteListeners = new TestSuiteListeners();
         testSuiteListeners.addTestSuiteListener(testSuiteListener);
-        beforeActions = new SequenceBeforeSuite();
-        afterActions = new SequenceAfterSuite();
+        beforeActions = new SequenceBeforeSuite.Builder().build();
+        afterActions = new SequenceAfterSuite.Builder().build();
 
         when(testContextFactory.getObject()).thenReturn(context);
 
@@ -183,9 +183,10 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBeforeTest() {
-        SequenceBeforeTest beforeTestActions = new SequenceBeforeTest();
+        SequenceBeforeTest beforeTestActions = new SequenceBeforeTest.Builder()
+                .actions(actionMock)
+                .build();
 
-        beforeTestActions.addTestAction(actionMock);
         beforeTestActions.execute(context);
 
         verify(actionMock).execute(any(TestContext.class));
@@ -193,12 +194,13 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBeforeTestFail() {
-        SequenceBeforeTest beforeTestActions = new SequenceBeforeTest();
-
         doThrow(new CitrusRuntimeException("Failed!")).when(actionMock).execute(any(TestContext.class));
-        beforeTestActions.addTestAction(actionMock);
 
         try {
+            SequenceBeforeTest beforeTestActions = new SequenceBeforeTest.Builder()
+                    .actions(actionMock)
+                    .build();
+
             beforeTestActions.execute(context);
         } catch (CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "Failed!");

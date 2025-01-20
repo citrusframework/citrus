@@ -16,6 +16,8 @@
 
 package org.citrusframework.container;
 
+import java.util.Optional;
+
 import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestActionBuilder;
 
@@ -34,7 +36,7 @@ public class FinallySequence extends Sequence {
      */
     public FinallySequence(Builder builder) {
         super(new Sequence.Builder()
-            .name(builder.getName())
+            .name(Optional.ofNullable(builder.getName()).orElse("finally"))
             .description(builder.getDescription())
             .actor(builder.getActor())
             .actions(builder.getActions().toArray(new TestActionBuilder<?>[0]))

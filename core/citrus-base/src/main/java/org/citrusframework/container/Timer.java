@@ -16,6 +16,11 @@
 
 package org.citrusframework.container;
 
+import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.context.TestContext;
@@ -23,9 +28,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
@@ -44,11 +46,14 @@ public class Timer extends AbstractActionContainer implements StopTimer {
     private final long delay;
     private final int repeatCount;
     private final boolean fork;
+    private final boolean autoStop;
     private final String timerId;
 
-    protected boolean timerComplete = false;
+    protected AtomicBoolean timerComplete = new AtomicBoolean(false);
     protected CitrusRuntimeException timerException = null;
     private java.util.Timer timer;
+
+    private ExecutorService taskExecutor;
 
     public Timer(Builder builder) {
         super("timer", builder);
@@ -57,26 +62,23 @@ public class Timer extends AbstractActionContainer implements StopTimer {
         this.delay = builder.delay;
         this.repeatCount = builder.repeatCount;
         this.fork = builder.fork;
+        this.autoStop = builder.autoStop;
         this.timerId = builder.timerId;
     }
 
     @Override
     public void doExecute(final TestContext context) {
+        timer = new java.util.Timer(getTimerId(), false);
+
         if (fork) {
-            var taskExecutor = newSingleThreadExecutor();
-            try {
-                taskExecutor.execute(() -> configureAndRunTimer(context));
-            } finally {
-                taskExecutor.shutdownNow();
-            }
+            taskExecutor = newSingleThreadExecutor();
+            taskExecutor.execute(() -> configureAndRunTimer(context));
         } else {
             configureAndRunTimer(context);
         }
     }
 
     private void configureAndRunTimer(final TestContext context) {
-        timer = new java.util.Timer(getTimerId(), false);
-
         context.registerTimer(getTimerId(), this);
 
         TimerTask timerTask = new TimerTask() {
@@ -121,7 +123,7 @@ public class Timer extends AbstractActionContainer implements StopTimer {
         };
         timer.scheduleAtFixedRate(timerTask, delay, interval);
 
-        while (!timerComplete) {
+        while (!timerComplete.get()) {
             try {
                 Thread.sleep(interval);
             } catch (InterruptedException e) {
@@ -140,8 +142,15 @@ public class Timer extends AbstractActionContainer implements StopTimer {
 
     @Override
     public void stopTimer() {
-        timer.cancel();
-        timerComplete = true;
+        if (timerComplete.compareAndSet(false, true)) {
+            if (fork && taskExecutor != null) {
+                taskExecutor.shutdown();
+            }
+
+            if (timer != null) {
+                timer.cancel();
+            }
+        }
     }
 
     private static int serialNumber() {
@@ -164,6 +173,20 @@ public class Timer extends AbstractActionContainer implements StopTimer {
         return fork;
     }
 
+    @Override
+    public boolean isDone(TestContext context) {
+        if (fork) {
+            if (autoStop) {
+                stopTimer();
+            } else {
+                // forked timers that should not be stopped automatically are always marked as done
+                return true;
+            }
+        }
+
+        return super.isDone(context);
+    }
+
     /**
      * Action builder.
      */
@@ -173,6 +196,7 @@ public class Timer extends AbstractActionContainer implements StopTimer {
         private long delay = 0L;
         private int repeatCount = Integer.MAX_VALUE;
         private boolean fork = false;
+        private boolean autoStop = true;
         private String timerId;
 
         /**
@@ -221,6 +245,16 @@ public class Timer extends AbstractActionContainer implements StopTimer {
          */
         public Builder fork(boolean fork) {
             this.fork = fork;
+            return this;
+        }
+
+        /**
+         * Automatically stop the timer when test is finished.
+         *
+         * @param autoStop
+         */
+        public Builder autoStop(boolean autoStop) {
+            this.autoStop = autoStop;
             return this;
         }
 

@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class TimerTest extends AbstractXmlActionTest {
 
     @Test
-    public void shouldLoadAsync() {
+    public void shouldLoadTimer() {
         XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/timer-test.xml");
 
         testLoader.load();

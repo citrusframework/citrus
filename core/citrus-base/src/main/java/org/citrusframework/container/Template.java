@@ -29,7 +29,6 @@ import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.actions.NoopTestAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -286,9 +285,8 @@ public class Template extends AbstractTestAction {
          */
         public B actions(List<TestAction> actions) {
             return actions(actions.stream()
-                    .filter(action -> !(action instanceof NoopTestAction))
                     .map(action -> (TestActionBuilder<?>)() -> action)
-                    .collect(Collectors.toList())
+                    .toList()
                     .toArray(new TestActionBuilder<?>[]{}));
         }
 
@@ -300,10 +298,6 @@ public class Template extends AbstractTestAction {
         public B actions(TestActionBuilder<?>... actions) {
             for (int i = 0; i < actions.length; i++) {
                 TestActionBuilder<?> current = actions[i];
-
-                if (current.build() instanceof NoopTestAction) {
-                    continue;
-                }
 
                 if (this.actions.size() == i) {
                     this.actions.add(current);

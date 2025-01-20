@@ -17,6 +17,7 @@
 package org.citrusframework.container;
 
 import org.citrusframework.AbstractSuiteContainerBuilder;
+import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.context.TestContext;
@@ -33,6 +34,14 @@ public class SequenceBeforeSuite extends AbstractSuiteActionContainer implements
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(SequenceBeforeSuite.class);
+
+    public SequenceBeforeSuite() {
+        this(new SequenceBeforeSuite.Builder());
+    }
+
+    public SequenceBeforeSuite(AbstractTestContainerBuilder<?, ?> builder) {
+        super("before-suite", builder);
+    }
 
     @Override
     public void doExecute(TestContext context) {
@@ -70,7 +79,7 @@ public class SequenceBeforeSuite extends AbstractSuiteActionContainer implements
 
         @Override
         public SequenceBeforeSuite doBuild() {
-            return new SequenceBeforeSuite();
+            return new SequenceBeforeSuite(this);
         }
     }
 }

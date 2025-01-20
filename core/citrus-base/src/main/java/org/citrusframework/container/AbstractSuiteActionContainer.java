@@ -21,6 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.citrusframework.AbstractTestContainerBuilder;
+import org.citrusframework.TestActionBuilder;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +35,7 @@ import org.slf4j.LoggerFactory;
  *
  * @since 2.0
  */
-public abstract class AbstractSuiteActionContainer extends AbstractActionContainer {
+public abstract class AbstractSuiteActionContainer extends AbstractActionContainer implements ReferenceResolverAware {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(AbstractSuiteActionContainer.class);
@@ -47,6 +51,10 @@ public abstract class AbstractSuiteActionContainer extends AbstractActionContain
 
     /** Optional system properties */
     private Map<String, String> systemProperties = new HashMap<>();
+
+    public AbstractSuiteActionContainer(String name, AbstractTestContainerBuilder<?, ?> builder) {
+        super(name, builder);
+    }
 
     /**
      * Checks if this suite actions should execute according to suite name and included test groups.
@@ -176,5 +184,14 @@ public abstract class AbstractSuiteActionContainer extends AbstractActionContain
      */
     public void setSystemProperties(Map<String, String> systemProperties) {
         this.systemProperties = systemProperties;
+    }
+
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        for (TestActionBuilder<?> builder : actions) {
+            if (builder instanceof ReferenceResolverAware referenceResolverAwareBuilder) {
+                referenceResolverAwareBuilder.setReferenceResolver(referenceResolver);
+            }
+        }
     }
 }

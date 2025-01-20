@@ -42,11 +42,16 @@ public class CustomContainerJavaIT extends TestNGCitrusSpringSupport {
         ));
     }
 
-    public TestActionContainerBuilder<ReverseActionContainer, ?> reverse() {
+    private TestActionContainerBuilder<ReverseActionContainer, ?> reverse() {
         return container(new ReverseActionContainer());
     }
 
     private static class ReverseActionContainer extends AbstractActionContainer {
+
+        public ReverseActionContainer() {
+            super("reverse");
+        }
+
         @Override
         public void doExecute(TestContext context) {
             for (int i = getActions().size(); i > 0; i--) {
