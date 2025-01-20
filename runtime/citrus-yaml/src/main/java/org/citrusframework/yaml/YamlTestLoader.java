@@ -18,6 +18,7 @@ package org.citrusframework.yaml;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionBuilder;
@@ -77,6 +78,17 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
                 return result.toString();
             }
         });
+
+        try {
+            Level original = java.util.logging.Logger.getLogger("org.yaml.snakeyaml.introspector").getLevel();
+            if (!Level.SEVERE.equals(original)) {
+                // Avoid snakeyaml warning messages due to missing methods in org.citrusframework.yaml.TestActions
+                java.util.logging.Logger.getLogger("org.yaml.snakeyaml.introspector").setLevel(java.util.logging.Level.SEVERE);
+            }
+        } catch (Exception e) {
+            // ignore and keep the original log level
+        }
+
         Map<String, TestActionBuilder<?>> builders = YamlTestActionBuilder.lookup();
         if (!builders.isEmpty()) {
             TypeDescription actions = new TypeDescription(TestActions.class);
