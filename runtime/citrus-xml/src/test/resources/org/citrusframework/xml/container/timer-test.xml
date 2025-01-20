@@ -14,7 +14,9 @@
   ~ limitations under the License.
   -->
 
-<test name="TimerTest" author="Christoph" status="FINAL">
+<test name="TimerTest" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
   <actions>
     <timer id="timer1" fork="true" delay="5000" interval="2000" repeatCount="1">
@@ -24,7 +26,7 @@
         </echo>
       </actions>
     </timer>
-    <timer id="timer2" fork="false" delay="500" interval="200" repeatCount="2">
+    <timer id="timer2" delay="500" interval="200" repeatCount="2">
       <actions>
         <echo>
           <message>1</message>

@@ -54,6 +54,10 @@ public class Timer implements TestActionBuilder<org.citrusframework.container.Ti
         builder.fork(enabled);
     }
 
+    public void setAutoStop(boolean enabled) {
+        builder.autoStop(enabled);
+    }
+
     public void setInterval(long milliseconds) {
         builder.interval(milliseconds);
     }

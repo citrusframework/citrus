@@ -65,6 +65,12 @@ public class Timer implements TestActionBuilder<org.citrusframework.container.Ti
         return this;
     }
 
+    @XmlAttribute(name = "auto-stop")
+    public Timer setAutoStop(boolean enabled) {
+        builder.autoStop(enabled);
+        return this;
+    }
+
     @XmlAttribute
     public Timer setInterval(long milliseconds) {
         builder.interval(milliseconds);

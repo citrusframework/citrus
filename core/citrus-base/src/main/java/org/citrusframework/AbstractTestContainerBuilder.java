@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.citrusframework.actions.NoopTestAction;
 import org.citrusframework.container.TestActionContainer;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
@@ -38,9 +37,8 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
     @Override
     public S actions(TestAction... actions) {
         return actions(Stream.of(actions)
-                                .filter(action -> !(action instanceof NoopTestAction))
                                 .map(action -> (TestActionBuilder<?>)() -> action)
-                                .collect(Collectors.toList())
+                                .toList()
                                 .toArray(new TestActionBuilder<?>[]{}));
     }
 
@@ -48,14 +46,6 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
     public S actions(TestActionBuilder<?>... actions) {
         for (int i = 0; i < actions.length; i++) {
             TestActionBuilder<?> current = actions[i];
-
-            try {
-                if (current.build() instanceof NoopTestAction) {
-                    continue;
-                }
-            } catch (Exception exception) {
-                // do nothing - possible that the action build is not able to perform build at this state
-            }
 
             if (this.actions.size() == i) {
                 this.actions.add(current);
@@ -80,8 +70,6 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
 
     @Override
     public T build() {
-        T container = doBuild();
-
         if (referenceResolver != null) {
             for (TestActionBuilder<?> builder : actions) {
                 if (builder instanceof ReferenceResolverAware referenceResolverAware) {
@@ -90,11 +78,7 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
             }
         }
 
-        container.setActions(actions.stream()
-                .map(TestActionBuilder::build)
-                .filter(action -> !(action instanceof NoopTestAction))
-                .collect(Collectors.toList()));
-        return container;
+        return doBuild();
     }
 
     /**
@@ -124,12 +108,16 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
         return new AbstractTestContainerBuilder<>() {
             @Override
             public T doBuild() {
+                container.setActions(actions.stream()
+                        .map(TestActionBuilder::build)
+                        .collect(Collectors.toList()));
+
                 return container;
             }
 
             @Override
             public T build() {
-                if (container.getActions().size() > 0) {
+                if (!container.getActions().isEmpty()) {
                     return container;
                 }
 

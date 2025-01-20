@@ -32,7 +32,7 @@ public class XmlTest extends AbstractGroovyActionDslTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "DefaultTestCase");
+        Assert.assertEquals(result.getName(), "test");
         Assert.assertEquals(result.getActions().get(0).getClass(), CreateVariablesAction.class);
         Assert.assertEquals(result.getActions().get(1).getClass(), SendMessageAction.class);
         Assert.assertEquals(result.getActions().get(2).getClass(), ReceiveMessageAction.class);

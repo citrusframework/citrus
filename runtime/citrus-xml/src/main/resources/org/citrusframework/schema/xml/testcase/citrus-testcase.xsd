@@ -627,6 +627,7 @@
     <xs:attribute name="id" type="xs:string"/>
     <xs:attribute name="delay" type="xs:long"/>
     <xs:attribute name="fork" type="xs:boolean"/>
+    <xs:attribute name="auto-stop" type="xs:boolean"/>
     <xs:attribute name="interval" type="xs:long"/>
     <xs:attribute name="repeatCount" type="xs:int"/>
   </xs:complexType>

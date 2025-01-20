@@ -17,7 +17,6 @@
 package org.citrusframework.report;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.citrusframework.DefaultTestCase;
@@ -25,6 +24,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.container.AbstractActionContainer;
+import org.citrusframework.container.Sequence;
 import org.citrusframework.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
 import org.testng.Assert;
@@ -348,8 +348,7 @@ public class FailureStackTestListenerTest extends UnitTestSupport {
 
     private static class MockedActionContainer extends AbstractActionContainer {
         public MockedActionContainer(String name, TestAction... actions) {
-            setName(name);
-            setActions(Arrays.asList(actions));
+            super(name, new Sequence.Builder().actions(actions));
         }
 
         @Override

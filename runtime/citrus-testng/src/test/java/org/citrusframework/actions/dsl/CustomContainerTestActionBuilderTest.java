@@ -80,7 +80,7 @@ public class CustomContainerTestActionBuilderTest extends UnitTestSupport {
     private static class CustomActionContainer extends AbstractActionContainer {
 
         public CustomActionContainer() {
-            setName("custom");
+            super("custom");
         }
 
         @Override

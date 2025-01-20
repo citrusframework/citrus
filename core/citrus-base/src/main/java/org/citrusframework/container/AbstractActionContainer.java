@@ -42,7 +42,7 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /** List of nested actions */
-    protected List<TestActionBuilder<?>> actions = new ArrayList<>();
+    protected List<TestActionBuilder<?>> actions;
 
     /** List of all executed actions during container run  */
     private final List<TestAction> executedActions = new ArrayList<>();
@@ -50,8 +50,8 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     /** Last executed action for error reporting reasons */
     private TestAction activeAction;
 
-    public AbstractActionContainer() {
-        super();
+    public AbstractActionContainer(String name) {
+        this(name, new Sequence.Builder());
     }
 
     public AbstractActionContainer(String name, AbstractTestContainerBuilder<?, ?> builder) {
@@ -107,7 +107,7 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
         for (TestAction action : new ArrayList<>(executedActions)) {
             if (action instanceof Completable && !((Completable) action).isDone(context)) {
                 if (logger.isDebugEnabled()) {
-                    logger.debug(Optional.ofNullable(action.getName()).filter(name -> name.trim().length() > 0)
+                    logger.debug(Optional.ofNullable(action.getName()).filter(name -> !name.trim().isEmpty())
                             .orElseGet(() -> action.getClass().getName()) + " not completed yet");
                 }
                 return false;

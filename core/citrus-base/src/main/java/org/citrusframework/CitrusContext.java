@@ -43,6 +43,7 @@ import org.citrusframework.message.MessageProcessors;
 import org.citrusframework.report.*;
 import org.citrusframework.spi.ReferenceRegistry;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.TypeConverter;
@@ -422,6 +423,10 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
         if (component instanceof ValidationMatcherLibrary library) {
             validationMatcherRegistry.addValidationMatcherLibrary(library);
             testContextFactory.getValidationMatcherRegistry().addValidationMatcherLibrary(library);
+        }
+
+        if (component instanceof ReferenceResolverAware referenceResolverAware) {
+            referenceResolverAware.setReferenceResolver(referenceResolver);
         }
     }
 

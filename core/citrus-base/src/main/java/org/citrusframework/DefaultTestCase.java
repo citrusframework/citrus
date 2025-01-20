@@ -106,6 +106,10 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
     private final StopWatch timer = new StopWatch();
 
+    public DefaultTestCase() {
+        super("test");
+    }
+
     @Override
     public void doExecute(final TestContext context) {
         if (!getMetaInfo().getStatus().equals(TestCaseMetaInfo.Status.DISABLED)) {
