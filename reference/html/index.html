@@ -661,8 +661,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 4.5.0,</span>
-<span id="revdate">2024-12-18</span>
+<span id="revnumber">version 4.5.1,</span>
+<span id="revdate">2025-01-20</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -1075,18 +1075,19 @@ $(addBlockSwitches);
 <li><a href="#functions-encode-base64">40.23. encodeBase64()</a></li>
 <li><a href="#functions-decode-base64">40.24. decodeBase64()</a></li>
 <li><a href="#functions-escape-xml">40.25. escapeXml()</a></li>
-<li><a href="#functions-cdata-section">40.26. cdataSection()</a></li>
-<li><a href="#functions-digest-auth-header">40.27. digestAuthHeader()</a></li>
-<li><a href="#functions-localhost-address">40.28. localHostAddress()</a></li>
-<li><a href="#functions-change-date">40.29. changeDate()</a></li>
-<li><a href="#functions-read-file">40.30. readFile()</a></li>
-<li><a href="#functions-message">40.31. message()</a></li>
-<li><a href="#functions-xpath">40.32. xpath()</a></li>
-<li><a href="#functions-jsonpath">40.33. jsonPath()</a></li>
-<li><a href="#functions-url-encode">40.34. urlEncode()/urlDecode()</a></li>
-<li><a href="#functions-system-properties">40.35. systemProperty()</a></li>
-<li><a href="#functions-env-settings">40.36. env()</a></li>
-<li><a href="#functions-unix-timestamp">40.37. unixTimestamp()</a></li>
+<li><a href="#functions-escape-json">40.26. escapeJson()</a></li>
+<li><a href="#functions-cdata-section">40.27. cdataSection()</a></li>
+<li><a href="#functions-digest-auth-header">40.28. digestAuthHeader()</a></li>
+<li><a href="#functions-localhost-address">40.29. localHostAddress()</a></li>
+<li><a href="#functions-change-date">40.30. changeDate()</a></li>
+<li><a href="#functions-read-file">40.31. readFile()</a></li>
+<li><a href="#functions-message">40.32. message()</a></li>
+<li><a href="#functions-xpath">40.33. xpath()</a></li>
+<li><a href="#functions-jsonpath">40.34. jsonPath()</a></li>
+<li><a href="#functions-url-encode">40.35. urlEncode()/urlDecode()</a></li>
+<li><a href="#functions-system-properties">40.36. systemProperty()</a></li>
+<li><a href="#functions-env-settings">40.37. env()</a></li>
+<li><a href="#functions-unix-timestamp">40.38. unixTimestamp()</a></li>
 </ul>
 </li>
 <li><a href="#validation-matcher">41. Validation Matchers</a>
@@ -1175,7 +1176,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 4.5.0</strong></p>
+<p><strong>Version: 4.5.1</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -3479,7 +3480,7 @@ Total tests run: 1, Passes: 1, Failures: 0, Skips: 0
 <div class="title">Install Citrus app</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="shell">jbang trust add https://github.com/citrusframework/citrus/
-jbang install citrus@citrusframework/citrus</code></pre>
+jbang app install citrus@citrusframework/citrus</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -14264,10 +14265,10 @@ wait/timeout
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
 <span class="directive">public</span> <span class="type">void</span> echoTest() {
-    variable(<span class="string"><span class="delimiter">&quot;</span><span class="content">date</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">citrus:currentDate()</span><span class="delimiter">&quot;</span></span>);
+    variable(<span class="string"><span class="delimiter">&quot;</span><span class="content">today</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">citrus:currentDate()</span><span class="delimiter">&quot;</span></span>);
 
     <span class="error">$</span>(echo().message(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello Test Framework</span><span class="delimiter">&quot;</span></span>));
-    <span class="error">$</span>(echo().message(<span class="string"><span class="delimiter">&quot;</span><span class="content">Current date is: ${date}</span><span class="delimiter">&quot;</span></span>));
+    <span class="error">$</span>(echo().message(<span class="string"><span class="delimiter">&quot;</span><span class="content">Current date is: ${today}</span><span class="delimiter">&quot;</span></span>));
 }</code></pre>
 </div>
 </div>
@@ -14284,7 +14285,7 @@ wait/timeout
         <span class="tag">&lt;/echo&gt;</span>
 
         <span class="tag">&lt;echo&gt;</span>
-            <span class="tag">&lt;message&gt;</span>Current date is: ${date}<span class="tag">&lt;/message&gt;</span>
+            <span class="tag">&lt;message&gt;</span>Current date is: ${today}<span class="tag">&lt;/message&gt;</span>
         <span class="tag">&lt;/echo&gt;</span>
     <span class="tag">&lt;/actions&gt;</span>
 <span class="tag">&lt;/test&gt;</span></code></pre>
@@ -14301,7 +14302,7 @@ wait/timeout
   - <span class="string"><span class="content">echo:</span><span class="content">
       message: &quot;Hello Test Framework&quot;</span></span>
   - <span class="string"><span class="content">echo:</span><span class="content">
-      message: &quot;Current date is: ${date}&quot;</span></span></code></pre>
+      message: &quot;Current date is: ${today}&quot;</span></span></code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
@@ -14349,10 +14350,10 @@ Tester might use it to print out debug messages and variables as shown the next 
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
 <span class="directive">public</span> <span class="type">void</span> printTest() {
-    variable(<span class="string"><span class="delimiter">&quot;</span><span class="content">date</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">citrus:currentDate()</span><span class="delimiter">&quot;</span></span>);
+    variable(<span class="string"><span class="delimiter">&quot;</span><span class="content">today</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">citrus:currentDate()</span><span class="delimiter">&quot;</span></span>);
 
     <span class="error">$</span>(print().message(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello Test Framework</span><span class="delimiter">&quot;</span></span>));
-    <span class="error">$</span>(print().message(<span class="string"><span class="delimiter">&quot;</span><span class="content">Current date is: ${date}</span><span class="delimiter">&quot;</span></span>));
+    <span class="error">$</span>(print().message(<span class="string"><span class="delimiter">&quot;</span><span class="content">Current date is: ${today}</span><span class="delimiter">&quot;</span></span>));
 }</code></pre>
 </div>
 </div>
@@ -14369,7 +14370,7 @@ Tester might use it to print out debug messages and variables as shown the next 
         <span class="tag">&lt;/print&gt;</span>
 
         <span class="tag">&lt;print&gt;</span>
-            <span class="tag">&lt;message&gt;</span>Current date is: ${date}<span class="tag">&lt;/message&gt;</span>
+            <span class="tag">&lt;message&gt;</span>Current date is: ${today}<span class="tag">&lt;/message&gt;</span>
         <span class="tag">&lt;/print&gt;</span>
     <span class="tag">&lt;/actions&gt;</span>
 <span class="tag">&lt;/test&gt;</span></code></pre>
@@ -14386,7 +14387,7 @@ Tester might use it to print out debug messages and variables as shown the next 
   - <span class="string"><span class="content">print:</span><span class="content">
       message: &quot;Hello Test Framework&quot;</span></span>
   - <span class="string"><span class="content">print:</span><span class="content">
-      message: &quot;Current date is: ${date}&quot;</span></span></code></pre>
+      message: &quot;Current date is: ${today}&quot;</span></span></code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
@@ -21307,12 +21308,35 @@ group <code>citrus_kafka_group</code>. You can customize these settings on the e
 </div>
 </div>
 <div class="paragraph">
-<p>Note that for effective message consumption it is advisable to use random consumer groups.
-Both the Java and XML DSL support random consumer groups, when enabled: <code>randomConsumerGroup(true)</code> or <code>random-consumer-group="true"</code>.</p>
-</div>
-<div class="paragraph">
 <p>The endpoint is now ready to be used inside a test case.
 The test simply references the endpoint by its name when sending or receiving.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The <code>org.apache.kafka.clients.consumer.KafkaConsumer&lt;K,V&gt;</code> is <strong>not thread-safe</strong>.
+When using <a href="#kafka-message-selector">selective message consumption</a>, it is recommended to configure <code>useThreadSafeConsumer</code> respectively <code>thread-safe-consumer</code> for the Kafka endpoint.
+Otherwise, you cannot execute tests in parallel.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For effective message consumption, it is additionally advisable to use random consumer groups.
+Both the Java and XML DSL support random consumer groups, when enabled: <code>randomConsumerGroup(true)</code> or <code>random-consumer-group="true"</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>In case of a send operation the endpoint creates a Kafka producer and will simply publish the records to the defined Kafka topic.
@@ -21462,7 +21486,7 @@ So you might run into message timeouts when using multiple Kafka endpoints with 
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Whether to use random consumer gorup names.
+<p>Whether to use random consumer group names.
   Note that these will all be prefixed by <code>citrus_kafka_</code> and end with a random 10 characters alphabetic suffix.</p>
 </div></div></td>
 </tr>
@@ -21527,6 +21551,15 @@ So you might run into message timeouts when using multiple Kafka endpoints with 
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Map of producer property settings to apply to the Kafka producer configuration.
   This enables you to overwrite any producer setting with respective property key value pairs.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thread-safe-consumer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Whether to use separate <code>org.apache.kafka.clients.consumer.KafkaConsumer&lt;K,V&gt;</code>'s per thread.
+  Required for parallel test execution, because the consumer is <strong>not thread-safe</strong>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -40960,7 +40993,30 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-cdata-section"><a class="anchor" href="#functions-cdata-section"></a><a class="link" href="#functions-cdata-section">40.26. cdataSection()</a></h3>
+<h3 id="functions-escape-json"><a class="anchor" href="#functions-escape-json"></a><a class="link" href="#functions-escape-json">40.26. escapeJson()</a></h3>
+<div class="paragraph">
+<p>If you want to deal with escaped JSON in your test case you may want to use this function.
+It automatically escapes all JSON special characters (especially double quotes).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;echo&gt;</span>
+    <span class="tag">&lt;message&gt;</span>
+        <span class="inline-delimiter">&lt;![CDATA[</span>
+            {
+                &quot;kafkaClientConfiguration&quot;: {
+                    &quot;bootstrapServers&quot;: [&quot;${kafkaBootstrapServer}&quot;]
+                },
+                &quot;messageBody&quot;: &quot;citrus:escapeJson(&quot;{&quot;exampleJson&quot;: &quot;exampleValue&quot;}&quot;)&quot;
+            }
+        <span class="inline-delimiter">]]&gt;</span>
+    <span class="tag">&lt;/message&gt;</span>
+<span class="tag">&lt;/echo&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="functions-cdata-section"><a class="anchor" href="#functions-cdata-section"></a><a class="link" href="#functions-cdata-section">40.27. cdataSection()</a></h3>
 <div class="paragraph">
 <p>Usually we use CDATA sections to define message payload data inside a testcase. We might run into problems when the payload itself contains CDATA sections as nested CDATA sections are prohibited by XML nature. In this case the next function ships very usefull.</p>
 </div>
@@ -40974,7 +41030,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-digest-auth-header"><a class="anchor" href="#functions-digest-auth-header"></a><a class="link" href="#functions-digest-auth-header">40.27. digestAuthHeader()</a></h3>
+<h3 id="functions-digest-auth-header"><a class="anchor" href="#functions-digest-auth-header"></a><a class="link" href="#functions-digest-auth-header">40.28. digestAuthHeader()</a></h3>
 <div class="paragraph">
 <p>Digest authentication is a commonly used security algorithm, especially in Http communication and SOAP WebServices. Citrus offers a function to generate a digest authentication principle used in the Http header section of a message.</p>
 </div>
@@ -41011,7 +41067,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-localhost-address"><a class="anchor" href="#functions-localhost-address"></a><a class="link" href="#functions-localhost-address">40.28. localHostAddress()</a></h3>
+<h3 id="functions-localhost-address"><a class="anchor" href="#functions-localhost-address"></a><a class="link" href="#functions-localhost-address">40.29. localHostAddress()</a></h3>
 <div class="paragraph">
 <p>Test cases may use the local host address for some reason (e.g. used as authentication principle). As the tests may run on different machines at the same time we can not use static host addresses. The provided function localHostAddress() reads the local host name dynamically at runtime.</p>
 </div>
@@ -41028,7 +41084,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-change-date"><a class="anchor" href="#functions-change-date"></a><a class="link" href="#functions-change-date">40.29. changeDate()</a></h3>
+<h3 id="functions-change-date"><a class="anchor" href="#functions-change-date"></a><a class="link" href="#functions-change-date">40.30. changeDate()</a></h3>
 <div class="paragraph">
 <p>This function works with date values and manipulates those at runtime by adding or removing a date value offset. You can manipulate several date fields such as: year, month, day, hour, minute or second.</p>
 </div>
@@ -41077,7 +41133,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-read-file"><a class="anchor" href="#functions-read-file"></a><a class="link" href="#functions-read-file">40.30. readFile()</a></h3>
+<h3 id="functions-read-file"><a class="anchor" href="#functions-read-file"></a><a class="link" href="#functions-read-file">40.31. readFile()</a></h3>
 <div class="paragraph">
 <p>The <strong>readFile</strong> function reads a file resource from given file path and loads the complete file content as function result. The file path can be a system file path as well as a classpath file resource. The file path can have test variables as part of the path or file name. In addition to that the file content can also have test variable values and other functions.</p>
 </div>
@@ -41126,7 +41182,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-message"><a class="anchor" href="#functions-message"></a><a class="link" href="#functions-message">40.31. message()</a></h3>
+<h3 id="functions-message"><a class="anchor" href="#functions-message"></a><a class="link" href="#functions-message">40.32. message()</a></h3>
 <div class="paragraph">
 <p>When messages are exchanged in Citrus the content is automatically saved to an in memory storage for further access in the test case. That means that functions and test actions can access the messages
 that have been sent or received within the test case. The <strong>message</strong> function loads a message content from that message store. The message is identified by its name. Receive and send actions usually define
@@ -41183,7 +41239,7 @@ in the local message store. The <strong>message</strong> function is then able t
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-xpath"><a class="anchor" href="#functions-xpath"></a><a class="link" href="#functions-xpath">40.32. xpath()</a></h3>
+<h3 id="functions-xpath"><a class="anchor" href="#functions-xpath"></a><a class="link" href="#functions-xpath">40.33. xpath()</a></h3>
 <div class="paragraph">
 <p>The <strong>xpath</strong> function evaluates a Xpath expressions on some XML source and returns the expression result as String.</p>
 </div>
@@ -41221,7 +41277,7 @@ becomes very easy then.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-jsonpath"><a class="anchor" href="#functions-jsonpath"></a><a class="link" href="#functions-jsonpath">40.33. jsonPath()</a></h3>
+<h3 id="functions-jsonpath"><a class="anchor" href="#functions-jsonpath"></a><a class="link" href="#functions-jsonpath">40.34. jsonPath()</a></h3>
 <div class="paragraph">
 <p>The <strong>jsonPath</strong> function evaluates a JsonPath expressions on some JSON source and returns the expression result as String.</p>
 </div>
@@ -41274,7 +41330,7 @@ becomes very easy then.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-url-encode"><a class="anchor" href="#functions-url-encode"></a><a class="link" href="#functions-url-encode">40.34. urlEncode()/urlDecode()</a></h3>
+<h3 id="functions-url-encode"><a class="anchor" href="#functions-url-encode"></a><a class="link" href="#functions-url-encode">40.35. urlEncode()/urlDecode()</a></h3>
 <div class="paragraph">
 <p>The <strong>urlEncode</strong> function takes a String and performs proper URL encoding. The result is a URL encoded String that is using proper character escaping for Http.</p>
 </div>
@@ -41303,7 +41359,7 @@ becomes very easy then.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-system-properties"><a class="anchor" href="#functions-system-properties"></a><a class="link" href="#functions-system-properties">40.35. systemProperty()</a></h3>
+<h3 id="functions-system-properties"><a class="anchor" href="#functions-system-properties"></a><a class="link" href="#functions-system-properties">40.36. systemProperty()</a></h3>
 <div class="paragraph">
 <p>The <strong>systemProperty</strong> function resolves a System property expression at test runtime. The resulting value is returned as function result. In case the System property is not available in the JVM an optional default value is used.
 In case no default value is given the function will fail with errors.</p>
@@ -41317,7 +41373,7 @@ In case no default value is given the function will fail with errors.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-env-settings"><a class="anchor" href="#functions-env-settings"></a><a class="link" href="#functions-env-settings">40.36. env()</a></h3>
+<h3 id="functions-env-settings"><a class="anchor" href="#functions-env-settings"></a><a class="link" href="#functions-env-settings">40.37. env()</a></h3>
 <div class="paragraph">
 <p>The <strong>env</strong> function can be used to access an environment specific property at test runtime. The environment property can be a variable set on the underlying operating system. Also the <code>env()</code> function is able to access
 the Spring environment settings (see <code>org.springframework.core.env.Environment</code>).</p>
@@ -41337,7 +41393,7 @@ the Spring environment settings (see <code>org.springframework.core.env.Environm
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-unix-timestamp"><a class="anchor" href="#functions-unix-timestamp"></a><a class="link" href="#functions-unix-timestamp">40.37. unixTimestamp()</a></h3>
+<h3 id="functions-unix-timestamp"><a class="anchor" href="#functions-unix-timestamp"></a><a class="link" href="#functions-unix-timestamp">40.38. unixTimestamp()</a></h3>
 <div class="paragraph">
 <p><strong>unixTimestamp</strong> is a parameterless function that simply returns the current epoch timestamp as seconds.</p>
 </div>
@@ -44371,8 +44427,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 4.5.0<br>
-Last updated 2024-12-16 15:25:17 +0100
+Version 4.5.1<br>
+Last updated 2025-01-20 18:54:26 +0100
 </div>
 </div>
 <style>
