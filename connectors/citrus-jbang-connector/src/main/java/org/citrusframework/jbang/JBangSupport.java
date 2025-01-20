@@ -432,7 +432,7 @@ public class JBangSupport {
      */
     private static ProcessAndOutput executeAsync(List<String> command, Path workingDir, File outputFile, Map<String, String> envVars) {
         try {
-            if (!outputFile.getParentFile().mkdirs()) {
+            if (!outputFile.getParentFile().exists() && !outputFile.getParentFile().mkdirs()) {
                 throw new CitrusRuntimeException("Unable to create process output directory: " + outputFile.getParent());
             }
 

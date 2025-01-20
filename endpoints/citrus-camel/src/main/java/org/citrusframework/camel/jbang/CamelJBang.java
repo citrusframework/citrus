@@ -34,6 +34,7 @@ import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.JBangSupport;
 import org.citrusframework.jbang.ProcessAndOutput;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,8 @@ public class CamelJBang {
     private final JBangSupport camelApp = JBangSupport.jbang().app(CamelJBangSettings.getCamelApp());
 
     private boolean dumpIntegrationOutput = CamelJBangSettings.isDumpIntegrationOutput();
+
+    private String version;
 
     /**
      * Prevent direct instantiation.
@@ -65,7 +68,10 @@ public class CamelJBang {
             camelApp.trust(url);
         }
 
-        logger.info("Camel JBang version: " + version());
+        String version = version();
+        if (logger.isDebugEnabled()) {
+            logger.debug("Camel JBang version: " + version);
+        }
     }
 
     /**
@@ -145,8 +151,12 @@ public class CamelJBang {
      * Get Camel JBang version.
      */
     public String version() {
-        ProcessAndOutput p = camelApp.run("--version");
-        return p.getOutput();
+        if (!StringUtils.hasText(version)) {
+            ProcessAndOutput p = camelApp.run("--version");
+            version = p.getOutput();
+        }
+
+        return version;
     }
 
     /**
