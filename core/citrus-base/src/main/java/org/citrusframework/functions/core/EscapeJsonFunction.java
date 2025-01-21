@@ -35,6 +35,7 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeJson;
  * <p>Example output: <code>"{\\\"mySuperJson\\\": \\\"valium\\\"}"</code></p>
  */
 public class EscapeJsonFunction implements Function {
+
     @Override
     public String execute(List<String> list, TestContext testContext) {
         if (Objects.isNull(list) || list.size() != 1

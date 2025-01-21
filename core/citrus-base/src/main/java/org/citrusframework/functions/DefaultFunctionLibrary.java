@@ -25,6 +25,7 @@ import org.citrusframework.functions.core.CurrentDateFunction;
 import org.citrusframework.functions.core.DecodeBase64Function;
 import org.citrusframework.functions.core.DigestAuthHeaderFunction;
 import org.citrusframework.functions.core.EncodeBase64Function;
+import org.citrusframework.functions.core.EscapeJsonFunction;
 import org.citrusframework.functions.core.FloorFunction;
 import org.citrusframework.functions.core.LoadMessageFunction;
 import org.citrusframework.functions.core.LocalHostAddressFunction;
@@ -94,6 +95,7 @@ public class DefaultFunctionLibrary extends FunctionLibrary {
         getMembers().put("message", new LoadMessageFunction());
         getMembers().put("systemProperty", new SystemPropertyFunction());
         getMembers().put("unixTimestamp", new UnixTimestampFunction());
+        getMembers().put("escapeJson", new EscapeJsonFunction());
 
         lookupFunctions();
     }
