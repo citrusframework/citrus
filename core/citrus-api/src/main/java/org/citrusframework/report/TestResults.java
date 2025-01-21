@@ -16,19 +16,18 @@
 
 package org.citrusframework.report;
 
-import org.citrusframework.TestResult;
-
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
+
+import org.citrusframework.TestResult;
 
 import static java.util.Collections.synchronizedSet;
-import static java.util.Objects.nonNull;
 
 /**
  * Multiple {@link org.citrusframework.TestResult} instances combined to a {@link TestResults}.
@@ -47,8 +46,6 @@ public class TestResults {
      */
     private final Set<TestResult> results = synchronizedSet(new LinkedHashSet<>());
 
-    private final AtomicLong totalDurationMillis = new AtomicLong(0);
-
     /**
      * Provides access to results as list generated from synchronized result list.
      */
@@ -62,10 +59,6 @@ public class TestResults {
      * Adds a test result to the result list.
      */
     public boolean addResult(TestResult result) {
-        if (nonNull(result.getDuration())) {
-            totalDurationMillis.accumulateAndGet(result.getDuration().toMillis(), Long::sum);
-        }
-
         return results.add(result);
     }
 
@@ -195,7 +188,10 @@ public class TestResults {
      * Gets the total duration of all tests.
      */
     public Duration getTotalDuration() {
-        return Duration.ofMillis(totalDurationMillis.get());
+        return Duration.ofMillis(results.stream()
+                .filter(r -> Objects.nonNull(r.getDuration()))
+                .mapToLong(r -> r.getDuration().toMillis())
+                .sum());
     }
 
     private DecimalFormat getNewDecimalFormat() {

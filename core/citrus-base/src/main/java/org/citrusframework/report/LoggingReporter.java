@@ -16,12 +16,8 @@
 
 package org.citrusframework.report;
 
-import static java.lang.String.format;
-import static java.time.Duration.ZERO;
-import static java.util.Objects.nonNull;
-import static org.citrusframework.util.StringUtils.hasText;
-
 import java.util.Optional;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.citrusframework.CitrusVersion;
 import org.citrusframework.TestAction;
@@ -34,6 +30,11 @@ import org.citrusframework.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLoggerFactory;
+
+import static java.lang.String.format;
+import static java.time.Duration.ZERO;
+import static java.util.Objects.nonNull;
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * Simple logging reporter printing test start and ending to the console/logger.
@@ -115,10 +116,14 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         newLine();
 
         info(format("TOTAL:\t\t%s", testResults.getFailed() + testResults.getSuccess()));
-        info(format("SUCCESS:\t%s (%s%%)", testResults.getSuccess(), testResults.getSuccessPercentageFormatted()));
+        info(format("PASSED:\t\t%s (%s%%)", testResults.getSuccess(), testResults.getSuccessPercentageFormatted()));
         info(format("FAILED:\t\t%s (%s%%)", testResults.getFailed(), testResults.getFailedPercentageFormatted()));
-        debug(format("SKIPPED:\t%s (%s%%)", testResults.getSkipped(), testResults.getSkippedPercentageFormatted()));
-        info(format("PERFORMANCE:\t%s ms", testResults.getTotalDuration().toMillis()));
+
+        if (testResults.getSkipped() > 0) {
+            info(format("SKIP:\t\t%s (%s%%)", testResults.getSkipped(), testResults.getSkippedPercentageFormatted()));
+        }
+
+        info(format("TIME:\t\t%s ms", testResults.getTotalDuration().toMillis()));
 
         newLine();
 
