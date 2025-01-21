@@ -16,6 +16,8 @@
 
 package org.citrusframework.functions;
 
+import static org.testng.Assert.assertEquals;
+
 import java.util.Collections;
 
 import org.citrusframework.UnitTestSupport;
@@ -30,9 +32,9 @@ public class FunctionUtilsTest extends UnitTestSupport {
 
     @Test
     public void testResolveFunction() {
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello', ' TestFramework!')", context), "Hello TestFramework!");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('citrus', ':citrus')", context), "citrus:citrus");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('citrus:citrus')", context), "citrus:citrus");
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello', ' TestFramework!')", context), "Hello TestFramework!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat('citrus', ':citrus')", context), "citrus:citrus");
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat('citrus:citrus')", context), "citrus:citrus");
     }
 
     @Test
@@ -40,15 +42,15 @@ public class FunctionUtilsTest extends UnitTestSupport {
         context.setVariable("greeting", "Hello");
         context.setVariable("text", "TestFramework!");
 
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello', ' ', ${text})", context), "Hello TestFramework!");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat(${greeting}, ' ', ${text})", context), "Hello TestFramework!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello', ' ', ${text})", context), "Hello TestFramework!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat(${greeting}, ' ', ${text})", context), "Hello TestFramework!");
     }
 
     @Test
     public void testWithNestedFunctions() {
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat(citrus:currentDate('yyyy-mm-dd'))", context), new CurrentDateFunction().execute(Collections.singletonList("yyyy-mm-dd"), context));
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Now is: ', citrus:currentDate('yyyy-mm-dd'))", context), "Now is: " + new CurrentDateFunction().execute(Collections.singletonList("yyyy-mm-dd"), context));
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat(citrus:currentDate('yyyy-mm-dd'), ' ', citrus:concat('Hello', ' TestFramework!'))", context), new CurrentDateFunction().execute(Collections.singletonList("yyyy-mm-dd"), context) + " Hello TestFramework!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat(citrus:currentDate('yyyy-mm-dd'))", context), new CurrentDateFunction().execute(Collections.singletonList("yyyy-mm-dd"), context));
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat('Now is: ', citrus:currentDate('yyyy-mm-dd'))", context), "Now is: " + new CurrentDateFunction().execute(Collections.singletonList("yyyy-mm-dd"), context));
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat(citrus:currentDate('yyyy-mm-dd'), ' ', citrus:concat('Hello', ' TestFramework!'))", context), new CurrentDateFunction().execute(Collections.singletonList("yyyy-mm-dd"), context) + " Hello TestFramework!");
     }
 
     @Test
@@ -56,27 +58,32 @@ public class FunctionUtilsTest extends UnitTestSupport {
         context.setVariable("greeting", "Hello");
         context.setVariable("dateFormat", "yyyy-mm-dd");
 
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat(citrus:currentDate('${dateFormat}'), ' ', citrus:concat(${greeting}, ' TestFramework!'))", context), new CurrentDateFunction().execute(Collections.singletonList("yyyy-mm-dd"), context) + " Hello TestFramework!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat(citrus:currentDate('${dateFormat}'), ' ', citrus:concat(${greeting}, ' TestFramework!'))", context), new CurrentDateFunction().execute(Collections.singletonList("yyyy-mm-dd"), context) + " Hello TestFramework!");
     }
 
     @Test
     public void testWithCommaValue() {
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat(citrus:upperCase(Yes), ' ', citrus:upperCase(I like Citrus!))", context), "YES I LIKE CITRUS!");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Monday, Tuesday, wednesday')", context), "MONDAY, TUESDAY, WEDNESDAY");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Monday, Tuesday', ' Wednesday')", context), "Monday, Tuesday Wednesday");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes, I like Citrus!)", context), "'YES, I LIKE CITRUS!");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase(''Yes, I like Citrus!)", context), "''YES, I LIKE CITRUS!");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase(Yes I like Citrus!')", context), "YES I LIKE CITRUS!'");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes, I like Citrus!')", context), "YES, I LIKE CITRUS!");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes, I like Citrus, and this is great!')", context), "YES, I LIKE CITRUS, AND THIS IS GREAT!");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes,I like Citrus!')", context), "YES,I LIKE CITRUS!");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes', 'I like Citrus!')", context), "YES");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes, I like Citrus!')", context), "Hello Yes, I like Citrus!");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes,I like Citrus!')", context), "Hello Yes,I like Citrus!");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes,I like Citrus, and this is great!')", context), "Hello Yes,I like Citrus, and this is great!");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes , I like Citrus!')", context), "Hello Yes , I like Citrus!");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes, I like Citrus!', 'Hello Yes,we like Citrus!')", context), "Hello Yes, I like Citrus!Hello Yes,we like Citrus!");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes, I like Citrus, and this is great!', 'Hello Yes,we like Citrus, and this is great!')", context), "Hello Yes, I like Citrus, and this is great!Hello Yes,we like Citrus, and this is great!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat(citrus:upperCase(Yes), ' ', citrus:upperCase(I like Citrus!))", context), "YES I LIKE CITRUS!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Monday, Tuesday, wednesday')", context), "MONDAY, TUESDAY, WEDNESDAY");
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat('Monday, Tuesday', ' Wednesday')", context), "Monday, Tuesday Wednesday");
+        assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes, I like Citrus!)", context), "'YES, I LIKE CITRUS!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:upperCase(''Yes, I like Citrus!)", context), "''YES, I LIKE CITRUS!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:upperCase(Yes I like Citrus!')", context), "YES I LIKE CITRUS!'");
+        assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes, I like Citrus!')", context), "YES, I LIKE CITRUS!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes, I like Citrus, and this is great!')", context), "YES, I LIKE CITRUS, AND THIS IS GREAT!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes,I like Citrus!')", context), "YES,I LIKE CITRUS!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes', 'I like Citrus!')", context), "YES");
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes, I like Citrus!')", context), "Hello Yes, I like Citrus!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes,I like Citrus!')", context), "Hello Yes,I like Citrus!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes,I like Citrus, and this is great!')", context), "Hello Yes,I like Citrus, and this is great!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes , I like Citrus!')", context), "Hello Yes , I like Citrus!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes, I like Citrus!', 'Hello Yes,we like Citrus!')", context), "Hello Yes, I like Citrus!Hello Yes,we like Citrus!");
+        assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes, I like Citrus, and this is great!', 'Hello Yes,we like Citrus, and this is great!')", context), "Hello Yes, I like Citrus, and this is great!Hello Yes,we like Citrus, and this is great!");
+    }
+
+    @Test
+    public void testEscapeJsonFunction() {
+        assertEquals(FunctionUtils.resolveFunction("citrus:escapeJson('{ \"name\": \"bond\" }')", context), "{ \\\"name\\\": \\\"bond\\\" }");
     }
 
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
