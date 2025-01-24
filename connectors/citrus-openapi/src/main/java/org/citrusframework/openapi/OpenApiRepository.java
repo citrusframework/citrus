@@ -16,8 +16,12 @@
 
 package org.citrusframework.openapi;
 
+import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.synchronizedList;
+import static org.citrusframework.openapi.OpenApiSettings.isNeglectBasePathGlobally;
+import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledGlobally;
+import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -28,6 +32,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.openapi.validation.OpenApiValidationPolicy;
 import org.citrusframework.repository.BaseRepository;
 import org.citrusframework.spi.Resource;
@@ -57,11 +62,22 @@ public class OpenApiRepository extends BaseRepository {
      */
     private String rootContextPath;
 
-    private boolean requestValidationEnabled = true;
+    /**
+     * Flag to indicate whether the base path of the OpenAPI should be part of the path or not.
+     */
+    private boolean neglectBasePath = isNeglectBasePathGlobally();
 
-    private boolean responseValidationEnabled = true;
+    /**
+     * Flag to indicate whether OpenAPIs managed by this repository should perform request validation.
+     */
+    private boolean requestValidationEnabled = isRequestValidationEnabledGlobally();
 
-    private OpenApiValidationPolicy openApiValidationPolicy = OpenApiSettings.getOpenApiValidationPolicy();
+    /**
+     * Flag to indicate whether OpenAPIs managed by this repository should perform response validation.
+     */
+    private boolean responseValidationEnabled = isResponseValidationEnabledGlobally();
+
+    private OpenApiValidationPolicy validationPolicy = OpenApiSettings.getOpenApiValidationPolicy();
 
     public OpenApiRepository() {
         super(DEFAULT_NAME);
@@ -124,12 +140,35 @@ public class OpenApiRepository extends BaseRepository {
         this.rootContextPath = rootContextPath;
     }
 
+    public OpenApiRepository rootContextPath(String rootContextPath) {
+        setRootContextPath(rootContextPath);
+        return this;
+    }
+
+    public boolean isNeglectBasePath() {
+        return neglectBasePath;
+    }
+
+    public void setNeglectBasePath(boolean neglectBasePath) {
+        this.neglectBasePath = neglectBasePath;
+    }
+
+    public OpenApiRepository neglectBasePath(boolean neglectBasePath) {
+        setNeglectBasePath(neglectBasePath);
+        return this;
+    }
+
     public boolean isRequestValidationEnabled() {
         return requestValidationEnabled;
     }
 
     public void setRequestValidationEnabled(boolean requestValidationEnabled) {
         this.requestValidationEnabled = requestValidationEnabled;
+    }
+
+    public OpenApiRepository requestValidationEnabled(boolean requestValidationEnabled) {
+        setRequestValidationEnabled(requestValidationEnabled);
+        return this;
     }
 
     public boolean isResponseValidationEnabled() {
@@ -140,15 +179,24 @@ public class OpenApiRepository extends BaseRepository {
         this.responseValidationEnabled = responseValidationEnabled;
     }
 
-    public OpenApiValidationPolicy getOpenApiValidationPolicy() {
-        return openApiValidationPolicy;
+    public OpenApiRepository responseValidationEnabled(boolean responseValidationEnabled) {
+        setResponseValidationEnabled(responseValidationEnabled);
+        return this;
     }
 
-    public void setOpenApiValidationPolicy(
-        OpenApiValidationPolicy openApiValidationPolicy) {
-        this.openApiValidationPolicy = openApiValidationPolicy;
+    public OpenApiValidationPolicy getValidationPolicy() {
+        return validationPolicy;
     }
 
+    public void setValidationPolicy(
+        OpenApiValidationPolicy validationPolicy) {
+        this.validationPolicy = validationPolicy;
+    }
+
+    public OpenApiRepository validationPolicy(OpenApiValidationPolicy openApiValidationPolicy) {
+        setValidationPolicy(openApiValidationPolicy);
+        return this;
+    }
 
     /**
      * Adds an OpenAPI Specification specified by the given resource to the repository. If an alias
@@ -158,14 +206,21 @@ public class OpenApiRepository extends BaseRepository {
      */
     @Override
     public void addRepository(Resource openApiResource) {
-        OpenApiSpecification openApiSpecification = OpenApiSpecification.from(openApiResource,
-            openApiValidationPolicy);
-        determineResourceAlias(openApiResource).ifPresent(openApiSpecification::addAlias);
-        openApiSpecification.setApiRequestValidationEnabled(requestValidationEnabled);
-        openApiSpecification.setApiResponseValidationEnabled(responseValidationEnabled);
-        openApiSpecification.setRootContextPath(rootContextPath);
 
-        addRepository(openApiSpecification);
+        try {
+            OpenApiSpecification openApiSpecification = OpenApiSpecification.from(openApiResource,
+                validationPolicy);
+            determineResourceAlias(openApiResource).ifPresent(openApiSpecification::addAlias);
+            openApiSpecification.setApiRequestValidationEnabled(requestValidationEnabled);
+            openApiSpecification.setApiResponseValidationEnabled(responseValidationEnabled);
+            openApiSpecification.setRootContextPath(rootContextPath);
+            openApiSpecification.neglectBasePath(neglectBasePath);
+            addRepository(openApiSpecification);
+        } catch (Exception e) {
+            logger.error(format("Unable to read OpenApiSpecification from location: %s", openApiResource.getURI()));
+            throw new CitrusRuntimeException(e);
+        }
+
     }
 
     /**

@@ -62,7 +62,9 @@ public class StringUtilsTest {
     @Test
     public void appendSegmentToPath() {
         assertEquals(StringUtils.appendSegmentToUrlPath("s1", "s2"), "s1/s2");
+        assertEquals(StringUtils.appendSegmentToUrlPath("s1", ""), "s1");
         assertEquals(StringUtils.appendSegmentToUrlPath("s1/", "s2"), "s1/s2");
+        assertEquals(StringUtils.appendSegmentToUrlPath("s1/", ""), "s1/");
         assertEquals(StringUtils.appendSegmentToUrlPath("s1/", "/s2"), "s1/s2");
         assertEquals(StringUtils.appendSegmentToUrlPath("/s1", "/s2"), "/s1/s2");
         assertEquals(StringUtils.appendSegmentToUrlPath("/s1/", "/s2"), "/s1/s2");

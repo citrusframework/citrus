@@ -86,8 +86,10 @@ public class OpenApiSpecification {
     private static final String HTTP = "http";
 
     /**
-     * An uid to uniquely identify this specification at runtime. The uid is based on the SHA of the
-     * OpenAPI document and the root context, to which it is attached.
+     * A unique identifier (UID) for this specification at runtime. The UID is generated based on the SHA
+     * of the OpenAPI document combined with the full context path to which the API is attached.
+     *
+     * @see OpenApiSpecification#determineUid for detailed information on how the UID is generated.
      */
     private String uid;
 
@@ -221,18 +223,16 @@ public class OpenApiSpecification {
         OpenApiValidationContext openApiValidationContext;
         if (specUrl.getProtocol().startsWith(HTTPS)) {
             openApiDoc = OpenApiResourceLoader.fromSecuredWebResource(specUrl);
-            openApiValidationContext = OpenApiValidationContextLoader.fromSecuredWebResource(
-                specUrl);
         } else {
             openApiDoc = OpenApiResourceLoader.fromWebResource(specUrl);
-            openApiValidationContext = OpenApiValidationContextLoader.fromWebResource(specUrl,
-                openApiValidationPolicy);
         }
+
+        openApiValidationContext = OpenApiValidationContextLoader.fromSpec(OasModelHelper.toJson(openApiDoc), openApiValidationPolicy);
+        specification.setOpenApiValidationContext(openApiValidationContext);
 
         specification.setSpecUrl(specUrl.toString());
         specification.initPathLookups();
         specification.setOpenApiDoc(openApiDoc);
-        specification.setOpenApiValidationContext(openApiValidationContext);
         specification.setRequestUrl(
             format("%s://%s%s%s", specUrl.getProtocol(), specUrl.getHost(),
                 specUrl.getPort() > 0 ? ":" + specUrl.getPort() : "",
@@ -267,7 +267,7 @@ public class OpenApiSpecification {
         OasDocument openApiDoc = OpenApiResourceLoader.fromFile(resource);
 
         specification.setOpenApiValidationContext(
-            OpenApiValidationContextLoader.fromFile(resource, openApiValidationPolicy));
+            OpenApiValidationContextLoader.fromSpec(OasModelHelper.toJson(openApiDoc), openApiValidationPolicy));
         specification.setOpenApiDoc(openApiDoc);
 
         String schemeToUse = Optional.ofNullable(OasModelHelper.getSchemes(openApiDoc))
@@ -280,7 +280,7 @@ public class OpenApiSpecification {
         specification.setSpecUrl(resource.getLocation());
         specification.setRequestUrl(
             format("%s://%s%s", schemeToUse, OasModelHelper.getHost(openApiDoc),
-                specification.rootContextPath));
+                getBasePath(openApiDoc)));
 
         return specification;
     }
@@ -314,8 +314,19 @@ public class OpenApiSpecification {
         return specification;
     }
 
+    /**
+     * Get the UID of this specification.
+     */
     public String getUid() {
         return uid;
+    }
+
+    /**
+     * Get the unique id of the given operation.
+     */
+    @SuppressWarnings("unused")
+    public String getUniqueId(OasOperation oasOperation) {
+        return operationToUniqueId.get(oasOperation);
     }
 
     public synchronized OasDocument getOpenApiDoc(TestContext context) {
@@ -351,13 +362,8 @@ public class OpenApiSpecification {
                 URL specWebResource = toSpecUrl(resolvedSpecUrl);
                 if (resolvedSpecUrl.startsWith(HTTPS)) {
                     initApiDoc(() -> OpenApiResourceLoader.fromSecuredWebResource(specWebResource));
-                    setOpenApiValidationContext(
-                        OpenApiValidationContextLoader.fromSecuredWebResource(specWebResource));
                 } else {
                     initApiDoc(() -> OpenApiResourceLoader.fromWebResource(specWebResource));
-                    setOpenApiValidationContext(
-                        OpenApiValidationContextLoader.fromWebResource(specWebResource,
-                            openApiValidationPolicy));
                 }
 
                 if (requestUrl == null) {
@@ -370,8 +376,7 @@ public class OpenApiSpecification {
             } else {
                 Resource resource = Resources.create(resolvedSpecUrl);
                 initApiDoc(() -> OpenApiResourceLoader.fromFile(resource));
-                setOpenApiValidationContext(OpenApiValidationContextLoader.fromFile(resource,
-                    openApiValidationPolicy));
+
 
                 if (requestUrl == null) {
                     String schemeToUse = Optional.ofNullable(OasModelHelper.getSchemes(openApiDoc))
@@ -387,6 +392,10 @@ public class OpenApiSpecification {
                 }
             }
         }
+
+        setOpenApiValidationContext(
+            OpenApiValidationContextLoader.fromSpec(OasModelHelper.toJson(openApiDoc),
+                openApiValidationPolicy));
 
         return openApiDoc;
     }
@@ -427,8 +436,7 @@ public class OpenApiSpecification {
             return;
         }
 
-        uid = DigestUtils.sha256Hex(OasModelHelper.toJson(openApiDoc) + rootContextPath);
-        aliases.add(uid);
+        determineUid();
 
         operationIdToOperationPathAdapter.clear();
         OasModelHelper.visitOasOperations(this.openApiDoc, (oasPathItem, oasOperation) -> {
@@ -444,6 +452,14 @@ public class OpenApiSpecification {
                 storeOperationPathAdapter(operationEntry.getValue(), oasPathItem);
             }
         });
+    }
+
+    private void determineUid() {
+        if (uid != null) {
+            aliases.remove(uid);
+        }
+        uid = DigestUtils.sha256Hex(OasModelHelper.toJson(openApiDoc) + getFullContextPath());
+        aliases.add(uid);
     }
 
     /**
@@ -470,6 +486,7 @@ public class OpenApiSpecification {
             appendSegmentToUrlPath(fullContextPath, path), operation, uniqueOperationId);
 
         operationIdToOperationPathAdapter.put(uniqueOperationId, operationPathAdapter);
+
         if (hasText(operation.operationId)) {
             operationIdToOperationPathAdapter.put(operation.operationId, operationPathAdapter);
         }
@@ -556,8 +573,9 @@ public class OpenApiSpecification {
         initPathLookups();
     }
 
-    public OpenApiValidationPolicy getOpenApiValidationPolicy() {
-        return openApiValidationPolicy;
+    public OpenApiSpecification rootContextPath(String rootContextPath) {
+        setRootContextPath(rootContextPath);
+        return this;
     }
 
     public void addAlias(String alias) {
@@ -608,15 +626,6 @@ public class OpenApiSpecification {
         }
     }
 
-    public OpenApiSpecification withRootContext(String rootContextPath) {
-        setRootContextPath(rootContextPath);
-        return this;
-    }
-
-    public String getUniqueId(OasOperation oasOperation) {
-        return operationToUniqueId.get(oasOperation);
-    }
-
     /**
      * Get the full path for the given {@link OasPathItem}.
      * <p>
@@ -633,11 +642,30 @@ public class OpenApiSpecification {
      * item
      */
     public String getFullPath(OasPathItem oasPathItem) {
-        return appendSegmentToUrlPath(
-            appendSegmentToUrlPath(rootContextPath,
-                neglectBasePath ? null : getBasePath(openApiDoc)),
-            oasPathItem.getPath());
+        return appendSegmentToUrlPath(rootContextPath,
+                getFullBasePath(oasPathItem));
     }
+
+    /**
+     * Get the full base-path for the given {@link OasPathItem}.
+     * <p>
+     * The full base-path is constructed by concatenating the base path (if
+     * applicable), and the path of the given {@code oasPathItem}. The resulting format is:
+     * </p>
+     * <pre>
+     * /basePath/pathItemPath
+     * </pre>
+     * If the base path is to be neglected, it is excluded from the final constructed path.
+     *
+     * @param oasPathItem the OpenAPI path item whose full base-path is to be constructed
+     * @return the full base URL path, consisting of the base path, and the given path
+     * item
+     */
+    public String getFullBasePath(OasPathItem oasPathItem) {
+        return appendSegmentToUrlPath(
+                getApplicableBasePath(), oasPathItem.getPath());
+    }
+
 
     /**
      * Constructs the full context path for the given {@link OasPathItem}.
@@ -654,7 +682,7 @@ public class OpenApiSpecification {
      */
     public String getFullContextPath() {
         return appendSegmentToUrlPath(rootContextPath,
-            neglectBasePath ? null : getBasePath(openApiDoc));
+            getApplicableBasePath());
     }
 
     /**
@@ -674,9 +702,23 @@ public class OpenApiSpecification {
     }
 
     public OpenApiSpecification neglectBasePath(boolean neglectBasePath) {
-        this.neglectBasePath = neglectBasePath;
-        initPathLookups();
+        setNeglectBasePath(neglectBasePath);
         return this;
     }
 
+    /**
+     * Gets the base path if basePath should be applied.
+     */
+    private String getApplicableBasePath() {
+        return neglectBasePath ? "" : getBasePath(openApiDoc);
+    }
+
+
+    /**
+     * Add another alias for this specification.
+     */
+    public OpenApiSpecification alias(String alias) {
+        addAlias(alias);
+        return this;
+    }
 }

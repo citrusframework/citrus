@@ -25,6 +25,7 @@ import static org.citrusframework.util.StringUtils.isNotEmpty;
 
 import static {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}OpenApi.{{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -84,19 +85,22 @@ public class {{classname}} implements GeneratedApi
 
     private final List<ApiActionBuilderCustomizer> customizers;
 
-    private final Endpoint endpoint;
+    /**
+    * An optional default endpoint which will be passed into the requests.
+    */
+    private final Endpoint defaultEndpoint;
 
-    public {{classname}}(Endpoint endpoint)  {
-        this(endpoint, emptyList());
+    public {{classname}}(@Nullable Endpoint defaultEndpoint)  {
+        this(defaultEndpoint, emptyList());
     }
 
-    public {{classname}}(Endpoint endpoint, List<ApiActionBuilderCustomizer> customizers)  {
-        this.endpoint = endpoint;
+    public {{classname}}(@Nullable Endpoint defaultEndpoint, @Nullable List<ApiActionBuilderCustomizer> customizers)  {
+        this.defaultEndpoint = defaultEndpoint;
         this.customizers = customizers;
     }
 
-    public static {{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}(Endpoint endpoint) {
-        return new {{classname}}(endpoint);
+    public static {{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}(Endpoint defaultEndpoint) {
+        return new {{classname}}(defaultEndpoint);
     }
 
     @Override
@@ -129,8 +133,9 @@ public class {{classname}} implements GeneratedApi
     }
 
     @Override
+    @Nullable
     public Endpoint getEndpoint() {
-        return endpoint;
+        return defaultEndpoint;
     }
 
     @Override

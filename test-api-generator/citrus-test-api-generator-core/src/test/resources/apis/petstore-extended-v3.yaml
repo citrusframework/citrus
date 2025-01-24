@@ -399,6 +399,38 @@ paths:
                     description: Invalid ID supplied
                 '404':
                     description: Pet not found
+    /pet/parameter-with-url-encoding-required/{Pet ID}:
+        get:
+            tags:
+                - extPet
+            summary: Get a pet by id with parameters that potentially require encoding
+            operationId: getPetWithParametersRequiringEncoding
+            description: "Returns multiple pets by ID using multiple ids in path parameter."
+            parameters:
+                -   name: Pet ID
+                    in: path
+                    description: IDs of pet to return
+                    required: true
+                    schema:
+                        type: integer
+                -   name: Query ID
+                    in: query
+                    description: A query parameter containing a space
+                    schema:
+                        type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
     /pet/header/simple:
         get:
             tags:

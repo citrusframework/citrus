@@ -76,10 +76,12 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
 
     private final int port = SocketUtils.findAvailableTcpPort(8080);
     private final String uri = "http://localhost:" + port + "/test";
-    private final MessageQueue inboundQueue = new DefaultMessageQueue("inboundQueue");
-    private final Queue<HttpMessage> responses = new ArrayBlockingQueue<>(6);
+
     private HttpServer httpServer;
     private HttpClient httpClient;
+
+    private final MessageQueue inboundQueue = new DefaultMessageQueue("inboundQueue");
+    private final Queue<HttpMessage> responses = new ArrayBlockingQueue<>(6);
 
     @BeforeClass
     public void setupEndpoints() {
@@ -122,9 +124,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         context.getReferenceResolver().bind("httpClient", httpClient);
         context.getReferenceResolver().bind("httpServer", httpServer);
 
-        String apiAsString = FileUtils.readToString(Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-v3.yaml"));
-        responses.add(new HttpMessage(apiAsString));
-        responses.add(new HttpMessage(apiAsString));
+        responses.add(new HttpMessage(FileUtils.readToString(Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-v3.yaml"))));
         responses.add(new HttpMessage("""
                 {
                   "id": 1000,
@@ -170,8 +170,8 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/pet/${petId}");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "/pet/${petId}");
+        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/petstore/v3/pet/${petId}");
+        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "/petstore/v3/pet/${petId}");
         Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
         Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
         Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpClient");
@@ -212,8 +212,8 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         Map<String, Object> requestHeaders = httpMessageBuilder.buildMessageHeaders(context);
         Assert.assertEquals(requestHeaders.size(), 4L);
         Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
-        Assert.assertEquals(requestHeaders.get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/pet");
-        Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_URI), "/pet");
+        Assert.assertEquals(requestHeaders.get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/petstore/v3/pet");
+        Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_URI), "/petstore/v3/pet");
         Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_CONTENT_TYPE), APPLICATION_JSON_VALUE);
         Assert.assertNull(sendMessageAction.getEndpoint());
         Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpClient");

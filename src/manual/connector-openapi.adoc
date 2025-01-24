@@ -4,10 +4,17 @@
 https://www.openapis.org/[OpenAPI] is a popular specification language to describe HTTP APIs and its exposure to clients.
 Citrus is able to leverage the specification to auto generate client and server request/response message data.
 The generated message data follows the rules of a given operation in the specification.
-In particular, the message body is generated from the given Json schema rules in that specification.
+In particular, the message body is generated according to the given Json schema rules in that specification.
 This way users may do contract-driven testing where the client and the server ensure the conformity with the contract to obey to the same specification rules.
 
-NOTE: The OpenAPI support in Citrus get enabled by adding a separate Maven module as dependency to your project
+Taking it a step further, Citrus OpenAPI offers a TestAPI generator powered by OpenApiGenerator. This
+generator produces the necessary Builders, which define explicit actions for each operation in a given
+OpenAPI. These actions enable access to any operation within the OpenAPI, making it ideal for testing
+the API itself or interacting with other supporting services. The current implementation of Citrus
+TestAPI uses Maven for generation and Spring for integration. For more details, please refer to
+<<openapi-test-api-generator>> .
+
+NOTE: The OpenAPI support in Citrus gets enabled by adding a separate Maven module as dependency to your project
 
 [source,xml]
 ----
@@ -28,6 +35,90 @@ You can directly load the specification from the HTTP URL.
 Or you may just point the OpenAPI components to a local specification file.
 
 Citrus supports OpenAPI on both client and server components so the next sections will describe the usage for each of those.
+
+[[openapi-repository]]
+== OpenAPI specification repositories
+
+An OpenApiRepository can be used to manage OpenAPI specifications.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public OpenApiRepository petstoreOpenApiRepository() {
+    return new OpenApiRepository()
+                .locations(singletonList(
+                    "classpath:org/citrusframework/openapi/petstore/petstore-v3.json"))
+                .neglectBasePath(true)
+                .validationPolicy(OpenApiValidationPolicy.REPORT)
+                .rootContextPath("/petstore/v3/api")
+                .requestValidationEnabled(false)
+                .responseValidationEnabled(false)
+                ;
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<bean id="petstoreOpenApiRepository" class="org.citrusframework.openapi.OpenApiRepository">
+    <property name="locations" value="classpath:org/citrusframework/openapi/petstore/petstore-v3.json"/>
+    <property name="neglectBasePath" value="true"/>
+    <property name="rootContextPath" value="/petstore/v3/api"/>
+    <property name="validationPolicy" value="REPORT"/>
+    <property name="requestValidationEnabled" value="false"/>
+    <property name="responseValidationEnabled" value="false"/>
+</bean>
+----
+
+|===
+|Property | Description | Default
+
+| locations | Defines the location(s) of the OpenAPI specification files. May be one file or a directory. E.g. `classpath:org/citrusframework/openapi/petstore/*.json` |
+| rootContextPath | Sets the root context path for the API, which overrides any context path defined within the specification itself. | Use the context path specified in the first server element of the OpenApi.
+| validationPolicy | Controls the handling of validation errors. The available options are: +
+- `FAIL`: Causes the test to fail when validation errors occur. +
+- `REPORT`: Reports validation errors without failing the test. +
+- `IGNORE`: Ignores any validation errors during test execution. | REPORT (from OpenApiSettings)
+| requestValidationEnabled | Enables or disables validation of requests. | true (from OpenApiSettings)
+| responseValidationEnabled | Enables or disables validation of responses. | true (from OpenApiSettings)
+
+|===
+
+=== Hooking the Operation Path
+
+The final path used for an operation during testing is built based on the OpenAPI specification's `basePath`,
+the `rootContextPath` configuration, and the `neglectBasePath` setting. The path construction follows these rules:
+
+1. **Default Path Construction**:
+- By default, the path is constructed using the `basePath` from the OpenAPI specification (if defined) combined with the `operationPath`.
+- For example, if the `basePath` is `/v1/petstore` and the operation path is `/pet`, the final path will be:
+```
+/v1/petstore/pet
+```
+
+2. **When `rootContextPath` is Set**:
+- If a `rootContextPath` is provided, it will be prepended to the `basePath` (if present) and the `operationPath`.
+- If the `basePath` is `/v1/petstore`, the `operationPath` is `/pet`, and the `rootContextPath` is `/api`, the resulting path will be:
+```
+/api/v1/petstore/pet
+```
+
+3. **When `neglectBasePath` is Set**:
+- If `neglectBasePath` is set to `true`, the `basePath` is ignored, and only the `operationPath` and `rootContextPath` is used.
+- For example, if the `basePath` is `/v1/petstore` and the `operationPath` is `/pet`, and the `rootContextPath` is `/api`, setting `neglectBasePath=true` will result in the path:
+```
+/api/pet
+```
+
+Likewise, if the `rootContextPath` is not set, the resulting path will be the `operationPath` only:
+```
+/pet
+```
+
+
+These properties allow for flexible configuration of the OpenAPI repository, enabling you to customize how API validation is handled and how the OpenAPI specifications are loaded into the system.
+
 
 [[openapi-client]]
 == OpenAPI client

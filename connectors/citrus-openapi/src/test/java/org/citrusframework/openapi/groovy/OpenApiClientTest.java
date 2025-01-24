@@ -167,8 +167,8 @@ public class OpenApiClientTest extends AbstractGroovyActionDslTest {
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/pet/${petId}");
-        assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "/pet/${petId}");
+        assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/petstore/v3/pet/${petId}");
+        assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "/petstore/v3/pet/${petId}");
         assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
         assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
         assertEquals(sendMessageAction.getEndpoint(), httpClient);
@@ -209,8 +209,8 @@ public class OpenApiClientTest extends AbstractGroovyActionDslTest {
         Map<String, Object> requestHeaders = httpMessageBuilder.buildMessageHeaders(context);
         assertEquals(requestHeaders.size(), 4L);
         assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
-        assertEquals(requestHeaders.get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/pet");
-        assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_URI), "/pet");
+        assertEquals(requestHeaders.get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/petstore/v3/pet");
+        assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_URI), "/petstore/v3/pet");
         assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_CONTENT_TYPE), APPLICATION_JSON_VALUE);
         assertNull(sendMessageAction.getEndpointUri());
         assertEquals(sendMessageAction.getEndpoint(), httpClient);

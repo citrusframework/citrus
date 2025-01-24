@@ -38,8 +38,6 @@ public class StringUtils {
 
     /**
      * Helper method checks for null or blank String.
-     * @param str
-     * @return
      */
     public static boolean hasNoText(String str) {
         return !hasText(str);
@@ -54,8 +52,6 @@ public class StringUtils {
 
     /**
      * String helper checking for isEmpty String and adds null check on given parameter.
-     * @param str
-     * @return
      */
     public static boolean isNotEmpty(String str) {
         return !isEmpty(str);
@@ -78,7 +74,7 @@ public class StringUtils {
             return segment;
         }
 
-        if (segment == null) {
+        if (isEmpty(segment)) {
             return path;
         }
 

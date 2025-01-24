@@ -29,7 +29,6 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.parser.core.models.ParseOptions;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import jakarta.annotation.Nonnull;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +36,6 @@ import javax.annotation.Nullable;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.openapi.OpenApiResourceLoader;
-import org.citrusframework.spi.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,73 +57,12 @@ public final class OpenApiValidationContextLoader {
         // Static access only
     }
 
-    /**
-     * Creates an OpenApiValidationContext from a secured OpenAPI web resource.
-     *
-     * @param url the URL of the secured OpenAPI web resource
-     * @return the OpenApiValidationContext
-     */
-    public static OpenApiValidationContext fromSecuredWebResource(@Nonnull URL url) {
-        return createValidationContext(new OpenApiLoader().loadApi(
-            SpecSource.inline(OpenApiResourceLoader.rawFromSecuredWebResource(url)), emptyList(),
-            defaultParseOptions()));
-    }
-
-    /**
-     * Creates an OpenApiValidationContext from an OpenAPI web resource.
-     *
-     * @param url the URL of the OpenAPI web resource
-     * @return the OpenApiValidationContext
-     */
-    public static OpenApiValidationContext fromWebResource(@Nonnull URL url,
+    public static OpenApiValidationContext fromSpec(String openApiSpecAsString,
         OpenApiValidationPolicy openApiValidationPolicy) {
-        return createValidationContext(
-            loadOpenApi(url.toString(),
-                SpecSource.inline(OpenApiResourceLoader.rawFromWebResource(url)),
-                openApiValidationPolicy));
-    }
-
-    /**
-     * Creates an OpenApiValidationContext from an OpenAPI file.
-     *
-     * @param resource                the resource containing the OpenAPI specification
-     * @param openApiValidationPolicy the policy used for validation of the OpenApi
-     * @return the OpenApiValidationContext
-     */
-    public static OpenApiValidationContext fromFile(@Nonnull Resource resource,
-        OpenApiValidationPolicy openApiValidationPolicy) {
-        return createValidationContext(
-            loadOpenApi(resource.getLocation(),
-                SpecSource.inline(OpenApiResourceLoader.rawFromFile(resource)),
-                openApiValidationPolicy));
-    }
-
-    private static OpenAPI loadOpenApi(String identifier, SpecSource specSource,
-        OpenApiValidationPolicy openApiValidationPolicy) {
-
-        logger.debug("Loading OpenApi: {}", identifier);
-
         OpenAPIParser openAPIParser = new OpenAPIParser();
-
-        SwaggerParseResult swaggerParseResult;
-        if (specSource.isInlineSpecification()) {
-            swaggerParseResult = openAPIParser.readContents(specSource.getValue(), emptyList(),
-                defaultParseOptions());
-        } else if (specSource.isSpecUrl()) {
-            swaggerParseResult = openAPIParser.readLocation(specSource.getValue(), emptyList(),
-                defaultParseOptions());
-        } else {
-            // Try to load as a URL first...
-            swaggerParseResult = openAPIParser.readLocation(specSource.getValue(), emptyList(),
-                defaultParseOptions());
-            if (swaggerParseResult == null) {
-                // ...then try to load as a content string
-                swaggerParseResult = openAPIParser.readContents(specSource.getValue(), emptyList(),
-                    defaultParseOptions());
-            }
-        }
-
-        return handleSwaggerParserResult(identifier, swaggerParseResult, openApiValidationPolicy);
+        return createValidationContext(
+            handleSwaggerParserResult(openApiSpecAsString, openAPIParser.readContents(openApiSpecAsString, emptyList(),
+                defaultParseOptions()), openApiValidationPolicy));
     }
 
     private static OpenAPI handleSwaggerParserResult(String identifier,

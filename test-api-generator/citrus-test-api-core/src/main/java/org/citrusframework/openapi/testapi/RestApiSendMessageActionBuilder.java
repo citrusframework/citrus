@@ -17,6 +17,7 @@
 package org.citrusframework.openapi.testapi;
 
 import static java.lang.String.format;
+import static java.net.URLEncoder.encode;
 import static org.citrusframework.openapi.testapi.OpenApiParameterFormatter.formatArray;
 import static org.citrusframework.openapi.util.OpenApiUtils.createFullPathOperationIdentifier;
 import static org.citrusframework.util.FileUtils.getDefaultCharset;
@@ -24,7 +25,6 @@ import static org.citrusframework.util.StringUtils.isEmpty;
 
 import jakarta.servlet.http.Cookie;
 import java.lang.reflect.Array;
-import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -131,7 +131,9 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
             return;
         }
 
-        setParameter((paramName, paramValue) -> super.queryParam(paramName, paramValue != null ? paramValue.toString() : null), name, value);
+        setParameter((paramName, paramValue) -> super.queryParam(
+            paramName.replace(" ", "%20"),
+            paramValue != null ? paramValue.toString() : null), name, value);
     }
 
     protected void queryParameter(final String name, Object value, ParameterStyle parameterStyle, boolean explode, boolean isObject) {
@@ -209,6 +211,9 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
 
         // If no endpoint was set explicitly, use the default endpoint given by api
         if (getEndpoint() == null && getEndpointUri() == null) {
+            if (generatedApi.getEndpoint() == null) {
+                throw new CitrusRuntimeException("No endpoint specified for action!");
+            }
             endpoint(generatedApi.getEndpoint());
         }
 
@@ -269,7 +274,7 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
             if (message.getCookies() != null && !message.getCookies().isEmpty()) {
                 for (Cookie cookie : message.getCookies()) {
                     if (cookie.getValue().contains(",")) {
-                        cookie.setValue(URLEncoder.encode(cookie.getValue(), getDefaultCharset()));
+                        cookie.setValue(encode(cookie.getValue(), getDefaultCharset()));
                     }
                 }
             }

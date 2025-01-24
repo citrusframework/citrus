@@ -1,6 +1,8 @@
 package org.citrusframework.openapi.validation;
 
 import static java.util.Collections.emptyList;
+import static org.citrusframework.openapi.OpenApiMessageHeaders.OAS_SPECIFICATION_ID;
+import static org.citrusframework.openapi.OpenApiMessageHeaders.OAS_UNIQUE_OPERATION_ID;
 import static org.citrusframework.util.StringUtils.isNotEmpty;
 
 import com.atlassian.oai.validator.report.ValidationReport;
@@ -61,12 +63,15 @@ public class OpenApiSchemaValidation extends
             findSchemaRepositories(context),
             validationContext);
 
-        if (validationReportData != null && validationReportData.report != null) {
-            if (validationReportData.report.hasErrors()) {
-                logger.error("Failed to validate Json schema for message:\n{}\nand origin path:\n{}",
-                        httpMessage.getPayload(String.class), httpMessage.getPath());
-                throw new ValidationException(constructErrorMessage(validationReportData));
+        if (validationReportData != null
+            && validationReportData.report != null
+            && validationReportData.report.hasErrors()) {
+            if (logger.isErrorEnabled()) {
+                logger.error(
+                    "Failed to validate Json schema for message:\n{}\nand origin path:\n{}",
+                    httpMessage.getPayload(String.class), httpMessage.getPath());
             }
+            throw new ValidationException(constructErrorMessage(validationReportData));
         }
 
         logger.debug("Json schema validation successful: All values OK");
@@ -86,8 +91,8 @@ public class OpenApiSchemaValidation extends
     public boolean supportsMessageType(String messageType, Message message) {
         return "JSON".equals(messageType)
             || (
-            message != null && IsJsonPredicate.getInstance().test(message.getPayload(String.class))
-                || message.getHeader(OpenApiMessageHeaders.OAS_UNIQUE_OPERATION_ID) != null);
+            message != null && (IsJsonPredicate.getInstance().test(message.getPayload(String.class))
+                || message.getHeader(OAS_UNIQUE_OPERATION_ID) != null));
     }
 
     private String constructErrorMessage(ValidationReportData validationReportData) {
@@ -121,10 +126,10 @@ public class OpenApiSchemaValidation extends
             return null;
         } else {
             String operationId = validationContext.getSchema() != null ? validationContext.getSchema()
-                : (String) message.getHeader(OpenApiMessageHeaders.OAS_UNIQUE_OPERATION_ID);
+                : (String) message.getHeader(OAS_UNIQUE_OPERATION_ID);
             String specificationId = validationContext.getSchemaRepository() != null
                 ? validationContext.getSchemaRepository()
-                : (String) message.getHeader(OpenApiMessageHeaders.OAS_SPECIFICATION_ID);
+                : (String) message.getHeader(OAS_SPECIFICATION_ID);
 
             if (isNotEmpty(specificationId) && isNotEmpty(operationId)) {
                 return validateOpenApiOperation(context, message, schemaRepositories,

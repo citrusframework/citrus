@@ -8,6 +8,7 @@ import static org.citrusframework.util.StringUtils.isNotEmpty;
 
 import static org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStoreOpenApi.extPetStoreSpecification;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -42,7 +43,7 @@ import java.util.UUID;
 import org.citrusframework.openapi.generator.rest.extpetstore.model.VaccinationDocumentResult;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-09T10:28:07.306037900+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-23T18:00:07.512935700+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class ExtPetApi implements GeneratedApi
 {
 
@@ -69,19 +70,22 @@ public class ExtPetApi implements GeneratedApi
 
     private final List<ApiActionBuilderCustomizer> customizers;
 
-    private final Endpoint endpoint;
+    /**
+    * An optional default endpoint which will be passed into the requests.
+    */
+    private final Endpoint defaultEndpoint;
 
-    public ExtPetApi(Endpoint endpoint)  {
-        this(endpoint, emptyList());
+    public ExtPetApi(@Nullable Endpoint defaultEndpoint)  {
+        this(defaultEndpoint, emptyList());
     }
 
-    public ExtPetApi(Endpoint endpoint, List<ApiActionBuilderCustomizer> customizers)  {
-        this.endpoint = endpoint;
+    public ExtPetApi(@Nullable Endpoint defaultEndpoint, @Nullable List<ApiActionBuilderCustomizer> customizers)  {
+        this.defaultEndpoint = defaultEndpoint;
         this.customizers = customizers;
     }
 
-    public static ExtPetApi extPetApi(Endpoint endpoint) {
-        return new ExtPetApi(endpoint);
+    public static ExtPetApi extPetApi(Endpoint defaultEndpoint) {
+        return new ExtPetApi(defaultEndpoint);
     }
 
     @Override
@@ -105,8 +109,9 @@ public class ExtPetApi implements GeneratedApi
     }
 
     @Override
+    @Nullable
     public Endpoint getEndpoint() {
-        return endpoint;
+        return defaultEndpoint;
     }
 
     @Override
@@ -610,6 +615,28 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetWithMatrixStyleObjectExplodedReceiveActionBuilder receiveGetPetWithMatrixStyleObjectExploded(@NotNull String statusCode)   {
         return new GetPetWithMatrixStyleObjectExplodedReceiveActionBuilder(this,  statusCode);
+    }
+
+    /**
+     * Builder with type safe required parameters.
+     */
+    public GetPetWithParametersRequiringEncodingSendActionBuilder sendGetPetWithParametersRequiringEncoding(Integer petID)   {
+            return new GetPetWithParametersRequiringEncodingSendActionBuilder(this, petID);
+    }
+
+    /**
+     * Builder with required parameters as string, allowing dynamic content using citrus expressions.
+     */
+    public GetPetWithParametersRequiringEncodingSendActionBuilder sendGetPetWithParametersRequiringEncoding$(String petIDExpression )   {
+            return new GetPetWithParametersRequiringEncodingSendActionBuilder(petIDExpression, this);
+    }
+
+    public GetPetWithParametersRequiringEncodingReceiveActionBuilder receiveGetPetWithParametersRequiringEncoding(@NotNull HttpStatus statusCode)   {
+        return new GetPetWithParametersRequiringEncodingReceiveActionBuilder(this, Integer.toString(statusCode.value()));
+    }
+
+    public GetPetWithParametersRequiringEncodingReceiveActionBuilder receiveGetPetWithParametersRequiringEncoding(@NotNull String statusCode)   {
+        return new GetPetWithParametersRequiringEncodingReceiveActionBuilder(this,  statusCode);
     }
 
     /**
@@ -3659,6 +3686,137 @@ public class ExtPetApi implements GeneratedApi
         }
 
         public GetPetWithMatrixStyleObjectExplodedReceiveActionBuilder(ExtPetApi extPetApi, OpenApiClientResponseMessageBuilder messageBuilder) {
+            super(extPetApi, extPetStoreSpecification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
+        }
+
+        @Override
+        public String getOperationName() {
+            return OPERATION_NAME;
+        }
+
+        @Override
+        public String getMethod() {
+            return METHOD;
+        }
+
+        @Override
+        public String getPath() {
+            return ENDPOINT;
+        }
+
+        @Override
+        public ReceiveMessageAction doBuild() {
+
+            if (getCustomizers() != null) {
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
+            }
+
+            return super.doBuild();
+        }
+
+    }
+
+    public static class GetPetWithParametersRequiringEncodingSendActionBuilder extends
+                RestApiSendMessageActionBuilder implements GeneratedApiOperationInfo {
+
+        private static final String METHOD = "GET";
+
+        private static final String ENDPOINT = "/api/v3/ext/pet/parameter-with-url-encoding-required/{Pet ID}";
+
+        private static final String OPERATION_NAME = "getPetWithParametersRequiringEncoding";
+
+        /**
+         * Constructor with type safe required parameters.
+         */
+        public GetPetWithParametersRequiringEncodingSendActionBuilder(ExtPetApi extPetApi, Integer petID) {
+            super(extPetApi, extPetStoreSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+            pathParameter("Pet ID", petID, ParameterStyle.SIMPLE, false, false);
+        }
+
+        /**
+         * Constructor with required parameters as string to allow for dynamic content.
+         */
+            public GetPetWithParametersRequiringEncodingSendActionBuilder(String petIDExpression, ExtPetApi extPetApi) {
+            super(extPetApi, extPetStoreSpecification,  METHOD, ENDPOINT, OPERATION_NAME);
+            pathParameter("Pet ID", petIDExpression, ParameterStyle.SIMPLE, false, false);
+        }
+
+        @Override
+        public String getOperationName() {
+            return OPERATION_NAME;
+        }
+
+        @Override
+        public String getMethod() {
+            return METHOD;
+        }
+
+        @Override
+        public String getPath() {
+            return ENDPOINT;
+        }
+
+        /**
+         * Constructor with required parameters as string to allow for dynamic content.
+         */
+        public GetPetWithParametersRequiringEncodingSendActionBuilder(ExtPetApi extPetApi, TestApiClientRequestMessageBuilder messageBuilder, String petIDExpression) {
+            super(extPetApi, extPetStoreSpecification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
+            pathParameter("Pet ID", petIDExpression, ParameterStyle.SIMPLE, false, false);
+        }
+
+        public GetPetWithParametersRequiringEncodingSendActionBuilder petID(Integer petID) {
+            pathParameter("Pet ID", petID, ParameterStyle.SIMPLE, false, false);
+            return this;
+        }
+
+        public GetPetWithParametersRequiringEncodingSendActionBuilder petID(String petIDExpression) {
+            pathParameter("Pet ID", petIDExpression, ParameterStyle.SIMPLE, false, false);
+                return this;
+        }
+
+        public GetPetWithParametersRequiringEncodingSendActionBuilder queryID(Integer queryID) {
+            queryParameter("Query ID", queryID, ParameterStyle.FORM, true, false);
+            return this;
+        }
+
+        public void setQueryID(Integer queryID) {
+            queryParameter("Query ID", queryID, ParameterStyle.FORM, true, false);
+        }
+
+        public GetPetWithParametersRequiringEncodingSendActionBuilder queryID(String queryIDExpression) {
+            queryParameter("Query ID", queryIDExpression, ParameterStyle.FORM, true, false);
+            return this;
+        }
+
+        public void setQueryID(String queryIDExpression) {
+            queryParameter("Query ID", queryIDExpression, ParameterStyle.FORM, true, false);
+        }
+
+        @Override
+        public SendMessageAction doBuild() {
+
+            if (getCustomizers() != null) {
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
+            }
+
+            return super.doBuild();
+        }
+    }
+
+    public static class GetPetWithParametersRequiringEncodingReceiveActionBuilder extends
+                        RestApiReceiveMessageActionBuilder implements GeneratedApiOperationInfo {
+
+        private static final String METHOD = "GET";
+
+        private static final String ENDPOINT = "/api/v3/ext/pet/parameter-with-url-encoding-required/{Pet ID}";
+
+        private static final String OPERATION_NAME = "getPetWithParametersRequiringEncoding";
+
+        public GetPetWithParametersRequiringEncodingReceiveActionBuilder(ExtPetApi extPetApi,  String statusCode) {
+            super(extPetApi, extPetStoreSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
+        }
+
+        public GetPetWithParametersRequiringEncodingReceiveActionBuilder(ExtPetApi extPetApi, OpenApiClientResponseMessageBuilder messageBuilder) {
             super(extPetApi, extPetStoreSpecification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
         }
 

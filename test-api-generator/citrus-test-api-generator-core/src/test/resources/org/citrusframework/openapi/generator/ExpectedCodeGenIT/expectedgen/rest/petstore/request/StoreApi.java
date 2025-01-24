@@ -8,6 +8,7 @@ import static org.citrusframework.util.StringUtils.isNotEmpty;
 
 import static org.citrusframework.openapi.generator.rest.petstore.PetStoreOpenApi.petStoreSpecification;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -36,7 +37,7 @@ import org.citrusframework.openapi.generator.rest.petstore.PetStoreOpenApi;
 import org.citrusframework.openapi.generator.rest.petstore.model.Order;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-09T10:28:06.562367500+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-23T18:00:06.769523100+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class StoreApi implements GeneratedApi
 {
 
@@ -48,19 +49,22 @@ public class StoreApi implements GeneratedApi
 
     private final List<ApiActionBuilderCustomizer> customizers;
 
-    private final Endpoint endpoint;
+    /**
+    * An optional default endpoint which will be passed into the requests.
+    */
+    private final Endpoint defaultEndpoint;
 
-    public StoreApi(Endpoint endpoint)  {
-        this(endpoint, emptyList());
+    public StoreApi(@Nullable Endpoint defaultEndpoint)  {
+        this(defaultEndpoint, emptyList());
     }
 
-    public StoreApi(Endpoint endpoint, List<ApiActionBuilderCustomizer> customizers)  {
-        this.endpoint = endpoint;
+    public StoreApi(@Nullable Endpoint defaultEndpoint, @Nullable List<ApiActionBuilderCustomizer> customizers)  {
+        this.defaultEndpoint = defaultEndpoint;
         this.customizers = customizers;
     }
 
-    public static StoreApi storeApi(Endpoint endpoint) {
-        return new StoreApi(endpoint);
+    public static StoreApi storeApi(Endpoint defaultEndpoint) {
+        return new StoreApi(defaultEndpoint);
     }
 
     @Override
@@ -84,8 +88,9 @@ public class StoreApi implements GeneratedApi
     }
 
     @Override
+    @Nullable
     public Endpoint getEndpoint() {
-        return endpoint;
+        return defaultEndpoint;
     }
 
     @Override

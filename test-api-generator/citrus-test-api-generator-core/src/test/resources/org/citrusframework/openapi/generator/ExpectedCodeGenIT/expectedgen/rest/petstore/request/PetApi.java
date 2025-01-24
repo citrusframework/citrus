@@ -8,6 +8,7 @@ import static org.citrusframework.util.StringUtils.isNotEmpty;
 
 import static org.citrusframework.openapi.generator.rest.petstore.PetStoreOpenApi.petStoreSpecification;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -37,7 +38,7 @@ import org.citrusframework.openapi.generator.rest.petstore.model.ModelApiRespons
 import org.citrusframework.openapi.generator.rest.petstore.model.Pet;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-09T10:28:06.562367500+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-23T18:00:06.769523100+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class PetApi implements GeneratedApi
 {
 
@@ -49,19 +50,22 @@ public class PetApi implements GeneratedApi
 
     private final List<ApiActionBuilderCustomizer> customizers;
 
-    private final Endpoint endpoint;
+    /**
+    * An optional default endpoint which will be passed into the requests.
+    */
+    private final Endpoint defaultEndpoint;
 
-    public PetApi(Endpoint endpoint)  {
-        this(endpoint, emptyList());
+    public PetApi(@Nullable Endpoint defaultEndpoint)  {
+        this(defaultEndpoint, emptyList());
     }
 
-    public PetApi(Endpoint endpoint, List<ApiActionBuilderCustomizer> customizers)  {
-        this.endpoint = endpoint;
+    public PetApi(@Nullable Endpoint defaultEndpoint, @Nullable List<ApiActionBuilderCustomizer> customizers)  {
+        this.defaultEndpoint = defaultEndpoint;
         this.customizers = customizers;
     }
 
-    public static PetApi petApi(Endpoint endpoint) {
-        return new PetApi(endpoint);
+    public static PetApi petApi(Endpoint defaultEndpoint) {
+        return new PetApi(defaultEndpoint);
     }
 
     @Override
@@ -85,8 +89,9 @@ public class PetApi implements GeneratedApi
     }
 
     @Override
+    @Nullable
     public Endpoint getEndpoint() {
-        return endpoint;
+        return defaultEndpoint;
     }
 
     @Override

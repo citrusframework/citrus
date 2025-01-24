@@ -1954,6 +1954,32 @@ class GeneratedRestApiIT {
         }
     }
 
+    @Nested
+    class ParameterThatNeedUrlEncoding {
+
+        @Test
+        void java_parameter_with_url_encoding(@CitrusResource TestCaseRunner runner) {
+
+            runner.when(extPetApi.sendGetPetWithParametersRequiringEncoding(1)
+                    .queryID(4)
+                .fork(true));
+
+            runner.then(http().server(httpServer)
+                .receive()
+                .get("/api/v3/ext/pet/parameter-with-url-encoding-required/1")
+                .message());
+
+            runner.then(http().server(httpServer)
+                .send()
+                .response(OK)
+                .message()
+                .contentType(APPLICATION_JSON_VALUE)
+                .body("[]"));
+
+            runner.when(extPetApi.receiveGetPetWithSimpleStyleArray("200"));
+        }
+    }
+
     /**
      * Demonstrates the usage of form data.
      */

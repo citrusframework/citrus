@@ -36,9 +36,9 @@ import org.citrusframework.http.server.HttpServerBuilder;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.openapi.AutoFillType;
 import org.citrusframework.openapi.OpenApiRepository;
-import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiClientResponseActionBuilder;
 import org.citrusframework.openapi.integration.OpenApiClientIT.Config;
+import org.citrusframework.openapi.validation.OpenApiValidationPolicy;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.SocketUtils;
@@ -57,9 +57,6 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
     public static final String VALID_PET_PATH = "classpath:org/citrusframework/openapi/petstore/pet.json";
     public static final String INVALID_PET_PATH = "classpath:org/citrusframework/openapi/petstore/pet_invalid.json";
 
-    private final OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
-        Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
-
     @Autowired
     private HttpServer httpServer;
 
@@ -72,7 +69,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         variable("petId", "1001");
 
-        when(openapi(petstoreSpec)
+        when(openapi("petstore-v3")
             .client(httpClient)
             .send("getPetById")
             .autoFill(AutoFillType.ALL)
@@ -81,7 +78,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
             .receive()
-            .get("/pet/${petId}")
+            .get("/pet/1001")
             .message()
             .accept("@contains('application/json')@"));
 
@@ -92,7 +89,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
 
-        then(openapi(petstoreSpec)
+        then(openapi("petstore-v3")
             .client(httpClient).receive("getPetById", OK)
             .schemaValidation(true));
 
@@ -104,7 +101,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         variable("petId", "1001");
 
-        when(openapi(petstoreSpec)
+        when(openapi("petstore-v3")
             .client(httpClient)
             .send("getPetById")
             .autoFill(AutoFillType.ALL)
@@ -124,7 +121,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
             .body(Resources.create(INVALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
 
-        OpenApiClientResponseActionBuilder clientResponseActionBuilder = openapi(petstoreSpec)
+        OpenApiClientResponseActionBuilder clientResponseActionBuilder = openapi("petstore-v3")
             .client(httpClient).receive("getPetById", OK)
             .schemaValidation(true);
         assertThrows(() -> then(clientResponseActionBuilder));
@@ -159,6 +156,8 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
             .body(Resources.create(INVALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
 
+        // We can validate an OpenAPI response against a specific schema,
+        // even without using open api client.
         HttpClientResponseActionBuilder.HttpMessageBuilderSupport receiveGetPetById = http().client(
                 httpClient)
             .receive()
@@ -167,7 +166,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
             .type(MessageType.JSON)
             .validate(openApi(null)
                 .schemaValidation(true)
-                .schemaRepository(petstoreSpec.getUid())
+                .schemaRepository("petstore-v3.json")
                 .schema("getPetById"));
 
         assertThrows(TestCaseFailedException.class, () -> then(receiveGetPetById));
@@ -180,7 +179,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         variable("petId", "1001");
 
-        when(openapi(petstoreSpec)
+        when(openapi("petstore-v3")
             .client(httpClient)
             .send("getPetById")
             .autoFill(AutoFillType.ALL)
@@ -200,7 +199,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
             .body(Resources.create(INVALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
 
-        then(openapi(petstoreSpec)
+        then(openapi("petstore-v3")
             .client(httpClient).receive("getPetById", OK)
             .schemaValidation(false));
 
@@ -208,10 +207,10 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     @Test
-    public void shouldProperlyExecuteGetAndAddPetFromRepository() {
+    public void shouldProperlyExecuteAddPetFromRepository() {
         variable("petId", "1001");
 
-        when(openapi(petstoreSpec)
+        when(openapi("petstore-v3")
             .client(httpClient)
             .send("addPet")
             .autoFill(AutoFillType.ALL)
@@ -241,7 +240,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
             .response(HttpStatus.CREATED)
             .message());
 
-        then(openapi(petstoreSpec)
+        then(openapi("petstore-v3")
             .client(httpClient)
             .receive("addPet", HttpStatus.CREATED));
 
@@ -252,7 +251,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
     public void shouldFailOnMissingNameInRequest() {
         variable("petId", "1001");
 
-        HttpMessageBuilderSupport addPetBuilder = openapi(petstoreSpec)
+        HttpMessageBuilderSupport addPetBuilder = openapi("petstore-v3")
             .client(httpClient)
             .send("addPet")
             .message().body(Resources.create(INVALID_PET_PATH));
@@ -264,7 +263,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
     @Test
     public void shouldFailOnWrongQueryIdType() {
         variable("petId", "xxxx");
-        HttpMessageBuilderSupport addPetBuilder = openapi(petstoreSpec)
+        HttpMessageBuilderSupport addPetBuilder = openapi("petstore-v3")
             .client(httpClient)
             .send("addPet")
             .message().body(Resources.create(VALID_PET_PATH));
@@ -275,7 +274,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
     @Test
     public void shouldSucceedOnWrongQueryIdTypeWithOasDisabled() {
         variable("petId", "xxxx");
-        HttpMessageBuilderSupport addPetBuilder = openapi(petstoreSpec)
+        HttpMessageBuilderSupport addPetBuilder = openapi("petstore-v3")
             .client(httpClient)
             .send("addPet")
             .schemaValidation(false)
@@ -289,9 +288,47 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
     }
 
-    @DataProvider(name = "pingApiOperationDataprovider")
-    public static Object[][] pingApiOperationDataprovider() {
-        return new Object[][]{{"doPing"}, {"doPong"}, {"doPung"}};
+    @DataProvider
+    public Object[][] aliases() {
+        return new Object[][] {
+            {"petstore-v3"},
+            {"Swagger Petstore"},
+            {"Swagger Petstore/1.0.1"},
+        };
+    }
+
+    /**
+     * Using OpenApiRepository, we should be able to resolve the OpenAPI spec from the name of the
+     * spec file or one of its aliases.
+     */
+    @CitrusTest
+    @Test(dataProvider = "aliases")
+    public void getPetByIdUsingOpenApiRepositoryAndAlias(String alias) {
+        variable("petId", "1001");
+
+        when(openapi(alias)
+            .client(httpClient)
+            .send("getPetById")
+            .autoFill(AutoFillType.ALL)
+            .message()
+            .fork(true));
+
+        then(http().server(httpServer)
+            .receive()
+            .get("/pet/${petId}")
+            .message()
+            .accept("@contains('application/json')@"));
+
+        then(http().server(httpServer)
+            .send()
+            .response(OK)
+            .message()
+            .body(Resources.create(VALID_PET_PATH))
+            .contentType(APPLICATION_JSON_VALUE));
+
+        then(openapi(alias)
+            .client(httpClient).receive("getPetById", OK)
+            .schemaValidation(true));
     }
 
     @Configuration
@@ -321,7 +358,9 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
         public OpenApiRepository petstoreOpenApiRepository() {
             return new OpenApiRepository()
                 .locations(singletonList(
-                    "classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
+                    "classpath:org/citrusframework/openapi/petstore/petstore-v3.json"))
+                .neglectBasePath(true)
+                .validationPolicy(OpenApiValidationPolicy.REPORT);
         }
     }
 }

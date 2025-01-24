@@ -3,6 +3,7 @@ package org.citrusframework.openapi.generator.soap.bookservice.request;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 
+import jakarta.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,25 +17,28 @@ import org.citrusframework.openapi.testapi.SoapApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.testapi.SoapApiSendMessageActionBuilder;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-09T10:28:07.680135700+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-23T18:00:07.870607200+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class BookServiceSoapApi implements GeneratedApi
 {
 
-    private final Endpoint endpoint;
+    /**
+     * An optional default endpoint which will be passed into the requests.
+     */
+    private final Endpoint defaultEndpoint;
 
     private final List<ApiActionBuilderCustomizer> customizers;
 
-    public BookServiceSoapApi(Endpoint endpoint)  {
-        this(endpoint, emptyList());
+    public BookServiceSoapApi(@Nullable Endpoint defaultEndpoint)  {
+        this(defaultEndpoint, emptyList());
     }
 
-    public BookServiceSoapApi(Endpoint endpoint, List<ApiActionBuilderCustomizer> customizers)  {
-        this.endpoint = endpoint;
+    public BookServiceSoapApi(@Nullable Endpoint defaultEndpoint, @Nullable List<ApiActionBuilderCustomizer> customizers)  {
+        this.defaultEndpoint = defaultEndpoint;
         this.customizers = customizers;
     }
 
-    public static BookServiceSoapApi bookServiceSoapApi(Endpoint endpoint) {
-        return new BookServiceSoapApi(endpoint);
+    public static BookServiceSoapApi bookServiceSoapApi(Endpoint defaultEndpoint) {
+        return new BookServiceSoapApi(defaultEndpoint);
     }
 
     @Override
@@ -58,8 +62,9 @@ public class BookServiceSoapApi implements GeneratedApi
     }
 
     @Override
+    @Nullable
     public Endpoint getEndpoint() {
-        return endpoint;
+        return defaultEndpoint;
     }
 
     @Override

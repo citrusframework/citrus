@@ -25,7 +25,7 @@ import java.time.OffsetDateTime;
 /**
  * Order
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-09T10:28:06.562367500+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-23T18:00:06.769523100+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class Order {
   private Long id;
 

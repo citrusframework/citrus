@@ -129,6 +129,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
 
         private final String operationId;
 
+        // TODO: document me
         private AutoFillType autoFill = OpenApiSettings.getRequestAutoFillRandomValues();
 
         public OpenApiClientRequestMessageBuilder(HttpMessage httpMessage,
@@ -175,7 +176,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
             OperationPathAdapter operationPathAdapter,
             TestContext context) {
             OasOperation operation = operationPathAdapter.operation();
-            String path = operationPathAdapter.apiPath();
+            String path = operationPathAdapter.fullPath();
             HttpMethod method = HttpMethod.valueOf(
                 operationPathAdapter.operation().getMethod().toUpperCase(Locale.US));
 

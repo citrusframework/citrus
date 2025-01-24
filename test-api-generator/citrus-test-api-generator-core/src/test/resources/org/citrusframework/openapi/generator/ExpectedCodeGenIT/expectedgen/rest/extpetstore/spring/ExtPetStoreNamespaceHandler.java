@@ -12,7 +12,7 @@ import org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStoreOpenApi
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-09T10:28:07.306037900+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-23T18:00:07.512935700+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class ExtPetStoreNamespaceHandler extends NamespaceHandlerSupport {
 
     @Override
@@ -149,6 +149,12 @@ public class ExtPetStoreNamespaceHandler extends NamespaceHandlerSupport {
                 ExtPetApi.GetPetWithMatrixStyleObjectExplodedReceiveActionBuilder.class,
                 new String[]{ "petId" },
             new String[]{  });
+
+            registerOperationParsers(ExtPetApi.class,"get-pet-with-parameters-requiring-encoding", "getPetWithParametersRequiringEncoding", "/pet/parameter-with-url-encoding-required/{Pet ID}",
+                ExtPetApi.GetPetWithParametersRequiringEncodingSendActionBuilder.class,
+                ExtPetApi.GetPetWithParametersRequiringEncodingReceiveActionBuilder.class,
+                new String[]{ "petID" },
+            new String[]{ "queryID" });
 
             registerOperationParsers(ExtPetApi.class,"get-pet-with-simple-style-array", "getPetWithSimpleStyleArray", "/pet/simple/{petId}",
                 ExtPetApi.GetPetWithSimpleStyleArraySendActionBuilder.class,

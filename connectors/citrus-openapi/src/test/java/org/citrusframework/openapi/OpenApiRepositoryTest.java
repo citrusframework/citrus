@@ -82,7 +82,7 @@ public class OpenApiRepositoryTest {
     @Test
     public void shouldFailOnFaultyOpenApiRepositoryByStrictValidation() {
         OpenApiRepository openApiRepository = new OpenApiRepository();
-        openApiRepository.setOpenApiValidationPolicy(OpenApiValidationPolicy.STRICT);
+        openApiRepository.setValidationPolicy(OpenApiValidationPolicy.STRICT);
         openApiRepository.setLocations(
             singletonList("org/citrusframework/openapi/faulty/faulty-ping-api.yaml"));
 

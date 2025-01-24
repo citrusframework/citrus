@@ -49,8 +49,8 @@ public class {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}BeanConfigurati
 {{#apiInfo}}
     {{#apis}}
     @Bean(name="{{classname}}")
-    public {{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}(@Qualifier("{{apiEndpoint}}") Endpoint endpoint, @Autowired(required = false) List<ApiActionBuilderCustomizer> customizers) {
-        return new {{classname}}(endpoint, customizers);
+    public {{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}(@Autowired(required = false) @Qualifier("{{apiEndpoint}}") Endpoint defaultEndpoint, @Autowired(required = false) List<ApiActionBuilderCustomizer> customizers) {
+        return new {{classname}}(defaultEndpoint, customizers);
     }
 
     {{/apis}}

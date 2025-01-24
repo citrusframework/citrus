@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import org.citrusframework.openapi.generator.rest.petstore.PetStoreOpenApi;
 
 @Configuration
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-09T10:28:06.562367500+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-23T18:00:06.769523100+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class PetStoreBeanConfiguration {
 
     @Bean
@@ -28,18 +28,18 @@ public class PetStoreBeanConfiguration {
     }
 
     @Bean(name="PetApi")
-    public PetApi petApi(@Qualifier("petstore.endpoint") Endpoint endpoint, @Autowired(required = false) List<ApiActionBuilderCustomizer> customizers) {
-        return new PetApi(endpoint, customizers);
+    public PetApi petApi(@Autowired(required = false) @Qualifier("petstore.endpoint") Endpoint defaultEndpoint, @Autowired(required = false) List<ApiActionBuilderCustomizer> customizers) {
+        return new PetApi(defaultEndpoint, customizers);
     }
 
     @Bean(name="StoreApi")
-    public StoreApi storeApi(@Qualifier("petstore.endpoint") Endpoint endpoint, @Autowired(required = false) List<ApiActionBuilderCustomizer> customizers) {
-        return new StoreApi(endpoint, customizers);
+    public StoreApi storeApi(@Autowired(required = false) @Qualifier("petstore.endpoint") Endpoint defaultEndpoint, @Autowired(required = false) List<ApiActionBuilderCustomizer> customizers) {
+        return new StoreApi(defaultEndpoint, customizers);
     }
 
     @Bean(name="UserApi")
-    public UserApi userApi(@Qualifier("petstore.endpoint") Endpoint endpoint, @Autowired(required = false) List<ApiActionBuilderCustomizer> customizers) {
-        return new UserApi(endpoint, customizers);
+    public UserApi userApi(@Autowired(required = false) @Qualifier("petstore.endpoint") Endpoint defaultEndpoint, @Autowired(required = false) List<ApiActionBuilderCustomizer> customizers) {
+        return new UserApi(defaultEndpoint, customizers);
     }
 
 }
