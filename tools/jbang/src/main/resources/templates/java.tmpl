@@ -1,0 +1,22 @@
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+
+import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariables;
+import static org.citrusframework.actions.EchoAction.Builder.echo;
+
+public class {{ .Name }} implements Runnable {
+
+    @CitrusResource
+    TestCaseRunner t;
+
+    @Override
+    public void run() {
+        t.given(
+            createVariables().variable("message", "Citrus rocks!")
+        );
+
+        t.then(
+            echo().message("${message}")
+        );
+    }
+}

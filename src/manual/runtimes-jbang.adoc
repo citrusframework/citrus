@@ -1,55 +1,85 @@
 [[runtime-jbang]]
 == JBang
 
-You can run Citrus tests with JBang.
-Running Citrus via JBang does not require any project setup which is fantastic for fast prototyping of integration tests.
-This means you can just run your test case sources directly with:
+You can easily create and run Citrus tests with https://www.jbang.dev/[JBang].
+The JBang tool support in Citrus is described in more detail in https://citrusframework.org/citrus/reference/html#runtime-jbang[reference guide]
 
-Given this very simple Java Citrus test:
+Running Citrus via JBang does not require any project setup which is a fantastic match for fast prototyping of integration tests.
+The JBang command will automatically set up everything you need to run the Citrus test.
+This means you can run your test case sources directly from your command line.
 
-.MyTest.java
-[source,java,indent=0]
-----
-import org.citrusframework.GherkinTestActionRunner;
-import org.citrusframework.annotations.CitrusResource;
+To initialize a test you can run the script `citrus@citrusframework/citrus` with the `init` command as follows:
 
-import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariables;
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
-public class MyTest implements Runnable {
-
-    @CitrusResource
-    GherkinTestActionRunner t;
-
-    @Override
-    public void run() {
-        t.given(
-            createVariables().variable("message", "Citrus rocks!")
-        );
-
-        t.then(
-            echo().message("${message}")
-        );
-    }
-}
-----
-
-You can now run this test Java class without any prior project setup using JBang:
-
-.Run MyTest.java
+.Initialize my-test.yaml
 [source,shell]
 ----
-jbang citrus@citrusframework/citrus run MyTest.java
+jbang citrus@citrusframework/citrus init my-test.yaml
 ----
 
-The command above uses the JBang catalog located on the https://github.com/citrusframework/citrus[Citrus GitHub repository].
-The command will automatically setup everything needed to run the Citrus test.
+The command above uses the JBang catalog `citrus@citrusframework/citrus` located on the https://github.com/citrusframework/citrus[Citrus GitHub repository].
+JBang will automatically resolve all dependencies and execute the command line script tool.
+This initializes the Citrus test file.
+You will find the created test source file in the current directory.
+
+.my-test.yaml
+[source,yaml,indent=0]
+----
+name: my-test
+author: Citrus
+status: FINAL
+description: Sample test in YAML
+variables:
+  - name: message
+    value: Citrus rocks!
+actions:
+  - echo:
+      message: "${message}"
+----
+
+The JBang script is able to initialize any supported Citrus test domain specific language `.java`, `.xml`, `.yaml`, `.groovy` or `.feature`.
+
+You can now run this test source file without any prior project setup using Citrus JBang:
+
+.Run my-test.yaml
+[source,shell]
+----
+jbang citrus@citrusframework/citrus run my-test.yaml
+----
 
 The command output will be like this:
 
 .Output
 [source,shell]
 ----
+INFO 53887 --- [           main] citrusframework.testng.TestNGEngine : Running test source my-test.yaml
+INFO 53887 --- [           main] org.testng.internal.Utils           : [TestNG] Running:
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :        .__  __
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :   ____ |__|/  |________ __ __  ______
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : _/ ___\|  \   __\_  __ \  |  \/  ___/
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : \  \___|  ||  |  |  | \/  |  /\___ \
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :  \___  >__||__|  |__|  |____//____  >
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :      \/                           \/
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : C I T R U S  T E S T S  ${citrus.version}
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : ------------------------------------------------------------------------
+INFO 53887 --- [           main] .citrusframework.actions.EchoAction : Citrus rocks!
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : TEST SUCCESS my-test (org.citrusframework)
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : ------------------------------------------------------------------------
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : CITRUS TEST RESULTS
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : SUCCESS (     3 ms) my-test
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : TOTAL:		1
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : SUCCESS:	1 (100.0%)
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : FAILED:		0 (0.0%)
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : PERFORMANCE:	0 ms
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : ------------------------------------------------------------------------
+
 ===============================================
 Default Suite
 Total tests run: 1, Passes: 1, Failures: 0, Skips: 0
@@ -59,35 +89,41 @@ Total tests run: 1, Passes: 1, Failures: 0, Skips: 0
 [[runtime-jbang-install]]
 === Install Citrus JBang app
 
-For a more convenient way to use the Citrus JBang scripts you can install Citrus as a JBang app.
+For a more convenient command line usage you can install Citrus as a JBang app.
 
-.Install Citrus app
+.Install Citrus as JBang app
 [source,shell]
 ----
 jbang trust add https://github.com/citrusframework/citrus/
 jbang app install citrus@citrusframework/citrus
 ----
 
-Now you can just call:
+Now you can just call `citrus` and create and run tests with Citrus JBang.
 
-.Run MyTest.java
+.Run my-test.yaml
 [source,shell]
 ----
-citrus run MyTest.java
+citrus run my-test.yaml
 ----
 
 [[runtime-jbang-run]]
 === Run tests
 
 You can directly run test sources with Citrus JBang.
-This includes test sources written in Java, XML, YAML, Cucumber.
+This includes test sources written in Java (`.java`), XML (`.xml`), YAML (`.yaml`), Groovy (`.groovy`) or as a Cucumber Gherkin feature file (`.feature`).
 
 ==== Java test sources
+
+.Initialize MyTest.java
+[source,shell]
+----
+citrus init MyTest.java
+----
 
 .MyTest.java
 [source,java,indent=0]
 ----
-import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 
 import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariables;
@@ -96,7 +132,7 @@ import static org.citrusframework.actions.EchoAction.Builder.echo;
 public class MyTest implements Runnable {
 
     @CitrusResource
-    GherkinTestActionRunner t;
+    TestCaseRunner t;
 
     @Override
     public void run() {
@@ -118,6 +154,12 @@ citrus run MyTest.java
 ----
 
 ==== XML test sources
+
+.Initialize my-test.xml
+[source,shell]
+----
+citrus init my-test.xml
+----
 
 .my-test.xml
 [source,xml,indent=0]
@@ -143,6 +185,12 @@ citrus run my-test.xml
 
 ==== YAML test sources
 
+.Initialize my-test.yaml
+[source,shell]
+----
+citrus init my-test.yaml
+----
+
 .my-test.yaml
 [source,yaml,indent=0]
 ----
@@ -163,6 +211,12 @@ citrus run my-test.yaml
 ----
 
 ==== Groovy test sources
+
+.Initialize my-test.groovy
+[source,shell]
+----
+citrus init my-test.groovy
+----
 
 .my-test.groovy
 [source,groovy,indent=0]
@@ -189,6 +243,12 @@ citrus run my-test.groovy
 
 ==== Cucumber feature sources
 
+.Initialize my-test.feature
+[source,shell]
+----
+citrus init my-test.feature
+----
+
 .my-test.feature
 [source,gherkin,indent=0]
 ----
@@ -205,11 +265,12 @@ Feature: EchoTest
 .Run my-test.feature
 [source,shell]
 ----
-citrus run my-test.feature
+jbang --deps org.citrusframework.yaks:yaks-standard:0.20.0 citrus run my-test.feature
 ----
 
-NOTE: Many of the predefined Cucumber steps in Citrus are provided in a separate Citrus child project called https://github.com/citrusframework/yaks[YAKS].
-You may need to add additional project dependencies for that steps to be loaded as part of the JBang script.
+NOTE: Many of the predefined Cucumber steps (e.g. `Then print '<message>'`) in Citrus are provided in a separate Citrus child project called https://github.com/citrusframework/yaks[YAKS].
+You need to add additional project dependencies for that steps to be loaded as part of the JBang script.
+The `--deps` option adds dependencies using Maven artifact coordinates.
 You may add the additional modules to the `jbang.properties` as described in the next section.
 
 [[runtime-jbang-dependencies]]
@@ -237,7 +298,9 @@ The easiest way to do this is to create a `jbang.properties` file that defines t
 [source,properties]
 ----
 # Declare required additional dependencies
-run.deps=org.citrusframework:citrus-camel:4.6.0-SNAPSHOT,org.citrusframework:citrus-testcontainers:4.6.0-SNAPSHOT,org.citrusframework:citrus-kafka:4.6.0-SNAPSHOT
+run.deps=org.citrusframework:citrus-camel:${citrus.version},\
+org.citrusframework:citrus-testcontainers:${citrus.version},\
+org.citrusframework:citrus-kafka:${citrus.version}
 ----
 
 The file above adds the modules `citrus-camel`, `citrus-testcontainers` and `citrus-kafka` so you can use them in your JBang Citrus test source.
@@ -245,7 +308,7 @@ The file above adds the modules `citrus-camel`, `citrus-testcontainers` and `cit
 The `jbang.properties` file may be located right next to the test source file or in your user home directory for global settings.
 
 IMPORTANT: In case you want to run Cucumber BDD Gherkin feature files and use the predefined steps included in the https://github.com/citrusframework/yaks[YAKS] project,
-you need to add this YAKS runtime dependency accordingly: `org.citrusframework.yaks:yaks-runtime-core:0.21.0-SNAPSHOT`
+you need to add this YAKS runtime dependency accordingly: `org.citrusframework.yaks:yaks-standard:0.20.0`
 
 [[runtime-jbang-clipboard]]
 === Run from clipboard
@@ -269,4 +332,11 @@ These tests may be started
 [source,shell]
 ----
 citrus ls
+----
+
+.Command output
+[source,shell]
+----
+PID   NAME         STATUS  AGE
+19201 my-test.yaml Running 20s
 ----
