@@ -71,28 +71,6 @@
                                 <element name="CorrelationId" value="${correlationId}"/>
                             </header>
                         </receive>
-
-                        <receive endpoint="syncJmsTopicSubscriberEndpoint">
-                            <description>
-                                Receive sync hello request from jms topic
-                            </description>
-                            <message>
-                                <data>
-                                    <![CDATA[
-                                      <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
-                                          <MessageId>${messageId}</MessageId>
-                                          <CorrelationId>${correlationId}</CorrelationId>
-                                          <User>${user}</User>
-                                          <Text>Hello TestFramework</Text>
-                                      </HelloRequest>
-                                    ]]>
-                                </data>
-                            </message>
-                            <header>
-                                <element name="Operation" value="sayHello"/>
-                                <element name="CorrelationId" value="${correlationId}"/>
-                            </header>
-                        </receive>
                     </parallel>
 
                     <send endpoint="syncJmsTopicSubscriberEndpoint">
