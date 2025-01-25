@@ -661,8 +661,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 4.5.1,</span>
-<span id="revdate">2025-01-20</span>
+<span id="revnumber">version 4.5.2,</span>
+<span id="revdate">2025-01-25</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -1176,7 +1176,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 4.5.1</strong></p>
+<p><strong>Version: 4.5.2</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -3412,52 +3412,55 @@ The configuration class is automatically loaded when the Main CLI is running.</p
 <div class="sect2">
 <h3 id="runtime-jbang"><a class="anchor" href="#runtime-jbang"></a><a class="link" href="#runtime-jbang">4.7. JBang</a></h3>
 <div class="paragraph">
-<p>You can run Citrus tests with JBang.
-Running Citrus via JBang does not require any project setup which is fantastic for fast prototyping of integration tests.
-This means you can just run your test case sources directly with:</p>
+<p>You can easily create and run Citrus tests with <a href="https://www.jbang.dev/">JBang</a>.
+The JBang tool support in Citrus is described in more detail in <a href="https://citrusframework.org/citrus/reference/html#runtime-jbang">reference guide</a></p>
 </div>
 <div class="paragraph">
-<p>Given this very simple Java Citrus test:</p>
+<p>Running Citrus via JBang does not require any project setup which is a fantastic match for fast prototyping of integration tests.
+The JBang command will automatically set up everything you need to run the Citrus test.
+This means you can run your test case sources directly from your command line.</p>
+</div>
+<div class="paragraph">
+<p>To initialize a test you can run the script <code>citrus@citrusframework/citrus</code> with the <code>init</code> command as follows:</p>
 </div>
 <div class="listingblock">
-<div class="title">MyTest.java</div>
+<div class="title">Initialize my-test.yaml</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">org.citrusframework.GherkinTestActionRunner</span>;
-<span class="keyword">import</span> <span class="include">org.citrusframework.annotations.CitrusResource</span>;
-
-<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.citrusframework.actions.CreateVariablesAction.Builder.createVariables</span>;
-<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.citrusframework.actions.EchoAction.Builder.echo</span>;
-
-<span class="directive">public</span> <span class="type">class</span> <span class="class">MyTest</span> <span class="directive">implements</span> <span class="predefined-type">Runnable</span> {
-
-    <span class="annotation">@CitrusResource</span>
-    GherkinTestActionRunner t;
-
-    <span class="annotation">@Override</span>
-    <span class="directive">public</span> <span class="type">void</span> run() {
-        t.given(
-            createVariables().variable(<span class="string"><span class="delimiter">&quot;</span><span class="content">message</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Citrus rocks!</span><span class="delimiter">&quot;</span></span>)
-        );
-
-        t.then(
-            echo().message(<span class="string"><span class="delimiter">&quot;</span><span class="content">${message}</span><span class="delimiter">&quot;</span></span>)
-        );
-    }
-}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">jbang citrus@citrusframework/citrus init my-test.yaml</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can now run this test Java class without any prior project setup using JBang:</p>
+<p>The command above uses the JBang catalog <code>citrus@citrusframework/citrus</code> located on the <a href="https://github.com/citrusframework/citrus">Citrus GitHub repository</a>.
+JBang will automatically resolve all dependencies and execute the command line script tool.
+This initializes the Citrus test file.
+You will find the created test source file in the current directory.</p>
 </div>
 <div class="listingblock">
-<div class="title">Run MyTest.java</div>
+<div class="title">my-test.yaml</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">jbang citrus@citrusframework/citrus run MyTest.java</code></pre>
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">my-test</span></span>
+<span class="key">author</span>: <span class="string"><span class="content">Citrus</span></span>
+<span class="key">status</span>: <span class="string"><span class="content">FINAL</span></span>
+<span class="key">description</span>: <span class="string"><span class="content">Sample test in YAML</span></span>
+<span class="key">variables</span>:
+  - <span class="string"><span class="content">name: message</span></span>
+    <span class="key">value</span>: <span class="string"><span class="content">Citrus rocks!</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">echo:</span><span class="content">
+      message: &quot;${message}&quot;</span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The command above uses the JBang catalog located on the <a href="https://github.com/citrusframework/citrus">Citrus GitHub repository</a>.
-The command will automatically setup everything needed to run the Citrus test.</p>
+<p>The JBang script is able to initialize any supported Citrus test domain specific language <code>.java</code>, <code>.xml</code>, <code>.yaml</code>, <code>.groovy</code> or <code>.feature</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can now run this test source file without any prior project setup using Citrus JBang:</p>
+</div>
+<div class="listingblock">
+<div class="title">Run my-test.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">jbang citrus@citrusframework/citrus run my-test.yaml</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>The command output will be like this:</p>
@@ -3465,7 +3468,36 @@ The command will automatically setup everything needed to run the Citrus test.</
 <div class="listingblock">
 <div class="title">Output</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">===============================================
+<pre class="CodeRay highlight"><code data-lang="shell">INFO 53887 --- [           main] citrusframework.testng.TestNGEngine : Running test source my-test.yaml
+INFO 53887 --- [           main] org.testng.internal.Utils           : [TestNG] Running:
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :        .__  __
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :   ____ |__|/  |________ __ __  ______
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : _/ ___\|  \   __\_  __ \  |  \/  ___/
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : \  \___|  ||  |  |  | \/  |  /\___ \
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :  \___  &gt;__||__|  |__|  |____//____  &gt;
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :      \/                           \/
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : C I T R U S  T E S T S  ${citrus.version}
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : ------------------------------------------------------------------------
+INFO 53887 --- [           main] .citrusframework.actions.EchoAction : Citrus rocks!
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : TEST SUCCESS my-test (org.citrusframework)
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : ------------------------------------------------------------------------
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : CITRUS TEST RESULTS
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : SUCCESS (     3 ms) my-test
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : TOTAL:                1
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : SUCCESS:        1 (100.0%)
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : FAILED:                0 (0.0%)
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : PERFORMANCE:        0 ms
+INFO 53887 --- [           main] rusframework.report.LoggingReporter :
+INFO 53887 --- [           main] rusframework.report.LoggingReporter : ------------------------------------------------------------------------
+
+===============================================
 Default Suite
 Total tests run: 1, Passes: 1, Failures: 0, Skips: 0
 ===============================================</code></pre>
@@ -3474,22 +3506,22 @@ Total tests run: 1, Passes: 1, Failures: 0, Skips: 0
 <div class="sect3">
 <h4 id="runtime-jbang-install"><a class="anchor" href="#runtime-jbang-install"></a><a class="link" href="#runtime-jbang-install">4.7.1. Install Citrus JBang app</a></h4>
 <div class="paragraph">
-<p>For a more convenient way to use the Citrus JBang scripts you can install Citrus as a JBang app.</p>
+<p>For a more convenient command line usage you can install Citrus as a JBang app.</p>
 </div>
 <div class="listingblock">
-<div class="title">Install Citrus app</div>
+<div class="title">Install Citrus as JBang app</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="shell">jbang trust add https://github.com/citrusframework/citrus/
 jbang app install citrus@citrusframework/citrus</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Now you can just call:</p>
+<p>Now you can just call <code>citrus</code> and create and run tests with Citrus JBang.</p>
 </div>
 <div class="listingblock">
-<div class="title">Run MyTest.java</div>
+<div class="title">Run my-test.yaml</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">citrus run MyTest.java</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">citrus run my-test.yaml</code></pre>
 </div>
 </div>
 </div>
@@ -3497,14 +3529,20 @@ jbang app install citrus@citrusframework/citrus</code></pre>
 <h4 id="runtime-jbang-run"><a class="anchor" href="#runtime-jbang-run"></a><a class="link" href="#runtime-jbang-run">4.7.2. Run tests</a></h4>
 <div class="paragraph">
 <p>You can directly run test sources with Citrus JBang.
-This includes test sources written in Java, XML, YAML, Cucumber.</p>
+This includes test sources written in Java (<code>.java</code>), XML (<code>.xml</code>), YAML (<code>.yaml</code>), Groovy (<code>.groovy</code>) or as a Cucumber Gherkin feature file (<code>.feature</code>).</p>
 </div>
 <div class="sect4">
 <h5 id="java-test-sources"><a class="anchor" href="#java-test-sources"></a><a class="link" href="#java-test-sources">Java test sources</a></h5>
 <div class="listingblock">
+<div class="title">Initialize MyTest.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">citrus init MyTest.java</code></pre>
+</div>
+</div>
+<div class="listingblock">
 <div class="title">MyTest.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">org.citrusframework.GherkinTestActionRunner</span>;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">org.citrusframework.TestCaseRunner</span>;
 <span class="keyword">import</span> <span class="include">org.citrusframework.annotations.CitrusResource</span>;
 
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.citrusframework.actions.CreateVariablesAction.Builder.createVariables</span>;
@@ -3513,7 +3551,7 @@ This includes test sources written in Java, XML, YAML, Cucumber.</p>
 <span class="directive">public</span> <span class="type">class</span> <span class="class">MyTest</span> <span class="directive">implements</span> <span class="predefined-type">Runnable</span> {
 
     <span class="annotation">@CitrusResource</span>
-    GherkinTestActionRunner t;
+    TestCaseRunner t;
 
     <span class="annotation">@Override</span>
     <span class="directive">public</span> <span class="type">void</span> run() {
@@ -3537,6 +3575,12 @@ This includes test sources written in Java, XML, YAML, Cucumber.</p>
 </div>
 <div class="sect4">
 <h5 id="xml-test-sources"><a class="anchor" href="#xml-test-sources"></a><a class="link" href="#xml-test-sources">XML test sources</a></h5>
+<div class="listingblock">
+<div class="title">Initialize my-test.xml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">citrus init my-test.xml</code></pre>
+</div>
+</div>
 <div class="listingblock">
 <div class="title">my-test.xml</div>
 <div class="content">
@@ -3563,6 +3607,12 @@ This includes test sources written in Java, XML, YAML, Cucumber.</p>
 <div class="sect4">
 <h5 id="yaml-test-sources"><a class="anchor" href="#yaml-test-sources"></a><a class="link" href="#yaml-test-sources">YAML test sources</a></h5>
 <div class="listingblock">
+<div class="title">Initialize my-test.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">citrus init my-test.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
 <div class="title">my-test.yaml</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">EchoTest</span></span>
@@ -3584,6 +3634,12 @@ This includes test sources written in Java, XML, YAML, Cucumber.</p>
 </div>
 <div class="sect4">
 <h5 id="groovy-test-sources"><a class="anchor" href="#groovy-test-sources"></a><a class="link" href="#groovy-test-sources">Groovy test sources</a></h5>
+<div class="listingblock">
+<div class="title">Initialize my-test.groovy</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">citrus init my-test.groovy</code></pre>
+</div>
+</div>
 <div class="listingblock">
 <div class="title">my-test.groovy</div>
 <div class="content">
@@ -3611,6 +3667,12 @@ actions {
 <div class="sect4">
 <h5 id="cucumber-feature-sources"><a class="anchor" href="#cucumber-feature-sources"></a><a class="link" href="#cucumber-feature-sources">Cucumber feature sources</a></h5>
 <div class="listingblock">
+<div class="title">Initialize my-test.feature</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">citrus init my-test.feature</code></pre>
+</div>
+</div>
+<div class="listingblock">
 <div class="title">my-test.feature</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="gherkin">Feature: EchoTest
@@ -3626,7 +3688,7 @@ actions {
 <div class="listingblock">
 <div class="title">Run my-test.feature</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">citrus run my-test.feature</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">jbang --deps org.citrusframework.yaks:yaks-standard:0.20.0 citrus run my-test.feature</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -3636,8 +3698,9 @@ actions {
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Many of the predefined Cucumber steps in Citrus are provided in a separate Citrus child project called <a href="https://github.com/citrusframework/yaks">YAKS</a>.
-You may need to add additional project dependencies for that steps to be loaded as part of the JBang script.
+Many of the predefined Cucumber steps (e.g. <code>Then print '&lt;message&gt;'</code>) in Citrus are provided in a separate Citrus child project called <a href="https://github.com/citrusframework/yaks">YAKS</a>.
+You need to add additional project dependencies for that steps to be loaded as part of the JBang script.
+The <code>--deps</code> option adds dependencies using Maven artifact coordinates.
 You may add the additional modules to the <code>jbang.properties</code> as described in the next section.
 </td>
 </tr>
@@ -3692,7 +3755,9 @@ In case your tests uses an additional feature from the Citrus project you may ne
 <div class="title">jbang.properties</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="properties"># Declare required additional dependencies
-run.deps=org.citrusframework:citrus-camel:4.6.0-SNAPSHOT,org.citrusframework:citrus-testcontainers:4.6.0-SNAPSHOT,org.citrusframework:citrus-kafka:4.6.0-SNAPSHOT</code></pre>
+run.deps=org.citrusframework:citrus-camel:${citrus.version},\
+org.citrusframework:citrus-testcontainers:${citrus.version},\
+org.citrusframework:citrus-kafka:${citrus.version}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3709,7 +3774,7 @@ run.deps=org.citrusframework:citrus-camel:4.6.0-SNAPSHOT,org.citrusframework:cit
 </td>
 <td class="content">
 In case you want to run Cucumber BDD Gherkin feature files and use the predefined steps included in the <a href="https://github.com/citrusframework/yaks">YAKS</a> project,
-you need to add this YAKS runtime dependency accordingly: <code>org.citrusframework.yaks:yaks-runtime-core:0.21.0-SNAPSHOT</code>
+you need to add this YAKS runtime dependency accordingly: <code>org.citrusframework.yaks:yaks-standard:0.20.0</code>
 </td>
 </tr>
 </table>
@@ -3738,6 +3803,13 @@ These tests may be started</p>
 <div class="title">List running tests</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="shell">citrus ls</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Command output</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">PID   NAME         STATUS  AGE
+19201 my-test.yaml Running 20s</code></pre>
 </div>
 </div>
 </div>
@@ -44427,8 +44499,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 4.5.1<br>
-Last updated 2025-01-20 18:54:26 +0100
+Version 4.5.2<br>
+Last updated 2025-01-25 13:06:28 +0100
 </div>
 </div>
 <style>
