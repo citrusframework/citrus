@@ -600,6 +600,13 @@ In addition to that you need to add a client id on the connection factory so the
 subscription with the client address. Also we use the `SingleConnectionFactory` implementation of Spring as a connection factory
 wrapper so we do not fail because of multiple connections with the same durable subscriber id.
 
+[[jms-topic-purging]]
+== JMS topic purging
+As mentioned earlier, auto-start topic subscribers consume all messages sent to the topic during the test run,
+while durable subscribers even consume messages sent outside the test run and store them immediately in an internal cache.
+To ensure the test starts with a clean internal cache, it is necessary to purge it before the test begins.
+The purge-process and underlying concepts are explained in detail in the section: link:#actions-purging-endpoints[Purging Endpoints].
+
 [[jms-message-headers]]
 == JMS message headers
 
