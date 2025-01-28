@@ -602,10 +602,12 @@ wrapper so we do not fail because of multiple connections with the same durable 
 
 [[jms-topic-purging]]
 == JMS topic purging
-As mentioned earlier, auto-start topic subscribers consume all messages sent to the topic during the test run,
-while durable subscribers even consume messages sent outside the test run and store them immediately in an internal cache.
-To ensure the test starts with a clean internal cache, it is necessary to purge it before the test begins.
-The purge-process and underlying concepts are explained in detail in the section: link:#actions-purging-endpoints[Purging Endpoints].
+As mentioned earlier, topic subscribers with `autoStart=true` consume all messages sent to the topic during the test run.
+Durable topic subscribers even consume messages sent outside the test run.
+Both cache the consumed messages internally in an in-memory-message-queue.
+To ensure that tests start with a clean in-memory-message-queue,
+it is necessary to purge the topic-subscribtion JmsEndpoint (which is defined in the code examples above) before the test begins.
+Endpoint-purging is explained in detail in this section: link:#actions-purging-endpoints[Purging Endpoints].
 
 [[jms-message-headers]]
 == JMS message headers
