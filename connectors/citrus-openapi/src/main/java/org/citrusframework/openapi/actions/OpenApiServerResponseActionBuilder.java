@@ -18,6 +18,8 @@ package org.citrusframework.openapi.actions;
 
 import static java.lang.Integer.parseInt;
 import static java.util.Collections.singletonMap;
+import static org.citrusframework.openapi.AutoFillType.NONE;
+import static org.citrusframework.openapi.AutoFillType.REQUIRED;
 import static org.citrusframework.openapi.OpenApiMessageType.RESPONSE;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
@@ -145,7 +147,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
         private final String statusCode;
         private final String accept;
 
-        private AutoFillType autoFillType = OpenApiSettings.getResponseAutoFillRandomValues();
+        private AutoFillType autoFill;
 
         public OpenApiServerResponseMessageBuilder(HttpMessage httpMessage,
             OpenApiSpecificationSource openApiSpecificationSource,
@@ -159,9 +161,8 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             this.accept = accept;
         }
 
-        // TODO: properly document autofill feature
         public OpenApiServerResponseMessageBuilder autoFill(AutoFillType autoFillType) {
-            this.autoFillType = autoFillType;
+            this.autoFill = autoFillType;
             return this;
         }
 
@@ -169,6 +170,11 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
         public Message build(TestContext context, String messageType) {
             OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(
                 context.getReferenceResolver());
+
+            if (autoFill == null) {
+                 autoFill = OpenApiSettings.getResponseAutoFillRandomValues();
+            }
+
             if (STATUS_CODE_PATTERN.matcher(statusCode).matches()) {
                 getMessage().status(HttpStatus.valueOf(parseInt(statusCode)));
             } else {
@@ -208,7 +214,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             if (responseForRandomGeneration.isPresent()) {
                 OasResponse oasResponse = responseForRandomGeneration.get();
 
-                if (autoFillType != AutoFillType.NONE) {
+                if (autoFill != NONE) {
                     buildRandomHeaders(context, openApiSpecification, oasResponse);
                     buildRandomPayload(openApiSpecification, operation, oasResponse);
                 }
@@ -227,7 +233,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
 
         private void buildRandomHeaders(TestContext context,
             OpenApiSpecification openApiSpecification, OasResponse response) {
-            if (autoFillType == AutoFillType.NONE) {
+            if (autoFill == NONE) {
                 return;
             }
 
@@ -236,10 +242,10 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
                 entry.getKey());
 
             Map<String, OasSchema> headersToFill;
-            if (openApiSpecification.isGenerateOptionalFields()) {
-                headersToFill = OasModelHelper.getHeaders(response);
-            } else {
+            if (autoFill == REQUIRED) {
                 headersToFill = OasModelHelper.getRequiredHeaders(response);
+            } else {
+                headersToFill = OasModelHelper.getHeaders(response);
             }
 
             headersToFill.entrySet().stream()

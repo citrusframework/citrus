@@ -72,7 +72,6 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
         when(openapi("petstore-v3")
             .client(httpClient)
             .send("getPetById")
-            .autoFill(AutoFillType.ALL)
             .message()
             .fork(true));
 

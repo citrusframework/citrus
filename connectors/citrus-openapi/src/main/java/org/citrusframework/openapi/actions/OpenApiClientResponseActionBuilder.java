@@ -80,11 +80,6 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
         this.operationId = operationId;
 
         // Set json as default instead of xml. This is most common for rest.
-        // TODO: we need to specify the type on message builder support level. So actually we need to
-        // 1. determine the response from operationId and statusCode
-        // 2. If status code is missing, take the most probable as response as determined by OasModelHelper.getResponseForRandomGeneration
-        // 3. Determine message type from response and set it on builder support
-        // If we do not set a proper type here, validations may not even be executed. E.g. simple json message validation.
         this.getMessageBuilderSupport().type(JSON);
     }
 

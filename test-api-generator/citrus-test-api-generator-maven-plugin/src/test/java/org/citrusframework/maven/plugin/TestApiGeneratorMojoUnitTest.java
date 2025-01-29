@@ -55,8 +55,7 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
 
     @Mock
     private MojoExecution mojoExecutionMock;
-// TODO: test real world scenario with prefix=manageBooking and prefix=ManageBooking (should result in ManageBookingNamespaceHandler instead of manageBookingNamespaceHandler. Also check namespace name it contains managebooking - is that reasonable, also the api yaml cannot be loaded because of capital letters )?
-    // TODO: Account Number as OpenAPI Parameter Name is allowed but leads to error as the space needs to be url encoded.
+
     static Stream<Arguments> replaceDynamicVarsInPattern() {
         return Stream.of(
             arguments("%PREFIX%-aa-%VERSION%", "MyPrefix", "1", false, "MyPrefix-aa-1"),

@@ -12,7 +12,7 @@ import org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStoreOpenApi
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-23T18:00:07.512935700+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-29T23:14:48.524898+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class ExtPetStoreNamespaceHandler extends NamespaceHandlerSupport {
 
     @Override
@@ -201,6 +201,12 @@ public class ExtPetStoreNamespaceHandler extends NamespaceHandlerSupport {
             registerOperationParsers(ExtPetApi.class,"get-pet-with-simple-style-object-header", "getPetWithSimpleStyleObjectHeader", "/pet/header/simple/object",
                 ExtPetApi.GetPetWithSimpleStyleObjectHeaderSendActionBuilder.class,
                 ExtPetApi.GetPetWithSimpleStyleObjectHeaderReceiveActionBuilder.class,
+                new String[]{ "petId" },
+            new String[]{  });
+
+            registerOperationParsers(ExtPetApi.class,"pet-without-operation-id-pet-id-get", "GET_/api/v3/ext/pet/without-operation-id/{petId}", "/pet/without-operation-id/{petId}",
+                ExtPetApi.PetWithoutOperationIdPetIdGetSendActionBuilder.class,
+                ExtPetApi.PetWithoutOperationIdPetIdGetReceiveActionBuilder.class,
                 new String[]{ "petId" },
             new String[]{  });
 

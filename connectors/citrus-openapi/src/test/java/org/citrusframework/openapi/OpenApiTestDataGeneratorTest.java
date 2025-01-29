@@ -48,6 +48,7 @@ import static org.citrusframework.openapi.OpenApiConstants.TYPE_ARRAY;
 import static org.citrusframework.openapi.OpenApiConstants.TYPE_INTEGER;
 import static org.citrusframework.openapi.OpenApiConstants.TYPE_NUMBER;
 import static org.citrusframework.openapi.OpenApiConstants.TYPE_STRING;
+import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -226,7 +227,7 @@ public class OpenApiTestDataGeneratorTest {
         testSchema.exclusiveMaximum = exclusiveMaximum;
 
         for (int i = 0; i < 1000; i++) {
-            String randomValue = OpenApiTestDataGenerator.createOutboundPayload(
+            String randomValue = createOutboundPayload(
                     testSchema, openApiSpecification);
             String finalRandomValue = testContext.resolveDynamicValue(randomValue);
             BigDecimal value = new BigDecimal(finalRandomValue);
@@ -291,7 +292,7 @@ public class OpenApiTestDataGeneratorTest {
         assertNotNull(schema);
 
         for (int i = 0; i < 100; i++) {
-            String randomValue = OpenApiTestDataGenerator.createOutboundPayload(schema, openApiSpecification);
+            String randomValue = createOutboundPayload(schema, openApiSpecification);
             assertNotNull(randomValue);
 
             String finalJsonAsText = testContext.replaceDynamicContentInString(randomValue);
@@ -324,7 +325,7 @@ public class OpenApiTestDataGeneratorTest {
         arraySchema.items = stringSchema;
 
         for (int i = 0; i < 10; i++) {
-            String randomValue = OpenApiTestDataGenerator.createOutboundPayload(arraySchema, openApiSpecification);
+            String randomValue = createOutboundPayload(arraySchema, openApiSpecification);
             int nElements = StringUtils.countMatches(randomValue, "citrus:randomString");
             assertTrue(nElements > 0);
         }
@@ -344,7 +345,7 @@ public class OpenApiTestDataGeneratorTest {
         arraySchema.items = stringSchema;
 
         for (int i = 0; i < 10; i++) {
-            String randomValue = OpenApiTestDataGenerator.createOutboundPayload(arraySchema, openApiSpecification);
+            String randomValue = createOutboundPayload(arraySchema, openApiSpecification);
             int nElements = StringUtils.countMatches(randomValue, "citrus:randomString(15)");
             assertTrue(nElements <= 5);
         }
@@ -366,7 +367,7 @@ public class OpenApiTestDataGeneratorTest {
 
         Pattern pattern = Pattern.compile("citrus:randomString\\(1[0-5],MIXED,true,10\\)");
         for (int i = 0; i < 100; i++) {
-            String randomArrayValue = OpenApiTestDataGenerator.createOutboundPayload(arraySchema, openApiSpecification);
+            String randomArrayValue = createOutboundPayload(arraySchema, openApiSpecification);
 
             Matcher matcher = pattern.matcher(randomArrayValue);
             int matches = 0;

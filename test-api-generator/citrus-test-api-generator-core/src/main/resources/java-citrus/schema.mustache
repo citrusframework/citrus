@@ -27,6 +27,14 @@
         schemaLocation="http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd"
     />
 
+    <xs:simpleType name="AutofillType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="REQUIRED"/>
+            <xs:enumeration value="ALL"/>
+            <xs:enumeration value="NONE"/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:complexType name="AbstractTestApiSendRequestWithoutBodyType">
         <xs:sequence>
             <xs:element name="param" minOccurs="0" maxOccurs="unbounded" type="http:ParamType"/>
@@ -48,6 +56,7 @@
         <xs:attribute name="uri" type="xs:string"/>
         <xs:attribute name="actor" type="xs:string"/>
         <xs:attribute name="fork" type="xs:boolean"/>
+        <xs:attribute name="autofill" type="AutofillType"/>
     </xs:complexType>
 
     <xs:complexType name="AbstractTestApiReceiveResponseType">

@@ -16,13 +16,17 @@
 
 package org.citrusframework.openapi;
 
+import static org.citrusframework.openapi.OpenApiSpecification.determineResourceAlias;
 import static org.citrusframework.openapi.validation.OpenApiValidationPolicy.IGNORE;
 import static org.citrusframework.openapi.validation.OpenApiValidationPolicy.REPORT;
 import static org.citrusframework.openapi.validation.OpenApiValidationPolicy.STRICT;
 import static org.citrusframework.util.FileUtils.readToString;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.isA;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -33,7 +37,9 @@ import static org.testng.Assert.assertTrue;
 
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
@@ -108,11 +114,9 @@ public class OpenApiSpecificationTest {
                     invocation -> new ByteArrayInputStream(PING_API_STRING.getBytes(
                             StandardCharsets.UTF_8)));
 
-            URL urlMock = mock();
-            when(urlMock.getProtocol()).thenReturn(urlString.substring(0, urlString.indexOf(":")));
-            when(urlMock.toString()).thenReturn(urlString);
-            when(urlMock.openConnection()).thenReturn(httpsURLConnectionMock);
-            return urlMock;
+            URL urlSpy = spy(new URL(urlString));
+            when(urlSpy.openConnection()).thenReturn(httpsURLConnectionMock);
+            return urlSpy;
         } catch (Exception e) {
             throw new CitrusRuntimeException("Unable to mock spec url!", e);
         }
@@ -430,18 +434,6 @@ public class OpenApiSpecificationTest {
     }
 
     @Test
-    public void shouldSeAndProvideProperties() {
-
-        openApiSpecification.setGenerateOptionalFields(true);
-
-        assertTrue(openApiSpecification.isGenerateOptionalFields());
-
-        openApiSpecification.setGenerateOptionalFields(false);
-
-        assertFalse(openApiSpecification.isGenerateOptionalFields());
-    }
-
-    @Test
     public void shouldReturnSpecUrlInAbsenceOfRequestUrl() {
 
         openApiSpecification.setSpecUrl(PING_API_HTTP_URL_STRING);
@@ -454,5 +446,30 @@ public class OpenApiSpecificationTest {
 
         assertEquals(openApiSpecification.getSpecUrl(), "/ping-api.yaml");
         assertEquals(openApiSpecification.getRequestUrl(), "http://or.citrus.sample");
+    }
+
+    @Test
+    public void testResolveResourceAliasFromFile() {
+        File fileMock = mock();
+        doReturn("MyApi.json").when(fileMock).getName();
+        Resource resourceMock = mock();
+        doReturn(fileMock).when(resourceMock).getFile();
+
+        Optional<String> alias = determineResourceAlias(resourceMock);
+        assertTrue(alias.isPresent());
+        assertEquals(alias.get(), "MyApi");
+    }
+
+    @Test
+    public void testResolveResourceAliasFromUrl() throws MalformedURLException {
+        URL urlMock = mock();
+        doReturn("/C:/segment1/segment2/MyApi.json").when(urlMock).getPath();
+        Resource resourceMock = mock();
+        doThrow(new RuntimeException("Forced Exception")).when(resourceMock).getFile();
+        doReturn(urlMock).when(resourceMock).getURL();
+
+        Optional<String> alias = determineResourceAlias(resourceMock);
+        assertTrue(alias.isPresent());
+        assertEquals(alias.get(), "MyApi");
     }
 }

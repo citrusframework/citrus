@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStoreOpenApi;
 
 @Configuration
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-23T18:00:07.512935700+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-01-29T23:14:48.524898+01:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
 public class ExtPetStoreBeanConfiguration {
 
     @Bean

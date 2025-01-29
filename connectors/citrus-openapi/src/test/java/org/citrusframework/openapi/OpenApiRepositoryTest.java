@@ -17,22 +17,14 @@
 package org.citrusframework.openapi;
 
 import static java.util.Collections.singletonList;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import org.citrusframework.openapi.validation.OpenApiValidationPolicy;
-import org.citrusframework.spi.Resource;
 import org.testng.annotations.Test;
 
 public class OpenApiRepositoryTest {
@@ -87,31 +79,6 @@ public class OpenApiRepositoryTest {
             singletonList("org/citrusframework/openapi/faulty/faulty-ping-api.yaml"));
 
         assertThrows(openApiRepository::initialize);
-    }
-
-    @Test
-    public void shouldResolveResourceAliasFromFile() {
-        File fileMock = mock();
-        doReturn("MyApi.json").when(fileMock).getName();
-        Resource resourceMock = mock();
-        doReturn(fileMock).when(resourceMock).getFile();
-
-        Optional<String> alias = OpenApiRepository.determineResourceAlias(resourceMock);
-        assertTrue(alias.isPresent());
-        assertEquals(alias.get(), "MyApi");
-    }
-
-    @Test
-    public void shouldResolveResourceAliasFromUrl() throws MalformedURLException {
-        URL urlMock = mock();
-        doReturn("/C:/segment1/segment2/MyApi.json").when(urlMock).getPath();
-        Resource resourceMock = mock();
-        doThrow(new RuntimeException("Forced Exception")).when(resourceMock).getFile();
-        doReturn(urlMock).when(resourceMock).getURL();
-
-        Optional<String> alias = OpenApiRepository.determineResourceAlias(resourceMock);
-        assertTrue(alias.isPresent());
-        assertEquals(alias.get(), "MyApi");
     }
 
     @Test

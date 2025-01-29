@@ -243,6 +243,39 @@ class GeneratedRestApiIT {
         }
     }
 
+    @Nested
+    class OperationWithoutOperationId {
+
+        @Test
+        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withoutOperationIdTest")
+        void xml() {
+        }
+
+        @Test
+        void java_operation_without_operationId(@CitrusResource TestCaseRunner runner) {
+            runner.variable("petId", "1234");
+
+            runner.when(extPetApi.sendPetWithoutOperationIdPetIdGet(1234)
+                .fork(true));
+            runner.then(http().server(httpServer)
+                .receive()
+                .get("/api/v3/ext/pet/without-operation-id/1234")
+                .message());
+
+            runner.then(http().server(httpServer)
+                .send()
+                .response(OK)
+                .message()
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(Resources.create(
+                    "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
+                .contentType(APPLICATION_JSON_VALUE));
+
+            runner.when(extPetApi
+                .receivePetWithoutOperationIdPetIdGet(OK));
+
+        }
+    }
     /**
      * Demonstrates usage of parameter serialization according to
      * <a href="https://swagger.io/docs/specification/serialization/">...</a>
@@ -2501,7 +2534,7 @@ class GeneratedRestApiIT {
 
             runner.then(http().server(otherHttpServer)
                 .receive()
-                .get("/api/v3/ext/pet/simple/object/uuid/" + uuid.toString())
+                .get("/api/v3/ext/pet/simple/object/uuid/" + uuid)
                 .message()
                 .accept("@contains('application/json')@"));
 

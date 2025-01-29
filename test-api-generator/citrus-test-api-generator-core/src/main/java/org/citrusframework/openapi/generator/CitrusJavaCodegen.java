@@ -272,8 +272,8 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
     @Override
     public void processOpts() {
         super.processOpts();
-        setupEndpoint();
         setupApiPrefix();
+        setupEndpoint();
         setupNamespace();
         setupFolders();
         setupApiType();
@@ -282,10 +282,8 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
     }
 
     private void setupEndpoint() {
-        if (additionalProperties.containsKey(API_ENDPOINT)) {
-            this.setHttpClient(additionalProperties.get(API_ENDPOINT).toString());
-        }
-        additionalProperties.put(API_ENDPOINT, httpClient);
+        additionalProperties.computeIfAbsent(API_ENDPOINT, k->apiPrefix+"Endpoint");
+        this.setHttpClient(additionalProperties.get(API_ENDPOINT).toString());
     }
 
     private void setupApiPrefix() {

@@ -220,7 +220,7 @@ public class {{classname}} implements GeneratedApi
 
         private static final String ENDPOINT = "{{#rootContextPath}}{{rootContextPath}}{{/rootContextPath}}{{^neglectBasePath}}{{basePathWithoutHost}}{{/neglectBasePath}}{{path}}";
 
-        private static final String OPERATION_NAME = "{{operationId}}";
+        private static final String OPERATION_NAME = "{{#operationIdOriginal}}{{operationId}}{{/operationIdOriginal}}{{^operationIdOriginal}}{{#lambda.uppercase}}{{httpMethod}}{{/lambda.uppercase}}_{{#rootContextPath}}{{rootContextPath}}{{/rootContextPath}}{{^neglectBasePath}}{{basePathWithoutHost}}{{/neglectBasePath}}{{path}}{{/operationIdOriginal}}";
         {{#hasApiKeyAuth}}
 
         @Value("${" + "{{#lambda.lowercase}}{{prefix}}{{/lambda.lowercase}}.base64-encode-api-key:#{false}}")
@@ -604,7 +604,7 @@ public class {{classname}} implements GeneratedApi
 
         private static final String ENDPOINT = "{{#rootContextPath}}{{rootContextPath}}{{/rootContextPath}}{{^neglectBasePath}}{{basePathWithoutHost}}{{/neglectBasePath}}{{path}}";
 
-        private static final String OPERATION_NAME = "{{operationId}}";
+        private static final String OPERATION_NAME = "{{#operationIdOriginal}}{{operationId}}{{/operationIdOriginal}}{{^operationIdOriginal}}{{#lambda.uppercase}}{{httpMethod}}{{/lambda.uppercase}}_{{#rootContextPath}}{{rootContextPath}}{{/rootContextPath}}{{^neglectBasePath}}{{basePathWithoutHost}}{{/neglectBasePath}}{{path}}{{/operationIdOriginal}}";
 
         public {{operationIdCamelCase}}ReceiveActionBuilder({{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}},  String statusCode) {
             super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, {{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Specification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);

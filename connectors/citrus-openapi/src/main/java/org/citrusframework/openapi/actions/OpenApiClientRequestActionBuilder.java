@@ -36,7 +36,6 @@ import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.message.Message;
 import org.citrusframework.openapi.AutoFillType;
-import org.citrusframework.openapi.OpenApiSettings;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.openapi.model.OperationPathAdapter;
@@ -129,8 +128,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
 
         private final String operationId;
 
-        // TODO: document me
-        private AutoFillType autoFill = OpenApiSettings.getRequestAutoFillRandomValues();
+        private AutoFillType autoFill ;
 
         public OpenApiClientRequestMessageBuilder(HttpMessage httpMessage,
             OpenApiSpecificationSource openApiSpec,
@@ -149,6 +147,11 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
         public Message build(TestContext context, String messageType) {
             OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(
                 context.getReferenceResolver());
+
+            if (autoFill == null) {
+                autoFill = openApiSpecification.getRequestAutoFill();
+            }
+
             openApiSpecification.initOpenApiDoc(context);
             openApiSpecification.getOperation(operationId, context)
                 .ifPresentOrElse(operationPathAdapter ->

@@ -35,6 +35,7 @@ import org.citrusframework.http.actions.HttpClientRequestActionBuilder.HttpMessa
 import org.citrusframework.http.config.xml.HttpSendRequestActionParser;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
+import org.citrusframework.openapi.AutoFillType;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiClientRequestActionBuilder.OpenApiClientRequestMessageBuilder;
 import org.citrusframework.openapi.actions.OpenApiSpecificationSource;
@@ -137,6 +138,8 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
         BeanDefinitionBuilder actionBuilder = createTestApiActionBuilder(element,
             beanDefinitionBuilder);
         beanDefinitionBuilder.addConstructorArgValue(actionBuilder.getBeanDefinition());
+
+        beanDefinitionBuilder.addPropertyValue("autoFill", element.getAttribute("autofill"));
 
         setDefaultEndpoint(beanDefinitionBuilder);
 
@@ -398,6 +401,10 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
 
         public void setBuilder(RestApiSendMessageActionBuilder builder) {
             this.builder = builder;
+        }
+
+        public void setAutoFill(AutoFillType autoFill) {
+            this.builder.autoFill(autoFill);
         }
     }
 }

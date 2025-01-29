@@ -170,11 +170,13 @@ class CitrusJavaCodegenTest {
         Operation operation = Mockito.mock(Operation.class);
         List<Server> servers = Collections.emptyList();
 
-        CodegenOperation codegenOperation = codegen.fromOperation("/path", "GET", operation, servers);
+        CodegenOperation codegenOperation = codegen.fromOperation("/path/segment1/{param1}/segment3/{param2}", "GET", operation, servers);
         assertThat(codegenOperation)
                 .isInstanceOf(CustomCodegenOperation.class)
                 .hasFieldOrPropertyWithValue("httpMethod", "GET")
-                .hasFieldOrPropertyWithValue("path", "/path");
+                .hasFieldOrPropertyWithValue("path", "/path/segment1/{param1}/segment3/{param2}")
+                .hasFieldOrPropertyWithValue("operationId", "pathSegment1Param1Segment3Param2GET")
+                .hasFieldOrPropertyWithValue("operationIdOriginal", null);
     }
 
     @Test

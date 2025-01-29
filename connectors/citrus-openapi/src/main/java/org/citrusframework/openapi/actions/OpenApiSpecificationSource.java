@@ -1,14 +1,13 @@
 package org.citrusframework.openapi.actions;
 
+import static org.citrusframework.util.StringUtils.isEmpty;
+
+import java.util.Objects;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.util.OpenApiUtils;
 import org.citrusframework.spi.ReferenceResolver;
-
-import java.util.Objects;
-
-import static org.citrusframework.util.StringUtils.isEmpty;
 
 /**
  * The {@code OpenApiSpecificationSource} class is responsible for managing and resolving an
@@ -36,18 +35,21 @@ public class OpenApiSpecificationSource {
 
             if (!isEmpty(openApiAlias)) {
                 openApiSpecification = resolver.resolveAll(OpenApiRepository.class).values()
-                        .stream()
-                        .map(openApiRepository -> openApiRepository.openApi(openApiAlias)).
-                        filter(Objects::nonNull).
-                        findFirst()
+                    .stream()
+                    .map(openApiRepository -> openApiRepository.openApi(openApiAlias)).
+                    filter(Objects::nonNull).
+                    findFirst()
+                    .orElseGet(() -> resolver.resolveAll(OpenApiSpecification.class).values().stream()
+                        .filter(specification -> specification.getAliases().contains(openApiAlias))
+                        .findFirst()
                         .orElseThrow(() ->
-                                new CitrusRuntimeException(
-                                        "Unable to resolve OpenApiSpecification from alias '%s'. Known aliases for open api specs are '%s'".formatted(
-                                                openApiAlias, OpenApiUtils.getKnownOpenApiAliases(resolver)))
-                        );
+                            new CitrusRuntimeException(
+                                "Unable to resolve OpenApiSpecification from alias '%s'. Known aliases for open api specs are '%s'".formatted(
+                                    openApiAlias, OpenApiUtils.getKnownOpenApiAliases(resolver)))
+                        ));
             } else {
                 throw new CitrusRuntimeException(
-                        "Unable to resolve OpenApiSpecification. Neither OpenAPI spec, nor OpenAPI  alias are specified.");
+                    "Unable to resolve OpenApiSpecification. Neither OpenAPI spec, nor OpenAPI  alias are specified.");
             }
         }
 

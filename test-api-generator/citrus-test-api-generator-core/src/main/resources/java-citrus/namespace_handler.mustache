@@ -43,7 +43,7 @@ public class {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}NamespaceHandle
         {{#operations}}
         {{#operation}}
 
-            registerOperationParsers({{classname}}.class,"{{#lambda.kebabcase}}{{operationId}}{{/lambda.kebabcase}}", "{{operationIdOriginal}}", "{{path}}",
+            registerOperationParsers({{classname}}.class,"{{#lambda.kebabcase}}{{operationId}}{{/lambda.kebabcase}}", "{{#operationIdOriginal}}{{operationId}}{{/operationIdOriginal}}{{^operationIdOriginal}}{{#lambda.uppercase}}{{httpMethod}}{{/lambda.uppercase}}_{{#rootContextPath}}{{rootContextPath}}{{/rootContextPath}}{{^neglectBasePath}}{{basePathWithoutHost}}{{/neglectBasePath}}{{path}}{{/operationIdOriginal}}", "{{path}}",
                 {{classname}}.{{operationIdCamelCase}}SendActionBuilder.class,
                 {{classname}}.{{operationIdCamelCase}}ReceiveActionBuilder.class,
                 new String[]{ {{#requiredNonBodyParams}}"{{paramName}}{{^isString}}{{/isString}}"{{^-last}}, {{/-last}}{{/requiredNonBodyParams}} },

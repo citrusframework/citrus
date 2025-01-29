@@ -17,9 +17,12 @@
 package org.citrusframework.openapi;
 
 import static java.lang.String.format;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.synchronizedSet;
+import static org.citrusframework.openapi.OpenApiSettings.getRequestAutoFillRandomValues;
+import static org.citrusframework.openapi.OpenApiSettings.getResponseAutoFillRandomValues;
 import static org.citrusframework.openapi.OpenApiSettings.isGenerateOptionalFieldsGlobally;
 import static org.citrusframework.openapi.OpenApiSettings.isNeglectBasePathGlobally;
 import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledGlobally;
@@ -29,13 +32,16 @@ import static org.citrusframework.util.StringUtils.appendSegmentToUrlPath;
 import static org.citrusframework.util.StringUtils.hasText;
 import static org.citrusframework.util.StringUtils.isEmpty;
 
+import io.apicurio.datamodels.core.models.Extension;
 import io.apicurio.datamodels.core.models.common.Info;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -86,8 +92,9 @@ public class OpenApiSpecification {
     private static final String HTTP = "http";
 
     /**
-     * A unique identifier (UID) for this specification at runtime. The UID is generated based on the SHA
-     * of the OpenAPI document combined with the full context path to which the API is attached.
+     * A unique identifier (UID) for this specification at runtime. The UID is generated based on
+     * the SHA of the OpenAPI document combined with the full context path to which the API is
+     * attached.
      *
      * @see OpenApiSpecification#determineUid for detailed information on how the UID is generated.
      */
@@ -145,7 +152,21 @@ public class OpenApiSpecification {
 
     private OasDocument openApiDoc;
     private OpenApiValidationContext openApiValidationContext;
+
+    /**
+     * Generate optional attributes when generating random schema objects.
+     */
     private boolean generateOptionalFields = isGenerateOptionalFieldsGlobally();
+
+    /**
+     * Autofill parameters and body of request with random data.
+     */
+    private AutoFillType requestAutoFill = getRequestAutoFillRandomValues();
+
+    /**
+     * Autofill parameters and body of response with random data.
+     */
+    private AutoFillType responseAutoFill = getResponseAutoFillRandomValues();
 
     /**
      * Flag to indicate, whether request validation is enabled on api level. Api level overrules
@@ -174,7 +195,8 @@ public class OpenApiSpecification {
     }
 
     /**
-     * Creates an OpenAPI specification instance from the given URL applying the default validation policy.
+     * Creates an OpenAPI specification instance from the given URL applying the default validation
+     * policy.
      *
      * @param specUrl the URL pointing to the OpenAPI specification to load
      * @return an OpenApiSpecification instance populated with the document and validation context
@@ -196,13 +218,20 @@ public class OpenApiSpecification {
         OpenApiSpecification specification = new OpenApiSpecification(openApiValidationPolicy);
         specification.setSpecUrl(specUrl);
 
+        try {
+            determineUrlAlias(new URL(specUrl)).ifPresent(specification::addAlias);
+        } catch (MalformedURLException e) {
+            // Ignore;
+        }
+
         return specification;
     }
 
     /**
-     * Creates an OpenAPI specification instance from the given URL applying the default validation policy.
+     * Creates an OpenAPI specification instance from the given URL applying the default validation
+     * policy.
      *
-     * @param specUrl                 the URL pointing to the OpenAPI specification to load
+     * @param specUrl the URL pointing to the OpenAPI specification to load
      * @return an OpenApiSpecification instance populated with the document and validation context
      */
     public static OpenApiSpecification from(URL specUrl) {
@@ -227,8 +256,11 @@ public class OpenApiSpecification {
             openApiDoc = OpenApiResourceLoader.fromWebResource(specUrl);
         }
 
-        openApiValidationContext = OpenApiValidationContextLoader.fromSpec(OasModelHelper.toJson(openApiDoc), openApiValidationPolicy);
+        openApiValidationContext = OpenApiValidationContextLoader.fromSpec(
+            OasModelHelper.toJson(openApiDoc), openApiValidationPolicy);
         specification.setOpenApiValidationContext(openApiValidationContext);
+
+        determineUrlAlias(specUrl).ifPresent(specification::addAlias);
 
         specification.setSpecUrl(specUrl.toString());
         specification.initPathLookups();
@@ -267,8 +299,11 @@ public class OpenApiSpecification {
         OasDocument openApiDoc = OpenApiResourceLoader.fromFile(resource);
 
         specification.setOpenApiValidationContext(
-            OpenApiValidationContextLoader.fromSpec(OasModelHelper.toJson(openApiDoc), openApiValidationPolicy));
+            OpenApiValidationContextLoader.fromSpec(OasModelHelper.toJson(openApiDoc),
+                openApiValidationPolicy));
         specification.setOpenApiDoc(openApiDoc);
+
+        determineResourceAlias(resource).ifPresent(specification::addAlias);
 
         String schemeToUse = Optional.ofNullable(OasModelHelper.getSchemes(openApiDoc))
             .orElse(singletonList(HTTP))
@@ -376,7 +411,6 @@ public class OpenApiSpecification {
             } else {
                 Resource resource = Resources.create(resolvedSpecUrl);
                 initApiDoc(() -> OpenApiResourceLoader.fromFile(resource));
-
 
                 if (requestUrl == null) {
                     String schemeToUse = Optional.ofNullable(OasModelHelper.getSchemes(openApiDoc))
@@ -550,6 +584,32 @@ public class OpenApiSpecification {
         this.generateOptionalFields = generateOptionalFields;
     }
 
+    public AutoFillType getRequestAutoFill() {
+        return requestAutoFill;
+    }
+
+    public void setRequestAutoFill(AutoFillType requestAutoFill) {
+        this.requestAutoFill = requestAutoFill;
+    }
+
+    public OpenApiSpecification requestAutoFill(AutoFillType requestAutoFill) {
+        setRequestAutoFill(requestAutoFill);
+        return this;
+    }
+
+    public AutoFillType getResponseAutoFill() {
+        return responseAutoFill;
+    }
+
+    public void setResponseAutoFill(AutoFillType responseAutoFill) {
+        this.responseAutoFill = responseAutoFill;
+    }
+
+    public OpenApiSpecification responseAutoFill(AutoFillType responseAutoFill) {
+        setResponseAutoFill(responseAutoFill);
+        return this;
+    }
+
     public String getRootContextPath() {
         return rootContextPath;
     }
@@ -605,6 +665,11 @@ public class OpenApiSpecification {
             }
         }
 
+        Extension xAlias = info.getExtension("x-citrus-alias");
+        if (xAlias != null && xAlias.value != null) {
+            set.add(xAlias.value.toString());
+        }
+
         return set;
     }
 
@@ -643,14 +708,14 @@ public class OpenApiSpecification {
      */
     public String getFullPath(OasPathItem oasPathItem) {
         return appendSegmentToUrlPath(rootContextPath,
-                getFullBasePath(oasPathItem));
+            getFullBasePath(oasPathItem));
     }
 
     /**
      * Get the full base-path for the given {@link OasPathItem}.
      * <p>
-     * The full base-path is constructed by concatenating the base path (if
-     * applicable), and the path of the given {@code oasPathItem}. The resulting format is:
+     * The full base-path is constructed by concatenating the base path (if applicable), and the
+     * path of the given {@code oasPathItem}. The resulting format is:
      * </p>
      * <pre>
      * /basePath/pathItemPath
@@ -658,12 +723,11 @@ public class OpenApiSpecification {
      * If the base path is to be neglected, it is excluded from the final constructed path.
      *
      * @param oasPathItem the OpenAPI path item whose full base-path is to be constructed
-     * @return the full base URL path, consisting of the base path, and the given path
-     * item
+     * @return the full base URL path, consisting of the base path, and the given path item
      */
     public String getFullBasePath(OasPathItem oasPathItem) {
         return appendSegmentToUrlPath(
-                getApplicableBasePath(), oasPathItem.getPath());
+            getApplicableBasePath(), oasPathItem.getPath());
     }
 
 
@@ -721,4 +785,58 @@ public class OpenApiSpecification {
         addAlias(alias);
         return this;
     }
+
+    /**
+     * @param openApiResource the OpenAPI resource from which to determine the alias
+     * @return an {@code Optional} containing the resource alias if it can be resolved, otherwise an
+     * empty {@code Optional}
+     */
+    // Package protection for testing
+    static Optional<String> determineResourceAlias(Resource openApiResource) {
+        String resourceAlias = null;
+
+        try {
+            File file = openApiResource.getFile();
+            if (file != null) {
+                resourceAlias = file.getName();
+                int index = resourceAlias.lastIndexOf(".");
+                if (index != -1 && index != resourceAlias.length() - 1) {
+                    resourceAlias = resourceAlias.substring(0, index);
+                }
+                return Optional.of(resourceAlias);
+            }
+        } catch (Exception e) {
+            // Ignore and try with url
+        }
+
+        try {
+            URL url = openApiResource.getURL();
+            return determineUrlAlias(url);
+        } catch (MalformedURLException e) {
+            logger.error("Unable to determine resource alias from resource!", e);
+        }
+
+        return Optional.ofNullable(resourceAlias);
+    }
+
+    static Optional<String> determineUrlAlias(URL url) {
+        String resourceAlias = null;
+
+        if (url != null) {
+            String urlString = URLDecoder.decode(url.getPath(), UTF_8).replace("\\", "/");
+            int index = urlString.lastIndexOf("/");
+            resourceAlias = urlString;
+            if (index != -1 && index != urlString.length() - 1) {
+                resourceAlias = resourceAlias.substring(index + 1);
+            }
+            index = resourceAlias.lastIndexOf(".");
+            if (index != -1 && index != resourceAlias.length() - 1) {
+                resourceAlias = resourceAlias.substring(0, index);
+            }
+
+        }
+
+        return Optional.ofNullable(resourceAlias);
+    }
+
 }

@@ -25,7 +25,6 @@
                             <prefix>Minimal</prefix>
                             <source>api/test-api.yml</source>
                             <apiConfigOptions>
-                                <!-- TODO: document this feature -->
                                 <a>b</a>
                                 <c>d</c>
                             </apiConfigOptions>

@@ -401,8 +401,6 @@ public class TestApiGeneratorMojo extends AbstractMojo {
         REST, SOAP
     }
 
-    // TODO: document all configuration properties
-
     /**
      * Note that the default values are not properly set by maven processor. Therefore, the default
      * values have been assigned additionally on field level.

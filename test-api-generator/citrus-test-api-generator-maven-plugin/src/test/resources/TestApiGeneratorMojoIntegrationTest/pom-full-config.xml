@@ -32,10 +32,8 @@
                             <additionalProperties>a=b,c=d</additionalProperties>
                             <rootContextPath>/a/b/c/d</rootContextPath>
                             <apiConfigOptions>
-                                <!-- TODO: document this feature -->
                                 <a>b</a>
                                 <c>d</c>
-                                <!-- TODO document this feature and the fact, that each base mojo property can be configured via these options -->
                                 <output>target/pom-full-config/target/generated-sources-mod/openapi-mod</output>
                                 <sourceFolder>src/main/java-mod</sourceFolder>
                                 <resourceFolder>src/main/resource-mod</resourceFolder>

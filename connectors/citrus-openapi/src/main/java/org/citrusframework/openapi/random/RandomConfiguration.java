@@ -37,14 +37,14 @@ public class RandomConfiguration {
 
         // Note that the order of generators in the list is relevant, as the list is traversed from start to end, to find the first matching generator for a schema, and some generators match for less significant schemas.
         generators.add(new RandomEnumGenerator());
-        generators.add(RandomGeneratorBuilder.randomGeneratorBuilder(TYPE_STRING, FORMAT_DATE).build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:currentDate('yyyy-MM-dd')")));
-        generators.add(RandomGeneratorBuilder.randomGeneratorBuilder(TYPE_STRING, FORMAT_DATE_TIME).build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:currentDate('yyyy-MM-dd'T'hh:mm:ssZ')")));
-        generators.add(RandomGeneratorBuilder.randomGeneratorBuilder(TYPE_STRING, FORMAT_UUID).build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomUUID()")));
-        generators.add(RandomGeneratorBuilder.randomGeneratorBuilder(TYPE_STRING, "email").build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomPattern('" + EMAIL_PATTERN + "')")));
-        generators.add(RandomGeneratorBuilder.randomGeneratorBuilder(TYPE_STRING, "uri").build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomPattern('" + URI_PATTERN + "')")));
-        generators.add(RandomGeneratorBuilder.randomGeneratorBuilder(TYPE_STRING, "hostname").build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomPattern('" + HOSTNAME_PATTERN + "')")));
-        generators.add(RandomGeneratorBuilder.randomGeneratorBuilder(TYPE_STRING, "ipv4").build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomPattern('" + IPV4_PATTERN + "')")));
-        generators.add(RandomGeneratorBuilder.randomGeneratorBuilder(TYPE_STRING, "ipv6").build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomPattern('" + IPV6_PATTERN + "')")));
+        generators.add(randomGeneratorBuilder(TYPE_STRING, FORMAT_DATE).build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:currentDate('yyyy-MM-dd')")));
+        generators.add(randomGeneratorBuilder(TYPE_STRING, FORMAT_DATE_TIME).build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:currentDate('yyyy-MM-dd'T'hh:mm:ssZ')")));
+        generators.add(randomGeneratorBuilder(TYPE_STRING, FORMAT_UUID).build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomUUID()")));
+        generators.add(randomGeneratorBuilder(TYPE_STRING, "email").build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomPattern('" + EMAIL_PATTERN + "')")));
+        generators.add(randomGeneratorBuilder(TYPE_STRING, "uri").build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomPattern('" + URI_PATTERN + "')")));
+        generators.add(randomGeneratorBuilder(TYPE_STRING, "hostname").build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomPattern('" + HOSTNAME_PATTERN + "')")));
+        generators.add(randomGeneratorBuilder(TYPE_STRING, "ipv4").build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomPattern('" + IPV4_PATTERN + "')")));
+        generators.add(randomGeneratorBuilder(TYPE_STRING, "ipv6").build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomPattern('" + IPV6_PATTERN + "')")));
         generators.add(randomGeneratorBuilder().withType(TYPE_STRING).withPattern(ANY).build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomPattern('" + schema.pattern + "')")));
         generators.add(randomGeneratorBuilder().withType(TYPE_BOOLEAN).build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimple("citrus:randomEnumValue('true', 'false')")));
         generators.add(new RandomStringGenerator());

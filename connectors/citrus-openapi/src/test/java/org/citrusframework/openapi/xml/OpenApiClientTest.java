@@ -151,7 +151,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getName(), "OpenApiClientTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 4L);
+        Assert.assertEquals(result.getActionCount(), 6L);
         Assert.assertEquals(result.getTestAction(0).getClass(), SendMessageAction.class);
         Assert.assertEquals(result.getTestAction(0).getName(), "openapi:send-request");
 
