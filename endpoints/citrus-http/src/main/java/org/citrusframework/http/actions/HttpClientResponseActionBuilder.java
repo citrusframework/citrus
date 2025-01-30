@@ -57,9 +57,13 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageAction.Receiv
     @Override
     public HttpMessageBuilderSupport getMessageBuilderSupport() {
         if (messageBuilderSupport == null) {
-            messageBuilderSupport = new HttpMessageBuilderSupport(httpMessage, this);
+            messageBuilderSupport = createHttpMessageBuilderSupport();
         }
         return super.getMessageBuilderSupport();
+    }
+
+    protected HttpMessageBuilderSupport createHttpMessageBuilderSupport() {
+        return new HttpMessageBuilderSupport(httpMessage, this);
     }
 
     public static class HttpMessageBuilderSupport extends ReceiveMessageBuilderSupport<ReceiveMessageAction, HttpClientResponseActionBuilder, HttpMessageBuilderSupport> {
@@ -140,6 +144,15 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageAction.Receiv
 
     @Override
     public ReceiveMessageAction doBuild() {
+        return createReceiveMessageAction();
+    }
+
+
+    /**
+     * Creates the actual SendMessageAction. Subclasses may override this method to provide specific
+     * implementations.
+     */
+    protected ReceiveMessageAction createReceiveMessageAction() {
         return new ReceiveMessageAction(this);
     }
 
