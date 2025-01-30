@@ -50,14 +50,15 @@
   </ciManagement>
 
   <modules>
-    <module>core</module>
-    <module>utils</module>
-    <module>runtime</module>
-    <module>validation</module>
-    <module>connectors</module>
-    <module>endpoints</module>
-    <module>tools</module>
     <module>catalog</module>
+    <module>connectors</module>
+    <module>core</module>
+    <module>endpoints</module>
+    <module>runtime</module>
+    <module>test-api-generator</module>
+    <module>tools</module>
+    <module>utils</module>
+    <module>validation</module>
   </modules>
 
   <developers>
@@ -192,6 +193,7 @@
     <apache.ant.version>1.10.15</apache.ant.version>
     <apache.camel.version>4.9.0</apache.camel.version>
     <apicurio.data-models.version>1.1.27</apicurio.data-models.version>
+    <swagger-request-validator.version>2.44.1</swagger-request-validator.version>
     <ascii-table-version>1.8.0</ascii-table-version>
     <assertj.version>3.27.2</assertj.version>
     <awaitility.version>4.2.2</awaitility.version>
@@ -249,6 +251,8 @@
     <mockftpserver.version>3.2.0</mockftpserver.version>
     <netty.version>4.1.105.Final</netty.version>
     <okhttp.version>4.12.0</okhttp.version>
+    <org.openapitools.version>7.9.0</org.openapitools.version>
+    <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
     <picoli-version>4.7.6</picoli-version>
     <postgresql.version>42.7.5</postgresql.version>
     <quarkus.platform.version>3.17.4</quarkus.platform.version>
@@ -258,6 +262,7 @@
     <snappy.version>1.1.10.7</snappy.version>
     <snakeyaml.version>2.3</snakeyaml.version>
     <spring.version>6.2.2</spring.version>
+    <spring.boot.version>3.4.1</spring.boot.version>
     <spring.ws.version>4.0.11</spring.ws.version>
     <spring.integration.version>6.4.1</spring.integration.version>
     <spring.restdocs.version>3.0.3</spring.restdocs.version>
@@ -518,9 +523,15 @@
       </dependency>
 
       <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
-        <version>${spring.version}</version>
+        <groupId>org.awaitility</groupId>
+        <artifactId>awaitility</artifactId>
+        <version>${awaitility.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator</artifactId>
+        <version>${org.openapitools.version}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.testng</groupId>
@@ -1007,6 +1018,16 @@
         <version>${jackson.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.fasterxml.jackson.dataformat</groupId>
+        <artifactId>jackson-dataformat-yaml</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openapitools</groupId>
+        <artifactId>jackson-databind-nullable</artifactId>
+        <version>${jackson-databind-nullable.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.fasterxml.jackson.module</groupId>
         <artifactId>jackson-module-jaxb-annotations</artifactId>
         <version>${jackson.version}</version>
@@ -1333,6 +1354,12 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>uk.org.webcompere</groupId>
+      <artifactId>system-stubs-core</artifactId>
+      <version>2.1.6</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
