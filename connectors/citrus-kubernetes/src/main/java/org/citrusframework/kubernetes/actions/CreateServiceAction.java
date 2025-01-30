@@ -253,7 +253,8 @@ public class CreateServiceAction extends AbstractKubernetesAction {
                 }
             }
 
-            if (referenceResolver != null && !referenceResolver.isResolvable(serverName, HttpServer.class)) {
+            if (httpServer != null && referenceResolver != null &&
+                    !referenceResolver.isResolvable(serverName, HttpServer.class)) {
                 referenceResolver.bind(serverName, httpServer);
             }
 

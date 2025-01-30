@@ -246,8 +246,9 @@ public abstract class CitrusAnnotations {
                     try {
                         String name = ReferenceRegistry.getName(m.getAnnotation(BindToRegistry.class), m.getName());
                         Object component = m.invoke(configuration);
-
-                        if (component instanceof Named named) {
+                        if (component == null) {
+                            return;
+                        } if (component instanceof Named named) {
                             named.setName(name);
                         }
 
@@ -270,8 +271,9 @@ public abstract class CitrusAnnotations {
                     try {
                         String name = ReferenceRegistry.getName(f.getAnnotation(BindToRegistry.class), f.getName());
                         Object component = f.get(configuration);
-
-                        if (component instanceof Named named) {
+                        if (component == null) {
+                            return;
+                        } else if (component instanceof Named named) {
                             named.setName(name);
                         }
 

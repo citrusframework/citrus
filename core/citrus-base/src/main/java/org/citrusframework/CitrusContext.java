@@ -361,72 +361,84 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
     }
 
     public void addComponent(String name, Object component) {
-        if (component instanceof InitializingPhase c) {
-            c.initialize();
-        }
-        referenceResolver.bind(name, component);
-
-        if (component instanceof MessageValidator<?> messageValidator) {
-            messageValidatorRegistry.addMessageValidator(name, messageValidator);
-            testContextFactory.getMessageValidatorRegistry().addMessageValidator(name, messageValidator);
-        }
-
-        if (component instanceof MessageProcessor messageProcessor) {
-            messageProcessors.addMessageProcessor(messageProcessor);
-            testContextFactory.getMessageProcessors().addMessageProcessor(messageProcessor);
-        }
-
-        if (component instanceof TestSuiteListener suiteListener) {
-            testSuiteListeners.addTestSuiteListener(suiteListener);
-        }
-
-        if (component instanceof TestListener testListener) {
-            testListeners.addTestListener(testListener);
-            testContextFactory.getTestListeners().addTestListener(testListener);
-        }
-
-        if (component instanceof TestReporter testReporter) {
-            testReporters.addTestReporter(testReporter);
-        }
-
-        if (component instanceof TestActionListener testActionListener) {
-            testActionListeners.addTestActionListener(testActionListener);
-            testContextFactory.getTestActionListeners().addTestActionListener(testActionListener);
-        }
-
-        if (component instanceof MessageListener messageListener) {
-            messageListeners.addMessageListener(messageListener);
-            testContextFactory.getMessageListeners().addMessageListener(messageListener);
-        }
-
-        if (component instanceof BeforeTest beforeTest) {
-            testContextFactory.getBeforeTest().add(beforeTest);
-        }
-
-        if (component instanceof AfterTest afterTest) {
-            testContextFactory.getAfterTest().add(afterTest);
-        }
-
-        if (component instanceof BeforeSuite beforeSuiteComponent) {
-            beforeSuite.add(beforeSuiteComponent);
-        }
-
-        if (component instanceof AfterSuite afterSuiteComponent) {
-            afterSuite.add(afterSuiteComponent);
-        }
-
-        if (component instanceof FunctionLibrary library) {
-            functionRegistry.addFunctionLibrary(library);
-            testContextFactory.getFunctionRegistry().addFunctionLibrary(library);
-        }
-
-        if (component instanceof ValidationMatcherLibrary library) {
-            validationMatcherRegistry.addValidationMatcherLibrary(library);
-            testContextFactory.getValidationMatcherRegistry().addValidationMatcherLibrary(library);
+        if (component == null) {
+            return;
         }
 
         if (component instanceof ReferenceResolverAware referenceResolverAware) {
             referenceResolverAware.setReferenceResolver(referenceResolver);
+        }
+
+        if (component instanceof InitializingPhase c) {
+            c.initialize();
+        }
+
+        referenceResolver.bind(name, component);
+
+        synchronized (this) {
+            if (component instanceof MessageValidator<?> messageValidator) {
+                messageValidatorRegistry.addMessageValidator(name, messageValidator);
+                testContextFactory.getMessageValidatorRegistry().addMessageValidator(name, messageValidator);
+            }
+
+            if (component instanceof MessageProcessor messageProcessor) {
+                messageProcessors.addMessageProcessor(messageProcessor);
+                testContextFactory.getMessageProcessors().addMessageProcessor(messageProcessor);
+            }
+
+            if (component instanceof TestSuiteListener suiteListener) {
+                testSuiteListeners.addTestSuiteListener(suiteListener);
+            }
+
+            if (component instanceof TestListener testListener) {
+                testListeners.addTestListener(testListener);
+                testContextFactory.getTestListeners().addTestListener(testListener);
+            }
+
+            if (component instanceof TestReporter testReporter) {
+                testReporters.addTestReporter(testReporter);
+            }
+
+            if (component instanceof TestActionListener testActionListener) {
+                testActionListeners.addTestActionListener(testActionListener);
+                testContextFactory.getTestActionListeners().addTestActionListener(testActionListener);
+            }
+
+            if (component instanceof MessageListener messageListener) {
+                messageListeners.addMessageListener(messageListener);
+                testContextFactory.getMessageListeners().addMessageListener(messageListener);
+            }
+
+            if (component instanceof BeforeTest beforeTest) {
+                testContextFactory.getBeforeTest().add(beforeTest);
+            }
+
+            if (component instanceof AfterTest afterTest) {
+                testContextFactory.getAfterTest().add(afterTest);
+            }
+
+            if (component instanceof BeforeSuite beforeSuiteComponent) {
+                beforeSuite.add(beforeSuiteComponent);
+            }
+
+            if (component instanceof AfterSuite afterSuiteComponent) {
+                afterSuite.add(afterSuiteComponent);
+            }
+
+            if (component instanceof FunctionLibrary library) {
+                functionRegistry.addFunctionLibrary(library);
+                testContextFactory.getFunctionRegistry().addFunctionLibrary(library);
+            }
+
+            if (component instanceof ValidationMatcherLibrary library) {
+                validationMatcherRegistry.addValidationMatcherLibrary(library);
+                testContextFactory.getValidationMatcherRegistry().addValidationMatcherLibrary(library);
+            }
+
+            if (component instanceof GlobalVariables vars) {
+                globalVariables.getVariables().putAll(vars.getVariables());
+                testContextFactory.getGlobalVariables().getVariables().putAll(vars.getVariables());
+            }
         }
     }
 
