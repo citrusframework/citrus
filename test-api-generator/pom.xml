@@ -18,6 +18,7 @@
     <modules>
         <module>citrus-test-api-core</module>
         <module>citrus-test-api-generator-core</module>
+        <module>citrus-test-api-generator-maven-plugin</module>
     </modules>
 
     <dependencies>
