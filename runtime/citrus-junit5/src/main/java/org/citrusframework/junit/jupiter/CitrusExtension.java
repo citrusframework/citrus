@@ -39,9 +39,17 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import org.opentest4j.TestAbortedException;
 
 import static org.citrusframework.annotations.CitrusAnnotations.injectCitrusFramework;
-import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.*;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getBaseKey;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getCitrus;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getTestCase;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getTestContext;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getTestLoader;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getTestRunner;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.requiresCitrus;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.setCitrus;
 
 /**
  * JUnit5 extension adding {@link TestCaseRunner} support as well as Citrus annotation based resource injection
@@ -70,6 +78,11 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CitrusExtension.class);
 
     private static void failTestCaseIfNotDoneYet(ExtensionContext extensionContext, Throwable throwable) {
+
+        if (throwable instanceof TestAbortedException) {
+            return;
+        }
+
         var testCase = getTestCase(extensionContext);
         var testResult = testCase.getTestResult();
 
