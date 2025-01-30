@@ -19,7 +19,7 @@ package org.citrusframework.http.servlet;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
@@ -164,7 +164,7 @@ public class CachingHttpServletRequestWrapperTest {
         wrapper.getInputStream();
 
         when(serverRequestMock.getContentType())
-                .thenReturn(ContentType.APPLICATION_FORM_URLENCODED.withCharset(Charset.forName("UTF-8")).toString());
+                .thenReturn(ContentType.APPLICATION_FORM_URLENCODED.withCharset(StandardCharsets.UTF_8).toString());
 
         when(serverRequestMock.getMethod()).thenReturn(requestMethod.name());
 
@@ -187,11 +187,11 @@ public class CachingHttpServletRequestWrapperTest {
         when(serverRequestMock.getInputStream())
                 .thenReturn(new DelegatingServletInputStream(
                         new ByteArrayInputStream(
-                                (requestMethod.name() + "=ÄäÖöÜü").getBytes(Charset.forName("ISO-8859-1")))));
+                                (requestMethod.name() + "=ÄäÖöÜü").getBytes(StandardCharsets.ISO_8859_1))));
         wrapper.getInputStream();
 
         when(serverRequestMock.getContentType())
-                .thenReturn(ContentType.APPLICATION_FORM_URLENCODED.withCharset(Charset.forName("ISO-8859-1")).toString());
+                .thenReturn(ContentType.APPLICATION_FORM_URLENCODED.withCharset(StandardCharsets.ISO_8859_1).toString());
 
         when(serverRequestMock.getMethod()).thenReturn(requestMethod.name());
 

@@ -64,7 +64,7 @@ public abstract class AbstractOutputFileReporter extends AbstractTestReporter {
         try (Writer fileWriter = new FileWriter(new File(targetDirectory, reportFileName))) {
             fileWriter.append(content);
             fileWriter.flush();
-            logger.info("Generated test report: " + targetDirectory + File.separator + reportFileName);
+            logger.info("Generated test report: {}{}{}", targetDirectory, File.separator, reportFileName);
         } catch (IOException e) {
             logger.error("Failed to create test report", e);
         }

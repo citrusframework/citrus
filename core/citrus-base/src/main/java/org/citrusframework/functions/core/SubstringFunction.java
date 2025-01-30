@@ -27,7 +27,7 @@ import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * Function implements simple substring functionality.
- *
+ * <p>
  * Function requires at least a target string and a beginIndex as function parameters. A
  * optional endIndex may be given as function parameter, too. The parameter usage looks
  * like this: substring(targetString, beginIndex, [endIndex]).

@@ -34,6 +34,7 @@ public class StringUtilsTest {
     public void hasText_returnsFalse_forBlankText(String str) {
         assertFalse(hasText(str));
     }
+
     @Test(dataProvider = "emptyText")
     public void hasText_returnsFalse_forEmptyText(String str) {
         assertFalse(hasText(str));

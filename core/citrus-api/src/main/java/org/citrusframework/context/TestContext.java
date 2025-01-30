@@ -255,7 +255,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Setting variable: %s with value: '%s'", VariableUtils.cutOffVariablesPrefix(variableName), value));
+            logger.debug("Setting variable: {} with value: '{}'", VariableUtils.cutOffVariablesPrefix(variableName), value);
         }
 
         variables.put(VariableUtils.cutOffVariablesPrefix(variableName), value);
@@ -849,7 +849,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
                 messageListeners.onInboundMessage(message, this);
             }
         } else if (logger.isDebugEnabled()) {
-            logger.debug(String.format("%s message:%n%s", operation, Optional.ofNullable(message).map(Message::toString).orElse("")));
+            logger.debug("{} message:%n{}", operation, Optional.ofNullable(message).map(Message::toString).orElse(""));
         }
     }
 

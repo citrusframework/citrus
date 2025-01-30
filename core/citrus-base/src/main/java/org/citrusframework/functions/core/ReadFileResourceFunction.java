@@ -29,9 +29,9 @@ import org.citrusframework.util.FileUtils;
 /**
  * Function reads file from given file path and returns the complete file content as function result.
  * File content is automatically parsed for test variables.
- *
+ * <p>
  * File path can also have test variables as part of the file name or path.
- *
+ * <p>
  * The function accepts the following parameters:
  *
  * <ol>

@@ -37,18 +37,13 @@ public class DefaultCorrelationManager<T> implements CorrelationManager<T> {
 
     @Override
     public void saveCorrelationKey(String correlationKeyName, String correlationKey, TestContext context) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Saving correlation key for '%s'", correlationKeyName));
-        }
-
+        logger.debug("Saving correlation key for '{}'", correlationKeyName);
         context.setVariable(correlationKeyName, correlationKey);
     }
 
     @Override
     public String getCorrelationKey(String correlationKeyName, TestContext context) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Get correlation key for '%s'", correlationKeyName));
-        }
+        logger.debug("Get correlation key for '{}'", correlationKeyName);
 
         if (context.getVariables().containsKey(correlationKeyName)) {
             return context.getVariable(correlationKeyName);
@@ -60,23 +55,18 @@ public class DefaultCorrelationManager<T> implements CorrelationManager<T> {
     @Override
     public void store(String correlationKey, T object) {
         if (object == null) {
-            logger.warn(String.format("Ignore correlated null object for '%s'", correlationKey));
+            logger.warn("Ignore correlated null object for '{}'", correlationKey);
             return;
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Saving correlated object for '%s'", correlationKey));
-        }
+        logger.debug("Saving correlated object for '{}'", correlationKey);
 
         objectStore.add(correlationKey, object);
     }
 
     @Override
     public T find(String correlationKey, long timeout) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Finding correlated object for '%s'", correlationKey));
-        }
-
+        logger.debug("Finding correlated object for '{}'", correlationKey);
         return objectStore.remove(correlationKey);
     }
 

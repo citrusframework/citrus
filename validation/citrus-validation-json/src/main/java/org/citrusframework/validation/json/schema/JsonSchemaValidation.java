@@ -71,7 +71,10 @@ public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidati
             context.getReferenceResolver());
 
         if (!report.isSuccess()) {
-            logger.error("Failed to validate Json schema for message:\n{}", message.getPayload(String.class));
+            if (logger.isErrorEnabled()) {
+                logger.error("Failed to validate Json schema for message:\n{}",
+                    message.getPayload(String.class));
+            }
             throw new ValidationException(constructErrorMessage(report));
         }
 

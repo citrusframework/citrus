@@ -33,7 +33,7 @@ public class DecodeBase64Function implements Function {
 
     @Override
     public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.size() < 1) {
+        if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Invalid function parameter usage! Missing parameters!");
         }
 

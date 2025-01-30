@@ -31,14 +31,14 @@ public class DefaultMessageStoreTest extends UnitTestSupport {
     private final MessageStore messageStore = new DefaultMessageStore();
 
     @Test
-    public void testStoreAndGetMessage() throws Exception {
+    public void testStoreAndGetMessage() {
         messageStore.storeMessage("request", new DefaultMessage("RequestMessage"));
         Assert.assertEquals(messageStore.getMessage("request").getPayload(String.class), "RequestMessage");
         Assert.assertNull(messageStore.getMessage("unknown"));
     }
 
     @Test
-    public void testConstructMessageName() throws Exception {
+    public void testConstructMessageName() {
         Endpoint endpoint = new DirectEndpoint();
         endpoint.setName("testEndpoint");
         Assert.assertEquals(messageStore.constructMessageName(new SendMessageAction.Builder().build(), endpoint), "send(testEndpoint)");

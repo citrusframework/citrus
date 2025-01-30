@@ -54,7 +54,7 @@ public class StopServerAction extends AbstractTestAction {
     public void doExecute(TestContext context) {
         for (Server server : servers) {
             server.stop();
-            logger.info("Stopped server: " + server.getName());
+            logger.info("Stopped server: {}", server.getName());
         }
     }
 

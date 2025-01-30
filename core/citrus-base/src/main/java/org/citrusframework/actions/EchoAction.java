@@ -38,7 +38,6 @@ public class EchoAction extends AbstractTestAction {
 
     /**
      * Default constructor using the builder.
-     * @param builder
      */
     private EchoAction(Builder builder) {
         super("echo", builder);
@@ -49,7 +48,7 @@ public class EchoAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         if (message == null) {
-            logger.info("Citrus test " + new Date(System.currentTimeMillis()));
+            logger.info("Citrus test {}", new Date());
         } else {
             logger.info(context.getLogModifier().mask(context.replaceDynamicContentInString(message)));
         }
@@ -72,7 +71,6 @@ public class EchoAction extends AbstractTestAction {
 
         /**
          * Fluent API action building entry method used in Java DSL.
-         * @return
          */
         public static Builder echo() {
             return new Builder();
@@ -80,8 +78,6 @@ public class EchoAction extends AbstractTestAction {
 
         /**
          * Fluent API action building entry method used in Java DSL.
-         * @param message
-         * @return
          */
         public static Builder echo(String message) {
             Builder builder = new Builder();
@@ -91,7 +87,6 @@ public class EchoAction extends AbstractTestAction {
 
         /**
          * Fluent API action building entry method used in Java DSL.
-         * @return
          */
         public static Builder print() {
             return new Builder();
@@ -99,8 +94,6 @@ public class EchoAction extends AbstractTestAction {
 
         /**
          * Fluent API action building entry method used in Java DSL.
-         * @param message
-         * @return
          */
         public static Builder print(String message) {
             Builder builder = new Builder();

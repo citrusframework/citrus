@@ -97,7 +97,7 @@ public class ClassPathTestScanner extends AbstractTestScanner {
             });
             return hasTestMethod.get();
         } catch (NoClassDefFoundError | ClassNotFoundException e) {
-            logger.warn("Unable to access class: " + className);
+            logger.warn("Unable to access class: {}", className);
             return false;
         }
     }

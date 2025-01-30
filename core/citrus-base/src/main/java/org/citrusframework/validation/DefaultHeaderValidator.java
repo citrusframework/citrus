@@ -87,11 +87,7 @@ public class DefaultHeaderValidator implements HeaderValidator {
      * Combines header validators from multiple sources. Includes validators coming from reference resolver
      * and resource path lookup are added.
      *
-     * Then pick validator that explicitly supports the given header name or control value and return as optional.
-     * @param headerName
-     * @param controlValue
-     * @param context
-     * @return
+     * <p>Then pick validator that explicitly supports the given header name or control value and return as optional.
      */
     private static Optional<HeaderValidator> getHeaderValidator(String headerName, Object controlValue, TestContext context) {
         // add validators from resource path lookup

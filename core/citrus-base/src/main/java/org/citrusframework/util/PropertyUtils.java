@@ -99,7 +99,7 @@ public final class PropertyUtils {
 
             if (!properties.containsKey(propertyName.toString())) {
                 throw new CitrusRuntimeException("No such property '"
-                        + PROPERTY_MARKER + propertyName.toString() + PROPERTY_MARKER + "'");
+                        + PROPERTY_MARKER + propertyName + PROPERTY_MARKER + "'");
             }
 
             newStr.append(line, startIndex, searchIndex);

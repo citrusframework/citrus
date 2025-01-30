@@ -36,7 +36,7 @@ public class DirectEndpointComponentTest {
     }
 
     @Test
-    public void testCreateDirectEndpoint() throws Exception {
+    public void testCreateDirectEndpoint() {
         DirectEndpointComponent component = new DirectEndpointComponent();
 
         Assert.assertFalse(context.getReferenceResolver().isResolvable("queueName"));
@@ -50,7 +50,7 @@ public class DirectEndpointComponentTest {
     }
 
     @Test
-    public void testCreateSyncDirectEndpoint() throws Exception {
+    public void testCreateSyncDirectEndpoint() {
         DirectEndpointComponent component = new DirectEndpointComponent();
 
         Assert.assertFalse(context.getReferenceResolver().isResolvable("queueName"));
@@ -63,7 +63,7 @@ public class DirectEndpointComponentTest {
     }
 
     @Test
-    public void testCreateDirectEndpointWithParameters() throws Exception {
+    public void testCreateDirectEndpointWithParameters() {
         DirectEndpointComponent component = new DirectEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("direct:queueName?timeout=10000", context);

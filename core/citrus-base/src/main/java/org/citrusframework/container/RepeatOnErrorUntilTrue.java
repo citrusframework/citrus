@@ -16,18 +16,13 @@
 
 package org.citrusframework.container;
 
-import jakarta.annotation.Nullable;
-import org.apache.commons.lang3.time.StopWatch;
+import java.time.Duration;
+
 import org.citrusframework.AbstractIteratingContainerBuilder;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.time.Duration;
-
-import static java.util.Objects.nonNull;
 
 /**
  * Looping test container iterating the nested test actions in case an error occurred in one

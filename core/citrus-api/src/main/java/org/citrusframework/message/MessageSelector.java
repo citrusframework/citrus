@@ -17,8 +17,8 @@
 package org.citrusframework.message;
 
 import java.util.Map;
-
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
@@ -50,7 +50,7 @@ public interface MessageSelector {
             factories.putAll(TYPE_RESOLVER.resolveAll());
 
             if (logger.isDebugEnabled()) {
-                factories.forEach((k, v) -> logger.debug(String.format("Found message selector '%s' as %s", k, v.getClass())));
+                factories.forEach((k, v) -> logger.debug("Found message selector '{}' as {}", k, v.getClass()));
             }
         }
 

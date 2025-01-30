@@ -16,15 +16,15 @@
 
 package org.citrusframework.util;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -127,9 +127,7 @@ public final class BooleanExpressionParser {
 
             result = parseBoolean(evaluateExpressionStack(operators, values));
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Boolean expression {} evaluates to {}", expression, result);
-            }
+            logger.debug("Boolean expression {} evaluates to {}", expression, result);
         } catch (final NoSuchElementException e) {
             throw new CitrusRuntimeException("Unable to parse boolean expression '" + expression + "'. Maybe expression is incomplete!", e);
         }

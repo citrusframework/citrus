@@ -122,7 +122,6 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
 
     /**
      * Gets mtom attachments enabled
-     * @return
      */
     public boolean getMtomEnabled() {
         return this.mtomEnabled;
@@ -130,7 +129,6 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
 
     /**
      * Gets mtom enabled.
-     * @return
      */
     public boolean isMtomEnabled() {
         return mtomEnabled;
@@ -214,8 +212,6 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
 
         /**
          * Sets special SOAP action message header.
-         * @param soapAction
-         * @return
          */
         public M soapAction(String soapAction) {
             soapMessage.header(SoapMessageHeaders.SOAP_ACTION, soapAction);
@@ -224,10 +220,6 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
 
         /**
          * Sets the attachment with string content.
-         * @param contentId
-         * @param contentType
-         * @param content
-         * @return
          */
         public M attachment(String contentId, String contentType, String content) {
             SoapAttachment attachment = new SoapAttachment();
@@ -241,10 +233,6 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
 
         /**
          * Sets the attachment with content resource.
-         * @param contentId
-         * @param contentType
-         * @param contentResource
-         * @return
          */
         public M attachment(String contentId, String contentType, Resource contentResource) {
             return attachment(contentId, contentType, contentResource, FileUtils.getDefaultCharset());
@@ -252,11 +240,6 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
 
         /**
          * Sets the attachment with content resource.
-         * @param contentId
-         * @param contentType
-         * @param contentResource
-         * @param charset
-         * @return
          */
         public M attachment(String contentId, String contentType, Resource contentResource, Charset charset) {
             SoapAttachment attachment = new SoapAttachment();
@@ -276,8 +259,6 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
 
         /**
          * Sets the charset name for this send action builder's most recent attachment.
-         * @param charsetName
-         * @return
          */
         public M charset(String charsetName) {
             if (!this.attachments.isEmpty()) {
@@ -288,8 +269,6 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
 
         /**
          * Sets the attachment from Java object instance.
-         * @param attachment
-         * @return
          */
         public M attachment(SoapAttachment attachment) {
             this.attachments.add(attachment);
@@ -310,8 +289,6 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
 
         /**
          * Sets the request content type header.
-         * @param contentType
-         * @return
          */
         public M contentType(String contentType) {
             soapMessage.contentType(contentType);
@@ -320,8 +297,6 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
 
         /**
          * Sets the request accept header.
-         * @param accept
-         * @return
          */
         public M accept(String accept) {
             soapMessage.accept(accept);

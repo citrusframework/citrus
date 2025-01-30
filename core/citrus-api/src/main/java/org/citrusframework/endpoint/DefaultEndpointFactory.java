@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * Default endpoint factory implementation uses registered endpoint components in Spring application context to create endpoint
  * from given endpoint uri. If endpoint bean name is given factory directly creates from application context. If endpoint uri is given
  * factory tries to find proper endpoint component in application context and in default endpoint component configuration.
- *
+ * <p>
  * Default endpoint components are listed in property file reference where key is the component name and value is the fully qualified class name
  * of the implementing endpoint component class.
  *
@@ -133,7 +133,7 @@ public class DefaultEndpointFactory implements EndpointFactory {
         synchronized (endpointCache) {
             if (endpointCache.containsKey(cachedEndpointName)) {
                 if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("Found cached endpoint for uri '%s'", cachedEndpointName));
+                    logger.debug("Found cached endpoint for uri '{}'", cachedEndpointName);
                 }
                 return endpointCache.get(cachedEndpointName);
             } else {

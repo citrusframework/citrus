@@ -16,19 +16,19 @@
 
 package org.citrusframework.validation.matcher.core;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.validation.matcher.ControlExpressionParser;
-import org.citrusframework.validation.matcher.ValidationMatcher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
+
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.validation.matcher.ControlExpressionParser;
+import org.citrusframework.validation.matcher.ValidationMatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Special validation matcher implementation checks that a given date matches an
@@ -107,7 +107,7 @@ public class WeekdayValidationMatcher implements ValidationMatcher, ControlExpre
         SATURDAY(Calendar.SATURDAY),
         SUNDAY(Calendar.SUNDAY);
 
-        private int constantValue;
+        private final int constantValue;
 
         Weekday(int constant) {
             this.constantValue = constant;

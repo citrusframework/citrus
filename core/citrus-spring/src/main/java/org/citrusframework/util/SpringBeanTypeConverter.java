@@ -38,7 +38,7 @@ import org.springframework.util.MultiValueMap;
 public final class SpringBeanTypeConverter extends DefaultTypeConverter {
 
     /** Logger */
-    private static final Logger logger = LoggerFactory.getLogger(DefaultTypeConverter.class);
+    private static final Logger logger = LoggerFactory.getLogger(SpringBeanTypeConverter.class);
 
     public static SpringBeanTypeConverter INSTANCE = new SpringBeanTypeConverter();
 

@@ -16,7 +16,6 @@
 
 package org.citrusframework.validation.interceptor;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import org.citrusframework.UnitTestSupport;
@@ -64,7 +63,7 @@ public class BinaryMessageProcessorTest extends UnitTestSupport {
     }
 
     @Test
-    public void testResourceMessageWithIsIntercepted() throws IOException {
+    public void testResourceMessageWithIsIntercepted() {
 
         //GIVEN
         final DefaultMessage message = new DefaultMessage(getTestFile());

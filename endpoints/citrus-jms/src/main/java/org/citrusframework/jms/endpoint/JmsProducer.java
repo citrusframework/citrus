@@ -42,8 +42,6 @@ public class JmsProducer implements Producer {
 
     /**
      * Default constructor using endpoint configuration.
-     * @param name
-     * @param endpointConfiguration
      */
     public JmsProducer(String name, JmsEndpointConfiguration endpointConfiguration) {
         this.name = name;
@@ -75,13 +73,10 @@ public class JmsProducer implements Producer {
 
     /**
      * Send message using destination name.
-     * @param message
-     * @param destinationName
-     * @param context
      */
     private void send(Message message, String destinationName, TestContext context) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending JMS message to destination: '" + destinationName + "'");
+            logger.debug("Sending JMS message to destination: '{}'", destinationName);
         }
 
         endpointConfiguration.getJmsTemplate().send(destinationName, session -> {
@@ -90,18 +85,15 @@ public class JmsProducer implements Producer {
             return jmsMessage;
         });
 
-        logger.info("Message was sent to JMS destination: '" + destinationName + "'");
+        logger.info("Message was sent to JMS destination: '{}'", destinationName);
     }
 
     /**
      * Send message using destination.
-     * @param message
-     * @param destination
-     * @param context
      */
     private void send(Message message, Destination destination, TestContext context) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending JMS message to destination: '" + endpointConfiguration.getDestinationName(destination) + "'");
+            logger.debug("Sending JMS message to destination: '{}'", endpointConfiguration.getDestinationName(destination));
         }
 
         endpointConfiguration.getJmsTemplate().send(destination, session -> {
@@ -110,7 +102,10 @@ public class JmsProducer implements Producer {
             return jmsMessage;
         });
 
-        logger.info("Message was sent to JMS destination: '" + endpointConfiguration.getDestinationName(destination) + "'");
+        if (logger.isInfoEnabled()) {
+            logger.info("Message was sent to JMS destination: '{}'",
+                endpointConfiguration.getDestinationName(destination));
+        }
     }
 
     @Override

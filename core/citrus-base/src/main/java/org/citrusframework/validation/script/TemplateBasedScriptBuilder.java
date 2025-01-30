@@ -71,7 +71,7 @@ public final class TemplateBasedScriptBuilder {
                         scriptBuilder.append(line);
                         scriptBuilder.append("\n");
                     } else {
-                        scriptBody.append((scriptBody.length() == 0 ? "" : "\n"));
+                        scriptBody.append((scriptBody.isEmpty() ? "" : "\n"));
                         scriptBody.append(line);
                     }
                 }
@@ -83,7 +83,7 @@ public final class TemplateBasedScriptBuilder {
         }
 
         scriptBuilder.append(scriptHead);
-        scriptBuilder.append(scriptBody.toString());
+        scriptBuilder.append(scriptBody);
         scriptBuilder.append(scriptTail);
 
         return scriptBuilder.toString();

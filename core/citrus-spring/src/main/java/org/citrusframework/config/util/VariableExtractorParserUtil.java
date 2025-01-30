@@ -52,7 +52,7 @@ public class VariableExtractorParserUtil {
             Element messageElement = DomUtils.getChildElementByTagName(element, "message");
             if (messageElement != null) {
                 List<?> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
-                if (namespaceElements.size() > 0) {
+                if (!namespaceElements.isEmpty()) {
                     for (Object namespaceElementObject : namespaceElements) {
                         Element namespaceElement = (Element) namespaceElementObject;
                         namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));

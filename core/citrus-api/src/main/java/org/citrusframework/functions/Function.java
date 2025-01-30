@@ -49,7 +49,7 @@ public interface Function {
             functions.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
 
             if (logger.isDebugEnabled()) {
-                functions.forEach((k, v) -> logger.debug(String.format("Found function '%s' as %s", k, v.getClass())));
+                functions.forEach((k, v) -> logger.debug("Found function '{}' as {}", k, v.getClass()));
             }
         }
 

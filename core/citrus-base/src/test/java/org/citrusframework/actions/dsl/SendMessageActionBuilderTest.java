@@ -17,7 +17,6 @@
 package org.citrusframework.actions.dsl;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -273,7 +272,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testSendBuilderWithPayloadResource() throws IOException {
+    public void testSendBuilderWithPayloadResource() {
         reset(resource, messageEndpoint, messageProducer);
         when(messageEndpoint.createProducer()).thenReturn(messageProducer);
         when(messageEndpoint.getActor()).thenReturn(null);
@@ -497,7 +496,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testSendBuilderWithHeaderDataResource() throws IOException {
+    public void testSendBuilderWithHeaderDataResource() {
         reset(resource, messageEndpoint, messageProducer);
         when(messageEndpoint.createProducer()).thenReturn(messageProducer);
         when(messageEndpoint.getActor()).thenReturn(null);

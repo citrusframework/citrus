@@ -66,7 +66,7 @@ public class CreateVariablesAction extends AbstractTestAction {
                 value = context.replaceDynamicContentInString(stringValue);
             }
 
-            logger.info("Setting variable: " + key + " to value: " + value);
+            logger.info("Setting variable: {} to value: {}", key, value);
 
             context.setVariable(key, value);
         }

@@ -155,7 +155,7 @@ public abstract class ValidationUtils {
     /**
      * Combines value matchers from multiple sources. Includes validators coming from reference resolver
      * and resource path lookup are added.
-     *
+     * <p>
      * Then pick matcher that explicitly supports the given expected value type.
      * @param expectedValue
      * @param context

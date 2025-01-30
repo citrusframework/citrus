@@ -68,7 +68,7 @@ public class SchemaParser implements BeanDefinitionParser {
         }
 
         BeanDefinitionParser parser = TYPE_RESOLVER.resolve(fileExtension);
-        logger.info(String.format("Found schema bean definition parser %s from resource %s", parser.getClass(), RESOURCE_PATH + "/" + fileExtension));
+        logger.info("Found schema bean definition parser {} from resource {}", parser.getClass(), RESOURCE_PATH + "/" + fileExtension);
         SCHEMA_PARSER.put(fileExtension, parser);
         return parser;
     }

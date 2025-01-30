@@ -205,7 +205,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
         CitrusAnnotations.injectCitrusFramework(this, citrus);
         beforeSuite(citrus.getCitrusContext());
         citrus.beforeSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
-                Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
+            Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
     }
 
     /**

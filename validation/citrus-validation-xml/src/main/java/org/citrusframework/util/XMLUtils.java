@@ -38,6 +38,8 @@ import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSParser;
 import org.w3c.dom.ls.LSSerializer;
 
+import static org.citrusframework.util.StringUtils.isEmpty;
+
 /**
  * Class providing several utility methods for XML processing.
  *
@@ -63,7 +65,6 @@ public final class XMLUtils {
 
     /**
      * Initializes XML utilities with custom configurer.
-     * @param xmlConfigurer
      */
     public static void initialize(XmlConfigurer xmlConfigurer) {
         configurer = xmlConfigurer;
@@ -71,7 +72,6 @@ public final class XMLUtils {
 
     /**
      * Creates basic parser instance.
-     * @return
      */
     public static LSParser createLSParser() {
         return configurer.createLSParser();
@@ -79,7 +79,6 @@ public final class XMLUtils {
 
     /**
      * Creates basic serializer instance.
-     * @return
      */
     public static LSSerializer createLSSerializer() {
         return configurer.createLSSerializer();
@@ -87,7 +86,6 @@ public final class XMLUtils {
 
     /**
      * Creates LSInput from dom implementation.
-     * @return
      */
     public static LSInput createLSInput() {
         return configurer.createLSInput();
@@ -95,7 +93,6 @@ public final class XMLUtils {
 
     /**
      * Creates LSOutput from dom implementation.
-     * @return
      */
     public static LSOutput createLSOutput() {
         return configurer.createLSOutput();
@@ -165,13 +162,14 @@ public final class XMLUtils {
      * @param element the root node to normalize.
      */
     public static void stripWhitespaceNodes(Node element) {
-        Node node, child;
+        Node node;
+        Node child;
         for (child = element.getFirstChild(); child != null; child = node) {
             node = child.getNextSibling();
             stripWhitespaceNodes(child);
         }
 
-        if (element.getNodeType() == Node.TEXT_NODE && element.getNodeValue().trim().length()==0) {
+        if (element.getNodeType() == Node.TEXT_NODE && element.getNodeValue().trim().isEmpty()) {
             element.getParentNode().removeChild(element);
         }
     }
@@ -185,43 +183,42 @@ public final class XMLUtils {
      * @return the path expression representing the node in DOM tree.
      */
     public static String getNodesPathName(Node node) {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder builder = new StringBuilder();
 
         if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
-            buildNodeName(((Attr) node).getOwnerElement(), buffer);
-            buffer.append(".");
-            buffer.append(node.getLocalName());
+            buildNodeName(((Attr) node).getOwnerElement(), builder);
+            builder.append(".");
+            builder.append(node.getLocalName());
         } else {
-            buildNodeName(node, buffer);
+            buildNodeName(node, builder);
         }
 
-        return buffer.toString();
+        return builder.toString();
     }
 
     /**
      * Builds the node path expression for a node in the DOM tree.
      * @param node in a DOM tree.
-     * @param buffer string buffer.
+     * @param builder string builder.
      */
-    private static void buildNodeName(Node node, StringBuffer buffer) {
+    private static void buildNodeName(Node node, StringBuilder builder) {
         if (node.getParentNode() == null) {
             return;
         }
 
-        buildNodeName(node.getParentNode(), buffer);
+        buildNodeName(node.getParentNode(), builder);
 
         if (node.getParentNode() != null
                 && node.getParentNode().getParentNode() != null) {
-            buffer.append(".");
+            builder.append(".");
         }
 
-        buffer.append(node.getLocalName());
+        builder.append(node.getLocalName());
     }
 
     /**
      * Serializes a DOM document
-     * @param doc
-     * @throws CitrusRuntimeException
+     *
      * @return serialized XML string
      */
     public static String serialize(Document doc) {
@@ -240,12 +237,15 @@ public final class XMLUtils {
     }
 
     /**
-     * Pretty prints a XML string.
-     * @param xml
-     * @throws CitrusRuntimeException
+     * Pretty prints an XML string.
      * @return pretty printed XML string
      */
     public static String prettyPrint(String xml) {
+
+        if (isEmpty(xml)) {
+            return xml;
+        }
+
         LSParser parser = configurer.createLSParser();
         configurer.setParserConfigParameter(parser, XmlConfigurer.VALIDATE_IF_SCHEMA, false);
 
@@ -306,8 +306,6 @@ public final class XMLUtils {
 
     /**
      * Parse message payload with DOM implementation.
-     * @param messagePayload
-     * @throws CitrusRuntimeException
      * @return DOM document.
      */
     public static Document parseMessagePayload(String messagePayload) {
@@ -327,8 +325,6 @@ public final class XMLUtils {
     /**
      * Try to find encoding for document node. Also supports Citrus default encoding set
      * as System property.
-     * @param doc
-     * @return
      */
     public static Charset getTargetCharset(Document doc) {
         String defaultEncoding = System.getProperty(CitrusSettings.CITRUS_FILE_ENCODING_PROPERTY,
@@ -397,8 +393,6 @@ public final class XMLUtils {
 
     /**
      * Removes leading XML declaration from xml if present.
-     * @param xml
-     * @return
      */
     public static String omitXmlDeclaration(String xml) {
         if (xml.startsWith("<?xml") && xml.contains("?>")) {

@@ -76,9 +76,7 @@ public class HttpCondition extends AbstractCondition {
      */
     private int invokeUrl(TestContext context) {
         URL contextUrl = getUrl(context);
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Probing Http request url '%s'", contextUrl.toExternalForm()));
-        }
+        logger.debug("Probing Http request url '{}'", contextUrl.toExternalForm());
 
         int responseCode = -1;
 
@@ -90,7 +88,7 @@ public class HttpCondition extends AbstractCondition {
 
             responseCode = httpURLConnection.getResponseCode();
         } catch (IOException e) {
-            logger.warn(String.format("Could not access Http url '%s' - %s", contextUrl.toExternalForm(), e.getMessage()));
+            logger.warn("Could not access Http url '{}' - {}", contextUrl.toExternalForm(), e.getMessage());
         } finally {
             if (httpURLConnection != null) {
                 httpURLConnection.disconnect();

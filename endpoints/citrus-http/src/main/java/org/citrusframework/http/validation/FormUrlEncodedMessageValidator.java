@@ -101,7 +101,7 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
                 .map(XmlMessageValidationContext.class::cast)
                 .findFirst();
 
-        if (!provided.isPresent()) {
+        if (provided.isEmpty()) {
             List<ValidationContext> enriched = new ArrayList<>(validationContexts);
             enriched.add(new XmlMessageValidationContext());
             return enriched;
@@ -124,12 +124,12 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
         // try to find xml message validator in registry
         Optional<MessageValidator<? extends ValidationContext>> defaultMessageValidator = context.getMessageValidatorRegistry().findMessageValidator(DEFAULT_XML_MESSAGE_VALIDATOR);
 
-        if (!defaultMessageValidator.isPresent()
+        if (defaultMessageValidator.isEmpty()
                 && context.getReferenceResolver().isResolvable(DEFAULT_XML_MESSAGE_VALIDATOR)) {
             defaultMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class));
         }
 
-        if (!defaultMessageValidator.isPresent()) {
+        if (defaultMessageValidator.isEmpty()) {
             // try to find xml message validator via resource path lookup
             defaultMessageValidator = MessageValidator.lookup("xml");
         }

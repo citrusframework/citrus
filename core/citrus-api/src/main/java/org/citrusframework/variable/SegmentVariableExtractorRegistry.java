@@ -37,12 +37,11 @@ import org.slf4j.LoggerFactory;
  * the extractors managed by this registry in order to access variable content from the TestContext expressed by variable expressions.
  * <p>
  * Registry provides all known {@link SegmentVariableExtractor}s.
- *
  */
 public class SegmentVariableExtractorRegistry {
 
     /** Logger */
-    private static final Logger logger = LoggerFactory.getLogger(SegmentVariableExtractor.class);
+    private static final Logger logger = LoggerFactory.getLogger(SegmentVariableExtractorRegistry.class);
 
     /** Segment variable extractor resource lookup path */
     private static final String RESOURCE_PATH = "META-INF/citrus/variable/extractor/segment";
@@ -61,7 +60,7 @@ public class SegmentVariableExtractorRegistry {
             Map<String, SegmentVariableExtractor> extractors = TYPE_RESOLVER.resolveAll();
             return extractors.values();
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve segment variable extractor from resource '%s'", RESOURCE_PATH));
+            logger.warn("Failed to resolve segment variable extractor from resource '{}'", RESOURCE_PATH);
         }
 
         return Collections.emptyList();

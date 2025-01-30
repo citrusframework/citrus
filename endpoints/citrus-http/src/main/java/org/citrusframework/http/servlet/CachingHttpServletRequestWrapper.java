@@ -18,7 +18,6 @@ package org.citrusframework.http.servlet;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -129,15 +128,8 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
                     paramValue = "";
                 }
 
-                try {
-                    params.put(URLDecoder.decode(paramName, charset.name()),
-                            new String[] { URLDecoder.decode(paramValue, charset.name()) });
-                } catch (final UnsupportedEncodingException e) {
-                    throw new CitrusRuntimeException(String.format(
-                            "Failed to decode query param value '%s=%s'",
-                            paramName,
-                            paramValue), e);
-                }
+                params.put(URLDecoder.decode(paramName, charset),
+                        new String[] { URLDecoder.decode(paramValue, charset) });
             }
         }
     }

@@ -23,12 +23,13 @@ import java.util.Scanner;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.message.RawMessage;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @since 2.5
@@ -43,13 +44,13 @@ public class MessageTracingTestListenerTest extends UnitTestSupport {
     }
 
     @Test
-    public void shouldReturnTheSameTraceFile() throws Exception {
+    public void shouldReturnTheSameTraceFile() {
         String testname = "SomeDummyTest";
-        Assert.assertEquals(testling.getTraceFile(testname).getAbsolutePath(), testling.getTraceFile(testname).getAbsolutePath());
+        assertEquals(testling.getTraceFile(testname).getAbsolutePath(), testling.getTraceFile(testname).getAbsolutePath());
     }
 
     @Test
-    public void shouldContainMessages() throws Exception {
+    public void shouldContainMessages() {
         String testname = "SomeDummyTest";
         String inboundPayload = "Inbound Message";
         String outboundPayload = "Outbound Message";
@@ -81,10 +82,10 @@ public class MessageTracingTestListenerTest extends UnitTestSupport {
 
     private void assertFileExistsWithContent(String testname, String content) {
         File traceFile = testling.getTraceFile(testname);
-        Assert.assertTrue(traceFile.isFile());
+        assertTrue(traceFile.isFile());
         try (Scanner scanner = new Scanner(traceFile)) {
             String fileContent = scanner.useDelimiter("\\Z").next();
-            Assert.assertTrue(fileContent.contains(content));
+            assertTrue(fileContent.contains(content));
         }
         catch (IOException e) {
             throw new RuntimeException(e);

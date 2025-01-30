@@ -85,9 +85,7 @@ public class TransformAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         try {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Starting XSLT transformation");
-            }
+            logger.debug("Starting XSLT transformation");
 
             //parse XML document and define XML source for transformation
             Source xmlSource;

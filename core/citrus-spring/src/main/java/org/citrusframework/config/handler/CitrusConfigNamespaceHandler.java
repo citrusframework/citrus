@@ -88,9 +88,7 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
 
         actionParserMap.forEach((k, p) -> {
             registerBeanDefinitionParser(k, p);
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Register bean definition parser %s from resource %s", p.getClass(), k));
-            }
+            logger.debug("Register bean definition parser {} from resource {}", p.getClass(), k);
         });
     }
 }

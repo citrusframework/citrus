@@ -16,6 +16,13 @@
 
 package org.citrusframework.http.interceptor;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Map.Entry;
+
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.message.RawMessage;
 import org.citrusframework.report.MessageListeners;
@@ -28,13 +35,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.Map.Entry;
 
 import static java.lang.String.join;
 import static java.lang.System.lineSeparator;
@@ -82,9 +82,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
             logger.debug("Sending Http request message");
             messageListener.onOutboundMessage(new RawMessage(request), contextFactory.getObject());
         } else {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Sending Http request message:" + NEWLINE + request);
-            }
+            logger.debug("Sending Http request message:{}{}", NEWLINE, request);
         }
     }
 
@@ -98,9 +96,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
             logger.debug("Received Http response message");
             messageListener.onInboundMessage(new RawMessage(response), contextFactory.getObject());
         } else {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Received Http response message:" + NEWLINE + response);
-            }
+            logger.debug("Received Http response message:{}{}", NEWLINE, response);
         }
     }
 
