@@ -54,9 +54,7 @@ import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
-import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
-import org.citrusframework.validation.xml.XpathMessageValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
@@ -245,14 +243,12 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 }
             } else {
                 boolean mustFindValidator = validationContexts.stream()
-                        .anyMatch(item -> JsonPathMessageValidationContext.class.isAssignableFrom(item.getClass()) ||
-                                XpathMessageValidationContext.class.isAssignableFrom(item.getClass()) ||
-                                ScriptValidationContext.class.isAssignableFrom(item.getClass()));
+                        .anyMatch(ValidationContext::requiresValidator);
 
-                List<MessageValidator<? extends ValidationContext>> validators =
+                List<MessageValidator<? extends ValidationContext>> activeValidators =
                         context.getMessageValidatorRegistry().findMessageValidators(messageType, message, mustFindValidator);
 
-                for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
+                for (MessageValidator<? extends ValidationContext> messageValidator : activeValidators) {
                     messageValidator.validateMessage(message, controlMessage, context, validationContexts);
                 }
             }
