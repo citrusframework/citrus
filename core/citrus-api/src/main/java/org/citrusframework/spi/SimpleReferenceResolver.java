@@ -16,8 +16,8 @@
 
 package org.citrusframework.spi;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -27,7 +27,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
  */
 public class SimpleReferenceResolver implements ReferenceResolver, ReferenceRegistry {
 
-    private final Map<String, Object> objectStore = new HashMap<>();
+    private final ConcurrentHashMap<String, Object> objectStore = new ConcurrentHashMap<>();
 
     @Override
     public <T> T resolve(Class<T> type) {
@@ -85,6 +85,8 @@ public class SimpleReferenceResolver implements ReferenceResolver, ReferenceRegi
 
     @Override
     public void bind(String name, Object value) {
-        this.objectStore.put(name, value);
+        if (value != null) {
+            this.objectStore.put(name, value);
+        }
     }
 }

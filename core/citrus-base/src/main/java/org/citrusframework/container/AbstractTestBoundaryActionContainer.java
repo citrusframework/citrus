@@ -72,27 +72,27 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
 
         if (StringUtils.hasText(packageNamePattern)) {
             if (!Pattern.compile(packageNamePattern).matcher(packageName).matches()) {
-                logger.warn(String.format(baseErrorMessage, "test package", getName()));
+                logger.debug(String.format(baseErrorMessage, "test package", getName()));
                 return false;
             }
         }
 
         if (StringUtils.hasText(namePattern)) {
             if (!Pattern.compile(sanitizePatten(namePattern)).matcher(testName).matches()) {
-                logger.warn(String.format(baseErrorMessage, "test name", getName()));
+                logger.debug(String.format(baseErrorMessage, "test name", getName()));
                 return false;
             }
         }
 
         if (!checkTestGroups(includedGroups)) {
-            logger.warn(String.format(baseErrorMessage, "test groups", getName()));
+            logger.debug(String.format(baseErrorMessage, "test groups", getName()));
             return false;
         }
 
         for (Map.Entry<String, String> envEntry : env.entrySet()) {
             if (!System.getenv().containsKey(envEntry.getKey()) ||
                     (StringUtils.hasText(envEntry.getValue()) && !System.getenv().get(envEntry.getKey()).equals(envEntry.getValue()))) {
-                logger.warn(String.format(baseErrorMessage, "env properties", getName()));
+                logger.debug(String.format(baseErrorMessage, "env properties", getName()));
                 return false;
             }
         }
@@ -100,7 +100,7 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
         for (Map.Entry<String, String> systemProperty : systemProperties.entrySet()) {
             if (!System.getProperties().containsKey(systemProperty.getKey()) ||
                     (StringUtils.hasText(systemProperty.getValue()) && !System.getProperties().get(systemProperty.getKey()).equals(systemProperty.getValue()))) {
-                logger.warn(String.format(baseErrorMessage, "system properties", getName()));
+                logger.debug(String.format(baseErrorMessage, "system properties", getName()));
                 return false;
             }
         }
