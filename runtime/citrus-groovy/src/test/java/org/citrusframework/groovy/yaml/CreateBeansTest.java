@@ -45,5 +45,7 @@ public class CreateBeansTest extends AbstractYamlActionTest {
         Assert.assertNotNull(action.getScript().trim());
 
         Assert.assertTrue(context.getReferenceResolver().isResolvable(DefaultTextEqualsMessageValidator.class));
+        Assert.assertTrue(context.getReferenceResolver().isResolvable("foo", FooBean.class));
+        Assert.assertTrue(context.getReferenceResolver().isResolvable("bar", FooBean.class));
     }
 }

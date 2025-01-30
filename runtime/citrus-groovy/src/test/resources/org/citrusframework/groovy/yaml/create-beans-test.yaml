@@ -8,4 +8,8 @@ actions:
         script: |
           beans {
             bean(org.citrusframework.validation.DefaultTextEqualsMessageValidator.class)
+            bean("foo") {
+              new org.citrusframework.groovy.yaml.FooBean("Citrus rocks!")
+            }
+            bar = new org.citrusframework.groovy.yaml.FooBean("Citrus is awesome!")
           }

@@ -77,6 +77,14 @@ public class BeansConfiguration extends GroovyObjectSupport {
         }
     }
 
+    public void bean(String name, Closure<?> callable) {
+        Object bean = callable.call();
+        if (bean == null) {
+            throw new CitrusRuntimeException("Failed to instantiate bean from closure - expected bean instance return value but was null");
+        }
+        referenceResolver.bind(name, bean);
+    }
+
     public void queue(String name) {
         referenceResolver.bind(name, new DefaultMessageQueue(name));
     }

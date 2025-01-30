@@ -47,7 +47,15 @@ actions:
 
 The YAML test is able to create endpoints and other configuration entities as part of the test.
 The test leverages the Groovy programming language that provides a comfortable way to define beans in the Citrus registry.
-You can set any of the supported properties on the configuration components.
+
+The script creates the instances as beans in the Citrus registry.
+
+A configuration script may use methods and closures to define the bean instances.
+The configuration script supports following methods:
+
+* queues()
+* endpoints()
+* beans()
 
 .my-test.yaml
 [source,yaml]
@@ -81,8 +89,44 @@ actions:
           data: Hello Citrus!
 ----
 
-The test above creates a new `direct` endpoint called `hello` that uses an im-memory queue `say-hello`.
-The send action is able to reference the endpoint by its name to send a message body to the queue.
+The test above creates a new `direct` endpoint called `hello` that uses an in-memory queue named `say-hello`.
+
+The `send` test action is able to reference the new endpoint by its name to send a message body to the queue.
+
+You can also create bean instances with a Groovy script:
+
+.my-test.yaml
+[source,yaml]
+----
+actions:
+  - groovy:
+      beans:
+        script: |
+          beans {
+            bean(DefaultTextEqualsMessageValidator.class)
+          }
+----
+
+The configuration script initializes a new bean instance of type `org.citrusframework.validation.DefaultTextEqualsMessageValidator.class`.
+A `receive` test action will automatically resolve the new message validator instance from the Citrus bean registry to perform its message validation.
+
+The bean type must have a default constructor in this case.
+
+.Create beans in registry
+[source,groovy]
+----
+beans {
+    bean('foo', org.example.foo.FooBean.class)
+    fooClient = new org.example.foo.FooClientBuilder().build()
+}
+----
+
+The example creates a new instance of `FooBean` with the id `foo` in the Citrus bean registry.
+The `FooBean` class must have a default constructor in this case, too.
+
+You can also create the instances on your own (e.g. using a builder factory) as seen with the `fooClient` bean in this example.
+
+All beans added to the Citrus registry are subject to being injected into or resolved by test actions and other components in Citrus.
 
 [[run-yaml-templates]]
 === Templates
