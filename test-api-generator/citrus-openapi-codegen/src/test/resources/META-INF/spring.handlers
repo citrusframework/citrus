@@ -1,0 +1,3 @@
+http\://www.citrusframework.org/citrus-test-schema/bookservice-api=org.citrusframework.openapi.generator.soap.bookservice.spring.BookServiceNamespaceHandler
+http\://www.citrusframework.org/citrus-test-schema/petstore-api=org.citrusframework.openapi.generator.rest.petstore.spring.PetStoreNamespaceHandler
+http\://www.citrusframework.org/citrus-test-schema/extpetstore-api=org.citrusframework.openapi.generator.rest.extpetstore.spring.ExtPetStoreNamespaceHandler

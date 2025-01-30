@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "hasso",
+    "category": {
+      "id": 2,
+      "name": "citrus:randomEnumValue('dog', 'cat', 'fish')"
+    },
+    "photoUrls": [
+      "http://localhost:8080/photos/${petId}"
+    ],
+    "tags": [
+      {
+        "id": 3,
+        "name": "generated"
+      }
+    ],
+    "status": "citrus:randomEnumValue('available', 'pending', 'sold')"
+  },
+  {
+    "id": 4,
+    "name": "fluffy",
+    "category": {
+      "id": 5,
+      "name": "citrus:randomEnumValue('dog', 'cat', 'fish')"
+    },
+    "photoUrls": [
+      "http://localhost:8080/photos/${petId}"
+    ],
+    "tags": [
+      {
+        "id": 6,
+        "name": "generated"
+      }
+    ],
+    "status": "citrus:randomEnumValue('available', 'pending', 'sold')"
+  }
+]

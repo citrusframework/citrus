@@ -70,6 +70,7 @@ import org.slf4j.LoggerFactory;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static org.citrusframework.message.MessageType.mapToMessageType;
 import static org.citrusframework.util.StringUtils.hasText;
 
 /**
@@ -287,14 +288,28 @@ public class ReceiveMessageAction extends AbstractTestAction {
                     .toList();
             if (!unknown.isEmpty()) {
                 unknown.forEach(validationContext -> logger.warn("Found validation context that has not been processed: {}", validationContext.getClass().getName()));
-                throw new ValidationException("Incomplete message validation - total of %d validation context has not been processed".formatted(unknown.size()));
+                throw new ValidationException("Incomplete message validation of message with type %s - no validation has been performed on the following contexts: %s".formatted(messageType, unknown.stream().map(validationContext -> validationContext.getClass().getSimpleName()).collect(
+                    Collectors.joining(", "))));
             }
         }
     }
 
     private void assumeMessageType(Message message) {
+
+        Object contentType = message.getHeaders().get("Content-Type");
+        if (contentType instanceof String contentTypeString) {
+            Object encoding = message.getHeaders().get("Content-Transfer-Encoding");
+            MessageType messageType = mapToMessageType(
+                contentTypeString,
+                encoding != null ? encoding.toString() : null);
+            if (messageType != null) {
+                setMessageType(messageType);
+                return;
+            }
+        }
+
         if (MessageType.isBinary(getMessageType()) ||
-                MessageType.FORM_URL_ENCODED.equalsIgnoreCase(getMessageType())) {
+            MessageType.FORM_URL_ENCODED.equalsIgnoreCase(getMessageType())) {
             return;
         }
 
@@ -752,6 +767,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 messageBuilderSupport = getMessageBuilderSupport();
             }
 
+
             reconcileValidationContexts();
 
             validationContexts.stream()
@@ -883,14 +899,15 @@ public class ReceiveMessageAction extends AbstractTestAction {
                     && payloadBuilder.getPayloadBuilder() != null)) {
                 MessageType messageType = MessageType.PLAINTEXT;
                 try {
-                    // The reason for this is to guess the best message type possible. In case we fail here,
-                    // the default type will in worst case just lead to a validation failure, because the
-                    // validation context stays untouched.
-                    messageType = hasText(messageBuilderSupport.getMessageType())
-                        ? MessageType.valueOf(messageBuilderSupport.getMessageType())
+                    // Determine the message type from builder support if it has EXPLICITLY been set.
+                    // If it has not been set explicitly, we rely on validation context reconciliation
+                    // on validation, based on the received message type.
+                    messageType = hasText(messageBuilderSupport.getMessageType()) && messageBuilderSupport.isExplictMessageType()
+                        ? MessageType.valueOf(messageBuilderSupport.getMessageType().toUpperCase())
                         : messageType;
                 } catch (IllegalArgumentException e) {
-                    // Ignore and use default message type
+                    // Unknown message type
+                    return null;
                 }
                 return messageType;
             }

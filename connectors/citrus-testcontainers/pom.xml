@@ -14,6 +14,7 @@
   <name>Citrus :: Connectors :: Testcontainers</name>
 
   <properties>
+    <!-- Container tests typically do not run behind a company proxy. Set this property if required, when building locally-->
     <skipContainerTests>false</skipContainerTests>
   </properties>
 

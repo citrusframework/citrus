@@ -45,9 +45,9 @@ import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.util.SocketUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -187,7 +187,7 @@ public class OpenApiClientTest extends AbstractGroovyActionDslTest {
         assertListContains(receiveMessageAction.getValidationContexts(),
             OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
         assertListContains(receiveMessageAction.getValidationContexts(),
-            JsonMessageValidationContext.class::isInstance, "List must contain JsonMessageValidationContext");
+            DefaultMessageValidationContext.class::isInstance, "List must contain DefaultMessageValidationContext");
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
@@ -226,7 +226,7 @@ public class OpenApiClientTest extends AbstractGroovyActionDslTest {
         assertListContains(receiveMessageAction.getValidationContexts(),
             OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
         assertListContains(receiveMessageAction.getValidationContexts(),
-            JsonMessageValidationContext.class::isInstance, "List must contain JsonMessageValidationContext");
+            DefaultMessageValidationContext.class::isInstance, "List must contain DefaultMessageValidationContext");
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);

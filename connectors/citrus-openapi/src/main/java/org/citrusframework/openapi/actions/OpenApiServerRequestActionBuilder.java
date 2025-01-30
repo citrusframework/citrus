@@ -16,7 +16,6 @@
 
 package org.citrusframework.openapi.actions;
 
-import org.citrusframework.CitrusSettings;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.http.actions.HttpServerRequestActionBuilder;
@@ -28,7 +27,6 @@ import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.openapi.validation.OpenApiOperationToMessageHeadersProcessor;
 import org.citrusframework.openapi.validation.OpenApiValidationContext;
 
-import static org.citrusframework.message.MessageType.JSON;
 import static org.citrusframework.openapi.OpenApiMessageType.REQUEST;
 import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
 
@@ -77,19 +75,6 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
                 .schemaValidation(schemaValidation)
                 .build());
         }
-    }
-
-    /**
-     * Overridden to change the default message type to JSON, as Json is more common in OpenAPI context.
-     */
-    @Override
-    protected HttpMessageBuilderSupport createMessageBuilderSupport() {
-        HttpMessageBuilderSupport support = super.createMessageBuilderSupport();
-        support.type(CitrusSettings.getPropertyEnvOrDefault(
-            CitrusSettings.DEFAULT_MESSAGE_TYPE_PROPERTY,
-            CitrusSettings.DEFAULT_MESSAGE_TYPE_ENV,
-            JSON.toString()));
-        return support;
     }
 
     @Override
