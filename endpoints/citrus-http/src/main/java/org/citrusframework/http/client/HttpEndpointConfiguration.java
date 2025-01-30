@@ -19,6 +19,7 @@ package org.citrusframework.http.client;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.citrusframework.endpoint.AbstractPollableEndpointConfiguration;
 import org.citrusframework.endpoint.resolver.DynamicEndpointUriResolver;
@@ -101,6 +102,10 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      * Should disable redirect handling
      */
     private boolean disableRedirectHandling = false;
+
+    /** Should handle http semicolon uri content e.g. for matrix encoded path variables  */
+    // TODO: Christoph Deppisch advise whether this is a reasonable approach to support matrix encoded path parameters
+    private boolean handleSemicolonPathContent = false;
 
     /** Default status code returned by http server */
     private int defaultStatusCode = HttpStatus.OK.value();
@@ -420,6 +425,24 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      */
     public void setDisableRedirectHandling(boolean disableRedirectHandling) {
         this.disableRedirectHandling = disableRedirectHandling;
+    }
+
+    /**
+     * Gets the handleSemicolonPathContent.
+     *
+     * @return
+     */
+    public boolean isHandleSemicolonPathContent() {
+        return handleSemicolonPathContent;
+    }
+
+    /**
+     * Sets the handleSemicolonPathContent.
+     *
+     * @param handleSemicolonPathContent
+     */
+    public void setHandleSemicolonPathContent(boolean handleSemicolonPathContent) {
+        this.handleSemicolonPathContent = handleSemicolonPathContent;
     }
 
     /**

@@ -16,6 +16,9 @@
 
 package org.citrusframework.http.server;
 
+import java.util.List;
+import java.util.Map;
+
 import jakarta.servlet.Filter;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.security.HttpAuthentication;
@@ -27,9 +30,6 @@ import org.eclipse.jetty.server.Connector;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.HandlerInterceptor;
-
-import java.util.List;
-import java.util.Map;
 
 public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractHttpServerBuilder<T, B>> extends AbstractServerBuilder<T, B> {
 
@@ -247,6 +247,17 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
      */
     public B handleCookies(boolean flag) {
         endpoint.setHandleCookies(flag);
+        return self;
+    }
+
+    /**
+     * Sets the semicolon handling property.
+     *
+     * @param flag
+     * @return
+     */
+    public B handleSemicolonPathContent(boolean flag) {
+        endpoint.setHandleSemicolonPathContent(flag);
         return self;
     }
 
