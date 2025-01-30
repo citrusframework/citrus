@@ -16,7 +16,11 @@
 
 package org.citrusframework.validation;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -73,9 +77,98 @@ public class DefaultHeaderValidator implements HeaderValidator {
                         + null + "'");
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Validating header element: " + headerName + "='" + expectedValue + "': OK");
+        logger.debug("Validating header element: {}='{}' : OK", headerName, expectedValue);
+    }
+
+    public void validateHeaderArray(String headerName, Object receivedValue, Object controlValue, TestContext context, HeaderValidationContext validationContext) {
+        Optional<HeaderValidator> validator = getHeaderValidator(headerName, controlValue, context);
+        if (validator.isPresent()) {
+            validator.get().validateHeader(headerName, receivedValue, controlValue, context, validationContext);
+            return;
         }
+
+        List<String> receivedValues = toList(receivedValue);
+        List<String> controlValues = toList(controlValue);
+
+        // Convert and replace dynamic content for controlValue
+        List<String> expectedValues = controlValues.stream()
+                .map(value -> context.getTypeConverter().convertIfNecessary(value, String.class))
+                .map(context::replaceDynamicContentInString)
+                .toList();
+
+        // Process received values
+        if (receivedValue != null) {
+            List<String> receivedValueStrings = receivedValues.stream()
+                .map(value -> context.getTypeConverter().convertIfNecessary(value, String.class))
+                .toList();
+
+            List<String> expectedValuesCopy = new ArrayList<>(expectedValues);
+
+            // Iterate over received values and try to match with expected values
+            for (String receivedValueString : receivedValueStrings) {
+
+                Iterator<String> expectedIterator = expectedValuesCopy.iterator();
+                boolean validated = validateExpected(headerName, context, receivedValueString, expectedIterator);
+
+                if (!validated) {
+                    throw new ValidationException(String.format("Values not equal for header element '%s', expected '%s' but was '%s'",
+                        headerName, String.join(", ", expectedValues), receivedValueString));
+                }
+            }
+
+            if (!expectedValuesCopy.isEmpty()) {
+                throw new ValidationException(String.format("Values not equal for header element '%s', expected '%s' but was '%s'",
+                    headerName, String.join(", ", expectedValues), String.join(", ", receivedValues)));
+            }
+        } else if (!expectedValues.isEmpty()) {
+            throw new ValidationException(String.format("Values not equal for header element '%s', expected '%s' but was 'null'",
+                headerName, String.join(", ", expectedValues)));
+        }
+
+        logger.debug("Validating header element: {}='{}' : OK", headerName, String.join(", ", expectedValues));
+    }
+
+    private static boolean validateExpected(String headerName, TestContext context,
+        String receivedValueString, Iterator<String> expectedIterator) {
+        boolean validated = false;
+        while (expectedIterator.hasNext()) {
+            String expectedValue = expectedIterator.next();
+
+            if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValue)) {
+                try {
+                    ValidationMatcherUtils.resolveValidationMatcher(headerName, receivedValueString, expectedValue,
+                        context);
+                    validated = true;
+                    expectedIterator.remove();  // Remove matched value
+                    break;
+                } catch (ValidationException e) {
+                    // Ignore this exception and try other expected values
+                }
+            } else {
+                if (receivedValueString.equals(expectedValue)) {
+                    validated = true;
+                    expectedIterator.remove();  // Remove matched value
+                    break;
+                }
+            }
+        }
+
+        return validated;
+    }
+
+    private static List<String> toList(Object value) {
+        List<String> receivedValuesList;
+        if (value == null) {
+            receivedValuesList = Collections.emptyList();
+        } else  if (!(value instanceof  List)) {
+            receivedValuesList = new ArrayList<>();
+            receivedValuesList.add(value.toString());
+        } else {
+            //noinspection unchecked
+            receivedValuesList = (List<String>) value;
+        }
+
+        return receivedValuesList;
     }
 
     @Override
