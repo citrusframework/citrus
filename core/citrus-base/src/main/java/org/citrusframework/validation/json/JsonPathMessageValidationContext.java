@@ -23,12 +23,12 @@ import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageProcessorAdapter;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.VariableExtractorAdapter;
-import org.citrusframework.util.StringUtils;
 
 /**
  * Specialised validation context adds JSON path expressions for message validation.
@@ -52,6 +52,11 @@ public class JsonPathMessageValidationContext extends DefaultValidationContext {
      */
     public JsonPathMessageValidationContext() {
         this(new Builder());
+    }
+
+    @Override
+    public boolean requiresValidator() {
+        return true;
     }
 
     /**
