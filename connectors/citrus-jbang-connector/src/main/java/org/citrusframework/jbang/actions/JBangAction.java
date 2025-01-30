@@ -79,7 +79,7 @@ public class JBangAction extends AbstractTestAction {
 
         ProcessAndOutput result = JBangSupport.jbang()
                 .app(app)
-                .withSystemProperties(systemProperties)
+                .withSystemProperties(context.resolveDynamicValuesInMap(systemProperties))
                 .run(context.replaceDynamicContentInString(scriptOrFile), context.resolveDynamicValuesInList(args));
 
         if (printOutput) {
