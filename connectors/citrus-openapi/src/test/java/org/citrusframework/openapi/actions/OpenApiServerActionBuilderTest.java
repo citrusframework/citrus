@@ -1,7 +1,6 @@
 package org.citrusframework.openapi.actions;
 
 import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -15,7 +14,7 @@ public class OpenApiServerActionBuilderTest {
 
     @BeforeMethod
     public void beforeMethod() {
-        fixture = new OpenApiServerActionBuilder(mock(Endpoint.class), mock(OpenApiSpecification.class));
+        fixture = new OpenApiServerActionBuilder(mock(Endpoint.class), mock(OpenApiSpecificationSource.class));
     }
 
     @Test

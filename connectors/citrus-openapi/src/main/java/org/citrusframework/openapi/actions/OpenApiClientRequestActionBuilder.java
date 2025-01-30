@@ -18,142 +18,292 @@ package org.citrusframework.openapi.actions;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
-import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasParameter;
-import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.actions.HttpClientRequestActionBuilder;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.message.Message;
+import org.citrusframework.openapi.AutoFillType;
 import org.citrusframework.openapi.OpenApiSpecification;
-import org.citrusframework.openapi.OpenApiTestDataGenerator;
 import org.citrusframework.openapi.model.OasModelHelper;
+import org.citrusframework.openapi.model.OperationPathAdapter;
+import org.citrusframework.openapi.validation.OpenApiOperationToMessageHeadersProcessor;
+import org.citrusframework.openapi.validation.OpenApiValidationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+
+import static org.citrusframework.openapi.OpenApiMessageType.REQUEST;
+import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
+import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
+import static org.citrusframework.util.StringUtils.isNotEmpty;
 
 /**
  * @since 4.1
  */
 public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBuilder {
 
+    private final OpenApiSpecificationSource openApiSpecificationSource;
+    private final String operationId;
+    private OpenApiOperationToMessageHeadersProcessor openApiOperationToMessageHeadersProcessor;
+    private boolean schemaValidation = true;
+
+
     /**
      * Default constructor initializes http request message builder.
      */
-    public OpenApiClientRequestActionBuilder(OpenApiSpecification openApiSpec, String operationId) {
+    public OpenApiClientRequestActionBuilder(OpenApiSpecificationSource openApiSpec,
+        String operationId) {
         this(new HttpMessage(), openApiSpec, operationId);
     }
 
-    public OpenApiClientRequestActionBuilder(HttpMessage httpMessage, OpenApiSpecification openApiSpec,
-                                             String operationId) {
-        super(new OpenApiClientRequestMessageBuilder(httpMessage, openApiSpec, operationId), httpMessage);
+    public OpenApiClientRequestActionBuilder(HttpMessage httpMessage,
+        OpenApiSpecificationSource openApiSpec,
+        String operationId) {
+        this(openApiSpec,
+            new OpenApiClientRequestMessageBuilder(httpMessage, openApiSpec, operationId),
+            httpMessage, operationId);
     }
 
-    private static class OpenApiClientRequestMessageBuilder extends HttpMessageBuilder {
+    public OpenApiClientRequestActionBuilder(OpenApiSpecificationSource openApiSpec,
+        OpenApiClientRequestMessageBuilder messageBuilder,
+        HttpMessage message,
+        String operationId) {
+        super(messageBuilder, message);
+        this.openApiSpecificationSource = openApiSpec;
+        this.operationId = operationId;
+    }
 
-        private final OpenApiSpecification openApiSpec;
+    public OpenApiClientRequestActionBuilder autoFill(AutoFillType autoFill) {
+        ((OpenApiClientRequestMessageBuilder) this.messageBuilderSupport.getMessageBuilder()).autoFill(
+            autoFill);
+        return this;
+    }
+
+    @Override
+    public SendMessageAction doBuild() {
+        OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(
+            referenceResolver);
+
+        // Honor default enablement of schema validation
+        OpenApiValidationContext openApiValidationContext = openApiSpecification.getOpenApiValidationContext();
+        if (openApiValidationContext != null && schemaValidation) {
+            schemaValidation = openApiValidationContext.isRequestValidationEnabled();
+        }
+
+        if (schemaValidation && !messageProcessors.contains(
+            openApiOperationToMessageHeadersProcessor)) {
+            openApiOperationToMessageHeadersProcessor = new OpenApiOperationToMessageHeadersProcessor(
+                openApiSpecification, operationId, REQUEST);
+            process(openApiOperationToMessageHeadersProcessor);
+        }
+
+        return super.doBuild();
+    }
+
+    /**
+     * By default, enable schema validation as the OpenAPI is always available.
+     */
+    @Override
+    protected HttpMessageBuilderSupport createHttpMessageBuilderSupport() {
+        HttpMessageBuilderSupport httpMessageBuilderSupport = super.createHttpMessageBuilderSupport();
+        httpMessageBuilderSupport.schemaValidation(true);
+        return httpMessageBuilderSupport;
+    }
+
+    public OpenApiClientRequestActionBuilder schemaValidation(boolean schemaValidation) {
+        this.schemaValidation = schemaValidation;
+        return this;
+    }
+
+    public static class OpenApiClientRequestMessageBuilder extends HttpMessageBuilder {
+
+        private final OpenApiSpecificationSource openApiSpecificationSource;
+
         private final String operationId;
 
-        private final HttpMessage httpMessage;
+        private AutoFillType autoFill ;
 
-        public OpenApiClientRequestMessageBuilder(HttpMessage httpMessage, OpenApiSpecification openApiSpec,
-                                                  String operationId) {
+        public OpenApiClientRequestMessageBuilder(HttpMessage httpMessage,
+            OpenApiSpecificationSource openApiSpec,
+            String operationId) {
             super(httpMessage);
-            this.openApiSpec = openApiSpec;
+            this.openApiSpecificationSource = openApiSpec;
             this.operationId = operationId;
-            this.httpMessage = httpMessage;
+        }
+
+        public OpenApiClientRequestMessageBuilder autoFill(AutoFillType autoFill) {
+            this.autoFill = autoFill;
+            return this;
         }
 
         @Override
         public Message build(TestContext context, String messageType) {
-            OasDocument oasDocument = openApiSpec.getOpenApiDoc(context);
-            OasOperation operation = null;
-            OasPathItem pathItem = null;
-            HttpMethod method = null;
+            OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(
+                context.getReferenceResolver());
 
-            for (OasPathItem path : OasModelHelper.getPathItems(oasDocument.paths)) {
-                Optional<Map.Entry<String, OasOperation>> operationEntry = OasModelHelper.getOperationMap(path).entrySet().stream()
-                        .filter(op -> operationId.equals(op.getValue().operationId))
-                        .findFirst();
-
-                if (operationEntry.isPresent()) {
-                    method = HttpMethod.valueOf(operationEntry.get().getKey().toUpperCase(Locale.US));
-                    operation = operationEntry.get().getValue();
-                    pathItem = path;
-                    break;
-                }
+            if (autoFill == null) {
+                autoFill = openApiSpecification.getRequestAutoFill();
             }
 
-            if (operation == null) {
-                throw new CitrusRuntimeException("Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(operationId, openApiSpec.getSpecUrl()));
+            openApiSpecification.initOpenApiDoc(context);
+            openApiSpecification.getOperation(operationId, context)
+                .ifPresentOrElse(operationPathAdapter ->
+                        buildMessageFromOperation(openApiSpecification, operationPathAdapter,
+                            context),
+                    () -> {
+                        throw new CitrusRuntimeException(
+                            "Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(
+                                operationId, openApiSpecification.getSpecUrl()));
+                    });
+            context.setVariable(openApiSpecification.getUid(), openApiSpecification);
+
+            return super.build(context, messageType);
+        }
+
+        @Override
+        public Object buildMessagePayload(TestContext context, String messageType) {
+            if (getPayloadBuilder() == null) {
+                this.setPayloadBuilder(new OpenApiPayloadBuilder(getMessage().getPayload()));
             }
+            return super.buildMessagePayload(context, messageType);
+        }
+
+        private void buildMessageFromOperation(OpenApiSpecification openApiSpecification,
+            OperationPathAdapter operationPathAdapter,
+            TestContext context) {
+            OasOperation operation = operationPathAdapter.operation();
+            String path = operationPathAdapter.fullPath();
+            HttpMethod method = HttpMethod.valueOf(
+                operationPathAdapter.operation().getMethod().toUpperCase(Locale.US));
 
             if (operation.parameters != null) {
-                List<String> configuredHeaders = getHeaderBuilders()
-                        .stream()
-                        .flatMap(b -> b.builderHeaders(context).keySet().stream())
-                        .toList();
-                operation.parameters.stream()
-                        .filter(param -> "header".equals(param.in))
-                        .filter(param -> (param.required != null && param.required) || context.getVariables().containsKey(param.getName()))
-                        .forEach(param -> {
-                            if(httpMessage.getHeader(param.getName()) == null && !configuredHeaders.contains(param.getName())) {
-                                httpMessage.setHeader(param.getName(),
-                                        OpenApiTestDataGenerator.createRandomValueExpression(param.getName(), (OasSchema) param.schema,
-                                                OasModelHelper.getSchemaDefinitions(oasDocument), false, openApiSpec, context));
-                            }
-                        });
-
-                operation.parameters.stream()
-                        .filter(param -> "query".equals(param.in))
-                        .filter(param -> (param.required != null && param.required) || context.getVariables().containsKey(param.getName()))
-                        .forEach(param -> {
-                            if(!httpMessage.getQueryParams().containsKey(param.getName())) {
-                                httpMessage.queryParam(param.getName(),
-                                        OpenApiTestDataGenerator.createRandomValueExpression(param.getName(), (OasSchema) param.schema, context));
-                            }
-                        });
+                setMissingHeadersToRandomValues(openApiSpecification, context, operation);
+                setMissingQueryParametersToRandomValues(openApiSpecification, context, operation);
             }
 
-            if(httpMessage.getPayload() == null || (httpMessage.getPayload() instanceof String p && p.isEmpty())) {
-                Optional<OasSchema> body = OasModelHelper.getRequestBodySchema(oasDocument, operation);
-                body.ifPresent(oasSchema -> httpMessage.setPayload(OpenApiTestDataGenerator.createOutboundPayload(oasSchema,
-                        OasModelHelper.getSchemaDefinitions(oasDocument), openApiSpec)));
-            }
-
-            String randomizedPath = pathItem.getPath();
+            setMissingBodyToRandomValue(openApiSpecification, context, operation);
+            String randomizedPath = getMessage().getPath() != null ? getMessage().getPath() : path;
             if (operation.parameters != null) {
                 List<OasParameter> pathParams = operation.parameters.stream()
-                        .filter(p -> "path".equals(p.in)).toList();
+                    .filter(p -> "path".equals(p.in)).toList();
 
                 for (OasParameter parameter : pathParams) {
                     String parameterValue;
-                    if (context.getVariables().containsKey(parameter.getName())) {
-                        parameterValue = "\\" + CitrusSettings.VARIABLE_PREFIX + parameter.getName() + CitrusSettings.VARIABLE_SUFFIX;
+                    String pathParameterValue = getDefinedPathParameter(context,
+                        parameter.getName());
+                    if (isNotEmpty(pathParameterValue)) {
+                        parameterValue = "\\" + pathParameterValue;
                     } else {
-                        parameterValue = OpenApiTestDataGenerator.createRandomValueExpression((OasSchema) parameter.schema);
+                        parameterValue = createRandomValueExpression(
+                            (OasSchema) parameter.schema);
                     }
-                    randomizedPath = Pattern.compile("\\{" + parameter.getName() + "}")
-                            .matcher(randomizedPath)
-                            .replaceAll(parameterValue);
+
+                    randomizedPath = randomizedPath.replaceAll("\\{" + parameter.getName() + "}",
+                        parameterValue);
                 }
             }
 
             OasModelHelper.getRequestContentType(operation)
-                    .ifPresent(contentType -> httpMessage.setHeader(HttpHeaders.CONTENT_TYPE, contentType));
+                .ifPresent(
+                    contentType -> getMessage().setHeader(HttpHeaders.CONTENT_TYPE, contentType));
 
-            httpMessage.path(randomizedPath);
-            httpMessage.method(method);
+            getMessage().path(randomizedPath);
+            getMessage().method(method);
+        }
 
-            return super.build(context, messageType);
+        protected String getDefinedPathParameter(TestContext context, String name) {
+            if (context.getVariables().containsKey(name)) {
+                return CitrusSettings.VARIABLE_PREFIX + name + CitrusSettings.VARIABLE_SUFFIX;
+            }
+            return null;
+        }
+
+        private void setMissingBodyToRandomValue(OpenApiSpecification openApiSpecification,
+            TestContext context, OasOperation operation) {
+            if (getMessage().getPayload() == null || (
+                getMessage().getPayload() instanceof String payloadString
+                    && payloadString.isEmpty())) {
+                Optional<OasSchema> body = OasModelHelper.getRequestBodySchema(
+                    openApiSpecification.getOpenApiDoc(context), operation);
+
+                body.ifPresent(oasSchema -> {
+
+                    if (autoFill == AutoFillType.ALL || autoFill == AutoFillType.REQUIRED) {
+                        getMessage().setPayload(
+                            createOutboundPayload(oasSchema, openApiSpecification));
+                    }
+                });
+            }
+        }
+
+        /**
+         * Creates all required query parameters, if they have not already been specified.
+         */
+        private void setMissingQueryParametersToRandomValues(
+            OpenApiSpecification openApiSpecification, TestContext context,
+            OasOperation operation) {
+            operation.parameters.stream()
+                .filter(param -> "query".equals(param.in))
+                // Not configured manually
+                .filter(param -> !getMessage().getQueryParams().containsKey(param.getName()))
+                // Only targeted parameters
+                .filter(param -> autoFill == AutoFillType.ALL || (autoFill == AutoFillType.REQUIRED
+                    && Boolean.TRUE.equals(param.required)))
+                .forEach(param -> {
+                    Object queryParameterValue = context.getVariables()
+                        .get(param.getName());
+                    if (queryParameterValue == null) {
+                        queryParameterValue = createRandomValueExpression(param.getName(),
+                            (OasSchema) param.schema, openApiSpecification,
+                            context);
+                    }
+                    try {
+                        getMessage().queryParam(param.getName(), queryParameterValue.toString());
+                    } catch (Exception e) {
+                        // Note that exploded object query parameter representation for example, cannot properly
+                        // be randomized.
+                        logger.warn(
+                            "Unable to set missing required query parameter to random value: {}",
+                            param);
+                    }
+                });
+        }
+
+        /**
+         * Creates all required headers, if they have not already been specified.
+         */
+        private void setMissingHeadersToRandomValues(OpenApiSpecification openApiSpecification,
+            TestContext context, OasOperation operation) {
+            List<String> configuredHeaders = getHeaderBuilders()
+                .stream()
+                .flatMap(b -> b.builderHeaders(context).keySet().stream())
+                .toList();
+            operation.parameters.stream()
+                .filter(param -> "header".equals(param.in))
+                // Not configured manually
+                .filter(param -> getMessage().getHeader(param.getName()) == null
+                    && !configuredHeaders.contains(param.getName()))
+                // Only targeted parameters
+                .filter(param -> autoFill == AutoFillType.ALL || (autoFill == AutoFillType.REQUIRED
+                    && Boolean.TRUE.equals(param.required)))
+                .forEach(param -> {
+                    Object headerValue = context.getVariables()
+                        .get(param.getName());
+                    if (headerValue == null) {
+                        headerValue = createRandomValueExpression(param.getName(),
+                            (OasSchema) param.schema,
+                            openApiSpecification, context);
+                    }
+                    getMessage().setHeader(param.getName(), headerValue);
+                });
         }
     }
 }

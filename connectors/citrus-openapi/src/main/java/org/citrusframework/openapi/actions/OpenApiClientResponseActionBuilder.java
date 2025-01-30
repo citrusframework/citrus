@@ -16,16 +16,18 @@
 
 package org.citrusframework.openapi.actions;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
-import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
+import jakarta.annotation.Nullable;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.actions.HttpClientResponseActionBuilder;
@@ -33,98 +35,176 @@ import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.message.Message;
 import org.citrusframework.openapi.OpenApiSpecification;
-import org.citrusframework.openapi.OpenApiTestDataGenerator;
 import org.citrusframework.openapi.model.OasModelHelper;
-import org.springframework.http.HttpHeaders;
+import org.citrusframework.openapi.model.OperationPathAdapter;
+import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
+import org.citrusframework.openapi.validation.OpenApiOperationToMessageHeadersProcessor;
+import org.citrusframework.openapi.validation.OpenApiValidationContext;
 import org.springframework.http.HttpStatus;
+
+import static org.citrusframework.message.MessageType.JSON;
+import static org.citrusframework.openapi.OpenApiMessageType.RESPONSE;
+import static org.citrusframework.openapi.model.OasModelHelper.resolveSchema;
+import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * @since 4.1
  */
 public class OpenApiClientResponseActionBuilder extends HttpClientResponseActionBuilder {
 
+    private final OpenApiSpecificationSource openApiSpecificationSource;
+    private final String operationId;
+    private OpenApiOperationToMessageHeadersProcessor openApiOperationToMessageHeadersProcessor;
+    private boolean schemaValidation = true;
+
     /**
      * Default constructor initializes http response message builder.
      */
-    public OpenApiClientResponseActionBuilder(OpenApiSpecification openApiSpec, String operationId, String statusCode) {
+    public OpenApiClientResponseActionBuilder(OpenApiSpecificationSource openApiSpec, String operationId, String statusCode) {
         this(new HttpMessage(), openApiSpec, operationId, statusCode);
     }
 
-    public OpenApiClientResponseActionBuilder(HttpMessage httpMessage, OpenApiSpecification openApiSpec,
-                                              String operationId, String statusCode) {
-        super(new OpenApiClientResponseMessageBuilder(httpMessage, openApiSpec, operationId, statusCode), httpMessage);
+    public OpenApiClientResponseActionBuilder(HttpMessage httpMessage,
+                                              OpenApiSpecificationSource openApiSpecificationSource,
+                                              String operationId,
+                                              String statusCode) {
+        this(openApiSpecificationSource, new OpenApiClientResponseMessageBuilder(httpMessage, openApiSpecificationSource, operationId, statusCode), httpMessage, operationId);
     }
 
-    private static class OpenApiClientResponseMessageBuilder extends HttpMessageBuilder {
+    public OpenApiClientResponseActionBuilder(OpenApiSpecificationSource openApiSpec,
+                                              OpenApiClientResponseMessageBuilder messageBuilder,
+                                              HttpMessage message,
+                                              String operationId) {
+        super(messageBuilder, message);
+        this.openApiSpecificationSource = openApiSpec;
+        this.operationId = operationId;
 
-        private final OpenApiSpecification openApiSpec;
+        // Set json as default instead of xml. This is most common for rest.
+        this.getMessageBuilderSupport().type(JSON);
+    }
+
+    public static void fillMessageTypeFromResponse(OpenApiSpecification openApiSpecification,
+                                                   HttpMessage httpMessage,
+                                                   @Nullable OasOperation operation,
+                                                   @Nullable OasResponse response) {
+        if (operation == null || response == null) {
+            return;
+        }
+
+        Optional<OasSchema> responseSchema = OasModelHelper.getSchema(response);
+        responseSchema.ifPresent(oasSchema -> {
+                    OasSchema resolvedSchema = resolveSchema(openApiSpecification.getOpenApiDoc(null), oasSchema);
+                    if (OasModelHelper.isObjectType(resolvedSchema) || OasModelHelper.isObjectArrayType(resolvedSchema)) {
+                        Collection<String> responseTypes = OasModelHelper.getResponseTypes(operation,response);
+                        if (responseTypes.contains(APPLICATION_JSON_VALUE)) {
+                            httpMessage.setType(JSON);
+                        }
+                    }
+                }
+        );
+    }
+
+    /**
+     * Overridden to change the default message type to JSON, as Json is more common in OpenAPI context.
+     */
+    @Override
+    protected HttpMessageBuilderSupport createHttpMessageBuilderSupport() {
+        HttpMessageBuilderSupport support = super.createHttpMessageBuilderSupport();
+        support.type(CitrusSettings.getPropertyEnvOrDefault(
+                CitrusSettings.DEFAULT_MESSAGE_TYPE_PROPERTY,
+                CitrusSettings.DEFAULT_MESSAGE_TYPE_ENV,
+                JSON.toString()));
+        return support;
+    }
+
+    @Override
+    public ReceiveMessageAction doBuild() {
+        OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(referenceResolver);
+
+        // Honor default enablement of schema validation
+        OpenApiValidationContext openApiValidationContext = openApiSpecification.getOpenApiValidationContext();
+        if (openApiValidationContext != null && schemaValidation) {
+            schemaValidation = openApiValidationContext.isResponseValidationEnabled();
+        }
+
+        if (schemaValidation && !messageProcessors.contains(openApiOperationToMessageHeadersProcessor)) {
+            openApiOperationToMessageHeadersProcessor = new OpenApiOperationToMessageHeadersProcessor(openApiSpecification, operationId, RESPONSE);
+            process(openApiOperationToMessageHeadersProcessor);
+        }
+
+        if (schemaValidation && getValidationContexts().stream().noneMatch(OpenApiMessageValidationContext.class::isInstance)) {
+            validate(openApi(openApiSpecification)
+                    .schemaValidation(schemaValidation)
+                    .build());
+        }
+
+        return super.doBuild();
+    }
+
+    public OpenApiClientResponseActionBuilder schemaValidation(boolean enabled) {
+        schemaValidation = enabled;
+        return this;
+    }
+
+    public static class OpenApiClientResponseMessageBuilder extends HttpMessageBuilder {
+
+        private final OpenApiSpecificationSource openApiSpecificationSource;
         private final String operationId;
-        private final String statusCode;
-
         private final HttpMessage httpMessage;
+        private String statusCode;
 
-        public OpenApiClientResponseMessageBuilder(HttpMessage httpMessage, OpenApiSpecification openApiSpec,
-                                                   String operationId, String statusCode) {
+        public OpenApiClientResponseMessageBuilder(HttpMessage httpMessage,
+                                                   OpenApiSpecificationSource openApiSpecificationSource,
+                                                   String operationId,
+                                                   String statusCode) {
             super(httpMessage);
-            this.openApiSpec = openApiSpec;
+            this.openApiSpecificationSource = openApiSpecificationSource;
             this.operationId = operationId;
             this.statusCode = statusCode;
             this.httpMessage = httpMessage;
         }
 
+        public OpenApiClientResponseMessageBuilder statusCode(String statusCode) {
+            this.statusCode = statusCode;
+            return this;
+        }
+
         @Override
         public Message build(TestContext context, String messageType) {
-            OasOperation operation = null;
-            OasDocument oasDocument = openApiSpec.getOpenApiDoc(context);
+            OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(context.getReferenceResolver());
 
-            for (OasPathItem path : OasModelHelper.getPathItems(oasDocument.paths)) {
-                Optional<Map.Entry<String, OasOperation>> operationEntry = OasModelHelper.getOperationMap(path).entrySet().stream()
-                        .filter(op -> operationId.equals(op.getValue().operationId))
-                        .findFirst();
+            openApiSpecification.getOperation(operationId, context)
+                    .ifPresentOrElse(operationPathAdapter ->
+                            buildMessageFromOperation(openApiSpecification, operationPathAdapter, context), () -> {
+                        throw new CitrusRuntimeException("Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(operationId, openApiSpecification.getSpecUrl()));
+                    });
 
-                if (operationEntry.isPresent()) {
-                    operation = operationEntry.get().getValue();
-                    break;
-                }
-            }
+            return super.build(context, messageType);
+        }
 
-            if (operation == null) {
-                throw new CitrusRuntimeException("Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(operationId, openApiSpec.getSpecUrl()));
-            }
+        private void buildMessageFromOperation(OpenApiSpecification openApiSpecification, OperationPathAdapter operationPathAdapter, TestContext context) {
+            OasOperation operation = operationPathAdapter.operation();
+
+            // Headers already present in httpMessage should not be overwritten by open api.
+            // E.g. if a reasonPhrase was explicitly set in the builder, it must not be overwritten.
+            Map<String, Object> currentHeaders = new HashMap<>(httpMessage.getHeaders());
 
             if (operation.responses != null) {
-                OasResponse response = Optional.ofNullable(operation.responses.getItem(statusCode))
-                        .orElse(operation.responses.default_);
+                Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
+                        openApiSpecification.getOpenApiDoc(context), operation, statusCode, null);
 
-                if (response != null) {
-                    Map<String, OasSchema> requiredHeaders = OasModelHelper.getRequiredHeaders(response);
-                    for (Map.Entry<String, OasSchema> header : requiredHeaders.entrySet()) {
-                        httpMessage.setHeader(header.getKey(), OpenApiTestDataGenerator.createValidationExpression(header.getKey(), header.getValue(),
-                                OasModelHelper.getSchemaDefinitions(oasDocument), false, openApiSpec, context));
-                    }
-
-                    Map<String, OasSchema> headers = OasModelHelper.getHeaders(response);
-                    for (Map.Entry<String, OasSchema> header : headers.entrySet()) {
-                        if (!requiredHeaders.containsKey(header.getKey()) && context.getVariables().containsKey(header.getKey())) {
-                            httpMessage.setHeader(header.getKey(), CitrusSettings.VARIABLE_PREFIX + header.getKey() + CitrusSettings.VARIABLE_SUFFIX);
-                        }
-                    }
-
-                    Optional<OasSchema> responseSchema = OasModelHelper.getSchema(response);
-                    responseSchema.ifPresent(oasSchema -> httpMessage.setPayload(OpenApiTestDataGenerator.createInboundPayload(oasSchema, OasModelHelper.getSchemaDefinitions(oasDocument), openApiSpec)));
-                }
+                responseForRandomGeneration.ifPresent(
+                        oasResponse -> fillMessageTypeFromResponse(openApiSpecification, httpMessage, operation, oasResponse));
             }
 
-            OasModelHelper.getResponseContentType(oasDocument, operation)
-                    .ifPresent(contentType -> httpMessage.setHeader(HttpHeaders.CONTENT_TYPE, contentType));
-
-            if (Pattern.compile("[0-9]+").matcher(statusCode).matches()) {
+            if (Pattern.compile("\\d+").matcher(statusCode).matches()) {
                 httpMessage.status(HttpStatus.valueOf(Integer.parseInt(statusCode)));
             } else {
                 httpMessage.status(HttpStatus.OK);
             }
 
-            return super.build(context, messageType);
+            httpMessage.getHeaders().putAll(currentHeaders);
         }
     }
 }
