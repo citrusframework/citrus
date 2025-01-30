@@ -1,0 +1,46 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+    xmlns:petstore="http://www.citrusframework.org/citrus-test-schema/petstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/http/testcase
+    http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/petstore-api
+    http://www.citrusframework.org/citrus-test-schema/petstore-api/petstore-api.xsd"
+>
+    <testcase name="withSpecificEndpointTest">
+        <actions>
+            <create-variables>
+                <variable name="petId" value="1234"/>
+            </create-variables>
+
+            <petstore:send-get-pet-by-id petId="${petId}" fork="true" client="otherApplicationServiceClient"/>
+
+            <http:receive-request server="otherHttpServer">
+                <http:GET path="/api/v3/pet/1234"/>
+            </http:receive-request>
+
+            <http:send-response server="otherHttpServer">
+                <http:headers status="200" reason-phrase="OK">
+                    <http:header name="Content-Type" value="application/json"/>
+                </http:headers>
+                <http:body type="json">
+                    <http:resource file="classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"/>
+                </http:body>
+            </http:send-response>
+
+            <petstore:receive-get-pet-by-id responseCode="200" client="otherApplicationServiceClient">
+                <http:body>
+                    <http:validate>
+                        <http:json-path expression="$.name" value="@matches('hasso|cutie|fluffy')@"/>
+                    </http:validate>
+                </http:body>
+            </petstore:receive-get-pet-by-id>
+        </actions>
+    </testcase>
+</spring:beans>
