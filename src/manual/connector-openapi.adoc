@@ -4,10 +4,17 @@
 https://www.openapis.org/[OpenAPI] is a popular specification language to describe HTTP APIs and its exposure to clients.
 Citrus is able to leverage the specification to auto generate client and server request/response message data.
 The generated message data follows the rules of a given operation in the specification.
-In particular, the message body is generated from the given Json schema rules in that specification.
+In particular, the message body is generated according to the given Json schema rules in that specification.
 This way users may do contract-driven testing where the client and the server ensure the conformity with the contract to obey to the same specification rules.
 
-NOTE: The OpenAPI support in Citrus get enabled by adding a separate Maven module as dependency to your project
+Taking it a step further, Citrus OpenAPI offers a TestAPI generator powered by OpenApiGenerator.
+This generator produces the necessary Builders, which define explicit actions for each operation in a given OpenAPI.
+These actions enable access to any operation within the OpenAPI, making it ideal for testing the API itself or interacting with other supporting services.
+The current implementation of Citrus TestAPI uses Maven for generation and Spring for integration.
+For more details, please refer to
+<<openapi-test-api-generator>> .
+
+NOTE: The OpenAPI support in Citrus gets enabled by adding a separate Maven module as dependency to your project
 
 [source,xml]
 ----
@@ -29,16 +36,153 @@ Or you may just point the OpenAPI components to a local specification file.
 
 Citrus supports OpenAPI on both client and server components so the next sections will describe the usage for each of those.
 
+[[openapi-specification-settings]]
+== OpenAPI specification settings
+
+The `OpenApiSettings` class provides configuration settings for controlling various aspects of OpenAPI request and response validation and random data generation.
+These settings can be controlled globally through system properties or environment variables.
+The following table outlines the available configuration options:
+
+|===
+| Parameter Name                                | Environment Variable Name                      | Description
+
+| `citrus.openapi.validation.enabled.request`    | `CITRUS_OPENAPI_VALIDATION_DISABLE_REQUEST`     | Controls whether request validation is enabled for OpenAPI operations.
+| `citrus.openapi.validation.enabled.response`   | `CITRUS_OPENAPI_VALIDATION_DISABLE_RESPONSE`    | Controls whether response validation is enabled for OpenAPI operations.
+| `citrus.openapi.neglect.base.path`             | `CITRUS_OPENAPI_NEGLECT_BASE_PATH`              | Determines whether to neglect the base path when building openration paths.
+| `citrus.openapi.request.fill.random.values`    | `CITRUS_OPENAPI_REQUEST_FILL_RANDOM_VALUES`     | Specifies whether to automatically fill missing values in request bodies with random data. One of `REQUIRED` (default) `ALL` or `NONE`)
+| `citrus.openapi.response.fill.random.values`   | `CITRUS_OPENAPI_RESPONSE_FILL_RANDOM_VALUES`    | Specifies whether to automatically fill missing values in response bodies with random data. One of `REQUIRED` (default) `ALL` or `NONE`)
+| `citrus.openapi.generate.optional.fields`      | `CITRUS_OPENAPI_GENERATE_OPTIONAL_FIELDS`        | Enables or disables the generation of optional fields in the OpenAPI Json requests and responses.
+| `citrus.openapi.validation.policy`             | `CITRUS_OPENAPI_VALIDATION_POLICY`              | Defines the validation policy for OpenAPI operations (e.g., `FAIL`, `REPORT`, `IGNORE`).
+|===
+
+
+[[openapi-repository]]
+== OpenAPI specification repositories
+
+An OpenApiRepository provides a centralized way to manage OpenAPI specifications within a test environment.
+When bound to a bean container, it automatically makes registered specifications available for message
+validation in conjunction with messages send by actions created by OpenApiActionBuilders. These built actions
+ensure that all necessary validation information is present, enabling seamless verification without additional user input.
+
+While an OpenApiRepository is particularly useful for loading multiple OpenAPI definitions from a specified
+location, in many cases, directly registering an individual OpenApiSpecification within the bean container
+is sufficient.
+Any registered specification—whether added individually or via a repository—will be considered during message validation.
+
+This approach simplifies OpenAPI-based validation in Citrus, ensuring that test messages conform to their expected structure without requiring manual intervention.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public OpenApiRepository petstoreOpenApiRepository() {
+    return new OpenApiRepository()
+                .locations(singletonList(
+                    "classpath:org/citrusframework/openapi/petstore/petstore-v3.json"))
+                .neglectBasePath(true)
+                .validationPolicy(OpenApiValidationPolicy.REPORT)
+                .rootContextPath("/petstore/v3/api")
+                .requestValidationEnabled(false)
+                .responseValidationEnabled(false)
+                ;
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<bean id="petstoreOpenApiRepository" class="org.citrusframework.openapi.OpenApiRepository">
+    <property name="locations" value="classpath:org/citrusframework/openapi/petstore/petstore-v3.json"/>
+    <property name="neglectBasePath" value="true"/>
+    <property name="rootContextPath" value="/petstore/v3/api"/>
+    <property name="validationPolicy" value="REPORT"/>
+    <property name="requestValidationEnabled" value="false"/>
+    <property name="responseValidationEnabled" value="false"/>
+</bean>
+----
+
+|===
+|Property | Description | Default
+
+| locations | Defines the location(s) of the OpenAPI specification files. May be one file or a directory. E.g. `classpath:org/citrusframework/openapi/petstore/*.json`. Note that when loading more than one OpenAPI via a repository, care must be taken with respect to the context paths of the OpenAPIs. See the context path configuration properties of the repository and the following <<_hooking_the_operation_path>> chapter.  |
+| rootContextPath | Sets the root context path for the API, which overrides any context path defined within the specification itself. | Use the context path specified in the first server element of the OpenApi.
+| validationPolicy | Controls the handling of validation errors. The available options are: +
+- `FAIL`: Causes the test to fail when validation errors occur. +
+- `REPORT`: Reports validation errors without failing the test. +
+- `IGNORE`: Ignores any validation errors during test execution. | REPORT (from OpenApiSettings)
+| requestValidationEnabled | Enables or disables validation of requests. | true (from OpenApiSettings)
+| responseValidationEnabled | Enables or disables validation of responses. | true (from OpenApiSettings)
+
+|===
+
+=== Hooking the Operation Path
+
+In OpenAPI, an operation represents a single API endpoint, typically corresponding to an HTTP method (e.g., GET, POST) and a specific path.
+The path defines how the client interacts with the API and often includes dynamic parameters.
+These paths are defined relative to the API's base URL and are an essential part of structuring API interactions.
+
+The OpenAPI specification allows defining a server URL, which acts as the root of the API. This URL
+may include a basePath, which serves as a prefix for all operation paths.
+If more than one server is specified, the first one will be used.
+Additionally, applications may define a context path, which can be used to namespace APIs when deployed in different environments.
+In the following, this context path is denoted rootContextPath.
+It is a user-specified value that can be assigned to an OpenApiRepository or to an OpenApiSpecification itself.
+
+The final path used for an operation during testing is built based on the OpenAPI specification's `basePath`, the `rootContextPath`.
+For most flexibility, Citrus provides several options to configure the final operation path:
+
+1. **Default Path Construction**:
+- By default, the path is constructed using the `basePath` from the OpenAPI specification (if defined) combined with the `operationPath`.
+- For example, if the `basePath` is `/v1/petstore` and the operation path is `/pet`, the final path will be: `*/v1/petstore/pet*`
+
+2. **When `rootContextPath` is Set**:
+- If a `rootContextPath` is provided, it will be prepended to the `basePath` (if present) and the `operationPath`.
+- or example, if the `basePath` is `/v1/petstore`, the `operationPath` is `/pet`, and the `rootContextPath` is `/api`, the resulting path will be: `*/api/v1/petstore/pet*`
+
+3. **When `neglectBasePath` is Set**:
+- If `neglectBasePath` is set to `true`, the `basePath` is ignored, and only the `operationPath` and `rootContextPath` is used.
+- For example, if the `basePath` is `/v1/petstore` and the `operationPath` is `/pet`, and the `rootContextPath` is `/api`, setting `neglectBasePath=true` will result in the path: `*/api/pet*` +
+Likewise, if the `rootContextPath` is not set, the resulting path will be the `operationPath` only: `*/pet*`
+
+These properties allow for flexible configuration of the OpenAPI repository, enabling you to customize how API validation is handled and how the OpenAPI specifications are loaded into the system.
+
+[[openapi-specification]]
+== OpenAPI aliases
+
+You can refer to registered OpenAPI specification by an alias.
+That way, you can register a specification in your preferred bean container and refer to it, rather than instantiating a specification over and over in all your tests.
+The specification can then be resolved at runtime when needed.
+
+The following aliases are derived from the specification.
+
+1. If the specification has an info element with a title, the title will be assigned as alias: `Swagger Petstore`
+2. If the specification has an info element with a version and a title, the title plus version will be assigned as alias: `Swagger Petstore/1.0.1`
+3. If the specification is loaded from a `Resource` via an OpenAPIRepository, the resource name without file extension will be added as alias: `petstore-v3`
+4. If the specification has an extension named `x-citrus-alias`, the value of this extension will be assigned as alias.
+5. For technical reasons, a unique-id will also be added as alias.
+This unique-id alias is determined from the document SHA value and the full context path, to which the specification is mounted, making it unique, even if the same API is used at different mount-points.
+Note that this unique-id alias is used internally during validation, to identify the OpenAPI specification that relates to a specific message.
+
+Citrus will try to resolve the specification from a given alias by querying all registered OpenApiRepositories as well as all registered OpenApiSpecifications.
+
+[[openapi-specification]]
+== XML Support
+
+This is a brief note on the XML support of OpenAPI. Due to the comprehensive <<openapi-test-api-generator>>  approach
+with Spring support, which covers all aspects of OpenAPI, the plain XML support has not yet been fully
+implemented. We recommend using the generated TestAPI with Spring, instead of plain XML for better functionality and coverage.
+
 [[openapi-client]]
 == OpenAPI client
 
-On the client side Citrus uses the OpenAPI specification to generate a proper HTTP request that is sent to the server.
-The user just gives a valid operationId from the specification every thing else is automatically generated.
-The Citrus client message will use the proper request path (e.g. `/petstore/v3/pet`) and Content-Type (e.g. `applicaiton/json`) according to the specification rules.
+On the client side, Citrus uses the OpenAPI specification to generate the appropriate HTTP request sent to the server.
+While you can manually configure every aspect of the message sent by the client, it’s also possible to auto-generate the message from the specification.
+In either case, the client will automatically use the correct request path (e.g., `/petstore/v3/pet`) and Content-Type (e.g., `application/json`) based on the specification.
 
-Of course, you can also validate the HTTP response message with auto generated validation.
-The user just gives the expected HTTP status code that is also described in the specification (e.g. 200 OK).
-The response data used as expected message content is then also generated from the specification.
+A response is automatically validated against the corresponding response defined in the OpenAPI specification
+for the given status code.
+You just specify the expected HTTP status code, which must match one defined in the specification (e.g., 200 OK), and validation will be performed automatically.
+For more details see <<openapi-validation>>.
 
 As an example the following OpenAPI specification defines the operation `getPetById`.
 
@@ -116,10 +260,12 @@ Pet:
 # ...
 ----
 
-In a testcase Citrus is able to leverage this information in order to send a proper request and validate the response based on the OpenAPI specification.
+In a testcase Citrus is able to leverage this information in order to send a proper request and validate
+the response based on the OpenAPI specification.
 
 .Java
 [source,java,indent=0,role="primary"]
+
 ----
 private final HttpClient httpClient = new HttpClientBuilder()
             .requestUrl("http://localhost:%d".formatted(port))
@@ -130,6 +276,9 @@ private final OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
 
 @CitrusTest
 public void openApiClientTest() {
+    // Define variables to set request parameters.
+    // Note that the path-param in `petstore-v3.yaml` is named `petId`
+    variable("petId", "1001");
     when(openapi(petstoreSpec)
                 .client(httpClient)
                 .send("getPetById"));
@@ -146,6 +295,9 @@ public void openApiClientTest() {
 <test name="OpenApiClientTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <variables>
         <variable name="petstoreSpec" value="classpath:org/citrusframework/openapi/petstore/petstore-v3.json"/>
+        <!-- Define variables to set request parameters.
+             Note that the path-param in `petstore-v3.yaml` is named `petId` -->
+        <variable name="petId" value="1001"/>
     </variables>
     <actions>
         <openapi specification="${petstoreSpec}" client="httpClient">
@@ -185,46 +337,241 @@ actions:
 ----
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
               xmlns:spring="http://www.springframework.org/schema/beans">
-    <!-- NOT SUPPORTED -->
+    <!-- NOT SUPPORTED but you can use a generated TestAPI in Spring. -->
 </spring:beans>
 ----
 
-In this very first example The client uses the OpenAPI specification to generate a proper GET HTTP request for the `getPetById` operation.
-The request is sent to the server using the request URL path `/petstore/v3/pet/${petId}` as declared in the OpenAPI specification.
+In this very first example The client uses the OpenAPI specification to generate a proper GET HTTP request
+for the `getPetById` operation. The request is sent to the server using the request URL path `/petstore/v3/pet/${petId}`
+as declared in the OpenAPI specification.
 
-The resulting HTTP response from the server is verified on the client by giving the operationId and the expected status `200`.
-The OpenAPI client generates the expected control message from the given Json schema in the OpenAPI specification.
+It is also possible to reference a given specification by one of its aliases. In the following example,
+this is demonstrated through the usage of either an OpenApiRepository or an OpenApiSpecification. Note
+that it is sufficient to register the specification using either method. The `openapi` call then accepts
+a string argument representing one of the specification's aliases..
 
-The generated control message contains validation matchers and expressions as follows.
+.Java
+[source,java,indent=0,role="primary"]
 
-.Generated control message body
-[source,json]
 ----
-{
-  "id": "@isNumber()@",
-  "name": "@notEmpty()@",
-  "category": {
-    "id": "@isNumber()@",
-    "name": "@notEmpty()@"
-  },
-  "photoUrls": "@notEmpty()@",
-  "tags":  "@ignore@",
-  "status": "@matches(sold|pending|available)@"
+private final HttpClient httpClient = new HttpClientBuilder()
+            .requestUrl("http://localhost:%d".formatted(port))
+            .build();
+
+@BindToRegistry
+private OpenApiRepository openApiRepository = new OpenApiRepository()
+            .locations(singletonList(
+                "classpath:org/citrusframework/openapi/petstore/petstore-v3.json"))
+            .neglectBasePath(true)
+            .validationPolicy(OpenApiValidationPolicy.REPORT);
+
+@BindToRegistry
+private OpenApiSpecification openApiSpecification = OpenApiSpecification
+            .from(Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"), OpenApiValidationPolicy.REPORT)
+            .neglectBasePath(true);
+
+@CitrusTest
+public void openApiClientTest() {
+    variable("petId", "1001");
+    when(openapi("petstore-v3")
+        .client(httpClient)
+        .send("getPetById"));
+
+    then(openapi("petstore-v3")
+        .client(httpClient)
+        .receive("getPetById", HttpStatus.OK));
 }
 ----
 
-This control message meets the rules defined by the OpenAPI Json schema specification for the pet object.
-For instance the enum field `status` is validated with a matching expression.
-In case the OpenAPI specification changes the generated control message will change accordingly.
+[[openapi-client]]
+=== Message Content
+
+All variables that match the parameters of the operation will be automatically assigned to the constructed method.
+For example, in the samples above, the `petId` will be assigned to the corresponding path parameter.
+The same applies to `header`, `query`, and `cookie` parameters. Additionally, it is also possible to
+specify parameters and body at the message level.
+
+For example, setting the `verbose` query parameter at the message level in the sample below has the
+same effect as specifying a `verbose` variable.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void openApiClientTest() {
+    variable("petId", "1001");
+    when(openapi("petstore-v3")
+        .client(httpClient)
+        .send("getPetById")
+        .message()
+        .header("verbose", "true"));
+
+    then(openapi("petstore-v3")
+        .client(httpClient)
+        .receive("getPetById", HttpStatus.OK));
+}
+----
+
+[[openapi-autofill]]
+=== Autofill
+
+As all parameters and the body are defined in the OpenAPI specification, it is possible to autofill
+missing values. Autofill works by generating random, schema-conforming values for parameters and the body.
+The ability to create random values based on OpenAPI schema definitions has been significantly enhanced
+compared to the previous implementations. It now respects constraints such as `min/max` definitions for
+numbers, composite patterns like `oneOf`, `anyOf`, and `allOf`, `arrays`, and specific patterns like
+`email`, `URI`, `hostname`, `IPv4`, and `IPv6`. Regular expression patterns for strings are properly
+generated using the `com.github.mifmif:generex` library.
+
+Note that random message generation has limitations. For example, in the case of complex schemas containing
+nested objects, the random generator currently stops if it encounters the same object type during generation,
+in order to avoid infinite recursion.
+
+There are three autofill modes:
+
+|===
+|Mode | Description
+|  `REQUIRED` | Autofills only the required parts of the message, such as required body attributes, and required header, query, cookie, and path parameters. This is the default mode.
+|  `ALL` | Autofills all parts of the message, including both required and optional parameters and body attributes.
+|  `NONE` | No autofill is applied. All missing parameters and body must be explicitly provided.
+|===
+
+The autofill mode is supported at client and server and can be specified at send the send message:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void openApiClientTest() {
+    // This request is invalid because no body will be generated
+    when(openapi("petstore-v3")
+        .client(httpClient)
+        .send("addPet")
+        .autoFill(AutoFillType.NONE));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="OpenApiClientTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <variables>
+        <variable name="petstoreSpec" value="classpath:org/citrusframework/openapi/petstore/petstore-v3.json"/>
+    </variables>
+    <actions>
+        <openapi specification="${petstoreSpec}" client="httpClient">
+          <!-- this request is invalid because no body will be generated -->
+          <send-request operation="addPet" autofill="NONE"/>
+        </openapi>
+    </actions>
+</test>
+----
+
+[[openapi-validation]]
+=== Validation
+
+The foundation of the OpenAPI validation concept is the OpenAPI validator provided by `com.atlassian.oai:swagger-request-validator-core`.
+This concept applies to both client-side and server-side implementations, covering both requests and responses.
+It includes parameter validation as well as message validation, with the latter being limited to messages
+based on schema definitions in the OpenAPI specification
+
+Since most use cases require sent and received messages to conform to the specification, schema validation
+is `enabled by default`. This ensures that parameter values and the body are valid not only in terms
+of type but also with respect to other constraints, such as minimum and maximum values, patterns,
+composites (`oneOf`, `anyOf`, `allOf`), and other restrictions.
+
+Unlike the previous validation implementation in Citrus, no explicit control message is involved in the validation.
+Technically, the OpenAPI validation is implemented as a Citrus SchemaValidation, similar to JSON and XML
+validation. However, you can still use the standard message validation features of Citrus to
+validate the explicit content of the body or header parameters.
+
+If you intentionally want to send or receive invalid data to test the response behavior or error handling
+of your service, you can disable the validation as follows:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void openApiClientTest() {
+    variable("petId", "invalid-string-as-pet-id");
+
+    // Although the petId is not an integer, this call will not fail due to disabled schema validation
+    when(openapi("petstore-v3")
+        .client(httpClient)
+        .send("getPetById")
+        .schemaValidation(false));
+
+    then(openapi("petstore-v3")
+        .client(httpClient)
+        .receive("getPetById", HttpStatus.OK))
+        .schemaValidation(false);
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="OpenApiClientTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <variables>
+        <variable name="petstoreSpec" value="classpath:org/citrusframework/openapi/petstore/petstore-v3.json"/>
+        <!-- Define variables to set request parameters.
+             Note that the path-param in `petstore-v3.yaml` is named `petId` -->
+        <variable name="petId" value="invalid-string-as-pet-id"/>
+    </variables>
+    <actions>
+        <openapi specification="${petstoreSpec}" client="httpClient">
+          <!-- Although the petId is not an integer, this call will not fail due to
+               disabled schema validation -->
+          <send-request operation="getPetById" schemaValidation="false"/>
+        </openapi>
+    </actions>
+</test>
+----
+
+Of course, the resulting HTTP response from the server is also verified against the OpenAPI specification.
+Programmatically, verification is configured by providing the `operationId` and the expected `status`.
+From this, the expected response is determined and validated against the actual response.
+
+Response schema validation can also be disabled, as shown in the previous example.
 
 This completes the client side OpenAPI support.
 Now let's have a closer look at the server side OpenAPI support in the next section.
 
+[[openapi-validation-configuration]]
+=== Validation Configuration
+
+If you need to disable certain validations, you can do so using the relevant configuration options described
+https://bitbucket.org/atlassian/swagger-request-validator/src/e0a7038bfee59afe4d4ca11b4a5f1625ee82728d/swagger-request-validator-core/README.md[here].
+
+For example, if you encounter a validation exception due to additional properties, such as:
+
+[source, shell]
+----
+ERROR - Object instance has properties which are not allowed by the schema: ["additionalInfo"]: [] (validationKey='validation.response.body.schema.additionalProperties')
+----
+
+You can disable this validation by setting the following system property:
+
+[source, shell]
+----
+swagger.validation.response.body.schema.additionalProperties=IGNORE
+----
+
+To ignore additional properties validation in general, use:
+
+[source, shell]
+----
+swagger.validation.schema.additionalProperties=IGNORE
+----
+
+
 [[openapi-server]]
 == OpenAPI server
 
-On the server side Citrus is able to verify incoming requests based on the OpenAPI specification.
-The expected request message content as well as the expected resource URL path and the Content-Type are automatically validated.
+As already mentioned in chapter <<openapi-validation>>, Citrus is able to verify incoming requests and
+outgoing responses, based on the OpenAPI specification. The expected request message content as well
+as the expected resource URL path, query, header, cookie parameters and the Content-Type are automatically
+validated.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -241,6 +588,9 @@ private final OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
 
 @CitrusTest
 public void openApiClientTest() {
+    // Define variables to set request parameters.
+    // Note that the path-param in `petstore-v3.yaml` is named `petId`
+    variable("petId", "1001");
     when(openapi(petstoreSpec)
                 .server(httpServer)
                 .receive("addPet"));
@@ -257,6 +607,9 @@ public void openApiClientTest() {
 <test name="OpenApiClientTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <variables>
         <variable name="petstoreSpec" value="classpath:org/citrusframework/openapi/petstore/petstore-v3.json"/>
+        <!-- Define variables to set request parameters.
+             Note that the path-param in `petstore-v3.yaml` is named `petId` -->
+        <variable name="petId" value="1001"/>
     </variables>
     <actions>
         <openapi specification="${petstoreSpec}" server="httpServer">
@@ -302,10 +655,801 @@ actions:
 
 The example above uses the `addPet` operation defined in the OpenAPI specification.
 The operation expects a HTTP POST request with a pet object as message payload.
-The OpenAPI server generates an expected Json message body according to the specification.
+The OpenAPI server validates the incoming message using `com.atlassian.oai:swagger-request-validator-core`.
 This ensures that the incoming client request meets the Json schema rules for the pet object.
-Also, the server will verify the HTTP request method, the Content-Type header as well as the used resource path `/petstore/v3/pet`.
+Also, the server will verify the HTTP request method, the Content-Type header as well as the used
+resource path `/petstore/v3/pet`. For more information check chapter <<openapi-validation>>.
 
 The given HTTP status code defines the response that should be sent by the server.
-The server will generate a proper response according to the OpenAPI specification.
-This also includes a potential response message body (e.g. pet object).
+The server will generate a proper response according to the OpenAPI specification and the autofill mode
+described in chapter <<openapi-autofill>>. This also includes a potential response message body (e.g. pet object).
+
+Note that the OpenAPI specification does not require all possible responses to be defined. Therefore,
+a response for a given operation and status code may not always be specified by the OpenAPI specification.
+In such cases, Citrus will fail to generate a valid random response, and you will need to specify the response manually.
+
+In case validation is unwanted, it can always be turned off for server side send and receive. Again, see
+<<openapi-validation>> for details.
+
+[[openapi-test-api-generator]]
+== OpenAPI Test API Generator
+
+For a deeper integration with a given OpenAPI, Citrus offers the ability to generate a dedicated
+TestAPI, providing test actions tailored to the specific operations of the OpenAPI under evaluation.
+These actions can be used with both XML and Java DSL.
+
+Please note the following restrictions:
+- Only OpenApiClient send/receive is implemented
+- XML integration is only available for Spring Framework
+
+The TestAPI functionality is provided by the https://github.com/citrusframework/citrus/tree/main/test-api-generator[Citrus OpenAPI TestAPI Generator]
+module, which utilizes the link:https://github.com/swagger-api/swagger-codegen/tree/master[OpenAPI Code Generator]
+to generate the necessary code. Citrus provides the following modules to build and run the TestAPI code:
+
+|===
+| Artifact            | Purpose
+
+| `citrus-test-api-core`  | Runtime dependencies of Citrus TestAPI feature.
+| `citrus-test-api-generator-core`  | Citrus specific generator `org.citrusframework.openapi.generator.CitrusJavaCodegen` and required
+https://github.com/citrusframework/citrus/tree/main/test-api-generator/citrus-test-api-generator-core/src/main/resources/java-citrus[mustache templates].
+| `citrus-test-api-generator-maven-plugin`  | The maven plugin used to build the TestAPI.
+
+|===
+
+
+The generator offers the following features:
+
+* Generation of a TestAPI
+** From OpenAPI Specification
+** From WSDL
+* Integration into Citrus XML test cases:
+** Integration into XML editors via dedicated generated XSD for:
+*** Schema validation
+*** Auto-completion
+* Integration into Citrus Java test cases via Java DSL
+
+Keep in mind that a generated TestAPI not only serves as a powerful tool for calling and validating
+the operations of your system under test, but also streamlines access to other supporting libraries
+that offer an OpenAPI specification, enhancing the overall integration and testing experience.
+
+[[openapi-test-api-when-to-use]]
+=== When to use a TestAPI
+
+Using a TestAPI simplifies testing OpenAPI-based services but introduces additional configuration overhead.
+It is essential to have a solid understanding of Maven and managing generated code.
+
+If you're writing multiple tests for a service, investing time in the following chapters will be worthwhile.
+However, if you only need a basic smoke test, using plain Citrus features may be the better choice.
+
+[[openapi-test-api-wsdl]]
+=== TestAPI from WSDL
+
+Citrus also supports the generation of a TestAPI from a WSDL. The WSDL is parsed, and a simple OpenAPI
+specification is generated, which includes an OpenAPI operation for each WSDL binding. Using specific
+code generation templates, the generator provides WS-specific action builders that can be used in both
+Java DSL and XML. All this happens behind the scenes, if you specifiy a WSDL as source and use the
+`citrus-test-api-generator-maven-plugin` for code generation.
+
+Note that there is currently no support for generating random messages. Also, the WSDL is not yet
+properly registered with an `XsdSchemaRepository`, nor are the actions configured for schema validation.
+Therefore, out of the box validation is currently not supported.
+
+[[openapi-test-api-files]]
+=== Generated Files
+
+The following directory structure depicts the files that are produced during code generation. Note
+that the `Prefix` in folder and file-names is a placeholder for a specific value configured by a
+parameter in the build configuration. This value should uniquely identify an API to avoid name clashes.
+
+.Generated Folder Structure and Files
+[source]
+----
+target/
+└generated-test-sources/
+ └ openapi/
+    ├ .openapi-generator/                             // OpenApiGenerator Metafiles
+    ├ docs/                                           // Standard OpenApiGenerator
+    │                                                 // documentation
+    └ src/
+       ├ main/
+       │   ├ java/
+       │   │   └ org/                                 // default
+       │   │      └ citrusframework/                  //   TestAPI
+       │   │         └ automation/                    //     package structure
+       │   │            │
+       │   │            └ prefix/                     // Api prefix as specified in Maven
+       │   │               │                          // build
+       │   │               │
+       │   │               └ version/                 // Optional version as specified in
+       │   │                  │                       // Maven build
+       │   │                  ├ api/
+       │   │                  │  └ PrefixApi.java     // The dedicated api action builder
+       │   │                  │
+       │   │                  ├ model/                // Model classes generated for
+       │   │                  │  ├ TypeA.java         // schema components
+       │   │                  │  └ TypeB.java
+       │   │                  ├ spring/
+       │   │                  │  ├ PrefixBeanConfiguration.java  // Spring BeanConfiguration
+       │   │                  │  │                            // providing OpenApiSpecification
+       │   │                  │  │                            // and PrefixApi bean
+       │   │                  │  │
+       │   │                  │  └ PrefixNamespaceHandler.java   // Spring NamespaceHandler for
+       │   │                  │                                  // XML integration
+       │   │                  │
+       │   │                  └ PrefixApi.java        // OpenApiSpecification provider
+       │   └ resources/
+       │       ├ META-INF/                            // Spring Integration files
+       │       │  ├ spring.handlers
+       │       │  └ spring.schemas
+       │       ├ org/
+       │       │  └ citrusframework/
+       │       │     └ automation/
+       │       │        ├ apiprefix/
+       │       │           └ version/
+       │       │              └ prefix_openApi.yml    // Copy of the OpenAPI specification
+       │       │                                      // for validation purposes
+       │       └ schema/
+       │          └ xsd
+       │             └ prefix-api.xsd                 // Generated XSD schema for XML
+       │                                              // integration
+       │
+       └ test                                         // Unused
+----
+
+|===
+| File                                | Content
+
+| `PrefixApi.java`                    | The class containing the dedicated TestAPI action builder and actions.
+| `TypeA.java, TypeB.java`            | Model files generated with respect to the schema components of the OpenAPI.
+| `PrefixBeanConfiguration.java`      | A Spring @Configuration class, that provides an OpenApiRepository with the Specification and an instance of PrefixApi.
+| `PrefixNamespaceHandler.java`       | A Spring class, that registers bean definition parsers for TestAPI XML elements.
+| `PrefixApi.java`                    | Provides static access to an instance of the TestAPI OpenAPI specification.
+| `spring.handlers`                   | Spring namespace handler configuration, that contains all NamespaceHandlers for all generated APIs.
+| `spring.schemas`                    | Spring schema definitions, with mappings of namespaces to schemas for all generated APIs.
+| `prefix-openApi.yml`                | The OpenAPI source that was used to build the TestAPI.
+| `prefix-api.xsd`                    | XSD schema for the integration of the TestAPI into XML.
+|===
+
+[[openapi-test-api-generator]]
+=== Configuration of TestAPI Generation
+
+Code generation is typically integrated into the build process, and for the `Citrus TestAPI Generator`,
+this is accomplished using a Maven or Gradle plugin. While the standard `org.openapitools:openapi-generator-maven-plugin`
+can be used for this purpose, configuring it, especially for multiple APIs, can be cumbersome and complex.
+However, it is certainly possible, and a sample configuration is available in the
+https://github.com/citrusframework/citrus/tree/main/test-api-generator/citrus-test-api-generator-core/pom.xml/[module descriptor].
+
+To streamline this process, Citrus provides its own adaptation of the standard generator plugin: the
+`Citrus OpenAPI Generator Plugin`. This plugin simplifies TestAPI generation by offering sensible
+default configurations and better support for generating multiple APIs. It also enhances integration
+with Spring by automatically generating Spring-specific files (`spring.handlers` and `spring.schemas`),
+making it easier to integrate the generated APIs into Spring-based applications.
+
+Given these advantages, the Citrus OpenAPI Generator Plugin is recommended in most scenarios as it
+greatly simplifies the configuration process and improves overall flexibility.
+
+The plugin is thoroughly tested across a wide variety of configurations. For additional details, you
+can refer to
+https://github.com/citrusframework/citrus/tree/main/test-api-generator/citrus-test-api-generator-maven-plugin/src/test/resources/TestApiGeneratorMojoIntegrationTest[these]
+sample project build descriptors used for testing.
+
+The following section provides a configuration example for basic TestAPI generation scenarios:
+
+.Citrus OpenAPI Generator Plugin - multiple APIs, minimal configuration
+[source,xml,indent=0,role="primary"]
+----
+<plugin>
+    <artifactId>citrus-test-api-generator-maven-plugin</artifactId>
+    <configuration>
+        <!-- Configuration for multiple APIs, with the minimal set of configurations per api.
+        Defaults will be assigned as described in the Configuration Options section. -->
+        <apis>
+            <api>
+                <prefix>Multi1</prefix>
+                <source>api/test-api.yml</source>
+            </api>
+            <api>
+                <prefix>Multi2</prefix>
+                <source>api/test-api.yml</source>
+            </api>
+            <api>
+                <prefix>Multi3</prefix>
+                <source>api/test-api.yml</source>
+            </api>
+        </apis>
+    </configuration>
+    <executions>
+        <execution>
+            <goals>
+                <goal>create-test-api</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+
+----
+
+.Citrus OpenAPI Generator Plugin - single API full configuration
+[source,xml,indent=0,role="secondary"]
+----
+<plugin>
+    <artifactId>citrus-test-api-generator-maven-plugin</artifactId>
+    <configuration>
+        <!-- Global configuration properties as described by OpenAPIGenerator -->
+        <globalConfigOptions>
+            <a>b</a>
+            <other>otherOption</other>
+        </globalConfigOptions>
+        <!-- Configuration for Single API, with the full set of configuration. -->
+        <apis>
+            <schemaFolder>myschema/xsd</schemaFolder>
+            <metaInfFolder>src/main/resources/META-INF</metaInfFolder>
+            <api>
+                <prefix>Full</prefix>
+                <source>api/test-api.yml</source>
+                <apiPackage>org.mypackage.%PREFIX%.api</apiPackage>
+                <invokerPackage>org.mypackage.%PREFIX%.invoker</invokerPackage>
+                <modelPackage>org.mypackage.%PREFIX%.model</modelPackage>
+                <endpoint>myEndpoint</endpoint>
+                <targetXmlnsNamespace>
+                    "http://company/citrus-test-api/myNamespace"
+                </targetXmlnsNamespace>
+                <version>v1</version>
+                <!-- Additional properties will be passed into the code generator and
+                     can be used in mustache templates. -->
+                <additionalProperties>a=b,c=d</additionalProperties>
+                <apiConfigOptions>
+                    <!-- Configuration properties as described by
+                         OpenAPIGenerator -->
+                    <sourceFolder>generated-sources</sourceFolder>
+                    <resourceFolder>generated-resources</resourceFolder>
+                </apiConfigOptions>
+            </api>
+        </apis>
+        <!-- Location for generated XSDs defaults to schema/xsd -->
+        <schemaFolder>myschema/xsd</schemaFolder>
+        <!-- Location for generated spring integration files defaults to target/generated-test-sources/openapi/src/main/resources/META-INF -->
+        <metaInfFolder>src/main/resource-mod/META-INF-MOD</metaInfFolder>
+    </configuration>
+    <executions>
+        <execution>
+            <goals>
+                <goal>create-test-api</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+----
+
+.Standard OpenAPI Generator Plugin
+[source,xml,indent=0,role="secondary"]
+----
+<!-- for detailed information refer to pom.xml of citrus-test-api-generator-core -->
+<plugin>
+    <groupId>org.openapitools</groupId>
+    <artifactId>openapi-generator-maven-plugin</artifactId>
+    <!-- Add the citrus generator as dependency -->
+    <dependencies>
+        <dependency>
+            <groupId>org.citrusframework</groupId>
+            <artifactId>citrus-test-api-generator-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+    <configuration>
+        <configOptions>
+            <apiType>REST</apiType>
+            <resourceFolder>generated-test-resources</resourceFolder>
+            <sourceFolder>generated-test-sources</sourceFolder>
+            <useTags>true</useTags>
+        </configOptions>
+        <generateSupportingFiles>true</generateSupportingFiles>
+        <!-- Use citrus generator for generation -->
+        <generatorName>java-citrus</generatorName>
+        <output>${project.build.directory}</output>
+    </configuration>
+    <executions>
+        <execution>
+            <id>generate-openapi-petstore-files</id>
+            <phase>compile</phase>
+            <goals>
+                <goal>generate</goal>
+            </goals>
+            <configuration>
+                <inputSpec>${project.basedir}/src/test/resources/apis/petstore.yaml</inputSpec>
+                <configOptions>
+                    <invokerPackage>
+                        org.citrusframework.openapi.generator.rest.petstore
+                    </invokerPackage>
+                    <apiPackage>
+                        org.citrusframework.openapi.generator.rest.petstore.request
+                    </apiPackage>
+                    <modelPackage>
+                        org.citrusframework.openapi.generator.rest.petstore.model
+                    </modelPackage>
+                    <prefix>PetStore</prefix>
+                    <apiEndpoint>petStoreEndpoint</apiEndpoint>
+                </configOptions>
+            </configuration>
+        </execution>
+        <execution>
+            <id>generate-openapi-files-for-soap</id>
+            <phase>compile</phase>
+            <goals>
+                <goal>generate</goal>
+            </goals>
+            <configuration>
+                <inputSpec>
+                    ${project.basedir}/src/test/resources/org/citrusframework/openapi/generator/SimpleWsdlToOpenApiTransformerTest/BookService-generated.yaml
+                </inputSpec>
+                <configOptions>
+                    <apiType>SOAP</apiType>
+                    <invokerPackage>
+                        org.citrusframework.openapi.generator.soap.bookservice
+                    </invokerPackage>
+                    <apiPackage>
+                        org.citrusframework.openapi.generator.soap.bookservice.request
+                    </apiPackage>
+                    <modelPackage>
+                        org.citrusframework.openapi.generator.soap.bookservice.model
+                    </modelPackage>
+                    <prefix>OpenApiFromWsdl</prefix>
+                    <apiEndpoint>soapSampleEndpoint</apiEndpoint>
+                </configOptions>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+----
+
+These are the primary elements you can configure in the `<configuration>` section:
+
+|===
+| Configuration element            | Maven Property   (ns = citrus.test.api.generator)                                             | Description                                                      | Default Value
+
+| `schemaFolder`                   | `ns.schema.folder`                     | Location of the generated XSD schemas                            | `schema/xsd/%VERSION%`
+| `metaInfFolder`                  | `ns.meta.inf.folder`                   | Location into which spring meta files are generated/updated      | `target/generated-test-resources/META-INF`
+| `generateSpringIntegrationFiles` | `ns.generate.spring.integration.files` | Specifies whether spring integration files should be generated   | `true`
+
+4+| Nested `<api>` element
+| `prefix`                         | `ns.prefix`                            | Specifies the prefix used for the TestAPI, typically an acronym. | (no default, **required**)
+| `source`                         | `ns.source`                            | Specifies the source of the TestAPI.                             | (no default, **required**)
+| `version`                        | `ns.version`                           | Specifies the version of the API, may be `null`.                  | (none)
+| `endpoint`                       | `ns.endpoint`                          | Specifies the default endpoint name of the TestAPI.                           | `%PREFIX%Endpoint`
+| `type`                           | `ns.type`                              | Specifies the type of the TestAPI.                               | `REST`, other option is `SOAP`
+| `useTags`                        | `ns.use.tags`                          | Specifies whether the generator should generate an API class per tag name. | `true`
+| `invokerPackage`                 | `ns.invoker.package`                   | Package for the TestAPI classes.                                 | `org.citrusframework.automation.%PREFIX%.%VERSION%`
+| `apiPackage`                     | `ns.api.package`                       | Package for the TestAPI interface classes.                       | `org.citrusframework.automation.%PREFIX%.%VERSION%.api`
+| `modelPackage`                   | `ns.model.package`                     | Package for the TestAPI model classes.                           | `org.citrusframework.automation.%PREFIX%.%VERSION%.model`
+| `targetXmlnsNamespace`           | `ns.namespace`                         | XML namespace used by the API.                                    | `http://www.citrusframework.org/schema/%VERSION%/%PREFIX%-api`
+| Nested `<apiConfigOptions>` element 3+|  https://openapi-generator.tech/docs/generators/java[OpenAPI Generator Options]
+| `resourceFolder`                 |                    | Location into which the resources are generated                  | Dependend on the phase in which the source is generated:
+-`target/generated-sources/openapi/src/main/java`
+-`target/generated-test-sources/openapi/src/main/java`
+| `sourceFolder`                   |                      | Location into which the sources are generated                    | Dependend on the phase in which the source is generated:
+-`target/generated-sources/openapi/src/main/resources`
+-`target/generated-test-sources/openapi/src/main/resources`
+|  `<globalConfigOptions>` 3+|  https://openapi-generator.tech/docs/globals[OpenAPI Generator global Config Options]
+|===
+
+Note: `%PREFIX%` and `%VERSION%` are placeholders that will be replaced by their specific values as configured.
+The plugin performs a conversion to lowercase for `PREFIX` used in package names and in `targetXmlnsNamespace`.
+
+[[openapi-test-api-generator-run]]
+==== Running the generator
+
+To run the generator, execute the following command in your project directory:
+
+[source,bash]
+----
+mvn citrus-test-api-generator:create-test-api
+----
+
+This command will generate the classes and XSD files as configured for your APIs in the specified locations.
+
+[[openapi-test-api-generator-spring-meta]]
+==== Spring meta file generation
+
+The `citrus-test-api-generator-maven-plugin` supports the generation of essential Spring integration
+files, namely `spring.handlers` and `spring.schemas`. These files play a crucial role for Spring applications
+that use XML configuration.
+
+The generated Spring integration files provide mappings between custom XML namespaces and their
+corresponding namespace handlers and schema locations. This mapping enables Spring to correctly parse
+and validate XML configuration files that contain custom elements and attributes, ensuring seamless
+integration with your Spring-based application.
+
+[[openapi-test-api-generator-spring-meta-config]]
+===== Configuration
+
+The `citrus-test-api-generator-maven-plugin` generates the Spring integration files based on the
+configuration provided in the `citrus-test-api-generator-maven-plugin` section of the pom.xml file.
+For each API defined, the plugin generates entries in the `spring.handlers` and `spring.schemas` files,
+mapping XML namespaces to their respective handlers and schema locations.
+
+===== Meta File Update Process
+
+If you are running your TestAPI alongside a non-generated API and need to modify the existing
+`spring.handlers` and `spring.schemas` files from your non-generated source code, you should point
+the metaInfoFolder to the location of your existing META-INF folder (e.g., src/test/resources/META-INF).
+This ensures that the plugin updates the existing files without overwriting any content.
+
+To distinguish the generated schemas from the non-generated ones during the metafile update process,
+the plugin checks for namespace URLs containing the segment `citrus-test-schemas`. When updating the
+files, all schemas that match this segment will be removed, while the other schemas will be preserved.
+After that, the plugin will add the namespaces for the generated TestAPI according to the configuration.
+
+===== Usage
+
+Once generated, the `spring.handlers` and `spring.schemas` files, along with any existing
+non-generated content, should be included in the classpath of your Spring application.
+During runtime, Spring will pick up and use these files to resolve custom XML namespaces and handle elements
+accordingly. This automatically happens if one of the following folders is chosen:
+
+- target/generated-sources/openapi/src/main/resources/META-INF
+- target/generated-test-sources/openapi/src/main/resources/META-INF (`default`)
+- src/main/resources/META-INF - for mixing existing meta files with generated
+- src/test/resources/META-INF - for mixing existing meta files with generated
+
+For the directories listed above, the resources folder is included in the classpath by default, depending
+on whether tests are executed. For other directories, the Citrus TestAPI generator plugin automatically
+adds them to the classpath.
+
+If your IDE fails to resolve the files, you may need to manually configure the directories as source
+or resource folders. Additionally, consider adding a Maven build step to ensure these folders are handled
+correctly during the build process.
+
+==== Configuration of the Classpath for using TestAPI
+
+In case you encounter issues with the classpath when running your TestAPI, you may want to manually
+configure the classpath to contain the generated sources/resources. You can use the
+link:https://www.mojohaus.org/build-helper-maven-plugin/usage.html[build-helper-maven-plugin] plugin to do so.
+Explicit definition of these classpath entries should solve all related issues.
+
+.Configuration of `build-helper-maven-plugin`
+[source,xml]
+----
+<build>
+   <plugins>
+      <plugin>
+         <groupId>org.codehaus.mojo</groupId>
+         <artifactId>build-helper-maven-plugin</artifactId>
+         <executions>
+            <execution>
+               <id>add-test-sources</id>
+               <phase>generate-test-sources</phase>
+               <goals>
+                  <goal>add-test-source</goal>
+               </goals>
+               <configuration>
+                  <sources>
+                     <source>${project.build.directory}/generated-test-sources/openapi/src/main/java</source>
+                  </sources>
+               </configuration>
+            </execution>
+            <execution>
+               <id>add-test-resource</id>
+               <phase>generate-test-resources</phase>
+               <goals>
+                  <goal>add-test-resource</goal>
+               </goals>
+               <configuration>
+                  <resources>
+                     <resource>
+                        <directory>${project.build.directory}/generated-test-sources/openapi/src/main/resources</directory>
+                     </resource>
+                  </resources>
+               </configuration>
+            </execution>
+         </executions>
+      </plugin>
+   </plugins>
+</build>
+----
+
+==== Sample usage
+
+To utilize the TestAPI in XML, it's necessary to import the respective namespace.
+Once imported, requests can be directly employed as actions, as illustrated in the sample below.
+Further examples can be found here `org.citrusframework.openapi.generator.GeneratedApiIT`.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@ExtendWith(CitrusSpringExtension.class)
+@SpringBootTest(classes = {PetStoreBeanConfiguration.class, CitrusSpringConfig.class})
+class GetPetByIdTest {
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    @Autowired
+    private PetApi petApi;
+
+    @Test
+    @CitrusTest
+    void testByJsonPath(@CitrusResource TestCaseRunner runner) {
+        runner.when(petApi.sendGetPetById(1234L));
+        runner.then(petApi.receiveGetPetById(OK));
+    }
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:petstore="http://www.citrusframework.org/citrus-test-schema/petstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/petstore-api
+    http://www.citrusframework.org/citrus-test-schema/petstore-api/petstore-api.xsd"
+>
+    <testcase name="defaultOas3SchemaValidationTest">
+        <actions>
+            <petstore:send-get-pet-by-id petId="1234"/>
+            <petstore:receive-get-pet-with-cookie responseCode="200"/>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+To use the TestAPI in Java, you need to import the relevant API configuration, which provides the necessary request actions.
+In the example above, this configuration is named PetStoreBeanConfiguration.
+Once imported, you can autowire the API and use its builder methods to create dedicated actions for your operations.
+
+*Type-Safe Action Builders*
+
+The Java DSL offers type-safe methods for all required parameters.
+For example, the `getPetById` operation requires a valid petId of type long, as shown in the sample.
+This ensures that all parameters are correctly typed, providing compile-time validation and reducing the risk of errors.
+
+*Dynamic Content with String Expressions*
+
+In addition to type-safe builder methods, there is another version of each action that allows you to
+pass string expressions, which are dynamically resolved by Citrus at runtime.
+These methods have the same name as their type-safe counterparts, but they end with a `$`.
+For instance, if the type-safe method is getPetById(long petId), the dynamic method would be getPetById$(String petId).
+
+The reason for the $ in the method name is related to the underlying code generation mechanism, which facilitates dynamic content substitution during runtime.
+
+*Example: Type-Safe vs Dynamic Method*
+Both method calls achieve the same outcome, but one provides type safety at compile-time, while the other allows for dynamic content resolution at runtime:
+
+- *Type-Safe:* getPetById(123L);
+- *Dynamic:* getPetById$("123");
+
+In both cases, the correct action is created, but the former ensures type correctness at compile time, while the latter allows flexibility with dynamic values.
+
+
+==== OpenAPI Default Endpoint
+
+It is possible to specify a default endpoint for a generated TestAPI.
+The endpoint needs to be registered as bean and will be resolved when needed.
+The name of the endpoint can be specified as configuration parameter in the <<openapi-test-api-generator>> config options.
+If not specified a default name is derived from the TestAPI prefix as follows:
+
+Endpointname: `prefixEndpoint`
+
+Because of the default endpoint option, it is not required to specify the endpoint in the action builder.
+If omitted, the endpoint will be resolved at runtime.
+Failure in specification of a default endpoint will result in an exception at runtime.
+
+The following shows an example of how to specify two endpoints for the same server:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean(name = {"petstoreEndpoint", "extpetstoreEndpoint"})
+public HttpClient applicationServiceClient() {
+    return new HttpClientBuilder()
+        .requestUrl("http://localhost:8080")
+        .handleCookies(true)
+        .build();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus-http:client
+        id="petstoreEndpoint"
+        request-url="http://localhost:8080"
+        handle-cookies="true"
+    />
+<alias name="applicationServiceClient" alias="extpetstoreEndpoint" />
+----
+
+==== OpenAPI Security
+
+An OpenAPI may contain security specifications which can be referenced by operations.
+Several schemes exist, of which Citrus currently supports:
+
+- Basic Authentication
+- Bearer Authentication
+- Api Key Authentication
+
+The following snippet shows the definition of these security schemes in an OpenAPI.
+
+.Yaml
+[source,yaml,indent=0,role="primary"]
+----
+openapi: 3.0.2
+info:
+title: Extended Petstore API
+description: "This API extends the standard Petstore API. Although the operations\
+\ may not be meaningful in\na real-world context, they are designed to showcase\
+\ various advanced OpenAPI features that \nare not present in the standard Petstore\
+\ API.\n"
+version: 1.0.0
+servers:
+- url: http://localhost:9000/api/v3/ext
+....
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    api_key_header:
+      type: apiKey
+      description: Header api key description
+      name: api_key_header
+      in: header
+    api_key_cookie:
+      type: apiKey
+      description: Cookie api key description
+      name: api_key_cookie
+      in: cookie
+    api_key_query:
+      type: apiKey
+      description: Query api key description
+      name: api_key_query
+      in: query
+----
+
+===== Basic Authentication
+
+Citrus supports Basic Authentication by specifying the following properties per authenticated TestAPI:
+
+.Properties
+[source,properties,indent=0,role="primary"]
+----
+extpetstore.basic.username=extUser
+extpetstore.basic.password=extPassword
+----
+
+The properties must be prefixed with the API prefix in lower case.
+
+If present, these values will automatically be added as authorization headers to each call of relevant operations.
+
+In addition, it is possible to set the values on the operation action builder, possibly overwriting the above defaults:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+ runner.when(extPetApi
+  .sendGetPetByIdWithBasicAuthentication$("${petId}", "true")
+  .basicAuthUsername("admin")
+  .basicAuthPassword("topSecret")
+  .fork(true));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<extpetstore:send-get-pet-by-id-with-basic-authentication
+    petId="${petId}"
+    allDetails="false"
+    basicAuthUsername="admin"
+    basicAuthPassword="topSecret"
+    fork="true"
+    />
+----
+
+===== Bearer Authentication
+
+For bearer authentication, a bearer token may be specified using the following property:
+
+.Properties
+[source,properties,indent=0,role="primary"]
+----
+extpetstore.bearer.token=defaultBearerToken
+----
+
+The property must be prefixed with the API prefix in lower case.
+
+If present, this value will automatically be added as `Authorization Bearer Header`  to each call of relevant operations.
+
+In addition, it is possible to set this value on the operation action builder, possibly overwriting the above default:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+ runner.when(extPetApi
+  .sendGetPetByIdWithBasicAuthentication$("${petId}", "true")
+  .basicAuthBearer("bearerToken")
+  .fork(true));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<extpetstore:send-get-pet-by-id-with-bearer-authentication
+    petId="${petId}"
+    allDetails="false"
+    basicAuthBearer="bearerToken"
+    fork="true"
+    />
+----
+
+==== API Key Authentication
+
+Citrus supports API Key Authentication by specifying the following properties per authenticated TestAPI:
+
+.Properties
+[source,properties,indent=0,role="primary"]
+----
+# Whether the api key should be Base64 encoded or not
+extpetstore.base64-encode-api-key=true
+extpetstore.api-key-query=defaultTopSecretQueryApiKey
+extpetstore.api-key-header=defaultTopSecretHeaderApiKey
+extpetstore.api-key-cookie=defaultTopSecretCookieApiKey
+----
+
+The properties must be prefixed with the API prefix in lower case.
+
+If present, these values will automatically be added as a query, header or cookie to each call of relevant operations.
+
+In addition, it is possible to set the values on the operation action builder, possibly overwriting the above defaults:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+runner.when(extPetApi
+    .sendGetPetByIdWithApiKeyAuthentication$("${petId}", "false")
+    .apiKeyHeader("TopSecretHeader")
+    .apiKeyCookie("TopSecretCookie")
+    .apiKeyQuery("TopSecretQuery")
+    .fork(true));
+----
+
+Note that only one type of parameter (query, header or cookie) should be specified in a real world scenario.
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<extpetstore:send-get-pet-by-id-with-api-key-authentication
+                petId="${petId}"
+                allDetails="false"
+                apiKeyCookie="TopSecretCookie"
+                apiKeyHeader="TopSecretHeader"
+                apiKeyQuery="TopSecretQuery"
+                fork="true"
+            />
+----
+
+
+=== TestAPI  Configuration and Usage Samples
+
+The Citrus TestAPI module includes numerous tests that serve as excellent starting points.
+
+- The https://github.com/citrusframework/citrus/tree/main/test-api-generator/citrus-test-api-generator-maven-plugin/src/test/resources/TestApiGeneratorMojoIntegrationTest[TestApiGeneratorMojoIntegrationTest]
+folder contains various Maven configurations for specifcation of TestAPI generation.
+
+- The https://github.com/citrusframework/citrus/tree/main/test-api-generator/citrus-test-api-generator-core/src/test/java/org/citrusframework/openapi/generator/GeneratedRestApiIT.java[GeneratedRestApiIT]
+is the primary integration test for the Citrus TestAPI in a REST environment. +
+It includes over 100 tests written in both `Java DSL` and `XML`, covering all aspects of the generated TestAPI. +
+The https://github.com/citrusframework/citrus/tree/main/test-api-generator/citrus-test-api-generator-core/src/test/resources/apis/petstore-extended-v3.yaml[ExtendedPetAPI]
+provides a range of specific operations for testing, all of which are thoroughly covered in this test.
+
+- For SOAP integration, the https://github.com/citrusframework/citrus/tree/main/test-api-generator/citrus-test-api-generator-core/src/test/java/org/citrusframework/openapi/generator/GeneratedSoapApiIT.java[GeneratedSoapApiIT]
+serves as the main integration test for Citrus TestAPI in a SOAP environment.
