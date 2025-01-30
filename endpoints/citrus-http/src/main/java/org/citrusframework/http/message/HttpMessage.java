@@ -84,6 +84,10 @@ public class HttpMessage extends DefaultMessage {
     public HttpMessage(final Message message, boolean forceCitrusHeaderUpdate) {
         super(message, forceCitrusHeaderUpdate);
         copyCookies(message);
+
+        if (message instanceof HttpMessage httpMessage) {
+            queryParams.putAll(httpMessage.queryParams);
+        }
     }
 
     /**
