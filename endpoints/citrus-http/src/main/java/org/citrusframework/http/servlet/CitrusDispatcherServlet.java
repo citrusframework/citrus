@@ -16,6 +16,9 @@
 
 package org.citrusframework.http.servlet;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.http.client.HttpEndpointConfiguration;
 import org.citrusframework.http.controller.HttpMessageController;
@@ -35,9 +38,6 @@ import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.handler.MappedInterceptor;
 import org.springframework.web.servlet.handler.WebRequestHandlerInterceptorAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Citrus dispatcher servlet extends Spring's message dispatcher servlet and just
@@ -111,6 +111,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
             endpointConfiguration.setHeaderMapper(DefaultHttpHeaderMapper.inboundMapper());
             endpointConfiguration.setHandleAttributeHeaders(httpServer.isHandleAttributeHeaders());
             endpointConfiguration.setHandleCookies(httpServer.isHandleCookies());
+            endpointConfiguration.setRemoveSemicolonPathContent(httpServer.isRemoveSemicolonPathContent());
             endpointConfiguration.setDefaultStatusCode(httpServer.getDefaultStatusCode());
             messageController.setEndpointConfiguration(endpointConfiguration);
 
