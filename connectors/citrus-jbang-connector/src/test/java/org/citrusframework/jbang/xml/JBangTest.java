@@ -19,12 +19,22 @@ package org.citrusframework.jbang.xml;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.jbang.actions.JBangAction;
+import org.citrusframework.util.TestUtils;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.xml.actions.XmlTestActionBuilder;
 import org.testng.Assert;
+import org.testng.SkipException;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class JBangTest extends AbstractXmlActionTest {
+
+    @BeforeClass
+    public static void beforeClass() {
+        if (!TestUtils.isNetworkReachable()) {
+            throw new SkipException("Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
+        }
+    }
 
     @Test
     public void shouldLoadJBangActions() {
