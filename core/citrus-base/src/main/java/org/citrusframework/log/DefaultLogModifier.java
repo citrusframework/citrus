@@ -44,7 +44,7 @@ public class DefaultLogModifier implements LogMessageModifier {
 
     @Override
     public String mask(String source) {
-        if (!CitrusSettings.isLogModifierEnabled() || source == null || source.length() == 0) {
+        if (!CitrusSettings.isLogModifierEnabled() || source == null || source.isEmpty()) {
             return source;
         }
 

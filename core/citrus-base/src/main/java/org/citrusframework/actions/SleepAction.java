@@ -55,22 +55,23 @@ public class SleepAction extends AbstractTestAction {
         String duration = context.resolveDynamicValue(time);
 
         try {
-            Duration ms;
+            Duration parsedDuration;
             if (duration.indexOf(".") > 0) {
-                ms = switch (timeUnit) {
+                parsedDuration = switch (timeUnit) {
                     case MILLISECONDS -> Duration.ofMillis(Math.round(Double.parseDouble(duration)));
-                    case SECONDS -> Duration.ofMillis(Math.round(Double.parseDouble(duration) * 1000));
-                    case MINUTES -> Duration.ofMillis(Math.round(Double.parseDouble(duration) * 60 * 1000));
-                    default -> throw new CitrusRuntimeException("Unsupported time expression for sleep action - " +
-                            "please use one of milliseconds, seconds, minutes");
+                    case SECONDS -> Duration.ofSeconds(Math.round(Double.parseDouble(duration)));
+                    case MINUTES -> Duration.ofMinutes(Math.round(Double.parseDouble(duration)));
+                    default -> throw new CitrusRuntimeException("Unsupported time expression for sleep action - please use one of milliseconds, seconds, minutes");
                 };
             } else {
-                ms = Duration.ofMillis(TimeUnit.MILLISECONDS.convert(Long.parseLong(duration), timeUnit));
+                parsedDuration = Duration.ofMillis(TimeUnit.MILLISECONDS.convert(Long.parseLong(duration), timeUnit));
             }
 
-            logger.info(String.format("Sleeping %s ms", ms.toMillis()));
-            TimeUnit.MILLISECONDS.sleep(ms.toMillis());
-            logger.info(String.format("Returning after %s ms", ms.toMillis()));
+            logger.info("Sleeping {} {}", duration, timeUnit);
+
+            TimeUnit.MILLISECONDS.sleep(parsedDuration.toMillis());
+
+            logger.info("Returning after {} {}", duration, timeUnit);
         } catch (InterruptedException e) {
             throw new CitrusRuntimeException(e);
         }

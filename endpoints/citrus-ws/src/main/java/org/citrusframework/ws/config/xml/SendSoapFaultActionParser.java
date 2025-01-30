@@ -172,7 +172,6 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
 
         /**
          * Sets the fault detail resource paths.
-         * @param faultDetailResourcePaths
          */
         public void setFaultDetailResourcePaths(List<String> faultDetailResourcePaths) {
             faultDetailResourcePaths.forEach(builder.message()::faultDetailResource);

@@ -57,7 +57,7 @@ public interface MessageValidator<T extends ValidationContext> {
         Map<String, MessageValidator<?>> validators = TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
 
         if (logger.isDebugEnabled()) {
-            validators.forEach((k, v) -> logger.debug(String.format("Found message validator '%s' as %s", k, v.getClass())));
+            validators.forEach((k, v) -> logger.debug("Found message validator '{}' as {}", k, v.getClass()));
         }
 
         return validators;
@@ -75,7 +75,7 @@ public interface MessageValidator<T extends ValidationContext> {
             MessageValidator<? extends ValidationMatcher> instance = TYPE_RESOLVER.resolve(validator);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve validator from resource '%s/%s'", RESOURCE_PATH, validator));
+            logger.warn("Failed to resolve validator from resource '{}/{}'", RESOURCE_PATH, validator);
         }
 
         return Optional.empty();

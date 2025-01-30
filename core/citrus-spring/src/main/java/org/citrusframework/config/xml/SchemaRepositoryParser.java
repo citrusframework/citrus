@@ -84,7 +84,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
         }
 
         BeanDefinitionParser parser = TYPE_RESOLVER.resolve(type);
-        logger.info(String.format("Found schema repository bean definition parser %s from resource %s", parser.getClass(), RESOURCE_PATH + "/" + type));
+        logger.info("Found schema repository bean definition parser {} from resource {}", parser.getClass(), RESOURCE_PATH + "/" + type);
         SCHEMA_REPOSITORY_PARSER.put(type, parser);
         return parser;
     }

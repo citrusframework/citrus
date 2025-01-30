@@ -16,6 +16,13 @@
 
 package org.citrusframework.container;
 
+import java.time.Duration;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
@@ -28,13 +35,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.time.Duration;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
@@ -83,9 +83,7 @@ public class Wait extends AbstractTestAction {
         while (timeLeft > 0) {
             timeLeft -= intervalMs;
 
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Waiting for condition %s", condition.getName()));
-            }
+            logger.debug("Waiting for condition {}", condition.getName());
 
             var executor = newSingleThreadExecutor();
             long checkStartTime = System.currentTimeMillis();

@@ -62,9 +62,10 @@ public class ActionCondition extends AbstractCondition {
             action.execute(context);
         } catch (Exception e) {
             this.caughtException = e;
-            logger.warn(String.format("Nested action did not perform as expected - %s", Optional.ofNullable(e.getMessage())
-                                                                                            .map(msg -> e.getClass().getName() + ": " + msg)
-                                                                                            .orElseGet(() -> e.getClass().getName())));
+            logger.warn("Nested action did not perform as expected - {}",
+                    Optional.ofNullable(e.getMessage())
+                            .map(msg -> e.getClass().getName() + ": " + msg)
+                            .orElseGet(() -> e.getClass().getName()));
             return false;
         }
 

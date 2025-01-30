@@ -112,7 +112,7 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Head
     /**
      * Combines header validators from multiple sources. First the manual added validators in this class are added. Then
      * validators coming from reference resolver and resource path lookup are added.
-     *
+     * <p>
      * At the end a distinct combination of all validators is returned.
      * @param context
      * @return

@@ -38,7 +38,7 @@ import org.citrusframework.util.TypeConversionUtils;
 /**
  * Default endpoint component reads component name from endpoint uri and parses parameters from uri using
  * the HTTP uri pattern.
- *
+ * <p>
  * http://localhost:8080?param1=value1&param2=value2&param3=value3
  * jms:queue.name?connectionFactory=specialConnectionFactory
  * soap:localhost:8080?soapAction=sayHello
@@ -187,16 +187,13 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
             Field field = ReflectionHelper.findField(endpointConfigurationType, parameterEntry.getKey());
 
             if (field == null) {
-                if (paramString.length() == 0) {
+                if (paramString.isEmpty()) {
                     paramString.append("?").append(parameterEntry.getKey());
-                    if (parameterEntry.getValue() != null) {
-                        paramString.append("=").append(parameterEntry.getValue());
-                    }
                 } else {
                     paramString.append("&").append(parameterEntry.getKey());
-                    if (parameterEntry.getValue() != null) {
-                        paramString.append("=").append(parameterEntry.getValue());
-                    }
+                }
+                if (parameterEntry.getValue() != null) {
+                    paramString.append("=").append(parameterEntry.getValue());
                 }
             }
         }

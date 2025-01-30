@@ -70,7 +70,7 @@ public abstract class ActionContainerParser implements BeanDefinitionParser {
             }
         }
 
-        if (actions.size() > 0) {
+        if (!actions.isEmpty()) {
             builder.addPropertyValue(propertyName, actions);
         }
     }

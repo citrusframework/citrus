@@ -56,7 +56,12 @@ import static org.citrusframework.validation.json.JsonMessageValidationContext.B
 import static org.citrusframework.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 import static org.citrusframework.validation.xml.XmlMessageValidationContext.Builder.xml;
 import static org.citrusframework.validation.xml.XpathMessageValidationContext.Builder.xpath;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -206,7 +211,7 @@ class ReceiveMessageBuilderTest {
 	}
 
     @Test
-    void testSetPayloadWithResourceIoExceptionsIsWrapped() throws IOException {
+    void testSetPayloadWithResourceIoExceptionsIsWrapped() {
 
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();

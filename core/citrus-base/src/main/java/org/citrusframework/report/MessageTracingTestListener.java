@@ -151,7 +151,7 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
 
         File traceFile = new File(targetDirectory, filename);
         if (traceFile.exists()) {
-            logger.warn(String.format("Trace file '%s' already exists. Normally a new file is created on each test execution ", traceFile.getName()));
+            logger.warn("Trace file '{}' already exists. Normally a new file is created on each test execution ", traceFile.getName());
         }
         return traceFile;
     }

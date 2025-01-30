@@ -54,7 +54,7 @@ public interface HeaderValidator {
             validators.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name"));
 
             if (logger.isDebugEnabled()) {
-                validators.forEach((k, v) -> logger.debug(String.format("Found header validator '%s' as %s", k, v.getClass())));
+                validators.forEach((k, v) -> logger.debug("Found header validator '{}' as {}", k, v.getClass()));
             }
         }
         return validators;
@@ -72,7 +72,7 @@ public interface HeaderValidator {
             HeaderValidator instance = TYPE_RESOLVER.resolve(validator);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve header validator from resource '%s/%s'", RESOURCE_PATH, validator));
+            logger.warn("Failed to resolve header validator from resource '{}/{}'", RESOURCE_PATH, validator);
         }
 
         return Optional.empty();

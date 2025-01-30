@@ -53,6 +53,7 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 import static org.citrusframework.validation.xml.schema.ValidationStrategy.FAIL;
+import static org.citrusframework.xml.schema.AbstractSchemaCollection.W3C_XML_SCHEMA_NS_URI;
 
 public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidationContext> {
 
@@ -85,10 +86,6 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
 
     /**
      * Validate message with an XML schema.
-     *
-     * @param message
-     * @param context
-     * @param validationContext
      */
     @Override
     public void validate(Message message, TestContext context, XmlMessageValidationContext validationContext) {
@@ -160,14 +157,18 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
                         .stream()
                         .map(AbstractSchemaCollection::toSpringResource)
                         .toList()
-                        .toArray(new org.springframework.core.io.Resource[]{}), WsdlXsdSchema.W3C_XML_SCHEMA_NS_URI);
+                        .toArray(new org.springframework.core.io.Resource[]{}), W3C_XML_SCHEMA_NS_URI);
             }
 
             SAXParseException[] results = validator.validate(new DOMSource(doc));
             if (results.length == 0) {
                 logger.debug("XML schema validation successful: All values OK");
             } else {
-                logger.error("XML schema validation failed for message:\n{}", XMLUtils.prettyPrint(message.getPayload(String.class)));
+
+                if (logger.isErrorEnabled()) {
+                    logger.error("XML schema validation failed for message:\n{}",
+                        XMLUtils.prettyPrint(message.getPayload(String.class)));
+                }
 
                 // Report all parsing errors
                 logger.debug("Found {} schema validation errors", results.length);
@@ -176,7 +177,10 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
                     errors.append(e.toString());
                     errors.append("\n");
                 }
-                logger.debug(errors.toString());
+
+                if (logger.isDebugEnabled()) {
+                    logger.debug(errors.toString());
+                }
 
                 throw new ValidationException("XML schema validation failed:", results[0]);
             }
@@ -186,9 +190,6 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
     }
 
     /**
-     *
-     * @param messageType
-     * @param message
      * @return true if the message or message type is supported by this validator
      */
     @Override

@@ -85,7 +85,7 @@ public class PurgeEndpointActionTest extends UnitTestSupport {
     }
 
 	@Test
-    public void testPurgeWithMessageSelector() throws Exception {
+    public void testPurgeWithMessageSelector() {
         reset(mockEndpoint, consumer, selectiveConsumer);
 
         when(mockEndpoint.getName()).thenReturn("mockEndpoint");
@@ -102,7 +102,7 @@ public class PurgeEndpointActionTest extends UnitTestSupport {
     }
 
     @Test
-    public void testPurgeWithMessageSelectorMap() throws Exception {
+    public void testPurgeWithMessageSelectorMap() {
         reset(mockEndpoint, consumer, selectiveConsumer);
 
         when(mockEndpoint.getName()).thenReturn("mockEndpoint");

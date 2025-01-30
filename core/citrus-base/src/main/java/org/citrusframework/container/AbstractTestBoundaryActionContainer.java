@@ -56,7 +56,7 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
     /** Optional system properties */
     private Map<String, String> systemProperties = new HashMap<>();
 
-    public AbstractTestBoundaryActionContainer(String name, AbstractTestContainerBuilder<?, ?> builder) {
+    protected AbstractTestBoundaryActionContainer(String name, AbstractTestContainerBuilder<?, ?> builder) {
         super(name, builder);
     }
 
@@ -68,31 +68,31 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
      * @return
      */
     public boolean shouldExecute(String testName, String packageName, String[] includedGroups) {
-        String baseErrorMessage = "Skip before test container because of %s restrictions - do not execute container '%s'";
+        String baseErrorMessage = "Skip before test container because of {} restrictions - do not execute container '{}'";
 
         if (StringUtils.hasText(packageNamePattern)) {
             if (!Pattern.compile(packageNamePattern).matcher(packageName).matches()) {
-                logger.debug(String.format(baseErrorMessage, "test package", getName()));
+                logger.debug(baseErrorMessage, "test package", getName());
                 return false;
             }
         }
 
         if (StringUtils.hasText(namePattern)) {
             if (!Pattern.compile(sanitizePatten(namePattern)).matcher(testName).matches()) {
-                logger.debug(String.format(baseErrorMessage, "test name", getName()));
+                logger.debug(baseErrorMessage, "test name", getName());
                 return false;
             }
         }
 
         if (!checkTestGroups(includedGroups)) {
-            logger.debug(String.format(baseErrorMessage, "test groups", getName()));
+            logger.debug(baseErrorMessage, "test groups", getName());
             return false;
         }
 
         for (Map.Entry<String, String> envEntry : env.entrySet()) {
             if (!System.getenv().containsKey(envEntry.getKey()) ||
                     (StringUtils.hasText(envEntry.getValue()) && !System.getenv().get(envEntry.getKey()).equals(envEntry.getValue()))) {
-                logger.debug(String.format(baseErrorMessage, "env properties", getName()));
+                logger.debug(baseErrorMessage, "env properties", getName());
                 return false;
             }
         }
@@ -100,7 +100,7 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
         for (Map.Entry<String, String> systemProperty : systemProperties.entrySet()) {
             if (!System.getProperties().containsKey(systemProperty.getKey()) ||
                     (StringUtils.hasText(systemProperty.getValue()) && !System.getProperties().get(systemProperty.getKey()).equals(systemProperty.getValue()))) {
-                logger.debug(String.format(baseErrorMessage, "system properties", getName()));
+                logger.debug(baseErrorMessage, "system properties", getName());
                 return false;
             }
         }

@@ -85,7 +85,7 @@ public interface CitrusContextProvider {
             CitrusContextProvider instance = TYPE_RESOLVER.resolve(name);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve Citrus context provider from resource '%s/%s'", RESOURCE_PATH, name));
+            logger.warn("Failed to resolve Citrus context provider from resource '{}/{}'", RESOURCE_PATH, name);
         }
 
         return Optional.empty();

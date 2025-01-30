@@ -36,6 +36,9 @@ import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @since 2.0
@@ -118,7 +121,7 @@ public class MessageValidatorRegistryTest {
     }
 
     @Test
-    public void testFindMessageValidators() throws Exception {
+    public void testFindMessageValidators() {
         MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
 
         Map<String, MessageValidator<? extends ValidationContext>> messageValidators = new HashMap<>();
@@ -128,165 +131,165 @@ public class MessageValidatorRegistryTest {
 
         List<MessageValidator<? extends ValidationContext>> matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 1L);
-        Assert.assertEquals(matchingValidators.get(0), plainTextMessageValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 1L);
+        assertEquals(matchingValidators.get(0), plainTextMessageValidator);
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage("Hello"));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 1L);
-        Assert.assertEquals(matchingValidators.get(0), plainTextMessageValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 1L);
+        assertEquals(matchingValidators.get(0), plainTextMessageValidator);
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage(""));
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 1L);
-        Assert.assertEquals(matchingValidators.get(0).getClass(), DefaultEmptyMessageValidator.class);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 1L);
+        assertEquals(matchingValidators.get(0).getClass(), DefaultEmptyMessageValidator.class);
 
         messageValidatorRegistry.addMessageValidator("xmlMessageValidator", xmlMessageValidator);
         messageValidatorRegistry.addMessageValidator("groovyScriptMessageValidator", groovyScriptMessageValidator);
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 2L);
-        Assert.assertEquals(matchingValidators.get(0), groovyScriptMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1), plainTextMessageValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 2L);
+        assertEquals(matchingValidators.get(0), groovyScriptMessageValidator);
+        assertEquals(matchingValidators.get(1), plainTextMessageValidator);
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.XML.name(), new DefaultMessage(""));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 1L);
-        Assert.assertEquals(matchingValidators.get(0), xmlMessageValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 1L);
+        assertEquals(matchingValidators.get(0), xmlMessageValidator);
     }
 
     @Test
-    public void testMessageValidatorRegistryXmlConfig() throws Exception {
+    public void testMessageValidatorRegistryXmlConfig() {
         //non XML message type
         List<MessageValidator<? extends ValidationContext>> matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 3L);
-        Assert.assertEquals(matchingValidators.get(0), plainTextMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 3L);
+        assertEquals(matchingValidators.get(0), plainTextMessageValidator);
+        assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
+        assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
 
         //XML message type and empty payload
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.XML.name(), new DefaultMessage(""));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 4L);
-        Assert.assertEquals(matchingValidators.get(0), xmlMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1), xPathMessageValidator);
-        Assert.assertEquals(matchingValidators.get(2), groovyXmlMessageValidator);
-        Assert.assertEquals(matchingValidators.get(3).getClass(), DefaultMessageHeaderValidator.class);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 4L);
+        assertEquals(matchingValidators.get(0), xmlMessageValidator);
+        assertEquals(matchingValidators.get(1), xPathMessageValidator);
+        assertEquals(matchingValidators.get(2), groovyXmlMessageValidator);
+        assertEquals(matchingValidators.get(3).getClass(), DefaultMessageHeaderValidator.class);
 
         //XML message type and non empty payload
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.XML.name(), new DefaultMessage("<id>12345</id>"));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 4L);
-        Assert.assertEquals(matchingValidators.get(0), xmlMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1), xPathMessageValidator);
-        Assert.assertEquals(matchingValidators.get(2), groovyXmlMessageValidator);
-        Assert.assertEquals(matchingValidators.get(3).getClass(), DefaultMessageHeaderValidator.class);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 4L);
+        assertEquals(matchingValidators.get(0), xmlMessageValidator);
+        assertEquals(matchingValidators.get(1), xPathMessageValidator);
+        assertEquals(matchingValidators.get(2), groovyXmlMessageValidator);
+        assertEquals(matchingValidators.get(3).getClass(), DefaultMessageHeaderValidator.class);
     }
 
     @Test
-    public void testMessageValidatorRegistryJsonConfig() throws Exception {
+    public void testMessageValidatorRegistryJsonConfig() {
         //JSON message type and empty payload
         List<MessageValidator<? extends ValidationContext>> matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage(""));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 4L);
-        Assert.assertEquals(matchingValidators.get(0), jsonTextMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1), jsonPathMessageValidator);
-        Assert.assertEquals(matchingValidators.get(2).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(matchingValidators.get(3), groovyJsonMessageValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 4L);
+        assertEquals(matchingValidators.get(0), jsonTextMessageValidator);
+        assertEquals(matchingValidators.get(1), jsonPathMessageValidator);
+        assertEquals(matchingValidators.get(2).getClass(), DefaultMessageHeaderValidator.class);
+        assertEquals(matchingValidators.get(3), groovyJsonMessageValidator);
 
         //JSON message type and non empty payload
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage("{ \"id\": 12345 }"));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 4L);
-        Assert.assertEquals(matchingValidators.get(0), jsonTextMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1), jsonPathMessageValidator);
-        Assert.assertEquals(matchingValidators.get(2).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(matchingValidators.get(3), groovyJsonMessageValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 4L);
+        assertEquals(matchingValidators.get(0), jsonTextMessageValidator);
+        assertEquals(matchingValidators.get(1), jsonPathMessageValidator);
+        assertEquals(matchingValidators.get(2).getClass(), DefaultMessageHeaderValidator.class);
+        assertEquals(matchingValidators.get(3), groovyJsonMessageValidator);
     }
 
     @Test
-    public void testMessageValidatorRegistryPlaintextConfig() throws Exception {
+    public void testMessageValidatorRegistryPlaintextConfig() {
         //Plaintext message type and empty payload
         List<MessageValidator<? extends ValidationContext>> matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 3L);
-        Assert.assertEquals(matchingValidators.get(0), plainTextMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 3L);
+        assertEquals(matchingValidators.get(0), plainTextMessageValidator);
+        assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
+        assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
 
         //Plaintext message type and non empty payload
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage("id=12345"));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 3L);
-        Assert.assertEquals(matchingValidators.get(0), plainTextMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 3L);
+        assertEquals(matchingValidators.get(0), plainTextMessageValidator);
+        assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
+        assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
     }
 
     @Test
-    public void testMessageValidatorRegistryFallback() throws Exception {
+    public void testMessageValidatorRegistryFallback() {
         List<MessageValidator<? extends ValidationContext>> matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.XML.name(), new DefaultMessage("{ \"id\": 12345 }"));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 4L);
-        Assert.assertEquals(matchingValidators.get(0), jsonTextMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1), jsonPathMessageValidator);
-        Assert.assertEquals(matchingValidators.get(2).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(matchingValidators.get(3), groovyJsonMessageValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 4L);
+        assertEquals(matchingValidators.get(0), jsonTextMessageValidator);
+        assertEquals(matchingValidators.get(1), jsonPathMessageValidator);
+        assertEquals(matchingValidators.get(2).getClass(), DefaultMessageHeaderValidator.class);
+        assertEquals(matchingValidators.get(3), groovyJsonMessageValidator);
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage("<id>12345</id>"));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 4L);
-        Assert.assertEquals(matchingValidators.get(0), xmlMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1), xPathMessageValidator);
-        Assert.assertEquals(matchingValidators.get(2), groovyXmlMessageValidator);
-        Assert.assertEquals(matchingValidators.get(3).getClass(), DefaultMessageHeaderValidator.class);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 4L);
+        assertEquals(matchingValidators.get(0), xmlMessageValidator);
+        assertEquals(matchingValidators.get(1), xPathMessageValidator);
+        assertEquals(matchingValidators.get(2), groovyXmlMessageValidator);
+        assertEquals(matchingValidators.get(3).getClass(), DefaultMessageHeaderValidator.class);
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage("<id>12345</id>"));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 3L);
-        Assert.assertEquals(matchingValidators.get(0), plainTextMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 3L);
+        assertEquals(matchingValidators.get(0), plainTextMessageValidator);
+        assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
+        assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage("{ \"id\": 12345 }"));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 3L);
-        Assert.assertEquals(matchingValidators.get(0), plainTextMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 3L);
+        assertEquals(matchingValidators.get(0), plainTextMessageValidator);
+        assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
+        assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.XML.name(), new DefaultMessage("id=12345"));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 3L);
-        Assert.assertEquals(matchingValidators.get(0), plainTextMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 3L);
+        assertEquals(matchingValidators.get(0), plainTextMessageValidator);
+        assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
+        assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage("id=12345"));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 3L);
-        Assert.assertEquals(matchingValidators.get(0), plainTextMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 3L);
+        assertEquals(matchingValidators.get(0), plainTextMessageValidator);
+        assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
+        assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
     }
 
     @Test
@@ -294,52 +297,52 @@ public class MessageValidatorRegistryTest {
         MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
         List<MessageValidator<? extends ValidationContext>> matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 1L);
-        Assert.assertEquals(matchingValidators.get(0).getClass(), DefaultEmptyMessageValidator.class);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 1L);
+        assertEquals(matchingValidators.get(0).getClass(), DefaultEmptyMessageValidator.class);
 
         messageValidatorRegistry.addMessageValidator("jsonTextMessageValidator", jsonTextMessageValidator);
         messageValidatorRegistry.addMessageValidator("headerMessageValidator", new DefaultMessageHeaderValidator());
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 2L);
-        Assert.assertEquals(matchingValidators.get(0).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultEmptyMessageValidator.class);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 2L);
+        assertEquals(matchingValidators.get(0).getClass(), DefaultMessageHeaderValidator.class);
+        assertEquals(matchingValidators.get(1).getClass(), DefaultEmptyMessageValidator.class);
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage("{}"));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 2L);
-        Assert.assertEquals(matchingValidators.get(0), jsonTextMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 2L);
+        assertEquals(matchingValidators.get(0), jsonTextMessageValidator);
+        assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
 
         try {
             messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage("Hello"), true);
             Assert.fail("Missing exception due to no proper message validator found");
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Failed to find proper message validator for message");
+            assertEquals(e.getMessage(), "Failed to find proper message validator for message");
         }
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage("Hello"));
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 2L);
-        Assert.assertEquals(matchingValidators.get(0).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultTextEqualsMessageValidator.class);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 2L);
+        assertEquals(matchingValidators.get(0).getClass(), DefaultMessageHeaderValidator.class);
+        assertEquals(matchingValidators.get(1).getClass(), DefaultTextEqualsMessageValidator.class);
 
         messageValidatorRegistry.addMessageValidator("plainTextMessageValidator", plainTextMessageValidator);
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage("Hello"));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 2L);
-        Assert.assertEquals(matchingValidators.get(0).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(matchingValidators.get(1), plainTextMessageValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 2L);
+        assertEquals(matchingValidators.get(0).getClass(), DefaultMessageHeaderValidator.class);
+        assertEquals(matchingValidators.get(1), plainTextMessageValidator);
     }
 
     @Test
-    public void testSchemaValidators() throws Exception {
+    public void testSchemaValidators() {
         MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
 
         Map<String, SchemaValidator<? extends SchemaValidationContext>> schemaValidators = new HashMap<>();
@@ -350,13 +353,13 @@ public class MessageValidatorRegistryTest {
 
         List<SchemaValidator<? extends SchemaValidationContext>> matchingValidators = messageValidatorRegistry.findSchemaValidators(MessageType.JSON.name(), new DefaultMessage(""));
 
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 1L);
-        Assert.assertEquals(matchingValidators.get(0), jsonSchemaValidator);
+        assertNotNull(matchingValidators);
+        assertEquals(matchingValidators.size(), 1L);
+        assertEquals(matchingValidators.get(0), jsonSchemaValidator);
 
         Optional<SchemaValidator<? extends SchemaValidationContext>> jsonSchema = messageValidatorRegistry.findSchemaValidator("jsonSchema");
 
-        Assert.assertTrue(jsonSchema.isPresent());
-        Assert.assertEquals(jsonSchema.get(), jsonSchemaValidator);
+        assertTrue(jsonSchema.isPresent());
+        assertEquals(jsonSchema.get(), jsonSchemaValidator);
     }
 }

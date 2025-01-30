@@ -16,6 +16,11 @@
 
 package org.citrusframework.validation.matcher.core;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
@@ -23,11 +28,6 @@ import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
 
 /**
  * Validation matcher for verifying a date is within the specified range. The following check is made when performing
@@ -47,10 +47,7 @@ public class DateRangeValidationMatcher implements ValidationMatcher {
 
     @Override
     public void validate(String fieldName, String value, List<String> params, TestContext context) throws ValidationException {
-        logger.debug(String.format(
-                "Validating date range for date '%s' using control data: %s",
-                value,
-                ValidationMatcherUtils.getParameterListAsString(params)));
+        logger.debug("Validating date range for date '{}' using control data: {}", value, ValidationMatcherUtils.getParameterListAsString(params));
         try {
 
             String dateFromParam = params.get(0);

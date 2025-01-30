@@ -16,6 +16,15 @@
 
 package org.citrusframework.container;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
@@ -32,24 +41,15 @@ import org.citrusframework.variable.VariableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 /**
  * This class represents a previously defined block of test actions. Test cases can call
  * templates and reuse their functionality.
- *
+ * <p>
  * Templates operate on test variables. While calling, the template caller can set these
  * variables as parameters.
- *
+ * <p>
  * Nested test actions are executed in sequence.
- *
+ * <p>
  * The template execution may affect existing variable values in the calling test case. So
  * variables may have different values in the test case after template execution. Therefore,
  * users can create a local test context by setting globalContext to false. Templates then will

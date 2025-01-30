@@ -34,7 +34,7 @@ public class DefaultControlExpressionParser implements ControlExpressionParser {
 
         if (controlExpression != null && !controlExpression.isBlank()) {
             extractParameters(controlExpression, useDelimiter, extractedParameters, 0);
-            if (extractedParameters.size() == 0) {
+            if (extractedParameters.isEmpty()) {
                 // if the controlExpression has text but no parameters were extracted, then assume that
                 // the controlExpression itself is the only parameter
                 extractedParameters.add(controlExpression);

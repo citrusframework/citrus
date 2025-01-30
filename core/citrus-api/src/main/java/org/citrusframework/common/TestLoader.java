@@ -86,7 +86,7 @@ public interface TestLoader {
         Map<String, TestLoader> loader = TYPE_RESOLVER.resolveAll();
 
         if (logger.isDebugEnabled()) {
-            loader.forEach((k, v) -> logger.debug(String.format("Found test loader '%s' as %s", k, v.getClass())));
+            loader.forEach((k, v) -> logger.debug("Found test loader '{}' as {}", k, v.getClass()));
         }
         return loader;
     }
@@ -102,7 +102,7 @@ public interface TestLoader {
         try {
             return Optional.of(TYPE_RESOLVER.resolve(loader));
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve test loader from resource '%s/%s'", RESOURCE_PATH, loader));
+            logger.warn("Failed to resolve test loader from resource '{}/{}'", RESOURCE_PATH, loader);
         }
 
         return Optional.empty();

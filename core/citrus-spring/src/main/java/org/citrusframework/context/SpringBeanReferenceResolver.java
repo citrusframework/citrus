@@ -209,7 +209,7 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
             try {
                 return Optional.of(resolver.adapt(supplier.apply(resolver.getAliasType())));
             } catch (Exception e) {
-                logger.warn(String.format("Unable to resolve alias type %s for required source %s", resolver.getAliasType(), source));
+                logger.warn("Unable to resolve alias type {} for required source {}", resolver.getAliasType(), source);
                 return Optional.empty();
             }
         }
@@ -238,7 +238,7 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
                         .stream()
                         .collect(Collectors.toMap(Map.Entry::getKey, v -> resolver.adapt(v.getValue()))));
             } catch (Exception e) {
-                logger.warn(String.format("Unable to resolve alias type %s for required source %s", resolver.getAliasType(), source));
+                logger.warn("Unable to resolve alias type {} for required source {}", resolver.getAliasType(), source);
                 return Optional.empty();
             }
         }

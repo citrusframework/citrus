@@ -45,17 +45,17 @@ public class ValidationUtilsTest extends UnitTestSupport {
     }
 
     @Test(dataProvider = "testData")
-    public void testValidateValues(Object actualValue, Object expectedValue, String path) throws Exception {
+    public void testValidateValues(Object actualValue, Object expectedValue, String path) {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
 
     @Test(dataProvider = "testDataFailed", expectedExceptions = ValidationException.class)
-    public void testValidateValuesFailure(Object actualValue, Object expectedValue, String path) throws Exception {
+    public void testValidateValuesFailure(Object actualValue, Object expectedValue, String path) {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
 
     @Test(dataProvider = "testDataTypeFailed", expectedExceptions = ValidationException.class)
-    public void testValidateValuesTypeFailure(String actualValue, Object expectedValue, String path) throws Exception {
+    public void testValidateValuesTypeFailure(String actualValue, Object expectedValue, String path) {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
 

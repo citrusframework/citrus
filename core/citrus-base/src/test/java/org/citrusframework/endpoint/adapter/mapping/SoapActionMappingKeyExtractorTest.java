@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 public class SoapActionMappingKeyExtractorTest {
 
     @Test
-    public void testExtractMappingKey() throws Exception {
+    public void testExtractMappingKey() {
         SoapActionMappingKeyExtractor extractor = new SoapActionMappingKeyExtractor();
 
         Assert.assertEquals(extractor.extractMappingKey(new DefaultMessage("Foo")
@@ -33,7 +33,7 @@ public class SoapActionMappingKeyExtractorTest {
     }
 
     @Test
-    public void testExtractNoMappingFound() throws Exception {
+    public void testExtractNoMappingFound() {
         SoapActionMappingKeyExtractor extractor = new SoapActionMappingKeyExtractor();
 
         try {

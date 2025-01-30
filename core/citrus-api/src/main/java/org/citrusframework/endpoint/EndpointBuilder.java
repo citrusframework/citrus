@@ -116,7 +116,7 @@ public interface EndpointBuilder<T extends Endpoint> {
         Map<String, EndpointBuilder<?>> builders = new HashMap<>(TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD));
 
         if (logger.isDebugEnabled()) {
-            builders.forEach((k, v) -> logger.debug(String.format("Found endpoint builder '%s' as %s", k, v.getClass())));
+            builders.forEach((k, v) -> logger.debug("Found endpoint builder '{}' as {}", k, v.getClass()));
         }
         return builders;
     }
@@ -125,7 +125,7 @@ public interface EndpointBuilder<T extends Endpoint> {
      * Resolves endpoint builder from resource path lookup with given resource name. Scans classpath for endpoint builder meta information
      * with given name and returns instance of the builder. Returns optional instead of throwing exception when no endpoint builder
      * could be found.
-     *
+     * <p>
      * Given builder name is a combination of resource file name and type property separated by '.' character.
      * @param builder
      * @return
@@ -142,7 +142,7 @@ public interface EndpointBuilder<T extends Endpoint> {
 
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve endpoint builder from resource '%s/%s'", RESOURCE_PATH, builder));
+            logger.warn("Failed to resolve endpoint builder from resource '{}/{}'", RESOURCE_PATH, builder);
         }
 
         return Optional.empty();

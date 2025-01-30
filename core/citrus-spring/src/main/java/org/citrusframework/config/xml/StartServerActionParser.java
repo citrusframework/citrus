@@ -47,7 +47,7 @@ public class StartServerActionParser implements BeanDefinitionParser {
         Element serversElement = DomUtils.getChildElementByTagName(element, "servers");
         if (serversElement != null) {
             List<Element> serverElements = DomUtils.getChildElementsByTagName(serversElement, "server");
-            if (serverElements.size() > 0) {
+            if (!serverElements.isEmpty()) {
                 for (Element serverElement : serverElements) {
                     servers.add(new RuntimeBeanReference(serverElement.getAttribute("name")));
                 }

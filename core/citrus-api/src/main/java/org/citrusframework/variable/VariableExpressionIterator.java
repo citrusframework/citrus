@@ -16,11 +16,12 @@
 
 package org.citrusframework.variable;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.variable.VariableExpressionIterator.VariableSegment;
-
-import java.util.*;
 
 /**
  * This {@link Iterator} uses a regular expression pattern to match individual
@@ -39,7 +40,6 @@ import java.util.*;
  *   <li>the third element of the <b>persons</b> property of the variable retrieved in the previous step</li>
  *   <li>the first element of the <b>firstnames</b> property of the property retrieved in the previous step</li>
  * </ol>
- *
  */
 public class VariableExpressionIterator implements Iterator<VariableSegment> {
 

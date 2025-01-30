@@ -80,9 +80,6 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
     /**
      * Processes nested ignore statements in control value and replaces that ignore placeholder with the actual value at this position.
      * This way we can ignore words in a plaintext value.
-     * @param control
-     * @param result
-     * @return
      */
     private String processIgnoreStatements(String control, String result) {
         if (control.equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
@@ -125,10 +122,6 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
     /**
      * Processes nested ignore statements in control value and replaces that ignore placeholder with the actual value at this position.
      * This way we can ignore words in a plaintext value.
-     * @param control
-     * @param result
-     * @param context
-     * @return
      */
     private String processVariableStatements(String control, String result, TestContext context) {
         if (control.equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
@@ -220,8 +213,6 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
 
     /**
      * Gets the ignoreWhitespace.
-     *
-     * @return
      */
     public boolean isIgnoreWhitespace() {
         return ignoreWhitespace;
@@ -229,8 +220,6 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
 
     /**
      * Sets the ignoreWhitespace.
-     *
-     * @param ignoreWhitespace
      */
     public void setIgnoreWhitespace(boolean ignoreWhitespace) {
         this.ignoreWhitespace = ignoreWhitespace;
@@ -238,8 +227,6 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
 
     /**
      * Gets the ignoreNewLineType.
-     *
-     * @return
      */
     public boolean isIgnoreNewLineType() {
         return ignoreNewLineType;
@@ -247,8 +234,6 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
 
     /**
      * Sets the ignoreNewLineType.
-     *
-     * @param ignoreNewLineType
      */
     public void setIgnoreNewLineType(boolean ignoreNewLineType) {
         this.ignoreNewLineType = ignoreNewLineType;

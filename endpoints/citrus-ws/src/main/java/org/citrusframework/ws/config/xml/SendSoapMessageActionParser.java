@@ -103,7 +103,6 @@ public class SendSoapMessageActionParser extends SendMessageActionParser {
 
         /**
          * Enable or disable mtom attachments
-         * @param mtomEnabled
          */
         public void setMtomEnabled(boolean mtomEnabled) {
             builder.message().mtomEnabled(mtomEnabled);

@@ -121,9 +121,8 @@ public abstract class FileUtils {
             throw new CitrusRuntimeException("Failed to read resource %s - does not exist".formatted(resource.getLocation()));
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Reading file resource: '%s' (encoding is '%s')", resource.getLocation(), charset.displayName()));
-        }
+        logger.debug("Reading file resource: '{}' (encoding is '{}')", resource.getLocation(), charset.displayName());
+
         return readToString(resource.getInputStream(), charset);
     }
 
@@ -148,9 +147,7 @@ public abstract class FileUtils {
      * @param file
      */
     public static void writeToFile(InputStream inputStream, File file) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Writing file resource: '%s'", file.getName()));
-        }
+        logger.debug("Writing file resource: '{}'", file.getName());
 
         if (!file.getParentFile().exists()) {
             if (!file.getParentFile().mkdirs()) {
@@ -180,9 +177,7 @@ public abstract class FileUtils {
      * @param file
      */
     public static void writeToFile(String content, File file, Charset charset) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Writing file resource: '%s' (encoding is '%s')", file.getName(), charset.displayName()));
-        }
+        logger.debug("Writing file resource: '{}' (encoding is '{}')", file.getName(), charset.displayName());
 
         if (!file.getParentFile().exists()) {
             if (!file.getParentFile().mkdirs()) {
@@ -224,7 +219,7 @@ public abstract class FileUtils {
         }
 
         /* walk through the directories */
-        while (dirs.size() > 0) {
+        while (!dirs.isEmpty()) {
             final File file = dirs.pop();
             File[] foundFiles = file.listFiles((dir, name) -> {
                 File tmp = new File(dir.getPath() + File.separator + name);

@@ -41,7 +41,7 @@ public class DefaultTextEqualsMessageValidatorTest extends UnitTestSupport {
     }
 
     @Test(dataProvider = "errorTests", expectedExceptions = ValidationException.class)
-    public void testValidateError(Object received, Object control) throws Exception {
+    public void testValidateError(Object received, Object control) {
         Message receivedMessage = new DefaultMessage(received);
         Message controlMessage = new DefaultMessage(control);
 

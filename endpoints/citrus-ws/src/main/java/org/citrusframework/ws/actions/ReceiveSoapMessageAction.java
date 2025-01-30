@@ -164,8 +164,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         /**
          * Sets special SOAP action message header.
-         * @param soapAction
-         * @return
          */
         public SoapMessageBuilderSupport soapAction(String soapAction) {
             soapMessage.header(SoapMessageHeaders.SOAP_ACTION, soapAction);
@@ -174,10 +172,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         /**
          * Sets the control attachment with string content.
-         * @param contentId
-         * @param contentType
-         * @param content
-         * @return
          */
         public SoapMessageBuilderSupport attachment(String contentId, String contentType, String content) {
             SoapAttachment attachment = new SoapAttachment();
@@ -192,10 +186,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         /**
          * Sets the control attachment with content resource.
-         * @param contentId
-         * @param contentType
-         * @param contentResource
-         * @return
          */
         public SoapMessageBuilderSupport attachment(String contentId, String contentType, Resource contentResource) {
             return attachment(contentId, contentType, contentResource, FileUtils.getDefaultCharset());
@@ -203,11 +193,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         /**
          * Sets the control attachment with content resource.
-         * @param contentId
-         * @param contentType
-         * @param contentResource
-         * @param charset
-         * @return
          */
         public SoapMessageBuilderSupport attachment(String contentId, String contentType, Resource contentResource, Charset charset) {
             SoapAttachment attachment = new SoapAttachment();
@@ -228,8 +213,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         /**
          * Sets the charset name for this send action builder's control attachment.
-         * @param charsetName
-         * @return
          */
         public SoapMessageBuilderSupport charset(String charsetName) {
             if (!delegate.attachments.isEmpty()) {
@@ -240,8 +223,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         /**
          * Sets the control attachment from Java object instance.
-         * @param attachment
-         * @return
          */
         public SoapMessageBuilderSupport attachment(SoapAttachment attachment) {
             delegate.attachments.add(attachment);
@@ -250,8 +231,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         /**
          * Set explicit SOAP attachment validator name.
-         * @param validator
-         * @return
          */
         public SoapMessageBuilderSupport attachmentValidatorName(String validator) {
             delegate.attachmentValidatorName = validator;
@@ -260,8 +239,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         /**
          * Set explicit SOAP attachment validator.
-         * @param validator
-         * @return
          */
         public SoapMessageBuilderSupport attachmentValidator(SoapAttachmentValidator validator) {
             delegate.attachmentValidator = validator;
@@ -270,8 +247,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         /**
          * Sets the request content type header.
-         * @param contentType
-         * @return
          */
         public SoapMessageBuilderSupport contentType(String contentType) {
             soapMessage.contentType(contentType);
@@ -280,8 +255,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         /**
          * Sets the request accept header.
-         * @param accept
-         * @return
          */
         public SoapMessageBuilderSupport accept(String accept) {
             soapMessage.accept(accept);
@@ -290,8 +263,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         /**
          * Sets the response status reason phrase.
-         * @param reasonPhrase
-         * @return
          */
         public SoapMessageBuilderSupport reasonPhrase(String reasonPhrase) {
             soapMessage.reasonPhrase(reasonPhrase);
@@ -300,8 +271,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         /**
          * Sets the response status.
-         * @param status
-         * @return
          */
         public SoapMessageBuilderSupport status(HttpStatus status) {
             soapMessage.status(status);
@@ -310,8 +279,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         /**
          * Sets the response status code.
-         * @param statusCode
-         * @return
          */
         public SoapMessageBuilderSupport statusCode(Integer statusCode) {
             soapMessage.statusCode(statusCode);
@@ -320,8 +287,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         /**
          * Sets the context path.
-         * @param contextPath
-         * @return
          */
         public SoapMessageBuilderSupport contextPath(String contextPath) {
             soapMessage.header(SoapMessageHeaders.HTTP_CONTEXT_PATH, contextPath);

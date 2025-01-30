@@ -24,9 +24,9 @@ import org.testng.annotations.Test;
 /**
  * @since 2.0
  */
-@Test
 public class RmiDynamicEndpointIT extends TestNGCitrusSpringSupport {
 
+    @Test
     @CitrusTestSource(type = TestLoader.SPRING, name = "RmiDynamicEndpointIT")
     public void testDynamicEndpoint() {}
 }

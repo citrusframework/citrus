@@ -25,9 +25,10 @@ import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * Abstract suit container actions executed before and after test suite run. Container decides
@@ -52,7 +53,7 @@ public abstract class AbstractSuiteActionContainer extends AbstractActionContain
     /** Optional system properties */
     private Map<String, String> systemProperties = new HashMap<>();
 
-    public AbstractSuiteActionContainer(String name, AbstractTestContainerBuilder<?, ?> builder) {
+    protected AbstractSuiteActionContainer(String name, AbstractTestContainerBuilder<?, ?> builder) {
         super(name, builder);
     }
 
@@ -65,29 +66,30 @@ public abstract class AbstractSuiteActionContainer extends AbstractActionContain
     public boolean shouldExecute(String suiteName, String[] includedGroups) {
         String baseErrorMessage = "Skip before/after suite container because of %s restriction - do not execute container '%s'";
 
-        if (StringUtils.hasText(suiteName) &&
-                suiteNames != null && !suiteNames.isEmpty() && !suiteNames.contains(suiteName)) {
-            logger.warn(String.format(baseErrorMessage, "suite name", getName()));
+        if (hasText(suiteName)
+                && suiteNames != null && !suiteNames.isEmpty()
+                && !suiteNames.contains(suiteName)) {
+            logger.warn("{} suite name {}", baseErrorMessage, getName());
             return false;
         }
 
         if (!checkTestGroups(includedGroups)) {
-            logger.warn(String.format(baseErrorMessage, "test groups", getName()));
+            logger.warn("{} test groups {}", baseErrorMessage, getName());
             return false;
         }
 
         for (Map.Entry<String, String> envEntry : env.entrySet()) {
-            if (!System.getenv().containsKey(envEntry.getKey()) ||
-                    (StringUtils.hasText(envEntry.getValue()) && !System.getenv().get(envEntry.getKey()).equals(envEntry.getValue()))) {
-                logger.warn(String.format(baseErrorMessage, "env properties", getName()));
+            if (!System.getenv().containsKey(envEntry.getKey())
+                    || (hasText(envEntry.getValue()) && !System.getenv().get(envEntry.getKey()).equals(envEntry.getValue()))) {
+                logger.warn("{} env properties {}", baseErrorMessage, getName());
                 return false;
             }
         }
 
         for (Map.Entry<String, String> systemProperty : systemProperties.entrySet()) {
-            if (!System.getProperties().containsKey(systemProperty.getKey()) ||
-                    (StringUtils.hasText(systemProperty.getValue()) && !System.getProperties().get(systemProperty.getKey()).equals(systemProperty.getValue()))) {
-                logger.warn(String.format(baseErrorMessage, "system properties", getName()));
+            if (!System.getProperties().containsKey(systemProperty.getKey())
+                    || (hasText(systemProperty.getValue()) && !System.getProperties().get(systemProperty.getKey()).equals(systemProperty.getValue()))) {
+                logger.warn("{} system properties {}", baseErrorMessage, getName());
                 return false;
             }
         }

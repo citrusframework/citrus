@@ -78,7 +78,7 @@ public class RmiServer extends AbstractServer implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (logger.isDebugEnabled()) {
-            logger.debug("Received message on RMI server: '" + endpointConfiguration.getBinding() + "'");
+            logger.debug("Received message on RMI server: '{}'", endpointConfiguration.getBinding());
         }
 
         Message response = getEndpointAdapter().handleMessage(endpointConfiguration.getMessageConverter()
@@ -153,7 +153,7 @@ public class RmiServer extends AbstractServer implements InvocationHandler {
             try {
                 registry.unbind(endpointConfiguration.getBinding());
             } catch (Exception e) {
-                logger.warn("Failed to unbind from registry:" + e.getMessage());
+                logger.warn("Failed to unbind from registry:{}", e.getMessage());
             }
         }
 
@@ -161,7 +161,7 @@ public class RmiServer extends AbstractServer implements InvocationHandler {
             try {
                 UnicastRemoteObject.unexportObject(proxy, true);
             } catch (Exception e) {
-                logger.warn("Failed to unexport from remote object:" + e.getMessage());
+                logger.warn("Failed to unexport from remote object:{}", e.getMessage());
             }
         }
 
