@@ -16,6 +16,8 @@
 
 package org.citrusframework.junit.jupiter;
 
+import java.lang.reflect.Method;
+
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusInstanceManager;
@@ -38,17 +40,8 @@ import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
-import java.lang.reflect.Method;
-
 import static org.citrusframework.annotations.CitrusAnnotations.injectCitrusFramework;
-import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getBaseKey;
-import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getCitrus;
-import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getTestCase;
-import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getTestContext;
-import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getTestLoader;
-import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getTestRunner;
-import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.requiresCitrus;
-import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.setCitrus;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.*;
 
 /**
  * JUnit5 extension adding {@link TestCaseRunner} support as well as Citrus annotation based resource injection
@@ -130,6 +123,21 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
         if (testInstance instanceof TestListener testListener) {
             testListener.after(getCitrus(extensionContext).getCitrusContext());
         }
+    }
+
+    @Override
+    public <T> T interceptTestFactoryMethod(Invocation<T> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        Object testInstance = extensionContext.getRequiredTestInstance();
+        Citrus citrus = getCitrus(extensionContext);
+        TestContext context = getTestContext(extensionContext);
+
+        CitrusAnnotations.injectAll(testInstance, citrus, context);
+
+        if (testInstance instanceof TestListener testListener) {
+            testListener.before(citrus.getCitrusContext());
+        }
+
+        return invocation.proceed();
     }
 
     @Override
