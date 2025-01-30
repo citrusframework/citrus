@@ -16,8 +16,20 @@
 
 package org.citrusframework.http.message;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.tuple.Pair;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
+
+import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
+import static org.citrusframework.http.message.HttpMessageHeaders.HTTP_QUERY_PARAMS;
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * @since 2.7.5
@@ -38,8 +50,8 @@ public final class HttpMessageUtils {
      */
     public static void copy(Message from, HttpMessage to) {
         HttpMessage source;
-        if (from instanceof HttpMessage) {
-            source = (HttpMessage) from;
+        if (from instanceof HttpMessage httpMessage) {
+            source = httpMessage;
         } else {
             source = new HttpMessage(from);
         }
@@ -64,5 +76,31 @@ public final class HttpMessageUtils {
 
         from.getHeaderData().forEach(to::addHeaderData);
         from.getCookies().forEach(to::cookie);
+    }
+
+    /**
+     * Extracts query parameters from the citrus HTTP message header and returns them as a map.
+     *
+     * @param httpMessage the HTTP message containing the query parameters in the header
+     * @return a map of query parameter names and their corresponding values
+     * @throws IllegalArgumentException if the query parameters are not formatted correctly
+     */
+    public static Map<String, List<String>> getQueryParameterMap(HttpMessage httpMessage) {
+        String queryParams = (String) httpMessage.getHeader(HTTP_QUERY_PARAMS);
+        if (hasText(queryParams)) {
+            return Arrays.stream(queryParams.split(","))
+                .map(queryParameterKeyValue -> {
+                    String[] keyAndValue = queryParameterKeyValue.split("=", 2);
+                    if (keyAndValue.length == 0) {
+                        throw new IllegalArgumentException("Query parameter must have a key.");
+                    }
+                    String key = keyAndValue[0];
+                    String value = keyAndValue.length > 1 ? keyAndValue[1] : "";
+                    return Pair.of(key, value);
+                })
+                .collect(groupingBy(Pair::getLeft,mapping(Pair::getRight,toList())));
+        }
+
+        return emptyMap();
     }
 }
