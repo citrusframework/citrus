@@ -56,7 +56,7 @@ public interface VariableExtractor extends MessageProcessor {
             Builder<T, B> instance = TYPE_RESOLVER.resolve(extractor);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve variable extractor from resource '%s/%s'", RESOURCE_PATH, extractor));
+            logger.warn("Failed to resolve variable extractor from resource '{}/{}'", RESOURCE_PATH, extractor);
         }
 
         return Optional.empty();

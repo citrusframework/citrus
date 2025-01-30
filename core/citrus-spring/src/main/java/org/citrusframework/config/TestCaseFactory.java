@@ -37,13 +37,13 @@ public class TestCaseFactory implements FactoryBean<TestCase> {
 
     @Override
     public TestCase getObject() throws Exception {
-        if (this.testActions != null && this.testActions.size() > 0) {
+        if (this.testActions != null && !this.testActions.isEmpty()) {
             for (TestAction action : testActions) {
                 testCase.addTestAction(action);
             }
         }
 
-        if (this.finalActions != null && this.finalActions.size() > 0) {
+        if (this.finalActions != null && !this.finalActions.isEmpty()) {
             for (TestAction action : finalActions) {
                 testCase.addFinalAction(action);
             }
@@ -65,7 +65,6 @@ public class TestCaseFactory implements FactoryBean<TestCase> {
 
     /**
      * Setter for final test actions.
-     * @param finalActions
      */
     public void setFinalActions(List<TestAction> finalActions) {
         this.finalActions = finalActions;
@@ -73,7 +72,6 @@ public class TestCaseFactory implements FactoryBean<TestCase> {
 
     /**
      * Set the test case object.
-     * @param testCase
      */
     public void setTestCase(TestCase testCase) {
         this.testCase = testCase;
@@ -81,7 +79,6 @@ public class TestCaseFactory implements FactoryBean<TestCase> {
 
     /**
      * Set the test actions.
-     * @param testActions
      */
     public void setTestActions(List<TestAction> testActions) {
         this.testActions = testActions;

@@ -47,7 +47,7 @@ public interface ScriptPayloadBuilder extends MessagePayloadBuilder {
             T instance = TYPE_RESOLVER.resolve(type);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve script payload builder from resource '%s/%s'", RESOURCE_PATH, type));
+            logger.warn("Failed to resolve script payload builder from resource '{}/{}'", RESOURCE_PATH, type);
         }
 
         return Optional.empty();

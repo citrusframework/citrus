@@ -52,7 +52,7 @@ public interface MessageProcessor extends MessageTransformer {
             Builder<T, B> instance = TYPE_RESOLVER.resolve(processor);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve message processor from resource '%s/%s'", RESOURCE_PATH, processor));
+            logger.warn("Failed to resolve message processor from resource '{}/{}'", RESOURCE_PATH, processor);
         }
 
         return Optional.empty();

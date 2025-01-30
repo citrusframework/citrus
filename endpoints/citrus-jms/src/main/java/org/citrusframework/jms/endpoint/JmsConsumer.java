@@ -39,8 +39,6 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
 
     /**
      * Default constructor using endpoint.
-     * @param name
-     * @param endpointConfiguration
      */
     public JmsConsumer(String name, JmsEndpointConfiguration endpointConfiguration) {
         super(name, endpointConfiguration);
@@ -72,15 +70,12 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
 
     /**
      * Receive message from destination name.
-     * @param destinationName
-     * @param selector
-     * @return
      */
     private jakarta.jms.Message receive(String destinationName, String selector) {
         jakarta.jms.Message receivedJmsMessage;
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Receiving JMS message on destination: '" + getDestinationNameWithSelector(destinationName, selector) + "'");
+            logger.debug("Receiving JMS message on destination: '{}'", getDestinationNameWithSelector(destinationName, selector));
         }
 
         if (StringUtils.hasText(selector)) {
@@ -93,22 +88,19 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
             throw new MessageTimeoutException(endpointConfiguration.getTimeout(), getDestinationNameWithSelector(destinationName, selector));
         }
 
-        logger.info("Received JMS message on destination: '" + getDestinationNameWithSelector(destinationName, selector) + "'");
+        logger.info("Received JMS message on destination: '{}'", getDestinationNameWithSelector(destinationName, selector));
 
         return receivedJmsMessage;
     }
 
     /**
      * Receive message from destination.
-     * @param destination
-     * @param selector
-     * @return
      */
     private jakarta.jms.Message receive(Destination destination, String selector) {
         jakarta.jms.Message receivedJmsMessage;
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Receiving JMS message on destination: '" + getDestinationNameWithSelector(endpointConfiguration.getDestinationName(destination), selector) + "'");
+            logger.debug("Receiving JMS message on destination: '{}'", getDestinationNameWithSelector(endpointConfiguration.getDestinationName(destination), selector));
         }
 
         if (StringUtils.hasText(selector)) {
@@ -121,16 +113,13 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
             throw new MessageTimeoutException(endpointConfiguration.getTimeout(), getDestinationNameWithSelector(endpointConfiguration.getDestinationName(destination), selector));
         }
 
-        logger.info("Received JMS message on destination: '" + getDestinationNameWithSelector(endpointConfiguration.getDestinationName(destination), selector) + "'");
+        logger.info("Received JMS message on destination: '{}'", getDestinationNameWithSelector(endpointConfiguration.getDestinationName(destination), selector));
 
         return receivedJmsMessage;
     }
 
     /**
      * Helper method to construct proper representation of destination name and selector if given.
-     * @param destinationName
-     * @param selector
-     * @return
      */
     private String getDestinationNameWithSelector(String destinationName, String selector) {
         return destinationName + (StringUtils.hasText(selector) ? "(" + selector + ")" : "");

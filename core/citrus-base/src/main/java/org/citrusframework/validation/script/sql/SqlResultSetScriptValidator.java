@@ -52,7 +52,7 @@ public interface SqlResultSetScriptValidator {
         Map<String, SqlResultSetScriptValidator> validators = TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
 
         if (logger.isDebugEnabled()) {
-            validators.forEach((k, v) -> logger.debug(String.format("Found SQL result set validator '%s' as %s", k, v.getClass())));
+            validators.forEach((k, v) -> logger.debug("Found SQL result set validator '{}' as {}", k, v.getClass()));
         }
         return validators;
     }

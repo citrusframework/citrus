@@ -42,7 +42,7 @@ public class CreateVariableValidationMatcher implements ValidationMatcher {
             name = controlParameters.get(0);
         }
 
-        logger.debug("Setting variable: " + name + " to value: " + value);
+        logger.debug("Setting variable: {} to value: {}", name, value);
 
         context.setVariable(name, value);
     }

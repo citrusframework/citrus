@@ -18,39 +18,40 @@ package org.citrusframework.message.correlation;
 
 import org.citrusframework.endpoint.direct.DirectSyncEndpointConfiguration;
 import org.mockito.Mockito;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 public class PollingCorrelationManagerTest {
 
     private ObjectStore objectStore = Mockito.mock(ObjectStore.class);
 
     @Test
-    public void testFind() throws Exception {
+    public void testFind() {
         DirectSyncEndpointConfiguration pollableEndpointConfiguration = new DirectSyncEndpointConfiguration();
         pollableEndpointConfiguration.setPollingInterval(100L);
         pollableEndpointConfiguration.setTimeout(500L);
 
         PollingCorrelationManager<String> correlationManager = new PollingCorrelationManager<>(pollableEndpointConfiguration, "Try again");
-        Assert.assertNull(correlationManager.find(""));
+        assertNull(correlationManager.find(""));
 
         correlationManager.store("foo", "bar");
-        Assert.assertNull(correlationManager.find("bar"));
-        Assert.assertEquals(correlationManager.find("foo"), "bar");
+        assertNull(correlationManager.find("bar"));
+        assertEquals(correlationManager.find("foo"), "bar");
 
         //2nd invocation with same correlation key
-        Assert.assertNull(correlationManager.find("foo"));
+        assertNull(correlationManager.find("foo"));
 
         for (String key : new String[]{"1", "2", "3", "4", "5"}) {
             correlationManager.store(key, "value" + key);
         }
 
         for (String key : new String[]{"1", "5", "3", "2", "4"}) {
-            Assert.assertEquals(correlationManager.find(key), "value" + key);
-            Assert.assertNull(correlationManager.find(key));
+            assertEquals(correlationManager.find(key), "value" + key);
+            assertNull(correlationManager.find(key));
         }
     }
 
@@ -65,7 +66,7 @@ public class PollingCorrelationManagerTest {
 
         reset(objectStore);
         when(objectStore.remove("foo")).thenReturn(null).thenReturn("bar");
-        Assert.assertEquals(correlationManager.find("foo"), "bar");
+        assertEquals(correlationManager.find("foo"), "bar");
 
     }
 
@@ -80,7 +81,7 @@ public class PollingCorrelationManagerTest {
 
         reset(objectStore);
         when(objectStore.remove("foo")).thenReturn(null);
-        Assert.assertNull(correlationManager.find("foo"));
+        assertNull(correlationManager.find("foo"));
 
     }
 }

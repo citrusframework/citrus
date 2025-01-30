@@ -243,7 +243,7 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
         }
 
         return "<tr><td colspan=\"2\">" +
-        		"<div class=\"error-detail\"><pre>" + stackTraceBuilder.toString() +
+        		"<div class=\"error-detail\"><pre>" + stackTraceBuilder +
         		"</pre>" + getCodeSnippetHtml(cause) + "</div></td></tr>";
     }
 

@@ -16,6 +16,9 @@
 
 package org.citrusframework.container;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.citrusframework.AbstractExceptionContainerBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
@@ -24,9 +27,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Collections;
-import java.util.List;
 
 import static java.lang.String.format;
 import static org.citrusframework.validation.matcher.ValidationMatcherUtils.isValidationMatcherExpression;
@@ -72,9 +72,7 @@ public class Assert extends AbstractActionContainer {
 
     @Override
     public void doExecute(TestContext context) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Assert container asserting exceptions of type {}", exception.getSimpleName());
-        }
+        logger.debug("Assert container asserting exceptions of type {}", exception.getSimpleName());
 
         try {
             executeAction(this.action.build(), context);

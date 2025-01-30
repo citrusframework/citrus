@@ -85,9 +85,7 @@ public abstract class AbstractServer extends AbstractEndpoint
 
     @Override
     public void start() {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Starting server: " + getName() + " ...");
-        }
+        logger.debug("Starting server: {} ...", getName());
 
         startup();
 
@@ -99,15 +97,13 @@ public abstract class AbstractServer extends AbstractEndpoint
         thread.setDaemon(false);
         thread.start();
 
-        logger.info("Started server: " + getName());
+        logger.info("Started server: {}", getName());
     }
 
     @Override
     public void stop() {
         if (isRunning()) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Stopping server: " + getName() + " ...");
-            }
+            logger.debug("Stopping server: {} ...", getName());
 
             shutdown();
 
@@ -117,7 +113,7 @@ public abstract class AbstractServer extends AbstractEndpoint
 
             thread = null;
 
-            logger.info("Stopped server: " + getName());
+            logger.info("Stopped server: {}", getName());
         }
     }
 

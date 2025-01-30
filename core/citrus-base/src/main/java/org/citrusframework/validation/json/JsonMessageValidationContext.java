@@ -35,7 +35,7 @@ public class JsonMessageValidationContext extends DefaultValidationContext imple
 
     /**
      * Should message be validated with its schema definition
-     *
+     * <p>
      * This is currently disabled by default, because old json tests would fail with a validation exception
      * as soon as a json schema repository is specified and the schema validation is activated.
      */

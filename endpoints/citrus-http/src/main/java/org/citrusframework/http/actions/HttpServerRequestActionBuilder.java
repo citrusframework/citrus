@@ -49,8 +49,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
 
     /**
      * Subclasses may use custom message builder and Http message.
-     * @param messageBuilder
-     * @param httpMessage
      */
     public HttpServerRequestActionBuilder(MessageBuilder messageBuilder, HttpMessage httpMessage) {
         this.httpMessage = httpMessage;
@@ -68,8 +66,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
 
     /**
      * Sets the request path.
-     * @param path
-     * @return
      */
     public HttpServerRequestActionBuilder path(String path) {
         httpMessage.path(path);
@@ -78,8 +74,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
 
     /**
      * Sets the request method.
-     * @param method
-     * @return
      */
     public HttpServerRequestActionBuilder method(HttpMethod method) {
         httpMessage.method(method);
@@ -88,8 +82,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
 
     /**
      * Adds a query param to the request uri.
-     * @param name
-     * @return
      */
     public HttpServerRequestActionBuilder queryParam(String name) {
         httpMessage.queryParam(name, null);
@@ -98,9 +90,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
 
     /**
      * Adds a query param to the request uri.
-     * @param name
-     * @param value
-     * @return
      */
     public HttpServerRequestActionBuilder queryParam(String name, String value) {
         httpMessage.queryParam(name, value);
@@ -125,8 +114,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
         /**
          * Adds message payload multi value map data to this builder. This is used when using multipart file upload via
          * Spring RestTemplate.
-         * @param payload
-         * @return
          */
         public HttpMessageBuilderSupport body(MultiValueMap<String,Object> payload) {
             httpMessage.setPayload(payload);
@@ -147,8 +134,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
 
         /**
          * Sets the request method.
-         * @param method
-         * @return
          */
         public HttpMessageBuilderSupport method(HttpMethod method) {
             delegate.method(method);
@@ -157,8 +142,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
 
         /**
          * Adds a query param to the request uri.
-         * @param name
-         * @return
          */
         public HttpMessageBuilderSupport queryParam(String name) {
             delegate.queryParam(name, null);
@@ -167,9 +150,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
 
         /**
          * Adds a query param to the request uri.
-         * @param name
-         * @param value
-         * @return
          */
         public HttpMessageBuilderSupport queryParam(String name, String value) {
             delegate.queryParam(name, value);
@@ -178,8 +158,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
 
         /**
          * Sets the http version.
-         * @param version
-         * @return
          */
         public HttpMessageBuilderSupport version(String version) {
             httpMessage.version(version);
@@ -188,8 +166,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
 
         /**
          * Sets the request content type header.
-         * @param contentType
-         * @return
          */
         public HttpMessageBuilderSupport contentType(String contentType) {
             httpMessage.contentType(contentType);
@@ -198,8 +174,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
 
         /**
          * Sets the request accept header.
-         * @param accept
-         * @return
          */
         public HttpMessageBuilderSupport accept(String accept) {
             httpMessage.accept(accept);
@@ -208,8 +182,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
 
         /**
          * Adds cookie to response by "Cookie" header.
-         * @param cookie
-         * @return
          */
         public HttpMessageBuilderSupport cookie(Cookie cookie) {
             httpMessage.cookie(cookie);

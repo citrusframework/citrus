@@ -63,7 +63,7 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
             parsers.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD));
 
             if (logger.isDebugEnabled()) {
-                parsers.forEach((k, v) -> logger.debug(String.format("Found annotation config parser '%s' as %s", k, v.getClass())));
+                parsers.forEach((k, v) -> logger.debug("Found annotation config parser '{}' as {}", k, v.getClass()));
             }
         }
         return parsers;
@@ -73,7 +73,7 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
      * Resolves annotation config parser from resource path lookup with given resource name. Scans classpath for annotation config parser meta information
      * with given name and returns instance of the parser. Returns optional instead of throwing exception when no annotation config parser
      * could be found.
-     *
+     * <p>
      * Given parser name is a combination of resource file name and type property separated by '.' character.
      * @param parser
      * @return
@@ -90,7 +90,7 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
 
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve annotation config parser from resource '%s/%s'", RESOURCE_PATH, parser));
+            logger.warn("Failed to resolve annotation config parser from resource '{}/{}'", RESOURCE_PATH, parser);
         }
 
         return Optional.empty();

@@ -98,7 +98,7 @@ public final class FunctionUtils {
                 strBuffer.append(newString, startIndex, searchIndex);
 
                 if (enableQuoting) {
-                    strBuffer.append("'" + value + "'");
+                    strBuffer.append("'").append(value).append("'");
                 } else {
                     strBuffer.append(value);
                 }

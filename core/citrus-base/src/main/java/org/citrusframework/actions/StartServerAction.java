@@ -54,7 +54,7 @@ public class StartServerAction extends AbstractTestAction {
     public void doExecute(TestContext context) {
         for (Server server : servers) {
             server.start();
-            logger.info("Started server: " + server.getName());
+            logger.info("Started server: {}", server.getName());
         }
     }
 

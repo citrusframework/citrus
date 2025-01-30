@@ -139,7 +139,7 @@ public class ZipMessage extends DefaultMessage {
     private void addToZip(String path, Entry entry, ZipOutputStream zos) throws IOException {
         String name = (path.endsWith("/") ? path : path + "/") + entry.getName();
         if (entry.isDirectory()) {
-            logger.debug("Adding directory to zip: " + name);
+            logger.debug("Adding directory to zip: {}", name);
 
             zos.putNextEntry(new ZipEntry(name.endsWith("/") ? name : name + "/"));
             for (Entry child : entry.getEntries()) {
@@ -151,7 +151,7 @@ public class ZipMessage extends DefaultMessage {
             }
             zos.closeEntry();
         } else {
-            logger.debug("Adding file to zip: " + name);
+            logger.debug("Adding file to zip: {}", name);
 
             zos.putNextEntry(new ZipEntry(name));
             zos.write(entry.getContent());

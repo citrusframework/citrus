@@ -49,7 +49,7 @@ public class EchoAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         if (message == null) {
-            logger.info("Citrus test " + new Date(System.currentTimeMillis()));
+            logger.info("Citrus test {}", new Date(System.currentTimeMillis()));
         } else {
             logger.info(context.getLogModifier().mask(context.replaceDynamicContentInString(message)));
         }

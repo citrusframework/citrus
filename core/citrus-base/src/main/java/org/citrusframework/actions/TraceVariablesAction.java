@@ -53,7 +53,7 @@ public class TraceVariablesAction extends AbstractTestAction {
         logger.info("Trace variables");
 
         Iterator<String> it;
-        if (variableNames != null && variableNames.size() > 0) {
+        if (variableNames != null && !variableNames.isEmpty()) {
             it = variableNames.iterator();
         } else {
             it = context.getVariables().keySet().iterator();
@@ -63,7 +63,7 @@ public class TraceVariablesAction extends AbstractTestAction {
             String key = it.next();
             String value = context.getVariable(key);
 
-            logger.info("Variable " + context.getLogModifier().mask(key + " = " + value));
+            logger.info("Variable {}", context.getLogModifier().mask(key + " = " + value));
         }
     }
 

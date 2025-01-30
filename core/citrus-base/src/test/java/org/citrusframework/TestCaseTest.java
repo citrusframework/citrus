@@ -121,7 +121,7 @@ public class TestCaseTest extends UnitTestSupport {
                 .findAny();
 
         waitingThread.ifPresent(thread -> LoggerFactory.getLogger("TestWaitForFinishAsync").warn(Arrays.toString(threads.get(thread))));
-        waitingThread.ifPresent(thread -> Assert.fail(String.format("Waiting thread still alive: %s", thread.toString())));
+        waitingThread.ifPresent(thread -> Assert.fail(String.format("Waiting thread still alive: %s", thread)));
     }
 
     @Test
@@ -220,6 +220,6 @@ public class TestCaseTest extends UnitTestSupport {
                 .filter(Thread::isAlive)
                 .findAny();
 
-        waitingThread.ifPresent(thread -> Assert.fail(String.format("Waiting thread still alive: %s", thread.toString())));
+        waitingThread.ifPresent(thread -> Assert.fail(String.format("Waiting thread still alive: %s", thread)));
     }
 }

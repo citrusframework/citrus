@@ -113,7 +113,7 @@ public class RandomNumberFunction implements Function {
             }
         }
 
-        if (builder.length() == 0) {
+        if (builder.isEmpty()) {
             // very unlikely to happen, ensures that empty string is not returned
             builder.append('0');
         }

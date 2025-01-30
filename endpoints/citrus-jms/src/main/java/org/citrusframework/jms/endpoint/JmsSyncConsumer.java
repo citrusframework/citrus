@@ -43,8 +43,6 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
 
     /**
      * Default constructor using endpoint configuration.
-     * @param name
-     * @param endpointConfiguration
      */
     public JmsSyncConsumer(String name, JmsSyncEndpointConfiguration endpointConfiguration) {
         super(name, endpointConfiguration);
@@ -58,8 +56,8 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
         Message receivedMessage = super.receive(selector, context, timeout);
 
         JmsMessage jmsMessage;
-        if (receivedMessage instanceof JmsMessage) {
-            jmsMessage = (JmsMessage) receivedMessage;
+        if (receivedMessage instanceof JmsMessage jmsMsg) {
+            jmsMessage = jmsMsg;
         } else {
             jmsMessage = new JmsMessage(receivedMessage);
         }
@@ -79,7 +77,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
         ObjectHelper.assertNotNull(replyDestination, "Failed to find JMS reply destination for message correlation key: '" + correlationKey + "'");
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending JMS message to destination: '" + endpointConfiguration.getDestinationName(replyDestination) + "'");
+            logger.debug("Sending JMS message to destination: '{}'", endpointConfiguration.getDestinationName(replyDestination));
         }
 
         endpointConfiguration.getJmsTemplate().send(replyDestination, session -> {
@@ -90,15 +88,12 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
 
         context.onOutboundMessage(message);
 
-        logger.info("Message was sent to JMS destination: '" + endpointConfiguration.getDestinationName(replyDestination) + "'");
+        logger.info("Message was sent to JMS destination: '{}'", endpointConfiguration.getDestinationName(replyDestination));
     }
 
     /**
      * Store the reply destination either straight forward or with a given
      * message correlation key.
-     *
-     * @param jmsMessage
-     * @param context
      */
     public void saveReplyDestination(JmsMessage jmsMessage, TestContext context) {
         if (jmsMessage.getReplyTo() != null) {
@@ -107,14 +102,12 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
             correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
             correlationManager.store(correlationKey, jmsMessage.getReplyTo());
         }  else {
-            logger.warn("Unable to retrieve reply to destination for message \n" +
-                    jmsMessage + "\n - no reply to destination found in message headers!");
+            logger.warn("Unable to retrieve reply to destination for message \n{}\n - no reply to destination found in message headers!", jmsMessage);
         }
     }
 
     /**
      * Gets the correlation manager.
-     * @return
      */
     public CorrelationManager<Destination> getCorrelationManager() {
         return correlationManager;
@@ -122,7 +115,6 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
 
     /**
      * Sets the correlation manager.
-     * @param correlationManager
      */
     public void setCorrelationManager(CorrelationManager<Destination> correlationManager) {
         this.correlationManager = correlationManager;

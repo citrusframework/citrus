@@ -27,6 +27,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.lang.Nullable;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
@@ -47,7 +48,7 @@ public class StartServerActionParser implements BeanDefinitionParser {
         Element serversElement = DomUtils.getChildElementByTagName(element, "servers");
         if (serversElement != null) {
             List<Element> serverElements = DomUtils.getChildElementsByTagName(serversElement, "server");
-            if (serverElements.size() > 0) {
+            if (!serverElements.isEmpty()) {
                 for (Element serverElement : serverElements) {
                     servers.add(new RuntimeBeanReference(serverElement.getAttribute("name")));
                 }
@@ -75,11 +76,13 @@ public class StartServerActionParser implements BeanDefinitionParser {
         }
 
         @Override
+        @Nullable
         public StartServerAction getObject() throws Exception {
             return builder.build();
         }
 
         @Override
+        @Nullable
         public Class<?> getObjectType() {
             return StartServerAction.class;
         }

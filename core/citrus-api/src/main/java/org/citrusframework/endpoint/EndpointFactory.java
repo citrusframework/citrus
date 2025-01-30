@@ -24,7 +24,7 @@ import org.citrusframework.context.TestContext;
 /**
  * Endpoint factory tries to get endpoint instance by parsing an endpoint uri. Uri can have parameters
  * that get passed to the endpoint configuration.
- *
+ * <p>
  * If Spring application context is given searches for matching endpoint component bean and delegates to component for
  * endpoint creation.
  *
