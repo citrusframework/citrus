@@ -1,0 +1,63 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+    xmlns:extpetstore="http://www.citrusframework.org/citrus-test-schema/extpetstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/http/testcase
+    http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api/extpetstore-api.xsd"
+>
+    <testcase name="withApiKeysOverridingPropertiesTest">
+        <actions>
+            <create-variables>
+                <variable name="petId" value="1234"/>
+                <variable name="apiKeyHeader" value="TopSecretHeader"/>
+                <variable name="apiKeyCookie" value="TopSecretCookie"/>
+                <variable name="apiKeyQuery" value="TopSecretQuery"/>
+            </create-variables>
+
+            <extpetstore:send-get-pet-by-id-with-api-key-authentication
+                petId="${petId}"
+                fork="true"
+                allDetails="false"
+                apiKeyCookie="${apiKeyCookie}"
+                apiKeyHeader="${apiKeyHeader}"
+                apiKeyQuery="${apiKeyQuery}"
+            />
+
+            <http:receive-request server="httpServer">
+                <http:GET path="/api/v3/ext/secure-api-key/pet/${petId}">
+                    <http:param name="api_key_query" value="citrus:encodeBase64('TopSecretQuery')"/>
+                    <http:headers>
+                        <http:header name="api_key_header" value="citrus:encodeBase64('TopSecretHeader')"/>
+                        <http:cookie name="api_key_cookie" value="citrus:encodeBase64('TopSecretCookie')"/>
+                    </http:headers>
+                </http:GET>
+
+            </http:receive-request>
+
+            <http:send-response server="httpServer">
+                <http:headers status="200" reason-phrase="OK">
+                    <http:header name="Content-Type" value="application/json"/>
+                </http:headers>
+                <http:body type="json">
+                    <http:resource file="classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"/>
+                </http:body>
+            </http:send-response>
+
+            <extpetstore:receive-get-pet-by-id-with-api-key-authentication responseCode="200">
+                <http:body>
+                    <http:validate>
+                        <http:json-path expression="$.name" value="@matches('hasso|cutie|fluffy')@"/>
+                    </http:validate>
+                </http:body>
+            </extpetstore:receive-get-pet-by-id-with-api-key-authentication>
+        </actions>
+    </testcase>
+</spring:beans>
