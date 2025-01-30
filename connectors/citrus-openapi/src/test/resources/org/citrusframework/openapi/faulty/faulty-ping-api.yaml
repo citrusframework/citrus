@@ -1,0 +1,422 @@
+openapi: 3.0.1
+info:
+    title: Ping API
+    description: 'A simple OpenApi defining that contains errors according to OpenApi Specification. In this case - Responses without description.'
+    version: 1.0
+
+servers:
+    - url: http://localhost:9000/services/rest/ping/v1
+    - url: http://localhost:9000/ping/v1
+
+paths:
+    /ping/{id}:
+        put:
+            tags:
+                - ping
+            summary: Do the ping
+            operationId: doPing
+            parameters:
+                - name: id
+                  in: path
+                  description: Id to ping
+                  required: true
+                  schema:
+                      type: integer
+                      format: int64
+                - name: q1
+                  in: query
+                  description: Some queryParameter
+                  required: true
+                  schema:
+                      type: integer
+                      format: int64
+                - name: api-key
+                  in: header
+                  description: Some header
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                description: Ping data
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/PingReqType'
+                required: true
+            responses:
+                200:
+                    headers:
+                        ping-time:
+                            required: false
+                            description: response time
+                            schema:
+                                type: integer
+                                format: int64
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PingRespType'
+                        plain/text:
+                            schema:
+                                type: string
+                405:
+                    content:
+                        text/plain:
+                            schema:
+                                type: string
+components:
+    schemas:
+        DateType:
+            required:
+                - date
+            type: object
+            properties:
+                date:
+                    type: string
+                    format: date
+        DateTimeType:
+            required:
+                - dateTime
+            type: object
+            properties:
+                dateTime:
+                    type: string
+                    format: date-time
+        AllOfType:
+            allOf:
+                - $ref: '#/components/schemas/NumbersType'
+                - $ref: '#/components/schemas/StringsType'
+                - $ref: '#/components/schemas/MultipleOfType'
+                - $ref: '#/components/schemas/DatesType'
+            discriminator:
+                propertyName: type
+                mapping:
+                    NumbersType: '#/components/schemas/NumbersType'
+                    StringsType: '#/components/schemas/StringsType'
+                    MultipleOfType: '#/components/schemas/MultipleOfType'
+                    DatesType: '#/components/schemas/DatesType'
+        AnyOfType:
+            anyOf:
+                - $ref: '#/components/schemas/NumbersType'
+                - $ref: '#/components/schemas/StringsType'
+                - $ref: '#/components/schemas/MultipleOfType'
+                - $ref: '#/components/schemas/DatesType'
+            discriminator:
+                propertyName: type
+                mapping:
+                    NumbersType: '#/components/schemas/NumbersType'
+                    StringsType: '#/components/schemas/StringsType'
+                    MultipleOfType: '#/components/schemas/MultipleOfType'
+                    DatesType: '#/components/schemas/DatesType'
+        OneOfType:
+            oneOf:
+                - $ref: '#/components/schemas/NumbersType'
+                - $ref: '#/components/schemas/StringsType'
+                - $ref: '#/components/schemas/MultipleOfType'
+                - $ref: '#/components/schemas/DatesType'
+            discriminator:
+                propertyName: type
+                mapping:
+                    NumbersType: '#/components/schemas/NumbersType'
+                    StringsType: '#/components/schemas/StringsType'
+                    MultipleOfType: '#/components/schemas/MultipleOfType'
+                    DatesType: '#/components/schemas/DatesType'
+        MultipleOfType:
+            type: object
+            required:
+                - type
+                - manyPi
+                - even
+            properties:
+                type:
+                    type: string
+                    enum: [ MultipleOfType ]
+                manyPi:
+                    type: number
+                    format: double
+                    multipleOf: 3.14159
+                    minimum: 0
+                    maximum: 31459
+                even:
+                    type: integer
+                    format: int32
+                    multipleOf: 2
+                    minimum: -2000
+                    maximum: 2000
+        StringsType:
+            type: object
+            required:
+                - type
+            properties:
+                type:
+                    type: string
+                    enum: [ StringsType ]
+                smallString:
+                    type: string
+                    minLength: 0
+                    maxLength: 10
+                mediumString:
+                    type: string
+                    minLength: 0
+                    maxLength: 256
+                largeString:
+                    type: string
+                    minLength: 0
+                    maxLength: 1024
+                nonEmptyString:
+                    type: string
+                    minLength: 256
+                    maxLength: 512
+        NumbersType:
+            type: object
+            required:
+                - type
+                - integerInt32
+                - integerInt64
+                - numberFloat
+                - numberDouble
+                - positiveIntegerInt32
+                - negativeIntegerInt64
+                - positiveNumberFloat
+                - negativeNumberDouble
+                - betweenIntegerInt32
+                - betweenIntegerInt64
+                - betweenNumberFloat
+                - betweenNumberDouble
+                - betweenIntegerInt32Exclude
+                - betweenIntegerInt64Exclude
+                - betweenNumberFloatExclude
+                - betweenNumberDoubleExclude
+            properties:
+                type:
+                    type: string
+                    enum: [ NumbersType ]
+                integerInt32:
+                    type: integer
+                    format: int32
+                integerInt64:
+                    type: integer
+                    format: int64
+                numberFloat:
+                    type: number
+                    format: float
+                numberDouble:
+                    type: number
+                    format: double
+                positiveIntegerInt32:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                negativeIntegerInt64:
+                    type: integer
+                    format: int64
+                    maximum: 0
+                positiveNumberFloat:
+                    type: number
+                    format: float
+                    minimum: 0
+                negativeNumberDouble:
+                    type: number
+                    format: double
+                    maximum: 0
+                betweenIntegerInt32:
+                    type: integer
+                    format: int32
+                    minimum: 2
+                    maximum: 8
+                betweenIntegerInt64:
+                    type: integer
+                    format: int64
+                    minimum: 2
+                    maximum: 3
+                betweenNumberFloat:
+                    type: number
+                    format: float
+                    minimum: 2
+                    maximum: 3
+                betweenNumberDouble:
+                    type: number
+                    format: double
+                    minimum: 2
+                    maximum: 3
+                betweenIntegerInt32Exclude:
+                    type: integer
+                    format: int32
+                    minimum: 2
+                    maximum: 4
+                    exclusiveMinimum: true
+                    exclusiveMaximum: true
+                betweenIntegerInt64Exclude:
+                    type: integer
+                    format: int64
+                    minimum: 2
+                    maximum: 4
+                    exclusiveMinimum: true
+                    exclusiveMaximum: true
+                betweenNumberFloatExclude:
+                    type: number
+                    format: float
+                    minimum: 2
+                    maximum: 4
+                    exclusiveMinimum: true
+                    exclusiveMaximum: true
+                betweenNumberDoubleExclude:
+                    type: number
+                    format: double
+                    minimum: 2
+                    maximum: 4
+                    exclusiveMinimum: true
+                    exclusiveMaximum: true
+        DatesType:
+            required:
+                - type
+                - date
+                - dateTime
+            type: object
+            properties:
+                type:
+                    type: string
+                    enum: [ DatesType ]
+                date:
+                    type: string
+                    format: date
+                dateTime:
+                    type: string
+                    format: date-time
+        PingReqType:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+        Detail1:
+            type: object
+            required:
+                - type
+            properties:
+                type:
+                    type: string
+                    enum: [ Detail1Type ]
+                allTypes:
+                    $ref: '#/components/schemas/NumbersType'
+        Detail2:
+            type: object
+            required:
+                - type
+            properties:
+                type:
+                    type: string
+                    enum: [ Detail2Type ]
+                allString:
+                    $ref: '#/components/schemas/StringsType'
+                allDates:
+                    $ref: '#/components/schemas/DatesType'
+        PingRespType:
+            type: object
+            required:
+                - type
+            properties:
+                type:
+                    type: string
+                    enum: [ PingRespType ]
+                id:
+                    type: integer
+                    format: int64
+                value:
+                    type: string
+                other:
+                    anyOf:
+                        -   $ref: '#/components/schemas/Detail1'
+                        -   $ref: '#/components/schemas/Detail2'
+            discriminator:
+                propertyName: type
+                mapping:
+                    Detail1Type: '#/components/schemas/Detail1'
+                    Detail2Type: '#/components/schemas/Detail2'
+        BooleanType:
+            type: object
+            required:
+                - isActive
+                - isVerified
+            properties:
+                isActive:
+                    type: boolean
+                isVerified:
+                    type: boolean
+        EnumType:
+            type: object
+            required:
+                - status
+            properties:
+                status:
+                    type: string
+                    enum:
+                        - ACTIVE
+                        - INACTIVE
+                        - PENDING
+        NestedType:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                details:
+                    $ref: '#/components/schemas/Detail1'
+        SimpleArrayType:
+            type: object
+            properties:
+                stringItems:
+                    type: array
+                    items:
+                        type: string
+                        minLength: 2
+                        maxLength: 5
+                    minItems: 10
+                    maxItems: 20
+                numberItems:
+                    type: array
+                    items:
+                        type: integer
+                    minItems: 10
+                    maxItems: 20
+                booleanItems:
+                    type: array
+                    items:
+                        type: boolean
+                dateItems:
+                    type: array
+                    items:
+                        type: string
+                        format: date
+        ComplexArrayType:
+            type: object
+            properties:
+                stringItems:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/StringsType'
+                numberItems:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/NumbersType'
+        ArrayOfArraysType:
+            type: object
+            properties:
+                matrix:
+                    type: array
+                    items:
+                        type: array
+                        items:
+                            type: integer
+        NullableType:
+            type: object
+            properties:
+                nullableString:
+                    type: string
+                    nullable: true
+        DefaultValueType:
+            type: object
+            properties:
+                defaultValue:
+                    type: string
+                    default: "defaultValue"

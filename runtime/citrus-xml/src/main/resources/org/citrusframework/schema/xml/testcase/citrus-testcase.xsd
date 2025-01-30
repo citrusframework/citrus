@@ -1563,6 +1563,14 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:simpleType name="AutofillType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="REQUIRED"/>
+      <xs:enumeration value="ALL"/>
+      <xs:enumeration value="NONE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:complexType name="OpenApi">
     <xs:sequence>
       <xs:element name="description" type="xs:string" minOccurs="0"/>
@@ -1581,6 +1589,7 @@
             <xs:attribute name="validators" type="xs:string"/>
             <xs:attribute name="header-validator" type="xs:string"/>
             <xs:attribute name="header-validators" type="xs:string"/>
+            <xs:attribute name="schemaValidation" type="xs:boolean"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="receive-response">
@@ -1598,6 +1607,7 @@
             <xs:attribute name="validators" type="xs:string"/>
             <xs:attribute name="header-validator" type="xs:string"/>
             <xs:attribute name="header-validators" type="xs:string"/>
+            <xs:attribute name="schemaValidation" type="xs:boolean"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="send-request">
@@ -1608,6 +1618,8 @@
             <xs:attribute name="operation" type="xs:string" use="required"/>
             <xs:attribute name="uri" type="xs:string"/>
             <xs:attribute name="fork" type="xs:boolean"/>
+            <xs:attribute name="schemaValidation" type="xs:boolean"/>
+            <xs:attribute name="autofill" type="tns:AutofillType" default="REQUIRED"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="send-response">
@@ -1617,6 +1629,8 @@
             </xs:sequence>
             <xs:attribute name="operation" type="xs:string" use="required"/>
             <xs:attribute name="status" type="xs:string"/>
+            <xs:attribute name="schemaValidation" type="xs:boolean"/>
+            <xs:attribute name="autofill" type="tns:AutofillType" default="REQUIRED"/>
           </xs:complexType>
         </xs:element>
       </xs:choice>
