@@ -20,13 +20,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.citrusframework.CitrusSettings;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.message.MessageBuilder;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.variable.VariableExtractor;
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -41,23 +40,7 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String endpointUri = element.getAttribute("endpoint");
-
-        if (!StringUtils.hasText(endpointUri)) {
-            throw new BeanCreationException("Endpoint reference must not be empty");
-        }
-
-        BeanDefinitionBuilder builder = parseComponent(element, parserContext);
-        builder.addPropertyValue("name", element.getLocalName());
-
-        if (endpointUri.contains(":") || (endpointUri.contains(CitrusSettings.VARIABLE_PREFIX) && endpointUri.contains(CitrusSettings.VARIABLE_SUFFIX))) {
-            builder.addPropertyValue("endpointUri", endpointUri);
-        } else {
-            builder.addPropertyReference("endpoint", endpointUri);
-        }
-
-        DescriptionElementParser.doParse(element, builder);
-        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
+        BeanDefinitionBuilder builder = getBeanDefinitionBuilder(element, parserContext);
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("fork"), "forkMode");
 
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
@@ -109,20 +92,10 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
     }
 
     /**
-     * Parse component returning generic bean definition.
-     * @param element
-     * @param parserContext
-     * @return
-     */
-    protected BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.genericBeanDefinition(getBeanDefinitionClass());
-    }
-
-    /**
      * Gets the bean definition builder class.
-     * @return
      */
-    protected Class<? extends AbstractSendMessageActionFactoryBean<?, ?, ?>> getBeanDefinitionClass() {
+    @Override
+    protected Class<? extends AbstractSendMessageActionFactoryBean<?, ?, ?>> getMessageFactoryClass() {
         return SendMessageActionFactoryBean.class;
     }
 
@@ -131,7 +104,17 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
      */
     public static class SendMessageActionFactoryBean extends AbstractSendMessageActionFactoryBean<SendMessageAction, SendMessageAction.SendMessageActionBuilderSupport, SendMessageAction.Builder> {
 
-        private final SendMessageAction.Builder builder = new SendMessageAction.Builder();
+        private final SendMessageAction.Builder builder;
+
+
+        public SendMessageActionFactoryBean() {
+            builder = new SendMessageAction.Builder();
+        }
+
+        public SendMessageActionFactoryBean(MessageBuilder messageBuilder) {
+            builder = new SendMessageAction.Builder();
+            builder.message(messageBuilder);
+        }
 
         @Override
         public SendMessageAction getObject() throws Exception {
