@@ -23,6 +23,14 @@ package org.citrusframework.validation.context;
 public interface ValidationContext {
 
     /**
+     * Indicates whether this validation context requires a validator.
+     * @return true if a validator is required; false otherwise.
+     */
+    default boolean requiresValidator() {
+        return false;
+    }
+
+    /**
      * Fluent builder
      * @param <T> context type
      * @param <B> builder reference to self
