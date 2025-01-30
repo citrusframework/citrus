@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public class CreateVariablesAction extends AbstractTestAction {
 
     /** New variables to set */
-    private final Map<String, String> variables;
+    private final Map<String, Object> variables;
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CreateVariablesAction.class);
@@ -51,18 +51,20 @@ public class CreateVariablesAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        for (Entry<String, String> entry : variables.entrySet()) {
+        for (Entry<String, Object> entry : variables.entrySet()) {
             String key = entry.getKey();
-            String value = entry.getValue();
+            Object value = entry.getValue();
 
-            if (value.startsWith("script:<")) {
-                String scriptEngine = value.substring("script:<".length(), value.indexOf('>'));
-                value = VariableUtils.getValueFromScript(scriptEngine,
-                        context.replaceDynamicContentInString(value.substring(value.indexOf('>') + 1)));
+            if (value instanceof String stringValue) {
+                if (stringValue.startsWith("script:<")) {
+                    String scriptEngine = stringValue.substring("script:<".length(), stringValue.indexOf('>'));
+                    stringValue = VariableUtils.getValueFromScript(scriptEngine,
+                            context.replaceDynamicContentInString(stringValue.substring(stringValue.indexOf('>') + 1)));
+                }
+
+                //check if value is variable or function (and resolve it if yes)
+                value = context.replaceDynamicContentInString(stringValue);
             }
-
-            //check if value is variable or function (and resolve it if yes)
-            value = context.replaceDynamicContentInString(value);
 
             logger.info("Setting variable: " + key + " to value: " + value);
 
@@ -74,7 +76,7 @@ public class CreateVariablesAction extends AbstractTestAction {
      * Gets the variables.
      * @return the variables
      */
-    public Map<String, String> getVariables() {
+    public Map<String, Object> getVariables() {
         return variables;
     }
 
@@ -83,9 +85,9 @@ public class CreateVariablesAction extends AbstractTestAction {
      */
     public static final class Builder extends AbstractTestActionBuilder<CreateVariablesAction, Builder> {
 
-        private final Map<String, String> variables = new LinkedHashMap<>();
+        private final Map<String, Object> variables = new LinkedHashMap<>();
 
-        public static Builder createVariable(String variableName, String value) {
+        public static Builder createVariable(String variableName, Object value) {
             Builder builder = new Builder();
             builder.variable(variableName, value);
             return builder;
@@ -95,7 +97,7 @@ public class CreateVariablesAction extends AbstractTestAction {
             return new Builder();
         }
 
-        public Builder variable(String variableName, String value) {
+        public Builder variable(String variableName, Object value) {
             this.variables.put(variableName, value);
             return this;
         }
