@@ -28,6 +28,8 @@ import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.actions.HttpServerResponseActionBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
+import org.citrusframework.openapi.AutoFillType;
+import org.citrusframework.openapi.OpenApiSettings;
 import org.citrusframework.openapi.actions.OpenApiActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiClientActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiClientRequestActionBuilder;
@@ -36,9 +38,9 @@ import org.citrusframework.openapi.actions.OpenApiServerActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiServerRequestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.actions.Message;
 import org.citrusframework.yaml.actions.Receive;
 import org.citrusframework.yaml.actions.Send;
-import org.citrusframework.yaml.actions.Message;
 
 public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
@@ -78,6 +80,7 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
         requestBuilder.name("openapi:send-request");
         requestBuilder.description(description);
+        requestBuilder.autoFill(request.autoFill);
 
         send = new Send(requestBuilder) {
             @Override
@@ -232,11 +235,12 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
     /**
      * Converts current builder to client builder.
+     *
      * @return
      */
     private OpenApiClientActionBuilder asClientBuilder() {
-        if (builder instanceof OpenApiClientActionBuilder) {
-            return (OpenApiClientActionBuilder) builder;
+        if (builder instanceof OpenApiClientActionBuilder openApiClientActionBuilder) {
+            return openApiClientActionBuilder;
         }
 
         throw new CitrusRuntimeException(String.format("Failed to convert '%s' to openapi client action builder",
@@ -245,11 +249,12 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
     /**
      * Converts current builder to server builder.
+     *
      * @return
      */
     private OpenApiServerActionBuilder asServerBuilder() {
-        if (builder instanceof OpenApiServerActionBuilder) {
-            return (OpenApiServerActionBuilder) builder;
+        if (builder instanceof OpenApiServerActionBuilder openApiServerActionBuilder) {
+            return openApiServerActionBuilder;
         }
 
         throw new CitrusRuntimeException(String.format("Failed to convert '%s' to openapi server action builder",
@@ -260,6 +265,8 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         protected String operation;
         protected String uri;
         protected Boolean fork;
+
+        protected AutoFillType autoFill = OpenApiSettings.getRequestAutoFillRandomValues();
 
         protected Message.Extract extract;
 
@@ -293,6 +300,14 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
+        }
+
+        public AutoFillType getAutoFill() {
+            return autoFill;
+        }
+
+        public void setAutoFill(AutoFillType autoFill) {
+            this.autoFill = autoFill;
         }
     }
 
