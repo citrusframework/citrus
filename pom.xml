@@ -192,6 +192,7 @@
     <apache.ant.version>1.10.15</apache.ant.version>
     <apache.camel.version>4.11.0</apache.camel.version>
     <apicurio.data-models.version>1.1.27</apicurio.data-models.version>
+    <swagger-request-validator.version>2.44.1</swagger-request-validator.version>
     <ascii-table-version>1.8.0</ascii-table-version>
     <assertj.version>3.27.3</assertj.version>
     <awaitility.version>4.3.0</awaitility.version>
@@ -248,6 +249,8 @@
     <mockftpserver.version>3.2.0</mockftpserver.version>
     <netty.version>4.2.0.Final</netty.version>
     <okhttp.version>4.12.0</okhttp.version>
+    <org.openapitools.version>7.9.0</org.openapitools.version>
+    <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
     <picoli-version>4.7.7</picoli-version>
     <postgresql.version>42.7.5</postgresql.version>
     <quarkus.platform.version>3.22.1</quarkus.platform.version>
@@ -692,6 +695,18 @@
         <groupId>io.apicurio</groupId>
         <artifactId>apicurio-data-models</artifactId>
         <version>${apicurio.data-models.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.atlassian.oai</groupId>
+        <artifactId>swagger-request-validator-core</artifactId>
+        <version>${swagger-request-validator.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>

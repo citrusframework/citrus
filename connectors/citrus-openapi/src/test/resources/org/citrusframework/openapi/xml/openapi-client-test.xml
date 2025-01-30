@@ -37,5 +37,17 @@
     <openapi specification="${petstoreSpec}" client="httpClient">
       <receive-response operation="addPet" status="201"/>
     </openapi>
+
+    <assert exception="org.citrusframework.exceptions.ValidationException">
+      <when>
+        <openapi specification="${petstoreSpec}" client="httpClient">
+          <send-request operation="addPet" autofill="NONE"/>
+        </openapi>
+      </when>
+    </assert>
+
+    <openapi specification="${petstoreSpec}" client="httpClient">
+      <send-request operation="addPet" autofill="NONE" schemaValidation="false"/>
+    </openapi>
   </actions>
 </test>
