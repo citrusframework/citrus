@@ -51,7 +51,7 @@ public class SequenceAfterTest extends AbstractTestBoundaryActionContainer imple
         logger.info("Entering after test block");
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Executing " + actions.size() + " actions after test");
+            logger.debug("Executing {} actions after test", actions.size());
             logger.debug("");
         }
 

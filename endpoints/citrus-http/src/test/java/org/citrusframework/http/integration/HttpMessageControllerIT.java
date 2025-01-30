@@ -22,6 +22,7 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 public class HttpMessageControllerIT extends TestNGCitrusSpringSupport {
+
     @Test
     @CitrusTestSource(type = TestLoader.SPRING)
     public void HttpMessageControllerIT() {}

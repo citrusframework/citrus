@@ -24,9 +24,9 @@ import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageSelector;
 import org.citrusframework.message.selector.DelegatingMessageSelector;
 import org.citrusframework.messaging.AbstractSelectiveMessageConsumer;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.citrusframework.util.StringUtils;
 
 public class DirectConsumer extends AbstractSelectiveMessageConsumer {
 
@@ -57,9 +57,7 @@ public class DirectConsumer extends AbstractSelectiveMessageConsumer {
             destinationQueueName = getDestinationQueueName();
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Receiving message from queue: '%s'", destinationQueueName));
-        }
+        logger.debug("Receiving message from queue: '{}'", destinationQueueName);
 
         Message message;
         if (StringUtils.hasText(selector)) {
@@ -82,7 +80,7 @@ public class DirectConsumer extends AbstractSelectiveMessageConsumer {
             throw new MessageTimeoutException(timeout, destinationQueueName);
         }
 
-        logger.info(String.format("Received message from queue: '%s'", destinationQueueName));
+        logger.info("Received message from queue: '{}'", destinationQueueName);
         return message;
     }
 

@@ -122,7 +122,7 @@ public class SoapJmsMessageConverter extends JmsMessageConverter implements Init
     public Message createJmsMessage(org.citrusframework.message.Message message, Session session, JmsEndpointConfiguration endpointConfiguration, TestContext context) {
         String payload = message.getPayload(String.class);
 
-        logger.debug("Creating SOAP message from payload: " + payload);
+        logger.debug("Creating SOAP message from payload: {}", payload);
 
         try {
             SoapMessage soapMessage = soapMessageFactory.createWebServiceMessage();

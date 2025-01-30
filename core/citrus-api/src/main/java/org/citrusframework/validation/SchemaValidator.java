@@ -32,7 +32,7 @@ import java.util.Optional;
 public interface SchemaValidator<T extends SchemaValidationContext> {
 
     /** Logger */
-    Logger logger = LoggerFactory.getLogger(MessageValidator.class);
+    Logger logger = LoggerFactory.getLogger(SchemaValidator.class);
 
     /** Schema validator resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/message/schemaValidator";
@@ -49,7 +49,7 @@ public interface SchemaValidator<T extends SchemaValidationContext> {
         Map<String, SchemaValidator<?>> validators = TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
 
         if (logger.isDebugEnabled()) {
-            validators.forEach((k, v) -> logger.debug(String.format("Found message validator '%s' as %s", k, v.getClass())));
+            validators.forEach((k, v) -> logger.debug("Found message validator '{}' as {}", k, v.getClass()));
         }
 
         return validators;
@@ -67,7 +67,7 @@ public interface SchemaValidator<T extends SchemaValidationContext> {
             SchemaValidator<? extends ValidationMatcher> instance = TYPE_RESOLVER.resolve(validator);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve validator from resource '%s/%s'", RESOURCE_PATH, validator));
+            logger.warn("Failed to resolve validator from resource '{}/{}'", RESOURCE_PATH, validator);
         }
 
         return Optional.empty();
@@ -88,4 +88,16 @@ public interface SchemaValidator<T extends SchemaValidationContext> {
      * @return true if the message/message type can be validated by this validator
      */
     boolean supportsMessageType(String messageType, Message message);
+
+    /**
+     * @param message the message which is subject of validation
+     * @param  schemaValidationEnabled flag to indicate whether schema validation is explicitly enabled
+     * @return true, if the validator can validate the given message
+     */
+    boolean canValidate(Message message, boolean schemaValidationEnabled);
+
+    /**
+     * Validate the message against the given schemaRepository and schema.
+     */
+    void validate(Message message, TestContext context, String schemaRepository, String schema);
 }

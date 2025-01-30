@@ -16,14 +16,14 @@
 
 package org.citrusframework;
 
+import org.citrusframework.container.TestActionContainer;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.citrusframework.container.TestActionContainer;
-import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.spi.ReferenceResolverAware;
 
 /**
  * Abstract container builder takes care on calling the container runner when actions are placed in the container.

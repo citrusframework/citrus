@@ -1,0 +1,69 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+    xmlns:petstore="http://www.citrusframework.org/citrus-test-schema/petstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/http/testcase
+    http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/petstore-api
+    http://www.citrusframework.org/citrus-test-schema/petstore-api/petstore-api.xsd"
+>
+    <testcase name="withBodyAsPlainTextTest">
+        <actions>
+            <create-variables>
+                <variable name="petId" value="citrus:randomNumber(10)"/>
+            </create-variables>
+
+            <petstore:send-update-pet fork="true">
+                <petstore:body>
+                    <petstore:data>
+                        <![CDATA[
+                            {
+                              "id": ${petId},
+                              "name": "citrus:randomEnumValue('hasso','cutie','fluffy')",
+                              "category": {
+                                "id": ${petId},
+                                "name": "citrus:randomEnumValue('dog', 'cat', 'fish')"
+                              },
+                              "photoUrls": [
+                                "http://localhost:8080/photos/${petId}"
+                              ],
+                              "tags": [
+                                {
+                                  "id": ${petId},
+                                  "name": "generated"
+                                }
+                              ],
+                              "status": "citrus:randomEnumValue('available', 'pending', 'sold')"
+                            }
+                        ]]>
+                    </petstore:data>
+                </petstore:body>
+            </petstore:send-update-pet>
+
+            <http:receive-request server="httpServer">
+                <http:PUT path="/api/v3/pet">
+                    <http:body>
+                        <http:resource file="classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response_validation.json"/>
+                    </http:body>
+                </http:PUT>
+            </http:receive-request>
+
+            <http:send-response server="httpServer">
+                <http:headers status="200">
+                    <http:header name="Content-Type" value="application/json"/>
+                </http:headers>
+                <http:body>
+                    <http:resource file="classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"/>
+                </http:body>
+            </http:send-response>
+
+            <petstore:receive-update-pet responseCode="200"/>
+        </actions>
+    </testcase>
+</spring:beans>

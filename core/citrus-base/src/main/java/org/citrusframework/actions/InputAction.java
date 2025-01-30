@@ -16,6 +16,13 @@
 
 package org.citrusframework.actions;
 
+import org.citrusframework.AbstractTestActionBuilder;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,17 +31,10 @@ import java.util.StringJoiner;
 import java.util.StringTokenizer;
 import java.util.stream.Stream;
 
-import org.citrusframework.AbstractTestActionBuilder;
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.citrusframework.util.StringUtils;
-
 /**
  * Test action prompts user data from standard input stream. The input data is then stored as new
  * test variable. Test workflow stops until user input is complete.
- *
+ * <p>
  * Action can declare a set of valid answers, so user will be prompted until a valid
  * answer was returned.
  *
@@ -77,7 +77,7 @@ public class InputAction extends AbstractTestAction {
 
         if (context.getVariables().containsKey(variable)) {
             input = context.getVariable(variable);
-            logger.info("Variable " + variable + " is already set (='" + input + "'). Skip waiting for user input");
+            logger.info("Variable {} is already set (='{}'). Skip waiting for user input", variable, input);
 
             return;
         }
@@ -123,7 +123,7 @@ public class InputAction extends AbstractTestAction {
             }
         }
 
-        logger.info("User input is not valid - must be one of " + validAnswers);
+        logger.info("User input is not valid - must be one of {}", validAnswers);
 
         return false;
     }

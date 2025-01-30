@@ -144,7 +144,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
      */
     private void purgeDestination(Destination destination, Session session, String destinationName) throws JMSException {
         if (logger.isDebugEnabled()) {
-            logger.debug("Try to purge destination " + destinationName);
+            logger.debug("Try to purge destination {}", destinationName);
         }
 
         int messagesPurged = 0;
@@ -155,7 +155,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
                 message = (receiveTimeout >= 0) ? messageConsumer.receive(receiveTimeout) : messageConsumer.receive();
 
                 if (message != null) {
-                    logger.debug("Removed message from destination " + destinationName);
+                    logger.debug("Removed message from destination {}", destinationName);
                     messagesPurged++;
 
                     try {
@@ -167,7 +167,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
             } while (message != null);
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Purged " + messagesPurged + " messages from destination");
+                logger.debug("Purged {} messages from destination", messagesPurged);
             }
         } finally {
             JmsUtils.closeMessageConsumer(messageConsumer);

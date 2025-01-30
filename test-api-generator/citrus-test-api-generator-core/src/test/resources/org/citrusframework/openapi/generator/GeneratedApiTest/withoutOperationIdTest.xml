@@ -1,0 +1,43 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+    xmlns:extpetstore="http://www.citrusframework.org/citrus-test-schema/extpetstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/http/testcase
+    http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api/extpetstore-api.xsd"
+>
+    <testcase name="withoutOperationIdTest">
+        <actions>
+            <create-variables>
+                <variable name="petId" value="citrus:randomNumber(10)"/>
+            </create-variables>
+
+            <extpetstore:send-pet-without-operation-id-pet-id-get petId="1234" fork="true">
+                <extpetstore:receive>
+                    <http:headers status="200" />
+                </extpetstore:receive>
+            </extpetstore:send-pet-without-operation-id-pet-id-get>
+
+            <http:receive-request server="httpServer">
+                <http:GET path="/api/v3/ext/pet/without-operation-id/1234"/>
+            </http:receive-request>
+
+            <http:send-response server="httpServer">
+                <http:headers status="200">
+                    <http:header name="Content-Type" value="application/json"/>
+                </http:headers>
+                <http:body>
+                    <http:resource file="classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"/>
+                </http:body>
+            </http:send-response>
+
+        </actions>
+    </testcase>
+</spring:beans>

@@ -16,9 +16,6 @@
 
 package org.citrusframework.validation.script.sql;
 
-import java.util.List;
-import java.util.Map;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
@@ -26,6 +23,9 @@ import org.citrusframework.spi.TypeResolver;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Validator working on SQL result sets. Scripts get the actual test context
@@ -52,7 +52,7 @@ public interface SqlResultSetScriptValidator {
         Map<String, SqlResultSetScriptValidator> validators = TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
 
         if (logger.isDebugEnabled()) {
-            validators.forEach((k, v) -> logger.debug(String.format("Found SQL result set validator '%s' as %s", k, v.getClass())));
+            validators.forEach((k, v) -> logger.debug("Found SQL result set validator '{}' as {}", k, v.getClass()));
         }
         return validators;
     }

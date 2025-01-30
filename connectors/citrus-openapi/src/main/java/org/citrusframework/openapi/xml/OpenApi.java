@@ -16,30 +16,30 @@
 
 package org.citrusframework.openapi.xml;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.http.actions.HttpServerResponseActionBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
+import org.citrusframework.openapi.AutoFillType;
 import org.citrusframework.openapi.actions.OpenApiActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiClientActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiClientRequestActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiClientResponseActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiServerActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiServerRequestActionBuilder;
+import org.citrusframework.openapi.actions.OpenApiServerResponseActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.xml.actions.Message;
@@ -92,10 +92,18 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
     @XmlElement(name = "send-request")
     public OpenApi setSendRequest(ClientRequest request) {
         OpenApiClientRequestActionBuilder requestBuilder =
-                asClientBuilder().send(request.getOperation());
+            asClientBuilder().send(request.getOperation());
 
         requestBuilder.name("openapi:send-request");
         requestBuilder.description(description);
+
+        if (request.getSchemaValidation() != null) {
+            requestBuilder.schemaValidation(request.getSchemaValidation());
+        }
+
+        if (request.getAutoFill() != null) {
+            requestBuilder.autoFill(request.getAutoFill());
+        }
 
         send = new Send(requestBuilder) {
             @Override
@@ -124,10 +132,14 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
     @XmlElement(name = "receive-response")
     public OpenApi setReceiveResponse(ClientResponse response) {
         OpenApiClientResponseActionBuilder responseBuilder =
-                asClientBuilder().receive(response.getOperation(), response.getStatus());
+            asClientBuilder().receive(response.getOperation(), response.getStatus());
 
         responseBuilder.name("openapi:receive-response");
         responseBuilder.description(description);
+
+        if (response.getSchemaValidation() != null) {
+            responseBuilder.schemaValidation(response.getSchemaValidation());
+        }
 
         receive = new Receive(responseBuilder) {
             @Override
@@ -166,10 +178,14 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
     @XmlElement(name = "receive-request")
     public OpenApi setReceiveRequest(ServerRequest request) {
         OpenApiServerRequestActionBuilder requestBuilder =
-                asServerBuilder().receive(request.getOperation());
+            asServerBuilder().receive(request.getOperation());
 
         requestBuilder.name("openapi:receive-request");
         requestBuilder.description(description);
+
+        if (request.getSchemaValidation() != null) {
+            requestBuilder.schemaValidation(request.getSchemaValidation());
+        }
 
         receive = new Receive(requestBuilder) {
             @Override
@@ -205,11 +221,19 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
     @XmlElement(name = "send-response")
     public OpenApi setSendResponse(ServerResponse response) {
-        HttpServerResponseActionBuilder responseBuilder =
-                asServerBuilder().send(response.getOperation(), response.getStatus());
+        OpenApiServerResponseActionBuilder  responseBuilder =
+            asServerBuilder().send(response.getOperation(), response.getStatus());
 
         responseBuilder.name("openapi:send-response");
         responseBuilder.description(description);
+
+        if (response.getSchemaValidation() != null) {
+            responseBuilder.schemaValidation(response.getSchemaValidation());
+        }
+
+        if (response.getAutoFill() != null) {
+            responseBuilder.autoFill(response.getAutoFill());
+        }
 
         send = new Send(responseBuilder) {
             @Override
@@ -257,6 +281,7 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
     /**
      * Converts current builder to client builder.
+     *
      * @return
      */
     private OpenApiClientActionBuilder asClientBuilder() {
@@ -265,11 +290,12 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         }
 
         throw new CitrusRuntimeException(String.format("Failed to convert '%s' to openapi client action builder",
-                Optional.ofNullable(builder).map(Object::getClass).map(Class::getName).orElse("null")));
+            Optional.ofNullable(builder).map(Object::getClass).map(Class::getName).orElse("null")));
     }
 
     /**
      * Converts current builder to server builder.
+     *
      * @return
      */
     private OpenApiServerActionBuilder asServerBuilder() {
@@ -278,7 +304,7 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         }
 
         throw new CitrusRuntimeException(String.format("Failed to convert '%s' to openapi server action builder",
-                Optional.ofNullable(builder).map(Object::getClass).map(Class::getName).orElse("null")));
+            Optional.ofNullable(builder).map(Object::getClass).map(Class::getName).orElse("null")));
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -290,6 +316,10 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         protected String uri;
         @XmlAttribute(name = "fork")
         protected Boolean fork;
+        @XmlAttribute(name = "schemaValidation")
+        protected Boolean schemaValidation;
+        @XmlAttribute(name = "autofill")
+        protected AutoFillType autoFill;
 
         @XmlElement
         protected Message.Extract extract;
@@ -318,6 +348,14 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
             this.fork = fork;
         }
 
+        public Boolean getSchemaValidation() {
+            return schemaValidation;
+        }
+
+        public void setSchemaValidation(Boolean schemaValidation) {
+            this.schemaValidation = schemaValidation;
+        }
+
         public Message.Extract getExtract() {
             return extract;
         }
@@ -325,6 +363,15 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
+
+        public AutoFillType getAutoFill() {
+            return autoFill;
+        }
+
+        public void setAutoFill(AutoFillType autoFill) {
+            this.autoFill = autoFill;
+        }
+
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -350,6 +397,9 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
         @XmlAttribute(name = "header-validators")
         protected String headerValidators;
+
+        @XmlAttribute(name = "schemaValidation")
+        protected Boolean schemaValidation;
 
         @XmlElement
         protected Receive.Selector selector;
@@ -435,6 +485,15 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
+
+        public Boolean getSchemaValidation() {
+            return schemaValidation;
+        }
+
+        public void setSchemaValidation(Boolean schemaValidation) {
+            this.schemaValidation = schemaValidation;
+        }
+
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -445,6 +504,12 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
         @XmlAttribute
         protected String status = "200";
+
+        @XmlAttribute(name = "schemaValidation")
+        protected Boolean schemaValidation;
+
+        @XmlAttribute(name = "autofill")
+        protected AutoFillType autoFill;
 
         @XmlElement
         protected Message.Extract extract;
@@ -472,6 +537,23 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
+
+        public Boolean getSchemaValidation() {
+            return schemaValidation;
+        }
+
+        public void setSchemaValidation(Boolean schemaValidation) {
+            this.schemaValidation = schemaValidation;
+        }
+
+        public AutoFillType getAutoFill() {
+            return autoFill;
+        }
+
+        public void setAutoFill(AutoFillType autoFill) {
+            this.autoFill = autoFill;
+        }
+
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -500,6 +582,9 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
         @XmlAttribute(name = "header-validators")
         protected String headerValidators;
+
+        @XmlAttribute(name = "schemaValidation")
+        protected Boolean schemaValidation;
 
         @XmlElement
         protected Receive.Selector selector;
@@ -597,5 +682,14 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
+
+        public Boolean getSchemaValidation() {
+            return schemaValidation;
+        }
+
+        public void setSchemaValidation(Boolean schemaValidation) {
+            this.schemaValidation = schemaValidation;
+        }
+
     }
 }

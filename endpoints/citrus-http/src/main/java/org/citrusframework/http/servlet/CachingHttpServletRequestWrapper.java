@@ -16,16 +16,6 @@
 
 package org.citrusframework.http.servlet;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.StringTokenizer;
-
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +29,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.StringTokenizer;
 
 /**
  * Caching wrapper saves request body data to cache when read.
@@ -129,15 +128,8 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
                     paramValue = "";
                 }
 
-                try {
-                    params.put(URLDecoder.decode(paramName, charset.name()),
-                            new String[] { URLDecoder.decode(paramValue, charset.name()) });
-                } catch (final UnsupportedEncodingException e) {
-                    throw new CitrusRuntimeException(String.format(
-                            "Failed to decode query param value '%s=%s'",
-                            paramName,
-                            paramValue), e);
-                }
+                params.put(URLDecoder.decode(paramName, charset),
+                        new String[] { URLDecoder.decode(paramValue, charset) });
             }
         }
     }

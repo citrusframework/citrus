@@ -16,9 +16,6 @@
 
 package org.citrusframework.openapi;
 
-import java.util.Collection;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -32,6 +29,9 @@ import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.nodes.NodeTuple;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
+
+import java.util.Collection;
+import java.util.Map;
 
 public class OpenApiSupport {
 

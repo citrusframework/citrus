@@ -16,6 +16,7 @@
 
 package org.citrusframework.validation.xml.schema;
 
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.XmlValidationHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -29,6 +30,7 @@ import org.citrusframework.util.SystemProvider;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.validation.SchemaValidator;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.xml.XmlMessageValidationContext.Builder;
 import org.citrusframework.xml.XsdSchemaRepository;
 import org.citrusframework.xml.schema.AbstractSchemaCollection;
 import org.citrusframework.xml.schema.WsdlXsdSchema;
@@ -53,6 +55,7 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 import static org.citrusframework.validation.xml.schema.ValidationStrategy.FAIL;
+import static org.citrusframework.xml.schema.AbstractSchemaCollection.W3C_XML_SCHEMA_NS_URI;
 
 public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidationContext> {
 
@@ -85,10 +88,6 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
 
     /**
      * Validate message with an XML schema.
-     *
-     * @param message
-     * @param context
-     * @param validationContext
      */
     @Override
     public void validate(Message message, TestContext context, XmlMessageValidationContext validationContext) {
@@ -160,14 +159,18 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
                         .stream()
                         .map(AbstractSchemaCollection::toSpringResource)
                         .toList()
-                        .toArray(new org.springframework.core.io.Resource[]{}), WsdlXsdSchema.W3C_XML_SCHEMA_NS_URI);
+                        .toArray(new org.springframework.core.io.Resource[]{}), W3C_XML_SCHEMA_NS_URI);
             }
 
             SAXParseException[] results = validator.validate(new DOMSource(doc));
             if (results.length == 0) {
                 logger.debug("XML schema validation successful: All values OK");
             } else {
-                logger.error("XML schema validation failed for message:\n{}", XMLUtils.prettyPrint(message.getPayload(String.class)));
+
+                if (logger.isErrorEnabled()) {
+                    logger.error("XML schema validation failed for message:\n{}",
+                        XMLUtils.prettyPrint(message.getPayload(String.class)));
+                }
 
                 // Report all parsing errors
                 logger.debug("Found {} schema validation errors", results.length);
@@ -176,7 +179,10 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
                     errors.append(e.toString());
                     errors.append("\n");
                 }
-                logger.debug(errors.toString());
+
+                if (logger.isDebugEnabled()) {
+                    logger.debug(errors.toString());
+                }
 
                 throw new ValidationException("XML schema validation failed:", results[0]);
             }
@@ -186,9 +192,6 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
     }
 
     /**
-     *
-     * @param messageType
-     * @param message
      * @return true if the message or message type is supported by this validator
      */
     @Override
@@ -221,5 +224,30 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
     private static Optional<String> extractEnvOrProperty(SystemProvider systemProvider, String envVarName, String fallbackPropertyName) {
         return systemProvider.getEnv(envVarName)
                 .or(() -> systemProvider.getProperty(fallbackPropertyName));
+    }
+
+    @Override
+    public boolean canValidate(Message message, boolean schemaValidationEnabled) {
+        return (isXmlSchemaValidationEnabled() || schemaValidationEnabled)
+            && IsXmlPredicate.getInstance().test(message.getPayload(String.class));
+    }
+
+    /**
+     * Get setting to determine if xml schema validation is enabled by default.
+     */
+    private static boolean isXmlSchemaValidationEnabled() {
+        return Boolean.getBoolean(CitrusSettings.OUTBOUND_SCHEMA_VALIDATION_ENABLED_PROPERTY)
+            || Boolean.getBoolean(CitrusSettings.OUTBOUND_XML_SCHEMA_VALIDATION_ENABLED_PROPERTY)
+            || Boolean.parseBoolean(System.getenv(CitrusSettings.OUTBOUND_SCHEMA_VALIDATION_ENABLED_ENV))
+            || Boolean.parseBoolean(System.getenv(CitrusSettings.OUTBOUND_XML_SCHEMA_VALIDATION_ENABLED_ENV));
+    }
+
+    @Override
+    public void validate(Message message, TestContext context, String schemaRepository, String schema) {
+        XmlMessageValidationContext validationContext = Builder.xml()
+            .schemaValidation(true)
+            .schema(schema)
+            .schemaRepository(schemaRepository).build();
+        validate(message, context, validationContext);
     }
 }

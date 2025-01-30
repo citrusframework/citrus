@@ -61,6 +61,8 @@ include::endpoint-restdocs.adoc[]
 include::endpoint-component.adoc[]
 include::endpoint-adapter.adoc[]
 
+include::testapi.adoc[]
+
 include::connectors.adoc[]
 include::connector-openapi.adoc[]
 include::connector-jbang.adoc[]
