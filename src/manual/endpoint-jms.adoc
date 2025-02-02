@@ -602,6 +602,7 @@ wrapper so we do not fail because of multiple connections with the same durable 
 
 [[jms-topic-purging]]
 == JMS topic purging
+
 As mentioned earlier, topic subscribers with `autoStart=true` consume all messages sent to the topic during the test run.
 Durable topic subscribers even consume messages sent outside the test run.
 Both cache the consumed messages internally in an in-memory-message-queue.
