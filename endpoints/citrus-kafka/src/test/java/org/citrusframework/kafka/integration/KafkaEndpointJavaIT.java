@@ -28,6 +28,8 @@ import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSe
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderEquals;
 
 import java.time.Duration;
+import java.util.concurrent.TimeoutException;
+
 import org.assertj.core.api.ThrowableAssert;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -286,6 +288,39 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
 
     @Test
     @CitrusTest
+    public void shutdown_afterTimeout_isThreadSafe() {
+        var body = "shutdown_afterTimeout_isThreadSafe";
+
+        var key = "Name";
+        var value = "Aragorn";
+
+        when(
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).setHeader(key, value))
+        );
+
+        ThrowableAssert.ThrowingCallable receiver = () -> then(
+                receive(kafkaWithRandomConsumerGroupEndpoint)
+                        .timeout(2_000)
+                        .selector(
+                                kafkaMessageFilter()
+                                        .eventLookbackWindow(Duration.ofSeconds(1L))
+                                        .kafkaMessageSelector(kafkaHeaderEquals(key, "Samwise"))
+                                        .pollTimeout(Duration.ofSeconds(3)) // Note that pollTimeout > overall receive timeout
+                                        .build()
+                        )
+                        .getMessageBuilderSupport()
+                        .body(body)
+        );
+
+        assertThatThrownBy(receiver)
+                .isInstanceOf(TestCaseFailedException.class)
+                .hasRootCauseInstanceOf(TimeoutException.class)
+                .hasMessageContaining("Action timeout after 2000 milliseconds. Failed to receive message on endpoint: 'KafkaEndpointJavaIT'");
+    }
+
+    @Test
+    @CitrusTest
     @GitHubIssue(1281)
     public void threadSafetyOfKafkaConsumer_onParallelAccess() {
         var body = "parallel_access_thread_safety";
@@ -304,7 +339,6 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
                 send(kafkaWithRandomConsumerGroupEndpoint)
                         .message(new KafkaMessage(body).setHeader(key, brother2))
         );
-
 
         then(
                 parallel()
