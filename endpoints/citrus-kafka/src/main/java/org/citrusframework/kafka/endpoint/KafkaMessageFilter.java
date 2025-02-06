@@ -46,27 +46,17 @@ public final class KafkaMessageFilter {
     private final KafkaMessageSelectorFactory kafkaMessageSelectorFactory;
 
     /**
-     * Defines the time window to look back for events in the Kafka topic. This duration is subtracted from the current
-     * time to determine the starting point for consuming messages.
-     * <p>
-     * Because finding messages in a Kafka topic is relatively complicated, message consumption starts at an
-     * offset {@code Ox = OT-n}. Where {@code T} is the current timestamp and {@code n} is the maximum timespan in which
-     * the wanted event is expected to have been published.
-     * <p>
-     * The timespan {@code n} should also be as small as possible, because the amount of consumed messages is
-     * potentially very high.
+     * See {@link KafkaMessageFilterBuilder#eventLookbackWindow(Duration)} for documentation.
      */
     private Duration eventLookbackWindow;
 
     /**
-     * The timeout duration for each poll operation when consuming messages from Kafka. This value determines how long
-     * the consumer will wait for new records in each poll cycle.
+     * See {@link KafkaMessageFilterBuilder#pollTimeout(Duration)} for documentation.
      */
-    private Duration pollTimeout = Duration.ofMillis(100);
+    private Duration pollTimeout;
 
     /**
-     * A custom matcher implementing {@link KafkaMessageSelector}. This matcher is used to determine whether a
-     * consumed record meets specific criteria defined by the user.
+     * See {@link KafkaMessageFilterBuilder#kafkaMessageSelector(KafkaMessageSelector)} for documentation.
      */
     private KafkaMessageSelector kafkaMessageSelector;
 
@@ -107,6 +97,10 @@ public final class KafkaMessageFilter {
 
     Duration getPollTimeout() {
         return pollTimeout;
+    }
+
+    void setPollTimeout(Duration pollTimeout) {
+        this.pollTimeout = pollTimeout;
     }
 
     KafkaMessageSelector getKafkaMessageSelector() {
@@ -180,16 +174,35 @@ public final class KafkaMessageFilter {
             return this;
         }
 
+        /**
+         * Defines the time window to look back for events in the Kafka topic. This duration is subtracted from the current
+         * time to determine the starting point for consuming messages.
+         * <p>
+         * Because finding messages in a Kafka topic is relatively complicated, message consumption starts at an
+         * offset {@code Ox = OT-n}. Where {@code T} is the current timestamp and {@code n} is the maximum timespan in which
+         * the wanted event is expected to have been published.
+         * <p>
+         * The timespan {@code n} should also be as small as possible, because the amount of consumed messages is
+         * potentially very high.
+         */
         public KafkaMessageFilterBuilder eventLookbackWindow(Duration eventLookbackWindow) {
             this.eventLookbackWindow = eventLookbackWindow;
             return this;
         }
 
+        /**
+         * The timeout duration for each poll operation when consuming messages from Kafka. This value determines how long
+         * the consumer will wait for new records in each poll cycle.
+         */
         public KafkaMessageFilterBuilder pollTimeout(Duration pollTimeout) {
             this.pollTimeout = pollTimeout;
             return this;
         }
 
+        /**
+         * A custom matcher implementing {@link KafkaMessageSelector}. This matcher is used to determine whether a
+         * consumed record meets specific criteria defined by the user.
+         */
         public KafkaMessageFilterBuilder kafkaMessageSelector(KafkaMessageSelector kafkaMessageSelector) {
             this.kafkaMessageSelector = kafkaMessageSelector;
             return this;
