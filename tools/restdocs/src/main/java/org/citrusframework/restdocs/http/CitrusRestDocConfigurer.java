@@ -77,7 +77,7 @@ public class CitrusRestDocConfigurer extends RestDocumentationConfigurer<CitrusS
     }
 
     @Override
-    public void onTestFinish(TestCase test) {
+    public void onTestExecutionEnd(TestCase test) {
     }
 
     @Override

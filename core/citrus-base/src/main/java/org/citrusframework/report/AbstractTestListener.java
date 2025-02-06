@@ -29,7 +29,7 @@ public abstract class AbstractTestListener implements TestListener {
     public void onTestFailure(TestCase test, Throwable cause) {}
 
     @Override
-    public void onTestFinish(TestCase test) {}
+    public void onTestExecutionEnd(TestCase test) {}
 
     @Override
     public void onTestSkipped(TestCase test) {}

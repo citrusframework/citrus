@@ -116,9 +116,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             try {
                 start(context);
 
-                for (final TestActionBuilder<?> actionBuilder : actions) {
-                    executeAction(actionBuilder.build(), context);
-                }
+                executeTest(context);
 
                 testResult = getTestResultInstanceProvider(context).createSuccess(this);
             } catch (final TestCaseFailedException e) {
@@ -134,10 +132,17 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         }
     }
 
+    private void executeTest(TestContext context) {
+        context.getTestListeners().onTestExecutionStart(this);
+        for (final TestActionBuilder<?> actionBuilder : actions) {
+            executeAction(actionBuilder.build(), context);
+        }
+    }
+
     @Override
     public void start(final TestContext context) {
         context.getTestListeners().onTestStart(this);
-
+        
         try {
             logger.debug("Initializing test case");
 
@@ -157,6 +162,19 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     public void beforeTest(final TestContext context) {
         restartTimer();
 
+        if (context.getBeforeTest().isEmpty()) {
+            return;
+        }
+
+        try {
+            context.getTestListeners().onBeforeTestStart(this);
+            doExecuteSequenceBefore(context);
+        } finally {
+            context.getTestListeners().onBeforeTestEnd(this);
+        }
+    }
+
+    private void doExecuteSequenceBefore(TestContext context) {
         for (final BeforeTest sequenceBeforeTest : context.getBeforeTest()) {
             try {
                 if (sequenceBeforeTest.shouldExecute(getName(), packageName, groups)) {
@@ -170,6 +188,19 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
     @Override
     public void afterTest(final TestContext context) {
+        if (context.getAfterTest().isEmpty()) {
+            return;
+        }
+
+        try {
+            context.getTestListeners().onAfterTestStart(this);
+        } finally {
+            doExecuteSequenceAfter(context);
+            context.getTestListeners().onAfterTestEnd(this);
+        }
+    }
+
+    private void doExecuteSequenceAfter(TestContext context) {
         for (final AfterTest sequenceAfterTest : context.getAfterTest()) {
             try {
                 if (sequenceAfterTest.shouldExecute(getName(), packageName, groups)) {
@@ -235,7 +266,6 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
                 waitForCompletion(this, context, timeout);
             }
 
-            context.getTestListeners().onTestFinish(this);
             executeFinalActions(context);
 
             if (contextException != null) {
@@ -250,6 +280,13 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             testResult = getTestResultInstanceProvider(context).createFailed(this, e);
             throw new TestCaseFailedException(e);
         } finally {
+            context.getTestListeners().onTestExecutionEnd(this);
+            doFinishTest(context);
+        }
+    }
+
+    private void doFinishTest(TestContext context) {
+        try {
             if (testResult != null) {
                 if (testResult.isSuccess()) {
                     context.getTestListeners().onTestSuccess(this);
@@ -259,8 +296,9 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             }
 
             afterTest(context);
-
             completeTestResultWithDuration();
+        } finally {
+            context.getTestListeners().onTestFinalization(this);
         }
     }
 
@@ -289,7 +327,25 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
      * Run final test actions.
      */
     private void executeFinalActions(TestContext context) {
+        if (!finalActions.isEmpty() || !context.getFinalActions().isEmpty()) {
+            try {
+                context.getTestListeners().onFinalActionsStart(this);
+                doExecuteFinalActions(context);
+            } finally {
+                context.getTestListeners().onFinalActionsEnd(this);
+            }
+        }
+
+        if (testResult.isSuccess() && context.hasExceptions()) {
+            CitrusRuntimeException contextException = context.getExceptions().remove(0);
+            testResult = getTestResultInstanceProvider(context).createFailed(this, contextException);
+            throw new TestCaseFailedException(contextException);
+        }
+    }
+
+    private void doExecuteFinalActions(TestContext context) {
         if (!finalActions.isEmpty()) {
+
             logger.debug("Entering finally block in test case");
 
             /* walk through the finally-chain and execute the actions in there */
@@ -307,6 +363,8 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
         /* test context may also have some actions to run finally */
         for (final TestActionBuilder<?> actionBuilder : context.getFinalActions()) {
+            context.getTestListeners().onFinalActionsStart(this);
+
             TestAction action = actionBuilder.build();
             if (!action.isDisabled(context)) {
                 context.getTestActionListeners().onTestActionStart(this, action);
@@ -316,19 +374,10 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
                 context.getTestActionListeners().onTestActionSkipped(this, action);
             }
         }
-
-        if (testResult.isSuccess() && context.hasExceptions()) {
-            CitrusRuntimeException contextException = context.getExceptions().remove(0);
-            testResult = getTestResultInstanceProvider(context).createFailed(this, contextException);
-            throw new TestCaseFailedException(contextException);
-        }
     }
 
     /**
      * Print variables in given test context.
-     *
-     * @param scope
-     * @param context
      */
     private void debugVariables(String scope, TestContext context) {
         /* Debug print global variables */
@@ -342,9 +391,6 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
     /**
      * Sets test parameters as test variables.
-     *
-     * @param parameters
-     * @param context
      */
     private void initializeTestParameters(Map<String, Object> parameters, TestContext context) {
         // add default variables for test
@@ -359,9 +405,6 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
     /**
      * Initialize the test variables in the given test context.
-     *
-     * @param variableDefinitions
-     * @param context
      */
     private void initializeTestVariables(Map<String, Object> variableDefinitions, TestContext context) {
         /* build up the global test variables in TestContext by
@@ -381,8 +424,6 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
     /**
      * Setter for variables.
-     *
-     * @param variableDefinitions
      */
     public void setVariableDefinitions(final Map<String, Object> variableDefinitions) {
         this.variableDefinitions = variableDefinitions;
@@ -395,8 +436,6 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
     /**
      * Setter for finally chain.
-     *
-     * @param finalActions
      */
     public void setFinalActions(final List<TestAction> finalActions) {
         this.finalActions = finalActions.stream().map(action -> (TestActionBuilder<?>) () -> action).collect(Collectors.toList());
@@ -543,8 +582,6 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
     /**
      * Sets the timeout.
-     *
-     * @param timeout
      */
     public void setTimeout(final long timeout) {
         this.timeout = timeout;
@@ -552,8 +589,6 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
     /**
      * Gets the timeout.
-     *
-     * @return
      */
     public long getTimeout() {
         return timeout;

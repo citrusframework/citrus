@@ -1,15 +1,20 @@
 package org.citrusframework;
 
+import org.citrusframework.TestCaseMetaInfo.Status;
 import org.citrusframework.actions.AbstractAsyncTestAction;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.actions.SleepAction;
+import org.citrusframework.container.AfterTest;
 import org.citrusframework.container.Async;
+import org.citrusframework.container.BeforeTest;
 import org.citrusframework.container.SequenceAfterTest;
 import org.citrusframework.container.SequenceBeforeTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.functions.core.CurrentDateFunction;
+import org.citrusframework.report.TestListener;
+import org.mockito.InOrder;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -18,6 +23,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -28,10 +34,15 @@ import static org.citrusframework.DefaultTestActionBuilder.action;
 import static org.citrusframework.TestResult.RESULT.FAILURE;
 import static org.citrusframework.TestResult.success;
 import static org.citrusframework.util.TestUtils.WAIT_THREAD_PREFIX;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.fail;
 
 public class DefaultTestCaseTest extends UnitTestSupport {
@@ -166,6 +177,126 @@ public class DefaultTestCaseTest extends UnitTestSupport {
     }
 
     @Test
+    public void testTestListenerEventsWithSuccessfulTestResult() {
+        TestListener testListenerMock = mock();
+        context.getTestListeners().addTestListener(testListenerMock);
+
+        BeforeTest beforeTestMock = mock();
+        List<BeforeTest> beforeTestListMock = new ArrayList<>(){{add(beforeTestMock);}};
+        context.setBeforeTest(beforeTestListMock);
+
+        TestAction testActionMock = mock();
+        List<TestAction> testActionListMock = new ArrayList<>(){{add(testActionMock);}};
+        fixture.setFinalActions(testActionListMock);
+
+        AfterTest afterTestMock = mock();
+        List<AfterTest> afterTestListMock = new ArrayList<>(){{add(afterTestMock);}};
+        context.setAfterTest(afterTestListMock);
+
+        fixture.doExecute(context);
+        fixture.finish(context);
+
+        InOrder inOrder = inOrder(testListenerMock);
+        inOrder.verify(testListenerMock, times(1)).onTestStart(fixture);
+        inOrder.verify(testListenerMock, times(1)).onBeforeTestStart(fixture);
+        inOrder.verify(testListenerMock, times(1)).onBeforeTestEnd(fixture);
+        inOrder.verify(testListenerMock, times(1)).onTestExecutionStart(fixture);
+        inOrder.verify(testListenerMock, times(1)).onFinalActionsStart(fixture);
+        inOrder.verify(testListenerMock, times(1)).onFinalActionsEnd(fixture);
+        inOrder.verify(testListenerMock, times(1)).onTestExecutionEnd(fixture);
+        inOrder.verify(testListenerMock, times(1)).onTestSuccess(fixture);
+        inOrder.verify(testListenerMock, times(1)).onAfterTestStart(fixture);
+        inOrder.verify(testListenerMock, times(1)).onAfterTestEnd(fixture);
+        inOrder.verify(testListenerMock, times(1)).onTestEnd(fixture);
+        verifyNoMoreInteractions(testListenerMock);
+    }
+
+    @Test
+    public void testTestListenerEventsWithTestActionFailedTestResult() {
+        TestAction testActionMock = mock();
+        doThrow(new CitrusRuntimeException()).when(testActionMock).execute(context);
+        fixture.addTestAction(testActionMock);
+        TestListener testListenerMock = mock();
+        context.getTestListeners().addTestListener(testListenerMock);
+
+        List<BeforeTest> beforeTestListMock = List.of(mock(BeforeTest.class));
+        context.setBeforeTest(beforeTestListMock);
+
+        List<TestAction> testActionListMock = List.of(mock(TestAction.class));
+        fixture.setFinalActions(testActionListMock);
+
+        List<AfterTest> afterTestListMock = List.of(mock(AfterTest.class));
+        context.setAfterTest(afterTestListMock);
+
+        assertThrows(TestCaseFailedException.class, () -> fixture.doExecute(context));
+        fixture.finish(context);
+
+        InOrder inOrder = inOrder(testListenerMock);
+        inOrder.verify(testListenerMock, times(1)).onTestStart(fixture);
+        inOrder.verify(testListenerMock, times(1)).onBeforeTestStart(fixture);
+        inOrder.verify(testListenerMock, times(1)).onBeforeTestEnd(fixture);
+        inOrder.verify(testListenerMock, times(1)).onTestExecutionStart(fixture);
+        inOrder.verify(testListenerMock, times(1)).onFinalActionsStart(fixture);
+        inOrder.verify(testListenerMock, times(1)).onFinalActionsEnd(fixture);
+        inOrder.verify(testListenerMock, times(1)).onTestExecutionEnd(fixture);
+        inOrder.verify(testListenerMock, times(1)).onTestFailure(fixture, fixture.getTestResult().getCause());
+        inOrder.verify(testListenerMock, times(1)).onAfterTestStart(fixture);
+        inOrder.verify(testListenerMock, times(1)).onAfterTestEnd(fixture);
+        inOrder.verify(testListenerMock, times(1)).onTestEnd(fixture);
+        verifyNoMoreInteractions(testListenerMock);
+    }
+
+    @Test
+    public void testTestListenerEventsWithFinalActionFailedTestResult() {
+
+        TestListener testListenerMock = mock();
+        context.getTestListeners().addTestListener(testListenerMock);
+
+        List<BeforeTest> beforeTestListMock = List.of(mock(BeforeTest.class));
+        context.setBeforeTest(beforeTestListMock);
+
+        TestAction finalActionMock = mock();
+        fixture.addFinalAction(finalActionMock);
+        doThrow(new CitrusRuntimeException()).when(finalActionMock).execute(context);
+
+        List<AfterTest> afterTestListMock = List.of(mock(AfterTest.class));
+        context.setAfterTest(afterTestListMock);
+
+        fixture.doExecute(context);
+        assertThrows(TestCaseFailedException.class, () -> fixture.finish(context));
+
+        InOrder inOrder = inOrder(testListenerMock);
+        inOrder.verify(testListenerMock, times(1)).onTestStart(fixture);
+        inOrder.verify(testListenerMock, times(1)).onBeforeTestStart(fixture);
+        inOrder.verify(testListenerMock, times(1)).onBeforeTestEnd(fixture);
+        inOrder.verify(testListenerMock, times(1)).onTestExecutionStart(fixture);
+        inOrder.verify(testListenerMock, times(1)).onFinalActionsStart(fixture);
+        inOrder.verify(testListenerMock, times(1)).onFinalActionsEnd(fixture);
+        inOrder.verify(testListenerMock, times(1)).onTestExecutionEnd(fixture);
+        inOrder.verify(testListenerMock, times(1)).onTestFailure(fixture, fixture.getTestResult().getCause());
+        inOrder.verify(testListenerMock, times(1)).onAfterTestStart(fixture);
+        inOrder.verify(testListenerMock, times(1)).onAfterTestEnd(fixture);
+        inOrder.verify(testListenerMock, times(1)).onTestEnd(fixture);
+        verifyNoMoreInteractions(testListenerMock);
+    }
+
+    @Test
+    public void testListenerEventOnTestSkipped() {
+        TestCaseMetaInfo testCaseMetaInfoMock = new TestCaseMetaInfo();
+        testCaseMetaInfoMock.setStatus(Status.DISABLED);
+        fixture.setMetaInfo(testCaseMetaInfoMock);
+        TestListener testListenerMock = mock();
+        context.getTestListeners().addTestListener(testListenerMock);
+
+        fixture.doExecute(context);
+        fixture.finish(context);
+
+        InOrder inOrder = inOrder(testListenerMock);
+        inOrder.verify(testListenerMock, times(1)).onTestSkipped(fixture);
+        verifyNoMoreInteractions(testListenerMock);
+    }
+
+    @Test
     public void testExecutionWithVariables() {
         fixture.setName("MyTestCase");
 
@@ -291,9 +422,8 @@ public class DefaultTestCaseTest extends UnitTestSupport {
     }
 
     private static Duration verifyDurationHasBeenMeasured(TestResult fixture) {
-        var testResult = fixture;
-        assertNotNull(testResult);
-        assertNotNull(testResult.getDuration());
-        return testResult.getDuration();
+        assertNotNull(fixture);
+        assertNotNull(fixture.getDuration());
+        return fixture.getDuration();
     }
 }

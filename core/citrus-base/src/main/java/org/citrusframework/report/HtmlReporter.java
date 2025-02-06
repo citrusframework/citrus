@@ -47,7 +47,7 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
     private static final Logger logger = LoggerFactory.getLogger(HtmlReporter.class);
 
     /** Map holding additional information of test cases */
-    private Map<String, ResultDetail> details = new HashMap<>();
+    private final Map<String, ResultDetail> details = new HashMap<>();
 
     /** Static resource for the HTML test report template */
     private String reportTemplate = HtmlReporterSettings.getReportTemplate();
@@ -119,8 +119,6 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
 
     /**
      * Reads citrus logo png image and converts to base64 encoded string for inline HTML image display.
-     * @return
-     * @throws IOException
      */
     private String getLogoImageData() {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -158,7 +156,6 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
      * Gets the code section from test case XML which is responsible for the
      * error.
      * @param cause the error cause.
-     * @return
      */
     private String getCodeSnippetHtml(Throwable cause) {
         StringBuilder codeSnippet = new StringBuilder();
@@ -229,7 +226,6 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
     /**
      * Construct HTML code snippet for stack trace information.
      * @param cause the causing error.
-     * @return
      */
     private String getStackTraceHtml(Throwable cause) {
         StringBuilder stackTraceBuilder = new StringBuilder();
@@ -243,7 +239,7 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
         }
 
         return "<tr><td colspan=\"2\">" +
-        		"<div class=\"error-detail\"><pre>" + stackTraceBuilder.toString() +
+        		"<div class=\"error-detail\"><pre>" + stackTraceBuilder +
         		"</pre>" + getCodeSnippetHtml(cause) + "</div></td></tr>";
     }
 
@@ -253,7 +249,7 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
     }
 
     @Override
-    public void onTestFinish(TestCase test) {
+    public void onTestExecutionEnd(TestCase test) {
         // do nothing
     }
 
@@ -292,7 +288,6 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
     /**
      * Sets the reportFileName property.
      *
-     * @param reportFileName
      */
     public void setReportFileName(String reportFileName) {
         this.reportFileName = reportFileName;
@@ -301,7 +296,6 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
     /**
      * Gets the reportFileName.
      *
-     * @return
      */
     @Override
     public String getReportFileName() {
@@ -311,7 +305,6 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
     /**
      * Sets the dateFormat property.
      *
-     * @param dateFormat
      */
     public void setDateFormat(DateFormat dateFormat) {
         this.dateFormat = dateFormat;
@@ -320,7 +313,6 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
     /**
      * Sets the reportTemplate property.
      *
-     * @param reportTemplate
      */
     public void setReportTemplate(String reportTemplate) {
         this.reportTemplate = reportTemplate;
@@ -329,7 +321,6 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
     /**
      * Sets the testDetailTemplate property.
      *
-     * @param testDetailTemplate
      */
     public void setTestDetailTemplate(String testDetailTemplate) {
         this.testDetailTemplate = testDetailTemplate;
@@ -337,7 +328,6 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
 
     /**
      * Sets the enabled property.
-     * @param enabled
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;

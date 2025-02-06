@@ -77,11 +77,11 @@ public class TestReportersTest {
     }
 
     @Test
-    public void onTestFinishAddsTestResultToList() {
+    public void onTestExecutionEndAddsTestResultToList() {
         var testResultMock = mock(TestResult.class);
         doReturn(testResultMock).when(testCaseMock).getTestResult();
 
-        fixture.onTestFinish(testCaseMock);
+        fixture.onTestExecutionEnd(testCaseMock);
 
         var testResults = fixture.getTestResults().asList();
         assertEquals(1, testResults.size());
@@ -89,10 +89,10 @@ public class TestReportersTest {
     }
 
     @Test
-    public void onTestFinishIgnoresNullTestResult() {
+    public void onTestExecutionEndIgnoresNullTestResult() {
         doReturn(null).when(testCaseMock).getTestResult();
 
-        fixture.onTestFinish(testCaseMock);
+        fixture.onTestExecutionEnd(testCaseMock);
 
         var testResults = fixture.getTestResults().asList();
         assertEquals(0, testResults.size());

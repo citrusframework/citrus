@@ -446,7 +446,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         try {
             testListeners.onTestStart(dummyTest);
             testListeners.onTestFailure(dummyTest, exception);
-            testListeners.onTestFinish(dummyTest);
+            testListeners.onTestExecutionEnd(dummyTest);
         } catch (Exception e) {
             logger.warn("Executing error handler listener failed!", e);
         }

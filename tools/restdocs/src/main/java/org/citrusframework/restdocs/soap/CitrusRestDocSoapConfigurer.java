@@ -96,7 +96,7 @@ public class CitrusRestDocSoapConfigurer extends RestDocumentationConfigurer<Cit
     }
 
     @Override
-    public void onTestFinish(TestCase test) {
+    public void onTestExecutionEnd(TestCase test) {
         if (contextProvider instanceof ManualRestDocumentation) {
             ((ManualRestDocumentation) contextProvider).afterTest();
         }

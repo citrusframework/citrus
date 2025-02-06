@@ -37,9 +37,26 @@ public class TestListeners implements TestListenerAware {
         }
     }
 
+    /**
+     * @deprecated use on {@link #onTestExecutionEnd(TestCase)}
+     */
+    @Deprecated(forRemoval = true)
     public void onTestFinish(TestCase test) {
         for (TestListener listener : testListeners) {
             listener.onTestFinish(test);
+        }
+    }
+
+    public void onTestExecutionStart(TestCase test) {
+        for (TestListener listener : testListeners) {
+            listener.onTestExecutionStart(test);
+        }
+
+    }
+
+    public void onTestExecutionEnd(TestCase test) {
+        for (TestListener listener : testListeners) {
+            listener.onTestExecutionEnd(test);
         }
     }
 
@@ -52,6 +69,48 @@ public class TestListeners implements TestListenerAware {
     public void onTestStart(TestCase test) {
         for (TestListener listener : testListeners) {
             listener.onTestStart(test);
+        }
+    }
+
+    public void onTestFinalization(TestCase test) {
+        for (TestListener listener : testListeners) {
+            listener.onTestEnd(test);
+        }
+    }
+
+    public void onFinalActionsStart(TestCase test) {
+        for (TestListener listener : testListeners) {
+            listener.onFinalActionsStart(test);
+        }
+    }
+
+    public void onFinalActionsEnd(TestCase test) {
+        for (TestListener listener : testListeners) {
+            listener.onFinalActionsEnd(test);
+        }
+    }
+
+    public void onBeforeTestEnd(TestCase test) {
+        for (TestListener listener : testListeners) {
+            listener.onBeforeTestEnd(test);
+        }
+    }
+
+    public void onAfterTestEnd(TestCase test) {
+        for (TestListener listener : testListeners) {
+            listener.onAfterTestEnd(test);
+        }
+    }
+
+    public void onBeforeTestStart(TestCase test) {
+        for (TestListener listener : testListeners) {
+            listener.onBeforeTestStart(test);
+        }
+    }
+
+    public void onAfterTestStart(TestCase test) {
+        for (TestListener listener : testListeners) {
+            listener.onAfterTestStart(test);
         }
     }
 
@@ -70,7 +129,6 @@ public class TestListeners implements TestListenerAware {
 
     /**
      * Obtains the testListeners.
-     * @return
      */
     public List<TestListener> getTestListeners() {
         return testListeners;

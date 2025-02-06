@@ -20,36 +20,105 @@ import org.citrusframework.TestCase;
 
 /**
  * Test listener interface. Listeners invoked on test start, finish, failure, skip, success.
- *
  */
 public interface TestListener {
     /**
-     * Invoked when test gets started
-     * @param test
+     * Invoked when test when a test starts execution
      */
     void onTestStart(TestCase test);
 
     /**
-     * Invoked when test gets finished
-     * @param test
+     * @deprecated use on {@link #onTestExecutionEnd(TestCase)}
      */
-    void onTestFinish(TestCase test);
+    @Deprecated(forRemoval = true)
+    default void onTestFinish(TestCase test) {
+        // Do nothing
+    }
 
     /**
-     * Invoked when test finished with success
-     * @param test
+     * Invoked when test execution has ended (after final actions execution and
+     * before {@link org.citrusframework.container.AfterTest} execution)
+     *
+     * @see #onTestEnd(TestCase)
+     */
+    default void onTestExecutionStart(TestCase test) {
+        onTestFinish(test);
+    }
+
+
+    /**
+     * Invoked when test execution has ended (after final actions execution and
+     * before {@link org.citrusframework.container.AfterTest} execution)
+     *
+     * @see #onTestEnd(TestCase)
+     */
+    default void onTestExecutionEnd(TestCase test) {
+        onTestFinish(test);
+    }
+
+    /**
+     * Invoked at the very end of test execution
+     *
+     * @see #onTestFinish(TestCase)
+     */
+    default void onTestEnd(TestCase test) {
+        // Default implementation does nothing
+    }
+
+    /**
+     * Invoked when a test finishes successfully
      */
     void onTestSuccess(TestCase test);
 
     /**
-     * Invoked when test finished with failure
-     * @param test
+     * Invoked when a test finishes with failure
      */
     void onTestFailure(TestCase test, Throwable cause);
 
     /**
-     * Invoked when test is skipped
-     * @param test
+     * Invoked when a test is skipped
      */
     void onTestSkipped(TestCase test);
+
+    /**
+     * Invoked when final actions start, only if any exist
+     */
+    default void onFinalActionsStart(TestCase test) {
+        // Default implementation does nothing
+    }
+
+    /**
+     * Invoked after final actions have completely finished, only if any exist
+     */
+    default void onFinalActionsEnd(TestCase test) {
+        // Default implementation does nothing
+    }
+
+    /**
+     * Invoked when {@link org.citrusframework.container.BeforeTest} execution starts, only if any exist
+     */
+    default void onBeforeTestStart(TestCase test) {
+        // Default implementation does nothing
+    }
+
+    /**
+     * Invoked when {@link org.citrusframework.container.BeforeTest} execution ends, only if any exist
+     */
+    default void onBeforeTestEnd(TestCase test) {
+        // Default implementation does nothing
+    }
+
+    /**
+     * Invoked when {@link org.citrusframework.container.AfterTest} execution starts, only if any exist
+     */
+    default void onAfterTestStart(TestCase test) {
+        // Default implementation does nothing
+    }
+
+    /**
+     * Invoked when {@link org.citrusframework.container.AfterTest} execution ends, only if any exist
+     */
+    default void onAfterTestEnd(TestCase test) {
+        // Default implementation does nothing
+    }
 }

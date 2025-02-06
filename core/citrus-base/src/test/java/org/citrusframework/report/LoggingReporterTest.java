@@ -93,7 +93,7 @@ public class LoggingReporterTest {
         fixture.onTestStart(test);
         fixture.onTestActionStart(test, echo);
         fixture.onTestActionFinish(test, echo);
-        fixture.onTestFinish(test);
+        fixture.onTestExecutionEnd(test);
         fixture.onTestSuccess(test);
         fixture.onFinish();
         fixture.onFinishSuccess();
@@ -123,7 +123,7 @@ public class LoggingReporterTest {
         fixture.onStartSuccess();
         fixture.onTestStart(test);
         fixture.onTestActionStart(test, echo);
-        fixture.onTestFinish(test);
+        fixture.onTestExecutionEnd(test);
         fixture.onTestFailure(test, cause);
         fixture.onFinish();
         fixture.onFinishSuccess();
@@ -171,7 +171,7 @@ public class LoggingReporterTest {
         fixture.onStart();
         fixture.onStartSuccess();
         fixture.onTestStart(test);
-        fixture.onTestFinish(test);
+        fixture.onTestExecutionEnd(test);
         fixture.onTestSuccess(test);
         fixture.onTestSkipped(new DefaultTestCase());
         fixture.onFinish();
@@ -207,7 +207,7 @@ public class LoggingReporterTest {
         fixture.onTestStart(test);
         fixture.onTestActionStart(test, echo);
         fixture.onTestActionFinish(test, echo);
-        fixture.onTestFinish(test);
+        fixture.onTestExecutionEnd(test);
         fixture.onTestSuccess(test);
         fixture.onFinish();
         fixture.onFinishFailure(new CitrusRuntimeException("Failed!"));
