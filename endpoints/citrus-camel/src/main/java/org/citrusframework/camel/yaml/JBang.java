@@ -22,13 +22,12 @@ import java.util.List;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.AbstractCamelJBangAction;
 import org.citrusframework.camel.actions.AddCamelPluginAction;
-import org.citrusframework.camel.actions.CamelPluginAction;
-import org.citrusframework.camel.actions.CamelRunIntegrationAction;
-import org.citrusframework.camel.actions.CamelStopIntegrationAction;
-import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
 import org.citrusframework.camel.actions.CamelKubernetesDeleteAction;
 import org.citrusframework.camel.actions.CamelKubernetesRunIntegrationAction;
 import org.citrusframework.camel.actions.CamelKubernetesVerifyAction;
+import org.citrusframework.camel.actions.CamelRunIntegrationAction;
+import org.citrusframework.camel.actions.CamelStopIntegrationAction;
+import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
 import org.citrusframework.camel.jbang.CamelJBangSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resources;
@@ -43,6 +42,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
     protected VerifyIntegration verify;
 
     protected Plugin plugin;
+    protected Kubernetes kubernetes;
 
     public void setCamelVersion(String camelVersion) {
         this.camelVersion = camelVersion;
@@ -92,6 +92,14 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
         return plugin;
     }
 
+    public void setKubernetes(Kubernetes kubernetes) {
+        this.kubernetes = kubernetes;
+    }
+
+    public Kubernetes getKubernetes() {
+        return kubernetes;
+    }
+
     @Override
     public AbstractCamelJBangAction.Builder<?, ?> getBuilder() {
         AbstractCamelJBangAction.Builder<?, ?> builder;
@@ -103,6 +111,8 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             builder = verify.getBuilder();
         } else if (plugin != null) {
             builder = plugin.getBuilder();
+        } else if (kubernetes != null) {
+            builder = kubernetes.getBuilder();
         } else {
             throw new CitrusRuntimeException("Missing Camel JBang action specification");
         }
@@ -365,74 +375,21 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
         }
     }
 
-    public static class Plugin implements CamelActionBuilderWrapper<CamelPluginAction.Builder> {
+    public static class Plugin implements CamelActionBuilderWrapper<AbstractCamelJBangAction.Builder<?, ?>> {
 
-        private final CamelPluginAction.Builder builder = new CamelPluginAction.Builder();
+        private AbstractCamelJBangAction.Builder<?, ?> builder;
 
         public void setAdd(Add add) {
             AddCamelPluginAction.Builder builder = new AddCamelPluginAction.Builder();
             builder.pluginName(add.getName());
-            if (add.getArgs() != null && add.getArgs().size() > 0) {
-                add.getArgs().forEach(arg -> builder.withArg(arg));
+            if (add.getArgs() != null) {
+                add.getArgs().forEach(builder::withArg);
             }
-            this.builder.addPluginAction(builder.build());
-        }
-
-        public void setKubernetes(Kubernetes kubernetes) {
-            if (kubernetes.getRun() != null) {
-                CamelKubernetesRunIntegrationAction.Builder builder = new CamelKubernetesRunIntegrationAction.Builder();
-                if (kubernetes.getRun().getIntegration().getFile() != null) {
-                    builder.integration(Resources.create(kubernetes.getRun().getIntegration().getFile()));
-                }
-                builder.runtime(kubernetes.getRun().getRuntime())
-                        .imageRegistry(kubernetes.getRun().getImageRegistry())
-                        .imageBuilder(kubernetes.getRun().getImageBuilder())
-                        .clusterType(kubernetes.getRun().getClusterType());
-                if (kubernetes.getRun().getBuildProperties() != null && kubernetes.getRun().getBuildProperties().size() > 0) {
-                    kubernetes.getRun().getBuildProperties().forEach(property -> builder.withBuildProperty(property));
-                }
-                if (kubernetes.getRun().getProperties() != null && kubernetes.getRun().getProperties().size() > 0) {
-                    kubernetes.getRun().getProperties().forEach(property -> builder.withProperty(property));
-                }
-                if (kubernetes.getRun().getTraits() != null && kubernetes.getRun().getTraits().size() > 0) {
-                    kubernetes.getRun().getTraits().forEach(trait -> builder.withTrait(trait));
-                }
-                if (kubernetes.getRun().getArgs() != null && kubernetes.getRun().getArgs().size() > 0) {
-                    kubernetes.getRun().getArgs().forEach(arg -> builder.withArg(arg));
-                }
-                builder.waitForRunningState(kubernetes.getRun().isWaitForRunningState());
-                this.builder.kubernetesRunIntegrationAction(builder.build());
-            } else if (kubernetes.getVerify() != null) {
-                CamelKubernetesVerifyAction.Builder builder = new CamelKubernetesVerifyAction.Builder();
-                builder.integration(kubernetes.getVerify().getIntegration())
-                        .label(kubernetes.getVerify().getLabel())
-                        .namespace(kubernetes.getVerify().getNamespace())
-                        .waitForLogMessage(kubernetes.getVerify().getLogMessage())
-                        .maxAttempts(kubernetes.getVerify().getMaxAttempts())
-                        .delayBetweenAttempts(kubernetes.getVerify().getDelayBetweenAttempts())
-                        .printLogs(kubernetes.getVerify().isPrintLogs());
-                if (kubernetes.getVerify().getArgs() != null && kubernetes.getVerify().getArgs().size() > 0) {
-                    kubernetes.getVerify().getArgs().forEach(arg -> builder.withArg(arg));
-                }
-                this.builder.verifyKubernetesIntegrationAction(builder.build());
-            } else if (kubernetes.getDelete() != null) {
-                CamelKubernetesDeleteAction.Builder builder = new CamelKubernetesDeleteAction.Builder();
-                builder.clusterType(kubernetes.getDelete().getClusterType())
-                        .workingDir(kubernetes.getDelete().getWorkingDir())
-                        .namespace(kubernetes.getDelete().getNamespace());
-                if (kubernetes.getDelete().getIntegration().getFile() != null) {
-                    builder.integration(Resources.create(kubernetes.getDelete().getIntegration().getFile()));
-                }
-                if (kubernetes.getDelete().getIntegration().getName() != null) {
-                    builder.integration(kubernetes.getDelete().getIntegration().getName());
-                }
-                this.builder.deleteKubernetesAction(builder.build());
-            }
-
+            this.builder = builder;
         }
 
         @Override
-        public CamelPluginAction.Builder getBuilder() {
+        public AbstractCamelJBangAction.Builder<?, ?> getBuilder() {
             return builder;
         }
 
@@ -460,296 +417,333 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 this.args = args;
             }
         }
+    }
 
-        public static class Kubernetes {
-            protected Run run;
-            protected Verify verify;
-            protected Delete delete;
+    public static class Kubernetes implements CamelActionBuilderWrapper<AbstractCamelJBangAction.Builder<?, ?>> {
 
-            public Run getRun() {
-                return run;
+        private AbstractCamelJBangAction.Builder<?, ?> builder;
+
+        @Override
+        public AbstractCamelJBangAction.Builder<?, ?> getBuilder() {
+            return builder;
+        }
+
+        public void setRun(Run run) {
+            CamelKubernetesRunIntegrationAction.Builder builder = new CamelKubernetesRunIntegrationAction.Builder();
+            if (run.getIntegration().getFile() != null) {
+                builder.integration(Resources.create(run.getIntegration().getFile()));
+            }
+            builder.runtime(run.getRuntime())
+                    .imageRegistry(run.getImageRegistry())
+                    .imageBuilder(run.getImageBuilder())
+                    .clusterType(run.getClusterType());
+
+            if (run.getBuildProperties() != null) {
+                run.getBuildProperties().forEach(builder::withBuildProperty);
+            }
+            if (run.getProperties() != null) {
+                run.getProperties().forEach(builder::withProperty);
+            }
+            if (run.getTraits() != null) {
+                run.getTraits().forEach(builder::withTrait);
+            }
+            if (run.getArgs() != null) {
+                run.getArgs().forEach(builder::withArg);
+            }
+            builder.waitForRunningState(run.isWaitForRunningState());
+            this.builder = builder;
+        }
+
+        public void setVerify(Verify verify) {
+            CamelKubernetesVerifyAction.Builder builder = new CamelKubernetesVerifyAction.Builder();
+            builder.integration(verify.getIntegration())
+                    .label(verify.getLabel())
+                    .namespace(verify.getNamespace())
+                    .waitForLogMessage(verify.getLogMessage())
+                    .maxAttempts(verify.getMaxAttempts())
+                    .delayBetweenAttempts(verify.getDelayBetweenAttempts())
+                    .printLogs(verify.isPrintLogs());
+
+            if (verify.getArgs() != null) {
+                verify.getArgs().forEach(builder::withArg);
+            }
+            this.builder = builder;
+        }
+
+        public void setDelete(Delete delete) {
+            CamelKubernetesDeleteAction.Builder builder = new CamelKubernetesDeleteAction.Builder();
+            builder.clusterType(delete.getClusterType())
+                    .workingDir(delete.getWorkingDir())
+                    .namespace(delete.getNamespace());
+            if (delete.getIntegration().getFile() != null) {
+                builder.integration(Resources.create(delete.getIntegration().getFile()));
+            }
+            if (delete.getIntegration().getName() != null) {
+                builder.integration(delete.getIntegration().getName());
+            }
+            this.builder = builder;
+        }
+
+        public static class Run {
+
+            protected Integration integration;
+            protected String runtime;
+            protected String imageRegistry;
+            protected String imageBuilder;
+            protected String clusterType;
+
+            protected List<String> buildProperties;
+            protected List<String> properties;
+            protected List<String> traits;
+            protected List<String> args;
+
+            private boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
+
+            public Integration getIntegration() {
+                return integration;
             }
 
-            public void setRun(Run run) {
-                this.run = run;
+            public void setIntegration(Integration integration) {
+                this.integration = integration;
             }
 
-            public Verify getVerify() {
-                return verify;
+            public String getRuntime() {
+                return runtime;
             }
 
-            public void setVerify(Verify verify) {
-                this.verify = verify;
+            public void setRuntime(String runtime) {
+                this.runtime = runtime;
             }
 
-            public Delete getDelete() {
-                return delete;
+            public String getImageRegistry() {
+                return imageRegistry;
             }
 
-            public void setDelete(Delete delete) {
-                this.delete = delete;
+            public void setImageRegistry(String imageRegistry) {
+                this.imageRegistry = imageRegistry;
             }
 
-            public static class Run {
-
-                protected Integration integration;
-                protected String runtime;
-                protected String imageRegistry;
-                protected String imageBuilder;
-                protected String clusterType;
-
-                protected List<String> buildProperties;
-                protected List<String> properties;
-                protected List<String> traits;
-                protected List<String> args;
-
-                private boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
-
-                public Integration getIntegration() {
-                    return integration;
-                }
-
-                public void setIntegration(Integration integration) {
-                    this.integration = integration;
-                }
-
-                public String getRuntime() {
-                    return runtime;
-                }
-
-                public void setRuntime(String runtime) {
-                    this.runtime = runtime;
-                }
-
-                public String getImageRegistry() {
-                    return imageRegistry;
-                }
-
-                public void setImageRegistry(String imageRegistry) {
-                    this.imageRegistry = imageRegistry;
-                }
-
-                public String getImageBuilder() {
-                    return imageBuilder;
-                }
-
-                public void setImageBuilder(String imageBuilder) {
-                    this.imageBuilder = imageBuilder;
-                }
-
-                public String getClusterType() {
-                    return clusterType;
-                }
-
-                public void setClusterType(String clusterType) {
-                    this.clusterType = clusterType;
-                }
-
-                public List<String> getBuildProperties() {
-                    if (buildProperties == null) {
-                        buildProperties = new ArrayList<>();
-                    }
-                    return this.buildProperties;
-                }
-
-                public void setBuildProperties(List<String> buildProperties) {
-                    this.buildProperties = buildProperties;
-                }
-
-                public List<String> getProperties() {
-                    if (properties == null) {
-                        properties = new ArrayList<>();
-                    }
-                    return this.properties;
-                }
-
-                public void setProperties(List<String> properties) {
-                    this.properties = properties;
-                }
-
-                public void setTraits(List<String> traits) {
-                    this.traits = traits;
-                }
-
-
-                public List<String> getTraits() {
-                    if (traits == null) {
-                        traits = new ArrayList<>();
-                    }
-                    return this.traits;
-                }
-
-                public List<String> getArgs() {
-                    if (args == null) {
-                        args = new ArrayList<>();
-                    }
-                    return this.args;
-                }
-
-                public void setArgs(List<String> args) {
-                    this.args = args;
-                }
-
-                public boolean isWaitForRunningState() {
-                    return waitForRunningState;
-                }
-
-                public void setWaitForRunningState(boolean enabled) {
-                    this.waitForRunningState = enabled;
-                }
-
-                public static class Integration {
-                    protected String file;
-
-                    public void setFile(String file) {
-                        this.file = file;
-                    }
-
-                    public String getFile() {
-                        return file;
-                    }
-                }
+            public String getImageBuilder() {
+                return imageBuilder;
             }
 
-            public static class Verify {
-                protected String integration;
-                protected String label;
-                private String namespace;
-
-                private String logMessage;
-                private int maxAttempts = CamelSettings.getMaxAttempts();
-                private long delayBetweenAttempts = CamelSettings.getDelayBetweenAttempts();
-
-                private boolean printLogs = CamelSettings.isPrintLogs();
-
-                protected List<String> args;
-
-                public String getIntegration() {
-                    return integration;
-                }
-
-                public void setIntegration(String integration) {
-                    this.integration = integration;
-                }
-
-                public String getLabel() {
-                    return label;
-                }
-
-                public void setLabel(String label) {
-                    this.label = label;
-                }
-
-                public String getNamespace() {
-                    return namespace;
-                }
-
-                public void setNamespace(String namespace) {
-                    this.namespace = namespace;
-                }
-
-                public String getLogMessage() {
-                    return logMessage;
-                }
-
-                public void setLogMessage(String logMessage) {
-                    this.logMessage = logMessage;
-                }
-
-                public int getMaxAttempts() {
-                    return maxAttempts;
-                }
-
-                public void setMaxAttempts(int maxAttempts) {
-                    this.maxAttempts = maxAttempts;
-                }
-
-                public long getDelayBetweenAttempts() {
-                    return delayBetweenAttempts;
-                }
-
-                public void setDelayBetweenAttempts(long delayBetweenAttempts) {
-                    this.delayBetweenAttempts = delayBetweenAttempts;
-                }
-
-                public boolean isPrintLogs() {
-                    return printLogs;
-                }
-
-                public void setPrintLogs(boolean printLogs) {
-                    this.printLogs = printLogs;
-                }
-
-
-                public List<String> getArgs() {
-                    if (args == null) {
-                        args = new ArrayList<>();
-                    }
-                    return this.args;
-                }
+            public void setImageBuilder(String imageBuilder) {
+                this.imageBuilder = imageBuilder;
             }
 
-            public static class Delete {
-                protected Integration integration;
+            public String getClusterType() {
+                return clusterType;
+            }
 
-                protected String clusterType;
-                protected String workingDir;
-                protected String namespace;
+            public void setClusterType(String clusterType) {
+                this.clusterType = clusterType;
+            }
 
-                public String getClusterType() {
-                    return clusterType;
+            public List<String> getBuildProperties() {
+                if (buildProperties == null) {
+                    buildProperties = new ArrayList<>();
+                }
+                return this.buildProperties;
+            }
+
+            public void setBuildProperties(List<String> buildProperties) {
+                this.buildProperties = buildProperties;
+            }
+
+            public List<String> getProperties() {
+                if (properties == null) {
+                    properties = new ArrayList<>();
+                }
+                return this.properties;
+            }
+
+            public void setProperties(List<String> properties) {
+                this.properties = properties;
+            }
+
+            public void setTraits(List<String> traits) {
+                this.traits = traits;
+            }
+
+
+            public List<String> getTraits() {
+                if (traits == null) {
+                    traits = new ArrayList<>();
+                }
+                return this.traits;
+            }
+
+            public List<String> getArgs() {
+                if (args == null) {
+                    args = new ArrayList<>();
+                }
+                return this.args;
+            }
+
+            public void setArgs(List<String> args) {
+                this.args = args;
+            }
+
+            public boolean isWaitForRunningState() {
+                return waitForRunningState;
+            }
+
+            public void setWaitForRunningState(boolean enabled) {
+                this.waitForRunningState = enabled;
+            }
+
+            public static class Integration {
+                protected String file;
+
+                public void setFile(String file) {
+                    this.file = file;
                 }
 
-                public void setClusterType(String clusterType) {
-                    this.clusterType = clusterType;
+                public String getFile() {
+                    return file;
+                }
+            }
+        }
+
+        public static class Verify {
+            protected String integration;
+            protected String label;
+            private String namespace;
+
+            private String logMessage;
+            private int maxAttempts = CamelSettings.getMaxAttempts();
+            private long delayBetweenAttempts = CamelSettings.getDelayBetweenAttempts();
+
+            private boolean printLogs = CamelSettings.isPrintLogs();
+
+            protected List<String> args;
+
+            public String getIntegration() {
+                return integration;
+            }
+
+            public void setIntegration(String integration) {
+                this.integration = integration;
+            }
+
+            public String getLabel() {
+                return label;
+            }
+
+            public void setLabel(String label) {
+                this.label = label;
+            }
+
+            public String getNamespace() {
+                return namespace;
+            }
+
+            public void setNamespace(String namespace) {
+                this.namespace = namespace;
+            }
+
+            public String getLogMessage() {
+                return logMessage;
+            }
+
+            public void setLogMessage(String logMessage) {
+                this.logMessage = logMessage;
+            }
+
+            public int getMaxAttempts() {
+                return maxAttempts;
+            }
+
+            public void setMaxAttempts(int maxAttempts) {
+                this.maxAttempts = maxAttempts;
+            }
+
+            public long getDelayBetweenAttempts() {
+                return delayBetweenAttempts;
+            }
+
+            public void setDelayBetweenAttempts(long delayBetweenAttempts) {
+                this.delayBetweenAttempts = delayBetweenAttempts;
+            }
+
+            public boolean isPrintLogs() {
+                return printLogs;
+            }
+
+            public void setPrintLogs(boolean printLogs) {
+                this.printLogs = printLogs;
+            }
+
+
+            public List<String> getArgs() {
+                if (args == null) {
+                    args = new ArrayList<>();
+                }
+                return this.args;
+            }
+        }
+
+        public static class Delete {
+            protected Integration integration;
+
+            protected String clusterType;
+            protected String workingDir;
+            protected String namespace;
+
+            public String getClusterType() {
+                return clusterType;
+            }
+
+            public void setClusterType(String clusterType) {
+                this.clusterType = clusterType;
+            }
+
+            public String getWorkingDir() {
+                return workingDir;
+            }
+
+            public void setWorkingDir(String workingDir) {
+                this.workingDir = workingDir;
+            }
+
+            public String getNamespace() {
+                return namespace;
+            }
+
+            public void setNamespace(String namespace) {
+                this.namespace = namespace;
+            }
+
+            public Integration getIntegration() {
+                return integration;
+            }
+
+            public void setIntegration(Integration integration) {
+                this.integration = integration;
+            }
+
+
+            public static class Integration {
+                protected String file;
+                protected String name;
+
+                public void setFile(String file) {
+                    this.file = file;
                 }
 
-                public String getWorkingDir() {
-                    return workingDir;
+                public String getFile() {
+                    return file;
                 }
 
-                public void setWorkingDir(String workingDir) {
-                    this.workingDir = workingDir;
+                public String getName() {
+                    return name;
                 }
 
-                public String getNamespace() {
-                    return namespace;
-                }
-
-                public void setNamespace(String namespace) {
-                    this.namespace = namespace;
-                }
-
-                public Integration getIntegration() {
-                    return integration;
-                }
-
-                public void setIntegration(Integration integration) {
-                    this.integration = integration;
-                }
-
-
-                public static class Integration {
-                    protected String file;
-                    protected String name;
-
-                    public void setFile(String file) {
-                        this.file = file;
-                    }
-
-                    public String getFile() {
-                        return file;
-                    }
-
-                    public String getName() {
-                        return name;
-                    }
-
-                    public void setName(String name) {
-                        this.name = name;
-                    }
+                public void setName(String name) {
+                    this.name = name;
                 }
             }
         }
     }
+
 }

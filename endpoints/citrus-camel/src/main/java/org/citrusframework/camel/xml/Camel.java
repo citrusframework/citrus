@@ -254,7 +254,6 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
 
             this.builder = builder;
         } else if (jbang.getPlugin() != null) {
-
             if (jbang.getPlugin().getAdd() != null) {
                 AddCamelPluginAction.Builder builder = new AddCamelPluginAction.Builder();
                 builder.pluginName(jbang.getPlugin().getAdd().getName());
@@ -262,78 +261,75 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                     builder.withArgs(jbang.getPlugin().getAdd().getArgLine().split(" "));
                 }
                 this.builder = builder;
-            } else if (jbang.getPlugin().getKubernetes() != null) {
-                if (jbang.getPlugin().getKubernetes().getRun() != null) {
-                    CamelKubernetesRunIntegrationAction.Builder builder = new CamelKubernetesRunIntegrationAction.Builder();
+            }
+        } else if (jbang.getKubernetes() != null) {
+            if (jbang.getKubernetes().getRun() != null) {
+                CamelKubernetesRunIntegrationAction.Builder builder = new CamelKubernetesRunIntegrationAction.Builder();
 
-                    if (jbang.getPlugin().getKubernetes().getRun().getIntegration().getFile() != null) {
-                        builder.integration(Resources.create(jbang.getPlugin().getKubernetes().getRun().getIntegration().getFile()));
-                    }
-
-                    builder.runtime(jbang.getPlugin().getKubernetes().getRun().getRuntime())
-                            .imageBuilder(jbang.getPlugin().getKubernetes().getRun().getImageBuilder())
-                            .imageRegistry(jbang.getPlugin().getKubernetes().getRun().getImageRegistry())
-                            .clusterType(jbang.getPlugin().getKubernetes().getRun().getClusterType());
-
-                    if (jbang.getPlugin().getKubernetes().getRun().getBuildProperties() != null) {
-                        jbang.getPlugin().getKubernetes().getRun().getBuildProperties()
-                                .getProperties()
-                                .forEach(property -> builder.withBuildProperties(property.getName() + "=\"" + property.getValue() + "\""));
-                    }
-                    if (jbang.getPlugin().getKubernetes().getRun().getProperties() != null) {
-                        jbang.getPlugin().getKubernetes().getRun().getProperties()
-                                .getProperties()
-                                .forEach(property -> builder.withProperties(property.getName() + "=\"" + property.getValue() + "\""));
-                    }
-                    if (jbang.getPlugin().getKubernetes().getRun().getTraits() != null) {
-                        jbang.getPlugin().getKubernetes().getRun().getTraits()
-                                .getTraits()
-                                .forEach(trait -> builder.withTrait(trait.getName() + "=\"" + trait.getValue() + "\""));
-                    }
-                    if (jbang.getPlugin().getKubernetes().getRun().getArgs() != null) {
-                        builder.withArgs(jbang.getPlugin().getKubernetes().getRun().getArgs().getArgs().toArray(String[]::new));
-                    }
-
-
-                    builder.waitForRunningState(jbang.getPlugin().getKubernetes().getRun().isWaitForRunningState());
-
-                    this.builder = builder;
-                } else if (jbang.getPlugin().getKubernetes().getVerify() != null) {
-                    CamelKubernetesVerifyAction.Builder builder = new CamelKubernetesVerifyAction.Builder();
-
-                    builder.integration(jbang.getPlugin().getKubernetes().getVerify().getIntegration())
-                            .label(jbang.getPlugin().getKubernetes().getVerify().getLabel())
-                            .namespace(jbang.getPlugin().getKubernetes().getVerify().getNamespace())
-                            .printLogs(jbang.getPlugin().getKubernetes().getVerify().isPrintLogs())
-                            .maxAttempts(jbang.getPlugin().getKubernetes().getVerify().getMaxAttempts())
-                            .delayBetweenAttempts(jbang.getPlugin().getKubernetes().getVerify().getDelayBetweenAttempts());
-                    if (jbang.getPlugin().getKubernetes().getVerify().getLogMessage() != null) {
-                        builder.waitForLogMessage(jbang.getPlugin().getKubernetes().getVerify().getLogMessage());
-                    }
-                    if (jbang.getPlugin().getKubernetes().getVerify().getArgs() != null) {
-                        builder.withArgs(jbang.getPlugin().getKubernetes().getVerify().getArgs().getArgs().toArray(String[]::new));
-                    }
-                    this.builder = builder;
-                } else if (jbang.getPlugin().getKubernetes().getDelete() != null) {
-                    CamelKubernetesDeleteAction.Builder builder = new CamelKubernetesDeleteAction.Builder();
-
-                    if (jbang.getPlugin().getKubernetes().getDelete().getIntegration() != null) {
-                        if (jbang.getPlugin().getKubernetes().getDelete().getIntegration().getFile() != null) {
-                            builder.integration(Resources.create(jbang.getPlugin().getKubernetes().getDelete().getIntegration().getFile()));
-                        }
-                        if (jbang.getPlugin().getKubernetes().getDelete().getIntegration().getName() != null) {
-                            builder.integration(jbang.getPlugin().getKubernetes().getDelete().getIntegration().getName());
-                        }
-                    }
-                    builder.clusterType(jbang.getPlugin().getKubernetes().getDelete().getClusterType())
-                            .namespace(jbang.getPlugin().getKubernetes().getDelete().getNamespace())
-                            .workingDir(jbang.getPlugin().getKubernetes().getDelete().getWorkingDir());
-                    this.builder = builder;
+                if (jbang.getKubernetes().getRun().getIntegration().getFile() != null) {
+                    builder.integration(Resources.create(jbang.getKubernetes().getRun().getIntegration().getFile()));
                 }
 
+                builder.runtime(jbang.getKubernetes().getRun().getRuntime())
+                        .imageBuilder(jbang.getKubernetes().getRun().getImageBuilder())
+                        .imageRegistry(jbang.getKubernetes().getRun().getImageRegistry())
+                        .clusterType(jbang.getKubernetes().getRun().getClusterType());
+
+                if (jbang.getKubernetes().getRun().getBuildProperties() != null) {
+                    jbang.getKubernetes().getRun().getBuildProperties()
+                            .getProperties()
+                            .forEach(property -> builder.withBuildProperties(property.getName() + "=\"" + property.getValue() + "\""));
+                }
+                if (jbang.getKubernetes().getRun().getProperties() != null) {
+                    jbang.getKubernetes().getRun().getProperties()
+                            .getProperties()
+                            .forEach(property -> builder.withProperties(property.getName() + "=\"" + property.getValue() + "\""));
+                }
+                if (jbang.getKubernetes().getRun().getTraits() != null) {
+                    jbang.getKubernetes().getRun().getTraits()
+                            .getTraits()
+                            .forEach(trait -> builder.withTrait(trait.getName() + "=\"" + trait.getValue() + "\""));
+                }
+                if (jbang.getKubernetes().getRun().getArgs() != null) {
+                    builder.withArgs(jbang.getKubernetes().getRun().getArgs().getArgs().toArray(String[]::new));
+                }
+
+
+                builder.waitForRunningState(jbang.getKubernetes().getRun().isWaitForRunningState());
+
+                this.builder = builder;
+            } else if (jbang.getKubernetes().getVerify() != null) {
+                CamelKubernetesVerifyAction.Builder builder = new CamelKubernetesVerifyAction.Builder();
+
+                builder.integration(jbang.getKubernetes().getVerify().getIntegration())
+                        .label(jbang.getKubernetes().getVerify().getLabel())
+                        .namespace(jbang.getKubernetes().getVerify().getNamespace())
+                        .printLogs(jbang.getKubernetes().getVerify().isPrintLogs())
+                        .maxAttempts(jbang.getKubernetes().getVerify().getMaxAttempts())
+                        .delayBetweenAttempts(jbang.getKubernetes().getVerify().getDelayBetweenAttempts());
+                if (jbang.getKubernetes().getVerify().getLogMessage() != null) {
+                    builder.waitForLogMessage(jbang.getKubernetes().getVerify().getLogMessage());
+                }
+                if (jbang.getKubernetes().getVerify().getArgs() != null) {
+                    builder.withArgs(jbang.getKubernetes().getVerify().getArgs().getArgs().toArray(String[]::new));
+                }
+                this.builder = builder;
+            } else if (jbang.getKubernetes().getDelete() != null) {
+                CamelKubernetesDeleteAction.Builder builder = new CamelKubernetesDeleteAction.Builder();
+
+                if (jbang.getKubernetes().getDelete().getIntegration() != null) {
+                    if (jbang.getKubernetes().getDelete().getIntegration().getFile() != null) {
+                        builder.integration(Resources.create(jbang.getKubernetes().getDelete().getIntegration().getFile()));
+                    }
+                    if (jbang.getKubernetes().getDelete().getIntegration().getName() != null) {
+                        builder.integration(jbang.getKubernetes().getDelete().getIntegration().getName());
+                    }
+                }
+                builder.clusterType(jbang.getKubernetes().getDelete().getClusterType())
+                        .namespace(jbang.getKubernetes().getDelete().getNamespace())
+                        .workingDir(jbang.getKubernetes().getDelete().getWorkingDir());
+                this.builder = builder;
             }
-
-
         }
         return this;
     }
