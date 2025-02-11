@@ -38,6 +38,8 @@ import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.citrusframework.jbang.JBangSupport.OK_EXIT_CODE;
+
 /**
  * Camel JBang app.
  */
@@ -134,7 +136,7 @@ public class CamelJBang {
      */
     public void stop(Long pid) {
         ProcessAndOutput p = camelApp.run("stop", String.valueOf(pid)) ;
-        if (p.getProcess().exitValue() != JBangSupport.OK_EXIT_CODE) {
+        if (p.getProcess().exitValue() != OK_EXIT_CODE) {
             throw new CitrusRuntimeException(String.format("Failed to stop Camel K integration - exit code %d", p.getProcess().exitValue()));
         }
     }
@@ -259,5 +261,17 @@ public class CamelJBang {
         }
     }
 
+    public void addPlugin(String pluginName, String ... args) {
+        List<String> fullArgs = new ArrayList<>();
+        fullArgs.add("add");
+        fullArgs.add(pluginName);
+        fullArgs.addAll(Arrays.asList(args));
+
+        ProcessAndOutput pao = camelApp.run("plugin", fullArgs);
+        int exitValue = pao.getProcess().exitValue();
+        if (exitValue != OK_EXIT_CODE && exitValue != 1) {
+            throw new CitrusRuntimeException("Error while adding Camel JBang plugin. Exit code: " + exitValue);
+        }
+    }
 
 }

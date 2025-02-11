@@ -30,6 +30,7 @@ import org.citrusframework.camel.jbang.CamelJBangSettings;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
         "plugin",
+        "kubernetes",
         "run",
         "stop",
         "verify",
@@ -53,6 +54,9 @@ public class JBang {
 
     @XmlElement
     protected Plugin plugin;
+
+    @XmlElement
+    protected Kubernetes kubernetes;
 
     public void setCamelVersion(String camelVersion) {
         this.camelVersion = camelVersion;
@@ -100,6 +104,14 @@ public class JBang {
 
     public Plugin getPlugin() {
         return plugin;
+    }
+
+    public Kubernetes getKubernetes() {
+        return kubernetes;
+    }
+
+    public void setKubernetes(Kubernetes kubernetes) {
+        this.kubernetes = kubernetes;
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -501,11 +513,8 @@ public class JBang {
     @XmlType(name = "plugin")
     public static class Plugin {
 
-        @XmlElement(name = "add")
+        @XmlElement
         protected Add add;
-
-        @XmlElement(name = "kubernetes")
-        protected Kubernetes kubernetes;
 
         public void setAdd(Add add) {
             this.add = add;
@@ -513,14 +522,6 @@ public class JBang {
 
         public Add getAdd() {
             return this.add;
-        }
-
-        public void setKubernetes(Kubernetes kubernetes) {
-            this.kubernetes = kubernetes;
-        }
-
-        public Kubernetes getKubernetes() {
-            return kubernetes;
         }
 
         @XmlAccessorType(XmlAccessType.FIELD)
@@ -548,46 +549,44 @@ public class JBang {
                 this.argLine = argLine;
             }
         }
+    }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "")
+    public static class Kubernetes {
 
-        @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "")
-        public static class Kubernetes {
+        @XmlElement(name = "run")
+        protected Run run;
 
-            @XmlElement(name = "run")
-            protected Run run;
+        @XmlElement(name = "delete")
+        protected Delete delete;
 
-            @XmlElement(name = "delete")
-            protected Delete delete;
+        @XmlElement(name = "verify")
+        protected Verify verify;
 
-            @XmlElement(name = "verify")
-            protected Verify verify;
-
-            public Run getRun() {
-                return run;
-            }
-
-            public void setRun(Run run) {
-                this.run = run;
-            }
-
-            public Delete getDelete() {
-                return delete;
-            }
-
-            public void setDelete(Delete delete) {
-                this.delete = delete;
-            }
-
-            public Verify getVerify() {
-                return verify;
-            }
-
-            public void setVerify(Verify verify) {
-                this.verify = verify;
-            }
+        public Run getRun() {
+            return run;
         }
 
+        public void setRun(Run run) {
+            this.run = run;
+        }
+
+        public Delete getDelete() {
+            return delete;
+        }
+
+        public void setDelete(Delete delete) {
+            this.delete = delete;
+        }
+
+        public Verify getVerify() {
+            return verify;
+        }
+
+        public void setVerify(Verify verify) {
+            this.verify = verify;
+        }
 
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
@@ -607,7 +606,6 @@ public class JBang {
 
             @XmlElement(name = "cluster-type")
             protected String clusterType;
-
 
             @XmlElement(name = "build-properties")
             protected Properties buildProperties;
@@ -697,7 +695,6 @@ public class JBang {
                 this.args = args;
             }
 
-
             public boolean isWaitForRunningState() {
                 return waitForRunningState;
             }
@@ -720,7 +717,6 @@ public class JBang {
                     this.file = file;
                 }
             }
-
 
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "")
@@ -768,7 +764,6 @@ public class JBang {
             @XmlType(name = "")
             public static class Traits {
 
-
                 @XmlElement(name = "trait")
                 protected List<Trait> traits;
 
@@ -778,7 +773,6 @@ public class JBang {
                     }
                     return this.traits;
                 }
-
 
                 @XmlAccessorType(XmlAccessType.FIELD)
                 @XmlType(name = "")
@@ -843,7 +837,6 @@ public class JBang {
 
             @XmlAttribute(name = "log-message")
             private String logMessage;
-
 
             @XmlAttribute(name = "max-attempts")
             private int maxAttempts = CamelSettings.getMaxAttempts();
@@ -948,7 +941,6 @@ public class JBang {
 
             @XmlElement(required = true)
             private Integration integration;
-
 
             @XmlAttribute(name = "cluster-type")
             protected String clusterType;

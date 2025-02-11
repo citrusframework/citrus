@@ -16,13 +16,13 @@
 
 package org.citrusframework.camel.actions;
 
-import org.citrusframework.context.TestContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.citrusframework.context.TestContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Install a specific plugin to a Camel JBang tooling.
@@ -46,26 +46,17 @@ public class AddCamelPluginAction extends AbstractCamelJBangAction {
         this.args = builder.args;
     }
 
-
-    public String getName() {
-        return name;
-    }
-
     @Override
     public void doExecute(TestContext context) {
-        logger.info("Adding Camel plugin '%s' ...".formatted(name));
+        String pluginName = context.replaceDynamicContentInString(name);
         List<String> installedPlugins = camelJBang().getPlugins();
 
-        if (!installedPlugins.contains(name)) {
-            List<String> fullArgs = new ArrayList<>();
-            fullArgs.add("add");
-            fullArgs.add(name);
-            if (args != null){
-                fullArgs.addAll(args);
-            }
-            camelJBang().camelApp().run("plugin", fullArgs.toArray(String[]::new));
+        if (!installedPlugins.contains(pluginName)) {
+            logger.info("Adding Camel plugin '%s' ...".formatted(pluginName));
+            camelJBang().addPlugin(pluginName, context.resolveDynamicValuesInList(args).toArray(String[]::new));
+            logger.info("Camel plugin '%s' successfully installed".formatted(pluginName));
         } else {
-            logger.info("Adding Camel plugin '%s' skipped: already installed".formatted(name));
+            logger.info("Camel plugin '%s' already installed".formatted(pluginName));
         }
 
     }
