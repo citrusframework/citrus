@@ -1,0 +1,16 @@
+name: "CamelJBangKubernetesVerifyTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      jbang:
+        kubernetes:
+          verify:
+            integration: "my-route"
+            logMessage: "Camel rocks!"
+  - camel:
+      jbang:
+        kubernetes:
+          verify:
+            label: "app=camel"
+            logMessage: "Camel rocks!"

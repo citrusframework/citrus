@@ -378,7 +378,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
         }
 
         @Override
-        public CamelRunIntegrationAction build() {
+        public CamelRunIntegrationAction doBuild() {
             if (systemPropertiesFile != null) {
                 Properties props = new Properties();
                 try {

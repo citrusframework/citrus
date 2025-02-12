@@ -270,7 +270,7 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
         }
 
         @Override
-        public CamelVerifyIntegrationAction build() {
+        public CamelVerifyIntegrationAction doBuild() {
             return new CamelVerifyIntegrationAction(this);
         }
     }

@@ -1,0 +1,10 @@
+name: "CamelJBangKubernetesDeleteTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      jbang:
+        kubernetes:
+          delete:
+            integration:
+              file: "classpath:org/citrusframework/camel/integration/route.yaml"

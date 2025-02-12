@@ -510,7 +510,9 @@ public class JBang {
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "plugin")
+    @XmlType(name = "", propOrder = {
+            "add"
+    })
     public static class Plugin {
 
         @XmlElement
@@ -552,7 +554,11 @@ public class JBang {
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "")
+    @XmlType(name = "", propOrder = {
+            "run",
+            "verify",
+            "delete"
+    })
     public static class Kubernetes {
 
         @XmlElement(name = "run")
@@ -595,16 +601,16 @@ public class JBang {
             @XmlElement(required = true)
             private Integration integration;
 
-            @XmlElement(name = "runtime")
+            @XmlAttribute(name = "runtime")
             protected String runtime;
 
-            @XmlElement(name = "image-registry")
+            @XmlAttribute(name = "image-registry")
             protected String imageRegistry;
 
-            @XmlElement(name = "image-builder")
+            @XmlAttribute(name = "image-builder")
             protected String imageBuilder;
 
-            @XmlElement(name = "cluster-type")
+            @XmlAttribute(name = "cluster-type")
             protected String clusterType;
 
             @XmlElement(name = "build-properties")
@@ -619,6 +625,12 @@ public class JBang {
 
             @XmlElement(name = "args")
             protected Args args;
+
+            @XmlAttribute(name = "auto-remove")
+            protected boolean autoRemove;
+
+            @XmlAttribute(name = "args")
+            protected String argLine;
 
             @XmlAttribute(name = "wait-for-running-state")
             protected boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
@@ -693,6 +705,22 @@ public class JBang {
 
             public void setArgs(Args args) {
                 this.args = args;
+            }
+
+            public boolean isAutoRemove() {
+                return autoRemove;
+            }
+
+            public void setAutoRemove(boolean autoRemove) {
+                this.autoRemove = autoRemove;
+            }
+
+            public String getArgLine() {
+                return argLine;
+            }
+
+            public void setArgLine(String argLine) {
+                this.argLine = argLine;
             }
 
             public boolean isWaitForRunningState() {

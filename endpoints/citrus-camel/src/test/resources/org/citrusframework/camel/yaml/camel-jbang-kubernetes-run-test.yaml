@@ -1,0 +1,28 @@
+name: "CamelJBangKubernetesRunTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      jbang:
+        kubernetes:
+          run:
+            integration:
+              file: "classpath:org/citrusframework/camel/integration/route.yaml"
+  - camel:
+      jbang:
+        kubernetes:
+          run:
+            autoRemove: true
+            integration:
+              file: "classpath:org/citrusframework/camel/integration/route.yaml"
+            runtime: "quarkus"
+            clusterType: "kind"
+            args:
+              - "--dev"
+              - "--verbose=true"
+            imageBuilder: "docker"
+            imageRegistry: "localhost:5000"
+            buildProperties:
+              - 'my-prop="foo"'
+            traits:
+              - 'mount.volumes="pvcname:/container/path"'

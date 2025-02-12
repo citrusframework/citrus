@@ -274,4 +274,8 @@ public class CamelJBang {
         }
     }
 
+    public KubernetesPlugin kubernetes() {
+        return new KubernetesPlugin(camelApp);
+    }
+
 }

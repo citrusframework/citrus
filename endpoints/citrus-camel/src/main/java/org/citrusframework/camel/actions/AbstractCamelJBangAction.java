@@ -20,6 +20,8 @@ import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.camel.jbang.CamelJBang;
 import org.citrusframework.camel.jbang.CamelJBangTestActor;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
 
 /**
  * Abstract action to access Camel JBang tooling. Action provides common Camel JBang settings such as explicit Camel version.
@@ -29,13 +31,14 @@ public abstract class AbstractCamelJBangAction extends AbstractTestAction {
     private final String camelVersion;
     private final String kameletsVersion;
 
-    private final CamelJBang camelJBang = CamelJBang.camel();
+    private final CamelJBang camelJBang;
 
     protected AbstractCamelJBangAction(String name, Builder<?, ?> builder) {
         super(name, builder);
 
         this.camelVersion = builder.camelVersion;
         this.kameletsVersion = builder.kameletsVersion;
+        this.camelJBang = builder.camelJBang;
 
         if (camelVersion != null) {
             camelJBang.camelApp().withSystemProperty("camel.jbang.version", camelVersion);
@@ -65,10 +68,13 @@ public abstract class AbstractCamelJBangAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static abstract class Builder<T extends AbstractCamelJBangAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B> {
+    public static abstract class Builder<T extends AbstractCamelJBangAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
 
+        protected CamelJBang camelJBang;
         protected String camelVersion;
         protected String kameletsVersion;
+
+        protected ReferenceResolver referenceResolver;
 
         public Builder() {
             actor(new CamelJBangTestActor());
@@ -94,5 +100,31 @@ public abstract class AbstractCamelJBangAction extends AbstractTestAction {
             return self;
         }
 
+        public B withReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
+            return self;
+        }
+
+        @Override
+        public void setReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
+        }
+
+        @Override
+        public final T build() {
+            if (referenceResolver != null && referenceResolver.isResolvable(CamelJBang.class)) {
+                this.camelJBang = referenceResolver.resolve(CamelJBang.class);
+            } else {
+                camelJBang = CamelJBang.camel();
+            }
+
+            return doBuild();
+        }
+
+        /**
+         * Subclasses need to implement to create the
+         * @return
+         */
+        protected abstract T doBuild();
     }
 }

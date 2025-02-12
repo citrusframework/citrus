@@ -34,15 +34,10 @@ import org.citrusframework.spi.Resources;
 
 public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction.Builder<?, ?>> {
 
+    private AbstractCamelJBangAction.Builder<?, ?> builder;
+
     private String camelVersion;
     private String kameletsVersion;
-
-    protected RunIntegration run;
-    protected StopIntegration stop;
-    protected VerifyIntegration verify;
-
-    protected Plugin plugin;
-    protected Kubernetes kubernetes;
 
     public void setCamelVersion(String camelVersion) {
         this.camelVersion = camelVersion;
@@ -61,59 +56,28 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
     }
 
     public void setRun(RunIntegration run) {
-        this.run = run;
-    }
-
-    public RunIntegration getRun() {
-        return run;
+        this.builder = run.getBuilder();
     }
 
     public void setStop(StopIntegration stop) {
-        this.stop = stop;
-    }
-
-    public StopIntegration getStop() {
-        return stop;
+        this.builder = stop.getBuilder();
     }
 
     public void setVerify(VerifyIntegration verify) {
-        this.verify = verify;
-    }
-
-    public VerifyIntegration getVerify() {
-        return verify;
+        this.builder = verify.getBuilder();
     }
 
     public void setPlugin(Plugin plugin) {
-        this.plugin = plugin;
-    }
-
-    public Plugin getPlugin() {
-        return plugin;
+        this.builder = plugin.getBuilder();
     }
 
     public void setKubernetes(Kubernetes kubernetes) {
-        this.kubernetes = kubernetes;
-    }
-
-    public Kubernetes getKubernetes() {
-        return kubernetes;
+        this.builder = kubernetes.getBuilder();
     }
 
     @Override
     public AbstractCamelJBangAction.Builder<?, ?> getBuilder() {
-        AbstractCamelJBangAction.Builder<?, ?> builder;
-        if (run != null) {
-            builder = run.getBuilder();
-        } else if (stop != null) {
-            builder = stop.getBuilder();
-        } else if (verify != null) {
-            builder = verify.getBuilder();
-        } else if (plugin != null) {
-            builder = plugin.getBuilder();
-        } else if (kubernetes != null) {
-            builder = kubernetes.getBuilder();
-        } else {
+        if (builder == null) {
             throw new CitrusRuntimeException("Missing Camel JBang action specification");
         }
 
@@ -433,11 +397,18 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             if (run.getIntegration().getFile() != null) {
                 builder.integration(Resources.create(run.getIntegration().getFile()));
             }
-            builder.runtime(run.getRuntime())
-                    .imageRegistry(run.getImageRegistry())
-                    .imageBuilder(run.getImageBuilder())
-                    .clusterType(run.getClusterType());
-
+            if (run.getRuntime() != null) {
+                builder.runtime(run.getRuntime());
+            }
+            if (run.getImageBuilder() != null) {
+                builder.imageBuilder(run.getImageBuilder());
+            }
+            if (run.getImageRegistry() != null) {
+                builder.imageRegistry(run.getImageRegistry());
+            }
+            if (run.getClusterType() != null) {
+                builder.clusterType(run.getClusterType());
+            }
             if (run.getBuildProperties() != null) {
                 run.getBuildProperties().forEach(builder::withBuildProperty);
             }
@@ -450,6 +421,11 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             if (run.getArgs() != null) {
                 run.getArgs().forEach(builder::withArg);
             }
+            if (run.getArgLine() != null) {
+                builder.withArgs(run.getArgLine().split(" "));
+            }
+
+            builder.autoRemove(run.isAutoRemove());
             builder.waitForRunningState(run.isWaitForRunningState());
             this.builder = builder;
         }
@@ -496,8 +472,10 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             protected List<String> properties;
             protected List<String> traits;
             protected List<String> args;
+            protected String argLine;
 
-            private boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
+            protected boolean autoRemove;
+            protected boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
 
             public Integration getIntegration() {
                 return integration;
@@ -582,6 +560,22 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
             public void setArgs(List<String> args) {
                 this.args = args;
+            }
+
+            public boolean isAutoRemove() {
+                return autoRemove;
+            }
+
+            public void setAutoRemove(boolean autoRemove) {
+                this.autoRemove = autoRemove;
+            }
+
+            public String getArgLine() {
+                return argLine;
+            }
+
+            public void setArgLine(String argLine) {
+                this.argLine = argLine;
             }
 
             public boolean isWaitForRunningState() {

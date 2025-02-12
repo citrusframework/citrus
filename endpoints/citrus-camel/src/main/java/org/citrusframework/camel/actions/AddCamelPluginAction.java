@@ -41,7 +41,7 @@ public class AddCamelPluginAction extends AbstractCamelJBangAction {
      * Default constructor.
      */
     public AddCamelPluginAction(AddCamelPluginAction.Builder builder) {
-        super("plugin", builder);
+        super("plugin-add", builder);
         this.name = builder.name;
         this.args = builder.args;
     }
@@ -113,7 +113,7 @@ public class AddCamelPluginAction extends AbstractCamelJBangAction {
         }
 
         @Override
-        public AddCamelPluginAction build() {
+        public AddCamelPluginAction doBuild() {
             return new AddCamelPluginAction(this);
         }
     }

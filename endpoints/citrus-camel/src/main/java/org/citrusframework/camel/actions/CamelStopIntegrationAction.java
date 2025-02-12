@@ -118,7 +118,7 @@ public class CamelStopIntegrationAction extends AbstractCamelJBangAction {
         }
 
         @Override
-        public CamelStopIntegrationAction build() {
+        public CamelStopIntegrationAction doBuild() {
             return new CamelStopIntegrationAction(this);
         }
     }
