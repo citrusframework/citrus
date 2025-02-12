@@ -266,36 +266,48 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
             if (jbang.getKubernetes().getRun() != null) {
                 CamelKubernetesRunIntegrationAction.Builder builder = new CamelKubernetesRunIntegrationAction.Builder();
 
-                if (jbang.getKubernetes().getRun().getIntegration().getFile() != null) {
-                    builder.integration(Resources.create(jbang.getKubernetes().getRun().getIntegration().getFile()));
+                JBang.Kubernetes.Run run = jbang.getKubernetes().getRun();
+
+                if (run.getIntegration().getFile() != null) {
+                    builder.integration(Resources.create(run.getIntegration().getFile()));
                 }
-
-                builder.runtime(jbang.getKubernetes().getRun().getRuntime())
-                        .imageBuilder(jbang.getKubernetes().getRun().getImageBuilder())
-                        .imageRegistry(jbang.getKubernetes().getRun().getImageRegistry())
-                        .clusterType(jbang.getKubernetes().getRun().getClusterType());
-
-                if (jbang.getKubernetes().getRun().getBuildProperties() != null) {
-                    jbang.getKubernetes().getRun().getBuildProperties()
+                if (run.getRuntime() != null) {
+                    builder.runtime(run.getRuntime());
+                }
+                if (run.getImageBuilder() != null) {
+                    builder.imageBuilder(run.getImageBuilder());
+                }
+                if (run.getImageRegistry() != null) {
+                    builder.imageRegistry(run.getImageRegistry());
+                }
+                if (run.getClusterType() != null) {
+                    builder.clusterType(run.getClusterType());
+                }
+                if (run.getBuildProperties() != null) {
+                    run.getBuildProperties()
                             .getProperties()
                             .forEach(property -> builder.withBuildProperties(property.getName() + "=\"" + property.getValue() + "\""));
                 }
-                if (jbang.getKubernetes().getRun().getProperties() != null) {
-                    jbang.getKubernetes().getRun().getProperties()
+                if (run.getProperties() != null) {
+                    run.getProperties()
                             .getProperties()
                             .forEach(property -> builder.withProperties(property.getName() + "=\"" + property.getValue() + "\""));
                 }
-                if (jbang.getKubernetes().getRun().getTraits() != null) {
-                    jbang.getKubernetes().getRun().getTraits()
+                if (run.getTraits() != null) {
+                    run.getTraits()
                             .getTraits()
                             .forEach(trait -> builder.withTrait(trait.getName() + "=\"" + trait.getValue() + "\""));
                 }
-                if (jbang.getKubernetes().getRun().getArgs() != null) {
-                    builder.withArgs(jbang.getKubernetes().getRun().getArgs().getArgs().toArray(String[]::new));
+                if (run.getArgs() != null) {
+                    builder.withArgs(run.getArgs().getArgs().toArray(String[]::new));
+                }
+                if (run.getArgLine() != null) {
+                    builder.withArgs(run.getArgLine().split(" "));
                 }
 
+                builder.autoRemove(run.isAutoRemove());
 
-                builder.waitForRunningState(jbang.getKubernetes().getRun().isWaitForRunningState());
+                builder.waitForRunningState(run.isWaitForRunningState());
 
                 this.builder = builder;
             } else if (jbang.getKubernetes().getVerify() != null) {

@@ -1,0 +1,17 @@
+name: "CamelAddPluginTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      jbang:
+        plugin:
+          add:
+            name: "my-plugin"
+  - camel:
+      jbang:
+        plugin:
+          add:
+            name: "my-plugin"
+            args:
+              - "--description"
+              - '"MyCamelPlugin"'

@@ -16,13 +16,17 @@
 
 package org.citrusframework.camel.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.citrusframework.jbang.JBangSupport.OK_EXIT_CODE;
 
 /**
  * Delete kubernetes resources deployed from a Camel project or Camel integration with Camel JBang tooling.
@@ -63,42 +67,44 @@ public class CamelKubernetesDeleteAction extends AbstractCamelJBangAction {
      * Default constructor.
      */
     public CamelKubernetesDeleteAction(Builder builder) {
-        super("delete-kubernetes", builder);
+        super("kubernetes-delete-integration", builder);
 
         this.integrationResource = builder.integrationResource;
         this.integrationName = builder.integrationName;
         this.clusterType = builder.clusterType;
         this.workingDir = builder.workingDir;
         this.namespace = builder.namespace;
-
     }
 
     @Override
     public void doExecute(TestContext context) {
         logger.info("Deleting integration deployed from a Camel Kubernetes project  ...");
-        List<String> fullArgs = new ArrayList<>();
-        fullArgs.add("delete");
-        if (integrationResource != null) {
-            fullArgs.add(integrationResource.getFile().toPath().toAbsolutePath().toString());
-        }
+        List<String> commandArgs = new ArrayList<>();
         if (integrationName != null) {
-            fullArgs.add("--name");
-            fullArgs.add(integrationName);
+            commandArgs.add("--name");
+            commandArgs.add(integrationName);
         }
         if (clusterType != null) {
-            fullArgs.add("--cluster-type");
-            fullArgs.add(clusterType);
+            commandArgs.add("--cluster-type");
+            commandArgs.add(clusterType);
         }
         if (workingDir != null) {
-            fullArgs.add("--working-dir");
-            fullArgs.add(workingDir);
+            commandArgs.add("--working-dir");
+            commandArgs.add(workingDir);
         }
         if (namespace != null) {
-            fullArgs.add("--namespace");
-            fullArgs.add(namespace);
+            commandArgs.add("--namespace");
+            commandArgs.add(namespace);
         }
-        camelJBang().camelApp().run("kubernetes", fullArgs.toArray(String[]::new));
 
+        camelJBang().camelApp().workingDir(integrationResource.getFile().toPath().toAbsolutePath().getParent());
+
+        ProcessAndOutput pao = camelJBang().kubernetes().delete(integrationResource.getFile().getName(), commandArgs.toArray(String[]::new));
+        logger.info(pao.getOutput());
+        int exitValue = pao.getProcess().exitValue();
+        if (exitValue != OK_EXIT_CODE) {
+            throw new CitrusRuntimeException(String.format("Failed to delete Camel integration from Kubernetes - exit code %s", exitValue));
+        }
     }
 
     public Resource getIntegrationResource() {
@@ -189,7 +195,7 @@ public class CamelKubernetesDeleteAction extends AbstractCamelJBangAction {
         }
 
         @Override
-        public CamelKubernetesDeleteAction build() {
+        public CamelKubernetesDeleteAction doBuild() {
             return new CamelKubernetesDeleteAction(this);
         }
     }

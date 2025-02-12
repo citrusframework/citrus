@@ -1,16 +1,17 @@
 package org.citrusframework.camel.actions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
+import org.citrusframework.spi.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Verifies Camel integration in kubernetes via Camel JBang. Waits for a log message to be present.
@@ -51,7 +52,7 @@ public class CamelKubernetesVerifyAction extends AbstractCamelJBangAction {
     private final List<String> args;
 
     protected CamelKubernetesVerifyAction(CamelKubernetesVerifyAction.Builder builder) {
-        super("verify-kubernetes-integration", builder);
+        super("kubernetes-verify-integration", builder);
         this.integrationName = builder.integrationName;
         this.label = builder.label;
         this.namespace = builder.namespace;
@@ -66,38 +67,37 @@ public class CamelKubernetesVerifyAction extends AbstractCamelJBangAction {
     @Override
     public void doExecute(TestContext context) {
         logger.info("Verify Camel integration in Kubernetes  ...");
-        List<String> fullArgs = new ArrayList<>();
-        fullArgs.add("logs");
+        List<String> commandArgs = new ArrayList<>();
 
         if (integrationName != null) {
-            fullArgs.add("--name");
-            fullArgs.add(integrationName);
+            commandArgs.add("--name");
+            commandArgs.add(integrationName);
         }
         if (label != null) {
-            fullArgs.add("--label");
-            fullArgs.add(label);
+            commandArgs.add("--label");
+            commandArgs.add(label);
         }
         if (namespace != null) {
-            fullArgs.add("--namespace");
-            fullArgs.add(namespace);
+            commandArgs.add("--namespace");
+            commandArgs.add(namespace);
         }
 
         if (args != null) {
-            fullArgs.addAll(args);
+            commandArgs.addAll(args);
         }
 
-        verifyIntegrationLog(logMessage, fullArgs);
+        verifyIntegrationLog(logMessage, commandArgs);
     }
 
-    private void verifyIntegrationLog(String message, List<String> fullArgs) {
+    private void verifyIntegrationLog(String message, List<String> commandArgs) {
         if (printLogs) {
-            INTEGRATION_LOG.info(String.format("Waiting for Camel integration in kubernetes to log message"));
+            INTEGRATION_LOG.info("Waiting for Camel integration in Kubernetes to log message");
         }
 
         String log;
         int offset = 0;
 
-        ProcessAndOutput pao = camelJBang().camelApp().runAsync("kubernetes", fullArgs.toArray(String[]::new));
+        ProcessAndOutput pao = camelJBang().kubernetes().logs(commandArgs.toArray(String[]::new));
         for (int i = 0; i < maxAttempts; i++) {
 
             log = pao.getOutput();
@@ -152,6 +152,17 @@ public class CamelKubernetesVerifyAction extends AbstractCamelJBangAction {
         private boolean printLogs = CamelSettings.isPrintLogs();
 
         private final List<String> args = new ArrayList<>();
+
+        /**
+         * Export given Camel integration resource.
+         *
+         * @param resource
+         * @return
+         */
+        public Builder integration(Resource resource) {
+            this.integrationName = resource.getFile().getName();
+            return this;
+        }
 
         /**
          * Identify Camel JBang process for this route.
@@ -217,7 +228,6 @@ public class CamelKubernetesVerifyAction extends AbstractCamelJBangAction {
             return this;
         }
 
-
         /**
          * Adds a command argument.
          *
@@ -254,7 +264,7 @@ public class CamelKubernetesVerifyAction extends AbstractCamelJBangAction {
         }
 
         @Override
-        public CamelKubernetesVerifyAction build() {
+        public CamelKubernetesVerifyAction doBuild() {
             return new CamelKubernetesVerifyAction(this);
         }
     }

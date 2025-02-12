@@ -16,18 +16,23 @@
 
 package org.citrusframework.camel.actions;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.citrusframework.camel.jbang.CamelJBangSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resource;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import static org.citrusframework.camel.dsl.CamelSupport.camel;
+import static org.citrusframework.jbang.JBangSupport.OK_EXIT_CODE;
 
 
 /**
@@ -39,6 +44,9 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
      * Logger
      */
     private static final Logger logger = LoggerFactory.getLogger(CamelKubernetesRunIntegrationAction.class);
+
+    /** Name of Camel integration */
+    private final String integrationName;
 
     /**
      * Camel integration resource
@@ -85,6 +93,8 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
      */
     private final List<String> args;
 
+    private final boolean autoRemoveResources;
+
     /**
      * Wait for integration pod to be in Running state
      */
@@ -94,8 +104,9 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
      * Default constructor.
      */
     public CamelKubernetesRunIntegrationAction(CamelKubernetesRunIntegrationAction.Builder builder) {
-        super("run-integration-kubernetes", builder);
+        super("kubernetes-run-integration", builder);
 
+        this.integrationName = builder.integrationName;
         this.integrationResource = builder.integrationResource;
         this.runtime = builder.runtime;
         this.imageBuilder = builder.imageBuilder;
@@ -105,74 +116,92 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
         this.properties = builder.properties;
         this.traits = builder.traits;
         this.args = builder.args;
+        this.autoRemoveResources = builder.autoRemoveResources;
         this.waitForRunningState = builder.waitForRunningState;
     }
 
     @Override
     public void doExecute(TestContext context) {
-        logger.info("Running a Camel integration in Kubernetes...");
-        Path integrationFile;
+        String name;
+        if (StringUtils.hasText(integrationName)) {
+            name = context.replaceDynamicContentInString(integrationName);
+        } else {
+            name = FileUtils.getBaseName(integrationResource.getFile().getName());
+        }
+
+        logger.info("Running Camel integration %s in Kubernetes ...".formatted(name));
+
+        Path integrationToRun;
         if (integrationResource != null) {
-            integrationFile = integrationResource.getFile().toPath();
+            integrationToRun = integrationResource.getFile().toPath();
         } else {
             throw new CitrusRuntimeException("Missing Camel integration source code or file");
         }
 
-        List<String> fullArgs = new ArrayList<>();
-        fullArgs.add("run");
-        fullArgs.add(integrationFile.toAbsolutePath().toString());
+        List<String> commandArgs = new ArrayList<>();
         if (runtime != null) {
-            fullArgs.add("--runtime");
-            fullArgs.add(runtime);
+            commandArgs.add("--runtime");
+            commandArgs.add(runtime);
         }
         if (imageBuilder != null) {
-            fullArgs.add("--image-builder");
-            fullArgs.add(imageBuilder);
+            commandArgs.add("--image-builder");
+            commandArgs.add(imageBuilder);
         }
         if (imageRegistry != null) {
-            fullArgs.add("--image-registry");
-            fullArgs.add(imageRegistry);
+            commandArgs.add("--image-registry");
+            commandArgs.add(imageRegistry);
         }
         if (clusterType != null) {
-            fullArgs.add("--cluster-type");
-            fullArgs.add(clusterType);
+            commandArgs.add("--cluster-type");
+            commandArgs.add(clusterType);
         }
 
         if (buildProperties != null) {
             for (String property : buildProperties) {
-                fullArgs.add("--build-property");
-                fullArgs.add(property);
+                commandArgs.add("--build-property");
+                commandArgs.add(property);
             }
         }
 
         if (properties != null) {
             for (String property : properties) {
-                fullArgs.add("--property");
-                fullArgs.add(property);
+                commandArgs.add("--property");
+                commandArgs.add(property);
             }
         }
 
         if (traits != null) {
             for (String trait : traits) {
-                fullArgs.add("--trait");
-                fullArgs.add(trait);
+                commandArgs.add("--trait");
+                commandArgs.add(trait);
             }
         }
 
         if (args != null) {
-            fullArgs.addAll(args);
+            commandArgs.addAll(args);
+        }
+
+        camelJBang().camelApp().workingDir(integrationToRun.toAbsolutePath().getParent());
+
+        ProcessAndOutput pao = camelJBang().kubernetes().run(integrationResource.getFile().getName(), commandArgs.toArray(String[]::new));
+        logger.info(pao.getOutput());
+        int exitValue = pao.getProcess().exitValue();
+        if (exitValue != OK_EXIT_CODE) {
+            throw new CitrusRuntimeException(String.format("Failed to start Camel integration in Kubernetes - exit code %s", exitValue));
+        }
+
+        if (autoRemoveResources) {
+            context.doFinally(camel()
+                    .jbang()
+                    .kubernetes()
+                    .delete()
+                    .integration(integrationResource)
+                    .withReferenceResolver(context.getReferenceResolver()));
         }
 
         if (waitForRunningState) {
-            fullArgs.add("--wait");
+            //TODO: implement it!
         }
-
-        ProcessAndOutput pao = camelJBang().camelApp().run("kubernetes", fullArgs.toArray(String[]::new));
-        logger.info(pao.getOutput());
-        if (pao.getProcess().exitValue() != 0) {
-            throw new CitrusRuntimeException(String.format("Failed to start Camel integration in kubernetes - exit code %s", pao.getProcess().exitValue()));
-        }
-
     }
 
 
@@ -213,6 +242,7 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
      */
     public static final class Builder extends AbstractCamelJBangAction.Builder<CamelKubernetesRunIntegrationAction, CamelKubernetesRunIntegrationAction.Builder> {
 
+        private String integrationName;
         private Resource integrationResource;
 
         private String runtime;
@@ -225,7 +255,18 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
         private final List<String> traits = new ArrayList<>();
         private final List<String> args = new ArrayList<>();
 
+        private boolean autoRemoveResources = CamelJBangSettings.isAutoRemoveResources();
         private boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
+
+        /**
+         * Sets the integration name.
+         * @param name
+         * @return
+         */
+        public Builder integrationName(String name) {
+            this.integrationName = name;
+            return this;
+        }
 
         /**
          * Export given Camel integration resource.
@@ -348,7 +389,6 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
             return this;
         }
 
-
         /**
          * Adds a command argument.
          *
@@ -384,6 +424,10 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
             return this;
         }
 
+        public Builder autoRemove(boolean enabled) {
+            this.autoRemoveResources = enabled;
+            return this;
+        }
 
         public Builder waitForRunningState(boolean enabled) {
             this.waitForRunningState = enabled;
@@ -391,7 +435,7 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
         }
 
         @Override
-        public CamelKubernetesRunIntegrationAction build() {
+        public CamelKubernetesRunIntegrationAction doBuild() {
             return new CamelKubernetesRunIntegrationAction(this);
         }
     }
