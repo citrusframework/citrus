@@ -80,7 +80,7 @@ public class TestReporters implements TestListener, TestSuiteListener, TestRepor
     }
 
     @Override
-    public void onTestFinish(TestCase test) {
+    public void onTestExecutionEnd(TestCase test) {
         if (nonNull(test.getTestResult())) {
             testResults.addResult(test.getTestResult());
         }
@@ -108,8 +108,6 @@ public class TestReporters implements TestListener, TestSuiteListener, TestRepor
 
     /**
      * Obtains the testReporters.
-     *
-     * @return
      */
     public List<TestReporter> getTestReporters() {
         return unmodifiableList(testReporters);
@@ -117,8 +115,6 @@ public class TestReporters implements TestListener, TestSuiteListener, TestRepor
 
     /**
      * Obtains the autoClear.
-     *
-     * @return
      */
     public boolean isAutoClear() {
         return autoClear;
@@ -126,8 +122,6 @@ public class TestReporters implements TestListener, TestSuiteListener, TestRepor
 
     /**
      * Specifies the autoClear.
-     *
-     * @param autoClear
      */
     public void setAutoClear(boolean autoClear) {
         this.autoClear = autoClear;
@@ -135,8 +129,6 @@ public class TestReporters implements TestListener, TestSuiteListener, TestRepor
 
     /**
      * Gets the testResults.
-     *
-     * @return
      */
     public TestResults getTestResults() {
         return testResults;

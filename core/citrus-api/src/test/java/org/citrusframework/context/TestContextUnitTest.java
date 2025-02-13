@@ -54,13 +54,13 @@ public class TestContextUnitTest {
         var testListenerMock = attachTestListenerMockToFixture();
 
         var cause = new CitrusRuntimeException("thrown with a purpose!");
-        doThrow(cause).when(testListenerMock).onTestFinish(any(TestContext.EmptyTestCase.class));
+        doThrow(cause).when(testListenerMock).onTestExecutionEnd(any(TestContext.EmptyTestCase.class));
 
         invokeHandleErrorOnFixture(cause);
 
         verify(testListenerMock).onTestStart(any(TestContext.EmptyTestCase.class));
         verify(testListenerMock).onTestFailure(any(TestContext.EmptyTestCase.class), any(CitrusRuntimeException.class));
-        verify(testListenerMock).onTestFinish(any(TestContext.EmptyTestCase.class));
+        verify(testListenerMock).onTestExecutionEnd(any(TestContext.EmptyTestCase.class));
     }
 
     private TestListener attachTestListenerMockToFixture() {

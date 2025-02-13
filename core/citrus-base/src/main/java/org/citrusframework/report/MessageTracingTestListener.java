@@ -34,10 +34,12 @@ import org.citrusframework.message.RawMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static java.lang.System.lineSeparator;
+
 /**
  * Test listener collects all messages sent and received by Citrus during test execution. Listener
  * writes a trace file with all message content per test case to a output directory.
- *
+ * <p>
  * Note: This class is not thread safe! Parallel test execution leads to behaviour that messages get mixed.
  * Proper correlation to test case is not possible here.
  *
@@ -77,7 +79,7 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
      * {@inheritDoc}
      */
     @Override
-    public void onTestFinish(TestCase test) {
+    public void onTestExecutionEnd(TestCase test) {
         if (messages.isEmpty()) {
             return; // do not write empty message trace file
         }
@@ -118,7 +120,6 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
 
     /**
      * Creates message separator line.
-     * @return
      */
     private String separator() {
         return "======================================================================";
@@ -126,10 +127,9 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
 
     /**
      * Get new line character.
-     * @return
      */
     private String newLine() {
-        return System.getProperty("line.separator");
+        return lineSeparator();
     }
 
     /**

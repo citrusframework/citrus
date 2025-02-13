@@ -169,7 +169,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     }
 
     @Override
-    public void onTestFinish(TestCase test) {
+    public void onTestExecutionEnd(TestCase test) {
         // do nothing
     }
 

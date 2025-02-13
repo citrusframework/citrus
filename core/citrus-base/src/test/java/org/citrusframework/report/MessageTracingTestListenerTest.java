@@ -43,13 +43,13 @@ public class MessageTracingTestListenerTest extends UnitTestSupport {
     }
 
     @Test
-    public void shouldReturnTheSameTraceFile() throws Exception {
+    public void shouldReturnTheSameTraceFile() {
         String testname = "SomeDummyTest";
         Assert.assertEquals(testling.getTraceFile(testname).getAbsolutePath(), testling.getTraceFile(testname).getAbsolutePath());
     }
 
     @Test
-    public void shouldContainMessages() throws Exception {
+    public void shouldContainMessages() {
         String testname = "SomeDummyTest";
         String inboundPayload = "Inbound Message";
         String outboundPayload = "Outbound Message";
@@ -61,7 +61,7 @@ public class MessageTracingTestListenerTest extends UnitTestSupport {
         testling.onTestStart(testCaseMock);
         testling.onInboundMessage(inboundMessageMock, context);
         testling.onOutboundMessage(outboundMessageMock, context);
-        testling.onTestFinish(testCaseMock);
+        testling.onTestExecutionEnd(testCaseMock);
 
         assertFileExistsWithContent(testname, inboundPayload);
         assertFileExistsWithContent(testname, outboundPayload);
