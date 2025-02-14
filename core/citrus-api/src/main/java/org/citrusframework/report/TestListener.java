@@ -36,13 +36,11 @@ public interface TestListener {
     }
 
     /**
-     * Invoked when test execution has ended (after final actions execution and
-     * before {@link org.citrusframework.container.AfterTest} execution)
-     *
-     * @see #onTestEnd(TestCase)
+     * Invoked when test execution starts
+     * (after {@link org.citrusframework.container.BeforeTest} execution} execution)
      */
     default void onTestExecutionStart(TestCase test) {
-        onTestFinish(test);
+        // Default implementation does nothing
     }
 
 
