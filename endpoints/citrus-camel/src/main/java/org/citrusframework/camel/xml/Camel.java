@@ -305,6 +305,8 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                     builder.withArgs(run.getArgLine().split(" "));
                 }
 
+                builder.verbose(run.isVerbose());
+
                 builder.autoRemove(run.isAutoRemove());
 
                 builder.waitForRunningState(run.isWaitForRunningState());

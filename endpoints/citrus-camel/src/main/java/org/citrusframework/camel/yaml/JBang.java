@@ -425,6 +425,8 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 builder.withArgs(run.getArgLine().split(" "));
             }
 
+            builder.verbose(run.isVerbose());
+
             builder.autoRemove(run.isAutoRemove());
             builder.waitForRunningState(run.isWaitForRunningState());
             this.builder = builder;
@@ -473,6 +475,8 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             protected List<String> traits;
             protected List<String> args;
             protected String argLine;
+
+            protected boolean verbose;
 
             protected boolean autoRemove;
             protected boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
@@ -560,6 +564,14 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
             public void setArgs(List<String> args) {
                 this.args = args;
+            }
+
+            public boolean isVerbose() {
+                return verbose;
+            }
+
+            public void setVerbose(boolean verbose) {
+                this.verbose = verbose;
             }
 
             public boolean isAutoRemove() {

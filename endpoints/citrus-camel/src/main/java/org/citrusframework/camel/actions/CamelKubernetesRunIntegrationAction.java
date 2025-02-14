@@ -93,6 +93,7 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
      */
     private final List<String> args;
 
+    private final boolean verbose;
     private final boolean autoRemoveResources;
 
     /**
@@ -116,6 +117,7 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
         this.properties = builder.properties;
         this.traits = builder.traits;
         this.args = builder.args;
+        this.verbose = builder.verbose;
         this.autoRemoveResources = builder.autoRemoveResources;
         this.waitForRunningState = builder.waitForRunningState;
     }
@@ -179,6 +181,10 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
 
         if (args != null) {
             commandArgs.addAll(args);
+        }
+
+        if (verbose) {
+            commandArgs.add("--verbose=true");
         }
 
         camelJBang().camelApp().workingDir(integrationToRun.toAbsolutePath().getParent());
@@ -255,6 +261,7 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
         private final List<String> traits = new ArrayList<>();
         private final List<String> args = new ArrayList<>();
 
+        private boolean verbose = CamelJBangSettings.isVerbose();
         private boolean autoRemoveResources = CamelJBangSettings.isAutoRemoveResources();
         private boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
 
@@ -421,6 +428,11 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
          */
         public Builder withArgs(String... args) {
             this.args.addAll(Arrays.asList(args));
+            return this;
+        }
+
+        public Builder verbose(boolean enabled) {
+            this.verbose = enabled;
             return this;
         }
 

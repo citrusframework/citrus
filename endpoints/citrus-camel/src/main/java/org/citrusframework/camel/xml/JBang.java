@@ -601,7 +601,7 @@ public class JBang {
             @XmlElement(required = true)
             private Integration integration;
 
-            @XmlAttribute(name = "runtime")
+            @XmlAttribute
             protected String runtime;
 
             @XmlAttribute(name = "image-registry")
@@ -617,14 +617,17 @@ public class JBang {
             protected Properties buildProperties;
 
 
-            @XmlElement(name = "properties")
+            @XmlElement
             protected Properties properties;
 
-            @XmlElement(name = "traits")
+            @XmlElement
             protected Traits traits;
 
-            @XmlElement(name = "args")
+            @XmlElement
             protected Args args;
+
+            @XmlAttribute
+            protected boolean verbose;
 
             @XmlAttribute(name = "auto-remove")
             protected boolean autoRemove;
@@ -705,6 +708,14 @@ public class JBang {
 
             public void setArgs(Args args) {
                 this.args = args;
+            }
+
+            public boolean isVerbose() {
+                return verbose;
+            }
+
+            public void setVerbose(boolean verbose) {
+                this.verbose = verbose;
             }
 
             public boolean isAutoRemove() {

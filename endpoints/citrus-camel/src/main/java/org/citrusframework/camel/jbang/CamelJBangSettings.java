@@ -54,6 +54,10 @@ public final class CamelJBangSettings {
     private static final String CAMEL_DUMP_INTEGRATION_OUTPUT_ENV = JBANG_ENV_PREFIX + "DUMP_INTEGRATION_OUTPUT";
     private static final String CAMEL_DUMP_INTEGRATION_OUTPUT_DEFAULT = "false";
 
+    private static final String VERBOSE_PROPERTY = JBANG_PROPERTY_PREFIX + "verbose";
+    private static final String VERBOSE_ENV = JBANG_ENV_PREFIX + "VERBOSE";
+    private static final String VERBOSE_DEFAULT = "false";
+
     private static final String AUTO_REMOVE_RESOURCES_PROPERTY = JBANG_PROPERTY_PREFIX + "auto.remove.resources";
     private static final String AUTO_REMOVE_RESOURCES_ENV = JBANG_ENV_PREFIX + "AUTO_REMOVE_RESOURCES";
     private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "true";
@@ -144,6 +148,16 @@ public final class CamelJBangSettings {
     public static String getKameletsVersion() {
         return System.getProperty(KAMELETS_VERSION_PROPERTY,
                 System.getenv(KAMELETS_VERSION_ENV) != null ? System.getenv(KAMELETS_VERSION_ENV) : KAMELETS_VERSION_DEFAULT);
+    }
+
+    /**
+     * When set to true Camel JBang will print detailed messages
+     * (e.g. while exporting to Maven projects and building and deploying Kubernetes container images).
+     * @return
+     */
+    public static boolean isVerbose() {
+        return Boolean.parseBoolean(System.getProperty(VERBOSE_PROPERTY,
+                System.getenv(VERBOSE_ENV) != null ? System.getenv(VERBOSE_ENV) : VERBOSE_DEFAULT));
     }
 
     /**
