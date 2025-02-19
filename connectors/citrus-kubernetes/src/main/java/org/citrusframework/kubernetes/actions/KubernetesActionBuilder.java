@@ -466,6 +466,30 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
     public class ServiceActionBuilder {
 
         /**
+         * Connect to given Kubernetes service via local port forward.
+         * @param serviceName the name of the Kubernetes service.
+         */
+        public ServiceConnectAction.Builder connect(String serviceName) {
+            ServiceConnectAction.Builder builder = new ServiceConnectAction.Builder()
+                    .client(kubernetesClient)
+                    .service(serviceName);
+            delegate = builder;
+            return builder;
+        }
+
+        /**
+         * Connect to given Kubernetes service via local port forward.
+         * @param serviceName the name of the Kubernetes service.
+         */
+        public ServiceDisconnectAction.Builder disconnect(String serviceName) {
+            ServiceDisconnectAction.Builder builder = new ServiceDisconnectAction.Builder()
+                    .client(kubernetesClient)
+                    .service(serviceName);
+            delegate = builder;
+            return builder;
+        }
+
+        /**
          * Create service instance.
          * @param serviceName the name of the Kubernetes service.
          */

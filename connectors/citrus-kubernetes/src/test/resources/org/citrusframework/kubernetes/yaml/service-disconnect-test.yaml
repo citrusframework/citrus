@@ -1,0 +1,11 @@
+name: "ServiceDisconnectTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      disconnect:
+        service:
+          name: "my-service"

@@ -61,6 +61,14 @@ public class Kubernetes implements TestActionBuilder<KubernetesAction>, Referenc
         this.kubernetesClient = client;
     }
 
+    public void setConnect(Connect builder) {
+        this.builder = builder;
+    }
+
+    public void setDisconnect(Disconnect builder) {
+        this.builder = builder;
+    }
+
     public void setCreateService(CreateService builder) {
         this.builder = builder;
     }

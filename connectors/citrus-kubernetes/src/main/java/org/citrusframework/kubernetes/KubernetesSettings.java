@@ -24,6 +24,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import io.fabric8.kubernetes.api.model.NamedContext;
+import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClientBuilder;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,6 +150,14 @@ public class KubernetesSettings {
                 return Files.readString(namespace.toPath());
             } catch (IOException e) {
                 logger.warn("Failed to read Kubernetes namespace from filesystem {}", namespace, e);
+            }
+        }
+
+        try (final KubernetesClient k8s = new KubernetesClientBuilder().build()) {
+            NamedContext currentContext = k8s.getConfiguration().getCurrentContext();
+            if (currentContext != null && currentContext.getContext() != null && StringUtils.hasText(currentContext.getContext().getNamespace())) {
+                logger.debug("Reading current namespace from context: {}", currentContext.getName());
+                return currentContext.getContext().getNamespace();
             }
         }
 

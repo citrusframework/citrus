@@ -1,0 +1,13 @@
+name: "ServiceConnectTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      connect:
+        service:
+          name: "my-service"
+          port: 8080
+          localPort: 31234

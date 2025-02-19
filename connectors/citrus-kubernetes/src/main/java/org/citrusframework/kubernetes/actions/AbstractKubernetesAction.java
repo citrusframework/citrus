@@ -17,6 +17,7 @@
 package org.citrusframework.kubernetes.actions;
 
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClientBuilder;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.kubernetes.KubernetesActor;
@@ -105,6 +106,11 @@ public abstract class AbstractKubernetesAction extends AbstractTestAction implem
             if (kubernetesClient == null) {
                 if (referenceResolver != null && referenceResolver.isResolvable(KubernetesClient.class)) {
                     kubernetesClient = referenceResolver.resolve(KubernetesClient.class);
+                } else {
+                    kubernetesClient = new KubernetesClientBuilder().build();
+                    if (referenceResolver != null) {
+                        referenceResolver.bind("kubernetesClient", kubernetesClient);
+                    }
                 }
             }
 
