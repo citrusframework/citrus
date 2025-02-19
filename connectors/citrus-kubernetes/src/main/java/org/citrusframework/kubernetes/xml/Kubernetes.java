@@ -74,6 +74,16 @@ public class Kubernetes implements TestActionBuilder<KubernetesAction>, Referenc
         return this;
     }
 
+    @XmlElement
+    public void setConnect(Connect builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
+    public void setDisconnect(Disconnect builder) {
+        this.builder = builder;
+    }
+
     @XmlElement(name = "create-service")
     public void setCreateService(CreateService builder) {
         this.builder = builder;

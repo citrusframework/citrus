@@ -1652,6 +1652,30 @@
     <xs:sequence>
       <xs:element name="description" type="xs:string" minOccurs="0"/>
       <xs:choice>
+        <xs:element name="connect">
+          <xs:complexType>
+            <xs:choice>
+              <xs:element name="service">
+                <xs:complexType>
+                  <xs:attribute name="name" use="required" type="xs:string"/>
+                  <xs:attribute name="port" use="required" type="xs:string"/>
+                  <xs:attribute name="local-port" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="disconnect">
+          <xs:complexType>
+            <xs:choice>
+              <xs:element name="service">
+                <xs:complexType>
+                  <xs:attribute name="name" use="required" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
         <xs:element name="create-service">
           <xs:complexType>
             <xs:sequence>
