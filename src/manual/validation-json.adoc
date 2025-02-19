@@ -35,7 +35,7 @@ With Json slurper the tester can validate the Json message body with closures fo
 IMPORTANT: The Json validator offers two different modes to operate.
 By default, *strict* mode is enabled and the validator will also check the exact amount of entries (object properties / array items) to match in received and control message.
 No additional fields in received Json data structure will be accepted.
-In *soft* mode the validator allows additional entries (object properties / array items) in received Json, so the control Json can be a subset of the recieved.
+In *soft* mode the validator allows additional entries (object properties / array items) in received Json, so the control Json can be a subset of the received.
 Additional entries in the received Json data structure are ignored.
 
 TIP: The Json validation mode (strict or soft) is settable via environment variable `CITRUS_JSON_MESSAGE_VALIDATION_STRICT` or system property `citrus.json.message.validation.strict=false`.
