@@ -16,13 +16,9 @@
 
 package org.citrusframework.util;
 
-import org.citrusframework.CitrusSettings;
-import org.citrusframework.Completable;
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -31,12 +27,21 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.citrusframework.CitrusSettings;
+import org.citrusframework.Completable;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Utility class for test cases providing several utility
  * methods regarding Citrus test cases.
  *
  */
 public abstract class TestUtils {
+
+    public static final String HTTPS_CITRUSFRAMEWORK_ORG = "https://citrusframework.org";
 
     /** Used to identify waiting task threads pool */
     public static final String WAIT_THREAD_PREFIX = "citrus-waiting-";
@@ -93,7 +98,7 @@ public abstract class TestUtils {
                     if (logger.isDebugEnabled()) {
                         logger.debug("Failed to wait for completion of nested test actions", e);
                     } else {
-                        logger.warn(String.format("Failed to wait for completion of nested test actions because of %s",  e.getMessage()));
+                        logger.warn("Failed to wait for completion of nested test actions because of {}", e.getMessage());
                     }
                 }
             }, 100L, timeout / 10, TimeUnit.MILLISECONDS);
@@ -110,7 +115,7 @@ public abstract class TestUtils {
                 scheduledExecutor.shutdown();
                 scheduledExecutor.awaitTermination((timeout / 10) / 2, TimeUnit.MICROSECONDS);
             } catch (InterruptedException e) {
-                logger.warn(String.format("Failed to await orderly termination of waiting tasks to complete, caused by %s", e.getMessage()));
+                logger.warn("Failed to await orderly termination of waiting tasks to complete, caused by {}", e.getMessage());
             }
 
             if (!scheduledExecutor.isTerminated()) {
@@ -136,5 +141,19 @@ public abstract class TestUtils {
             waitThread.setName(WAIT_THREAD_PREFIX.concat(waitThread.getName()));
         }
         return waitThread;
+    }
+
+    public static boolean isNetworkReachable() {
+        try {
+            URL url = new URL(HTTPS_CITRUSFRAMEWORK_ORG);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+            int responseCode = connection.getResponseCode();
+            return responseCode == HttpURLConnection.HTTP_OK;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

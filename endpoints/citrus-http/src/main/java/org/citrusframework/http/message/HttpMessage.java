@@ -84,6 +84,10 @@ public class HttpMessage extends DefaultMessage {
     public HttpMessage(final Message message, boolean forceCitrusHeaderUpdate) {
         super(message, forceCitrusHeaderUpdate);
         copyCookies(message);
+
+        if (message instanceof HttpMessage httpMessage) {
+            queryParams.putAll(httpMessage.queryParams);
+        }
     }
 
     /**
@@ -368,7 +372,11 @@ public class HttpMessage extends DefaultMessage {
      * @return The accept header value
      */
     public String getAccept() {
-        final Object accept = getHeader("Accept");
+        Object accept = getHeader("Accept");
+
+        if (accept == null) {
+            accept = getHeader("accept");
+        }
 
         if (accept != null) {
             return accept.toString();

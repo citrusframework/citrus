@@ -16,6 +16,10 @@
 
 package org.citrusframework.http.server;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import jakarta.servlet.Filter;
 import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -42,10 +46,6 @@ import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.DispatcherServlet;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static java.nio.file.Paths.get;
 import static java.util.Arrays.asList;
@@ -148,6 +148,11 @@ public class HttpServer extends AbstractServer {
      * Should handle http cookies
      */
     private boolean handleCookies = false;
+
+    /**
+     * Should handle matrix encoded path parameters
+     */
+    private boolean removeSemicolonPathContent = true;
 
     /**
      * Default status code returned by http server
@@ -643,6 +648,20 @@ public class HttpServer extends AbstractServer {
      */
     public void setHandleCookies(boolean handleCookies) {
         this.handleCookies = handleCookies;
+    }
+
+    /**
+     * Gets the removeSemicolonPathContent.
+     */
+    public boolean isRemoveSemicolonPathContent() {
+        return removeSemicolonPathContent;
+    }
+
+    /**
+     * Sets the removeSemicolonPathContent.
+     */
+    public void setRemoveSemicolonPathContent(boolean removeSemicolonPathContent) {
+        this.removeSemicolonPathContent = removeSemicolonPathContent;
     }
 
     /**

@@ -17,7 +17,6 @@
 package org.citrusframework.http.actions;
 
 import jakarta.servlet.http.Cookie;
-
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
@@ -31,7 +30,8 @@ import org.springframework.util.MultiValueMap;
 /**
  * @since 2.4
  */
-public class HttpClientRequestActionBuilder extends SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {
+public class HttpClientRequestActionBuilder extends
+    SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {
 
     /**
      * Http message to send or receive
@@ -58,9 +58,13 @@ public class HttpClientRequestActionBuilder extends SendMessageAction.SendMessag
     @Override
     public HttpMessageBuilderSupport getMessageBuilderSupport() {
         if (messageBuilderSupport == null) {
-            messageBuilderSupport = new HttpMessageBuilderSupport(httpMessage, this);
+            messageBuilderSupport = createHttpMessageBuilderSupport();
         }
         return super.getMessageBuilderSupport();
+    }
+
+    protected HttpMessageBuilderSupport createHttpMessageBuilderSupport() {
+        return new HttpMessageBuilderSupport(httpMessage, this);
     }
 
     /**
@@ -216,6 +220,14 @@ public class HttpClientRequestActionBuilder extends SendMessageAction.SendMessag
 
     @Override
     public SendMessageAction doBuild() {
+        return createSendMessageAction();
+    }
+
+    /**
+     * Creates the actual SendMessageAction. Subclasses may override this method to provide specific
+     * implementations.
+     */
+    protected SendMessageAction createSendMessageAction() {
         return new SendMessageAction(this);
     }
 }

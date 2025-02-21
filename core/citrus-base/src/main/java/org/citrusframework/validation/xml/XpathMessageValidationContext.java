@@ -23,10 +23,10 @@ import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageProcessorAdapter;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.VariableExtractorAdapter;
-import org.citrusframework.util.StringUtils;
 
 /**
  * Specialised Xml validation context adds XPath expression evaluation.
@@ -51,6 +51,11 @@ public class XpathMessageValidationContext extends XmlMessageValidationContext {
     public XpathMessageValidationContext(Builder builder) {
         super(builder);
         this.xPathExpressions = builder.expressions;
+    }
+
+    @Override
+    public boolean requiresValidator() {
+        return true;
     }
 
     /**
