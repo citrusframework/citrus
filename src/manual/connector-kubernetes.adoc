@@ -333,6 +333,215 @@ NOTE: The behavior to auto create the HttpServer instance can be disabled via sy
 You can also customize the HttpServer instance by referencing a previously created server from the bean registry.
 In this case the auto creation is skipped for this test action and the custom server reference is used.
 
+[[kubernetes-connect-service]]
+== Connect with Service
+
+Every Kubernetes Deployment is able to expose a service to other resources on the cluster so clients are able to call the service endpoint.
+Usually Kubernetes service exposes this endpoint to internal clients only (e.g. service type is ClusterIP).
+Internal client means that the client connects from within the same cluster (e.g. from another pod).
+Following from that your test that runs on your local machine may not have access to the Kubernetes service endpoint.
+
+The solution for that is to connect to the Kubernetes service as part of the Citrus test.
+This enables the access to such a Kubernetes service.
+The service connection uses a port forward to the Kubernetes service and the underlying Kubernetes pod.
+You can then use a local port on your machine to access the Kubernetes service.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void connectServiceTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .services()
+            .connect("my-service")
+            .portMapping(8080, 31234)
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ServiceConnectTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+  <actions>
+    <kubernetes client="k8sClient" namespace="my-namespace">
+      <connect>
+        <service name="my-service" port="8080" local-port="31234"/>
+      </connect>
+    </kubernetes>
+  </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ServiceConnectTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      connect:
+        service:
+          name: "my-service"
+          port: 8080
+          localPort: 31234
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+The service connect test action creates a new port forward using a local port on your machine connecting to the exposed port on the service.
+The user is able to define the port mapping with a fixed local port and the target exposed port on the Kubernetes service.
+
+NOTE: You can also skip the local port setting to choose a random local port.
+
+This opens the connection of your local machine to the Kubernetes service so sending requests to the local endpoint will invoke the service on the Kubernetes cluster.
+The port forward is kept open for the rest of your test or until you explicitly disconnect.
+
+The connect test action automatically creates a new Http client instance and stores this in the Citrus registry.
+You can use the client in following test actions to connect to the new port forward service endpoint.
+As usual, you can reference the client by its name in the Citrus registry.
+The name of the Http client instance that connects to the new port forward service uses a default pattern: `<service-name>.client`.
+
+In our example the client is stored in the Citrus registry with the name `my-service.client`.
+You can use the client in a normal Http test action to call the new port forward service.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void connectServiceTest() {
+    when(http()
+        .client("my-service.client")
+        .send()
+        .get()
+    );
+
+    then(http()
+        .client("my-service.client")
+        .receive()
+        .response(HttpStatus.OK)
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ServiceConnectTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+  <actions>
+    <http client="my-service.client">
+      <send-request>
+        <GET/>
+      </send-request>
+    </http>
+
+    <http client="my-service.client">
+      <receive-response>
+        <response status="200" reason-phrase="OK"/>
+      </receive-response>
+    </http>
+  </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ServiceConnectTest
+actions:
+  - http:
+      client: "my-service.client"
+      sendRequest:
+        GET: {}
+  - http:
+      client: "httpClient"
+      receiveResponse:
+        status: 200
+        reasonPhrase: OK
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+Instead of using the default generated Http client name you can also explicitly specify a client name.
+Citrus will search create the client and add it to the Citrus registry with that name.
+
+IMPORTANT: The Kubernetes service port forward may require special permissions on your Kubernetes cluster. Please make sure to connect with a proper user that is able to create the port forward. On Kubernetes platforms such as Minikube or Kind this is given by default. On other cluster types you may need to set up special permissions for your local Kubernetes user.
+
+NOTE: The port forward connection is automatically closed when the test ends. This is done with an explicit disconnect test action that is run in the finally section of the current test. In case you need to keep the port forward connection open you can disable the `auto-remove` option on the connect test action.
+
+[[kubernetes-disconnect-service]]
+== Disconnect from Service
+
+By default, the port forward service connection is closed automatically when the test ends.
+In case you need to explicitly close the port forward connection you can do so with the following test action.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void connectServiceTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .services()
+            .disconnect("my-service")
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ServiceConnectTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+  <actions>
+    <kubernetes client="k8sClient" namespace="my-namespace">
+      <disconnect>
+        <service name="my-service"/>
+      </disconnect>
+    </kubernetes>
+  </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ServiceConnectTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      disconnect:
+        service:
+          name: "my-service"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+This closes the port forward to the Kubernetes service immediately.
+
 [[kubernetes-create-config-map]]
 == Create ConfigMap
 
