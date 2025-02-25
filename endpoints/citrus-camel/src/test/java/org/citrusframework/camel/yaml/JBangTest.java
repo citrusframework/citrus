@@ -25,11 +25,21 @@ import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CamelRunIntegrationAction;
 import org.citrusframework.camel.actions.CamelStopIntegrationAction;
 import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
+import org.citrusframework.util.TestUtils;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.testng.Assert;
+import org.testng.SkipException;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class JBangTest extends AbstractYamlActionTest {
+
+    @BeforeClass
+    public static void beforeClass() {
+        if (!TestUtils.isNetworkReachable()) {
+            throw new SkipException("Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
+        }
+    }
 
     @Test
     public void shouldLoadCamelActions() throws Exception {

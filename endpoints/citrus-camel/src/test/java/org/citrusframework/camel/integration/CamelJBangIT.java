@@ -19,6 +19,8 @@ package org.citrusframework.camel.integration;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.TestNGCitrusSupport;
+import org.citrusframework.util.TestUtils;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.camel.dsl.CamelSupport.camel;
@@ -30,6 +32,11 @@ public class CamelJBangIT extends TestNGCitrusSupport {
     @Test
     @CitrusTest(name = "RunIntegration_SourceCode_IT")
     public void runIntegrationWithSourceCodeIT() {
+
+        if (!TestUtils.isNetworkReachable()) {
+            throw new SkipException("Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
+        }
+
         given(doFinally().actions(
                 catchException().actions(camel().jbang().stop("hello"))
         ));
@@ -58,6 +65,11 @@ public class CamelJBangIT extends TestNGCitrusSupport {
     @Test
     @CitrusTest(name = "RunIntegration_Resource_IT")
     public void runIntegrationWithResourceIT() {
+
+        if (!TestUtils.isNetworkReachable()) {
+            throw new SkipException("Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
+        }
+
         given(doFinally().actions(
             catchException().actions(camel().jbang().stop("route"))
         ));

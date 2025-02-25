@@ -18,6 +18,7 @@ package org.citrusframework.functions.core;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
@@ -25,6 +26,7 @@ import org.citrusframework.functions.Function;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
+import static java.lang.System.currentTimeMillis;
 
 /**
  * Function generating a random string containing alphabetic characters. Arguments specify
@@ -32,7 +34,7 @@ import static java.lang.Integer.parseInt;
  *
  */
 public class RandomStringFunction implements Function {
-    private static Random generator = new Random(System.currentTimeMillis());
+    private static final Random random = new Random(currentTimeMillis());
 
     private static final char[] ALPHABET_UPPER = { 'A', 'B', 'C', 'D', 'E', 'F', 'G',
         'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
@@ -67,12 +69,13 @@ public class RandomStringFunction implements Function {
         int numberOfLetters;
         String notationMethod = MIXED;
         boolean includeNumbers = false;
+        int minNumberOfLetters = -1;
 
         if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 
-        if (parameterList.size() > 3) {
+        if (parameterList.size() > 4) {
             throw new InvalidFunctionUsageException("Too many parameters for function");
         }
 
@@ -89,36 +92,41 @@ public class RandomStringFunction implements Function {
             includeNumbers = parseBoolean(parameterList.get(2));
         }
 
+        if (parameterList.size() > 3) {
+            minNumberOfLetters = parseInt(parameterList.get(3));
+        }
+
         if (notationMethod.equals(UPPERCASE)) {
-            return getRandomString(numberOfLetters, ALPHABET_UPPER, includeNumbers);
+            return getRandomString(numberOfLetters, ALPHABET_UPPER, includeNumbers, minNumberOfLetters);
         } else if (notationMethod.equals(LOWERCASE)) {
-            return getRandomString(numberOfLetters, ALPHABET_LOWER, includeNumbers);
+            return getRandomString(numberOfLetters, ALPHABET_LOWER, includeNumbers, minNumberOfLetters);
         } else {
-            return getRandomString(numberOfLetters, ALPHABET_MIXED, includeNumbers);
+            return getRandomString(numberOfLetters, ALPHABET_MIXED, includeNumbers, minNumberOfLetters);
         }
     }
 
     /**
      * Static random number generator aware string generating method.
-     * @param numberOfLetters
-     * @param alphabet
-     * @param includeNumbers
-     * @return
      */
-    public static String getRandomString(int numberOfLetters, char[] alphabet, boolean includeNumbers) {
+    public static String getRandomString(int numberOfLetters, char[] alphabet, boolean includeNumbers, int minNumberOfLetters) {
         StringBuilder builder = new StringBuilder();
 
         int upperRange = alphabet.length - 1;
 
         // make sure first character is not a number
-        builder.append(alphabet[generator.nextInt(upperRange)]);
+        builder.append(alphabet[random.nextInt(upperRange)]);
 
         if (includeNumbers) {
             upperRange += NUMBERS.length;
         }
 
+        if (minNumberOfLetters > -1) {
+            numberOfLetters = ThreadLocalRandom.current()
+                .nextInt(minNumberOfLetters, numberOfLetters + 1);
+        }
+
         for (int i = 1; i < numberOfLetters; i++) {
-            int letterIndex = generator.nextInt(upperRange);
+            int letterIndex = random.nextInt(upperRange);
 
             if (letterIndex > alphabet.length - 1) {
                 builder.append(NUMBERS[letterIndex - alphabet.length]);

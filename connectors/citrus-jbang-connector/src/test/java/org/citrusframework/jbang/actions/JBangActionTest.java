@@ -21,12 +21,22 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.jbang.UnitTestSupport;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.util.TestUtils;
 import org.testng.Assert;
+import org.testng.SkipException;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class JBangActionTest extends UnitTestSupport {
 
     private final Resource helloScript = Resources.fromClasspath("org/citrusframework/jbang/hello.java");
+
+    @BeforeClass
+    public static void beforeClass() {
+        if (!TestUtils.isNetworkReachable()) {
+            throw new SkipException("Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
+        }
+    }
 
     @Test
     public void testScriptOrFile() {

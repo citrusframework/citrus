@@ -30,6 +30,7 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.messaging.Producer;
+import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.MessageValidatorRegistry;
@@ -42,9 +43,12 @@ import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class SendMessageActionTest extends AbstractTestNGUnitTest {
@@ -70,10 +74,11 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         overwriteElements.put("$.TestRequest.Message", "Hello World!");
 
         JsonPathMessageProcessor processor = new JsonPathMessageProcessor.Builder()
-                .expressions(overwriteElements)
-                .build();
+            .expressions(overwriteElements)
+            .build();
 
-        final Message controlMessage = new DefaultMessage("{\"TestRequest\":{\"Message\":\"Hello World!\"}}");
+        final Message controlMessage = new DefaultMessage(
+            "{\"TestRequest\":{\"Message\":\"Hello World!\"}}");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -87,31 +92,37 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.getActor()).thenReturn(null);
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
-                .endpoint(endpoint)
-                .message(messageBuilder)
-                .type(MessageType.JSON)
-                .process(processor)
-                .build();
+            .endpoint(endpoint)
+            .message(messageBuilder)
+            .type(MessageType.JSON)
+            .process(processor)
+            .build();
         sendAction.execute(context);
-
     }
 
     @Test
     public void testSendJsonMessageWithValidation() {
-
-        AtomicBoolean  validated = new AtomicBoolean(false);
+        AtomicBoolean validated = new AtomicBoolean(false);
 
         SchemaValidator<?> schemaValidator = mock(SchemaValidator.class);
         when(schemaValidator.supportsMessageType(eq("JSON"), any())).thenReturn(true);
-        doAnswer(invocation-> {
-            JsonMessageValidationContext argument = invocation.getArgument(2, JsonMessageValidationContext.class);
+        doAnswer(invocation -> {
 
-            Assert.assertEquals(argument.getSchema(), "fooSchema");
-            Assert.assertEquals(argument.getSchemaRepository(), "fooRepository");
+            Assert.assertEquals(invocation.getArgument(3, String.class), "fooSchema");
+            Assert.assertEquals(invocation.getArgument(2, String.class), "fooRepository");
 
             validated.set(true);
+
             return null;
-        }).when(schemaValidator).validate(any(), any(), any());
+        }).when(schemaValidator)
+            .validate(isA(Message.class), isA(TestContext.class), isA(String.class),
+                isA(String.class));
+        doReturn(true).when(schemaValidator).canValidate(isA(Message.class), isA(Boolean.class));
+
+        ReferenceResolver referenceResolverSpy = spy(context.getReferenceResolver());
+        context.setReferenceResolver(referenceResolverSpy);
+
+        doReturn(Map.of("jsonSchemaValidator", schemaValidator)).when(referenceResolverSpy).resolveAll(SchemaValidator.class);
 
         context.getMessageValidatorRegistry().addSchemaValidator("JSON", schemaValidator);
 
@@ -125,20 +136,21 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.getActor()).thenReturn(null);
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
-                .endpoint(endpoint)
-                .message(messageBuilder)
-                .schemaValidation(true)
-                .schema("fooSchema")
-                .schemaRepository("fooRepository")
-                .type(MessageType.JSON)
-                .build();
+            .endpoint(endpoint)
+            .message(messageBuilder)
+            .schemaValidation(true)
+            .schema("fooSchema")
+            .schemaRepository("fooRepository")
+            .type(MessageType.JSON)
+            .build();
         sendAction.execute(context);
 
         Assert.assertTrue(validated.get());
     }
 
     private void validateMessageToSend(Message toSend, Message controlMessage) {
-        Assert.assertEquals(toSend.getPayload(String.class).trim(), controlMessage.getPayload(String.class).trim());
+        Assert.assertEquals(toSend.getPayload(String.class).trim(),
+            controlMessage.getPayload(String.class).trim());
         DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
         validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext());
     }

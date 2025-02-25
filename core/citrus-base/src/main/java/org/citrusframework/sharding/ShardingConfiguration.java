@@ -16,10 +16,10 @@
 
 package org.citrusframework.sharding;
 
+import java.util.Optional;
+
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.SystemProvider;
-
-import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.String.valueOf;
@@ -109,7 +109,7 @@ public final class ShardingConfiguration {
      *
      * @param systemProvider a provider for system environment variables and properties.
      */
-    protected ShardingConfiguration(SystemProvider systemProvider) {
+    ShardingConfiguration(SystemProvider systemProvider) {
         this(getTotalNumberOfShards(systemProvider), getShardNumber(systemProvider), systemProvider);
     }
 
@@ -131,7 +131,7 @@ public final class ShardingConfiguration {
      * @param shardNumber         the shard number for this loader, zero-based.
      * @param systemProvider      a provider for system environment variables and properties.
      */
-    protected ShardingConfiguration(int totalNumberOfShards, int shardNumber, SystemProvider systemProvider) {
+    private ShardingConfiguration(int totalNumberOfShards, int shardNumber, SystemProvider systemProvider) {
         this.totalNumberOfShards = totalNumberOfShards;
         this.shardNumber = shardNumber;
 

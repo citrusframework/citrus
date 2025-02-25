@@ -255,10 +255,99 @@ Function output:
 65
 ----
 
+[[function-random-number-generator]]
+== randomNumberGenerator()
+
+This function is the big brother of randomNumber it generates a random numeric value with customizable decimal precision and range.
+It provides options to control the minimum and maximum values, inclusivity, and numerical multiples of the generated number.
+
+The function accepts up to six parameters, which influence the generated number:
+
+Parameters
+
+1. Decimal places (optional, default: 0)
+
+- Defines the number of decimal places in the generated number.
+- A value of 0 results in an integer output.
+
+2. Minimum value (optional, default: -1,000,000)
+
+- The lower bound for the generated number.
+
+3. Maximum value (optional, default: 1,000,000)
+
+- The upper bound for the generated number.
+
+4. Exclude minimum (optional, default: false)
+
+- If true, the generated number will never be exactly the minimum value.
+
+5. Exclude maximum (optional, default: false)
+
+- If true, the generated number will never be exactly the maximum value.
+
+6. Multiple of (optional)
+
+- If provided, the generated number will be a multiple of this value.
+- If no valid multiple exists within the given range, the function may return Infinity.
+
+7. Format pattern (optional)
+
+- If no pattern is specified a plain string representation of the number will be returned.
+- e.g. "#,###.000", "#.000", "#.###E0"
+
+.XML Example
+[source,xml]
+----
+<variables>
+    <variable name="rndNum1" value="${citrus:randomNumberGenerator()}"/>
+    <variable name="rndNum2" value="${citrus:randomNumberGenerator(2)}"/>
+    <variable name="rndNum3" value="${citrus:randomNumberGenerator(3, -10, 10)}"/>
+    <variable name="rndNum4" value="${citrus:randomNumberGenerator(0, 100, 200, true, false)}"/>
+    <variable name="rndNum5" value="${citrus:randomNumberGenerator(2, 0, 100, false, true, 5)}"/>
+    <variable name="rndNum5" value="${citrus:randomNumberGenerator(0, 10000000, 1000000000, false, false, null, #.###E0)}"/>
+</variables>
+----
+
+Function Output Examples
+[source]
+----
+157
+23.78
+-5.462
+101
+15.00
+----
+
+If no parameters are provided, the function generates a random integer between -1,000,000 and 1,000,000.
+
+If decimal places are specified, the number will be formatted accordingly.
+
+If multiple of is set, the generated number will always be a multiple of the given value within the range.
+
+If minimum or maximum values are excluded, the function ensures that the output never equals these boundaries.
+
 [[functions-random-string]]
 == randomString()
 
-This function will generate a random string representation with a defined length. A second parameter for this function will define the case of the generated letters (UPPERCASE, LOWERCASE, MIXED). The last parameter allows also digit characters in the generated string. By default digit characters are not allowed.
+This function will generate a random string representation with a defined length.
+
+Parameters
+
+1. Length  of the generated string. (Required, no default value)
+
+2. Case of the generated letters. (Optional, default: MIXED)
+
+- Possible values: UPPERCASE, LOWERCASE, MIXED.
+
+3. Digits characters (0-9) included. (Optional, default: false)
+
+- If set to true, digits will be part of the output.
+
+4. Minimum number of characters in the generated string. (Optional, default: length)
+
+- This value must be positive or zero and less than or equal to the total length.
+- If smaller than the length, the generated string will have a random length between the minimum and the specified length.
 
 [source,xml]
 ----
@@ -269,6 +358,7 @@ This function will generate a random string representation with a defined length
     <variable name="rndString3" value="citrus:randomString(10, LOWERCASE)"/>
     <variable name="rndString4" value="citrus:randomString(10, MIXED)"/>
     <variable name="rndString4" value="citrus:randomString(10, MIXED, true)"/>
+    <variable name="rndString4" value="citrus:randomString(10, MIXED, true, 2)"/>
 </variables>
 ----
 
@@ -281,12 +371,48 @@ AgSSwedetG
 JSDFUTTRKU
 dtkhirtsuz
 Vt567JkA32
+Vt56
 ----
+
+[[functions-random-pattern]]
+== randomPattern()
+
+This function generates a random string that matches the given regular expression pattern.
+It utilizes the https://github.com/mifmif/Generex[Generex library] to produce valid strings based on the provided regex.
+
+The function takes one parameter, which is the regular expression pattern to generate the string from.
+
+[source,xml]
+----
+<variables>
+    <variable name="rndPattern1" value="${citrus:randomPattern('[A-Z]{5}')}"/>
+    <variable name="rndPattern2" value="${citrus:randomPattern('[0-9]{3}-[A-Z]{2}')}"/>
+    <variable name="rndPattern3" value="${citrus:randomPattern('[a-z]{4}[0-9]{2}')}"/>
+    <variable name="rndPattern4" value="${citrus:randomPattern('[A-Za-z0-9]{8,12}')}"/>
+</variables>
+----
+
+Function output:
+[source]
+----
+ABCDE
+735-RT
+bcda42
+TgH56yJk12
+----
+
+The generated string strictly adheres to the provided regex pattern.
+The function supports character ranges, quantifiers, and grouping as per standard Java regex syntax.
+If an invalid regex is provided, an error will be thrown.
+An error might also be thrown for very complex regex, which cannot be handled by the Generex library.
 
 [[functions-random-enum-value]]
 == randomEnumValue()
 
-This function returns one of its supplied arguments. Furthermore you can specify a custom function with a configured list of values (the enumeration). The function will randomly return an entry when called without arguments. This promotes code reuse and facilitates refactoring.
+This function returns one of its supplied arguments.
+Furthermore, you can specify a custom function with a configured list of values (the enumeration).
+The function will randomly return an entry when called without arguments.
+This promotes code reuse and facilitates refactoring.
 
 In the next sample the function is used to set a httpStatusCode variable to one of the given HTTP status codes (200, 401, 500)
 

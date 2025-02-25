@@ -16,7 +16,10 @@
 
 package org.citrusframework.actions;
 
-import org.citrusframework.CitrusSettings;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
 import org.citrusframework.Completable;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
@@ -25,24 +28,12 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageBuilder;
 import org.citrusframework.message.MessageDirection;
 import org.citrusframework.message.MessageProcessor;
-import org.citrusframework.message.MessageType;
 import org.citrusframework.message.builder.MessageBuilderSupport;
 import org.citrusframework.message.builder.SendMessageBuilderSupport;
-import org.citrusframework.util.IsJsonPredicate;
-import org.citrusframework.util.IsXmlPredicate;
-import org.citrusframework.util.StringUtils;
-import org.citrusframework.validation.SchemaValidator;
-import org.citrusframework.validation.context.SchemaValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static org.citrusframework.util.StringUtils.hasText;
@@ -184,54 +175,9 @@ public class SendMessageAction extends AbstractTestAction implements Completable
      * Validate the message against registered schema validators.
      */
     protected void validateMessage(Message message, TestContext context) {
-        List<SchemaValidator<? extends SchemaValidationContext>> schemaValidators = null;
-        SchemaValidationContext validationContext = null;
-        String  payload = message.getPayload(String.class);
-
-        if ((isSchemaValidation() || isJsonSchemaValidationEnabled()) && IsJsonPredicate.getInstance().test(payload)) {
-            schemaValidators = context.getMessageValidatorRegistry()
-                    .findSchemaValidators(MessageType.JSON.name(), message);
-            validationContext = JsonMessageValidationContext.Builder.json()
-                    .schemaValidation(this.schemaValidation)
-                    .schema(this.schema)
-                    .schemaRepository(this.schemaRepository).build();
-        } else if ((isSchemaValidation() || isXmlSchemaValidationEnabled()) && IsXmlPredicate.getInstance().test(payload)) {
-            schemaValidators = context.getMessageValidatorRegistry()
-                    .findSchemaValidators(MessageType.XML.name(), message);
-            validationContext = XmlMessageValidationContext.Builder.xml()
-                    .schemaValidation(this.schemaValidation)
-                    .schema(this.schema)
-                    .schemaRepository(this.schemaRepository).build();
-        }
-
-        if (schemaValidators != null) {
-            for (SchemaValidator validator : schemaValidators) {
-                validator.validate(message, context, validationContext);
-            }
-        }
-
-    }
-
-    /**
-     * Get setting to determine if json schema validation is enabled by default.
-     * @return
-     */
-    private static boolean isJsonSchemaValidationEnabled() {
-        return Boolean.getBoolean(CitrusSettings.OUTBOUND_SCHEMA_VALIDATION_ENABLED_PROPERTY)
-                || Boolean.getBoolean(CitrusSettings.OUTBOUND_JSON_SCHEMA_VALIDATION_ENABLED_PROPERTY)
-                || Boolean.parseBoolean(System.getenv(CitrusSettings.OUTBOUND_SCHEMA_VALIDATION_ENABLED_ENV))
-                || Boolean.parseBoolean(System.getenv(CitrusSettings.OUTBOUND_JSON_SCHEMA_VALIDATION_ENABLED_ENV));
-    }
-
-    /**
-     * Get setting to determine if xml schema validation is enabled by default.
-     * @return
-     */
-    private static boolean isXmlSchemaValidationEnabled() {
-        return Boolean.getBoolean(CitrusSettings.OUTBOUND_SCHEMA_VALIDATION_ENABLED_PROPERTY)
-                || Boolean.getBoolean(CitrusSettings.OUTBOUND_XML_SCHEMA_VALIDATION_ENABLED_PROPERTY)
-                || Boolean.parseBoolean(System.getenv(CitrusSettings.OUTBOUND_SCHEMA_VALIDATION_ENABLED_ENV))
-                || Boolean.parseBoolean(System.getenv(CitrusSettings.OUTBOUND_XML_SCHEMA_VALIDATION_ENABLED_ENV));
+        context.getMessageValidatorRegistry().getSchemaValidators().values().stream()
+                .filter(validator -> validator.canValidate(message, isSchemaValidation()))
+                .forEach(validator -> validator.validate(message, context, this.schemaRepository, this.schema));
     }
 
     /**

@@ -16,7 +16,8 @@
 
 package org.citrusframework.http.config.xml;
 
-import jakarta.servlet.http.Cookie;
+import java.util.List;
+
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.xml.DescriptionElementParser;
 import org.citrusframework.config.xml.ReceiveMessageActionParser;
@@ -33,11 +34,9 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import java.util.List;
-
 import static java.lang.Boolean.parseBoolean;
-import static java.lang.Integer.parseInt;
 import static org.citrusframework.config.xml.MessageSelectorParser.doParse;
+import static org.citrusframework.http.config.xml.CookieUtils.setCookieElement;
 import static org.springframework.util.xml.DomUtils.getChildElementByTagName;
 import static org.springframework.util.xml.DomUtils.getChildElementsByTagName;
 
@@ -48,6 +47,13 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
+        BeanDefinitionBuilder builder = createBeanDefinitionBuilder(
+            element, parserContext);
+        return builder.getBeanDefinition();
+    }
+
+    protected BeanDefinitionBuilder createBeanDefinitionBuilder(Element element,
+        ParserContext parserContext) {
         BeanDefinitionBuilder builder = parseComponent(element, parserContext);
         builder.addPropertyValue("name", "http:" + element.getLocalName());
 
@@ -59,9 +65,7 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
             builder.addPropertyValue("receiveTimeout", Long.valueOf(receiveTimeout));
         }
 
-        if (!element.hasAttribute("uri") && !element.hasAttribute("client")) {
-            throw new BeanCreationException("Neither http request uri nor http client endpoint reference is given - invalid test action definition");
-        }
+        validateEndpointConfiguration(element);
 
         if (element.hasAttribute("client")) {
             builder.addPropertyReference("endpoint", element.getAttribute("client"));
@@ -98,28 +102,7 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
             }
 
             List<?> cookieElements = getChildElementsByTagName(headers, "cookie");
-            for (Object item : cookieElements) {
-                Element cookieElement = (Element) item;
-                Cookie cookie = new Cookie(cookieElement.getAttribute("name"), cookieElement.getAttribute("value"));
-
-                if (cookieElement.hasAttribute("path")) {
-                    cookie.setPath(cookieElement.getAttribute("path"));
-                }
-
-                if (cookieElement.hasAttribute("domain")) {
-                    cookie.setDomain(cookieElement.getAttribute("domain"));
-                }
-
-                if (cookieElement.hasAttribute("max-age")) {
-                    cookie.setMaxAge(parseInt(cookieElement.getAttribute("max-age")));
-                }
-
-                if (cookieElement.hasAttribute("secure")) {
-                    cookie.setSecure(parseBoolean(cookieElement.getAttribute("secure")));
-                }
-
-                httpMessage.cookie(cookie);
-            }
+            setCookieElement(httpMessage, cookieElements);
 
             boolean ignoreCase = !headers.hasAttribute("ignore-case") || parseBoolean(headers.getAttribute("ignore-case"));
             validationContexts.stream()
@@ -130,7 +113,7 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
 
         doParse(element, builder);
 
-        HttpMessageBuilder httpMessageBuilder = new HttpMessageBuilder(httpMessage);
+        HttpMessageBuilder httpMessageBuilder = createMessageBuilder(httpMessage);
         DefaultMessageBuilder messageContentBuilder = constructMessageBuilder(body, builder);
 
         httpMessageBuilder.setName(messageContentBuilder.getName());
@@ -141,6 +124,28 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
         builder.addPropertyValue("validationContexts", validationContexts);
         builder.addPropertyValue("variableExtractors", getVariableExtractors(element));
 
-        return builder.getBeanDefinition();
+        return builder;
+    }
+
+    protected HttpMessageBuilder createMessageBuilder(HttpMessage httpMessage) {
+        HttpMessageBuilder httpMessageBuilder = new HttpMessageBuilder(httpMessage);
+        return httpMessageBuilder;
+    }
+
+    /**
+     * Validates the endpoint configuration for the given XML element.
+     * <p>
+     * This method is designed to be overridden by subclasses if custom validation logic is required.
+     * By default, it checks whether the 'uri' or 'client' attributes are present in the element.
+     * If neither is found, it throws a {@link BeanCreationException} indicating an invalid test action definition.
+     * </p>
+     *
+     * @param element the XML element representing the endpoint configuration to validate
+     * @throws BeanCreationException if neither 'uri' nor 'client' attributes are present
+     */
+    protected void validateEndpointConfiguration(Element element) {
+        if (!element.hasAttribute("uri") && !element.hasAttribute("client")) {
+            throw new BeanCreationException("Neither http request uri nor http client endpoint reference is given - invalid test action definition");
+        }
     }
 }

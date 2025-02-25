@@ -16,14 +16,14 @@
 
 package org.citrusframework.http.controller;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.adapter.EmptyResponseEndpointAdapter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -31,7 +31,11 @@ import org.citrusframework.http.client.HttpEndpointConfiguration;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.server.HttpServerSettings;
 import org.citrusframework.message.Message;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -130,6 +134,7 @@ public class HttpMessageController {
 
         HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
         UrlPathHelper pathHelper = new UrlPathHelper();
+        pathHelper.setRemoveSemicolonContent(endpointConfiguration.isRemoveSemicolonPathContent());
 
         Enumeration<String> allHeaders = servletRequest.getHeaderNames();
         for (String headerName : CollectionUtils.toArray(allHeaders, new String[] {})) {
