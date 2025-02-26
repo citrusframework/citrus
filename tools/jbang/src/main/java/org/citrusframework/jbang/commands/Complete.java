@@ -15,8 +15,6 @@
  */
 package org.citrusframework.jbang.commands;
 
-import java.io.PrintStream;
-
 import org.citrusframework.jbang.CitrusJBangMain;
 import picocli.AutoComplete;
 import picocli.CommandLine;
@@ -34,12 +32,9 @@ public class Complete extends CitrusCommand {
                 spec.parent().name(),
                 spec.parent().commandLine());
 
-        // not PrintWriter.println: scripts with Windows line separators fail in strange
-        // ways!
-        PrintStream out = System.out;
-        out.print(script);
-        out.print('\n');
-        out.flush();
+        // not PrintWriter.println: scripts with Windows line separators fail in strange ways!
+        printer().print(script);
+        printer().print("\n");
         return 0;
     }
 }

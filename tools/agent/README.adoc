@@ -1,0 +1,5 @@
+= Citrus Agent
+
+The Citrus agent is a Quarkus web application capable of running Citrus tests.
+The agent can be used as a local service or as a Docker image deployed to Kubernetes to run tests inside the platform.
+

@@ -19,6 +19,7 @@ package org.citrusframework.testng.main;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
+import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testng.TestNGCitrusSupport;
 import org.citrusframework.util.FileUtils;
@@ -39,16 +40,19 @@ import org.testng.annotations.Test;
 public class TestNGCitrusTest extends TestNGCitrusSupport {
 
     public static final String TEST_NAME_PARAM = "name";
-    public static final String TEST_SOURCE_PARAM = "source";
+    public static final String TEST_SOURCE_FILE_PARAM = "sourceFile";
+    public static final String TEST_SOURCE_CONTENT_PARAM = "sourceContent";
 
     private String name;
-    private String source;
+    private String sourceFile;
+    private String sourceContent;
 
-    @Parameters({ TEST_NAME_PARAM, TEST_SOURCE_PARAM })
+    @Parameters({ TEST_NAME_PARAM, TEST_SOURCE_FILE_PARAM, TEST_SOURCE_CONTENT_PARAM })
     @BeforeMethod
-    public void beforeTest(String name, String source) {
+    public void beforeTest(String name, String sourceFile, String sourceContent) {
         this.name = name;
-        this.source = source;
+        this.sourceFile = sourceFile;
+        this.sourceContent = sourceContent;
     }
 
     @Test
@@ -59,8 +63,8 @@ public class TestNGCitrusTest extends TestNGCitrusSupport {
     @Override
     protected TestLoader createTestLoader() {
         String type;
-        if (StringUtils.hasText(source)) {
-            type = FileUtils.getFileExtension(source);
+        if (StringUtils.hasText(sourceFile)) {
+            type = FileUtils.getFileExtension(sourceFile);
         } else {
             type = FileUtils.getFileExtension(name);
         }
@@ -74,7 +78,11 @@ public class TestNGCitrusTest extends TestNGCitrusSupport {
         testLoader.setTestName(name);
 
         if (testLoader instanceof TestSourceAware sourceAwareTestLoader) {
-            sourceAwareTestLoader.setSource(source);
+            if (StringUtils.hasText(sourceContent)) {
+                sourceAwareTestLoader.setSource(TestSourceHelper.create(sourceFile, sourceContent));
+            } else if (StringUtils.hasText(sourceFile)) {
+                sourceAwareTestLoader.setSource(TestSourceHelper.create(sourceFile));
+            }
         }
 
         return testLoader;

@@ -27,6 +27,7 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestCaseRunnerFactory;
+import org.citrusframework.TestSource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ClasspathResourceResolver;
@@ -113,9 +114,11 @@ public final class JUnit4Helper {
                 sourceFilePackageName = sourceFilePackageName.substring(0, sourceFilePackageName.lastIndexOf("/"));
             }
 
-            CitrusFrameworkMethod frameworkMethod = new CitrusFrameworkMethod(method.getMethod(), type, FileUtils.getBaseName(FileUtils.getFileName(file.getLocation())),
+            String testName = FileUtils.getBaseName(FileUtils.getFileName(file.getLocation()));
+            String ext = FileUtils.getFileExtension(file.getLocation());
+            CitrusFrameworkMethod frameworkMethod = new CitrusFrameworkMethod(method.getMethod(), type, testName,
                     sourceFilePackageName.replace("/","."));
-            frameworkMethod.setSource(source);
+            frameworkMethod.setSource(new TestSource(ext, testName, source));
             interceptedMethods.add(frameworkMethod);
         }
 

@@ -39,6 +39,7 @@ import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.common.DefaultTestLoader;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
+import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.config.CitrusSpringConfig;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -139,7 +140,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
                 if (testLoader instanceof TestSourceAware testSourceAware) {
                     String[] sources = method.getAnnotation(CitrusTestSource.class).sources();
                     if (sources.length > 0) {
-                        testSourceAware.setSource(sources[0]);
+                        testSourceAware.setSource(TestSourceHelper.create(sources[0]));
                     }
                 }
             } else {

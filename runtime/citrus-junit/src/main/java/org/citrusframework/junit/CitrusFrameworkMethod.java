@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.citrusframework.TestSource;
 import org.citrusframework.common.TestSourceAware;
 import org.junit.runners.model.FrameworkMethod;
 
@@ -34,7 +35,7 @@ public class CitrusFrameworkMethod extends FrameworkMethod implements TestSource
     private final String packageName;
 
     private String sourceType;
-    private String source;
+    private TestSource source;
 
     private final Map<String, Object> attributes = new HashMap<>();
 
@@ -94,7 +95,7 @@ public class CitrusFrameworkMethod extends FrameworkMethod implements TestSource
     }
 
     @Override
-    public void setSource(String source) {
+    public void setSource(TestSource source) {
         this.source = source;
     }
 
@@ -102,7 +103,7 @@ public class CitrusFrameworkMethod extends FrameworkMethod implements TestSource
      * Gets the test source.
      * @return
      */
-    public String getSource() {
+    public TestSource getSource() {
         return source;
     }
 

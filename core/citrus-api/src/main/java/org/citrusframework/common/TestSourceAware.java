@@ -16,12 +16,13 @@
 
 package org.citrusframework.common;
 
+import org.citrusframework.TestSource;
+
 @FunctionalInterface
 public interface TestSourceAware {
 
     /**
      * Sets the test source.
-     * @param source
      */
-    void setSource(String source);
+    void setSource(TestSource source);
 }

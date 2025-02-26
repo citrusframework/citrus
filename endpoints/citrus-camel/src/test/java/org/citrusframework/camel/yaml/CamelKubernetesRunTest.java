@@ -48,9 +48,6 @@ public class CamelKubernetesRunTest extends AbstractYamlActionTest {
     private CamelJBang camelJBang;
 
     @Mock
-    private JBangSupport camelApp;
-
-    @Mock
     private KubernetesPlugin k8sPlugin;
 
     @Mock
@@ -63,7 +60,6 @@ public class CamelKubernetesRunTest extends AbstractYamlActionTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-        when(camelJBang.camelApp()).thenReturn(camelApp);
         when(camelJBang.kubernetes()).thenReturn(k8sPlugin);
         when(pao.getProcess()).thenReturn(process);
     }
@@ -103,7 +99,7 @@ public class CamelKubernetesRunTest extends AbstractYamlActionTest {
         action = (CamelKubernetesRunIntegrationAction) result.getTestAction(actionIndex);
         Assert.assertEquals(action.getRuntime(), "quarkus");
 
-        verify(camelApp, times(3)).workingDir(Paths.get(Resources.create("classpath:org/citrusframework/camel/integration/route.yaml")
+        verify(camelJBang, times(3)).workingDir(Paths.get(Resources.create("classpath:org/citrusframework/camel/integration/route.yaml")
                 .getFile().getParentFile().toPath().toAbsolutePath().toString()));
         verify(k8sPlugin).run(eq("route.yaml"), eq(new String[] {}));
         verify(k8sPlugin).run("route.yaml", "--runtime", "quarkus",

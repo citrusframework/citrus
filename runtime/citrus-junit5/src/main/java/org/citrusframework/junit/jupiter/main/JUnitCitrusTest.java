@@ -18,6 +18,7 @@ package org.citrusframework.junit.jupiter.main;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.TestCaseRunner;
+import org.citrusframework.TestSource;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
@@ -28,7 +29,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.StringUtils;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Test;
 public class JUnitCitrusTest {
 
     private static String sourceName;
-    private static String source;
+    private static TestSource source;
 
     @CitrusFramework
     Citrus citrus;
@@ -59,8 +59,8 @@ public class JUnitCitrusTest {
     @CitrusTest
     public void execute() {
         String type;
-        if (StringUtils.hasText(source)) {
-            type = FileUtils.getFileExtension(source);
+        if (source != null) {
+            type = source.getType();
         } else {
             type = FileUtils.getFileExtension(sourceName);
         }
@@ -84,7 +84,7 @@ public class JUnitCitrusTest {
         sourceName = name;
     }
 
-    public static void setSource(String testSource) {
+    public static void setSource(TestSource testSource) {
         source = testSource;
     }
 }

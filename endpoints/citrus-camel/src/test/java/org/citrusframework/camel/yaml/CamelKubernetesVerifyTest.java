@@ -24,7 +24,6 @@ import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CamelKubernetesVerifyAction;
 import org.citrusframework.camel.jbang.CamelJBang;
 import org.citrusframework.camel.jbang.KubernetesPlugin;
-import org.citrusframework.jbang.JBangSupport;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.mockito.Mock;
@@ -42,9 +41,6 @@ public class CamelKubernetesVerifyTest extends AbstractYamlActionTest {
     private CamelJBang camelJBang;
 
     @Mock
-    private JBangSupport camelApp;
-
-    @Mock
     private KubernetesPlugin k8sPlugin;
 
     @Mock
@@ -57,7 +53,6 @@ public class CamelKubernetesVerifyTest extends AbstractYamlActionTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-        when(camelJBang.camelApp()).thenReturn(camelApp);
         when(camelJBang.kubernetes()).thenReturn(k8sPlugin);
         when(pao.getProcess()).thenReturn(process);
     }

@@ -25,6 +25,7 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestBehavior;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.TestCaseRunner;
+import org.citrusframework.TestSource;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
@@ -105,7 +106,7 @@ public class JUnit4CitrusSupport implements GherkinTestActionRunner, CitrusFrame
      * @param type
      * @return
      */
-    protected TestLoader createTestLoader(String testName, String packageName, String source, String type) {
+    protected TestLoader createTestLoader(String testName, String packageName, TestSource source, String type) {
         TestLoader testLoader = TestLoader.lookup(type)
                 .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing test loader for type '%s'", type)));
 

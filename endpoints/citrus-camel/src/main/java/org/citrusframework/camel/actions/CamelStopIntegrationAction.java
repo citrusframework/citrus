@@ -51,7 +51,7 @@ public class CamelStopIntegrationAction extends AbstractCamelJBangAction {
         if (name.equals("*")) {
             logger.info("Stopping all Camel integrations ...");
 
-            camelJBang().camelApp().run("stop");
+            camelJBang().stop();
 
             logger.info("Stopped all Camel integrations");
         } else {

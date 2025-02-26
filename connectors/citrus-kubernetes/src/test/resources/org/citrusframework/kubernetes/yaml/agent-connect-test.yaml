@@ -1,0 +1,12 @@
+name: "AgentConnectTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      autoRemove: false
+      agent:
+        connect:
+          localPort: 31234

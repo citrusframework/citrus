@@ -16,6 +16,11 @@
 
 package org.citrusframework.jbang.commands;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.github.freva.asciitable.AsciiTable;
 import com.github.freva.asciitable.Column;
 import com.github.freva.asciitable.HorizontalAlign;
@@ -24,11 +29,6 @@ import main.CitrusJBang;
 import org.citrusframework.jbang.CitrusJBangMain;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static java.lang.Long.compare;
 import static java.lang.Long.parseLong;
@@ -70,9 +70,9 @@ public class ListTests extends CitrusCommand {
         rows.sort(this::sortRow);
 
         if (pid) {
-            rows.forEach(r -> System.out.println(r.pid));
+            rows.forEach(r -> printer().println(r.pid));
         } else {
-            System.out.println(AsciiTable.getTable(AsciiTable.NO_BORDERS, rows, Arrays.asList(
+            printer().println(AsciiTable.getTable(AsciiTable.NO_BORDERS, rows, Arrays.asList(
                     new Column().header("PID").headerAlign(HorizontalAlign.CENTER).with(r -> r.pid),
                     new Column().header("NAME").dataAlign(HorizontalAlign.LEFT)
                             .maxWidth(40, OverflowBehaviour.ELLIPSIS_RIGHT)
@@ -93,6 +93,8 @@ public class ListTests extends CitrusCommand {
         String citrusJBangRun = getJBangRunCommand();
         if (cl.contains(citrusJBangRun)) {
             return cl.substring(cl.indexOf(citrusJBangRun) + citrusJBangRun.length());
+        } else if (cl.contains(getJBangAgentCommand())) {
+            return "citrus-agent";
         }
 
         return "";
@@ -100,6 +102,10 @@ public class ListTests extends CitrusCommand {
 
     protected String getJBangRunCommand() {
         return String.format("main.%s run ", CitrusJBang.class.getSimpleName());
+    }
+
+    protected String getJBangAgentCommand() {
+        return String.format("main.%s agent ", CitrusJBang.class.getSimpleName());
     }
 
     private String printSince(long timestamp) {

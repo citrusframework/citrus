@@ -1,0 +1,23 @@
+name: "AgentRunTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - agent:
+      name: "citrus-agent"
+      connect:
+        port: 4567
+  - agent:
+      name: "citrus-agent"
+      run:
+        source:
+          code: |
+            name: ${citrus.test.name}
+            actions:
+              - echo:
+                  message: Citrus rocks!
+  - agent:
+      run:
+        actions:
+          - echo:
+              message: Citrus rocks!

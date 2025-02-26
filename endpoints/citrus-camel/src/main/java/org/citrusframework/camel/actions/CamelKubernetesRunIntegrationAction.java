@@ -187,7 +187,7 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
             commandArgs.add("--verbose=true");
         }
 
-        camelJBang().camelApp().workingDir(integrationToRun.toAbsolutePath().getParent());
+        camelJBang().workingDir(integrationToRun.toAbsolutePath().getParent());
 
         ProcessAndOutput pao = camelJBang().kubernetes().run(integrationResource.getFile().getName(), commandArgs.toArray(String[]::new));
         logger.info(pao.getOutput());

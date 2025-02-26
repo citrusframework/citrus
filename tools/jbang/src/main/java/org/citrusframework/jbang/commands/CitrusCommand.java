@@ -20,6 +20,7 @@ import java.util.Stack;
 import java.util.concurrent.Callable;
 
 import org.citrusframework.jbang.CitrusJBangMain;
+import org.citrusframework.jbang.Printer;
 import picocli.CommandLine;
 import picocli.CommandLine.IParameterConsumer;
 import picocli.CommandLine.Model.ArgSpec;
@@ -61,6 +62,10 @@ public abstract class CitrusCommand implements Callable<Integer> {
         }
 
         return userDir;
+    }
+
+    protected Printer printer() {
+        return main.getOut();
     }
 
     protected abstract static class ParameterConsumer<T> implements IParameterConsumer {

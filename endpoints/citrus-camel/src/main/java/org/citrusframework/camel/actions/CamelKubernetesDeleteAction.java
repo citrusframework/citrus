@@ -97,7 +97,7 @@ public class CamelKubernetesDeleteAction extends AbstractCamelJBangAction {
             commandArgs.add(namespace);
         }
 
-        camelJBang().camelApp().workingDir(integrationResource.getFile().toPath().toAbsolutePath().getParent());
+        camelJBang().workingDir(integrationResource.getFile().toPath().toAbsolutePath().getParent());
 
         ProcessAndOutput pao = camelJBang().kubernetes().delete(integrationResource.getFile().getName(), commandArgs.toArray(String[]::new));
         logger.info(pao.getOutput());

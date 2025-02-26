@@ -16,18 +16,27 @@
 
 package org.citrusframework;
 
+import java.nio.charset.StandardCharsets;
+
+import org.citrusframework.common.TestLoader;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+
 /**
  * @since 4.0
  */
 public class TestSource {
 
-    /** Test type, name and optional sourceFile */
+    /** Test type, name and optional source file path */
     private final String type;
     private final String name;
     private final String filePath;
 
+    private Resource sourceFile;
+
     public TestSource(String type, String name) {
-        this(type, name, null);
+        this(type, name, "%s.%s".formatted(name, type));
     }
 
     public TestSource(String type, String name, String filePath) {
@@ -37,12 +46,15 @@ public class TestSource {
     }
 
     public TestSource(Class<?> testClass) {
-        this("java", testClass.getName());
+        this(TestLoader.JAVA, testClass.getName());
+
+        String path = testClass.getPackageName().replace('.', '/');
+        String fileName = testClass.getName() + ".java";
+        sourceFile = new Resources.ClasspathResource(path.isEmpty() ? fileName : path + "/" + fileName);
     }
 
     /**
      * The test source type. Usually one of java, xml, groovy, yaml.
-     * @return
      */
     public String getType() {
         return type;
@@ -50,17 +62,48 @@ public class TestSource {
 
     /**
      * Gets the name.
-     * @return
      */
     public String getName() {
         return name;
     }
 
-    /**
-     * Optional source file path.
-     * @return
-     */
     public String getFilePath() {
         return filePath;
+    }
+
+    /**
+     * Gets the file resource for this test source.
+     */
+    public Resource getSourceFile() {
+        if (sourceFile == null) {
+            sourceFile = Resources.create(filePath);
+        }
+
+        return sourceFile;
+    }
+
+    /**
+     * Gets the file resource for this test source and uses given test context
+     * to resolve the file path with test variables.
+     */
+    public Resource getSourceFile(TestContext context) {
+        if (sourceFile == null) {
+            sourceFile = Resources.create(context.replaceDynamicContentInString(filePath));
+        }
+
+        return sourceFile;
+    }
+
+    public void setSourceFile(Resource sourceFile) {
+        this.sourceFile = sourceFile;
+    }
+
+    /**
+     * Add source code for this test source.
+     * Uses in memory resource to load the test source code.
+     */
+    public TestSource sourceCode(String sourceCode) {
+        this.sourceFile = new Resources.ByteArrayResource(sourceCode.getBytes(StandardCharsets.UTF_8));
+        return this;
     }
 }

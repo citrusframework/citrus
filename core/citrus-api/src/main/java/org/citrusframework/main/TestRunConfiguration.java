@@ -30,7 +30,7 @@ import org.citrusframework.TestSource;
 public class TestRunConfiguration {
 
     /** Test engine */
-    private String engine = "junit4";
+    private String engine = "junit5";
 
     /** Test to execute at runtime */
     private final List<TestSource> sources = new ArrayList<>();
@@ -151,5 +151,9 @@ public class TestRunConfiguration {
      */
     public void addDefaultProperties(Map<String, String> defaultProperties) {
         this.defaultProperties = defaultProperties;
+    }
+
+    public boolean hasTests() {
+        return !getTestSources().isEmpty() || !getPackages().isEmpty() || getTestJar() != null;
     }
 }

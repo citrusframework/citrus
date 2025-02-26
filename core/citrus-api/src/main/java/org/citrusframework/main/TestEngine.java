@@ -44,15 +44,20 @@ public interface TestEngine {
      * Resolves engine from resource path lookup. Scans classpath for engine meta information
      * and instantiates engine with respective name given in test run configuration.
      * @param configuration the test run configuration used to initialize the engine.
-     * @return
      */
     static TestEngine lookup(TestRunConfiguration configuration) {
+        TestEngine testEngine;
         try {
-            TestEngine testEngine = TYPE_RESOLVER.resolve(configuration.getEngine(), configuration);
-            logger.debug("Using Citrus engine '{}' as {}", configuration.getEngine(), testEngine);
-            return testEngine;
-        } catch (CitrusRuntimeException e) {
+            testEngine = TYPE_RESOLVER.resolve(configuration.getEngine(), configuration);
+        } catch (Exception e) {
             throw new CitrusRuntimeException(String.format("Failed to resolve Citrus engine from resource '%s/%s'", RESOURCE_PATH, configuration.getEngine()), e);
         }
+
+        if (testEngine == null) {
+            throw new CitrusRuntimeException(String.format("Failed to resolve Citrus engine from resource '%s/%s'", RESOURCE_PATH, configuration.getEngine()));
+        }
+
+        logger.debug("Using Citrus engine '{}' as {}", configuration.getEngine(), testEngine);
+        return testEngine;
     }
 }

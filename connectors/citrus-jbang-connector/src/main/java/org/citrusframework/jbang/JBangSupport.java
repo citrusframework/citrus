@@ -70,6 +70,8 @@ public class JBangSupport {
 
     private final Map<String, String> systemProperties = new HashMap<>();
 
+    private final List<String> classpathEntries = new ArrayList<>();
+
     private final Map<String, String> envVars = new HashMap<>();
 
     private String app;
@@ -128,7 +130,7 @@ public class JBangSupport {
      * Adds environment variables to command line.
      */
     public JBangSupport withEnv(String name, String value) {
-        this.systemProperties.put(name, value);
+        this.envVars.put(name, value);
         return this;
     }
 
@@ -137,6 +139,14 @@ public class JBangSupport {
      */
     public JBangSupport withEnvs(Map<String, String> envVars) {
         this.envVars.putAll(envVars);
+        return this;
+    }
+
+    /**
+     * Adds classpath entries to the command line.
+     */
+    public JBangSupport addToClasspath(String path) {
+        this.classpathEntries.add(path);
         return this;
     }
 
@@ -170,7 +180,7 @@ public class JBangSupport {
      * Command can be a script file or an app command.
      */
     public ProcessAndOutput run(String command, List<String> args) {
-        return execute(jBang(systemProperties, constructAllArgs(command, args)), workingDir, envVars);
+        return execute(jBang(systemProperties, classpathEntries, constructAllArgs(command, args)), workingDir, envVars);
     }
 
     /**
@@ -186,7 +196,7 @@ public class JBangSupport {
      * Command can be a script file or an app command.
      */
     public ProcessAndOutput runAsync(String command, List<String> args) {
-        return executeAsync(jBang(systemProperties, constructAllArgs(command, args)), workingDir, envVars);
+        return executeAsync(jBang(systemProperties, classpathEntries, constructAllArgs(command, args)), workingDir, envVars);
     }
 
     /**
@@ -204,7 +214,7 @@ public class JBangSupport {
      * Redirect the process output to given file.
      */
     public ProcessAndOutput runAsync(String command, File output, List<String> args) {
-        return executeAsync(jBang(systemProperties, constructAllArgs(command, args)), workingDir, output, envVars);
+        return executeAsync(jBang(systemProperties, classpathEntries, constructAllArgs(command, args)), workingDir, output, envVars);
     }
 
     private List<String> constructAllArgs(String command, List<String> args) {
@@ -310,13 +320,13 @@ public class JBangSupport {
      * @return JBang command with given arguments.
      */
     private static List<String> jBang(List<String> args) {
-        return jBang(Collections.emptyMap(), args);
+        return jBang(Collections.emptyMap(), Collections.emptyList(), args);
     }
 
     /**
      * @return JBang command with given arguments.
      */
-    private static List<String> jBang(Map<String, String> systemProperties, List<String> args) {
+    private static List<String> jBang(Map<String, String> systemProperties, List<String> classpathEntries, List<String> args) {
         List<String> command = new ArrayList<>();
         if (IS_OS_WINDOWS) {
             command.add("cmd.exe");
@@ -326,7 +336,7 @@ public class JBangSupport {
             command.add("-c");
         }
 
-        String jBangCommand = getJBangExecutable() + " " + getSystemPropertyArgs(systemProperties) + String.join(" ", args);
+        String jBangCommand = getJBangExecutable() + " " + getSystemPropertyArgs(systemProperties) + getClasspathEntries(classpathEntries) + String.join(" ", args);
         command.add(jBangCommand);
 
         return command;
@@ -349,12 +359,22 @@ public class JBangSupport {
     }
 
     /**
+     * Construct command line arguments from given list of classpath entries.
+     */
+    private static String getClasspathEntries(List<String> classpathEntries) {
+        if (classpathEntries.isEmpty()) {
+            return "";
+        }
+
+        return classpathEntries
+                .stream()
+                .map("--cp=%s"::formatted)
+                .collect(Collectors.joining(" ")) + " ";
+    }
+
+    /**
      * Execute JBang command using the process API. Waits for the process to complete and returns the process instance so
      * caller is able to access the exit code and process output.
-     * @param command
-     * @param workingDir
-     * @param envVars
-     * @return
      */
     private static ProcessAndOutput execute(List<String> command, Path workingDir, Map<String, String> envVars) {
         try {
@@ -397,10 +417,6 @@ public class JBangSupport {
     /**
      * Execute JBang command using the process API. Waits for the process to complete and returns the process instance so
      * caller is able to access the exit code and process output.
-     * @param command
-     * @param workingDir
-     * @param envVars
-     * @return
      */
     private static ProcessAndOutput executeAsync(List<String> command, Path workingDir, Map<String, String> envVars) {
         try {
@@ -425,10 +441,6 @@ public class JBangSupport {
     /**
      * Execute JBang command using the process API. Waits for the process to complete and returns the process instance so
      * caller is able to access the exit code and process output.
-     * @param command
-     * @param outputFile
-     * @param envVars
-     * @return
      */
     private static ProcessAndOutput executeAsync(List<String> command, Path workingDir, File outputFile, Map<String, String> envVars) {
         try {
@@ -530,5 +542,9 @@ public class JBangSupport {
         }
 
         return destFile;
+    }
+
+    public Path getWorkingDir() {
+        return workingDir;
     }
 }
