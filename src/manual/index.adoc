@@ -71,6 +71,7 @@ include::connector-testcontainers.adoc[]
 include::functions.adoc[]
 include::validation-matchers.adoc[]
 
+include::agent.adoc[]
 include::data-dictionary.adoc[]
 include::test-actors.adoc[]
 include::test-suite.adoc[]

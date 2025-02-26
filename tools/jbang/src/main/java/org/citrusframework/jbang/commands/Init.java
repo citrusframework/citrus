@@ -16,18 +16,18 @@
 
 package org.citrusframework.jbang.commands;
 
+import java.io.File;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.Stack;
+
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.CitrusJBangMain;
 import org.citrusframework.util.FileUtils;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
-
-import java.io.File;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.util.Stack;
 
 import static java.nio.file.Files.writeString;
 
@@ -56,7 +56,7 @@ public class Init extends CitrusCommand {
         String content;
         try (InputStream is = Init.class.getClassLoader().getResourceAsStream("templates/" + ext + ".tmpl")) {
             if (is == null) {
-                System.out.println("Error: Unsupported file type: " + ext);
+                printer().println("Error: Unsupported file type: " + ext);
                 return 1;
             }
             content = FileUtils.readToString(is, StandardCharsets.UTF_8);

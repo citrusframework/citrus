@@ -26,22 +26,30 @@ public class TestClass extends TestSource {
     /** Optional test method */
     private final String method;
 
-    public TestClass(Class<?> type) {
-        this(type, null);
+    private final Class<?> testClass;
+
+    public TestClass(Class<?> testClass) {
+        this(testClass, null);
     }
 
-    public TestClass(Class<?> type, String method) {
-        super(type);
+    public TestClass(Class<?> testClass, String method) {
+        super(testClass);
+        this.testClass = testClass;
         this.method = method;
     }
 
     /**
-     * Gets the method.
-     *
-     * @return
+     * Gets the test method name to execute.
      */
     public String getMethod() {
         return method;
+    }
+
+    /**
+     * Gets the test class to execute.
+     */
+    public Class<?> getTestClass() {
+        return testClass;
     }
 
     /**

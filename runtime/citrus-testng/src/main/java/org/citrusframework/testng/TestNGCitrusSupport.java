@@ -35,6 +35,7 @@ import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.common.DefaultTestLoader;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
+import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.IHookCallBack;
@@ -124,7 +125,7 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
                 if (testLoader instanceof TestSourceAware) {
                     String[] sources = method.getAnnotation(CitrusTestSource.class).sources();
                     if (sources.length > 0) {
-                        ((TestSourceAware) testLoader).setSource(sources[0]);
+                        ((TestSourceAware) testLoader).setSource(TestSourceHelper.create(sources[0]));
                     }
                 }
             } else {

@@ -22,13 +22,14 @@ import java.util.logging.Level;
 
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestSource;
 import org.citrusframework.common.DefaultTestLoader;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.actions.YamlTestActionBuilder;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.TypeDescription;
@@ -43,7 +44,7 @@ import org.yaml.snakeyaml.introspector.PropertyUtils;
  */
 public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware {
 
-    private String source;
+    private TestSource source;
 
     private final Yaml yaml;
 
@@ -117,9 +118,8 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
 
     @Override
     public void doLoad() {
-        Resource yamlSource = FileUtils.getFileResource(getSource());
-
         try {
+            Resource yamlSource = getSource().getSourceFile();
             YamlTestCase tc = yaml.load(FileUtils.readToString(yamlSource));
             testCase = tc.getTestCase();
             if (runner instanceof DefaultTestCaseRunner) {
@@ -140,26 +140,24 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
     }
 
     /**
-     * Gets custom Spring application context file for the YAML test case. If not set creates default
-     * context file path from testName and packageName.
-     * @return
+     * Gets custom source file for the YAML test case. If not set creates default
+     * source file path from testName and packageName.
      */
-    public String getSource() {
-        if (StringUtils.hasText(source)) {
+    public TestSource getSource() {
+        if (source != null) {
             return source;
         } else {
             String path = packageName.replace('.', '/');
             String fileName = testName.endsWith(FileUtils.FILE_EXTENSION_YAML) ? testName : testName + FileUtils.FILE_EXTENSION_YAML;
-            return Resources.CLASSPATH_RESOURCE_PREFIX + path + "/" + fileName;
+            return new TestSource(TestLoader.YAML, testName, Resources.CLASSPATH_RESOURCE_PREFIX + path + "/" + fileName);
         }
     }
 
     /**
-     * Sets custom Spring application context file for YAML test case.
-     * @param source
+     * Sets custom source file for YAML test case.
      */
     @Override
-    public void setSource(String source) {
+    public void setSource(TestSource source) {
         this.source = source;
     }
 }

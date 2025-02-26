@@ -75,6 +75,11 @@ public class Kubernetes implements TestActionBuilder<KubernetesAction>, Referenc
     }
 
     @XmlElement
+    public void setAgent(Agent builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
     public void setConnect(Connect builder) {
         this.builder = builder;
     }

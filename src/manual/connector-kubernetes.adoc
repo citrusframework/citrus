@@ -1246,6 +1246,226 @@ This action scans the Pod logs for a message `Something interesting`.
 As soon as the log message has been located in the Pod logs the test action finishes with success.
 The action waits for the log message to appear in the Pod logs for given amount of time with a specified polling attempt configuration.
 
+[[kubernetes-agent]]
+== Kubernetes Citrus agent
+
+The Citrus agent is a way to run tests as part of the Kubernetes platform.
+You can deploy the Citrus agent on the Kubernetes cluster.
+Usually the agent exposes a REST service endpoint so clients are then able to inject Citrus tests for execution.
+
+The Citrus agent runs as part of the Kubernetes cluster, so it has access to Kubernetes resources on the same namespace.
+This means the tests that run with the agent are able to access resources such as Knative eventing brokers, Services, ConfigMaps, Secrets and many more.
+
+[[kubernetes-agent-connect]]
+=== Agent connect
+
+You can connect to a Citrus agent service as part of your test like follows:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void agentConnectTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .agent()
+            .connect()
+            .service("citrus-agent")
+            .localPort(12345)
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="AgentConnectTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <agent>
+          <connect name="citrus-agent" local-port="12345"/>
+        </agent>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: AgentConnectTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      agent:
+        connect:
+          name: "citrus-agent"
+          localPort: 12345
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+The agent connect test action connects to the Citrus agent service on the given Kubernetes namespace.
+In case the Citrus agent application has been deployed already and the exposed service is available the test action connects to the service via local port forwarding (see also the section about link:#kubernetes-connect-service[connecting with a Kubernetes Service]).
+This means that you will be able to trigger test runs on the agent with calling REST operations on the local endpoint.
+
+In case the Citrus agent application is not present on the Kubernetes cluster the connect test action will automatically create the deployment on the given namespace.
+The deployment includes a ConfigMap that holds the test case sources (e.g. in the form of a `test-jar` Java archive).
+The agent deployment specification will mount the test sources into the agent Pod via volume mounts, so you can run the tests from the `test-jar` Java archive.
+
+Also, the action creates a new Kubernetes service that exposes the agent REST API and the Web UI.
+Once the connection is done you can start triggering test actions and test runs on the Citrus agent.
+
+[[kubernetes-agent-run]]
+=== Agent run
+
+When the local test is connected to the Kubernetes Citrus agent you can trigger the test execution on the agent.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void agentRunTest() {
+    given(agent()
+            .run()
+            .sourceFile("classpath:my-test.groovy"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="AgentRunTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <agent>
+        <run>
+          <source file="classpath:my-test.groovy"/>
+        </run>
+      </agent>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: AgentRunTest
+actions:
+  - agent:
+      source:
+        file: "classpath:my-test.groovy"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+The test source code can be any of the supported domain specific languages (e.g. XML, YAML, Java, Groovy, Cucumber).
+The example above loads a Groovy test source code file.
+The test actions will be sent to the Citrus agent and executed as a test within the agent runtime.
+The test results are validated for success outcome and in case the remote test execution fails the local Citrus agent run action will also fail accordingly.
+
+TIP: When using XML and YAML tests you can also leverage the possibility to use inline test actions as part of the Citrus agent run action
+
+.YAML
+[source,yaml,indent=0,role="primary"]
+----
+name: AgentRunTest
+actions:
+  - agent:
+      run:
+        actions:
+          - echo:
+              message: Citrus rocks!
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="AgentRunTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <agent>
+        <run>
+          <actions>
+            <echo message="Citrus rocks!"/>
+          </actions>
+        </run>
+      </agent>
+    </actions>
+</test>
+----
+
+All nested test actions within the Citrus agent run action will be run on the connected remote Citrus agent.
+
+[[kubernetes-agent-disconnect]]
+=== Agent disconnect
+
+You can explicitly disconnect from the Citrus agent service.
+This terminates the local port forward and also removes the Citrus agent deployment and all dependent resources from the current Kubernetes namespace.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void agentDisconnectTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .agent()
+            .disconnect()
+            .service("citrus-agent")
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="AgentDisconnectTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <agent>
+          <disconnect name="citrus-agent"/>
+        </agent>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: AgentDisconnectTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      agent:
+        disconnect:
+          name: "citrus-agent"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
 [[kubernetes-spring]]
 == Spring bean config
 

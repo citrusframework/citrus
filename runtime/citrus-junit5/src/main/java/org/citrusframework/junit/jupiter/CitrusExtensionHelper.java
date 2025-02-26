@@ -31,6 +31,7 @@ import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.common.DefaultTestLoader;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
+import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
@@ -293,7 +294,7 @@ public final class CitrusExtensionHelper {
         CitrusAnnotations.injectAll(testLoader, CitrusExtensionHelper.getCitrus(extensionContext));
 
         if (testLoader instanceof TestSourceAware) {
-            ((TestSourceAware) testLoader).setSource(source);
+            ((TestSourceAware) testLoader).setSource(TestSourceHelper.create(source));
         }
     }
 }

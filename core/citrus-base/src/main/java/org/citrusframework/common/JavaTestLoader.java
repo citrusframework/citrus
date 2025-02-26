@@ -28,6 +28,8 @@ import java.util.regex.Pattern;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
+import org.citrusframework.TestClass;
+import org.citrusframework.TestSource;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
@@ -41,13 +43,12 @@ import org.citrusframework.util.StringUtils;
 public class JavaTestLoader extends DefaultTestLoader implements TestSourceAware {
 
     private static final Pattern packageNamePattern = Pattern.compile("^package\\s+([a-zA-Z_][.a-zA-Z_]+);$", Pattern.MULTILINE);
-    private String source;
+    private TestSource source;
 
     @Override
     public void doLoad() {
-        Resource javaSource = FileUtils.getFileResource(getSource());
-
         try {
+            Resource javaSource = getSource().getSourceFile();
             // Compile source file.
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
             int success = compiler.run(null, null, null, javaSource.getFile().getAbsolutePath());
@@ -82,27 +83,37 @@ public class JavaTestLoader extends DefaultTestLoader implements TestSourceAware
     }
 
     /**
-     * Gets custom Spring application context file for the Java test case. If not set creates default
+     * Gets custom source file for the Java test case. If not set creates default
      * context file path from testName and packageName.
-     * @return
      */
-    public String getSource() {
-        if (StringUtils.hasText(source)) {
+    public TestSource getSource() {
+        if (source != null) {
             return source;
         } else {
             String path = StringUtils.hasText(packageName) ? packageName.replace('.', '/') : "";
             String fileName = testName.endsWith(FileUtils.FILE_EXTENSION_JAVA) ? testName : testName + FileUtils.FILE_EXTENSION_JAVA;
-            return StringUtils.hasText(path) ? path + "/" + fileName : fileName;
+            return new TestSource(TestLoader.JAVA, testName, StringUtils.hasText(path) ? path + "/" + fileName : fileName);
         }
     }
 
     public String getClassName() {
-        if (StringUtils.hasText(source)) {
-            if (source.contains(":")) {
-                return FileUtils.getBaseName(FileUtils.getFileName(source.substring(source.indexOf(":"))));
+        if (source != null) {
+            if (source instanceof TestClass clazz) {
+                return clazz.getName();
             }
 
-            return FileUtils.getBaseName(FileUtils.getFileName(source));
+            String filePath;
+            if (StringUtils.hasText(source.getFilePath())) {
+                filePath = source.getFilePath();
+            } else {
+                filePath = source.getSourceFile().getLocation();
+            }
+
+            if (filePath.contains(":")) {
+                return FileUtils.getBaseName(FileUtils.getFileName(filePath.substring(filePath.indexOf(":"))));
+            }
+
+            return FileUtils.getBaseName(FileUtils.getFileName(filePath));
         }
 
         return FileUtils.getBaseName(testName.endsWith(FileUtils.FILE_EXTENSION_JAVA) ? testName : testName + FileUtils.FILE_EXTENSION_JAVA);
@@ -139,11 +150,10 @@ public class JavaTestLoader extends DefaultTestLoader implements TestSourceAware
     }
 
     /**
-     * Sets custom Spring application context file for Java test case.
-     * @param source
+     * Sets custom source file for Java test case.
      */
     @Override
-    public void setSource(String source) {
+    public void setSource(TestSource source) {
         this.source = source;
     }
 }

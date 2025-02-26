@@ -1,0 +1,4 @@
+name: citrus-test
+actions:
+  - echo:
+      message: Citrus rocks!
