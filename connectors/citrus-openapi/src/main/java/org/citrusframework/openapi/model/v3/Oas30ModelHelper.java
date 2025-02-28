@@ -16,34 +16,43 @@
 
 package org.citrusframework.openapi.model.v3;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.core.models.common.Server;
 import io.apicurio.datamodels.core.models.common.ServerVariable;
-import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30MediaType;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30RequestBody;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import org.citrusframework.openapi.model.OasAdapter;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static java.lang.String.format;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toMap;
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+
 public final class Oas30ModelHelper {
 
-    /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(Oas30ModelHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(Oas30ModelHelper.class);
+
+    public static final String NO_URL_ERROR_MESSAGE = "Unable to determine base path from server URL: %s";
 
     private Oas30ModelHelper() {
         // utility class
@@ -56,11 +65,7 @@ public final class Oas30ModelHelper {
 
         String serverUrl = resolveUrl(openApiDoc.servers.get(0));
         if (serverUrl.startsWith("http")) {
-            try {
-                return new URL(serverUrl).getHost();
-            } catch (MalformedURLException e) {
-                throw new IllegalStateException(String.format("Unable to determine base path from server URL: %s", serverUrl));
-            }
+            return URI.create(serverUrl).getHost();
         }
 
         return "localhost";
@@ -68,21 +73,25 @@ public final class Oas30ModelHelper {
 
     public static List<String> getSchemes(Oas30Document openApiDoc) {
         if (openApiDoc.servers == null || openApiDoc.servers.isEmpty()) {
-            return Collections.emptyList();
+            return emptyList();
         }
 
         return openApiDoc.servers.stream()
                 .map(Oas30ModelHelper::resolveUrl)
                 .map(serverUrl -> {
                     try {
-                        return new URL(serverUrl).getProtocol();
-                    } catch (MalformedURLException e) {
-                        LOG.warn(String.format("Unable to determine base path from server URL: %s", serverUrl));
+                        return URI.create(serverUrl).toURL().getProtocol();
+                    } catch (Exception e) {
+                        logger.warn(format(NO_URL_ERROR_MESSAGE, serverUrl), e);
                         return null;
                     }
                 })
-        .filter(Objects::nonNull)
-        .collect(Collectors.toList());
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    public static boolean isCompositeSchema(Oas30Schema schema) {
+        return schema.anyOf != null || schema.oneOf != null || schema.allOf != null;
     }
 
     public static String getBasePath(Oas30Document openApiDoc) {
@@ -95,11 +104,7 @@ public final class Oas30ModelHelper {
 
         String serverUrl = resolveUrl(server);
         if (serverUrl.startsWith("http")) {
-            try {
-                basePath = new URL(serverUrl).getPath();
-            } catch (MalformedURLException e) {
-                throw new IllegalStateException(String.format("Unable to determine base path from server URL: %s", serverUrl));
-            }
+            basePath = URI.create(serverUrl).getPath();
         } else {
             basePath = serverUrl;
         }
@@ -109,12 +114,12 @@ public final class Oas30ModelHelper {
 
     public static Map<String, OasSchema> getSchemaDefinitions(Oas30Document openApiDoc) {
         if (openApiDoc.components == null || openApiDoc.components.schemas == null) {
-            return Collections.emptyMap();
+            return emptyMap();
         }
 
         return openApiDoc.components.schemas.entrySet()
                 .stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, entry -> (OasSchema) entry.getValue()));
+                .collect(toMap(Map.Entry::getKey, Entry::getValue));
     }
 
     public static Optional<OasSchema> getSchema(Oas30Response response) {
@@ -129,6 +134,31 @@ public final class Oas30ModelHelper {
                 .filter(entry -> entry.getValue().schema != null)
                 .map(entry -> (OasSchema) entry.getValue().schema)
                 .findFirst();
+    }
+
+    public static Optional<OasAdapter<OasSchema, String>> getSchema(Oas30Operation ignoredOas30Operation, Oas30Response response, List<String> acceptedMediaTypes) {
+        acceptedMediaTypes = OasModelHelper.resolveAllTypes(acceptedMediaTypes);
+        acceptedMediaTypes = acceptedMediaTypes.isEmpty()  ? OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES : acceptedMediaTypes;
+
+        Map<String, Oas30MediaType> content = response.content;
+        if (content == null) {
+            return Optional.empty();
+        }
+
+        String selectedMediaType = null;
+        Oas30Schema selectedSchema = null;
+        for (String type : acceptedMediaTypes) {
+            if (!isFormDataMediaType(type)) {
+                Oas30MediaType oas30MediaType = content.get(type);
+                if (oas30MediaType != null) {
+                    selectedMediaType = type;
+                    selectedSchema = oas30MediaType.schema;
+                    break;
+                }
+            }
+        }
+
+        return selectedSchema == null && selectedMediaType == null ? Optional.empty() : Optional.of(new OasAdapter<>(selectedSchema, selectedMediaType));
     }
 
     public static Optional<OasSchema> getRequestBodySchema(Oas30Document openApiDoc, Oas30Operation operation) {
@@ -169,86 +199,59 @@ public final class Oas30ModelHelper {
                 .findFirst();
     }
 
-    public static Optional<String> getResponseContentType(Oas30Document openApiDoc, Oas30Operation operation) {
-        if (operation.responses == null) {
-            return Optional.empty();
+    public static Collection<String> getResponseTypes(Oas30Operation operation, Oas30Response response) {
+        if (operation == null) {
+            return emptySet();
         }
 
-        List<OasResponse> responses = new ArrayList<>();
-
-        for (OasResponse response : operation.responses.getResponses()) {
-            if (response.$ref != null) {
-                responses.add(openApiDoc.components.responses.get(OasModelHelper.getReferenceName(response.$ref)));
-            } else {
-                responses.add(response);
-            }
-        }
-
-        // Pick the response object related to the first 2xx return code found
-        Optional<Oas30Response> response = responses.stream()
-                .filter(Oas30Response.class::isInstance)
-                .filter(r -> r.getStatusCode() != null && r.getStatusCode().startsWith("2"))
-                .map(Oas30Response.class::cast)
-                .filter(res -> Oas30ModelHelper.getSchema(res).isPresent())
-                .findFirst();
-
-        // No 2xx response given so pick the first one no matter what status code
-        if (!response.isPresent()) {
-            response = responses.stream()
-                    .filter(Oas30Response.class::isInstance)
-                    .map(Oas30Response.class::cast)
-                    .filter(res -> Oas30ModelHelper.getSchema(res).isPresent())
-                    .findFirst();
-        }
-
-        return response.flatMap(res -> res.content.entrySet()
-                .stream()
-                .filter(entry -> entry.getValue().schema != null)
-                .map(Map.Entry::getKey)
-                .findFirst());
-
+        return response.content != null ? response.content.keySet() : emptyList();
     }
 
     public static Map<String, OasSchema> getRequiredHeaders(Oas30Response response) {
         if (response.headers == null) {
-            return Collections.emptyMap();
+            return emptyMap();
         }
 
         return response.headers.entrySet()
                 .stream()
                 .filter(entry -> Boolean.TRUE.equals(entry.getValue().required))
-                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().schema));
+                .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().schema));
     }
 
     public static Map<String, OasSchema> getHeaders(Oas30Response response) {
         if (response.headers == null) {
-            return Collections.emptyMap();
+            return emptyMap();
         }
 
         return response.headers.entrySet()
-                                .stream()
-                                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().schema));
+                .stream()
+                .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().schema));
     }
 
     private static boolean isFormDataMediaType(String type) {
-        return Arrays.asList("application/x-www-form-urlencoded", "multipart/form-data").contains(type);
+        return Arrays.asList(APPLICATION_FORM_URLENCODED_VALUE, MULTIPART_FORM_DATA_VALUE).contains(type);
     }
 
     /**
      * Resolve given server url and replace variable placeholders if any with default variable values. Open API 3.x
      * supports variables with placeholders in form {variable_name} (e.g. "http://{hostname}:{port}/api/v1").
+     *
      * @param server the server holding a URL with maybe variable placeholders.
      * @return the server URL with all placeholders resolved or "/" by default.
      */
     private static String resolveUrl(Server server) {
         String url = Optional.ofNullable(server.url).orElse("/");
         if (server.variables != null) {
-            for (Map.Entry<String, ServerVariable> variable: server.variables.entrySet()) {
+            for (Map.Entry<String, ServerVariable> variable : server.variables.entrySet()) {
                 String defaultValue = Optional.ofNullable(variable.getValue().default_).orElse("");
                 url = url.replaceAll(String.format("\\{%s\\}", variable.getKey()), defaultValue);
             }
         }
 
         return url;
+    }
+
+    public static Optional<OasSchema> getParameterSchema(Oas30Parameter parameter) {
+        return Optional.ofNullable((OasSchema) parameter.schema);
     }
 }
