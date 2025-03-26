@@ -6,6 +6,7 @@ Citrus Integration Testing ![Logo][1]
 [![Javadocs](http://javadoc.io/badge/org.citrusframework/citrus-core.svg)](http://javadoc.io/doc/org.citrusframework/citrus-core)
 [![Licensed under Apache License version 2.0](https://img.shields.io/github/license/openshift/origin.svg?maxAge=2592000)](https://www.apache.org/licenses/LICENSE-2.0")
 [![Chat on Zulip](https://img.shields.io/badge/zulip-join_chat-brightgreen.svg)](https://citrusframework.zulipchat.com)
+[![libs.tech recommends](https://libs.tech/project/500806/badge.svg)](https://libs.tech/project/500806/citrus)
 
 Welcome to Citrus
 ---------
