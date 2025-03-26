@@ -53,7 +53,6 @@ import static java.util.Arrays.copyOf;
 import static java.util.Objects.nonNull;
 import static org.citrusframework.util.StringUtils.hasText;
 import static org.springframework.http.MediaType.valueOf;
-import static org.springframework.util.CollectionUtils.isEmpty;
 import static org.springframework.web.context.WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE;
 
 /**
@@ -165,6 +164,11 @@ public class HttpServer extends AbstractServer {
     private int responseCacheSize = HttpServerSettings.responseCacheSize();
 
     /**
+     * When enabled default servlet filters (e.g. request caching filter) will be added to the servlet context.
+     */
+    private boolean useDefaultFilters = HttpServerSettings.isUseDefaultFilters();
+
+    /**
      * List of media types that should be handled with binary content processing
      */
     private List<MediaType> binaryMediaTypes = asList(
@@ -246,7 +250,7 @@ public class HttpServer extends AbstractServer {
                 servletHandler.addFilter(filterHolder, filterMapping);
             }
 
-            if (isEmpty(filters)) {
+            if (useDefaultFilters) {
                 addRequestCachingFilter();
                 addGzipFilter();
             }
@@ -419,6 +423,14 @@ public class HttpServer extends AbstractServer {
      */
     public void setContextConfigLocation(String contextConfigLocation) {
         this.contextConfigLocation = contextConfigLocation;
+    }
+
+    public boolean isUseDefaultFilters() {
+        return useDefaultFilters;
+    }
+
+    public void setUseDefaultFilters(boolean useDefaultFilters) {
+        this.useDefaultFilters = useDefaultFilters;
     }
 
     /**

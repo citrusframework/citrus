@@ -108,6 +108,17 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     /**
+     * When enabled server uses default servlet filters such as request caching filter.
+     *
+     * @param useDefaultFilters
+     * @return
+     */
+    public B useDefaultFilters(boolean useDefaultFilters) {
+        endpoint.setUseDefaultFilters(useDefaultFilters);
+        return self;
+    }
+
+    /**
      * Sets the connectors.
      *
      * @param connectors

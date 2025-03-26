@@ -16,6 +16,11 @@
 
 package org.citrusframework.http.config.annotation;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import jakarta.servlet.Filter;
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
@@ -32,11 +37,6 @@ import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.HandlerInterceptor;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.stream.Streams.of;
@@ -79,6 +79,8 @@ public class HttpServerConfigParser implements AnnotationConfigParser<HttpServer
         }
 
         builder.rootParentContext(annotation.rootParentContext());
+
+        builder.useDefaultFilters(annotation.useDefaultFilters());
 
         builder.connectors(referenceResolver.resolve(annotation.connectors(), Connector.class));
 
