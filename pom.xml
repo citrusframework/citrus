@@ -217,6 +217,7 @@
     <httpclient.version>5.4.4</httpclient.version>
     <hsqldb.version>2.7.4</hsqldb.version>
     <jackson.version>2.18.3</jackson.version>
+    <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
     <jakarta.activation.api.version>2.1.3</jakarta.activation.api.version>
     <jakarta.activation.version>2.0.1</jakarta.activation.version>
     <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
@@ -266,6 +267,8 @@
     <sshd.version>2.15.0</sshd.version>
     <swagger.version>1.6.9</swagger.version>
     <swagger.parser.version>2.1.22</swagger.parser.version>
+    <swagger-request-validator.version>2.44.1</swagger-request-validator.version>
+    <system-stubs.version>2.1.7</system-stubs.version>
     <testcontainers.version>1.21.0</testcontainers.version>
     <testng.version>7.11.0</testng.version>
     <vertx.version>4.5.11</vertx.version>
@@ -707,6 +710,11 @@
             <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>uk.org.webcompere</groupId>
+        <artifactId>system-stubs-core</artifactId>
+        <version>${system-stubs.version}</version>
       </dependency>
 
       <dependency>
