@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -52,6 +53,7 @@ import static org.testng.Assert.fail;
 
 @Test
 @ContextConfiguration(classes = {Config.class})
+@DirtiesContext
 public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
     public static final String VALID_PET_PATH = "classpath:org/citrusframework/openapi/petstore/pet.json";
