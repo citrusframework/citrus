@@ -52,7 +52,6 @@
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>
-      <version>2.17.0</version>
     </dependency>
 
     <!-- Test scoped dependencies -->
@@ -83,7 +82,6 @@
     <dependency>
       <groupId>uk.org.webcompere</groupId>
       <artifactId>system-stubs-core</artifactId>
-      <version>2.1.7</version>
       <scope>test</scope>
     </dependency>
 
