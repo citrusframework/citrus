@@ -192,7 +192,6 @@
     <apache.ant.version>1.10.15</apache.ant.version>
     <apache.camel.version>4.9.0</apache.camel.version>
     <apicurio.data-models.version>1.1.27</apicurio.data-models.version>
-    <swagger-request-validator.version>2.44.1</swagger-request-validator.version>
     <ascii-table-version>1.8.0</ascii-table-version>
     <assertj.version>3.27.3</assertj.version>
     <awaitility.version>4.2.2</awaitility.version>
@@ -216,7 +215,8 @@
     <htmlunit.version>4.13.0</htmlunit.version>
     <httpclient.version>5.4.2</httpclient.version>
     <hsqldb.version>2.7.4</hsqldb.version>
-    <jackson.version>2.18.2</jackson.version>
+    <jackson.version>2.18.3</jackson.version>
+    <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
     <jakarta.activation.api.version>2.1.3</jakarta.activation.api.version>
     <jakarta.activation.version>2.0.1</jakarta.activation.version>
     <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
@@ -251,7 +251,6 @@
     <netty.version>4.1.118.Final</netty.version>
     <okhttp.version>4.12.0</okhttp.version>
     <org.openapitools.version>7.9.0</org.openapitools.version>
-    <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
     <picoli-version>4.7.6</picoli-version>
     <postgresql.version>42.7.5</postgresql.version>
     <quarkus.platform.version>3.18.2</quarkus.platform.version>
@@ -267,6 +266,8 @@
     <sshd.version>2.14.0</sshd.version>
     <swagger.version>1.6.9</swagger.version>
     <swagger.parser.version>2.1.22</swagger.parser.version>
+    <swagger-request-validator.version>2.44.1</swagger-request-validator.version>
+    <system-stubs.version>2.1.7</system-stubs.version>
     <testcontainers.version>1.20.4</testcontainers.version>
     <testng.version>7.10.2</testng.version>
     <vertx.version>4.5.11</vertx.version>
@@ -698,6 +699,7 @@
         <version>${apicurio.data-models.version}</version>
       </dependency>
 
+      <!-- Citrus OpenAPI -->
       <dependency>
         <groupId>com.atlassian.oai</groupId>
         <artifactId>swagger-request-validator-core</artifactId>
@@ -708,6 +710,11 @@
             <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>uk.org.webcompere</groupId>
+        <artifactId>system-stubs-core</artifactId>
+        <version>${system-stubs.version}</version>
       </dependency>
 
       <dependency>
@@ -1017,6 +1024,11 @@
       <dependency>
         <groupId>com.fasterxml.jackson.jaxrs</groupId>
         <artifactId>jackson-jaxrs-json-provider</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.datatype</groupId>
+        <artifactId>jackson-datatype-jsr310</artifactId>
         <version>${jackson.version}</version>
       </dependency>
 
