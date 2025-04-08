@@ -35,7 +35,7 @@ public class LocalStackSettings {
 
     private static final String VERSION_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "version";
     private static final String VERSION_ENV = LOCALSTACK_ENV_PREFIX + "VERSION";
-    public static final String VERSION_DEFAULT = "3.8.1";
+    public static final String VERSION_DEFAULT = "4.2.0";
 
     private static final String IMAGE_NAME_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "image.name";
     private static final String IMAGE_NAME_ENV = LOCALSTACK_ENV_PREFIX + "IMAGE_NAME";

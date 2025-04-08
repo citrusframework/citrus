@@ -115,17 +115,29 @@ public class TestResultsTest {
     }
 
     @Test
-    public void testSkippedResults() {
-        fixture.addResult(success("OkTest", TestResultsTest.class.getName()));
-        fixture.addResult(failed("FailedTest", TestResultsTest.class.getName(), new CitrusRuntimeException("This went wrong")));
-        fixture.addResult(skipped("SkippedTest", TestResultsTest.class.getName()));
+    public void testAllResults() {
+        fixture.addResult(success("OkTest1", TestResultsTest.class.getName()));
+        fixture.addResult(success("OkTest2", TestResultsTest.class.getName()));
+        fixture.addResult(failed("FailedTest1", TestResultsTest.class.getName(), new CitrusRuntimeException("This went wrong")));
+        fixture.addResult(failed("FailedTest2", TestResultsTest.class.getName(), new CitrusRuntimeException("This went wrong")));
+        fixture.addResult(skipped("SkippedTest1", TestResultsTest.class.getName()));
 
-        assertEquals(fixture.getSuccess(), 1);
-        assertEquals(fixture.getSuccessPercentageFormatted(), "50.0");
-        assertEquals(fixture.getFailed(), 1);
-        assertEquals(fixture.getFailedPercentageFormatted(), "50.0");
+        assertEquals(fixture.getSuccess(), 2);
+        assertEquals(fixture.getSuccessPercentageFormatted(), "40.0");
+        assertEquals(fixture.getFailed(), 2);
+        assertEquals(fixture.getFailedPercentageFormatted(), "40.0");
         assertEquals(fixture.getSkipped(), 1);
-        assertEquals(fixture.getSkippedPercentageFormatted(), "33.3");
+        assertEquals(fixture.getSkippedPercentageFormatted(), "20.0");
+    }
+
+    @Test
+    public void testResultsForNoResult() {
+        assertEquals(fixture.getSuccess(), 0);
+        assertEquals(fixture.getSuccessPercentageFormatted(), "0.0");
+        assertEquals(fixture.getFailed(), 0);
+        assertEquals(fixture.getFailedPercentageFormatted(), "0.0");
+        assertEquals(fixture.getSkipped(), 0);
+        assertEquals(fixture.getSkippedPercentageFormatted(), "0.0");
     }
 
     @Test

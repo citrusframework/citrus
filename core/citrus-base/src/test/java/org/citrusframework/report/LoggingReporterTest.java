@@ -184,7 +184,7 @@ public class LoggingReporterTest {
 
         verify(logger).info("SKIP (     0 ms) testLoggingReporterSkipped");
 
-        verifyResultSummaryLog(0, 0, 0, 0);
+        verifyResultSummaryLog(1, 0, 0, 0);
 
         verify(logger, never()).debug(anyString());
     }

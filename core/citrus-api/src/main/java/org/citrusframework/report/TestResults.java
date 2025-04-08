@@ -101,7 +101,7 @@ public class TestResults {
     }
 
     public String getSuccessPercentageFormatted() {
-        return results.isEmpty() || getSuccess() == 0 ? ZERO_PERCENTAGE : getNewDecimalFormat().format((double) getSuccess() / (getFailed() + getSuccess()) * 100);
+        return results.isEmpty() || getSuccess() == 0 ? ZERO_PERCENTAGE : getNewDecimalFormat().format((double) getSuccess() / (results.size()) * 100);
     }
 
     /**
@@ -132,7 +132,7 @@ public class TestResults {
     }
 
     public String getFailedPercentageFormatted() {
-        return results.isEmpty() || getFailed() == 0 ? ZERO_PERCENTAGE : getNewDecimalFormat().format((double) getFailed() / (getFailed() + getSuccess()) * 100);
+        return results.isEmpty() || getFailed() == 0 ? ZERO_PERCENTAGE : getNewDecimalFormat().format((double) getFailed() / (results.size()) * 100);
     }
 
     /**

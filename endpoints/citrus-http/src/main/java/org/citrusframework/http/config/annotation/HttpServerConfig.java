@@ -57,6 +57,12 @@ public @interface HttpServerConfig {
     boolean rootParentContext() default false;
 
     /**
+     * When enabled server uses default servlet filters.
+     * @return
+     */
+    boolean useDefaultFilters() default true;
+
+    /**
      * Connector references.
      * @return
      */

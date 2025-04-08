@@ -18,9 +18,16 @@ package org.citrusframework.http.server;
 
 public class HttpServerSettings {
 
-    private static final String RESPONSE_CACHE_SIZE_PROPERTY = "citrus.http.server.response.cache.size";
-    private static final String RESPONSE_CACHE_SIZE_ENV = "CITRUS_HTTP_SERVER_RESPONSE_CACHE_SIZE";
+    private static final String HTTP_SERVER_PROPERTY_PREFIX = "citrus.http.server.";
+    private static final String HTTP_SERVER_ENV_PREFIX = "CITRUS_HTTP_SERVER_";
+
+    private static final String RESPONSE_CACHE_SIZE_PROPERTY = HTTP_SERVER_PROPERTY_PREFIX + "response.cache.size";
+    private static final String RESPONSE_CACHE_SIZE_ENV = HTTP_SERVER_ENV_PREFIX + "RESPONSE_CACHE_SIZE";
     private static final String RESPONSE_CACHE_SIZE_DEFAULT = "100";
+
+    private static final String USE_DEFAULT_FILTERS_PROPERTY = HTTP_SERVER_PROPERTY_PREFIX + "use.default.filters";
+    private static final String USE_DEFAULT_FILTERS_ENV = HTTP_SERVER_ENV_PREFIX + "USE_DEFAULT_FILTERS";
+    private static final String USE_DEFAULT_FILTERS_DEFAULT = "true";
 
     /**
      * Private constructor prevent instantiation of utility class
@@ -37,5 +44,14 @@ public class HttpServerSettings {
     public static int responseCacheSize() {
         return Integer.parseInt(System.getProperty(RESPONSE_CACHE_SIZE_PROPERTY, System.getenv(RESPONSE_CACHE_SIZE_ENV) != null ?
                         System.getenv(RESPONSE_CACHE_SIZE_ENV) : RESPONSE_CACHE_SIZE_DEFAULT));
+    }
+
+    /**
+     * When enabled the server uses default servlet filters on the servlet context such as request caching filter.
+     * @return
+     */
+    public static boolean isUseDefaultFilters() {
+        return Boolean.parseBoolean(System.getProperty(USE_DEFAULT_FILTERS_PROPERTY, System.getenv(USE_DEFAULT_FILTERS_ENV) != null ?
+                        System.getenv(USE_DEFAULT_FILTERS_ENV) : USE_DEFAULT_FILTERS_DEFAULT));
     }
 }
