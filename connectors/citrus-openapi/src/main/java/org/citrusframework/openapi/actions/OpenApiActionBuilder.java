@@ -16,6 +16,8 @@
 
 package org.citrusframework.openapi.actions;
 
+import java.net.URL;
+
 import org.citrusframework.TestAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -25,7 +27,7 @@ import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;
 
-import java.net.URL;
+import static org.citrusframework.openapi.OpenApiSettings.getOpenApiValidationPolicy;
 
 /**
  * Action executes client and server operations using given OpenApi specification.
@@ -35,117 +37,126 @@ import java.net.URL;
  */
 public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
 
-	private OpenApiSpecification specification;
+    private OpenApiSpecificationSource openApiSpecificationSource;
 
-	public OpenApiActionBuilder() {
-	}
+    public OpenApiActionBuilder() {
+    }
 
-	public OpenApiActionBuilder(OpenApiSpecification specification) {
-		this.specification = specification;
-	}
+    public OpenApiActionBuilder(OpenApiSpecification specification) {
+        this.openApiSpecificationSource = new OpenApiSpecificationSource(specification);
+    }
 
-	/**
-	 * Static entrance method for the OpenApi fluent action builder.
-	 * @return
-	 */
-	public static OpenApiActionBuilder openapi() {
-		return new OpenApiActionBuilder();
-	}
+    public OpenApiActionBuilder(String openApiAlias) {
+        this.openApiSpecificationSource = new OpenApiSpecificationSource(openApiAlias);
+    }
 
-	public static OpenApiActionBuilder openapi(OpenApiSpecification specification) {
-		return new OpenApiActionBuilder(specification);
-	}
+    /**
+     * Static entrance method for the OpenApi fluent action builder.
+     */
+    public static OpenApiActionBuilder openapi() {
+        return new OpenApiActionBuilder();
+    }
 
-	public OpenApiActionBuilder specification(OpenApiSpecification specification) {
-		this.specification = specification;
-		return this;
-	}
+    public static OpenApiActionBuilder openapi(OpenApiSpecification specification) {
+        return new OpenApiActionBuilder(specification);
+    }
 
-	public OpenApiActionBuilder specification(URL specUrl) {
-		return specification(OpenApiSpecification.from(specUrl));
-	}
+    public static OpenApiActionBuilder openapi(String openApiAlias) {
+        return new OpenApiActionBuilder(openApiAlias);
+    }
 
-	public OpenApiActionBuilder specification(String specUrl) {
-		return specification(OpenApiSpecification.from(specUrl));
-	}
+    public OpenApiActionBuilder specification(OpenApiSpecification specification) {
+        this.openApiSpecificationSource = new OpenApiSpecificationSource(specification);
+        return this;
+    }
 
-	public OpenApiClientActionBuilder client() {
-		assertSpecification();
-		return client(specification.getRequestUrl());
-	}
+    public OpenApiActionBuilder specification(URL specUrl) {
+        return specification(OpenApiSpecification.from(specUrl, getOpenApiValidationPolicy()));
+    }
 
-	/**
-	 * Initiate http client action.
-	 */
-	public OpenApiClientActionBuilder client(HttpClient httpClient) {
-		assertSpecification();
+    public OpenApiActionBuilder specification(String specUrl) {
+        return specification(OpenApiSpecification.from(specUrl, getOpenApiValidationPolicy()));
+    }
 
-		if (httpClient.getEndpointConfiguration().getRequestUrl() != null) {
-			specification.setRequestUrl(httpClient.getEndpointConfiguration().getRequestUrl());
-		}
+    public OpenApiClientActionBuilder client() {
+        assertSpecification();
+        OpenApiClientActionBuilder clientActionBuilder = new OpenApiClientActionBuilder(openApiSpecificationSource)
+                .withReferenceResolver(referenceResolver);
+        this.delegate = clientActionBuilder;
+        return clientActionBuilder;
+    }
 
-		OpenApiClientActionBuilder clientActionBuilder = new OpenApiClientActionBuilder(httpClient, specification)
-				.withReferenceResolver(referenceResolver);
-		this.delegate = clientActionBuilder;
-		return clientActionBuilder;
-	}
+    /**
+     * Initiate http client action.
+     */
+    public OpenApiClientActionBuilder client(HttpClient httpClient) {
+        assertSpecification();
 
-	/**
-	 * Initiate http client action.
-	 */
-	public OpenApiClientActionBuilder client(String httpClient) {
-		assertSpecification();
+        if (httpClient.getEndpointConfiguration().getRequestUrl() != null) {
+            openApiSpecificationSource.setHttpClient(httpClient.getEndpointConfiguration().getRequestUrl());
+        }
 
-		specification.setHttpClient(httpClient);
+        OpenApiClientActionBuilder clientActionBuilder = new OpenApiClientActionBuilder(httpClient, openApiSpecificationSource)
+                .withReferenceResolver(referenceResolver);
+        this.delegate = clientActionBuilder;
+        return clientActionBuilder;
+    }
 
-		OpenApiClientActionBuilder clientActionBuilder = new OpenApiClientActionBuilder(httpClient, specification)
-				.withReferenceResolver(referenceResolver);
-		this.delegate = clientActionBuilder;
-		return clientActionBuilder;
-	}
+    /**
+     * Initiate http client action.
+     */
+    public OpenApiClientActionBuilder client(String httpClient) {
+        assertSpecification();
 
-	/**
-	 * Initiate http server action.
-	 */
-	public OpenApiServerActionBuilder server(Endpoint endpoint) {
-		assertSpecification();
+        openApiSpecificationSource.setHttpClient(httpClient);
 
-		OpenApiServerActionBuilder serverActionBuilder = new OpenApiServerActionBuilder(endpoint, specification)
-				.withReferenceResolver(referenceResolver);
-		this.delegate = serverActionBuilder;
-		return serverActionBuilder;
-	}
+        OpenApiClientActionBuilder clientActionBuilder = new OpenApiClientActionBuilder(httpClient, openApiSpecificationSource)
+                .withReferenceResolver(referenceResolver);
+        this.delegate = clientActionBuilder;
+        return clientActionBuilder;
+    }
 
-	private void assertSpecification() {
-		if (specification == null) {
-			throw new CitrusRuntimeException("Invalid OpenApi specification - please set specification first");
-		}
-	}
+    /**
+     * Initiate http server action.
+     */
+    public OpenApiServerActionBuilder server(Endpoint endpoint) {
+        assertSpecification();
 
-	/**
-	 * Initiate http server action.
-	 */
-	public OpenApiServerActionBuilder server(String httpServer) {
-		assertSpecification();
+        OpenApiServerActionBuilder serverActionBuilder = new OpenApiServerActionBuilder(endpoint, openApiSpecificationSource)
+                .withReferenceResolver(referenceResolver);
+        this.delegate = serverActionBuilder;
+        return serverActionBuilder;
+    }
 
-		OpenApiServerActionBuilder serverActionBuilder = new OpenApiServerActionBuilder(httpServer, specification)
-				.withReferenceResolver(referenceResolver);
-		this.delegate = serverActionBuilder;
-		return serverActionBuilder;
-	}
+    private void assertSpecification() {
+        if (openApiSpecificationSource == null) {
+            throw new CitrusRuntimeException("Invalid OpenApiSpecificationSource - please set specification first");
+        }
+    }
 
-	/**
-	 * Sets the bean reference resolver.
-	 * @param referenceResolver
-	 */
-	public OpenApiActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
-		this.referenceResolver = referenceResolver;
-		return this;
-	}
+    /**
+     * Initiate http server action.
+     */
+    public OpenApiServerActionBuilder server(String httpServer) {
+        assertSpecification();
 
-	@Override
-	public TestAction build() {
-		ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
-		return delegate.build();
-	}
+        OpenApiServerActionBuilder serverActionBuilder = new OpenApiServerActionBuilder(httpServer, openApiSpecificationSource)
+                .withReferenceResolver(referenceResolver);
+        this.delegate = serverActionBuilder;
+        return serverActionBuilder;
+    }
+
+    /**
+     * Sets the bean reference resolver.
+     */
+    public OpenApiActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
+        return this;
+    }
+
+    @Override
+    public TestAction build() {
+        ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
+        return delegate.build();
+    }
 }
