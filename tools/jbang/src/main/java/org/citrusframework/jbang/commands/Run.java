@@ -93,7 +93,7 @@ public class Run extends CitrusCommand {
         TestReporterSettings.setReportDirectory(WORK_DIR + "/citrus-reports");
         removeDir(work);
         if (!work.mkdirs()) {
-            System.err.println("Failed to create working directory " + WORK_DIR);
+            printer().printErr("Failed to create working directory " + WORK_DIR);
             return 1;
         }
 
@@ -120,7 +120,7 @@ public class Run extends CitrusCommand {
                 // check if file exist
                 File inputFile = FileUtils.getFileResource(file).getFile();
                 if (!inputFile.exists() && !inputFile.isFile()) {
-                    System.err.println("File does not exist: " + file);
+                    printer().printErr("File does not exist: " + file);
                     return 1;
                 }
 
@@ -129,7 +129,7 @@ public class Run extends CitrusCommand {
         }
 
         if (tests.isEmpty()) {
-            System.err.println("No tests to run in current directory");
+            printer().printErr("No tests to run in current directory");
             return 1;
         }
 

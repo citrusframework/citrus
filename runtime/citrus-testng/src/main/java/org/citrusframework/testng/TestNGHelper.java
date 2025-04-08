@@ -33,6 +33,7 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
+import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ClasspathResourceResolver;
@@ -203,7 +204,7 @@ public final class TestNGHelper {
                     sourceFilePackageName.replace("/","."), type);
 
             if (testLoader instanceof TestSourceAware) {
-                ((TestSourceAware) testLoader).setSource(source);
+                ((TestSourceAware) testLoader).setSource(TestSourceHelper.create(source));
                 methodTestLoaders.add(testLoader);
             } else {
                 logger.warn(String.format("Test loader %s is not able to handle test source %s", testLoader.getClass(), source));

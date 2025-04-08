@@ -35,13 +35,13 @@ import static org.citrusframework.kubernetes.actions.KubernetesActionBuilder.kub
  */
 public class ServiceConnectAction extends AbstractKubernetesAction {
 
-    private final String clientName;
-    private final String serviceName;
-    private final String port;
-    private final String localPort;
+    protected final String clientName;
+    protected final String serviceName;
+    protected final String port;
+    protected final String localPort;
 
-    public ServiceConnectAction(Builder builder) {
-        super("service-connect", builder);
+    protected ServiceConnectAction(String name, Builder builder) {
+        super(name, builder);
 
         this.serviceName = builder.serviceName;
         this.port = builder.port;
@@ -49,15 +49,16 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
         this.localPort = builder.localPort;
     }
 
+    public ServiceConnectAction(Builder builder) {
+        this("service-connect", builder);
+    }
+
     @Override
     public void doExecute(TestContext context) {
         if (KubernetesSettings.isLocal()) {
-            if (context.getReferenceResolver().isResolvable(serviceName)) {
+            if (context.getReferenceResolver().isResolvable(serviceName, HttpServer.class)) {
                 HttpServer server = context.getReferenceResolver().resolve(serviceName, HttpServer.class);
-                HttpClient serviceClient = new HttpClientBuilder()
-                        .requestUrl("http://localhost:%d".formatted(server.getPort()))
-                        .build();
-                context.getReferenceResolver().bind(clientName, serviceClient);
+                exposeServiceClient(context, server.getPort());
             }
 
             return;
@@ -80,10 +81,7 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
             throw new CitrusRuntimeException("Failed to bind Kubernetes service client '%s' - client already exists".formatted(clientName));
         }
 
-        HttpClient serviceClient = new HttpClientBuilder()
-                .requestUrl("http://localhost:%d".formatted(portForward.getLocalPort()))
-                .build();
-        context.getReferenceResolver().bind(clientName, serviceClient);
+        exposeServiceClient(context, portForward.getLocalPort());
 
         if (context.getReferenceResolver().isResolvable(serviceName + ":port-forward")) {
             throw new CitrusRuntimeException("Failed to bind Kubernetes service port forward '%s' - already exists".formatted(serviceName + ":port-forward"));
@@ -94,7 +92,19 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
             context.doFinally(kubernetes().client(getKubernetesClient())
                     .services()
                     .disconnect(serviceName)
-                    .inNamespace(getNamespace()));
+                    .inNamespace(namespace(context)));
+        }
+    }
+
+    private void exposeServiceClient(TestContext context, int localPort) {
+        if (context.getReferenceResolver().isResolvable(clientName, HttpClient.class)) {
+            HttpClient serviceClient = context.getReferenceResolver().resolve(clientName, HttpClient.class);
+            serviceClient.getEndpointConfiguration().setRequestUrl("http://localhost:%d".formatted(localPort));
+        } else {
+            HttpClient serviceClient = new HttpClientBuilder()
+                    .requestUrl("http://localhost:%d".formatted(localPort))
+                    .build();
+            context.getReferenceResolver().bind(clientName, serviceClient);
         }
     }
 
@@ -104,9 +114,9 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
     public static class Builder extends AbstractKubernetesAction.Builder<ServiceConnectAction, Builder> {
 
         private String clientName;
-        private String localPort;
+        protected String localPort;
         private String serviceName = KubernetesSettings.getServiceName();
-        private String port;
+        private String port = "8080";
 
         public Builder service(String serviceName) {
             this.serviceName = serviceName;

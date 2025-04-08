@@ -16,24 +16,34 @@
 
 package org.citrusframework.junit.jupiter;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.citrusframework.TestClass;
 import org.citrusframework.TestSource;
+import org.citrusframework.common.TestSourceHelper;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.junit.jupiter.main.JUnitCitrusTest;
 import org.citrusframework.main.AbstractTestEngine;
 import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.main.scan.ClassPathTestScanner;
 import org.citrusframework.main.scan.JarFileTestScanner;
+import org.citrusframework.spi.ClasspathResourceResolver;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.DiscoverySelector;
@@ -71,7 +81,7 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
             addTestPackages(requestBuilder, getConfiguration());
         } else {
             addTestClasses(requestBuilder, getConfiguration());
-            addTestSources(requestBuilder, getConfiguration());
+            addTestSources(requestBuilder, getConfiguration().getTestSources());
         }
 
         LauncherDiscoveryRequest request = requestBuilder.build();
@@ -102,16 +112,46 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
         }
     }
 
-    private void addTestSources(LauncherDiscoveryRequestBuilder requestBuilder, TestRunConfiguration configuration) {
-        List<TestSource> testSources = configuration.getTestSources().stream()
-                .filter(source -> !"java".equals(source.getType()))
+    private void addTestSources(LauncherDiscoveryRequestBuilder requestBuilder, List<TestSource> testSources) {
+        List<TestSource> directories = testSources.stream()
+                .filter(source -> "directory".equals(source.getType()))
                 .toList();
 
-        for (TestSource source : testSources) {
+        for (TestSource directory : directories) {
+            Resource sourceDir = Resources.create(directory.getFilePath());
+            if (sourceDir.exists()) {
+                if (sourceDir instanceof Resources.ClasspathResource) {
+                    try {
+                        addTestSources(requestBuilder, new ClasspathResourceResolver()
+                                .getResources(sourceDir.getLocation())
+                                .stream()
+                                .map(Path::toString)
+                                .map(TestSourceHelper::create)
+                                .collect(Collectors.toList()));
+                    } catch (IOException e) {
+                        throw new CitrusRuntimeException("Failed to resolve files from resource directory '%s'".formatted(sourceDir.getLocation()), e);
+                    }
+                } else {
+                    addTestSources(requestBuilder, Optional.ofNullable(sourceDir.getFile().list())
+                            .stream()
+                            .flatMap(Arrays::stream)
+                            .map(file -> directory.getFilePath() + File.separator + file)
+                            .map(TestSourceHelper::create)
+                            .collect(Collectors.toList()));
+                }
+            }
+        }
+
+        List<TestSource> filtered = testSources.stream()
+                .filter(source -> !"directory".equals(source.getType()))
+                .filter(source -> !"java".equals(source.getType()) || !TestClass.isKnownToClasspath(source.getName()))
+                .toList();
+
+        for (TestSource source : filtered) {
             logger.info("Running test source {}", source.getName());
 
             JUnitCitrusTest.setSourceName(source.getName());
-            JUnitCitrusTest.setSource(Optional.ofNullable(source.getFilePath()).orElse(""));
+            JUnitCitrusTest.setSource(source);
             requestBuilder.selectors(selectClass(JUnitCitrusTest.class));
         }
     }

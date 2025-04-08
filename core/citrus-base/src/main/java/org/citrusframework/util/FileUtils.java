@@ -441,6 +441,10 @@ public abstract class FileUtils {
     public static TestSource getTestSource(String sourceFile) {
         String ext = getFileExtension(sourceFile);
         String name = getFileName(sourceFile);
-        return new TestSource(ext, name, sourceFile);
+        if (StringUtils.hasText(ext)) {
+            return new TestSource(ext, name, sourceFile);
+        } else {
+            return new TestSource("directory", name, sourceFile);
+        }
     }
 }

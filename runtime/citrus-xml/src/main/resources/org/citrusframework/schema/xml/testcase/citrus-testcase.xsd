@@ -728,6 +728,7 @@
   <xs:element name="soap" type="tns:Soap"/>
   <xs:element name="camel" type="tns:Camel"/>
   <xs:element name="selenium" type="tns:Selenium"/>
+  <xs:element name="agent" type="tns:Agent"/>
   <xs:element name="jbang" type="tns:JBang"/>
   <xs:element name="kubernetes" type="tns:Kubernetes"/>
   <xs:element name="knative" type="tns:Knative"/>
@@ -1603,6 +1604,45 @@
     <xs:attribute name="server" type="xs:string"/>
   </xs:complexType>
 
+  <xs:complexType name="Agent">
+    <xs:annotation>
+      <xs:documentation>Connect with Citrus Agent to run test actions on foreign platforms such as Docker or Kubernetes.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:choice>
+        <xs:element name="connect">
+          <xs:complexType>
+            <xs:attribute name="url" type="xs:string"/>
+            <xs:attribute name="port" type="xs:int"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="run">
+          <xs:complexType>
+            <xs:choice>
+              <xs:element name="source">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="code" minOccurs="0" type="xs:string"/>
+                  </xs:sequence>
+                  <xs:attribute name="file" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="actions">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:any processContents="lax"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string"/>
+  </xs:complexType>
+
   <xs:complexType name="JBang">
     <xs:annotation>
       <xs:documentation>Connect with JBang to run scripts as spawned processes</xs:documentation>
@@ -1652,6 +1692,27 @@
     <xs:sequence>
       <xs:element name="description" type="xs:string" minOccurs="0"/>
       <xs:choice>
+        <xs:element name="agent">
+          <xs:complexType>
+            <xs:choice>
+              <xs:element name="connect">
+                <xs:complexType>
+                  <xs:attribute name="name" type="xs:string"/>
+                  <xs:attribute name="image-registry" type="xs:string"/>
+                  <xs:attribute name="image" type="xs:string"/>
+                  <xs:attribute name="port" type="xs:string"/>
+                  <xs:attribute name="test-jar" type="xs:string"/>
+                  <xs:attribute name="local-port" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="disconnect">
+                <xs:complexType>
+                  <xs:attribute name="name" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
         <xs:element name="connect">
           <xs:complexType>
             <xs:choice>

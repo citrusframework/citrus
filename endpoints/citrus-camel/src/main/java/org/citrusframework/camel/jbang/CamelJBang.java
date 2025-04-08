@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.JBangSupport;
 import org.citrusframework.jbang.ProcessAndOutput;
@@ -46,9 +45,9 @@ import static org.citrusframework.jbang.JBangSupport.OK_EXIT_CODE;
 public class CamelJBang {
 
     /** Logger */
-    private static final Logger logger = LoggerFactory.getLogger(CamelVerifyIntegrationAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(CamelJBang.class);
 
-    private final JBangSupport camelApp = JBangSupport.jbang().app(CamelJBangSettings.getCamelApp());
+    private final JBangSupport app = JBangSupport.jbang().app(CamelJBangSettings.getCamelApp());
 
     private boolean dumpIntegrationOutput = CamelJBangSettings.isDumpIntegrationOutput();
 
@@ -59,15 +58,15 @@ public class CamelJBang {
      */
     private CamelJBang() {
         if (!"latest".equals(CamelJBangSettings.getCamelVersion())) {
-            camelApp.withSystemProperty("camel.jbang.version", CamelJBangSettings.getCamelVersion());
+            app.withSystemProperty("camel.jbang.version", CamelJBangSettings.getCamelVersion());
         }
 
         if (!CamelJBangSettings.getKameletsVersion().isBlank()) {
-            camelApp.withSystemProperty("camel-kamelets.version", CamelJBangSettings.getKameletsVersion());
+            app.withSystemProperty("camel-kamelets.version", CamelJBangSettings.getKameletsVersion());
         }
 
         for (String url : CamelJBangSettings.getTrustUrl()) {
-            camelApp.trust(url);
+            app.trust(url);
         }
 
         String version = version();
@@ -78,18 +77,49 @@ public class CamelJBang {
 
     /**
      * Static entrance method to retrieve instance of Camel JBang.
-     * @return
      */
     public static CamelJBang camel() {
         return new CamelJBang();
     }
 
     /**
-     * Provides access to the underlying JBang support. For instance to set system properties on the JBang binary.
-     * @return
+     * Sets the current working directory.
      */
-    public JBangSupport camelApp() {
-        return camelApp;
+    public CamelJBang workingDir(Path workingDir) {
+        app.workingDir(workingDir);
+        return this;
+    }
+
+    /**
+     * Adds system property to command line.
+     */
+    public CamelJBang withSystemProperty(String name, String value) {
+        app.withSystemProperty(name, value);
+        return this;
+    }
+
+    /**
+     * Adds system properties to command line.
+     */
+    public CamelJBang withSystemProperties(Map<String, String> systemProperties) {
+        app.withSystemProperties(systemProperties);
+        return this;
+    }
+
+    /**
+     * Adds environment variables to command line.
+     */
+    public CamelJBang withEnv(String name, String value) {
+        app.withEnv(name, value);
+        return this;
+    }
+
+    /**
+     * Adds environment variables to command line.
+     */
+    public CamelJBang withEnvs(Map<String, String> envVars) {
+        app.withEnvs(envVars);
+        return this;
     }
 
     /**
@@ -124,20 +154,30 @@ public class CamelJBang {
                 runArgs.add("--logging-color=false");
             }
 
-            return camelApp.runAsync("run", outputFile, runArgs);
+            return app.runAsync("run", outputFile, runArgs);
         } else {
-            return camelApp.runAsync("run", runArgs);
+            return app.runAsync("run", runArgs);
         }
     }
 
     /**
-     * Get details for integration previously run via JBang Camel app. Integration is identified by its process id.
+     * Stops all Camel integrations run via Came JBang.
+     */
+    public void stop() {
+        ProcessAndOutput p = app.run("stop") ;
+        if (p.getProcess().exitValue() != OK_EXIT_CODE) {
+            throw new CitrusRuntimeException(String.format("Failed to stop Camel integration - exit code %d", p.getProcess().exitValue()));
+        }
+    }
+
+    /**
+     * Stops given Camel integration identified by its process id.
      * @param pid
      */
     public void stop(Long pid) {
-        ProcessAndOutput p = camelApp.run("stop", String.valueOf(pid)) ;
+        ProcessAndOutput p = app.run("stop", String.valueOf(pid)) ;
         if (p.getProcess().exitValue() != OK_EXIT_CODE) {
-            throw new CitrusRuntimeException(String.format("Failed to stop Camel K integration - exit code %d", p.getProcess().exitValue()));
+            throw new CitrusRuntimeException(String.format("Failed to stop Camel integration - exit code %d", p.getProcess().exitValue()));
         }
     }
 
@@ -145,7 +185,7 @@ public class CamelJBang {
      * Get information on running integrations.
      */
     public String ps() {
-        ProcessAndOutput p = camelApp.run("ps");
+        ProcessAndOutput p = app.run("ps");
         return p.getOutput();
     }
 
@@ -154,13 +194,12 @@ public class CamelJBang {
      */
     public String version() {
         if (!StringUtils.hasText(version)) {
-            ProcessAndOutput p = camelApp.run("--version");
+            ProcessAndOutput p = app.run("--version");
             version = p.getOutput();
         }
 
         return version;
     }
-
 
     /**
      * Get details for integration previously run via JBang Camel app. Integration is identified by its process id.
@@ -241,7 +280,7 @@ public class CamelJBang {
     }
 
     public List<String> getPlugins() {
-        ProcessAndOutput p = camelApp.run("plugin","get");
+        ProcessAndOutput p = app.run("plugin","get");
         String output = p.getOutput();
         List<String> installedPlugins = new ArrayList<>();
         if (output.isBlank()) {
@@ -267,7 +306,7 @@ public class CamelJBang {
         fullArgs.add(pluginName);
         fullArgs.addAll(Arrays.asList(args));
 
-        ProcessAndOutput pao = camelApp.run("plugin", fullArgs);
+        ProcessAndOutput pao = app.run("plugin", fullArgs);
         int exitValue = pao.getProcess().exitValue();
         if (exitValue != OK_EXIT_CODE && exitValue != 1) {
             throw new CitrusRuntimeException("Error while adding Camel JBang plugin. Exit code: " + exitValue);
@@ -275,7 +314,7 @@ public class CamelJBang {
     }
 
     public KubernetesPlugin kubernetes() {
-        return new KubernetesPlugin(camelApp);
+        return new KubernetesPlugin(app);
     }
 
 }

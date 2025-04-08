@@ -1,0 +1,386 @@
+[[agent]]
+= Citrus agent
+
+The Citrus agent provides a way to run tests as part of the Docker container environment and as part of the Kubernetes platform.
+
+The agent ships as a web application and users are able to run Citrus tests on demand.
+Usually the agent application runs as a Docker container or Kubernetes deployment so that the agent is able to access internal platform services such as Knative eventing brokers or a service resources exposed only to the current Kubernetes namespace.
+
+The agent application exposes a REST service API for clients to inject tests and trigger test runs.
+
+[[agent-service]]
+== Agent REST service API
+
+As a web application the agent exposes several REST endpoints.
+Http clients are able to trigger test runs and inspect the remote test results.
+
+At service startup the agent will automatically run all tests that can be found according to certain criteria.
+The agent performs a test scan looking for available tests on multiple sources applying multiple search criteria:
+
+* name pattern: Tests that should be executed must match one of the given class name patterns (e.g. `.*IT`)
+* packages: List of packages to scan in the agent classpath. All tests matching the given name patterns will be executed.
+* source files: List of source file paths to test sources (e.g. XML, YAML, Cucumber feature). All sources found will be run.
+* test-jar: A provided Java archive holding test classes for execution. All previous test filters (e.g. name patterns, package filters) get applied while scanning classes in this JAR.
+
+TIP: A test-jar that holds all tests and its dependencies can be injected into the agent application classpath. When using a Docker container image this injection may be accomplished through Docker volumes. In Kubernetes the test-jar injection may be done via ConfigMaps and volume mounts on the citrus-agent deployment.
+
+The citrus-agent may also run tests on demand rather than on startup.
+The agent provides a REST service endpoint to trigger a test run.
+Each call to the service API may use different settings and test run criteria (e.g. name patterns, packages, source files).
+
+The agent REST API provides these operations:
+
+.REST service operations
+|===
+|Operation |Method |Description
+
+| /health
+| GET
+| Provides general agent service status as a Json object (UP: true/false)
+
+| /run
+| GET
+| Triggers a new test run. The request query parameters may define the test run settings (e.g. name pattern, packages, source files). The operation blocks until the test run is finished and the response represents the test result summary using proper Http response codes for failure (500 INTERNAL_SERVER_ERROR) and success (200 OK).
+
+| /run
+| POST
+| Triggers a new test run. The request body may be a test configuration object that specifies the test run (e.g. name pattern, packages, source files). The operation blocks until the test run is finished and the response represents the test result summary using proper Http response codes for failure (500 INTERNAL_SERVER_ERROR) and success (200 OK).
+
+| /run
+| PUT
+| Same as GET/POST run operation but the call is not blocking until the test run is finished. Instead of this clients may inspect the test results calling/polling the `/results` service endpoint.
+
+| /results
+| GET
+| Get cumulated test results for this agent. This represents the overall test results for all tests that have been run on this agent.
+
+| /results/latest
+| GET
+| Get the most recent test results for the latest test run. This also includes results from a pending test run which may deliver partial test results (Http response code partial 206). This way clients can check on when the current test run is finished or still pending.
+
+| /results/clear
+| PUT
+| Clear the cumulated test results to start fresh.
+
+| /results/files
+| GET
+| Get test results files that have been created as part of the test run. This includes JUnit test reports and HTML Citrus test suite reports.
+
+|===
+
+[[agent-configuration]]
+== Configuration
+
+The agent reads general settings on startup from system properties and environment variables.
+The environment settings are well suited for both usual Java runtime environment and containerized runtime environments such as Docker containers or Kubernetes deployments.
+
+The Citrus agent application supports the following settings.
+
+.System properties
+|===
+|System properties |Description
+
+| citrus.agent.name
+| The name of this agent instance. Default value is `citrus-agent`.
+
+| citrus.agent.server.port
+| The port to listen on for incoming client requests. Default port is `4567`.
+
+| citrus.agent.test.engine
+| The default engine used to run tests on this agent. One of junit, junit5, testng, cucumber. Default is `junit5`.
+
+| citrus.agent.time.to.live
+| The time to wait after the tests have run as part of the startup procedure. Default is `-1` which means indefinite.
+
+| citrus.agent.system.exit
+| Should use system exit to mark test failure (e.g. system exit = -1). Default is `false`.
+
+| citrus.agent.skip.tests
+| Test execution should bee skipped at server startup. Default is `false` which means that all tests found are automatically run as part of the server startup procedure.
+
+| citrus.agent.includes
+| List of test name patterns to include in test runs. The server searches for tests matching these patterns when running all available tests. Default patterns are `["^.*IT$", "^.*ITCase$", "^IT.*$"]`
+
+| citrus.agent.packages
+| List of packages to include in test scan.
+
+| citrus.agent.default.properties
+| Comma separated list of key-value pairs that represent default system properties for a test run.
+
+| citrus.agent.test.sources
+| List of test source paths to run. This may be paths to XML, YAML, Cucumber feature files that the agent should run as part of a test run.
+
+| citrus.agent.config.class
+| Bean configuration class to load as part of a test run.
+
+| citrus.agent.test.jar
+| Path to a test Java archive that hold tests for a test run. Default value is `classpath:citrus-agent-tests.jar`. The test-jar execution is skipped when the file does not exist.
+
+|===
+
+Same properties are settable via environment variables.
+
+.Environment variables
+|===
+|Environment variable |Description
+
+| CITRUS_AGENT_NAME
+| The name of this agent instance. Default value is `citrus-agent`.
+
+| CITRUS_AGENT_SERVER_PORT
+| The port to listen on for incoming client requests. Default port is `4567`.
+
+| CITRUS_AGENT_TEST_ENGINE
+| The default engine used to run tests on this agent. One of junit, junit5, testng, cucumber. Default is `junit5`.
+
+| CITRUS_AGENT_TIME_TO_LIVE
+| The time to wait after the tests have run as part of the startup procedure. Default is `-1` which means indefinite.
+
+| CITRUS_AGENT_SYSTEM_EXIT
+| Should use system exit to mark test failure (e.g. system exit = -1). Default is `false`.
+
+| CITRUS_AGENT_SKIP_TESTS
+| Test execution should bee skipped at server startup. Default is `false` which means that all tests found are automatically run as part of the server startup procedure.
+
+| CITRUS_AGENT_INCLUDES
+| List of test name patterns to include in test runs. The server searches for tests matching these patterns when running all available tests. Default patterns are `["^.*IT$", "^.*ITCase$", "^IT.*$"]`
+
+| CITRUS_AGENT_PACKAGES
+| List of packages to include in test scan.
+
+| CITRUS_AGENT_DEFAULT_PROPERTIES
+| Comma separated list of key-value pairs that represent default system properties for a test run.
+
+| CITRUS_AGENT_TEST_SOURCES
+| List of test source paths to run. This may be paths to XML, YAML, Cucumber feature files that the agent should run as part of a test run.
+
+| CITRUS_AGENT_CONFIG_CLASS
+| Bean configuration class to load as part of a test run.
+
+| CITRUS_AGENT_TEST_JAR
+| Path to a test Java archive that hold tests for a test run. Default value is `classpath:citrus-agent-tests.jar`. The test-jar execution is skipped when the file does not exist.
+
+|===
+
+[[agent-ui]]
+== Web UI
+
+The Citrus agent application provides a Web user interface for clients to inspect previous test runs.
+You can access the user interface pointing your browser to the exposed server port.
+By default, when running the agent service locally (e.g. via JBang) the exposed Web UI endpoint is http://localhost:4567[http://localhost:4567].
+
+When run on Docker or Kubernetes the exposed port may be mapped to a local port or Service resource that you can access with the browser.
+
+[[agent-docker-image]]
+== Docker container image
+
+The Citrus agent also ships as a Docker container image that you can use to run the agent as a Docker container or as part of a Kubernetes deployment.
+The Docker image is available on this https://quay.io/repository/citrusframework/citrus-agent[Quay.io repository].
+
+You can use the image in a Kubernetes deployment:
+
+.Citrus agent deployment
+[source,yaml,indent=0]
+----
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: citrus
+    app.kubernetes.io/name: citrus-agent
+  name: citrus-agent
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: citrus-agent
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/managed-by: citrus
+        app.kubernetes.io/name: citrus-agent
+    spec:
+      containers:
+      - name: citrus-agent
+        env:
+        - name: CITRUS_AGENT_SERVER_PORT
+          value: "8080"
+        image: quay.io/citrusframework/citrus-agent:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+----
+
+The Deployment may use the environment variables to customize the Citrus agent application. The container exposes the Http port so you can access the Web UI with a Service resource.
+
+TIP: You can inject a test jar that contains the tests to run with the agent. Just use a ConfigMap with the archive as binary content and mount the JAR into the Citrus agent pod with volumes.
+
+.Test jar ConfigMap
+[source,yaml,indent=0]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: citrus-agent-resources
+  labels:
+    app.kubernetes.io/managed-by: citrus
+    app.kubernetes.io/name: citrus-agent
+binaryData:
+  citrus-agent-tests.jar: |
+    [...]
+----
+
+.Citrus agent with volumes
+[source,yaml,indent=0]
+----
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: citrus
+    app.kubernetes.io/name: citrus-agent
+  name: citrus-agent
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: citrus-agent
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/managed-by: citrus
+        app.kubernetes.io/name: citrus-agent
+    spec:
+      containers:
+      - name: citrus-agent
+        env:
+        - name: CITRUS_AGENT_TEST_JAR
+          value: /deployments/resources/citrus-agent-tests.jar
+        - name: CITRUS_AGENT_SERVER_PORT
+          value: "8080"
+        image: quay.io/citrusframework/citrus-agent:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /deployments/resources
+          name: resources
+      volumes:
+      - name: resources
+        configMap:
+          defaultMode: 420
+          name: citrus-agent-resources
+----
+
+The volume mount adds the binary content from the ConfigMap to the Pod and the Citrus agent application will be able to run the tests from that Java archive.
+
+You may also use a ConfigMap that holds other test sources such as XML, YAML, Groovy or Cucumber test files.
+
+[[agent-jbang]]
+== Agent JBang commands
+
+The JBang integration is a perfect way to run the agent locally suited very well for rapid prototyping.
+
+The Citrus JBang command line tooling supports several agent related commands:
+
+.JBang agent commands
+|===
+|command |Description
+
+| agent start
+| Start the Citrus agent application as a local JBang process.
+
+| agent stop
+| Stop the current agent process.
+
+|===
+
+[[agent-maven-plugin]]
+== Maven plugin
+
+The Citrus agent provides a Maven plugin that you can include into your project build lifecycle.
+You can use the plugin to build a `test-jar` from your local test sources.
+The plugin will then start a new Citrus agent service (e.g. in Kubernetes) and run the tests from the `test-jar` artifact.
+The plugin waits for the remote test execution to finish and provides the test results to the local Maven build.
+
+The Citrus agent Maven plugin provides these goals to execute:
+
+.Goals
+|===
+|Goal |Build phase |Description
+
+| test-jar
+| package
+| Builds a test JAR artifact from your test scoped sources
+
+| start
+| pre-integration-test
+| Create and run a new Citrus agent application instance (locally via JBang, as a Docker container or as a Kubernetes deployment)
+
+| run
+| integration-test
+| Run the tests from the test-jar artifact in the agent service (e.g. the tests run as part of the Kubernetes platform)
+
+| stop
+| post-integration-test
+| Stop the agent service
+
+| verify
+| verify
+| Verify the remote test results and make sure that tests have executed successfully
+
+|===
+
+Each Maven plugin goal is bound to a default Maven build lifecycle phase.
+Like the Maven failsafe plugin the Citrus agent plugin binds its goals to the Maven `integration-test` phases in the build lifecycle.
+
+The agent plugin makes sure to run the `post-integration-test` phase even when tests are failing.
+The plugin propagates the remote test execution results to the local Maven build so the `verify` goal is able to fail the build in case of failed tests.
+
+A typical usage example for the Citrus agent Maven plugin looks like follows:
+
+.Maven POM
+[source,xml,indent=0]
+----
+<plugin>
+  <groupId>org.citrusframework.mvn</groupId>
+  <artifactId>citrus-agent-maven-plugin</artifactId>
+  <version>${project.version}</version>
+  <configuration>
+    <run>
+      <async>true</async>
+    </run>
+    <kubernetes>
+      <enabled>true</enabled>
+    </kubernetes>
+  </configuration>
+  <executions>
+    <execution>
+      <id>citrus-agent-tests</id>
+      <goals>
+        <goal>test-jar</goal>
+        <goal>start</goal>
+        <goal>test</goal>
+        <goal>stop</goal>
+        <goal>verify</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
+----
+
+The example above uses the Citrus agent Maven plugin amd binds its individual goals to the Maven build lifecycle.
+In this example the Kubernetes support is enabled.
+This means that the Citrus agent service will be started as a Deployment on the current Kubernetes cluster.
+Please make sure to connect to the Kubernetes cluster before the Maven build (e.g. via `kubectl`).
+
+The plugin uses the Kubernetes client to create the agent service as a deployment.
+It creates a ConfigMap from the built test-jar Java archive and makes sure the agent service has access to it (e.g. via volume mounts).
+It connects to the service and triggers the test run on the agent.
+It waits for the tes run to finish properly and the remote test results are propagated to the local Maven build.
+It verifies the test results and makes the local Maven build fail in case of test failures or errors.
+It automatically removes the Citrus agent service deployment and its related resources from the Kubernetes cluster.
+
+When the local Maven build is successful you can be sure that all tests have run successful on the agent.

@@ -1,0 +1,101 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements. See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+        rel="stylesheet"
+        href="static/styles/patternfly.css"
+        crossorigin="anonymous"
+    >
+    <title>Citrus Agent - 1.0-SNAPSHOT</title>
+</head>
+<body>
+<div class="pf-c-page" id="citrus-agent">
+    <a class="pf-c-skip-to-content pf-c-button pf-m-primary" href="#main-content-citrus-agent">Skip to content</a>
+    <header class="pf-c-page__header">
+        <div class="pf-c-page__header-brand">
+            <div class="pf-c-page__header-brand-toggle">
+                <button class="pf-c-button pf-m-plain" type="button" id="citrus-agent-nav-toggle" aria-label="Global navigation" aria-expanded="true" aria-controls="citrus-agent-primary-nav">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    <div class="pf-c-page__sidebar">
+        <div class="pf-c-page__sidebar-body">
+            <nav class="pf-c-nav" id="citrus-agent-primary-nav" aria-label="Global">
+                <ul class="pf-c-nav__list">
+                    <li class="pf-c-nav__item">
+                        <a href="#" class="pf-c-nav__link pf-m-current" aria-current="page">Results</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <main class="pf-c-page__main" tabindex="-1">
+        <section class="pf-c-page__main-section pf-m-light">
+            <div class="pf-c-content">
+                <h1>Citrus Agent</h1>
+            </div>
+        </section>
+        <section class="pf-c-page__main-section pf-m-no-padding pf-m-padding-on-xl">
+            <div class="pf-c-content">
+                <h3 class="pf-c-title pf-m-lg">Test Results</h3>
+            </div>
+            <div class="pf-c-card">
+                <table class="pf-c-table pf-m-grid-xl" role="grid" aria-label="This is a table with checkboxes" id="results">
+                    <thead>
+                    <tr role="row">
+                        <th role="columnheader" scope="col">Name</th>
+                        <th role="columnheader" scope="col">Class</th>
+                        <th role="columnheader" scope="col">Status</th>
+                        <th role="columnheader" scope="col">Error</th>
+                        <th role="columnheader" scope="col">Duration</th>
+                    </tr>
+                    </thead>
+                    <tbody role="rowgroup">
+                    <tr role="row" th:each="result: ${results}">
+                        <th role="columnheader" data-label="Name">
+                            <span th:text="${result.testName}"/>
+                        </th>
+                        <td role="cell" data-label="Class">
+                            <span th:text="${result.className}"/>
+                        </td>
+                        <td role="cell" data-label="Status">
+                            <span th:text="${result.result}"/>
+                        </td>
+                        <td role="cell" data-label="Error">
+                            <span th:text="${result.errorMessage} ?: '-'"/>
+                        </td>
+                        <td role="cell" data-label="Duration">
+                            <span th:text="${result.duration.toMillis} ?: '0'"/>
+                            <span>ms</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+<script src="static/scripts/jquery-3.3.1.min.js"></script>
+</html>

@@ -16,8 +16,6 @@
 
 package org.citrusframework.spi;
 
-import static org.citrusframework.spi.Resources.CLASSPATH_RESOURCE_PREFIX;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -37,9 +35,12 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.stream.Collectors;
+
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.citrusframework.spi.Resources.CLASSPATH_RESOURCE_PREFIX;
 
 /**
  * Resolver finds all resources in given classpath resource path.
@@ -57,6 +58,40 @@ public class ClasspathResourceResolver {
             findResources(path, classLoader, resources, name -> name.endsWith(".class"));
         }
         return resources;
+    }
+
+    public File getResource(String path) throws IOException {
+        if (path.endsWith("/*")) {
+            path = path.substring(0, path.length() - 1);
+        } else if (path.endsWith(".*")) {
+            path = path.substring(0, path.length() - 2);
+        }
+
+        if (path.startsWith(CLASSPATH_RESOURCE_PREFIX)) {
+            path = path.substring(CLASSPATH_RESOURCE_PREFIX.length());
+        }
+
+        if (path.startsWith("/")) {
+            path = path.substring(1);
+        }
+
+        for (ClassLoader classLoader : getClassLoaders()) {
+            URL url = classLoader.getResource(path);
+            if (url != null) {
+                String urlPath = parseUrlPath(url);
+                if (urlPath == null) {
+                    return null;
+                }
+
+                File file = new File(urlPath);
+                if (file.exists()) {
+                    logger.trace("Found resource: {} as {}", file.getName(), file.toURI());
+                    return file;
+                }
+            }
+        }
+
+        return null;
     }
 
     public Set<Path> getResources(String path) throws IOException {

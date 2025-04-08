@@ -857,6 +857,18 @@
         <version>${vertx.version}</version>
       </dependency>
 
+      <!-- Citrus agent dependencies-->
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-web</artifactId>
+        <version>${vertx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-web-templ-thymeleaf</artifactId>
+        <version>${vertx.version}</version>
+      </dependency>
+
       <!-- Citrus camel dependencies -->
       <dependency>
         <groupId>org.apache.camel</groupId>
@@ -1002,6 +1014,11 @@
       <dependency>
         <groupId>com.fasterxml.jackson.jaxrs</groupId>
         <artifactId>jackson-jaxrs-json-provider</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.datatype</groupId>
+        <artifactId>jackson-datatype-jsr310</artifactId>
         <version>${jackson.version}</version>
       </dependency>
 

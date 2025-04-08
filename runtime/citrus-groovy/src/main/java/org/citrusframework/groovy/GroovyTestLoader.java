@@ -18,23 +18,24 @@ package org.citrusframework.groovy;
 
 import java.io.IOException;
 
+import org.citrusframework.TestSource;
 import org.citrusframework.common.DefaultTestLoader;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
 import org.citrusframework.groovy.dsl.GroovyShellUtils;
 import org.citrusframework.groovy.dsl.test.TestCaseScript;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.StringUtils;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
 public class GroovyTestLoader extends DefaultTestLoader implements TestSourceAware {
 
-    private String source;
+    private TestSource source;
 
     protected void doLoad() {
         try {
-            Resource scriptSource = FileUtils.getFileResource(this.getSource(), context);
+            Resource scriptSource = getSource().getSourceFile(context);
             ImportCustomizer ic = new ImportCustomizer();
 
             String basePath;
@@ -59,22 +60,22 @@ public class GroovyTestLoader extends DefaultTestLoader implements TestSourceAwa
         }
     }
 
-    public String getSource() {
-        if (StringUtils.hasText(this.source)) {
-            return this.source;
+    public TestSource getSource() {
+        if (source != null) {
+            return source;
         } else {
             String path = packageName.replace('.', '/');
             String fileName = testName.endsWith(FileUtils.FILE_EXTENSION_GROOVY) ? testName : testName + FileUtils.FILE_EXTENSION_GROOVY;
-            return Resources.CLASSPATH_RESOURCE_PREFIX + path + "/" + fileName;
+            return new TestSource(TestLoader.GROOVY, testName, Resources.CLASSPATH_RESOURCE_PREFIX + path + "/" + fileName);
         }
     }
 
-    public void setSource(String source) {
+    public void setSource(TestSource source) {
         this.source = source;
     }
 
-    public GroovyTestLoader source(String source) {
-        setSource(source);
+    public GroovyTestLoader source(String sourceFile) {
+        setSource(new TestSource(TestLoader.GROOVY, FileUtils.getBaseName(FileUtils.getFileName(sourceFile)), sourceFile));
         return this;
     }
 }

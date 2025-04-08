@@ -41,11 +41,11 @@ public abstract class AbstractCamelJBangAction extends AbstractTestAction {
         this.camelJBang = builder.camelJBang;
 
         if (camelVersion != null) {
-            camelJBang.camelApp().withSystemProperty("camel.jbang.version", camelVersion);
+            camelJBang.withSystemProperty("camel.jbang.version", camelVersion);
         }
 
         if (kameletsVersion != null) {
-            camelJBang.camelApp().withSystemProperty("camel-kamelets.version", camelVersion);
+            camelJBang.withSystemProperty("camel-kamelets.version", camelVersion);
         }
     }
 

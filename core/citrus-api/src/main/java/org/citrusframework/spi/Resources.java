@@ -16,9 +16,6 @@
 
 package org.citrusframework.spi;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.ReflectionHelper;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,7 +28,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.Paths;
+
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ReflectionHelper;
 
 import static java.lang.String.format;
 
@@ -123,10 +122,12 @@ public class Resources {
      */
     public static class ClasspathResource implements Resource {
 
+        private static final ClasspathResourceResolver resolver = new ClasspathResourceResolver();
+
         private final String location;
 
         public ClasspathResource(String location) {
-            String raw = getRawPath(location);
+            String raw = getRawPath(location).replace("\\", "/");
 
             if (raw.startsWith("/")) {
                 this.location = raw.substring(1);
@@ -148,18 +149,24 @@ public class Resources {
         @Override
         public InputStream getInputStream() {
             return ReflectionHelper.class.getClassLoader()
-                .getResourceAsStream(location.replace("\\", "/"));
+                .getResourceAsStream(location);
         }
 
         @Override
         public File getFile() {
             if (!exists()) {
-                throw new CitrusRuntimeException(
-                    format("Failed to load classpath resource %s - does not exist", getLocation())
-                );
+                throw new CitrusRuntimeException(format("Failed to load classpath resource '%s' - does not exist", location));
             }
 
-            return Paths.get(getURI()).toFile();
+            try {
+                File found = resolver.getResource(location);
+                if (found == null) {
+                    throw new CitrusRuntimeException(format("Failed to load classpath resource '%s' - does not exist", location));
+                }
+                return found;
+            } catch (IOException e) {
+                throw new CitrusRuntimeException(format("Failed to load classpath resource '%s'", location), e);
+            }
         }
 
         @Override

@@ -16,9 +16,12 @@
 
 package org.citrusframework.cucumber;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,9 +40,13 @@ import io.cucumber.core.resource.ClasspathSupport;
 import io.cucumber.core.runtime.Runtime;
 import io.cucumber.core.snippets.SnippetType;
 import org.citrusframework.TestSource;
+import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.main.AbstractTestEngine;
 import org.citrusframework.main.TestRunConfiguration;
+import org.citrusframework.spi.ClasspathResourceResolver;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
@@ -79,20 +86,11 @@ public class CucumberTestEngine extends AbstractTestEngine {
             }
         }
 
-        String features = getConfiguration().getTestSources()
-                .stream()
-                .peek(it -> logger.info(it.getName()))
-                .filter(source -> "cucumber".equals(source.getType()) ||
-                        Optional.ofNullable(source.getFilePath())
-                                .filter(it -> it.endsWith(".feature"))
-                                .isPresent() ||
-                        "feature".equals(FileUtils.getFileExtension(source.getName()))
-                )
-                .map(TestSource::getName)
-                .collect(Collectors.joining(","));
+        List<String> features = new ArrayList<>();
+        addToFeatures(features, getConfiguration().getTestSources());
 
-        if (StringUtils.hasText(features)) {
-            System.setProperty("cucumber.features", features);
+        if (!features.isEmpty()) {
+            System.setProperty("cucumber.features", String.join(",", features));
         }
 
         RuntimeOptions environmentOptions = new CucumberPropertiesParser().parse(CucumberProperties.fromEnvironment()).build(annotationOptions);
@@ -124,6 +122,47 @@ public class CucumberTestEngine extends AbstractTestEngine {
                 .build();
 
         runtime.run();
+    }
+
+    private void addToFeatures(List<String> features, List<TestSource> testSources) {
+        List<TestSource> directories = testSources.stream()
+                .filter(source -> "directory".equals(source.getType()))
+                .toList();
+
+        for (TestSource directory : directories) {
+            Resource sourceDir = Resources.create(directory.getFilePath());
+            if (sourceDir.exists()) {
+                if (sourceDir instanceof Resources.ClasspathResource) {
+                    try {
+                        addToFeatures(features, new ClasspathResourceResolver()
+                                .getResources(sourceDir.getLocation())
+                                .stream()
+                                .map(Path::toString)
+                                .map(TestSourceHelper::create)
+                                .collect(Collectors.toList()));
+                    } catch (IOException e) {
+                        throw new CitrusRuntimeException("Failed to resolve files from resource directory '%s'".formatted(sourceDir.getLocation()), e);
+                    }
+                } else {
+                    addToFeatures(features, Optional.ofNullable(sourceDir.getFile().list())
+                            .stream()
+                            .flatMap(Arrays::stream)
+                            .map(file -> directory.getFilePath() + File.separator + file)
+                            .map(TestSourceHelper::create)
+                            .collect(Collectors.toList()));
+                }
+            }
+        }
+
+        features.addAll(testSources.stream()
+                .filter(source -> "cucumber".equals(source.getType()) ||
+                        Optional.ofNullable(source.getFilePath())
+                                .filter(it -> it.endsWith(".feature"))
+                                .isPresent() ||
+                        "feature".equals(FileUtils.getFileExtension(source.getName()))
+                )
+                .map(TestSource::getName)
+                .toList());
     }
 
     /**

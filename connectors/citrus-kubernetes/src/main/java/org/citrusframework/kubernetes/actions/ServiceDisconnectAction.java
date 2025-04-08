@@ -30,10 +30,14 @@ public class ServiceDisconnectAction extends AbstractKubernetesAction {
 
     private final String serviceName;
 
-    public ServiceDisconnectAction(Builder builder) {
-        super("service-disconnect", builder);
+    protected ServiceDisconnectAction(String name, Builder builder) {
+        super(name, builder);
 
         this.serviceName = builder.serviceName;
+    }
+
+    public ServiceDisconnectAction(Builder builder) {
+        this("service-disconnect", builder);
     }
 
     @Override

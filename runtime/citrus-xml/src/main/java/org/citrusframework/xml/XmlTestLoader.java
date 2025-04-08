@@ -22,14 +22,15 @@ import java.util.regex.Pattern;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestSource;
 import org.citrusframework.common.DefaultTestLoader;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.StringUtils;
 
 /**
  * Loads test case as Spring bean from XML application context file. Loader holds application context file
@@ -39,7 +40,7 @@ import org.citrusframework.util.StringUtils;
  */
 public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware {
 
-    private String source;
+    private TestSource source;
 
     private final JAXBContext jaxbContext;
 
@@ -70,9 +71,8 @@ public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware 
 
     @Override
     public void doLoad() {
-        Resource xmlSource = FileUtils.getFileResource(getSource());
-
         try {
+            Resource xmlSource = getSource().getSourceFile();
             testCase = jaxbContext.createUnmarshaller()
                                     .unmarshal(new StringSource(applyNamespace(FileUtils.readToString(xmlSource))), XmlTestCase.class)
                                     .getValue()
@@ -106,29 +106,29 @@ public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware 
     }
 
     /**
-     * Gets custom Spring application context file for the XML test case. If not set creates default
-     * context file path from testName and packageName.
+     * Gets custom source file for the XML test case. If not set creates default
+     * source file path from testName and packageName.
      */
-    public String getSource() {
-        if (StringUtils.hasText(source)) {
+    public TestSource getSource() {
+        if (source != null) {
             return source;
         } else {
             String path = packageName.replace('.', '/');
             String fileName = testName.endsWith(FileUtils.FILE_EXTENSION_XML) ? testName : testName + FileUtils.FILE_EXTENSION_XML;
-            return Resources.CLASSPATH_RESOURCE_PREFIX + path + "/" + fileName;
+            return new TestSource(TestLoader.XML, testName, Resources.CLASSPATH_RESOURCE_PREFIX + path + "/" + fileName);
         }
     }
 
     /**
-     * Sets custom Spring application context file for XML test case.
+     * Sets custom source file for XML test case.
      */
     @Override
-    public void setSource(String source) {
+    public void setSource(TestSource source) {
         this.source = source;
     }
 
-    public XmlTestLoader source(String source) {
-        setSource(source);
+    public XmlTestLoader source(String sourceFile) {
+        setSource(new TestSource(TestLoader.XML, FileUtils.getBaseName(FileUtils.getFileName(sourceFile)), sourceFile));
         return this;
     }
 }

@@ -40,9 +40,15 @@ public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetes
         ServiceConnectAction.Builder builder = new ServiceConnectAction.Builder();
 
         builder.service(service.getName());
-        builder.client(service.getClient());
-        builder.port(service.getPort());
-        builder.localPort(service.getLocalPort());
+        if (service.getClient() != null) {
+            builder.client(service.getClient());
+        }
+        if (service.getPort() != null) {
+            builder.port(service.getPort());
+        }
+        if (service.getLocalPort() != null) {
+            builder.localPort(service.getLocalPort());
+        }
 
         this.delegate = builder;
     }

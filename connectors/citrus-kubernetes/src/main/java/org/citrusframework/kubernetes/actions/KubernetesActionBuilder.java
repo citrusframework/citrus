@@ -54,6 +54,14 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
     }
 
     /**
+     * Performs actions on Kubernetes agent.
+     * @return
+     */
+    public AgentActionBuilder agent() {
+        return new AgentActionBuilder();
+    }
+
+    /**
      * Performs actions on Kubernetes services.
      * @return
      */
@@ -463,7 +471,61 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
         }
     }
 
+    public class AgentActionBuilder {
+
+        /**
+         * Create new agent deployment and connect to given Kubernetes service via local port forward.
+         */
+        public AgentConnectAction.Builder connect() {
+            AgentConnectAction.Builder builder = new AgentConnectAction.Builder()
+                    .client(kubernetesClient);
+            delegate = builder;
+            return builder;
+        }
+        /**
+         * Create new agent deployment and connect to given Kubernetes service via local port forward.
+         */
+        public AgentConnectAction.Builder connect(String agentName) {
+            AgentConnectAction.Builder builder = new AgentConnectAction.Builder()
+                    .client(kubernetesClient)
+                    .agent(agentName);
+            delegate = builder;
+            return builder;
+        }
+
+        /**
+         * Disconnect from given Kubernetes agent.
+         */
+        public AgentDisconnectAction.Builder disconnect() {
+            AgentDisconnectAction.Builder builder = new AgentDisconnectAction.Builder()
+                    .client(kubernetesClient);
+            delegate = builder;
+            return builder;
+        }
+
+        /**
+         * Disconnect from given Kubernetes agent.
+         */
+        public AgentDisconnectAction.Builder disconnect(String agentName) {
+            AgentDisconnectAction.Builder builder = new AgentDisconnectAction.Builder()
+                    .client(kubernetesClient)
+                    .agent(agentName);
+            delegate = builder;
+            return builder;
+        }
+    }
+
     public class ServiceActionBuilder {
+
+        /**
+         * Connect to given Kubernetes service via local port forward.
+         */
+        public ServiceConnectAction.Builder connect() {
+            ServiceConnectAction.Builder builder = new ServiceConnectAction.Builder()
+                    .client(kubernetesClient);
+            delegate = builder;
+            return builder;
+        }
 
         /**
          * Connect to given Kubernetes service via local port forward.
@@ -473,6 +535,16 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             ServiceConnectAction.Builder builder = new ServiceConnectAction.Builder()
                     .client(kubernetesClient)
                     .service(serviceName);
+            delegate = builder;
+            return builder;
+        }
+
+        /**
+         * Connect to given Kubernetes service via local port forward.
+         */
+        public ServiceDisconnectAction.Builder disconnect() {
+            ServiceDisconnectAction.Builder builder = new ServiceDisconnectAction.Builder()
+                    .client(kubernetesClient);
             delegate = builder;
             return builder;
         }

@@ -1,0 +1,7 @@
+<test name="citrus-test" xmlns="http://citrusframework.org/schema/xml/testcase">
+  <actions>
+    <echo>
+      <message>"Citrus rocks!"</message>
+    </echo>
+  </actions>
+</test>

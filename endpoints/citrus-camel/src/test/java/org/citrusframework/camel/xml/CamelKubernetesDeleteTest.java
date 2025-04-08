@@ -26,7 +26,6 @@ import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CamelKubernetesDeleteAction;
 import org.citrusframework.camel.jbang.CamelJBang;
 import org.citrusframework.camel.jbang.KubernetesPlugin;
-import org.citrusframework.jbang.JBangSupport;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.xml.XmlTestLoader;
@@ -47,9 +46,6 @@ public class CamelKubernetesDeleteTest extends AbstractXmlActionTest {
     private CamelJBang camelJBang;
 
     @Mock
-    private JBangSupport camelApp;
-
-    @Mock
     private KubernetesPlugin k8sPlugin;
 
     @Mock
@@ -62,7 +58,6 @@ public class CamelKubernetesDeleteTest extends AbstractXmlActionTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-        when(camelJBang.camelApp()).thenReturn(camelApp);
         when(camelJBang.kubernetes()).thenReturn(k8sPlugin);
         when(pao.getProcess()).thenReturn(process);
     }
@@ -93,7 +88,7 @@ public class CamelKubernetesDeleteTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesDeleteAction.class);
         Assert.assertEquals(result.getTestAction(0).getName(), "kubernetes-delete-integration");
 
-        verify(camelApp).workingDir(Paths.get(Resources.create("classpath:org/citrusframework/camel/integration/route.yaml")
+        verify(camelJBang).workingDir(Paths.get(Resources.create("classpath:org/citrusframework/camel/integration/route.yaml")
                 .getFile().getParentFile().toPath().toAbsolutePath().toString()));
         verify(k8sPlugin).delete(eq("route.yaml"), eq(new String[] {}));
     }

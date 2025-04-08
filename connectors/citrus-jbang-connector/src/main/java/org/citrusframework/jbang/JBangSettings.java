@@ -44,6 +44,10 @@ public final class JBangSettings {
     private static final String DUMP_PROCESS_OUTPUT_ENV = JBANG_ENV_PREFIX + "DUMP_PROCESS_OUTPUT";
     private static final String DUMP_PROCESS_OUTPUT_DEFAULT = "false";
 
+    private static final String APP_PROPERTY = JBANG_PROPERTY_PREFIX + "app";
+    private static final String APP_ENV = JBANG_ENV_PREFIX + "APP";
+    private static final String APP_DEFAULT = "citrus@citrusframework/citrus";
+
     private JBangSettings() {
         // prevent instantiation of utility class
     }
@@ -98,6 +102,15 @@ public final class JBangSettings {
     public static boolean isDumpProcessOutput() {
         return Boolean.parseBoolean(System.getProperty(DUMP_PROCESS_OUTPUT_PROPERTY,
                 System.getenv(DUMP_PROCESS_OUTPUT_ENV) != null ? System.getenv(DUMP_PROCESS_OUTPUT_ENV) : DUMP_PROCESS_OUTPUT_DEFAULT));
+    }
+
+    /**
+     * Citrus JBang app name.
+     * @return
+     */
+    public static String getApp() {
+        return System.getProperty(APP_PROPERTY,
+                System.getenv(APP_ENV) != null ? System.getenv(APP_ENV) : APP_DEFAULT);
     }
 
 }

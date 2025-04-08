@@ -23,10 +23,10 @@ import java.util.List;
 import org.citrusframework.CitrusSpringContext;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
+import org.citrusframework.TestSource;
 import org.citrusframework.config.CitrusNamespaceParserRegistry;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.StringUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.context.ApplicationContext;
@@ -41,7 +41,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class SpringXmlTestLoader extends DefaultTestLoader implements TestSourceAware {
 
-    private String source;
+    private TestSource source;
 
     @Override
     protected void doLoad() {
@@ -72,7 +72,7 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
 
             return new ClassPathXmlApplicationContext(
                     new String[]{
-                            getSource(),
+                            getSource().getFilePath(),
                             "org/citrusframework/spring/annotation-config-ctx.xml"},
                     true, parentApplicationContext);
         } catch (Exception e) {
@@ -161,13 +161,13 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
      * Gets custom Spring application context file for the XML test case. If not set creates default
      * context file path from testName and packageName.
      */
-    public String getSource() {
-        if (StringUtils.hasText(source)) {
+    public TestSource getSource() {
+        if (source != null) {
             return source;
         } else {
             String path = packageName.replace('.', '/');
             String fileName = testName.endsWith(FileUtils.FILE_EXTENSION_XML) ? testName : testName + FileUtils.FILE_EXTENSION_XML;
-            return path + "/" + fileName;
+            return new TestSource(TestLoader.XML, testName, path + "/" + fileName);
         }
     }
 
@@ -175,12 +175,12 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
      * Sets custom Spring application context file for XML test case.
      */
     @Override
-    public void setSource(String source) {
+    public void setSource(TestSource source) {
         this.source = source;
     }
 
-    public SpringXmlTestLoader source(String source) {
-        setSource(source);
+    public SpringXmlTestLoader source(String sourceFile) {
+        setSource(new TestSource(TestLoader.XML, FileUtils.getBaseName(FileUtils.getFileName(sourceFile)), sourceFile));
         return this;
     }
 }
