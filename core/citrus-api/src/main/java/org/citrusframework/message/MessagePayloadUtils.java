@@ -18,6 +18,8 @@ package org.citrusframework.message;
 
 import org.citrusframework.CitrusSettings;
 
+import static java.util.Objects.nonNull;
+
 public class MessagePayloadUtils {
 
     private static final boolean prettyPrint = CitrusSettings.isPrettyPrintEnabled();
@@ -55,7 +57,7 @@ public class MessagePayloadUtils {
      * @return
      */
     public static boolean isXml(String payload) {
-        return payload.trim().startsWith("<");
+        return nonNull(payload) && payload.trim().startsWith("<");
     }
 
     /**
@@ -64,7 +66,7 @@ public class MessagePayloadUtils {
      * @return
      */
     public static boolean isJson(String payload) {
-        return payload.trim().startsWith("{") || payload.trim().startsWith("[");
+        return nonNull(payload) && (payload.trim().startsWith("{") || payload.trim().startsWith("["));
     }
 
     /**
