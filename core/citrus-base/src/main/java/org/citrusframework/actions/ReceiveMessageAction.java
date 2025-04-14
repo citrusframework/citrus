@@ -16,16 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -36,6 +26,7 @@ import org.citrusframework.message.MessagePayloadBuilder;
 import org.citrusframework.message.MessagePayloadUtils;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageSelectorBuilder;
+import org.citrusframework.message.MessageType;
 import org.citrusframework.message.WithPayloadBuilder;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.message.builder.MessageBuilderSupport;
@@ -43,7 +34,6 @@ import org.citrusframework.message.builder.ReceiveMessageBuilderSupport;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.HeaderValidator;
 import org.citrusframework.validation.MessageValidator;
@@ -60,6 +50,20 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static org.citrusframework.util.StringUtils.hasText;
+
 /**
  * This action receives messages from a service destination. Action uses a {@link org.citrusframework.endpoint.Endpoint}
  * to receive the message, this means that this action is independent of any message transport.
@@ -70,6 +74,12 @@ import org.slf4j.LoggerFactory;
  * @since 2008
  */
 public class ReceiveMessageAction extends AbstractTestAction {
+
+    private static final List<String> XML_LIKE_MESSAGE_TYPES = List.of(
+            MessageType.XML.name(),
+            MessageType.XHTML.name()
+    );
+
     /** Build message selector with name value pairs */
     private final Map<String, Object> messageSelectorMap;
 
@@ -109,9 +119,11 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /** List of processors that handle the control message builder */
     private final List<MessageProcessor> controlMessageProcessors;
 
-    /** The expected message type to arrive in this receive action - this information is needed to find a proper
-     * message validator for this message */
-    private final String messageType;
+    /**
+     * The expected message type to arrive in this receive action.
+     * This information is needed to find a proper message validator for this message
+     * */
+    private String messageType;
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(ReceiveMessageAction.class);
@@ -150,7 +162,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         String selector = MessageSelectorBuilder.build(messageSelector, messageSelectorMap, context);
 
         //receive message either selected or plain with message receiver
-        if (StringUtils.hasText(selector)) {
+        if (hasText(selector)) {
             receivedMessage = receiveSelected(context, selector);
         } else {
             receivedMessage = receive(context);
@@ -217,18 +229,24 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         Message controlMessage = createControlMessage(context, messageType);
-        if (StringUtils.hasText(controlMessage.getName())) {
+        if (hasText(controlMessage.getName())) {
             context.getMessageStore().storeMessage(controlMessage.getName(), message);
         } else {
             context.getMessageStore().storeMessage(context.getMessageStore().constructMessageName(this, getOrCreateEndpoint(context)), message);
         }
 
-        if (validationProcessor != null) {
+        if (nonNull(validationProcessor)) {
             validationProcessor.validate(message, context);
         } else {
             logger.debug("Control message:\n{}", controlMessage.print(context));
 
-            if (!validators.isEmpty()) {
+            if (hasText(controlMessage.getPayload(String.class))) {
+                assumeMessageType(controlMessage);
+            } else {
+                assumeMessageType(message);
+            }
+
+            if (nonNull(validators) && !validators.isEmpty()) {
                 for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
                     messageValidator.validateMessage(message, controlMessage, context, validationContexts);
                 }
@@ -251,6 +269,27 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 for (MessageValidator<? extends ValidationContext> messageValidator : activeValidators) {
                     messageValidator.validateMessage(message, controlMessage, context, validationContexts);
                 }
+            }
+        }
+    }
+
+    private void assumeMessageType(Message message) {
+        var payload = message.getPayload(String.class);
+        if (hasText(payload)) {
+            payload = payload.trim();
+
+            if (payload.startsWith("<")
+                    && (isNull(getMessageType()) || !XML_LIKE_MESSAGE_TYPES.contains(getMessageType()))) {
+                logger.warn("Detected payload starting with '<', but non-XML message type '{}' configured! Assuming message type {}",
+                        getMessageType(), MessageType.XML);
+
+                setMessageType(MessageType.XML);
+            } else if ((payload.startsWith("{") || payload.startsWith("["))
+                    && (isNull(getMessageType()) || !getMessageType().equals(MessageType.JSON.name()))) {
+                logger.warn("Detected payload starting with '{}', but non-JSON message type '{}' configured! Assuming message type {}",
+                        payload.charAt(0), getMessageType(), MessageType.JSON);
+
+                setMessageType(MessageType.JSON);
             }
         }
     }
@@ -296,7 +335,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     public Endpoint getOrCreateEndpoint(TestContext context) {
         if (endpoint != null) {
             return endpoint;
-        } else if (StringUtils.hasText(endpointUri)) {
+        } else if (hasText(endpointUri)) {
             return context.getEndpointFactory().create(endpointUri, context);
         } else {
             throw new CitrusRuntimeException("Neither endpoint nor endpoint uri is set properly!");
@@ -349,6 +388,10 @@ public class ReceiveMessageAction extends AbstractTestAction {
      */
     public String getMessageType() {
         return messageType;
+    }
+
+    private void setMessageType(MessageType messageType) {
+        this.messageType = messageType.name();
     }
 
     /**

@@ -26,11 +26,15 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.UnknownElementException;
+import org.citrusframework.log.LogModifier;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageBuilder;
 import org.citrusframework.message.MessageDirection;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageQueue;
+import org.citrusframework.message.MessageStore;
+import org.citrusframework.message.MessageType;
 import org.citrusframework.message.builder.DefaultHeaderBuilder;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.message.builder.FileResourcePayloadBuilder;
@@ -38,6 +42,7 @@ import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.util.TestUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.MessageValidator;
+import org.citrusframework.validation.MessageValidatorRegistry;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
@@ -46,6 +51,9 @@ import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.mockito.Mock;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -54,14 +62,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.citrusframework.message.MessageType.JSON;
+import static org.citrusframework.message.MessageType.XHTML;
+import static org.citrusframework.message.MessageType.XML;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.expectThrows;
 
@@ -162,8 +177,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
     }
 
     @Test
-	public void testReceiveMessageWithMessagePayloadData() {
-		TestActor testActor = new TestActor();
+    public void testReceiveMessageWithMessagePayloadData() {
+        TestActor testActor = new TestActor();
         testActor.setName("TESTACTOR");
 
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
@@ -195,7 +210,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-	}
+    }
 
     @Test
     public void testReceiveMessageWithMessagePayloadResource() {
@@ -498,7 +513,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .build();
         try {
             receiveAction.execute(context);
-        } catch(CitrusRuntimeException e) {
+        } catch (CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "Unknown variable 'myOperation'");
         }
     }
@@ -534,7 +549,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .build();
         try {
             receiveAction.execute(context);
-        } catch(CitrusRuntimeException e) {
+        } catch (CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "Unknown variable 'myText'");
         }
     }
@@ -878,7 +893,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .build();
         try {
             receiveAction.execute(context);
-        } catch(CitrusRuntimeException e) {
+        } catch (CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "Failed to receive message - message is not available");
             return;
         }
@@ -1126,5 +1141,172 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
+    }
+
+    public static class AssumeMessageType {
+
+        @Mock
+        private Message messageMock;
+
+        @Mock
+        private TestContext contextMock;
+
+        @Mock
+        private LogModifier logModifierMock;
+
+        @Mock
+        private MessageStore messageStoreMock;
+
+        @Mock
+        private MessageValidatorRegistry messageValidatorRegistryMock;
+
+        @Mock
+        private Endpoint endpointMock;
+
+        private AutoCloseable mocks;
+
+        private ReceiveMessageAction fixture;
+
+        @BeforeMethod
+        public void setup() {
+            mocks = openMocks(this);
+
+            doReturn(logModifierMock).when(contextMock).getLogModifier();
+            doReturn(messageStoreMock).when(contextMock).getMessageStore();
+            doReturn(messageValidatorRegistryMock).when(contextMock).getMessageValidatorRegistry();
+
+            fixture = new ReceiveMessageAction.Builder()
+                    .endpoint(endpointMock)
+                    .build();
+        }
+
+        @AfterMethod
+        public void teardown() throws Exception {
+            mocks.close();
+        }
+
+        @DataProvider(name = "jsonPayload")
+        public static String[] jsonPayload() {
+            return new String[]{"{", "[", " {", " ["};
+        }
+
+        @Test(dataProvider = "jsonPayload")
+        void shouldAssumeJSONMessageType_forJSONPayload(String payload) {
+            shouldAssumeMessageTypeOnPayload(payload, JSON);
+        }
+
+        @Test(dataProvider = "jsonPayload")
+        void shouldAssumeJSONMessageType_forJSONPayload_andPreviouslyEmptyMessageType(String payload) {
+            doReturn(payload).when(messageMock).getPayload(String.class);
+
+            setField(fixture, "messageType", null);
+            assertThat(fixture.getMessageType()).isNull();
+
+            fixture.validateMessage(messageMock, contextMock);
+
+            assertThat(fixture.getMessageType()).isEqualTo(JSON.name());
+        }
+
+        @DataProvider(name = "xmlPayload")
+        public static String[] xmlPayload() {
+            return new String[]{"<", " <"};
+        }
+
+        @Test(dataProvider = "xmlPayload")
+        void shouldAssumeXMLMessageType_forXMLPayload(String payload) {
+            shouldAssumeMessageTypeOnPayload(payload, XML);
+        }
+
+        @Test(dataProvider = "xmlPayload")
+        void shouldAssumeXMLMessageType_forXMLPayload_andPreviouslyEmptyMessageType(String payload) {
+            doReturn(payload).when(messageMock).getPayload(String.class);
+
+            setField(fixture, "messageType", null);
+            assertThat(fixture.getMessageType()).isNull();
+
+            fixture.validateMessage(messageMock, contextMock);
+
+            assertThat(fixture.getMessageType()).isEqualTo(XML.name());
+        }
+
+        @Test
+        void shouldNotAssumeAnything_forEverythingElse() {
+            shouldAssumeMessageTypeOnPayload("foo", XML);
+        }
+
+        @DataProvider(name = "emptyOrNullString")
+        public static String[] emptyOrNullString() {
+            return new String[]{null, "", " "};
+        }
+
+        @Test(dataProvider = "emptyOrNullString")
+        void shouldNotAssumeAnything_forEmptyPayload(String payload) {
+            shouldAssumeMessageTypeOnPayload(payload, XML);
+        }
+
+        private void shouldAssumeMessageTypeOnPayload(String payload, MessageType messageType) {
+            doReturn(payload).when(messageMock).getPayload(String.class);
+
+            assertThat(fixture.getMessageType()).isEqualTo(XML.name());
+
+            fixture.validateMessage(messageMock, contextMock);
+
+            assertThat(fixture.getMessageType()).isEqualTo(messageType.name());
+        }
+
+        @Test(dataProvider = "emptyOrNullString")
+        void shouldNotAssumeTypeOnEmptyControlPayload(String controlPayload) {
+            shouldAssumeMessageTypeOnControlPayload("{}", controlPayload, JSON);
+        }
+
+        @Test(dataProvider = "jsonPayload")
+        void shouldAssumeMessageOnControlPayload_withJSONPayload(String jsonPayload) {
+            shouldAssumeMessageTypeOnControlPayload("<>", jsonPayload, JSON);
+        }
+
+        @Test(dataProvider = "xmlPayload")
+        void shouldAssumeMessageOnControlPayload_withXMLPayload(String xmlPayload) {
+            shouldAssumeMessageTypeOnControlPayload("{}", xmlPayload, XML);
+        }
+
+        private void shouldAssumeMessageTypeOnControlPayload(String messagePayload, String controlMessagePayload, MessageType messageType) {
+            doReturn(messagePayload).when(messageMock).getPayload(String.class);
+
+            assertThat(fixture.getMessageType()).isEqualTo(XML.name());
+
+            var messageBuilderMock = mock(MessageBuilder.class);
+            setField(fixture, "messageBuilder", messageBuilderMock);
+
+            var controlMessage = mock(Message.class);
+            doReturn(null).when(controlMessage).getPayload();
+            doReturn(controlMessagePayload).when(controlMessage).getPayload(String.class);
+            doReturn(controlMessage).when(messageBuilderMock).build(contextMock, XML.name());
+
+            fixture.validateMessage(messageMock, contextMock);
+
+            assertThat(fixture.getMessageType()).isEqualTo(messageType.name());
+        }
+
+        @Test(dataProvider = "xmlPayload")
+        void shouldAcceptXMLLikeMessageType_XHTML_andNotAlterIt(String xmlPayload) {
+            doReturn(xmlPayload).when(messageMock).getPayload(String.class);
+
+            var xhtmlMessageType = XHTML.name();
+
+            setField(fixture, "messageType", xhtmlMessageType);
+            assertThat(fixture.getMessageType()).isEqualTo(xhtmlMessageType);
+
+            var messageBuilderMock = mock(MessageBuilder.class);
+            setField(fixture, "messageBuilder", messageBuilderMock);
+
+            var controlMessage = mock(Message.class);
+            doReturn(null).when(controlMessage).getPayload();
+            doReturn(xmlPayload).when(controlMessage).getPayload(String.class);
+            doReturn(controlMessage).when(messageBuilderMock).build(contextMock, xhtmlMessageType);
+
+            fixture.validateMessage(messageMock, contextMock);
+
+            assertThat(fixture.getMessageType()).isEqualTo(xhtmlMessageType);
+        }
     }
 }
