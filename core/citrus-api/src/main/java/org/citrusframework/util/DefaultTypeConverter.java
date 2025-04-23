@@ -237,6 +237,14 @@ public class DefaultTypeConverter implements TypeConverter {
      */
     protected <T> T convertAfter(Object target, Class<T> type) {
         if (String.class.equals(type)) {
+            if (InputStream.class.isAssignableFrom(target.getClass())) {
+                try {
+                    return (T) Arrays.toString(((InputStream) target).readAllBytes());
+                } catch (IOException e) {
+                    throw new CitrusRuntimeException("Unable to convert InputStream to String representation", e);
+                }
+            }
+
             logger.warn("Using default toString representation for object type {}", target.getClass());
             return (T) target.toString();
         }

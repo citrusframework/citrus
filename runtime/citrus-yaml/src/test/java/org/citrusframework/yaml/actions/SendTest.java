@@ -82,7 +82,7 @@ public class SendTest extends AbstractYamlActionTest {
         Message controlMessage = new DefaultMessage("Hello from Citrus!")
                                         .setHeader("operation", "sayHello");
         Message receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
@@ -100,7 +100,7 @@ public class SendTest extends AbstractYamlActionTest {
         controlMessage = new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>")
                 .setHeader("operation", "sayHello");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
@@ -123,7 +123,7 @@ public class SendTest extends AbstractYamlActionTest {
                 "<TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>")
                 .setHeader("operation", "sayHello");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
@@ -142,7 +142,7 @@ public class SendTest extends AbstractYamlActionTest {
                     <Message>Hello World!</Message>
                 </TestRequest>""");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
@@ -171,7 +171,7 @@ public class SendTest extends AbstractYamlActionTest {
         controlMessage = new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>")
                 .setHeader("operation", "sayHello");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
@@ -204,7 +204,7 @@ public class SendTest extends AbstractYamlActionTest {
                 .setHeader("boolValue" ,true)
                 .setHeader("stringValue" ,"Hello Citrus");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
@@ -224,7 +224,7 @@ public class SendTest extends AbstractYamlActionTest {
 
         controlMessage = new DefaultMessage("{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
@@ -234,7 +234,7 @@ public class SendTest extends AbstractYamlActionTest {
 
         controlMessage = new DefaultMessage("{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex);
@@ -244,7 +244,7 @@ public class SendTest extends AbstractYamlActionTest {
 
         controlMessage = new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
     }
 }

@@ -16,8 +16,6 @@
 
 package org.citrusframework.junit.jupiter.integration;
 
-import java.util.List;
-
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.TestActionRunner;
@@ -25,21 +23,15 @@ import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.direct.DirectEndpointBuilder;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfig;
-import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.citrusframework.message.DefaultMessageQueue;
-import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.validation.MessageValidator;
-import org.citrusframework.validation.context.DefaultValidationContext;
-import org.citrusframework.validation.context.ValidationContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
@@ -71,21 +63,6 @@ public class EndpointInjectionIT implements CitrusExtension.TestListener {
         context.bind("foo", new DirectEndpointBuilder()
                 .queue("messages")
                 .build());
-    }
-
-    @BindToRegistry
-    public MessageValidator<DefaultValidationContext> plaintextValidator() {
-        return new MessageValidator<>() {
-            @Override
-            public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, List<ValidationContext> validationContexts) throws ValidationException {
-                org.testng.Assert.assertEquals(receivedMessage.getPayload(String.class), controlMessage.getPayload());
-            }
-
-            @Override
-            public boolean supportsMessageType(String messageType, Message message) {
-                return messageType.equalsIgnoreCase(MessageType.PLAINTEXT.name());
-            }
-        };
     }
 
     @BindToRegistry(name = "FOO.direct.queue")

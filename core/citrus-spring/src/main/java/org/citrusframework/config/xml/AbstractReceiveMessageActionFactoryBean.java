@@ -114,6 +114,15 @@ public abstract class AbstractReceiveMessageActionFactoryBean<T extends ReceiveM
     }
 
     /**
+     * Sets the list of available validation contexts for this action.
+     *
+     * @param validationContexts the validationContexts to set
+     */
+    public void setValidationContextBuilder(List<ValidationContext.Builder<?, ?>> validationContexts) {
+        validationContexts.forEach(getBuilder()::validate);
+    }
+
+    /**
      * Sets the expected message type for this receive action.
      *
      * @param messageType the messageType to set

@@ -33,6 +33,8 @@ public enum MessageType {
     GZIP_BASE64,
     MSCONS;
 
+    public static final String FORM_URL_ENCODED = "x-www-form-urlencoded";
+
     /**
      * Check if this message type name is matching a enum value.
      *
@@ -57,5 +59,15 @@ public enum MessageType {
     public static boolean isBinary(String messageType) {
         return MessageType.GZIP.name().equalsIgnoreCase(messageType)
                 || MessageType.BINARY.name().equalsIgnoreCase(messageType);
+    }
+
+    /**
+     * Checks for the given message type to be handled as XML content.
+     * @param messageType
+     * @return
+     */
+    public static boolean isXml(String messageType) {
+        return MessageType.XML.name().equalsIgnoreCase(messageType)
+                || MessageType.XHTML.name().equalsIgnoreCase(messageType);
     }
 }

@@ -16,9 +16,13 @@
 
 package org.citrusframework.validation;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.Message;
+import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,6 +96,15 @@ public class DefaultTextEqualsMessageValidator extends DefaultMessageValidator {
     public DefaultTextEqualsMessageValidator enableTrim() {
         this.trim = true;
         return this;
+    }
+
+    @Override
+    public ValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+        Optional<ValidationContext> messageValidationContext = validationContexts.stream()
+                .filter(MessageValidationContext.class::isInstance)
+                .findFirst();
+
+        return messageValidationContext.orElseGet(() -> super.findValidationContext(validationContexts));
     }
 
     /**

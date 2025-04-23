@@ -32,7 +32,7 @@ import static org.hamcrest.Matchers.is;
 public class HttpQueryParamHeaderValidatorTest extends AbstractTestNGUnitTest {
 
     private final HttpQueryParamHeaderValidator validator = new HttpQueryParamHeaderValidator();
-    private final HeaderValidationContext validationContext = new HeaderValidationContext();
+    private final HeaderValidationContext validationContext = new HeaderValidationContext.Builder().build();
 
     @Test(dataProvider = "successData")
     public void testValidateHeader(Object receivedValue, Object controlValue) {

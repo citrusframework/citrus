@@ -16,12 +16,17 @@
 
 package org.citrusframework.validation.json;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import net.minidev.json.parser.ParseException;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.json.JsonSchemaRepository;
 import org.citrusframework.message.DefaultMessage;
-import org.citrusframework.message.MessageType;
+import org.citrusframework.script.ScriptTypes;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.json.report.GraciousProcessingReport;
@@ -31,13 +36,11 @@ import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import static net.minidev.json.parser.JSONParser.MODE_JSON_SIMPLE;
 import static net.minidev.json.parser.JSONParser.MODE_RFC4627;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 public class JsonTextMessageValidatorTest extends UnitTestSupport {
@@ -107,17 +110,23 @@ public class JsonTextMessageValidatorTest extends UnitTestSupport {
     public void shouldFindProperValidationContext() {
         List<ValidationContext> validationContexts = new ArrayList<>();
         validationContexts.add(new HeaderValidationContext());
-        validationContexts.add(new XmlMessageValidationContext());
-        validationContexts.add(new ScriptValidationContext(MessageType.JSON.name()));
-        validationContexts.add(new ScriptValidationContext(MessageType.XML.name()));
-        validationContexts.add(new ScriptValidationContext(MessageType.PLAINTEXT.name()));
+        validationContexts.add(new ScriptValidationContext(ScriptTypes.GROOVY));
+        validationContexts.add(new ScriptValidationContext("something"));
         validationContexts.add(new JsonPathMessageValidationContext());
 
         assertThat(fixture.findValidationContext(validationContexts)).isNull();
 
+        validationContexts.add(new XmlMessageValidationContext());
+
+        assertThat(fixture.findValidationContext(validationContexts)).isInstanceOf(XmlMessageValidationContext.class);
+
+        validationContexts.add(new DefaultMessageValidationContext());
+
+        assertThat(fixture.findValidationContext(validationContexts)).isInstanceOf(DefaultMessageValidationContext.class);
+
         validationContexts.add(new JsonMessageValidationContext());
 
-        assertThat(fixture.findValidationContext(validationContexts)).isNotNull();
+        assertThat(fixture.findValidationContext(validationContexts)).isInstanceOf(JsonMessageValidationContext.class);
     }
 
     @Test

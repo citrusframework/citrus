@@ -129,7 +129,7 @@ public class HeaderValuesTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .validate(new HeaderValidationContext())
+                .validate(new HeaderValidationContext.Builder().build())
                 .build();
         receiveAction.execute(context);
     }

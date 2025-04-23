@@ -35,8 +35,8 @@ import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.ws.UnitTestSupport;
 import org.citrusframework.ws.actions.ReceiveSoapMessageAction;
@@ -100,10 +100,9 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getEndpoint(), server);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), DefaultMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
         Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "Foo");
@@ -142,10 +141,9 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), server);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
         Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -185,10 +183,9 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), server);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
         Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -235,10 +232,9 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), server);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
         Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -289,10 +285,9 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), server);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
         Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");

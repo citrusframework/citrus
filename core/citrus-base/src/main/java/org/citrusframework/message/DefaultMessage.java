@@ -16,15 +16,17 @@
 
 package org.citrusframework.message;
 
-import org.citrusframework.CitrusSettings;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.MessageUtils;
-import org.citrusframework.util.TypeConversionUtils;
-
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.citrusframework.CitrusSettings;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.CachingInputStream;
+import org.citrusframework.util.MessageUtils;
+import org.citrusframework.util.TypeConversionUtils;
 
 import static java.lang.System.currentTimeMillis;
 import static java.util.UUID.randomUUID;
@@ -117,7 +119,7 @@ public class DefaultMessage implements Message {
      * @param forceCitrusHeaderUpdate flag indicating whether to force Citrus header update
      */
     private DefaultMessage(Object payload, Map<String, Object> headers, boolean forceCitrusHeaderUpdate) {
-        this.payload = payload;
+        setPayload(payload);
         this.headers.putAll(headers);
 
         if (forceCitrusHeaderUpdate) {
@@ -189,12 +191,21 @@ public class DefaultMessage implements Message {
 
     @Override
     public Object getPayload() {
+        if (payload instanceof CachingInputStream cachingInputStream) {
+            return cachingInputStream.get();
+        }
+
         return payload;
     }
 
     @Override
     public DefaultMessage setPayload(Object payload) {
-        this.payload = payload;
+        if (payload instanceof InputStream inputStream && CitrusSettings.isCacheInputStream()) {
+            this.payload = new CachingInputStream(inputStream);
+        } else {
+            this.payload = payload;
+        }
+
         return this;
     }
 

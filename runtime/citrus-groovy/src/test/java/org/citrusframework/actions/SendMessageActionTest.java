@@ -41,9 +41,9 @@ import static org.mockito.Mockito.when;
 
 public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
-    private Endpoint endpoint = Mockito.mock(Endpoint.class);
-    private Producer producer = Mockito.mock(Producer.class);
-    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
+    private final Endpoint endpoint = Mockito.mock(Endpoint.class);
+    private final Producer producer = Mockito.mock(Producer.class);
+    private final EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
 
     @Override
     protected TestContextFactory createTestContextFactory() {
@@ -153,6 +153,6 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     private void validateMessageToSend(Message toSend, Message controlMessage) {
         Assert.assertEquals(TestUtils.normalizeLineEndings(toSend.getPayload(String.class).trim()), TestUtils.normalizeLineEndings(controlMessage.getPayload(String.class).trim()));
         DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
-        validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext());
+        validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext.Builder().build());
     }
 }

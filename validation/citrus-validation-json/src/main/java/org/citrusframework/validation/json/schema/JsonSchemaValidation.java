@@ -34,7 +34,7 @@ import org.citrusframework.message.Message;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.IsJsonPredicate;
 import org.citrusframework.validation.SchemaValidator;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
+import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.json.JsonMessageValidationContext.Builder;
 import org.citrusframework.validation.json.report.GraciousProcessingReport;
 import org.slf4j.Logger;
@@ -47,7 +47,7 @@ import static java.util.Collections.emptySet;
  *
  * @since 2.7.3
  */
-public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidationContext> {
+public class JsonSchemaValidation implements SchemaValidator<MessageValidationContext> {
 
     private static final Logger logger = LoggerFactory.getLogger(JsonSchemaValidation.class);
 
@@ -64,7 +64,7 @@ public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidati
     }
 
     @Override
-    public void validate(Message message, TestContext context, JsonMessageValidationContext validationContext) {
+    public void validate(Message message, TestContext context, MessageValidationContext validationContext) {
         logger.debug("Starting Json schema validation ...");
 
         GraciousProcessingReport report = validate(message,
@@ -115,7 +115,7 @@ public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidati
      */
     public GraciousProcessingReport validate(Message message,
                                              List<JsonSchemaRepository> schemaRepositories,
-                                             JsonMessageValidationContext validationContext,
+                                             MessageValidationContext validationContext,
                                              ReferenceResolver referenceResolver) {
         return validate(message, jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolver));
     }
@@ -192,7 +192,7 @@ public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidati
 
     @Override
     public void validate(Message message, TestContext context, String schemaRepository, String schema) {
-        JsonMessageValidationContext validationContext = Builder.json()
+        MessageValidationContext validationContext = Builder.json()
             .schemaValidation(true)
             .schema(schema)
             .schemaRepository(schemaRepository).build();

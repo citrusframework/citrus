@@ -16,6 +16,7 @@
 
 package org.citrusframework.validation.binary;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -31,8 +32,7 @@ import org.citrusframework.validation.context.ValidationContext;
 
 /**
  * Message validator compares binary streams. Assumes control
- * message payload is convertable to an input stream so we can compare the stream data with buffer read.
- *
+ * message payload is convertable to an input stream, so we can compare the stream data with buffer read.
  */
 public class BinaryMessageValidator extends DefaultMessageValidator {
 
@@ -44,31 +44,53 @@ public class BinaryMessageValidator extends DefaultMessageValidator {
         try (InputStream receivedInput = receivedMessage.getPayload(InputStream.class);
              InputStream controlInput = controlMessage.getPayload(InputStream.class)) {
 
+            logger.debug("Start binary message validation");
+
             ReadableByteChannel receivedBytes = Channels.newChannel(receivedInput);
             ReadableByteChannel controlBytes = Channels.newChannel(controlInput);
 
             ByteBuffer receivedBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
             ByteBuffer controlBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
 
+            ByteArrayOutputStream receivedResult = new ByteArrayOutputStream();
+            ByteArrayOutputStream controlResult = new ByteArrayOutputStream();
             while (true) {
                 int n1 = receivedBytes.read(receivedBuffer);
                 int n2 = controlBytes.read(controlBuffer);
 
-                if (n1 == -1 || n2 == -1) return;
+                if (n1 == -1 && n2 == -1) {
+                    logger.debug("Binary message validation successful: All values OK");
+                    return;
+                } else if (n1 == -1) {
+                    throw new ValidationException(("Received input stream reached end-of-stream - " +
+                            "control input stream is not finished yet"));
+                } else if (n2 == -1) {
+                    throw new ValidationException(("Control input stream reached end-of-stream - " +
+                            "received input stream is not finished yet"));
+                }
 
                 receivedBuffer.flip();
                 controlBuffer.flip();
 
                 for (int i = 0; i < Math.min(n1, n2); i++) {
-                    if (receivedBuffer.get() != controlBuffer.get()) {
-                        throw new ValidationException("Received input stream is not equal to given control");
+                    byte received = receivedBuffer.get();
+                    byte control = controlBuffer.get();
+
+                    receivedResult.write((char)received);
+                    controlResult.write((char)control);
+
+                    if (received != control) {
+                        logger.info("Received input stream is not equal - expected '%s', but was '%s'".formatted(controlResult.toString(), receivedResult.toString()));
+                        throw new ValidationException(("Received input stream is not equal to given control, " +
+                                "expected '%s', but was '%s'").formatted(
+                                        controlResult.toString().substring(controlResult.toString().length() - Math.min(25, controlResult.size())),
+                                        receivedResult.toString().substring(receivedResult.toString().length() - Math.min(25, receivedResult.size()))));
                     }
                 }
 
                 receivedBuffer.compact();
-                receivedBuffer.compact();
+                controlBuffer.compact();
             }
-
         } catch (IOException e) {
             throw new ValidationException("Failed to compare binary input streams", e);
         }

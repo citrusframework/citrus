@@ -31,6 +31,7 @@ import org.citrusframework.util.XMLUtils;
 import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.ValidationUtils;
 import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.context.ValidationStatus;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.citrusframework.xml.xpath.XPathExpressionResult;
 import org.citrusframework.xml.xpath.XPathUtils;
@@ -146,6 +147,11 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
 
             if (!xpathExpressions.isEmpty()) {
                 xpathMessageValidationContext.getXpathExpressions().putAll(xpathExpressions);
+
+                // Update status of other validation contexts to optional as validation is performed by this single context
+                xpathMessageValidationContexts.stream()
+                        .filter(vc -> vc != xpathMessageValidationContext)
+                        .forEach(vc -> vc.updateStatus(ValidationStatus.OPTIONAL));
                 return xpathMessageValidationContext;
             }
         }

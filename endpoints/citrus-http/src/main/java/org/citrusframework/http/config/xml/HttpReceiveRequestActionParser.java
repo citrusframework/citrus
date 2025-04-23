@@ -28,7 +28,6 @@ import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpQueryParamHeaderValidator;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
-import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -79,11 +78,8 @@ public class HttpReceiveRequestActionParser extends ReceiveMessageActionParser {
         }
 
         Element body = DomUtils.getChildElementByTagName(requestElement, "body");
-        List<ValidationContext> validationContexts = parseValidationContexts(body, builder);
-
-        validationContexts.stream().filter(context -> context instanceof HeaderValidationContext)
-                .map(context -> (HeaderValidationContext) context)
-                .forEach(context -> context.addHeaderValidator(new HttpQueryParamHeaderValidator()));
+        List<ValidationContext.Builder<?, ?>> validationContexts = parseValidationContexts(body, builder);
+        getHeaderValidationContext(validationContexts).validator(new HttpQueryParamHeaderValidator());
 
         Element headers = DomUtils.getChildElementByTagName(requestElement, "headers");
         if (headers != null) {
@@ -115,9 +111,7 @@ public class HttpReceiveRequestActionParser extends ReceiveMessageActionParser {
             }
 
             boolean ignoreCase = !headers.hasAttribute("ignore-case") || parseBoolean(headers.getAttribute("ignore-case"));
-            validationContexts.stream().filter(context -> context instanceof HeaderValidationContext)
-                    .map(context -> (HeaderValidationContext) context)
-                    .forEach(context -> context.setHeaderNameIgnoreCase(ignoreCase));
+            getHeaderValidationContext(validationContexts).ignoreCase(ignoreCase);
         }
 
         MessageSelectorParser.doParse(element, builder);
@@ -130,7 +124,7 @@ public class HttpReceiveRequestActionParser extends ReceiveMessageActionParser {
         messageContentBuilder.getHeaderBuilders().forEach(httpMessageBuilder::addHeaderBuilder);
 
         builder.addPropertyValue("messageBuilder", httpMessageBuilder);
-        builder.addPropertyValue("validationContexts", validationContexts);
+        builder.addPropertyValue("validationContextBuilder", validationContexts);
         builder.addPropertyValue("variableExtractors", getVariableExtractors(element));
 
         return builder.getBeanDefinition();

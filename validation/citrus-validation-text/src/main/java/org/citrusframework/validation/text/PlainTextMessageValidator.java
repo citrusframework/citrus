@@ -16,6 +16,8 @@
 
 package org.citrusframework.validation.text;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +28,7 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DefaultMessageValidator;
+import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 
@@ -35,7 +38,6 @@ import static org.citrusframework.util.StringUtils.normalizeWhitespace;
 
 /**
  * Plain text validator using simple String comparison.
- *
  */
 public class PlainTextMessageValidator extends DefaultMessageValidator {
 
@@ -50,7 +52,8 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
             System.getenv(IGNORE_WHITESPACE_ENV) : "false"));
 
     @Override
-    public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, ValidationContext validationContext) throws ValidationException {
+    public void validateMessage(Message receivedMessage, Message controlMessage,
+                                TestContext context, ValidationContext validationContext) throws ValidationException {
         if (controlMessage == null || controlMessage.getPayload() == null) {
             logger.debug("Skip message payload validation as no control message was defined");
             return;
@@ -175,6 +178,15 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         return messageType.equalsIgnoreCase(MessageType.PLAINTEXT.toString());
+    }
+
+    @Override
+    public ValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+        Optional<ValidationContext> messageValidationContext = validationContexts.stream()
+                .filter(MessageValidationContext.class::isInstance)
+                .findFirst();
+
+        return messageValidationContext.orElseGet(() -> super.findValidationContext(validationContexts));
     }
 
     /**

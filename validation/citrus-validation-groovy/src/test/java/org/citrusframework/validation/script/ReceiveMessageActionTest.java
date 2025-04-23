@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.CitrusSettings;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
@@ -31,16 +30,19 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
-import org.citrusframework.message.builder.FileResourcePayloadBuilder;
+import org.citrusframework.message.builder.script.GroovyFileResourcePayloadBuilder;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.util.MessageUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.MessageValidatorRegistry;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.context.ValidationStatus;
+import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.Test;
@@ -67,6 +69,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         TestContextFactory factory = super.createTestContextFactory();
         factory.getMessageValidatorRegistry().addMessageValidator("header", new DefaultMessageHeaderValidator());
+        factory.getMessageValidatorRegistry().addMessageValidator("message", new DefaultTextEqualsMessageValidator());
         factory.getMessageValidatorRegistry().addMessageValidator("groovyJson", new GroovyJsonMessageValidator());
         factory.getMessageValidatorRegistry().addMessageValidator("groovyText", new GroovyScriptMessageValidator());
         factory.getMessageValidatorRegistry().addMessageValidator("groovyXml", new GroovyXmlMessageValidator());
@@ -78,9 +81,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testReceiveMessageWithMessageBuilderScriptResource() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        controlMessageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload.groovy"));
+        controlMessageBuilder.setPayloadBuilder(new GroovyFileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload.groovy"));
 
-        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        final Message controlMessage = new DefaultMessage("<TestRequest>\n  <Message>Hello World!</Message>\n</TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -95,7 +98,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -171,6 +173,13 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name())
                         && MessageUtils.hasXmlPayload(invocation.getArgument(1)));
 
+        doAnswer(invocationOnMock -> {
+            ((List<ValidationContext>) invocationOnMock.getArgument(3, List.class)).stream()
+                    .filter(context -> context instanceof XmlMessageValidationContext)
+                    .forEach(context -> context.updateStatus(ValidationStatus.PASSED));
+            return null;
+        }).when(xmlMessageValidator).validateMessage(any(org.citrusframework.message.Message.class), any(Message.class), eq(context), anyList());
+
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
@@ -179,6 +188,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         // now inject multiple validators
         Map<String, MessageValidator<? extends ValidationContext>> validators = new HashMap<>();
+        validators.put("header", new DefaultMessageHeaderValidator());
         validators.put("xml", xmlMessageValidator);
         validators.put("groovyXml", new GroovyXmlMessageValidator());
 
@@ -186,7 +196,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         messageValidatorRegistry.setMessageValidators(validators);
         context.setMessageValidatorRegistry(messageValidatorRegistry);
 
-        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(CitrusSettings.DEFAULT_MESSAGE_TYPE);
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
 
         receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)

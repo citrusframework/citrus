@@ -16,27 +16,19 @@
 
 package org.citrusframework.junit.integration;
 
-import java.util.List;
-
 import org.citrusframework.Citrus;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.endpoint.direct.DirectEndpointBuilder;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfig;
-import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.junit.spring.JUnit4CitrusSpringSupport;
 import org.citrusframework.message.DefaultMessageQueue;
-import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.validation.MessageValidator;
-import org.citrusframework.validation.context.DefaultValidationContext;
-import org.citrusframework.validation.context.ValidationContext;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -58,21 +50,6 @@ public class EndpointInjectionIT extends JUnit4CitrusSpringSupport {
 
     @BindToRegistry
     private final MessageQueue messages = new DefaultMessageQueue("messages");
-
-    @BindToRegistry
-    public MessageValidator<DefaultValidationContext> plaintextValidator() {
-        return new MessageValidator<>() {
-            @Override
-            public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, List<ValidationContext> validationContexts) throws ValidationException {
-                org.testng.Assert.assertEquals(receivedMessage.getPayload(String.class), controlMessage.getPayload());
-            }
-
-            @Override
-            public boolean supportsMessageType(String messageType, Message message) {
-                return messageType.equalsIgnoreCase(MessageType.PLAINTEXT.name());
-            }
-        };
-    }
 
     @BindToRegistry
     public DirectEndpoint foo() {

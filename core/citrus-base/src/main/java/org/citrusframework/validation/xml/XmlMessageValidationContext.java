@@ -17,38 +17,26 @@
 package org.citrusframework.validation.xml;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
-import org.citrusframework.validation.context.DefaultValidationContext;
-import org.citrusframework.validation.context.SchemaValidationContext;
-import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
+import org.citrusframework.validation.context.MessageValidationContext;
+import org.citrusframework.validation.context.ValidationStatus;
 
 /**
  * XML validation context holding validation specific information needed for XML
  * message validation.
- *
  */
-public class XmlMessageValidationContext extends DefaultValidationContext implements SchemaValidationContext {
+public class XmlMessageValidationContext extends DefaultMessageValidationContext {
 
-    /** Map holding xpath expressions to identify the ignored message elements */
-    private final Set<String> ignoreExpressions;
+    /** Optional delegate acting as a parent context that should be updated with this context */
+    private final MessageValidationContext delegate;
 
     /** Namespace definitions resolving namespaces in XML message validation */
     private final Map<String, String> namespaces;
 
     /** Map holding control namespaces for validation */
     private final Map<String, String> controlNamespaces;
-
-    /** Should message be validated with its schema definition */
-    private final boolean schemaValidation;
-
-    /** Explicit schema repository to use for this validation */
-    private final String schemaRepository;
-
-    /** Explicit schema instance to use for this validation */
-    private final String schema;
 
     /**
      * Default constructor.
@@ -62,12 +50,19 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
      * @param builder
      */
     public XmlMessageValidationContext(XmlValidationContextBuilder<?, ?> builder) {
-        this.ignoreExpressions = builder.ignoreExpressions;
+        super(builder);
+        this.delegate = builder.delegate;
         this.namespaces = builder.namespaces;
         this.controlNamespaces = builder.controlNamespaces;
-        this.schemaValidation = builder.schemaValidation;
-        this.schemaRepository = builder.schemaRepository;
-        this.schema = builder.schema;
+    }
+
+    @Override
+    public void updateStatus(ValidationStatus status) {
+        super.updateStatus(status);
+
+        if (delegate != null) {
+            delegate.updateStatus(status);
+        }
     }
 
     /**
@@ -81,6 +76,32 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
          */
         public static Builder xml() {
             return new Builder();
+        }
+
+        /**
+         * Adapt the given message validation context to the Xml message validation context.
+         * @param messageValidationContext the source
+         * @return a new instance of Xml message validation context that holds all values from the given message validation context.
+         */
+        public static Builder adapt(MessageValidationContext.Builder<?, ?> messageValidationContext) {
+            return adapt(messageValidationContext.build());
+        }
+
+        /**
+         * Adapt the given message validation context to the Xml message validation context.
+         * @param messageValidationContext the source
+         * @return a new instance of Xml message validation context that holds all values from the given message validation context.
+         */
+        public static Builder adapt(MessageValidationContext messageValidationContext) {
+            XmlMessageValidationContext.Builder builder = new XmlMessageValidationContext.Builder();
+
+            builder.ignore(messageValidationContext.getIgnoreExpressions());
+            builder.schemaValidation(messageValidationContext.isSchemaValidationEnabled());
+            builder.schema(messageValidationContext.getSchema());
+            builder.schemaRepository(messageValidationContext.getSchemaRepository());
+            builder.delegate(messageValidationContext);
+
+            return builder;
         }
 
         public XpathMessageValidationContext.Builder expressions() {
@@ -115,30 +136,17 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
      * Base fluent builder for XML validation contexts.
      */
     public static abstract class XmlValidationContextBuilder<T extends XmlMessageValidationContext, S extends XmlValidationContextBuilder<T, S>>
-            implements ValidationContext.Builder<T, XmlValidationContextBuilder<T, S>>, XmlNamespaceAware, SchemaValidationContext.Builder<XmlValidationContextBuilder<T, S>> {
+            extends MessageValidationContext.Builder<T, S> implements XmlNamespaceAware {
 
         protected final S self;
 
-        protected final Set<String> ignoreExpressions = new HashSet<>();
+        protected MessageValidationContext delegate;
+
         protected Map<String, String> namespaces = new HashMap<>();
         protected final Map<String, String> controlNamespaces = new HashMap<>();
-        protected boolean schemaValidation = true;
-        protected String schemaRepository;
-        protected String schema;
 
         protected XmlValidationContextBuilder() {
             this.self = (S) this;
-        }
-
-        /**
-         * Sets schema validation enabled/disabled for this message.
-         *
-         * @param enabled
-         * @return
-         */
-        public S schemaValidation(final boolean enabled) {
-            this.schemaValidation = enabled;
-            return self;
         }
 
         /**
@@ -187,62 +195,18 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
             return self;
         }
 
-        /**
-         * Sets explicit schema instance name to use for schema validation.
-         *
-         * @param schemaName
-         * @return
-         */
-        public S schema(final String schemaName) {
-            this.schema = schemaName;
-            return self;
-        }
-
-        /**
-         * Sets explicit xsd schema repository instance to use for validation.
-         *
-         * @param schemaRepository
-         * @return
-         */
-        public S schemaRepository(final String schemaRepository) {
-            this.schemaRepository = schemaRepository;
-            return self;
-        }
-
-        /**
-         * Adds ignore path expression for message element.
-         *
-         * @param path
-         * @return
-         */
-        public S ignore(final String path) {
-            this.ignoreExpressions.add(path);
-            return self;
-        }
-
-        /**
-         * Adds a list of ignore path expressions for message element.
-         *
-         * @param paths
-         * @return
-         */
-        public S ignore(final Set<String> paths) {
-            this.ignoreExpressions.addAll(paths);
-            return self;
-        }
-
         @Override
         public void setNamespaces(Map<String, String> namespaces) {
             this.namespaces = namespaces;
         }
-    }
 
-    /**
-     * Get ignored message elements.
-     * @return the ignoreExpressions
-     */
-    public Set<String> getIgnoreExpressions() {
-        return ignoreExpressions;
+        /**
+         * Sets a parent context that is updated with the status as a delegate.
+         */
+        protected S delegate(MessageValidationContext delegate) {
+            this.delegate = delegate;
+            return self;
+        }
     }
 
     /**
@@ -261,18 +225,4 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
         return controlNamespaces;
     }
 
-    @Override
-    public boolean isSchemaValidationEnabled() {
-        return schemaValidation;
-    }
-
-    @Override
-    public String getSchemaRepository() {
-        return schemaRepository;
-    }
-
-    @Override
-    public String getSchema() {
-        return schema;
-    }
 }

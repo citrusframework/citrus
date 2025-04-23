@@ -61,7 +61,7 @@ public class SendSoapMessageActionParser extends SendMessageActionParser {
     }
 
     @Override
-    protected void parseHeaderElements(Element actionElement, DefaultMessageBuilder messageBuilder, List<ValidationContext> validationContexts) {
+    protected void parseHeaderElements(Element actionElement, DefaultMessageBuilder messageBuilder, List<ValidationContext.Builder<?, ?>> validationContexts) {
         super.parseHeaderElements(actionElement, messageBuilder, validationContexts);
 
         Map<String, Object> headers = new HashMap<>();

@@ -28,6 +28,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.context.HeaderValidationContext;
+import org.citrusframework.validation.context.ValidationStatus;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,85 +48,109 @@ public class DefaultHeaderValidator implements HeaderValidator {
     public void validateHeader(String headerName, Object receivedValue, Object controlValue, TestContext context, HeaderValidationContext validationContext) {
         Optional<HeaderValidator> validator = getHeaderValidator(headerName, controlValue, context);
         if (validator.isPresent()) {
-            validator.get().validateHeader(headerName, receivedValue, controlValue, context, validationContext);
+            try {
+                validator.get().validateHeader(headerName, receivedValue, controlValue, context, validationContext);
+                validationContext.updateStatus(ValidationStatus.PASSED);
+            } catch (ValidationException e) {
+                validationContext.updateStatus(ValidationStatus.FAILED);
+                throw e;
+            }
             return;
         }
 
-        String expectedValue = Optional.ofNullable(controlValue)
-                .map(value -> context.getTypeConverter().convertIfNecessary(value, String.class))
-                .map(context::replaceDynamicContentInString)
-                .orElse("");
+        try {
+            String expectedValue = Optional.ofNullable(controlValue)
+                    .map(value -> context.getTypeConverter().convertIfNecessary(value, String.class))
+                    .map(context::replaceDynamicContentInString)
+                    .orElse("");
 
-        if (receivedValue != null) {
-            String receivedValueString = context.getTypeConverter().convertIfNecessary(receivedValue, String.class);
-            if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValue)) {
-                ValidationMatcherUtils.resolveValidationMatcher(headerName, receivedValueString,
-                        expectedValue, context);
-                return;
-            }
+            if (receivedValue != null) {
+                String receivedValueString = context.getTypeConverter().convertIfNecessary(receivedValue, String.class);
+                if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValue)) {
+                    ValidationMatcherUtils.resolveValidationMatcher(headerName, receivedValueString,
+                            expectedValue, context);
+                    return;
+                }
 
-            if (!receivedValueString.equals(expectedValue)) {
-                throw new ValidationException("Values not equal for header element '"
-                        + headerName + "', expected '"
-                        + expectedValue + "' but was '"
-                        + receivedValue + "'");
-            }
-        } else if (StringUtils.hasText(expectedValue)) {
+                if (!receivedValueString.equals(expectedValue)) {
+                    throw new ValidationException("Values not equal for header element '"
+                            + headerName + "', expected '"
+                            + expectedValue + "' but was '"
+                            + receivedValue + "'");
+                }
+            } else if (StringUtils.hasText(expectedValue)) {
                 throw new ValidationException("Values not equal for header element '"
                         + headerName + "', expected '"
                         + expectedValue + "' but was '"
                         + null + "'");
-        }
+            }
 
-        logger.debug("Validating header element: {}='{}' : OK", headerName, expectedValue);
+            logger.debug("Validating header element: {}='{}' : OK", headerName, expectedValue);
+            validationContext.updateStatus(ValidationStatus.PASSED);
+        } catch (ValidationException e) {
+            validationContext.updateStatus(ValidationStatus.FAILED);
+            throw e;
+        }
     }
 
     public void validateHeaderArray(String headerName, Object receivedValue, Object controlValue, TestContext context, HeaderValidationContext validationContext) {
         Optional<HeaderValidator> validator = getHeaderValidator(headerName, controlValue, context);
         if (validator.isPresent()) {
-            validator.get().validateHeader(headerName, receivedValue, controlValue, context, validationContext);
+            try {
+                validator.get().validateHeader(headerName, receivedValue, controlValue, context, validationContext);
+                validationContext.updateStatus(ValidationStatus.PASSED);
+            } catch (ValidationException e) {
+                validationContext.updateStatus(ValidationStatus.FAILED);
+                throw e;
+            }
             return;
         }
 
-        List<String> receivedValues = toList(receivedValue);
-        List<String> controlValues = toList(controlValue);
+        try {
+            List<String> receivedValues = toList(receivedValue);
+            List<String> controlValues = toList(controlValue);
 
-        // Convert and replace dynamic content for controlValue
-        List<String> expectedValues = controlValues.stream()
-                .map(value -> context.getTypeConverter().convertIfNecessary(value, String.class))
-                .map(context::replaceDynamicContentInString)
-                .toList();
+            // Convert and replace dynamic content for controlValue
+            List<String> expectedValues = controlValues.stream()
+                    .map(value -> context.getTypeConverter().convertIfNecessary(value, String.class))
+                    .map(context::replaceDynamicContentInString)
+                    .toList();
 
-        // Process received values
-        if (receivedValue != null) {
-            List<String> receivedValueStrings = receivedValues.stream()
-                .map(value -> context.getTypeConverter().convertIfNecessary(value, String.class))
-                .toList();
+            // Process received values
+            if (receivedValue != null) {
+                List<String> receivedValueStrings = receivedValues.stream()
+                        .map(value -> context.getTypeConverter().convertIfNecessary(value, String.class))
+                        .toList();
 
-            List<String> expectedValuesCopy = new ArrayList<>(expectedValues);
+                List<String> expectedValuesCopy = new ArrayList<>(expectedValues);
 
-            // Iterate over received values and try to match with expected values
-            for (String receivedValueString : receivedValueStrings) {
+                // Iterate over received values and try to match with expected values
+                for (String receivedValueString : receivedValueStrings) {
 
-                Iterator<String> expectedIterator = expectedValuesCopy.iterator();
-                boolean validated = validateExpected(headerName, context, receivedValueString, expectedIterator);
+                    Iterator<String> expectedIterator = expectedValuesCopy.iterator();
+                    boolean validated = validateExpected(headerName, context, receivedValueString, expectedIterator);
 
-                if (!validated) {
-                    throw new ValidationException(String.format("Values not equal for header element '%s', expected '%s' but was '%s'",
-                        headerName, String.join(", ", expectedValues), receivedValueString));
+                    if (!validated) {
+                        throw new ValidationException(String.format("Values not equal for header element '%s', expected '%s' but was '%s'",
+                                headerName, String.join(", ", expectedValues), receivedValueString));
+                    }
                 }
+
+                if (!expectedValuesCopy.isEmpty()) {
+                    throw new ValidationException(String.format("Values not equal for header element '%s', expected '%s' but was '%s'",
+                            headerName, String.join(", ", expectedValues), String.join(", ", receivedValues)));
+                }
+            } else if (!expectedValues.isEmpty()) {
+                throw new ValidationException(String.format("Values not equal for header element '%s', expected '%s' but was 'null'",
+                        headerName, String.join(", ", expectedValues)));
             }
 
-            if (!expectedValuesCopy.isEmpty()) {
-                throw new ValidationException(String.format("Values not equal for header element '%s', expected '%s' but was '%s'",
-                    headerName, String.join(", ", expectedValues), String.join(", ", receivedValues)));
-            }
-        } else if (!expectedValues.isEmpty()) {
-            throw new ValidationException(String.format("Values not equal for header element '%s', expected '%s' but was 'null'",
-                headerName, String.join(", ", expectedValues)));
+            logger.debug("Validating header element: {}='{}' : OK", headerName, String.join(", ", expectedValues));
+            validationContext.updateStatus(ValidationStatus.PASSED);
+        } catch (ValidationException e) {
+            validationContext.updateStatus(ValidationStatus.FAILED);
+            throw e;
         }
-
-        logger.debug("Validating header element: {}='{}' : OK", headerName, String.join(", ", expectedValues));
     }
 
     private static boolean validateExpected(String headerName, TestContext context,

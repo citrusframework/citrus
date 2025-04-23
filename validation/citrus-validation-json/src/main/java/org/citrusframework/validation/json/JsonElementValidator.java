@@ -16,13 +16,14 @@
 
 package org.citrusframework.validation.json;
 
+import java.util.Collection;
+import java.util.Objects;
+
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
-
-import java.util.Collection;
-import java.util.Objects;
+import org.citrusframework.validation.context.MessageValidationContext;
 
 import static java.util.Objects.requireNonNullElse;
 import static org.citrusframework.CitrusSettings.IGNORE_PLACEHOLDER;
@@ -154,12 +155,12 @@ public class JsonElementValidator {
 
     @FunctionalInterface
     public interface Provider {
-        JsonElementValidator getValidator(boolean isStrict, TestContext context, JsonMessageValidationContext validationContext);
+        JsonElementValidator getValidator(boolean isStrict, TestContext context, MessageValidationContext validationContext);
 
         Provider DEFAULT = (
                 boolean isStrict,
                 TestContext context,
-                JsonMessageValidationContext validationContext
+                MessageValidationContext validationContext
         ) -> new JsonElementValidator(isStrict, context, validationContext.getIgnoreExpressions());
     }
 }

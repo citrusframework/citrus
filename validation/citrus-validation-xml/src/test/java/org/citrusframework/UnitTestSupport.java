@@ -16,16 +16,13 @@
 
 package org.citrusframework;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
-import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
-import org.citrusframework.validation.MessageValidator;
+import org.citrusframework.validation.DefaultMessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.xhtml.XhtmlMessageValidator;
 import org.citrusframework.validation.xhtml.XhtmlXpathMessageValidator;
@@ -43,9 +40,9 @@ public abstract class UnitTestSupport extends AbstractTestNGUnitTest {
         factory.getMessageValidatorRegistry().addMessageValidator("xpath", new XpathMessageValidator());
         factory.getMessageValidatorRegistry().addMessageValidator("xhtml", new XhtmlMessageValidator());
         factory.getMessageValidatorRegistry().addMessageValidator("xhtmlXpath", new XhtmlXpathMessageValidator());
-        factory.getMessageValidatorRegistry().addMessageValidator("plaintext", new MessageValidator<>() {
+        factory.getMessageValidatorRegistry().addMessageValidator("plaintext", new DefaultMessageValidator() {
             @Override
-            public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, List<ValidationContext> validationContexts) throws ValidationException {
+            public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, ValidationContext validationContexts) {
                 Assert.assertEquals(receivedMessage.getPayload(String.class), controlMessage.getPayload());
             }
 

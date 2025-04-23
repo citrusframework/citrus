@@ -16,36 +16,14 @@
 
 package org.citrusframework.validation.json;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.citrusframework.validation.context.DefaultValidationContext;
-import org.citrusframework.validation.context.SchemaValidationContext;
-import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
+import org.citrusframework.validation.context.MessageValidationContext;
 
 /**
  * Validation context holding JSON specific validation information.
  * @since 2.3
  */
-public class JsonMessageValidationContext extends DefaultValidationContext implements SchemaValidationContext {
-
-    /** Map holding xpath expressions to identify the ignored message elements */
-    private final Set<String> ignoreExpressions;
-
-    /**
-     * Should message be validated with its schema definition
-     * <p>
-     * This is currently disabled by default, because old json tests would fail with a validation exception
-     * as soon as a json schema repository is specified and the schema validation is activated.
-     */
-    private final boolean schemaValidation;
-
-    /** Explicit schema repository to use for this validation */
-    private final String schemaRepository;
-
-    /** Explicit schema instance to use for this validation */
-    private final String schema;
+public class JsonMessageValidationContext extends DefaultMessageValidationContext {
 
     /**
      * Default constructor.
@@ -59,22 +37,13 @@ public class JsonMessageValidationContext extends DefaultValidationContext imple
      * @param builder
      */
     public JsonMessageValidationContext(Builder builder) {
-        this.ignoreExpressions = builder.ignoreExpressions;
-        this.schemaValidation = builder.schemaValidation;
-        this.schemaRepository = builder.schemaRepository;
-        this.schema = builder.schema;
+        super(builder);
     }
 
     /**
      * Fluent builder
      */
-    public static final class Builder implements ValidationContext.Builder<JsonMessageValidationContext, Builder>,
-            SchemaValidationContext.Builder<Builder> {
-
-        private final Set<String> ignoreExpressions = new HashSet<>();
-        private boolean schemaValidation = true;
-        private String schemaRepository;
-        private String schema;
+    public static final class Builder extends MessageValidationContext.Builder<JsonMessageValidationContext, Builder> {
 
         public static Builder json() {
             return new Builder();
@@ -89,87 +58,9 @@ public class JsonMessageValidationContext extends DefaultValidationContext imple
                     .expression(path, expectedValue);
         }
 
-        /**
-         * Sets schema validation enabled/disabled for this message.
-         *
-         * @param enabled
-         * @return
-         */
-        public Builder schemaValidation(final boolean enabled) {
-            this.schemaValidation = enabled;
-            return this;
-        }
-
-        /**
-         * Sets explicit schema instance name to use for schema validation.
-         *
-         * @param schemaName
-         * @return
-         */
-        public Builder schema(final String schemaName) {
-            this.schema = schemaName;
-            return this;
-        }
-
-        /**
-         * Sets explicit xsd schema repository instance to use for validation.
-         *
-         * @param schemaRepository
-         * @return
-         */
-        public Builder schemaRepository(final String schemaRepository) {
-            this.schemaRepository = schemaRepository;
-            return this;
-        }
-
-        /**
-         * Adds ignore path expression for message element.
-         *
-         * @param path
-         * @return
-         */
-        public Builder ignore(final String path) {
-            this.ignoreExpressions.add(path);
-            return this;
-        }
-
-        /**
-         * Adds a list of ignore path expressions for message element.
-         *
-         * @param paths
-         * @return
-         */
-        public Builder ignore(final List<String> paths) {
-            this.ignoreExpressions.addAll(paths);
-            return this;
-        }
-
         @Override
         public JsonMessageValidationContext build() {
             return new JsonMessageValidationContext(this);
         }
-    }
-
-    /**
-     * Get ignored message elements.
-     * @return the ignoreExpressions
-     */
-    public Set<String> getIgnoreExpressions() {
-        return ignoreExpressions;
-    }
-
-    @Override
-    public boolean isSchemaValidationEnabled() {
-        return schemaValidation;
-    }
-
-    @Override
-    public String getSchemaRepository() {
-        return schemaRepository;
-    }
-
-    @Override
-    public String getSchema() {
-        return schema;
     }
 }

@@ -33,6 +33,7 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.ValidationUtils;
 import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.context.ValidationStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,6 +97,8 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
                 .toList();
 
         if (jsonPathMessageValidationContexts.size() > 1) {
+            JsonPathMessageValidationContext jsonPathMessageValidationContext = jsonPathMessageValidationContexts.get(0);
+
             // Collect all jsonPath expressions and combine into one single validation context
             Map<String, Object> jsonPathExpressions = jsonPathMessageValidationContexts.stream()
                     .map(JsonPathMessageValidationContext::getJsonPathExpressions)
@@ -106,7 +109,13 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
                     .orElseGet(Collections::emptyMap);
 
             if (!jsonPathExpressions.isEmpty()) {
-                return new JsonPathMessageValidationContext.Builder().expressions(jsonPathExpressions).build();
+                jsonPathMessageValidationContext.getJsonPathExpressions().putAll(jsonPathExpressions);
+
+                // Update status of other validation contexts to optional as validation is performed by this single context
+                jsonPathMessageValidationContexts.stream()
+                        .filter(vc -> vc != jsonPathMessageValidationContext)
+                        .forEach(vc -> vc.updateStatus(ValidationStatus.OPTIONAL));
+                return jsonPathMessageValidationContext;
             }
         }
 

@@ -16,7 +16,11 @@
 
 package org.citrusframework.validation;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.citrusframework.message.Message;
+import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 
 /**
@@ -29,6 +33,13 @@ public class DefaultMessageValidator extends AbstractMessageValidator<Validation
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         return true;
+    }
+
+    @Override
+    public ValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+        return super.findValidationContext(validationContexts.stream()
+                .filter(it -> !(it instanceof HeaderValidationContext))
+                .collect(Collectors.toList()));
     }
 
     @Override

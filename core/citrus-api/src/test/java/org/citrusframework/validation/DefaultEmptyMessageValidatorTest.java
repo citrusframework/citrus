@@ -34,7 +34,7 @@ public class DefaultEmptyMessageValidatorTest {
     @Mock
     private Message control;
 
-    DefaultEmptyMessageValidator validator = new DefaultEmptyMessageValidator();
+    private final DefaultEmptyMessageValidator validator = new DefaultEmptyMessageValidator();
 
     @BeforeMethod
     public void setupMocks() {

@@ -16,6 +16,9 @@
 
 package org.citrusframework.actions;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
@@ -25,8 +28,10 @@ import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.messaging.Consumer;
+import org.citrusframework.validation.DefaultMessageValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
+import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.hamcrest.core.AnyOf;
@@ -60,6 +65,17 @@ public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\",\"active\": true}, \"index\":5, \"id\":\"x123456789x\"}")
                         .setHeader("operation", "sayHello"));
+
+        context.getMessageValidatorRegistry().addMessageValidator("jsonPathMessageValidator", new DefaultMessageValidator() {
+            @Override
+            public ValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+                Optional<ValidationContext> validationContext = validationContexts.stream()
+                        .filter(JsonPathMessageValidationContext.class::isInstance)
+                        .findFirst();
+
+                return validationContext.orElseGet(() -> super.findValidationContext(validationContexts));
+            }
+        });
 
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(receive().endpoint(messageEndpoint)

@@ -308,9 +308,9 @@ class ReceiveMessageBuilderTest {
 		builder.message().headerNameIgnoreCase(false);
 
 		//THEN
-		final HeaderValidationContext headerValidationContext = builder.getHeaderValidationContext();
+		final HeaderValidationContext.Builder headerValidationContext = builder.getHeaderValidationContext();
 		assertNotNull(headerValidationContext);
-		assertFalse(headerValidationContext.isHeaderNameIgnoreCase());
+		assertFalse(headerValidationContext.build().isHeaderNameIgnoreCase());
 	}
 
 	@Test
