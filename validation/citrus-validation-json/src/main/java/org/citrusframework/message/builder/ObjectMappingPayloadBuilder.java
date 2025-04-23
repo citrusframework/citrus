@@ -22,7 +22,10 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.citrusframework.message.MessageType;
+import org.citrusframework.message.MessagePayload;
 
+@MessagePayload(MessageType.JSON)
 public class ObjectMappingPayloadBuilder extends DefaultPayloadBuilder {
 
     private final ObjectMapper mapper;

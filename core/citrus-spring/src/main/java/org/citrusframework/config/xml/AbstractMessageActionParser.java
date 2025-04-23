@@ -40,7 +40,6 @@ import org.citrusframework.message.builder.FileResourcePayloadBuilder;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
-import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.interceptor.BinaryMessageProcessor;
 import org.citrusframework.validation.interceptor.GzipMessageProcessor;
@@ -249,7 +248,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
      * @param messageBuilder the message content builder.
      * @param validationContexts list of validation contexts.
      */
-    protected void parseHeaderElements(Element actionElement, DefaultMessageBuilder messageBuilder, List<ValidationContext> validationContexts) {
+    protected void parseHeaderElements(Element actionElement, DefaultMessageBuilder messageBuilder, List<ValidationContext.Builder<?, ?>> validationContexts) {
         Element headerElement = DomUtils.getChildElementByTagName(actionElement, "header");
         Map<String, Object> messageHeaders = new LinkedHashMap<>();
 
@@ -289,13 +288,6 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
             }
 
             messageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(messageHeaders));
-
-            if (headerElement.hasAttribute("ignore-case")) {
-                boolean ignoreCase = Boolean.parseBoolean(headerElement.getAttribute("ignore-case"));
-                validationContexts.stream().filter(context -> context instanceof HeaderValidationContext)
-                                            .map(context -> (HeaderValidationContext) context)
-                                            .forEach(context -> context.setHeaderNameIgnoreCase(ignoreCase));
-            }
         }
     }
 

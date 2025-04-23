@@ -61,11 +61,12 @@ public interface Message extends Serializable {
             return print();
         }
 
+        String payload = getPayload(String.class).trim();
         if (context.getLogModifier() instanceof LogMessageModifier modifier) {
-            return print(modifier.maskBody(this), modifier.maskHeaders(this), modifier.maskHeaderData(this));
+            return print(modifier.mask(payload), modifier.maskHeaders(this), modifier.maskHeaderData(this));
         }
 
-        return print(context.getLogModifier().mask(getPayload(String.class).trim()), getHeaders(), getHeaderData());
+        return print(context.getLogModifier().mask(payload), getHeaders(), getHeaderData());
     }
 
     /**

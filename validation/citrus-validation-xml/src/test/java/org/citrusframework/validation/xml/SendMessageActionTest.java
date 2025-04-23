@@ -276,6 +276,6 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     private void validateMessageToSend(Message toSend, Message controlMessage) {
         Assert.assertEquals(toSend.getPayload(String.class).trim(), controlMessage.getPayload(String.class).trim());
         DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
-        validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext());
+        validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext.Builder().build());
     }
 }

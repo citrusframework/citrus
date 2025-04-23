@@ -29,14 +29,13 @@ import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.config.util.ValidateMessageParserUtil;
 import org.citrusframework.config.util.VariableExtractorParserUtil;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.context.SchemaValidationContext;
+import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
-import org.citrusframework.validation.xml.XpathMessageValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -70,13 +69,13 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         MessageSelectorParser.doParse(element, builder);
 
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
-        List<ValidationContext> validationContexts = parseValidationContexts(messageElement, builder);
+        List<ValidationContext.Builder<?, ?>> validationContexts = parseValidationContexts(messageElement, builder);
 
         DefaultMessageBuilder messageBuilder = constructMessageBuilder(messageElement, builder);
         parseHeaderElements(element, messageBuilder, validationContexts);
 
         builder.addPropertyValue("messageBuilder", messageBuilder);
-        builder.addPropertyValue("validationContexts", validationContexts);
+        builder.addPropertyValue("validationContextBuilder", validationContexts);
         builder.addPropertyValue("variableExtractors", getVariableExtractors(element));
 
         return builder.getBeanDefinition();
@@ -88,49 +87,19 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @param builder
      * @return
      */
-    protected List<ValidationContext> parseValidationContexts(Element messageElement, BeanDefinitionBuilder builder) {
-        List<ValidationContext> validationContexts = new ArrayList<>();
+    protected List<ValidationContext.Builder<?, ?>> parseValidationContexts(Element messageElement, BeanDefinitionBuilder builder) {
+        List<ValidationContext.Builder<?, ?>> validationContexts = new ArrayList<>();
         if (messageElement != null) {
             String messageType = messageElement.getAttribute("type");
             if (hasText(messageType)) {
                 builder.addPropertyValue("messageType", messageType);
             }
 
-            HeaderValidationContext headerValidationContext = new HeaderValidationContext();
-            validationContexts.add(headerValidationContext);
-
-            String headerValidator = messageElement.getAttribute("header-validator");
-            if (hasText(headerValidator)) {
-                headerValidationContext.addHeaderValidator(headerValidator);
-            }
-
-            String headerValidatorExpression = messageElement.getAttribute("header-validators");
-            if (hasText(headerValidatorExpression)) {
-                Stream.of(headerValidatorExpression.split(","))
-                        .map(String::trim)
-                        .forEach(headerValidationContext::addHeaderValidator);
-            }
-
-            XmlMessageValidationContext xmlMessageValidationContext = getXmlMessageValidationContext(messageElement);
-            validationContexts.add(xmlMessageValidationContext);
-
-            XpathMessageValidationContext xPathMessageValidationContext = getXPathMessageValidationContext(messageElement, xmlMessageValidationContext);
-            if (!xPathMessageValidationContext.getXpathExpressions().isEmpty()) {
-                validationContexts.add(xPathMessageValidationContext);
-            }
-
-            JsonMessageValidationContext jsonMessageValidationContext = getJsonMessageValidationContext(messageElement);
-            validationContexts.add(jsonMessageValidationContext);
-
-            JsonPathMessageValidationContext jsonPathMessageValidationContext = getJsonPathMessageValidationContext(messageElement);
-            if (!jsonPathMessageValidationContext.getJsonPathExpressions().isEmpty()) {
-                validationContexts.add(jsonPathMessageValidationContext);
-            }
-
-            ScriptValidationContext scriptValidationContext = getScriptValidationContext(messageElement);
-            if (scriptValidationContext != null) {
-                validationContexts.add(scriptValidationContext);
-            }
+            addHeaderValidationContext(messageElement, validationContexts);
+            addXmlValidationContext(messageElement, validationContexts);
+            addJsonMessageValidationContext(messageElement, validationContexts);
+            addMessageValidationContext(messageElement, validationContexts);
+            addScriptValidationContext(messageElement, validationContexts);
 
             ManagedList<RuntimeBeanReference> validators = new ManagedList<>();
             String messageValidator = messageElement.getAttribute("validator");
@@ -154,11 +123,35 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             if (hasText(dataDictionary)) {
                 builder.addPropertyReference("dataDictionary", dataDictionary);
             }
-        } else {
-            validationContexts.add(new HeaderValidationContext());
         }
 
         return validationContexts;
+    }
+
+    private void addHeaderValidationContext(Element messageElement, List<ValidationContext.Builder<?, ?>> validationContexts) {
+        String headerValidator = messageElement.getAttribute("header-validator");
+        if (hasText(headerValidator)) {
+            getHeaderValidationContext(validationContexts).validator(headerValidator);
+        }
+
+        String headerValidatorExpression = messageElement.getAttribute("header-validators");
+        if (hasText(headerValidatorExpression)) {
+            Stream.of(headerValidatorExpression.split(","))
+                    .map(String::trim)
+                    .forEach(getHeaderValidationContext(validationContexts)::validator);
+        }
+    }
+
+    protected HeaderValidationContext.Builder getHeaderValidationContext(List<ValidationContext.Builder<?, ?>> validationContexts) {
+        if (validationContexts.stream().noneMatch(HeaderValidationContext.Builder.class::isInstance)) {
+            validationContexts.add(new HeaderValidationContext.Builder());
+        }
+
+        return validationContexts.stream()
+                .filter(HeaderValidationContext.Builder.class::isInstance)
+                .map(HeaderValidationContext.Builder.class::cast)
+                .findFirst()
+                .orElseThrow(() -> new BeanCreationException("Unable to initialize header validation context"));
     }
 
     /**
@@ -186,114 +179,100 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         return variableExtractors;
     }
 
-    /**
-     * Construct the basic Json message validation context.
-     * @param messageElement
-     * @return
-     */
-    private JsonMessageValidationContext getJsonMessageValidationContext(Element messageElement) {
-        JsonMessageValidationContext.Builder context = new JsonMessageValidationContext.Builder();
-
-        if (messageElement != null) {
-            Set<String> ignoreExpressions = new HashSet<>();
-            List<?> ignoreElements = DomUtils.getChildElementsByTagName(messageElement, "ignore");
-            for (Object ignoreElement : ignoreElements) {
-                Element ignoreValue = (Element) ignoreElement;
-                ignoreExpressions.add(ignoreValue.getAttribute("path"));
-            }
-            ignoreExpressions.forEach(context::ignore);
-
-            addSchemaInformationToValidationContext(messageElement, context);
+    private MessageValidationContext.Builder<?, ?> getMessageValidationContext(List<ValidationContext.Builder<?, ?>> validationContexts) {
+        if (validationContexts.stream().noneMatch(MessageValidationContext.Builder.class::isInstance)) {
+            validationContexts.add(new DefaultMessageValidationContext.Builder());
         }
 
-        return context.build();
+        return validationContexts.stream()
+                .filter(MessageValidationContext.Builder.class::isInstance)
+                .map(MessageValidationContext.Builder.class::cast)
+                .findFirst()
+                .orElseThrow(() -> new BeanCreationException("Unable to initialize message validation context"));
     }
 
     /**
-     * Construct the basic Xml message validation context.
-     * @param messageElement
-     * @return
+     * Construct the basic message validation context.
      */
-    private XmlMessageValidationContext getXmlMessageValidationContext(Element messageElement) {
-        XmlMessageValidationContext.Builder context = new XmlMessageValidationContext.Builder();
-
-        if (messageElement != null) {
-            addSchemaInformationToValidationContext(messageElement, context);
-
-            Set<String> ignoreExpressions = new HashSet<>();
-            List<Element> ignoreElements = DomUtils.getChildElementsByTagName(messageElement, "ignore");
-            for (Element ignoreValue : ignoreElements) {
-                ignoreExpressions.add(ignoreValue.getAttribute("path"));
-            }
-            ignoreExpressions.forEach(context::ignore);
-
-            parseNamespaceValidationElements(messageElement, context);
-
-            //Catch namespace declarations for namespace context
-            Map<String, String> namespaces = new HashMap<>();
-            List<Element> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
-            if (!namespaceElements.isEmpty()) {
-                for (Element namespaceElement : namespaceElements) {
-                    namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
-                }
-                context.setNamespaces(namespaces);
-            }
+    private void addMessageValidationContext(Element messageElement, List<ValidationContext.Builder<?, ?>> validationContexts) {
+        Set<String> ignoreExpressions = new HashSet<>();
+        List<?> ignoreElements = DomUtils.getChildElementsByTagName(messageElement, "ignore");
+        for (Object ignoreElement : ignoreElements) {
+            Element ignoreValue = (Element) ignoreElement;
+            ignoreExpressions.add(ignoreValue.getAttribute("path"));
         }
 
-        return context.build();
+        if (!ignoreExpressions.isEmpty()) {
+            MessageValidationContext.Builder<?, ?> messageValidationContext = getMessageValidationContext(validationContexts);
+            ignoreExpressions.forEach(messageValidationContext::ignore);
+        }
+
+        addSchemaInformationToValidationContext(messageElement, validationContexts);
     }
 
     /**
      * Adds information about the validation of the message against a certain schema to the context
      * @param messageElement The message element to get the configuration from
-     * @param context The context to set the schema validation configuration to
      */
-    protected void addSchemaInformationToValidationContext(Element messageElement, SchemaValidationContext.Builder<?> context) {
+    protected void addSchemaInformationToValidationContext(Element messageElement, List<ValidationContext.Builder<?, ?>> validationContexts) {
         String schemaValidation = messageElement.getAttribute("schema-validation");
         if (hasText(schemaValidation)) {
-            context.schemaValidation(parseBoolean(schemaValidation));
+            getMessageValidationContext(validationContexts).schemaValidation(parseBoolean(schemaValidation));
         }
 
         String schema = messageElement.getAttribute("schema");
         if (hasText(schema)) {
-            context.schema(schema);
+            getMessageValidationContext(validationContexts).schema(schema);
         }
 
         String schemaRepository = messageElement.getAttribute("schema-repository");
         if (hasText(schemaRepository)) {
-            context.schemaRepository(schemaRepository);
+            getMessageValidationContext(validationContexts).schemaRepository(schemaRepository);
         }
     }
 
     /**
-     * Construct the XPath message validation context.
-     * @param messageElement
-     * @param parentContext
-     * @return
+     * Construct the basic Xml message validation context.
      */
-    private XpathMessageValidationContext getXPathMessageValidationContext(Element messageElement, XmlMessageValidationContext parentContext) {
-        XpathMessageValidationContext.Builder context = new XpathMessageValidationContext.Builder();
+    private void addXmlValidationContext(Element messageElement, List<ValidationContext.Builder<?, ?>> validationContexts) {
+        parseNamespaceValidationElements(messageElement, validationContexts);
 
-        parseXPathValidationElements(messageElement, context);
+        //Catch namespace declarations for namespace context
+        Map<String, String> namespaces = new HashMap<>();
+        List<Element> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
+        for (Element namespaceElement : namespaceElements) {
+            namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
+        }
 
-        context.setNamespaces(parentContext.getNamespaces());
-        context.namespaces(parentContext.getControlNamespaces());
-        parentContext.getIgnoreExpressions().forEach(context::ignore);
-        context.schema(parentContext.getSchema());
-        context.schemaRepository(parentContext.getSchemaRepository());
-        context.schemaValidation(parentContext.isSchemaValidationEnabled());
+        if (!namespaces.isEmpty()) {
+            getXmlValidationContext(validationContexts).setNamespaces(namespaces);
+        }
 
-        return context.build();
+        parseXPathValidationElements(messageElement, validationContexts);
+    }
+
+    private XmlMessageValidationContext.Builder getXmlValidationContext(List<ValidationContext.Builder<?, ?>> validationContexts) {
+        if (validationContexts.stream().noneMatch(MessageValidationContext.Builder.class::isInstance)) {
+            XmlMessageValidationContext.Builder builder = new XmlMessageValidationContext.Builder();
+            validationContexts.add(builder);
+            return builder;
+        } else {
+            MessageValidationContext.Builder<?, ?> messageValidationContext = getMessageValidationContext(validationContexts);
+            if (messageValidationContext instanceof XmlMessageValidationContext.Builder xmlMessageValidationContext) {
+                return xmlMessageValidationContext;
+            }
+
+            XmlMessageValidationContext.Builder builder = XmlMessageValidationContext.Builder.adapt(messageValidationContext);
+            validationContexts.remove(messageValidationContext);
+            validationContexts.add(builder);
+            return builder;
+        }
     }
 
     /**
      * Construct the JSONPath message validation context.
-     * @param messageElement
-     * @return
      */
-    private JsonPathMessageValidationContext getJsonPathMessageValidationContext(Element messageElement) {
-        JsonPathMessageValidationContext.Builder context = new JsonPathMessageValidationContext.Builder();
-
+    private void addJsonMessageValidationContext(Element messageElement, List<ValidationContext.Builder<?, ?>> validationContexts) {
         //check for validate elements, these elements can either have script, jsonPath or namespace validation information
         //for now we only handle jsonPath validation
         Map<String, Object> validateJsonPathExpressions = new HashMap<>();
@@ -303,38 +282,34 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 extractJsonPathValidateExpressions(validateElement, validateJsonPathExpressions);
             }
 
-            context.expressions(validateJsonPathExpressions);
+            if (!validateJsonPathExpressions.isEmpty()) {
+                JsonPathMessageValidationContext.Builder context = new JsonPathMessageValidationContext.Builder();
+                context.expressions(validateJsonPathExpressions);
+                validationContexts.add(context);
+            }
         }
-
-        return context.build();
     }
 
     /**
-     * Construct the message validation context.
-     * @param messageElement
-     * @return
+     * Adds script validation context if specified.
      */
-    private ScriptValidationContext getScriptValidationContext(Element messageElement) {
-        ScriptValidationContext.Builder context;
-
-        boolean done = false;
+    private void addScriptValidationContext(Element messageElement, List<ValidationContext.Builder<?, ?>> validationContexts) {
         List<Element> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
         if (!validateElements.isEmpty()) {
+            ScriptValidationContext.Builder context = null;
+
             for (Element validateElement : validateElements) {
                 Element scriptElement = DomUtils.getChildElementByTagName(validateElement, "script");
 
                 // check for nested validate script child node
                 if (scriptElement != null) {
-                    if (!done) {
-                        done = true;
-                    } else {
+                    if (context != null) {
                         throw new BeanCreationException("Found multiple validation script definitions - " +
                                 "only supporting a single validation script for message validation");
                     }
 
                     String type = scriptElement.getAttribute("type");
-                    context = new ScriptValidationContext.Builder()
-                            .scriptType(type);
+                    context = new ScriptValidationContext.Builder().scriptType(type);
 
                     String filePath = scriptElement.getAttribute("file");
                     if (hasText(filePath)) {
@@ -345,21 +320,17 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                     } else {
                         context.script(DomUtils.getTextValue(scriptElement));
                     }
-                    return context.build();
+
+                    validationContexts.add(context);
                 }
             }
         }
-
-        return null;
     }
 
     /**
      * Parses validation elements and adds information to the message validation context.
-     *
-     * @param messageElement the message DOM element.
-     * @param context the message validation context.
      */
-    private void parseNamespaceValidationElements(Element messageElement, XmlMessageValidationContext.Builder context) {
+    private void parseNamespaceValidationElements(Element messageElement, List<ValidationContext.Builder<?, ?>> validationContexts) {
         //check for validate elements, these elements can either have script, xpath or namespace validation information
         //for now we only handle namespace validation
         Map<String, String> validateNamespaces = new HashMap<>();
@@ -376,28 +347,29 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 }
             }
 
-            context.namespaces(validateNamespaces);
+            if (!validateNamespaces.isEmpty()) {
+                getXmlValidationContext(validationContexts).namespaces(validateNamespaces);
+            }
         }
     }
 
     /**
      * Parses validation elements and adds information to the message validation context.
-     *
-     * @param messageElement the message DOM element.
-     * @param context the message validation context.
      */
-    private void parseXPathValidationElements(Element messageElement, XpathMessageValidationContext.Builder context) {
+    private void parseXPathValidationElements(Element messageElement, List<ValidationContext.Builder<?, ?>> validationContexts) {
         //check for validate elements, these elements can either have script, xpath or namespace validation information
         //for now we only handle xpath validation
         Map<String, Object> validateXpathExpressions = new HashMap<>();
 
         List<Element> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
-        if (!validateElements.isEmpty()) {
             for (Element validateElement : validateElements) {
                 extractXPathValidateExpressions(validateElement, validateXpathExpressions);
             }
 
-            context.expressions(validateXpathExpressions);
+        if (!validateXpathExpressions.isEmpty()) {
+            XmlMessageValidationContext.Builder xmlValidationContext = getXmlValidationContext(validationContexts);
+            validationContexts.remove(xmlValidationContext);
+            validationContexts.add(xmlValidationContext.xpath().expressions(validateXpathExpressions));
         }
     }
 
@@ -454,7 +426,18 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractReceiveMessageActionFactoryBean> getMessageFactoryClass() {
+    protected void parseHeaderElements(Element actionElement, DefaultMessageBuilder messageBuilder, List<ValidationContext.Builder<?, ?>> validationContexts) {
+        super.parseHeaderElements(actionElement, messageBuilder, validationContexts);
+
+        Element headerElement = DomUtils.getChildElementByTagName(actionElement, "header");
+        if (headerElement != null && headerElement.hasAttribute("ignore-case")) {
+            boolean ignoreCase = Boolean.parseBoolean(headerElement.getAttribute("ignore-case"));
+            getHeaderValidationContext(validationContexts).ignoreCase(ignoreCase);
+        }
+    }
+
+    @Override
+    protected Class<? extends AbstractReceiveMessageActionFactoryBean<?, ?, ?>> getMessageFactoryClass() {
         return ReceiveMessageActionFactoryBean.class;
     }
 

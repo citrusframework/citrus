@@ -29,8 +29,8 @@ import static org.hamcrest.Matchers.is;
  */
 public class HamcrestHeaderValidatorTest extends AbstractTestNGUnitTest {
 
-    private HamcrestHeaderValidator validator = new HamcrestHeaderValidator();
-    private HeaderValidationContext validationContext = new HeaderValidationContext();
+    private final HamcrestHeaderValidator validator = new HamcrestHeaderValidator();
+    private final HeaderValidationContext validationContext = new HeaderValidationContext.Builder().build();
 
     @Test(dataProvider = "successData")
     public void testValidateHeader(Object receivedValue, Object controlValue) {

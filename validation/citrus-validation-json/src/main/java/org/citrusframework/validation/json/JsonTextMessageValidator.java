@@ -16,11 +16,17 @@
 
 package org.citrusframework.validation.json;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.json.JsonSettings;
 import org.citrusframework.message.Message;
 import org.citrusframework.validation.AbstractMessageValidator;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
+import org.citrusframework.validation.context.MessageValidationContext;
+import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.json.schema.JsonSchemaValidation;
 
 import static org.citrusframework.message.MessageType.JSON;
@@ -39,7 +45,7 @@ import static org.citrusframework.validation.json.JsonElementValidatorItem.parse
  * allows additional fields in received JSON data structure so the control JSON object can be a partial subset.
  *
  */
-public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessageValidationContext> {
+public class JsonTextMessageValidator extends AbstractMessageValidator<MessageValidationContext> {
 
     private boolean strict = JsonSettings.isStrict();
 
@@ -53,7 +59,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     public void validateMessage(Message receivedMessage,
                                 Message controlMessage,
                                 TestContext context,
-                                JsonMessageValidationContext validationContext) {
+                                MessageValidationContext validationContext) {
         logger.debug("Start JSON message validation ...");
 
         if (validationContext.isSchemaValidationEnabled()) {
@@ -77,8 +83,8 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     }
 
     @Override
-    protected Class<JsonMessageValidationContext> getRequiredValidationContextType() {
-        return JsonMessageValidationContext.class;
+    protected Class<MessageValidationContext> getRequiredValidationContextType() {
+        return MessageValidationContext.class;
     }
 
     @Override
@@ -93,6 +99,25 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     public JsonTextMessageValidator strict(boolean strict) {
         setStrict(strict);
         return this;
+    }
+
+    @Override
+    public MessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+        Optional<MessageValidationContext> jsonMessageValidationContext = validationContexts.stream()
+                .filter(JsonMessageValidationContext.class::isInstance)
+                .map(MessageValidationContext.class::cast)
+                .findFirst();
+
+        if (jsonMessageValidationContext.isPresent()) {
+            return jsonMessageValidationContext.get();
+        }
+
+        Optional<MessageValidationContext> defaultMessageValidationContext = validationContexts.stream()
+                .filter(it -> it.getClass().equals(DefaultMessageValidationContext.class))
+                .map(MessageValidationContext.class::cast)
+                .findFirst();
+
+        return defaultMessageValidationContext.orElseGet(() -> super.findValidationContext(validationContexts));
     }
 
     public void setJsonSchemaValidation(JsonSchemaValidation jsonSchemaValidation) {

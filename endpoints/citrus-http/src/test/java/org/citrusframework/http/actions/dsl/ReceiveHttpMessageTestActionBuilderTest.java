@@ -32,7 +32,6 @@ import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
@@ -85,10 +84,9 @@ public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "http:receive-request");
 
         Assert.assertEquals(action.getEndpoint(), httpServer);
-        Assert.assertEquals(action.getValidationContexts().size(), 3L);
+        Assert.assertEquals(action.getValidationContexts().size(), 2L);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -131,10 +129,9 @@ public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "http:receive-request");
 
         Assert.assertEquals(action.getEndpoint(), httpServer);
-        Assert.assertEquals(action.getValidationContexts().size(), 3L);
+        Assert.assertEquals(action.getValidationContexts().size(), 2L);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -180,10 +177,9 @@ public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "http:receive-response");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getValidationContexts().size(), 3L);
+        Assert.assertEquals(action.getValidationContexts().size(), 2L);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");

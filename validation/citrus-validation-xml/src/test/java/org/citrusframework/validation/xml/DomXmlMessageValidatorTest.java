@@ -33,6 +33,7 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.validation.SchemaValidator;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.SchemaValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
@@ -1064,6 +1065,12 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
         List<ValidationContext> validationContexts = new ArrayList<>();
         validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
+
+        Assert.assertNotNull(validator.findValidationContext(validationContexts));
+
+        validationContexts.clear();
+        validationContexts.add(new HeaderValidationContext());
+        validationContexts.add(new DefaultMessageValidationContext());
 
         Assert.assertNotNull(validator.findValidationContext(validationContexts));
 

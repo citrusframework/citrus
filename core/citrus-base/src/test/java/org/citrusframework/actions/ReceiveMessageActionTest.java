@@ -16,6 +16,12 @@
 
 package org.citrusframework.actions;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
@@ -41,10 +47,12 @@ import org.citrusframework.message.builder.FileResourcePayloadBuilder;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.util.TestUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.MessageValidatorRegistry;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.context.ValidationStatus;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.citrusframework.variable.VariableExtractor;
@@ -56,16 +64,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.message.MessageType.JSON;
 import static org.citrusframework.message.MessageType.XHTML;
 import static org.citrusframework.message.MessageType.XML;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
@@ -134,6 +137,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -165,6 +169,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -201,6 +206,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -238,6 +244,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(TestUtils.normalizeLineEndings(received.getPayload(String.class).trim()), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -272,6 +279,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -310,6 +318,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(TestUtils.normalizeLineEndings(received.getPayload(String.class).trim()), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -346,6 +355,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(TestUtils.normalizeLineEndings(received.getPayload(String.class).trim()), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -386,6 +396,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -426,6 +437,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -466,6 +478,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -504,6 +517,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -540,6 +554,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -587,6 +602,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -660,6 +676,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -696,6 +713,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -734,6 +752,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -772,6 +791,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -812,6 +832,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -851,6 +872,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -884,6 +906,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -923,6 +946,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -957,6 +981,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -993,6 +1018,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -1032,8 +1058,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -1083,6 +1109,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -1131,6 +1158,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -1143,7 +1171,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         receiveAction.execute(context);
     }
 
-    public static class AssumeMessageType {
+    public static class AssumeMessageTypeTest {
 
         @Mock
         private Message messageMock;
@@ -1174,6 +1202,9 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             doReturn(logModifierMock).when(contextMock).getLogModifier();
             doReturn(messageStoreMock).when(contextMock).getMessageStore();
             doReturn(messageValidatorRegistryMock).when(contextMock).getMessageValidatorRegistry();
+            doReturn(Collections.singletonList(new DefaultMessageHeaderValidator()))
+                    .when(messageValidatorRegistryMock).findMessageValidators(anyString(), any(Message.class), eq(false));
+            doReturn(new DefaultTextEqualsMessageValidator()).when(messageValidatorRegistryMock).getDefaultMessageValidator();
 
             fixture = new ReceiveMessageAction.Builder()
                     .endpoint(endpointMock)

@@ -86,7 +86,7 @@ public class FileResourcePayloadBuilder implements MessagePayloadBuilder, Messag
 
     private Object buildFromResource(TestContext context) {
         if (MessageType.isBinary(messageType)){
-            // message content is supposed to be handled as binary content so we skip variable placeholder replacement.
+            // message content is supposed to be handled as binary content, so we skip variable placeholder replacement.
             return resource;
         }
 
@@ -99,7 +99,7 @@ public class FileResourcePayloadBuilder implements MessagePayloadBuilder, Messag
         }
 
         if (MessageType.isBinary(messageType)){
-            // message content is supposed to be handled as binary content so we skip variable placeholder replacement.
+            // message content is supposed to be handled as binary content, so we skip variable placeholder replacement.
             return FileUtils.getFileResource(resourcePath, context);
         }
 
@@ -117,6 +117,18 @@ public class FileResourcePayloadBuilder implements MessagePayloadBuilder, Messag
             return FileUtils.readToString(fileResource, charset);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to build message payload from file resource", e);
+        }
+    }
+
+    public String getMessageType() {
+        return messageType;
+    }
+
+    public String getResourcePath() {
+        if (resource != null) {
+            return resource.getLocation();
+        } else {
+            return resourcePath;
         }
     }
 

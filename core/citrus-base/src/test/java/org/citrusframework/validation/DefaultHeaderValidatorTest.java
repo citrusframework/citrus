@@ -30,8 +30,8 @@ import org.testng.annotations.Test;
  */
 public class DefaultHeaderValidatorTest extends UnitTestSupport {
 
-    private DefaultHeaderValidator validator = new DefaultHeaderValidator();
-    private HeaderValidationContext validationContext = new HeaderValidationContext();
+    private final DefaultHeaderValidator validator = new DefaultHeaderValidator();
+    private final HeaderValidationContext validationContext = new HeaderValidationContext.Builder().build();
 
     @Test(dataProvider = "successData")
     public void testValidateHeader(Object receivedValue, Object controlValue) {

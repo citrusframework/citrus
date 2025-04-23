@@ -17,10 +17,8 @@ package org.citrusframework.xml.actions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -36,7 +34,8 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
+import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
@@ -51,9 +50,9 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     private ReferenceResolver referenceResolver;
     private final List<String> validators = new ArrayList<>();
 
-    private final XmlMessageValidationContext.Builder xmlValidationContext = new XmlMessageValidationContext.Builder();
-    private final JsonMessageValidationContext.Builder jsonValidationContext = new JsonMessageValidationContext.Builder();
+    private MessageValidationContext.Builder<?, ?> messageValidationContext;
 
+    protected Message message;
     @XmlElement(name = "ignore")
     protected List<Ignore> ignores;
     @XmlElement(name = "validate")
@@ -118,7 +117,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     @XmlAttribute(name = "header-validator")
     public Receive setHeaderValidator(String headerValidator) {
         if (StringUtils.hasText(headerValidator)) {
-            builder.getHeaderValidationContext().addHeaderValidator(headerValidator);
+            builder.getHeaderValidationContext().validator(headerValidator);
         }
 
         return this;
@@ -129,7 +128,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         if (StringUtils.hasText(headerValidatorExpression)) {
             Stream.of(headerValidatorExpression.split(","))
                     .map(String::trim)
-                    .forEach(builder.getHeaderValidationContext()::addHeaderValidator);
+                    .forEach(builder.getHeaderValidationContext()::validator);
         }
 
         return this;
@@ -137,22 +136,8 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
 
     @XmlElement(required = true)
     public Receive setMessage(Message message) {
+        this.message = message;
         MessageSupport.configureMessage(builder, message);
-
-        if (message.schema != null || message.schemaRepository != null) {
-            xmlValidationContext.schemaValidation(message.isSchemaValidation())
-                    .schema(message.schema)
-                    .schemaRepository(message.schemaRepository);
-
-            jsonValidationContext
-                    .schemaValidation(message.isSchemaValidation())
-                    .schema(message.schema)
-                    .schemaRepository(message.schemaRepository);
-        } else if (message.isSchemaValidation() != null && !message.isSchemaValidation()) {
-            xmlValidationContext.schemaValidation(message.isSchemaValidation());
-            jsonValidationContext.schemaValidation(message.isSchemaValidation());
-        }
-
         return this;
     }
 
@@ -187,15 +172,6 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     }
 
     private void addJsonValidationContext() {
-        Set<String> ignoreExpressions = new HashSet<>();
-        for (Ignore ignoreValue : getIgnores()) {
-            ignoreExpressions.add(ignoreValue.path);
-        }
-        ignoreExpressions.forEach(jsonValidationContext::ignore);
-        builder.validate(jsonValidationContext);
-
-        JsonPathMessageValidationContext.Builder jsonPathContext = new JsonPathMessageValidationContext.Builder();
-
         //check for validate elements, these elements can either have script, jsonPath or namespace validation information
         //for now we only handle jsonPath validation
         Map<String, Object> validateJsonPathExpressions = new HashMap<>();
@@ -204,6 +180,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         }
 
         if (!validateJsonPathExpressions.isEmpty()) {
+            JsonPathMessageValidationContext.Builder jsonPathContext = new JsonPathMessageValidationContext.Builder();
             jsonPathContext.expressions(validateJsonPathExpressions);
             builder.validate(jsonPathContext);
         }
@@ -225,13 +202,32 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         }
     }
 
-    private void addXmlValidationContext() {
-        Set<String> ignoreExpressions = new HashSet<>();
-        for (Ignore ignore : getIgnores()) {
-            ignoreExpressions.add(ignore.path);
-        }
-        ignoreExpressions.forEach(xmlValidationContext::ignore);
+    private void addMessageValidationContext() {
+        getIgnores().stream()
+                .map(Ignore::getPath)
+                .forEach(ignorePath -> getMessageValidationContext().ignore(ignorePath));
 
+        if (message != null) {
+            if (message.schema != null || message.schemaRepository != null) {
+                getMessageValidationContext()
+                        .schemaValidation(message.isSchemaValidation())
+                        .schema(message.schema)
+                        .schemaRepository(message.schemaRepository);
+            } else if (message.isSchemaValidation() != null && !message.isSchemaValidation()) {
+                getMessageValidationContext().schemaValidation(message.isSchemaValidation());
+            }
+        }
+    }
+
+    private MessageValidationContext.Builder<?, ?> getMessageValidationContext() {
+        if (messageValidationContext == null) {
+            messageValidationContext = new DefaultMessageValidationContext.Builder();
+        }
+
+        return messageValidationContext;
+    }
+
+    private void addXmlValidationContext() {
         //check for validate elements, these elements can either have script, xpath or namespace validation information
         //for now we only handle namespace validation
         Map<String, String> validateNamespaces = new HashMap<>();
@@ -241,14 +237,18 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
                 validateNamespaces.put(namespaceElement.prefix, namespaceElement.value);
             }
         }
-        xmlValidationContext.namespaces(validateNamespaces);
+        if (!validateNamespaces.isEmpty()) {
+            getXmlValidationContext().namespaces(validateNamespaces);
+        }
 
         //Catch namespace declarations for namespace context
         Map<String, String> namespaces = new HashMap<>();
         for (Namespace namespace : getNamespaces()) {
             namespaces.put(namespace.prefix, namespace.value);
         }
-        xmlValidationContext.namespaceContext(namespaces);
+        if (!namespaces.isEmpty()) {
+            getXmlValidationContext().namespaceContext(namespaces);
+        }
 
         //check for validate elements, these elements can either have script, xpath or namespace validation information
         //for now we only handle xpath validation
@@ -258,9 +258,21 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         }
 
         if (!validateXpathExpressions.isEmpty()) {
-            builder.validate(xmlValidationContext.xpath().expressions(validateXpathExpressions));
+            messageValidationContext = getXmlValidationContext().xpath().expressions(validateXpathExpressions);
+        }
+    }
+
+    private XmlMessageValidationContext.Builder getXmlValidationContext() {
+        if (messageValidationContext == null) {
+            XmlMessageValidationContext.Builder builder = new XmlMessageValidationContext.Builder();
+            messageValidationContext = builder;
+            return builder;
+        } else if (messageValidationContext instanceof XmlMessageValidationContext.Builder xmlValidationContext) {
+            return xmlValidationContext;
         } else {
-            builder.validate(xmlValidationContext);
+            XmlMessageValidationContext.Builder builder = XmlMessageValidationContext.Builder.adapt(messageValidationContext);
+            messageValidationContext = builder;
+            return builder;
         }
     }
 
@@ -350,7 +362,12 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
 
         addXmlValidationContext();
         addJsonValidationContext();
+        addMessageValidationContext();
         addScriptValidationContext();
+
+        if (messageValidationContext != null) {
+            builder.validate(messageValidationContext);
+        }
 
         return doBuild();
     }

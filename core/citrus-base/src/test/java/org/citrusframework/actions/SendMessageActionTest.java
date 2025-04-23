@@ -16,6 +16,12 @@
 
 package org.citrusframework.actions;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
@@ -42,12 +48,6 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -59,9 +59,9 @@ import static org.mockito.Mockito.when;
 
 public class SendMessageActionTest extends UnitTestSupport {
 
-    private Endpoint endpoint = mock(Endpoint.class);
-    private Producer producer = mock(Producer.class);
-    private EndpointConfiguration endpointConfiguration = mock(EndpointConfiguration.class);
+    private final Endpoint endpoint = mock(Endpoint.class);
+    private final Producer producer = mock(Producer.class);
+    private final EndpointConfiguration endpointConfiguration = mock(EndpointConfiguration.class);
 
     @Test
 	public void testSendMessageWithMessagePayloadData() {
@@ -690,6 +690,6 @@ public class SendMessageActionTest extends UnitTestSupport {
     private void validateMessageToSend(Message toSend, Message controlMessage) {
         Assert.assertEquals(TestUtils.normalizeLineEndings(toSend.getPayload(String.class).trim()), controlMessage.getPayload(String.class).trim());
         DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
-        validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext());
+        validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext.Builder().build());
     }
 }

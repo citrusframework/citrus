@@ -44,7 +44,7 @@ import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
+import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.mockito.Mockito;
@@ -83,10 +83,8 @@ public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
     }
 
     @Test
@@ -110,10 +108,9 @@ public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(MessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
         Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).getMessage().getPayload(), "Foo");
@@ -144,10 +141,9 @@ public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -181,10 +177,9 @@ public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");

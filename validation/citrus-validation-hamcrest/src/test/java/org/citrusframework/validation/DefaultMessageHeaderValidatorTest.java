@@ -31,8 +31,8 @@ import static org.hamcrest.Matchers.startsWith;
  */
 public class DefaultMessageHeaderValidatorTest extends AbstractTestNGUnitTest {
 
-    private DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
-    private HeaderValidationContext validationContext = new HeaderValidationContext();
+    private final DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
+    private final HeaderValidationContext validationContext = new HeaderValidationContext.Builder().build();
 
     @Test
     public void testValidateMessageHeadersHamcrestMatcherSupport() throws Exception {

@@ -19,6 +19,7 @@ package org.citrusframework.validation;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.context.HeaderValidationContext;
+import org.citrusframework.validation.context.ValidationStatus;
 import org.hamcrest.Matcher;
 import org.hamcrest.core.IsEqual;
 import org.slf4j.Logger;
@@ -34,21 +35,27 @@ public class HamcrestHeaderValidator implements HeaderValidator {
 
     @Override
     public void validateHeader(String headerName, Object receivedValue, Object controlValue, TestContext context, HeaderValidationContext validationContext) {
-        if (controlValue instanceof Matcher) {
-            if (!((Matcher<?>) controlValue).matches(receivedValue)) {
-                throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
-                        "Header validation failed: Values not matching for header '" + headerName + "'", controlValue, receivedValue));
+        try {
+            if (controlValue instanceof Matcher) {
+                if (!((Matcher<?>) controlValue).matches(receivedValue)) {
+                    throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
+                            "Header validation failed: Values not matching for header '" + headerName + "'", controlValue, receivedValue));
+                }
+            } else {
+                IsEqual<Object> equalMatcher = new IsEqual<>(controlValue);
+                if (!equalMatcher.matches(receivedValue)) {
+                    throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
+                            "Header validation failed: Values not equal for header '" + headerName + "'", controlValue, receivedValue));
+                }
             }
-        } else {
-            IsEqual<Object> equalMatcher = new IsEqual<>(controlValue);
-            if (!equalMatcher.matches(receivedValue)) {
-               throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
-                        "Header validation failed: Values not equal for header '" + headerName + "'", controlValue, receivedValue));
-            }
-        }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Header validation: " + headerName + "='" + controlValue + "': OK");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Header validation: " + headerName + "='" + controlValue + "': OK");
+            }
+            validationContext.updateStatus(ValidationStatus.PASSED);
+        } catch (ValidationException e) {
+            validationContext.updateStatus(ValidationStatus.FAILED);
+            throw e;
         }
     }
 

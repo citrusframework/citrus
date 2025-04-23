@@ -17,11 +17,13 @@
 package org.citrusframework.validation;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.Message;
 import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.context.ValidationStatus;
 
 /**
  * Base abstract implementation for message validators. Calls method to finds a proper validation context
@@ -37,7 +39,13 @@ public abstract class AbstractMessageValidator<T extends ValidationContext> impl
 
         // check if we were able to find a proper validation context
         if (validationContext != null) {
-            validateMessage(receivedMessage, controlMessage, context, validationContext);
+            try {
+                validateMessage(receivedMessage, controlMessage, context, validationContext);
+                validationContext.updateStatus(ValidationStatus.PASSED);
+            } catch (ValidationException e) {
+                validationContext.updateStatus(ValidationStatus.FAILED);
+                throw e;
+            }
         }
     }
 
@@ -63,12 +71,11 @@ public abstract class AbstractMessageValidator<T extends ValidationContext> impl
      * @return
      */
     public T findValidationContext(List<ValidationContext> validationContexts) {
-        for (ValidationContext validationContext : validationContexts) {
-            if (getRequiredValidationContextType().isInstance(validationContext)) {
-                return (T) validationContext;
-            }
-        }
+        Optional<T> matchingValidationContext = validationContexts.stream()
+                .filter(getRequiredValidationContextType()::isInstance)
+                .map(getRequiredValidationContextType()::cast)
+                .findFirst();
 
-        return null;
+        return matchingValidationContext.orElse(null);
     }
 }

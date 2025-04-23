@@ -27,6 +27,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 import jakarta.xml.bind.annotation.XmlValue;
 
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.xml.actions.script.ScriptDefinitionType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -119,7 +120,7 @@ public class Message {
     }
 
     public String getType() {
-        return Objects.requireNonNullElse(type, "xml");
+        return Objects.requireNonNullElse(type, CitrusSettings.DEFAULT_MESSAGE_TYPE);
     }
 
     public void setType(String value) {

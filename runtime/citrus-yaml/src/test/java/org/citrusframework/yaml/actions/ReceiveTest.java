@@ -17,6 +17,8 @@
 package org.citrusframework.yaml.actions;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
@@ -24,16 +26,20 @@ import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.validation.DefaultMessageValidator;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
+import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.context.ValidationStatus;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
@@ -48,6 +54,10 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 
 public class ReceiveTest extends AbstractYamlActionTest {
 
@@ -66,6 +76,37 @@ public class ReceiveTest extends AbstractYamlActionTest {
 
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");
         context.getMessageValidatorRegistry().addMessageValidator("textEqualsMessageValidator", new DefaultTextEqualsMessageValidator().enableTrim().normalizeLineEndings());
+        context.getMessageValidatorRegistry().addMessageValidator("scriptMessageValidator", new DefaultMessageValidator() {
+            @Override
+            public ValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+                Optional<ValidationContext> scriptValidationContext = validationContexts.stream()
+                        .filter(ScriptValidationContext.class::isInstance)
+                        .findFirst();
+
+                return scriptValidationContext.orElseGet(() -> super.findValidationContext(validationContexts));
+            }
+        });
+        context.getMessageValidatorRegistry().addMessageValidator("jsonPathMessageValidator", new DefaultMessageValidator() {
+            @Override
+            public ValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+                Optional<ValidationContext> validationContext = validationContexts.stream()
+                        .filter(JsonPathMessageValidationContext.class::isInstance)
+                        .findFirst();
+
+                return validationContext.orElseGet(() -> super.findValidationContext(validationContexts));
+            }
+        });
+        context.getMessageValidatorRegistry().addMessageValidator("xpathMessageValidator", new DefaultMessageValidator() {
+            @Override
+            public ValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+                Optional<ValidationContext> validationContext = validationContexts.stream()
+                        .filter(XpathMessageValidationContext.class::isInstance)
+                        .findFirst();
+
+                return validationContext.orElseGet(() -> super.findValidationContext(validationContexts));
+            }
+        });
+
         context.getReferenceResolver().bind("helloQueue", helloQueue);
         context.getReferenceResolver().bind("helloEndpoint", direct().asynchronous().queue(helloQueue).build());
 
@@ -74,6 +115,16 @@ public class ReceiveTest extends AbstractYamlActionTest {
 
         context.getReferenceResolver().bind("jsonPathMessageProcessorBuilder", new NoopMessageProcessor.Builder());
         context.getReferenceResolver().bind("xpathMessageProcessorBuilder", new NoopMessageProcessor.Builder());
+
+        doAnswer(invocationOnMock -> {
+            ((List<ValidationContext>) invocationOnMock.getArgument(3, List.class)).forEach(context -> context.updateStatus(ValidationStatus.PASSED));
+            return null;
+        }).when(myValidator).validateMessage(any(org.citrusframework.message.Message.class), any(org.citrusframework.message.Message.class), eq(context), anyList());
+
+        doAnswer(invocationOnMock -> {
+            ((List<ValidationContext>) invocationOnMock.getArgument(3, List.class)).forEach(context -> context.updateStatus(ValidationStatus.PASSED));
+            return null;
+        }).when(defaultMessageValidator).validateMessage(any(org.citrusframework.message.Message.class), any(Message.class), eq(context), anyList());
 
         helloQueue.send(new DefaultMessage("Hello from Citrus!").setHeader("operation", "sayHello"));
         helloQueue.send(new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>").setHeader("operation", "sayHello"));
@@ -119,10 +170,9 @@ public class ReceiveTest extends AbstractYamlActionTest {
         Assert.assertNull(action.getMessageSelector());
         Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
 
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof HeaderValidationContext);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         DefaultMessageBuilder messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
@@ -142,10 +192,9 @@ public class ReceiveTest extends AbstractYamlActionTest {
         Assert.assertNull(action.getMessageSelector());
         Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
 
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof HeaderValidationContext);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
@@ -170,10 +219,9 @@ public class ReceiveTest extends AbstractYamlActionTest {
         Assert.assertNull(action.getMessageSelector());
         Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
 
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof HeaderValidationContext);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
@@ -205,10 +253,9 @@ public class ReceiveTest extends AbstractYamlActionTest {
         Assert.assertNotNull(action.getDataDictionary());
 
         action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof HeaderValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
 
         XmlMessageValidationContext xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(0);
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
@@ -234,10 +281,9 @@ public class ReceiveTest extends AbstractYamlActionTest {
         Assert.assertEquals(xmlValidationContext.getControlNamespaces().get("ns"), "http://citrusframework.org");
 
         action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof XpathMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof HeaderValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
         XpathMessageValidationContext xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(0);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "direct:helloQueue");
@@ -249,10 +295,9 @@ public class ReceiveTest extends AbstractYamlActionTest {
         Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("boolean:/TestMessage/foo"), "true");
 
         action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof XpathMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof HeaderValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
         xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(0);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "direct:helloQueue");
@@ -264,13 +309,12 @@ public class ReceiveTest extends AbstractYamlActionTest {
         Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("boolean:/TestMessage/foo"), "true");
 
         action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getValidationContexts().size(), 4);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XpathMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof ScriptValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(3) instanceof HeaderValidationContext);
-        xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(0);
-        ScriptValidationContext scriptValidationContext = (ScriptValidationContext)action.getValidationContexts().get(2);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof ScriptValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XpathMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(2) instanceof HeaderValidationContext);
+        xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(1);
+        ScriptValidationContext scriptValidationContext = (ScriptValidationContext)action.getValidationContexts().get(0);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "direct:helloQueue");
 
@@ -283,28 +327,21 @@ public class ReceiveTest extends AbstractYamlActionTest {
         Assert.assertEquals(scriptValidationContext.getValidationScript().trim(), "assert true");
 
         action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getValidationContexts().size(), 4);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof ScriptValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(3) instanceof HeaderValidationContext);
-        xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(0);
-        scriptValidationContext = (ScriptValidationContext)action.getValidationContexts().get(2);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof ScriptValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
+        scriptValidationContext = (ScriptValidationContext)action.getValidationContexts().get(0);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "direct:helloQueue");
-
-        Assert.assertTrue(xmlValidationContext.isSchemaValidationEnabled());
 
         Assert.assertEquals(scriptValidationContext.getScriptType(), "groovy");
         Assert.assertEquals(scriptValidationContext.getValidationScriptResourcePath(), "classpath:org/citrusframework/yaml/test-validation-script.groovy");
 
         action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getValidationContexts().size(), 4);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonPathMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(3) instanceof HeaderValidationContext);
-        JsonPathMessageValidationContext jsonPathValidationContext = (JsonPathMessageValidationContext)action.getValidationContexts().get(2);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof JsonPathMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
+        JsonPathMessageValidationContext jsonPathValidationContext = (JsonPathMessageValidationContext)action.getValidationContexts().get(0);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "direct:helloQueue");
 
@@ -315,12 +352,10 @@ public class ReceiveTest extends AbstractYamlActionTest {
         Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$..foo.bar"), "true");
 
         action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getValidationContexts().size(), 4);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonPathMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(3) instanceof HeaderValidationContext);
-        jsonPathValidationContext = (JsonPathMessageValidationContext)action.getValidationContexts().get(2);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof JsonPathMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
+        jsonPathValidationContext = (JsonPathMessageValidationContext)action.getValidationContexts().get(0);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "direct:helloQueue");
 
@@ -331,11 +366,10 @@ public class ReceiveTest extends AbstractYamlActionTest {
         Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$..foo.bar"), "true");
 
         action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof HeaderValidationContext);
-        JsonMessageValidationContext jsonValidationContext = (JsonMessageValidationContext)action.getValidationContexts().get(1);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
+        DefaultMessageValidationContext jsonValidationContext = (DefaultMessageValidationContext)action.getValidationContexts().get(0);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();

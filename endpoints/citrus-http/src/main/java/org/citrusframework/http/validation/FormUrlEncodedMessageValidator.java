@@ -19,7 +19,6 @@ package org.citrusframework.http.validation;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,8 +36,10 @@ import org.citrusframework.http.model.FormMarshaller;
 import org.citrusframework.http.model.ObjectFactory;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageType;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.MessageValidator;
+import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.xml.StringResult;
@@ -56,11 +57,8 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(FormUrlEncodedMessageValidator.class);
 
-    /** Message type this validator is bound to */
-    public static final String MESSAGE_TYPE = "x-www-form-urlencoded";
-
     /** Form data message marshaller */
-    private FormMarshaller formMarshaller = new FormMarshaller();
+    private final FormMarshaller formMarshaller = new FormMarshaller();
 
     /** Xml message validator delegate */
     private MessageValidator<? extends ValidationContext> xmlMessageValidator;
@@ -73,7 +71,7 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage,
                                 TestContext context, List<ValidationContext> validationContexts) throws ValidationException {
-        logger.info("Start " + MESSAGE_TYPE + " message validation");
+        logger.info("Start " + MessageType.FORM_URL_ENCODED + " message validation");
 
         try {
             Message formMessage = new DefaultMessage(receivedMessage);
@@ -81,12 +79,13 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
             formMarshaller.marshal(createFormData(receivedMessage), result);
             formMessage.setPayload(result.toString());
 
-            getXmlMessageValidator(context).validateMessage(formMessage, controlMessage, context, prepareValidationContexts(validationContexts));
+            getXmlMessageValidator(context).validateMessage(formMessage, controlMessage,
+                    context, prepareValidationContexts(validationContexts));
         } catch (IllegalArgumentException e) {
-            throw new ValidationException("Failed to validate " + MESSAGE_TYPE + " message", e);
+            throw new ValidationException("Failed to validate " + MessageType.FORM_URL_ENCODED + " message", e);
         }
 
-        logger.info("Validation of " + MESSAGE_TYPE + " message finished successfully: All values OK");
+        logger.info("Validation of " + MessageType.FORM_URL_ENCODED + " message finished successfully: All values OK");
     }
 
     /**
@@ -96,15 +95,18 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
      * @return
      */
     private List<ValidationContext> prepareValidationContexts(List<ValidationContext> validationContexts) {
-        Optional<XmlMessageValidationContext> provided = validationContexts.stream()
-                .filter(XmlMessageValidationContext.class::isInstance)
-                .map(XmlMessageValidationContext.class::cast)
-                .findFirst();
+        if (validationContexts.stream()
+                .noneMatch(XmlMessageValidationContext.class::isInstance)) {
+            Optional<MessageValidationContext> messageValidationContext = validationContexts.stream()
+                    .filter(MessageValidationContext.class::isInstance)
+                    .map(MessageValidationContext.class::cast)
+                    .findFirst();
 
-        if (provided.isEmpty()) {
-            List<ValidationContext> enriched = new ArrayList<>(validationContexts);
-            enriched.add(new XmlMessageValidationContext());
-            return enriched;
+            if (messageValidationContext.isPresent()) {
+                validationContexts.add(XmlMessageValidationContext.Builder.adapt(messageValidationContext.get()).build());
+            } else {
+                validationContexts.add(new XmlMessageValidationContext());
+            }
         }
 
         return validationContexts;
@@ -122,11 +124,13 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
         }
 
         // try to find xml message validator in registry
-        Optional<MessageValidator<? extends ValidationContext>> defaultMessageValidator = context.getMessageValidatorRegistry().findMessageValidator(DEFAULT_XML_MESSAGE_VALIDATOR);
+        Optional<MessageValidator<? extends ValidationContext>> defaultMessageValidator =
+                context.getMessageValidatorRegistry().findMessageValidator(DEFAULT_XML_MESSAGE_VALIDATOR);
 
         if (defaultMessageValidator.isEmpty()
                 && context.getReferenceResolver().isResolvable(DEFAULT_XML_MESSAGE_VALIDATOR)) {
-            defaultMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class));
+            defaultMessageValidator = Optional.of(context.getReferenceResolver()
+                    .resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class));
         }
 
         if (defaultMessageValidator.isEmpty()) {
@@ -175,7 +179,8 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
                             control.setName(URLDecoder.decode(nameValuePair[0], getEncoding()));
                             control.setValue(URLDecoder.decode(nameValuePair[1], getEncoding()));
                         } catch (UnsupportedEncodingException e) {
-                            throw new CitrusRuntimeException(String.format("Failed to decode form control value '%s=%s'", nameValuePair[0], nameValuePair[1]), e);
+                            throw new CitrusRuntimeException(String.format("Failed to decode form control value '%s=%s'",
+                                    nameValuePair[0], nameValuePair[1]), e);
                         }
                     } else {
                         control.setName(nameValuePair[0]);
@@ -205,7 +210,8 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
      * @return
      */
     private String getFormAction(Message message) {
-        return message.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI) != null ? message.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI).toString() : null;
+        return message.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI) != null ?
+                message.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI).toString() : null;
     }
 
     /**
@@ -214,11 +220,12 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
      * @return
      */
     private String getFormContentType(Message message) {
-        return message.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE) != null ? message.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE).toString() : null;
+        return message.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE) != null ?
+                message.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE).toString() : null;
     }
 
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        return MESSAGE_TYPE.equalsIgnoreCase(messageType);
+        return MessageType.FORM_URL_ENCODED.equalsIgnoreCase(messageType);
     }
 }

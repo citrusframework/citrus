@@ -31,10 +31,27 @@ public interface ValidationContext {
     }
 
     /**
+     * Update the validation status if it is allowed.
+     * @param status the new status.
+     */
+    void updateStatus(ValidationStatus status);
+
+    /**
+     * Marks the validation result for this context.
+     * By default, all validation context do have the status UNKNOWN marking that the validation has not performed yet.
+     * Validators must set proper status after the validation to mark the context as being processed.
+     * @return the status indicating the validation result for this context.
+     */
+    default ValidationStatus getStatus() {
+        return ValidationStatus.UNKNOWN;
+    }
+
+    /**
      * Fluent builder
      * @param <T> context type
      * @param <B> builder reference to self
      */
+    @FunctionalInterface
     interface Builder<T extends ValidationContext, B extends Builder<T, B>> {
 
         /**

@@ -19,6 +19,7 @@ package org.citrusframework.validation.xml;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
@@ -34,6 +35,8 @@ import org.citrusframework.util.MessageUtils;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.ValidationUtils;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
+import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.citrusframework.validation.xml.schema.XmlSchemaValidation;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
@@ -530,6 +533,22 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         return messageType.equalsIgnoreCase(MessageType.XML.name()) && MessageUtils.hasXmlPayload(message);
+    }
+
+    @Override
+    public XmlMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+        if (validationContexts.stream().noneMatch(XmlMessageValidationContext.class::isInstance)) {
+            Optional<DefaultMessageValidationContext> messageValidationContext = validationContexts.stream()
+                    .filter(context -> context.getClass().equals(DefaultMessageValidationContext.class))
+                    .map(DefaultMessageValidationContext.class::cast)
+                    .findFirst();
+
+            if (messageValidationContext.isPresent()) {
+                return XmlMessageValidationContext.Builder.adapt(messageValidationContext.get()).build();
+            }
+        }
+
+        return super.findValidationContext(validationContexts);
     }
 
     /**

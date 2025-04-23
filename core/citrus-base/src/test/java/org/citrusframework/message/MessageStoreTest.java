@@ -27,6 +27,7 @@ import org.citrusframework.endpoint.direct.DirectEndpointBuilder;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.context.ValidationStatus;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -52,6 +53,7 @@ public class MessageStoreTest {
             @Override
             public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, List<ValidationContext> validationContexts) throws ValidationException {
                 Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+                validationContexts.forEach(ctx -> ctx.updateStatus(ValidationStatus.PASSED));
             }
 
             @Override

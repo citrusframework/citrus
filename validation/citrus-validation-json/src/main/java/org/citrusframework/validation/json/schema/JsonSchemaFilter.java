@@ -25,12 +25,12 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.json.JsonSchemaRepository;
 import org.citrusframework.json.schema.SimpleJsonSchema;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
+import org.citrusframework.validation.context.MessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class is responsible for filtering {@link SimpleJsonSchema}s based on a {@link JsonMessageValidationContext}.
+ * This class is responsible for filtering {@link SimpleJsonSchema}s based on a {@link MessageValidationContext}.
  */
 public class JsonSchemaFilter {
 
@@ -46,7 +46,7 @@ public class JsonSchemaFilter {
      * @return a list of json schemas relevant for the validation based on the configuration
      */
     public List<SimpleJsonSchema> filter(List<JsonSchemaRepository> schemaRepositories,
-                                         JsonMessageValidationContext jsonMessageValidationContext,
+                                         MessageValidationContext jsonMessageValidationContext,
                                          ReferenceResolver referenceResolver) {
         if (isSchemaRepositorySpecified(jsonMessageValidationContext)) {
             return filterByRepositoryName(schemaRepositories, jsonMessageValidationContext);
@@ -57,7 +57,7 @@ public class JsonSchemaFilter {
         }
     }
 
-    private List<SimpleJsonSchema> getSchemaFromContext(JsonMessageValidationContext jsonMessageValidationContext,
+    private List<SimpleJsonSchema> getSchemaFromContext(MessageValidationContext jsonMessageValidationContext,
                                                         ReferenceResolver referenceResolver) {
         SimpleJsonSchema simpleJsonSchema =
                 referenceResolver.resolve(jsonMessageValidationContext.getSchema(), SimpleJsonSchema.class);
@@ -70,7 +70,7 @@ public class JsonSchemaFilter {
     }
 
     private List<SimpleJsonSchema> filterByRepositoryName(List<JsonSchemaRepository> schemaRepositories,
-                                                          JsonMessageValidationContext jsonMessageValidationContext) {
+                                                          MessageValidationContext jsonMessageValidationContext) {
         for (JsonSchemaRepository jsonSchemaRepository : schemaRepositories) {
             if (Objects.equals(jsonSchemaRepository.getName(), jsonMessageValidationContext.getSchemaRepository())) {
                 if (logger.isDebugEnabled()) {
@@ -92,11 +92,11 @@ public class JsonSchemaFilter {
                 .collect(Collectors.toList());
     }
 
-    private boolean isSchemaSpecified(JsonMessageValidationContext context) {
+    private boolean isSchemaSpecified(MessageValidationContext context) {
         return context.getSchema() != null && !context.getSchema().isEmpty() && !context.getSchema().isBlank();
     }
 
-    private boolean isSchemaRepositorySpecified(JsonMessageValidationContext context) {
+    private boolean isSchemaRepositorySpecified(MessageValidationContext context) {
         return context.getSchemaRepository() != null && !context.getSchemaRepository().isEmpty() && !context.getSchemaRepository().isBlank();
     }
 }

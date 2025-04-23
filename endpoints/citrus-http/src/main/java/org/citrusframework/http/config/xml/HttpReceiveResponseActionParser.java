@@ -26,7 +26,6 @@ import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
-import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -76,7 +75,7 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
         HttpMessage httpMessage = new HttpMessage();
 
         Element body = getChildElementByTagName(element, "body");
-        List<ValidationContext> validationContexts = parseValidationContexts(body, builder);
+        List<ValidationContext.Builder<?, ?>> validationContexts = parseValidationContexts(body, builder);
 
         Element headers = getChildElementByTagName(element, "headers");
         if (headers != null) {
@@ -105,10 +104,7 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
             setCookieElement(httpMessage, cookieElements);
 
             boolean ignoreCase = !headers.hasAttribute("ignore-case") || parseBoolean(headers.getAttribute("ignore-case"));
-            validationContexts.stream()
-                    .filter(context -> context instanceof HeaderValidationContext)
-                    .map(context -> (HeaderValidationContext) context)
-                    .forEach(context -> context.setHeaderNameIgnoreCase(ignoreCase));
+            getHeaderValidationContext(validationContexts).ignoreCase(ignoreCase);
         }
 
         doParse(element, builder);
@@ -121,15 +117,14 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
         messageContentBuilder.getHeaderBuilders().forEach(httpMessageBuilder::addHeaderBuilder);
 
         builder.addPropertyValue("messageBuilder", httpMessageBuilder);
-        builder.addPropertyValue("validationContexts", validationContexts);
+        builder.addPropertyValue("validationContextBuilder", validationContexts);
         builder.addPropertyValue("variableExtractors", getVariableExtractors(element));
 
         return builder;
     }
 
     protected HttpMessageBuilder createMessageBuilder(HttpMessage httpMessage) {
-        HttpMessageBuilder httpMessageBuilder = new HttpMessageBuilder(httpMessage);
-        return httpMessageBuilder;
+        return new HttpMessageBuilder(httpMessage);
     }
 
     /**

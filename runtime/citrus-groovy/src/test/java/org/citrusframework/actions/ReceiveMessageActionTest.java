@@ -29,14 +29,13 @@ import org.citrusframework.message.builder.script.GroovyFileResourcePayloadBuild
 import org.citrusframework.message.builder.script.GroovyScriptPayloadBuilder;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.citrusframework.util.TestUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.ValidationContext;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -94,8 +93,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
             Message control = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(TestUtils.normalizeLineEndings(received.getPayload(String.class).trim()), TestUtils.normalizeLineEndings(control.getPayload(String.class).trim()));
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            new DefaultTextEqualsMessageValidator().validateMessage(received, control, context, validationContextList);
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -136,8 +135,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
             Message control = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(TestUtils.normalizeLineEndings(received.getPayload(String.class).trim()), TestUtils.normalizeLineEndings(control.getPayload(String.class).trim()));
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            new DefaultTextEqualsMessageValidator().validateMessage(received, control, context, validationContextList);
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
@@ -172,7 +171,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
             Message control = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(TestUtils.normalizeLineEndings(received.getPayload(String.class).trim()), TestUtils.normalizeLineEndings(control.getPayload(String.class).trim()));
+            new DefaultTextEqualsMessageValidator().validateMessage(received, control, context, validationContextList);
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));

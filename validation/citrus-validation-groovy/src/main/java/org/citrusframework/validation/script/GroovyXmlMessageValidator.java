@@ -40,6 +40,6 @@ public class GroovyXmlMessageValidator extends GroovyScriptMessageValidator {
     public boolean supportsMessageType(String messageType, Message message) {
         // only support xml message type
         return (messageType.equalsIgnoreCase(MessageType.XML.name()) ||
-                messageType.equalsIgnoreCase(MessageType.XHTML.name()))&& MessageUtils.hasXmlPayload(message);
+                messageType.equalsIgnoreCase(MessageType.XHTML.name())) && MessageUtils.hasXmlPayload(message);
     }
 }

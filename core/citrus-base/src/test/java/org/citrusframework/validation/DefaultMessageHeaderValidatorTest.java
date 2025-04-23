@@ -28,8 +28,8 @@ import org.testng.annotations.Test;
  */
 public class DefaultMessageHeaderValidatorTest extends UnitTestSupport {
 
-    private DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
-    private HeaderValidationContext validationContext = new HeaderValidationContext();
+    private final DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
+    private final HeaderValidationContext validationContext = new HeaderValidationContext.Builder().build();
 
     @Test
     public void testValidateNoMessageHeaders() {
@@ -54,20 +54,18 @@ public class DefaultMessageHeaderValidatorTest extends UnitTestSupport {
 
     @Test
     public void testValidateMessageHeadersIgnoreCase() {
-        try {
-            Message receivedMessage = new DefaultMessage("Hello World!")
-                    .setHeader("X-Foo", "foo_test")
-                    .setHeader("X-Additional", "additional")
-                    .setHeader("X-Bar", "bar_test");
-            Message controlMessage = new DefaultMessage("Hello World!")
-                    .setHeader("x-foo", "foo_test")
-                    .setHeader("x-bar", "bar_test");
+        Message receivedMessage = new DefaultMessage("Hello World!")
+                .setHeader("X-Foo", "foo_test")
+                .setHeader("X-Additional", "additional")
+                .setHeader("X-Bar", "bar_test");
+        Message controlMessage = new DefaultMessage("Hello World!")
+                .setHeader("x-foo", "foo_test")
+                .setHeader("x-bar", "bar_test");
 
-            validationContext.setHeaderNameIgnoreCase(true);
-            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
-        } finally {
-            validationContext.setHeaderNameIgnoreCase(false);
-        }
+        HeaderValidationContext validationContext = new HeaderValidationContext.Builder()
+                .ignoreCase(true)
+                .build();
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
     @Test(expectedExceptions = ValidationException.class)

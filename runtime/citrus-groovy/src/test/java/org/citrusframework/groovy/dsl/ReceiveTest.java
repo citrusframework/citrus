@@ -17,6 +17,8 @@
 package org.citrusframework.groovy.dsl;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
@@ -27,17 +29,21 @@ import org.citrusframework.groovy.NoopVariableExtractor;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.DefaultHeaderValidator;
+import org.citrusframework.validation.DefaultMessageValidator;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.validation.HeaderValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
+import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.context.ValidationStatus;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
@@ -50,6 +56,10 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 
 public class ReceiveTest extends AbstractGroovyActionDslTest {
 
@@ -68,6 +78,37 @@ public class ReceiveTest extends AbstractGroovyActionDslTest {
 
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");
         context.getMessageValidatorRegistry().addMessageValidator("textEqualsMessageValidator", new DefaultTextEqualsMessageValidator().enableTrim().normalizeLineEndings());
+        context.getMessageValidatorRegistry().addMessageValidator("scriptMessageValidator", new DefaultMessageValidator() {
+            @Override
+            public ValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+                Optional<ValidationContext> scriptValidationContext = validationContexts.stream()
+                        .filter(ScriptValidationContext.class::isInstance)
+                        .findFirst();
+
+                return scriptValidationContext.orElseGet(() -> super.findValidationContext(validationContexts));
+            }
+        });
+        context.getMessageValidatorRegistry().addMessageValidator("jsonPathMessageValidator", new DefaultMessageValidator() {
+            @Override
+            public ValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+                Optional<ValidationContext> validationContext = validationContexts.stream()
+                        .filter(JsonPathMessageValidationContext.class::isInstance)
+                        .findFirst();
+
+                return validationContext.orElseGet(() -> super.findValidationContext(validationContexts));
+            }
+        });
+        context.getMessageValidatorRegistry().addMessageValidator("xpathMessageValidator", new DefaultMessageValidator() {
+            @Override
+            public ValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+                Optional<ValidationContext> validationContext = validationContexts.stream()
+                        .filter(XpathMessageValidationContext.class::isInstance)
+                        .findFirst();
+
+                return validationContext.orElseGet(() -> super.findValidationContext(validationContexts));
+            }
+        });
+
         context.getReferenceResolver().bind("defaultHeaderValidator", new DefaultHeaderValidator());
         context.getReferenceResolver().bind("myHeaderValidator", new DefaultHeaderValidator());
         context.getReferenceResolver().bind("helloQueue", helloQueue);
@@ -78,6 +119,16 @@ public class ReceiveTest extends AbstractGroovyActionDslTest {
 
         context.getReferenceResolver().bind("jsonPathMessageProcessorBuilder", new NoopMessageProcessor.Builder());
         context.getReferenceResolver().bind("xpathMessageProcessorBuilder", new NoopMessageProcessor.Builder());
+
+        doAnswer(invocationOnMock -> {
+            ((List<ValidationContext>) invocationOnMock.getArgument(3, List.class)).forEach(context -> context.updateStatus(ValidationStatus.PASSED));
+            return null;
+        }).when(myValidator).validateMessage(any(org.citrusframework.message.Message.class), any(org.citrusframework.message.Message.class), eq(context), anyList());
+
+        doAnswer(invocationOnMock -> {
+            ((List<ValidationContext>) invocationOnMock.getArgument(3, List.class)).forEach(context -> context.updateStatus(ValidationStatus.PASSED));
+            return null;
+        }).when(defaultMessageValidator).validateMessage(any(org.citrusframework.message.Message.class), any(Message.class), eq(context), anyList());
 
         helloQueue.send(new DefaultMessage("Hello from Citrus!").setHeader("operation", "sayHello"));
         helloQueue.send(new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>").setHeader("operation", "sayHello"));
@@ -123,10 +174,9 @@ public class ReceiveTest extends AbstractGroovyActionDslTest {
         Assert.assertNull(action.getMessageSelector());
         Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
 
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
         Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         DefaultMessageBuilder messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
@@ -146,10 +196,9 @@ public class ReceiveTest extends AbstractGroovyActionDslTest {
         Assert.assertNull(action.getMessageSelector());
         Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
 
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
         Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
@@ -174,10 +223,9 @@ public class ReceiveTest extends AbstractGroovyActionDslTest {
         Assert.assertNull(action.getMessageSelector());
         Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
 
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
         Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
@@ -294,10 +342,9 @@ public class ReceiveTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(scriptValidationContext.getValidationScriptResourcePath(), "classpath:org/citrusframework/groovy/test-validation-script.groovy");
 
         action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof JsonPathMessageValidationContext);
         Assert.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
         JsonPathMessageValidationContext jsonPathValidationContext = (JsonPathMessageValidationContext)action.getValidationContexts().get(0);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "direct:helloQueue");
@@ -309,10 +356,9 @@ public class ReceiveTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$..foo.bar"), true);
 
         action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof JsonPathMessageValidationContext);
         Assert.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
         jsonPathValidationContext = (JsonPathMessageValidationContext)action.getValidationContexts().get(0);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "direct:helloQueue");

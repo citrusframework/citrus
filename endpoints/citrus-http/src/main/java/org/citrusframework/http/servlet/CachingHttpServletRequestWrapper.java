@@ -18,6 +18,7 @@ package org.citrusframework.http.servlet;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.CachingInputStream;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
@@ -47,7 +49,7 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
     private static final Logger logger = LoggerFactory.getLogger(CachingHttpServletRequestWrapper.class);
 
     /** Cached request data initialized when first read from input stream */
-    private byte[] body;
+    private CachingInputStream bodyStream;
 
     /**
      * Default constructor using initial servlet request.
@@ -94,14 +96,14 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
 
     @Override
     public ServletInputStream getInputStream() throws IOException {
-        if (body == null) {
+        if (bodyStream == null) {
             if (super.getInputStream() != null) {
-                body = FileUtils.copyToByteArray(super.getInputStream());
+                bodyStream = new CachingInputStream(super.getInputStream());
             } else {
-                body = new byte[] {};
+                bodyStream = new CachingInputStream(new ByteArrayInputStream(new byte[] {}));
             }
         }
-        return new RequestCachingInputStream();
+        return new RequestCachingInputStream(bodyStream.get());
     }
 
     /**
@@ -135,16 +137,20 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
     }
 
     /** Input stream uses cached request data */
-    private final class RequestCachingInputStream extends ServletInputStream {
-        private final ByteArrayInputStream is;
+    private static final class RequestCachingInputStream extends ServletInputStream {
+        private final InputStream delegate;
 
-        private RequestCachingInputStream() {
-            this.is = new ByteArrayInputStream(body);
+        private RequestCachingInputStream(InputStream is) {
+            this.delegate = is;
         }
 
         @Override
         public boolean isFinished() {
-            return is.available() == 0;
+            try {
+                return delegate.available() == 0;
+            } catch (IOException e) {
+                return true;
+            }
         }
 
         @Override
@@ -158,8 +164,8 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
         }
 
         @Override
-        public int read() {
-            return is.read();
+        public int read() throws IOException {
+            return delegate.read();
         }
     }
 }

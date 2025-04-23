@@ -22,9 +22,8 @@ import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.testng.AbstractActionParserTest;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -44,10 +43,9 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
 
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
@@ -64,10 +62,9 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
 
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();

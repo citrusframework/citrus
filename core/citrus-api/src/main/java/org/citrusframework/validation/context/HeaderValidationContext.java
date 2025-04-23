@@ -27,13 +27,87 @@ import org.citrusframework.validation.HeaderValidator;
 public class HeaderValidationContext implements ValidationContext {
 
     /** List of special header validators */
-    private List<HeaderValidator> validators = new ArrayList<>();
+    private final List<HeaderValidator> validators;
 
     /** List of special header validator references */
-    private List<String> validatorNames = new ArrayList<>();
+    private final List<String> validatorNames;
 
     /** Should header name validation ignore case sensitivity */
-    private boolean headerNameIgnoreCase = false;
+    private final boolean headerNameIgnoreCase;
+
+    /** The status of this context */
+    private ValidationStatus status = ValidationStatus.UNKNOWN;
+
+    public HeaderValidationContext() {
+        this(new Builder());
+    }
+
+    public HeaderValidationContext(Builder builder) {
+        this.validators = builder.validators;
+        this.validatorNames = builder.validatorNames;
+        this.headerNameIgnoreCase = builder.headerNameIgnoreCase;
+    }
+
+    /**
+     * Fluent builder.
+     */
+    public static final class Builder implements ValidationContext.Builder<HeaderValidationContext, Builder> {
+
+        /** List of special header validators */
+        private List<HeaderValidator> validators = new ArrayList<>();
+
+        /** List of special header validator references */
+        private List<String> validatorNames = new ArrayList<>();
+
+        /** Should header name validation ignore case sensitivity */
+        private boolean headerNameIgnoreCase = false;
+
+        /**
+         * Sets the headerNameIgnoreCase.
+         */
+        public Builder ignoreCase(boolean headerNameIgnoreCase) {
+            this.headerNameIgnoreCase = headerNameIgnoreCase;
+            return this;
+        }
+
+
+        /**
+         * Adds header validator.
+         */
+        public Builder validator(HeaderValidator validator) {
+            this.validators.add(validator);
+            return this;
+        }
+
+        /**
+         * Adds header validator reference.
+         */
+        public Builder validator(String validatorName) {
+            this.validatorNames.add(validatorName);
+            return this;
+        }
+
+        /**
+         * Sets the validators.
+         */
+        public Builder validators(List<HeaderValidator> validators) {
+            this.validators.addAll(validators);
+            return this;
+        }
+
+        /**
+         * Sets the validatorNames.
+         */
+        public Builder validatorNames(List<String> validatorNames) {
+            this.validatorNames.addAll(validatorNames);
+            return this;
+        }
+
+        @Override
+        public HeaderValidationContext build() {
+            return new HeaderValidationContext(this);
+        }
+    }
 
     /**
      * Gets the headerNameIgnoreCase.
@@ -42,15 +116,6 @@ public class HeaderValidationContext implements ValidationContext {
      */
     public boolean isHeaderNameIgnoreCase() {
         return headerNameIgnoreCase;
-    }
-
-    /**
-     * Sets the headerNameIgnoreCase.
-     *
-     * @param headerNameIgnoreCase
-     */
-    public void setHeaderNameIgnoreCase(boolean headerNameIgnoreCase) {
-        this.headerNameIgnoreCase = headerNameIgnoreCase;
     }
 
     /**
@@ -79,15 +144,6 @@ public class HeaderValidationContext implements ValidationContext {
     }
 
     /**
-     * Sets the validators.
-     *
-     * @param validators
-     */
-    public void setValidators(List<HeaderValidator> validators) {
-        this.validators = validators;
-    }
-
-    /**
      * Gets the validatorNames.
      *
      * @return
@@ -96,12 +152,15 @@ public class HeaderValidationContext implements ValidationContext {
         return validatorNames;
     }
 
-    /**
-     * Sets the validatorNames.
-     *
-     * @param validatorNames
-     */
-    public void setValidatorNames(List<String> validatorNames) {
-        this.validatorNames = validatorNames;
+    @Override
+    public void updateStatus(ValidationStatus status) {
+        if (status != ValidationStatus.FAILED) {
+            this.status = status;
+        }
+    }
+
+    @Override
+    public ValidationStatus getStatus() {
+        return status;
     }
 }

@@ -75,7 +75,8 @@ class SpringBean_IT {
         public DefaultMessageValidator validator() {
             return new DefaultMessageValidator() {
                 @Override
-                public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, ValidationContext validationContext) {
+                public void validateMessage(Message receivedMessage, Message controlMessage,
+                                            TestContext context, ValidationContext validationContext) {
                     Assert.isTrue(receivedMessage.getPayload(String.class).equals(controlMessage.getPayload(String.class)), "Validation failed - " +
                             "expected message contents not equal!");
                 }

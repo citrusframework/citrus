@@ -235,6 +235,20 @@ public final class CitrusSettings {
     public static final String TYPE_CONVERTER_DEFAULT = "default";
 
     /**
+     * Flag to enable/disable fallback to default text equals validation
+     */
+    public static final String PERFORM_DEFAULT_VALIDATION_PROPERTY = "citrus.perform.default.validation";
+    public static final String PERFORM_DEFAULT_VALIDATION_ENV = "CITRUS_PERFORM_DEFAULT_VALIDATION";
+    public static final String PERFORM_DEFAULT_VALIDATION_DEFAULT = Boolean.FALSE.toString();
+
+    /**
+     * Flag to enable/disable input stream caching
+     */
+    public static final String CACHE_INPUT_STREAM_PROPERTY = "citrus.message.cache.input.stream";
+    public static final String CACHE_INPUT_STREAM_ENV = "CITRUS_MESSAGE_CACHE_INPUT_STREAM";
+    public static final String CACHE_INPUT_STREAM_DEFAULT = Boolean.TRUE.toString();
+
+    /**
      * Flag to enable/disable message pretty print
      */
     public static final String PRETTY_PRINT_PROPERTY = "citrus.message.pretty.print";
@@ -327,6 +341,26 @@ public final class CitrusSettings {
                 TYPE_CONVERTER_PROPERTY,
                 TYPE_CONVERTER_ENV,
                 TYPE_CONVERTER_DEFAULT);
+    }
+
+    /**
+     * Gets the setting whether fallback default message validation is enabled/disabled.
+     */
+    public static boolean isPerformDefaultValidation() {
+        return parseBoolean(getPropertyEnvOrDefault(
+                PERFORM_DEFAULT_VALIDATION_PROPERTY,
+                PERFORM_DEFAULT_VALIDATION_ENV,
+                PERFORM_DEFAULT_VALIDATION_DEFAULT));
+    }
+
+    /**
+     * Gets the setting whether caching of input stream is enabled/disabled.
+     */
+    public static boolean isCacheInputStream() {
+        return parseBoolean(getPropertyEnvOrDefault(
+                CACHE_INPUT_STREAM_PROPERTY,
+                CACHE_INPUT_STREAM_ENV,
+                CACHE_INPUT_STREAM_DEFAULT));
     }
 
     /**

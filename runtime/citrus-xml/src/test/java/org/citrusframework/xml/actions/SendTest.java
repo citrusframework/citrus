@@ -83,7 +83,7 @@ public class SendTest extends AbstractXmlActionTest {
         Message controlMessage = new DefaultMessage("Hello from Citrus!")
                                         .setHeader("operation", "sayHello");
         Message receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
@@ -101,7 +101,7 @@ public class SendTest extends AbstractXmlActionTest {
         controlMessage = new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>")
                 .setHeader("operation", "sayHello");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
@@ -121,7 +121,7 @@ public class SendTest extends AbstractXmlActionTest {
         controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>")
                 .setHeader("operation", "sayHello");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
@@ -140,7 +140,7 @@ public class SendTest extends AbstractXmlActionTest {
                     <Message>Hello World!</Message>
                 </TestRequest>""");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
@@ -169,7 +169,7 @@ public class SendTest extends AbstractXmlActionTest {
         controlMessage = new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>")
                 .setHeader("operation", "sayHello");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
@@ -202,7 +202,7 @@ public class SendTest extends AbstractXmlActionTest {
                 .setHeader("boolValue" ,true)
                 .setHeader("stringValue" ,"Hello Citrus");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
@@ -222,7 +222,7 @@ public class SendTest extends AbstractXmlActionTest {
 
         controlMessage = new DefaultMessage("{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
@@ -232,7 +232,7 @@ public class SendTest extends AbstractXmlActionTest {
 
         controlMessage = new DefaultMessage("{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex);
@@ -242,7 +242,7 @@ public class SendTest extends AbstractXmlActionTest {
 
         controlMessage = new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>");
         receivedMessage = helloQueue.receive();
-        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
     }
 }

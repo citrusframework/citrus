@@ -21,9 +21,12 @@ import java.util.Map;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.MessagePayloadBuilder;
+import org.citrusframework.message.MessageType;
+import org.citrusframework.message.MessagePayload;
 import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.StringResult;
 
+@MessagePayload(MessageType.XML)
 public class MarshallingPayloadBuilder extends DefaultPayloadBuilder {
 
     private final Marshaller marshaller;

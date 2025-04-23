@@ -25,6 +25,7 @@ import java.util.Optional;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.NoSuchMessageValidatorException;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessagePayloadUtils;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.util.IsJsonPredicate;
 import org.citrusframework.util.IsXmlPredicate;
@@ -97,9 +98,9 @@ public class MessageValidatorRegistry {
                     !message.getPayload(String.class).isBlank()) {
                 String payload = message.getPayload(String.class).trim();
 
-                if (payload.startsWith("<") && !messageType.equals(MessageType.XML.name())) {
+                if (MessagePayloadUtils.isXml(payload) && !messageType.equals(MessageType.XML.name())) {
                     matchingValidators = findFallbackMessageValidators(MessageType.XML.name(), message);
-                } else if ((payload.startsWith("{") || payload.startsWith("[")) && !messageType.equals(MessageType.JSON.name())) {
+                } else if (MessagePayloadUtils.isJson(payload) && !messageType.equals(MessageType.JSON.name())) {
                     matchingValidators = findFallbackMessageValidators(MessageType.JSON.name(), message);
                 } else if (!messageType.equals(MessageType.PLAINTEXT.name())) {
                     matchingValidators = findFallbackMessageValidators(MessageType.PLAINTEXT.name(), message);
@@ -243,6 +244,14 @@ public class MessageValidatorRegistry {
      */
     public Map<String, MessageValidator<? extends ValidationContext>> getMessageValidators() {
         return messageValidators;
+    }
+
+    /**
+     * Gets the default message validator.
+     * @return
+     */
+    public MessageValidator<? extends ValidationContext> getDefaultMessageValidator() {
+        return defaultTextEqualsMessageValidator;
     }
 
     /**
