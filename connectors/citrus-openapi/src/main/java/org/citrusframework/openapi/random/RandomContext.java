@@ -92,7 +92,7 @@ public class RandomContext {
     }
 
     void doGenerate(OasSchema resolvedSchema) {
-        RANDOM_CONFIGURATION.getGenerator(resolvedSchema).generate(this, resolvedSchema);
+        RANDOM_CONFIGURATION.getGenerator(resolvedSchema).generateIntoContext(this, resolvedSchema);
     }
 
     /**

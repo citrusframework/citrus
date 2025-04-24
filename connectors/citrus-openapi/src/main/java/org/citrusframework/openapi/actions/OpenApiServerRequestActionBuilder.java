@@ -36,7 +36,7 @@ import static org.citrusframework.openapi.validation.OpenApiMessageValidationCon
 public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBuilder {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
-    private final String operationId;
+    private final String operationKey;
     private OpenApiOperationToMessageHeadersProcessor openApiOperationToMessageHeadersProcessor;
 
     /**
@@ -47,16 +47,16 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
     /**
      * Default constructor initializes http request message builder.
      */
-    public OpenApiServerRequestActionBuilder(OpenApiSpecificationSource openApiSpecificationSource, String operationId) {
-        this(new HttpMessage(), openApiSpecificationSource, operationId);
+    public OpenApiServerRequestActionBuilder(OpenApiSpecificationSource openApiSpecificationSource, String operationKey) {
+        this(new HttpMessage(), openApiSpecificationSource, operationKey);
     }
 
     public OpenApiServerRequestActionBuilder(HttpMessage httpMessage,
                                              OpenApiSpecificationSource openApiSpecificationSource,
-                                             String operationId) {
+                                             String operationKey) {
         super(new OpenApiServerRequestMessageBuilder(httpMessage, openApiSpecificationSource), httpMessage);
         this.openApiSpecificationSource = openApiSpecificationSource;
-        this.operationId = operationId;
+        this.operationKey = operationKey;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
         }
 
         if (schemaValidation && !messageProcessors.contains(openApiOperationToMessageHeadersProcessor)) {
-            openApiOperationToMessageHeadersProcessor = new OpenApiOperationToMessageHeadersProcessor(openApiSpecification, operationId, REQUEST);
+            openApiOperationToMessageHeadersProcessor = new OpenApiOperationToMessageHeadersProcessor(openApiSpecification, operationKey, REQUEST);
             process(openApiOperationToMessageHeadersProcessor);
         }
 

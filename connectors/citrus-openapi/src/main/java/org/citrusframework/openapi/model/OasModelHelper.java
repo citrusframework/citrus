@@ -278,6 +278,10 @@ public final class OasModelHelper {
         return delegate(openApiDoc, operation, Oas20ModelHelper::getRequestBodySchema, Oas30ModelHelper::getRequestBodySchema);
     }
 
+    public static boolean isOperationRequestBodyRequired(OasDocument openApiDoc, OasOperation operation) {
+        return delegate(openApiDoc, operation, Oas20ModelHelper::isOperationRequestBodyRequired, Oas30ModelHelper::isOperationRequestBodyRequired);
+    }
+
     public static Collection<String> getResponseTypes(OasOperation operation, OasResponse response) {
         return delegate(operation, response, Oas20ModelHelper::getResponseTypes, Oas30ModelHelper::getResponseTypes);
     }

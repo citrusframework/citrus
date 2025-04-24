@@ -36,7 +36,7 @@ public final class OpenApiTestDataGenerator {
     public static String createOutboundPayload(OasSchema schema, OpenApiSpecification specification) {
         RandomContext randomContext = new RandomContext(specification, true);
         randomContext.generate(schema);
-        return randomContext.getRandomModelBuilder().write();
+        return randomContext.getRandomModelBuilder().writeToJson();
     }
 
     /**
@@ -49,7 +49,7 @@ public final class OpenApiTestDataGenerator {
 
         RandomContext randomContext = new RandomContext(specification, false);
         randomContext.generate(schema);
-        return randomContext.getRandomModelBuilder().write();
+        return randomContext.getRandomModelBuilder().writeToJson();
     }
 
     /**
@@ -67,6 +67,6 @@ public final class OpenApiTestDataGenerator {
     public static String createRandomValueExpression(OasSchema schema) {
         RandomContext randomContext = new RandomContext();
         randomContext.generate(schema);
-        return randomContext.getRandomModelBuilder().write();
+        return randomContext.getRandomModelBuilder().writeToJson();
     }
 }

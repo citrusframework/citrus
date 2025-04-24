@@ -64,7 +64,7 @@ public class RandomCompositeGeneratorTest {
         Oas30Schema schema = new Oas30Schema();
         schema.allOf = List.of(new Oas30Schema(), new Oas30Schema(), new Oas30Schema());
 
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
 
         verify(builderSpy).object(any());
         verify(mockContext).generate(schema.allOf.get(0));
@@ -77,7 +77,7 @@ public class RandomCompositeGeneratorTest {
         Oas30Schema schema = new Oas30Schema();
         schema.anyOf = List.of(new Oas30Schema(), new Oas30Schema(), new Oas30Schema());
 
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
 
         verify(builderSpy, atMost(2)).object(any());
         verify(mockContext, atLeast(1)).generate(assertArg(arg -> assertThat(schema.anyOf).contains(arg)));
@@ -89,7 +89,7 @@ public class RandomCompositeGeneratorTest {
         Oas30Schema schema = new Oas30Schema();
         schema.oneOf = List.of(new Oas30Schema(), new Oas30Schema(), new Oas30Schema());
 
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
 
         verify(builderSpy, atLeastOnce()).object(any());
         verify(mockContext).generate(any(OasSchema.class));
@@ -99,7 +99,7 @@ public class RandomCompositeGeneratorTest {
     public void testGenerateWithNoCompositeSchema() {
         Oas30Schema schema = new Oas30Schema();
 
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
 
         verify(builderSpy, never()).object(any());
         verify(mockContext, never()).generate(any(OasSchema.class));

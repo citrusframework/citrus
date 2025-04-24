@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.openapi.validation;
+package org.citrusframework.openapi.validation.schema;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +33,11 @@ import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.citrusframework.openapi.util.OpenApiUtils;
+import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder;
+import org.citrusframework.openapi.validation.OpenApiRequestValidator;
+import org.citrusframework.openapi.validation.OpenApiResponseValidator;
 import org.citrusframework.util.IsJsonPredicate;
-import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.SchemaValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,25 +47,9 @@ import static org.citrusframework.openapi.OpenApiMessageHeaders.OAS_SPECIFICATIO
 import static org.citrusframework.openapi.OpenApiMessageHeaders.OAS_UNIQUE_OPERATION_ID;
 import static org.citrusframework.util.StringUtils.isNotEmpty;
 
-public class OpenApiSchemaValidation extends
-    AbstractMessageValidator<OpenApiMessageValidationContext> implements
-    SchemaValidator<OpenApiMessageValidationContext> {
+public class OpenApiSchemaValidation implements SchemaValidator<OpenApiMessageValidationContext> {
 
     private static final Logger logger = LoggerFactory.getLogger(OpenApiSchemaValidation.class);
-
-    @Override
-    protected Class<OpenApiMessageValidationContext> getRequiredValidationContextType() {
-        return OpenApiMessageValidationContext.class;
-    }
-
-    @Override
-    public void validateMessage(Message receivedMessage,
-        Message controlMessage,
-        TestContext context,
-        OpenApiMessageValidationContext validationContext) {
-        // No control message validation, only schema validation
-        validate(receivedMessage, context, validationContext);
-    }
 
     @Override
     public void validate(Message message, TestContext context,
@@ -142,15 +128,15 @@ public class OpenApiSchemaValidation extends
         if (!validationContext.isSchemaValidationEnabled()) {
             return null;
         } else {
-            String operationId = validationContext.getSchema() != null ? validationContext.getSchema()
+            String operationKey = validationContext.getSchema() != null ? validationContext.getSchema()
                 : (String) message.getHeader(OAS_UNIQUE_OPERATION_ID);
             String specificationId = validationContext.getSchemaRepository() != null
                 ? validationContext.getSchemaRepository()
                 : (String) message.getHeader(OAS_SPECIFICATION_ID);
 
-            if (isNotEmpty(specificationId) && isNotEmpty(operationId)) {
+            if (isNotEmpty(specificationId) && isNotEmpty(operationKey)) {
                 return validateOpenApiOperation(context, message, schemaRepositories,
-                    specificationId, operationId);
+                    specificationId, operationKey);
             }
 
             return null;
@@ -159,7 +145,7 @@ public class OpenApiSchemaValidation extends
     }
 
     private ValidationReportData validateOpenApiOperation(TestContext context, HttpMessage message,
-        List<OpenApiRepository> schemaRepositories, String specificationId, String operationId) {
+        List<OpenApiRepository> schemaRepositories, String specificationId, String operationKey) {
         OpenApiSpecification openApiSpecification = schemaRepositories
             .stream()
             .map(repository -> repository.openApi(specificationId))
@@ -171,15 +157,15 @@ public class OpenApiSchemaValidation extends
             throw new CitrusRuntimeException("""
             Unable to derive OpenAPI spec for operation '%s' for validation of message from available "
             schema repositories. Known repository aliases are: %s""".formatted(
-                operationId,
+                operationKey,
                 OpenApiUtils.getKnownOpenApiAliases(context.getReferenceResolver())));
         }
 
         OperationPathAdapter operationPathAdapter = openApiSpecification.getOperation(
-                operationId, context)
+                operationKey, context)
             .orElseThrow(() -> new CitrusRuntimeException(
-                "Unexpectedly could not resolve operation path adapter for operationId: "
-                    + operationId));
+                "Unexpectedly could not resolve operation path adapter for operationKey: "
+                    + operationKey));
 
         ValidationReportData validationReportData = null;
         if (isRequestMessage(message)) {

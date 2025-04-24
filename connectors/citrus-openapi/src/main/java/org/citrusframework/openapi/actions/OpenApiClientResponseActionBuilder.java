@@ -54,31 +54,32 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class OpenApiClientResponseActionBuilder extends HttpClientResponseActionBuilder {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
-    private final String operationId;
+    private final String operationKey;
     private OpenApiOperationToMessageHeadersProcessor openApiOperationToMessageHeadersProcessor;
     private boolean schemaValidation = true;
 
     /**
      * Default constructor initializes http response message builder.
      */
-    public OpenApiClientResponseActionBuilder(OpenApiSpecificationSource openApiSpec, String operationId, String statusCode) {
-        this(new HttpMessage(), openApiSpec, operationId, statusCode);
+    public OpenApiClientResponseActionBuilder(OpenApiSpecificationSource openApiSpec, String operationKey, String statusCode) {
+        this(new HttpMessage(), openApiSpec, operationKey, statusCode);
     }
 
     public OpenApiClientResponseActionBuilder(HttpMessage httpMessage,
                                               OpenApiSpecificationSource openApiSpecificationSource,
-                                              String operationId,
+                                              String operationKey,
                                               String statusCode) {
-        this(openApiSpecificationSource, new OpenApiClientResponseMessageBuilder(httpMessage, openApiSpecificationSource, operationId, statusCode), httpMessage, operationId);
+        this(openApiSpecificationSource, new OpenApiClientResponseMessageBuilder(httpMessage, openApiSpecificationSource,
+            operationKey, statusCode), httpMessage, operationKey);
     }
 
     public OpenApiClientResponseActionBuilder(OpenApiSpecificationSource openApiSpec,
                                               OpenApiClientResponseMessageBuilder messageBuilder,
                                               HttpMessage message,
-                                              String operationId) {
+                                              String operationKey) {
         super(messageBuilder, message);
         this.openApiSpecificationSource = openApiSpec;
-        this.operationId = operationId;
+        this.operationKey = operationKey;
 
         // Set json as default instead of xml. This is most common for rest.
         this.getMessageBuilderSupport().type(JSON);
@@ -129,7 +130,8 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
         }
 
         if (schemaValidation && !messageProcessors.contains(openApiOperationToMessageHeadersProcessor)) {
-            openApiOperationToMessageHeadersProcessor = new OpenApiOperationToMessageHeadersProcessor(openApiSpecification, operationId, RESPONSE);
+            openApiOperationToMessageHeadersProcessor = new OpenApiOperationToMessageHeadersProcessor(openApiSpecification,
+                operationKey, RESPONSE);
             process(openApiOperationToMessageHeadersProcessor);
         }
 
@@ -150,17 +152,17 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
     public static class OpenApiClientResponseMessageBuilder extends HttpMessageBuilder {
 
         private final OpenApiSpecificationSource openApiSpecificationSource;
-        private final String operationId;
+        private final String operationKey;
         private final HttpMessage httpMessage;
         private String statusCode;
 
         public OpenApiClientResponseMessageBuilder(HttpMessage httpMessage,
                                                    OpenApiSpecificationSource openApiSpecificationSource,
-                                                   String operationId,
+                                                   String operationKey,
                                                    String statusCode) {
             super(httpMessage);
             this.openApiSpecificationSource = openApiSpecificationSource;
-            this.operationId = operationId;
+            this.operationKey = operationKey;
             this.statusCode = statusCode;
             this.httpMessage = httpMessage;
         }
@@ -174,10 +176,10 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
         public Message build(TestContext context, String messageType) {
             OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(context.getReferenceResolver());
 
-            openApiSpecification.getOperation(operationId, context)
+            openApiSpecification.getOperation(operationKey, context)
                     .ifPresentOrElse(operationPathAdapter ->
                             buildMessageFromOperation(openApiSpecification, operationPathAdapter, context), () -> {
-                        throw new CitrusRuntimeException("Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(operationId, openApiSpecification.getSpecUrl()));
+                        throw new CitrusRuntimeException("Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(operationKey, openApiSpecification.getSpecUrl()));
                     });
 
             return super.build(context, messageType);

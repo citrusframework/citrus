@@ -39,7 +39,7 @@ public class RandomGeneratorTest {
         mockSchema = mock(OasSchema.class);
         generator = new RandomGenerator(mockSchema) {
             @Override
-            void generate(RandomContext randomContext, OasSchema schema) {
+            void generateIntoContext(RandomContext randomContext, OasSchema schema) {
                 // Implementation not needed for this test
             }
         };
@@ -150,7 +150,7 @@ public class RandomGeneratorTest {
     public void testHandlesWithNullGeneratorSchema() {
         RandomGenerator generatorWithNullSchema = new RandomGenerator() {
             @Override
-            void generate(RandomContext randomContext, OasSchema schema) {
+            void generateIntoContext(RandomContext randomContext, OasSchema schema) {
                 // Do nothing
             }
         };
@@ -162,7 +162,7 @@ public class RandomGeneratorTest {
     public void testNullGenerator() {
         RandomContext mockContext = mock(RandomContext.class);
 
-        RandomGenerator.NOOP_RANDOM_GENERATOR.generate(mockContext, mockSchema);
+        RandomGenerator.NOOP_RANDOM_GENERATOR.generateIntoContext(mockContext, mockSchema);
 
         verify(mockContext, never()).getRandomModelBuilder();
     }

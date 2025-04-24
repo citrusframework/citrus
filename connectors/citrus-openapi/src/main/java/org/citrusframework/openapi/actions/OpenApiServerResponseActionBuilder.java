@@ -41,7 +41,6 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaderBuilder;
 import org.citrusframework.message.builder.DefaultHeaderBuilder;
 import org.citrusframework.openapi.AutoFillType;
-import org.citrusframework.openapi.OpenApiSettings;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OasAdapter;
 import org.citrusframework.openapi.model.OasModelHelper;
@@ -55,9 +54,11 @@ import static java.util.Collections.singletonMap;
 import static org.citrusframework.openapi.AutoFillType.NONE;
 import static org.citrusframework.openapi.AutoFillType.REQUIRED;
 import static org.citrusframework.openapi.OpenApiMessageType.RESPONSE;
+import static org.citrusframework.openapi.OpenApiSettings.getResponseAutoFillRandomValues;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
@@ -67,7 +68,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 public class OpenApiServerResponseActionBuilder extends HttpServerResponseActionBuilder {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
-    private final String operationId;
+    private final String operationKey;
     private OpenApiOperationToMessageHeadersProcessor openApiOperationToMessageHeadersProcessor;
     private boolean schemaValidation = true;
 
@@ -75,21 +76,21 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
      * Default constructor initializes http response message builder.
      */
     public OpenApiServerResponseActionBuilder(OpenApiSpecificationSource openApiSpecificationSource,
-        String operationId,
+        String operationKey,
         String statusCode,
         String accept) {
-        this(new HttpMessage(), openApiSpecificationSource, operationId, statusCode, accept);
+        this(new HttpMessage(), openApiSpecificationSource, operationKey, statusCode, accept);
     }
 
     public OpenApiServerResponseActionBuilder(HttpMessage httpMessage,
         OpenApiSpecificationSource openApiSpecificationSource,
-        String operationId,
+        String operationKey,
         String statusCode,
         String accept) {
         super(new OpenApiServerResponseMessageBuilder(httpMessage, openApiSpecificationSource,
-            operationId, statusCode, accept), httpMessage);
+            operationKey, statusCode, accept), httpMessage);
         this.openApiSpecificationSource = openApiSpecificationSource;
-        this.operationId = operationId;
+        this.operationKey = operationKey;
     }
 
     public OpenApiServerResponseActionBuilder autoFill(AutoFillType autoFill) {
@@ -111,7 +112,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
         if (schemaValidation && !messageProcessors.contains(
             openApiOperationToMessageHeadersProcessor)) {
             openApiOperationToMessageHeadersProcessor = new OpenApiOperationToMessageHeadersProcessor(
-                openApiSpecification, operationId, RESPONSE);
+                openApiSpecification, operationKey, RESPONSE);
             process(openApiOperationToMessageHeadersProcessor);
         }
 
@@ -144,7 +145,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
         private static final Pattern STATUS_CODE_PATTERN = Pattern.compile("\\d+");
 
         private final OpenApiSpecificationSource openApiSpecificationSource;
-        private final String operationId;
+        private final String operationKey;
         private final String statusCode;
         private final String accept;
 
@@ -152,12 +153,12 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
 
         public OpenApiServerResponseMessageBuilder(HttpMessage httpMessage,
             OpenApiSpecificationSource openApiSpecificationSource,
-            String operationId,
+            String operationKey,
             String statusCode,
             String accept) {
             super(httpMessage);
             this.openApiSpecificationSource = openApiSpecificationSource;
-            this.operationId = operationId;
+            this.operationKey = operationKey;
             this.statusCode = statusCode;
             this.accept = accept;
         }
@@ -173,7 +174,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
                 context.getReferenceResolver());
 
             if (autoFill == null) {
-                 autoFill = OpenApiSettings.getResponseAutoFillRandomValues();
+                 autoFill = getResponseAutoFillRandomValues();
             }
 
             if (STATUS_CODE_PATTERN.matcher(statusCode).matches()) {
@@ -185,12 +186,12 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             List<MessageHeaderBuilder> initialHeaderBuilders = new ArrayList<>(getHeaderBuilders());
             getHeaderBuilders().clear();
 
-            openApiSpecification.getOperation(operationId, context)
+            openApiSpecification.getOperation(operationKey, context)
                 .ifPresentOrElse(operationPathAdapter ->
                     fillRandomData(openApiSpecification, operationPathAdapter, context), () -> {
                     throw new CitrusRuntimeException(
                         "Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(
-                            operationId, openApiSpecification.getSpecUrl()));
+                            operationKey, openApiSpecification.getSpecUrl()));
                 });
 
             // Initial header builder need to be prepended, so that they can overwrite randomly generated headers.
@@ -300,11 +301,11 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
                 String mediaTypeName = schemaForMediaType.adapted();
 
                 // Support any json for now. Especially: application/json, application/json;charset=UTF-8
-                if (mediaTypeName.toUpperCase().contains("JSON")) {
+                if (APPLICATION_JSON_VALUE.equals(mediaTypeName) || APPLICATION_JSON_UTF8_VALUE.equals(mediaTypeName)) {
                     // Json Schema
                     message.setPayload(
                         createOutboundPayload(schemaForMediaType.node(), openApiSpecification));
-                    message.setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, APPLICATION_JSON_VALUE);
+                    message.setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, mediaTypeName);
                 } else if (TEXT_PLAIN_VALUE.equals(schemaForMediaType.adapted())) {
                     // Schema but plain text
                     message.setPayload(

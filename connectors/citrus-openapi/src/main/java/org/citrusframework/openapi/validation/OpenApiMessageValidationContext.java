@@ -41,7 +41,7 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
 
     private final String openApiSpecificationId;
 
-    private final String operationId;
+    private final String operationKey;
 
     public OpenApiMessageValidationContext(Builder builder) {
         super();
@@ -51,7 +51,7 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
                 : builder.openApiSpecification.isApiRequestValidationEnabled()
                 || builder.openApiSpecification.isApiResponseValidationEnabled();
         this.openApiSpecificationId = builder.openApiSpecificationId;
-        this.operationId = builder.operationId;
+        this.operationKey = builder.operationKey;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
 
     @Override
     public String getSchema() {
-        return operationId;
+        return operationKey;
     }
 
     /**
@@ -85,7 +85,7 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
 
         private String openApiSpecificationId;
 
-        private String operationId;
+        private String operationKey;
 
         /**
          * Mapped as object to be able to indicate "not explicitly set" in which case the default is
@@ -94,7 +94,7 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
          * <p>Note that a message validation context is explicitly created only for send messages,
          * whereas default request validation enabled is chosen as default value.
          */
-        private Boolean schemaValidation = OpenApiSettings.isRequestValidationEnabledGlobally();
+        private Boolean schemaValidation = OpenApiSettings.isRequestValidationEnabled();
 
         public static OpenApiMessageValidationContext.Builder openApi(OpenApiSpecification openApiSpecification) {
             Builder builder = new Builder();
@@ -119,7 +119,7 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
          */
         @Override
         public OpenApiMessageValidationContext.Builder schema(final String schemaName) {
-            this.operationId = schemaName;
+            this.operationKey = schemaName;
             return this;
         }
 

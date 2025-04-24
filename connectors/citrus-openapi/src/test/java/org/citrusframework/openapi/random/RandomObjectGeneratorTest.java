@@ -79,7 +79,7 @@ public class RandomObjectGeneratorTest {
         OasSchema schema = new Oas30Schema();
         schema.type = OpenApiConstants.TYPE_OBJECT;
 
-        generator.generate(contextMock, schema);
+        generator.generateIntoContext(contextMock, schema);
 
         verify(randomModelBuilderSpy).object(any());
     }
@@ -94,7 +94,7 @@ public class RandomObjectGeneratorTest {
 
         when(specificationMock.isGenerateOptionalFields()).thenReturn(true);
 
-        generator.generate(contextMock, schema);
+        generator.generateIntoContext(contextMock, schema);
 
         verify(randomModelBuilderSpy).object(any());
         verify(randomModelBuilderSpy).property(eq("property1"), any());
@@ -112,7 +112,7 @@ public class RandomObjectGeneratorTest {
 
         when(specificationMock.isGenerateOptionalFields()).thenReturn(false);
 
-        generator.generate(contextMock, schema);
+        generator.generateIntoContext(contextMock, schema);
 
         verify(randomModelBuilderSpy).object(any());
         verify(randomModelBuilderSpy).property(eq("property1"), any());
@@ -128,7 +128,7 @@ public class RandomObjectGeneratorTest {
         schema.properties.put("property1", propertySchema);
         schema.required = emptyList();
         when(specificationMock.isGenerateOptionalFields()).thenReturn(false);
-        generator.generate(contextMock, schema);
+        generator.generateIntoContext(contextMock, schema);
 
         verify(randomModelBuilderSpy).object(any());
         verify(randomModelBuilderSpy, never()).property(eq("property1"), any());
@@ -144,7 +144,7 @@ public class RandomObjectGeneratorTest {
 
         when(contextMock.get(eq("OBJECT_STACK"), any())).thenReturn(objectStack);
 
-        generator.generate(contextMock, schema);
+        generator.generateIntoContext(contextMock, schema);
 
         verify(randomModelBuilderSpy, never()).object(any());
     }

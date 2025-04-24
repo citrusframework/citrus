@@ -37,7 +37,7 @@ public class OpenApiClientRequestMessageBuilderTest {
         Message message = openapi()
                 .specification(petstoreSpec)
                 .client()
-                .send("addPet") // operationId
+                .send("addPet")
                 .autoFill(AutoFillType.ALL)
                 .build()
                 .getMessageBuilder()
@@ -59,7 +59,7 @@ public class OpenApiClientRequestMessageBuilderTest {
             Message message = openapi()
                 .specification(petstoreSpec)
                 .client()
-                .send("addPet") // operationId
+                .send("addPet")
             .autoFill(AutoFillType.REQUIRED)
                 .build()
                 .getMessageBuilder()
@@ -81,7 +81,7 @@ public class OpenApiClientRequestMessageBuilderTest {
         Message message = openapi()
             .specification(petstoreSpec)
             .client()
-            .send("addPet") // operationId
+            .send("addPet")
             .autoFill(AutoFillType.NONE)
             .build()
             .getMessageBuilder()
@@ -105,7 +105,7 @@ public class OpenApiClientRequestMessageBuilderTest {
         Message message = openapi()
                 .specification(petstoreSpec)
                 .client()
-                .send("addPet") // operationId
+                .send("addPet")
                 .message()
                 .body(body)
                 .header("X-SAMPLE-HEADER", sampleHeader)

@@ -16,12 +16,12 @@
 
 package org.citrusframework.openapi.model.v2;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.openapi.models.OasHeader;
@@ -44,6 +44,8 @@ import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VAL
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 public final class Oas20ModelHelper {
+
+    private static Set<String> FORM_TYPES = Set.of(APPLICATION_FORM_URLENCODED_VALUE, MULTIPART_FORM_DATA_VALUE);
 
     private Oas20ModelHelper() {
         // utility class
@@ -97,17 +99,24 @@ public final class Oas20ModelHelper {
     }
 
     public static Optional<OasSchema> getRequestBodySchema(@Nullable Oas20Document ignoredOpenApiDoc, Oas20Operation operation) {
+        return getOperationRequestBodyParameter(operation).map(oasParameter -> (OasSchema) oasParameter.schema);
+    }
+
+    public static boolean isOperationRequestBodyRequired(@Nullable Oas20Document ignoredOpenApiDoc, Oas20Operation operation) {
+        return getOperationRequestBodyParameter(operation).isPresent();
+    }
+
+    private static Optional<OasParameter> getOperationRequestBodyParameter(Oas20Operation operation) {
         if (operation.parameters == null) {
             return Optional.empty();
         }
 
         final List<OasParameter> operationParameters = operation.parameters;
 
-        Optional<OasParameter> body = operationParameters.stream()
-                .filter(p -> "body".equals(p.in) && p.schema != null)
-                .findFirst();
+        return operationParameters.stream()
+            .filter(p -> "body".equals(p.in) && p.schema != null && Boolean.TRUE == p.required)
+            .findFirst();
 
-        return body.map(oasParameter -> (OasSchema) oasParameter.schema);
     }
 
     public static Optional<String> getRequestContentType(Oas20Operation operation) {
@@ -135,7 +144,7 @@ public final class Oas20ModelHelper {
     }
 
     private static boolean isFormDataMediaType(String type) {
-        return Arrays.asList(APPLICATION_FORM_URLENCODED_VALUE, MULTIPART_FORM_DATA_VALUE).contains(type);
+        return FORM_TYPES.contains(type);
     }
 
     /**

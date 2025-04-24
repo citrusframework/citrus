@@ -49,9 +49,9 @@ import static org.citrusframework.openapi.OpenApiConstants.TYPE_INTEGER;
  */
 public class RandomNumberGenerator extends RandomGenerator {
 
-    public static final BigDecimal THOUSAND = new BigDecimal(1000);
-    public static final BigDecimal HUNDRED = java.math.BigDecimal.valueOf(100);
-    public static final BigDecimal MINUS_THOUSAND = new BigDecimal(-1000);
+    public static final BigDecimal THOUSAND = BigDecimal.valueOf(1000);
+    public static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
+    public static final BigDecimal MINUS_THOUSAND = BigDecimal.valueOf(-1000);
 
     /**
      * Determine some reasonable bounds for a random number
@@ -103,7 +103,7 @@ public class RandomNumberGenerator extends RandomGenerator {
     }
 
     @Override
-    void generate(RandomContext randomContext, OasSchema schema) {
+    void generateIntoContext(RandomContext randomContext, OasSchema schema) {
         boolean exclusiveMaximum = TRUE.equals(schema.exclusiveMaximum);
         boolean exclusiveMinimum = TRUE.equals(schema.exclusiveMinimum);
 

@@ -21,9 +21,9 @@ import java.util.Objects;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.openapi.OpenApiSpecification;
-import org.citrusframework.openapi.util.OpenApiUtils;
 import org.citrusframework.spi.ReferenceResolver;
 
+import static org.citrusframework.openapi.util.OpenApiUtils.getKnownOpenApiAliases;
 import static org.citrusframework.util.StringUtils.isEmpty;
 
 /**
@@ -62,7 +62,7 @@ public class OpenApiSpecificationSource {
                         .orElseThrow(() ->
                             new CitrusRuntimeException(
                                 "Unable to resolve OpenApiSpecification from alias '%s'. Known aliases for open api specs are '%s'".formatted(
-                                    openApiAlias, OpenApiUtils.getKnownOpenApiAliases(resolver)))
+                                    openApiAlias, getKnownOpenApiAliases(resolver)))
                         ));
             } else {
                 throw new CitrusRuntimeException(

@@ -21,17 +21,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.citrusframework.openapi.random.RandomElement.RandomList;
+import org.citrusframework.openapi.random.RandomElement.RandomObject;
 import org.citrusframework.openapi.random.RandomElement.RandomValue;
 
 import static org.citrusframework.util.StringUtils.trimTrailingComma;
 
 /**
- * Utility class for converting a {@link RandomModelBuilder} to its string representation.
- * This class provides static methods to serialize the model built by {@link RandomModelBuilder}.
+ * Utility class for converting a {@link RandomModelBuilder} to a JSON string representation.
  */
-final class RandomModelWriter {
+final class RandomModelJsonWriter {
 
-    private RandomModelWriter() {
+    private RandomModelJsonWriter() {
         // static access only
     }
 
@@ -46,11 +47,10 @@ final class RandomModelWriter {
             while (!deque.isEmpty()) {
                 appendObject(builder, deque.pop());
             }
-        } else if (object instanceof Map<?, ?> map) {
-            // noinspection unchecked
-            appendMap(builder, (Map<String, Object>) map);
-        } else if (object instanceof List<?> list) {
-            appendArray(builder, list);
+        } else if (object instanceof RandomObject randomObject) {
+            appendJsonObject(builder, randomObject);
+        } else if (object instanceof RandomList randomList) {
+            appendArray(builder, randomList);
         } else if (object instanceof String string) {
             builder.append(string);
         } else if (object instanceof RandomValue randomValue) {
@@ -58,7 +58,7 @@ final class RandomModelWriter {
         }
     }
 
-    private static void appendArray(StringBuilder builder, List<?> list) {
+    private static void appendArray(StringBuilder builder, List<RandomElement> list) {
         builder.append("[");
         list.forEach(listValue -> {
             appendObject(builder, listValue);
@@ -68,40 +68,16 @@ final class RandomModelWriter {
         builder.append("]");
     }
 
-    private static void appendMap(StringBuilder builder, Map<String, Object> map) {
-        if (map.size() == 1) {
-            Entry<String, Object> entry = map.entrySet().iterator().next();
-            String key = entry.getKey();
-            Object value = entry.getValue();
-
-            if ("ARRAY".equals(key)) {
-                appendObject(builder, value);
-            } else if ("NATIVE".equals(key)) {
-                builder.append(value);
-            } else {
-                appendJsonObject(builder, map);
-            }
-        } else {
-            appendJsonObject(builder, map);
-        }
-    }
-
-    private static void appendJsonObject(StringBuilder builder, Map<String, Object> map) {
+    private static void appendJsonObject(StringBuilder builder, Map<String, RandomElement> map) {
         builder.append("{");
-        for (Entry<String, Object> entry : map.entrySet()) {
+        for (Entry<String, RandomElement> entry : map.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
             builder.append("\"");
             builder.append(key);
             builder.append("\": ");
 
-            if (value instanceof String) {
-                builder.append(value);
-            } else if (value instanceof Map<?, ?>) {
-                appendObject(builder, value);
-            } else if (value instanceof RandomValue randomValue) {
-                appendObject(builder, randomValue.getValue());
-            }
+            appendObject(builder, value);
 
             builder.append(",");
         }

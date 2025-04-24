@@ -45,6 +45,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toMap;
+import static org.citrusframework.openapi.model.OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
@@ -138,7 +139,7 @@ public final class Oas30ModelHelper {
 
     public static Optional<OasAdapter<OasSchema, String>> getSchema(Oas30Operation ignoredOas30Operation, Oas30Response response, List<String> acceptedMediaTypes) {
         acceptedMediaTypes = OasModelHelper.resolveAllTypes(acceptedMediaTypes);
-        acceptedMediaTypes = acceptedMediaTypes.isEmpty()  ? OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES : acceptedMediaTypes;
+        acceptedMediaTypes = acceptedMediaTypes.isEmpty()  ? DEFAULT_ACCEPTED_MEDIA_TYPES : acceptedMediaTypes;
 
         Map<String, Oas30MediaType> content = response.content;
         if (content == null) {
@@ -185,6 +186,10 @@ public final class Oas30ModelHelper {
                 .findFirst()
                 .map(Map.Entry::getValue)
                 .map(oas30MediaType -> oas30MediaType.schema);
+    }
+
+    public static boolean isOperationRequestBodyRequired(Oas30Document openApiDoc, Oas30Operation operation) {
+        return operation.requestBody != null && Boolean.TRUE == operation.requestBody.required;
     }
 
     public static Optional<String> getRequestContentType(Oas30Operation operation) {

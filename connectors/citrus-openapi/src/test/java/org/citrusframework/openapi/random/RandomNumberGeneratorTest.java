@@ -63,14 +63,14 @@ public class RandomNumberGeneratorTest {
 
     @Test
     public void testGenerateDefaultBounds() {
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         verify(mockBuilder).appendSimple("citrus:randomNumberGenerator('2', '-1000', '1000', 'false', 'false')");
     }
 
     @Test
     public void testGenerateWithMinimum() {
         schema.minimum = BigDecimal.valueOf(5);
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         // Max is because of guessing a reasonable range
         verify(mockBuilder).appendSimple("citrus:randomNumberGenerator('2', '5', '1005', 'false', 'false')");
     }
@@ -78,7 +78,7 @@ public class RandomNumberGeneratorTest {
     @Test
     public void testGenerateWithMaximum() {
         schema.maximum = BigDecimal.valueOf(15);
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         // Min is because of guessing a reasonable range
         verify(mockBuilder).appendSimple("citrus:randomNumberGenerator('2', '-985', '15', 'false', 'false')");
     }
@@ -87,7 +87,7 @@ public class RandomNumberGeneratorTest {
     public void testGenerateWithMinimumAndMaximum() {
         schema.minimum = BigDecimal.valueOf(5);
         schema.maximum = BigDecimal.valueOf(15);
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         verify(mockBuilder).appendSimple("citrus:randomNumberGenerator('2', '5', '15', 'false', 'false')");
     }
 
@@ -95,7 +95,7 @@ public class RandomNumberGeneratorTest {
     public void testGenerateWithExclusiveMinimum() {
         schema.minimum = BigDecimal.valueOf(5);
         schema.exclusiveMinimum = true;
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         // Max is because of guessing a reasonable range
         verify(mockBuilder).appendSimple("citrus:randomNumberGenerator('2', '5', '1005', 'true', 'false')");
     }
@@ -104,7 +104,7 @@ public class RandomNumberGeneratorTest {
     public void testGenerateWithExclusiveMaximum() {
         schema.maximum = BigDecimal.valueOf(15);
         schema.exclusiveMaximum = true;
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         // Min is because of guessing a reasonable range
         verify(mockBuilder).appendSimple("citrus:randomNumberGenerator('2', '-985', '15', 'false', 'true')");
     }
@@ -114,7 +114,7 @@ public class RandomNumberGeneratorTest {
         schema.multipleOf = BigDecimal.valueOf(5);
         schema.minimum = BigDecimal.valueOf(10);
         schema.maximum = BigDecimal.valueOf(50);
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         verify(mockBuilder).appendSimple("citrus:randomNumberGenerator('0', '10', '50', 'false', 'false', '5')");
     }
 
@@ -123,7 +123,7 @@ public class RandomNumberGeneratorTest {
         schema.type = "integer";
         schema.minimum = BigDecimal.valueOf(1);
         schema.maximum = BigDecimal.valueOf(10);
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         verify(mockBuilder).appendSimple("citrus:randomNumberGenerator('0', '1', '10', 'false', 'false')");
     }
 
@@ -132,7 +132,7 @@ public class RandomNumberGeneratorTest {
         schema.type = "number";
         schema.minimum = BigDecimal.valueOf(1.5);
         schema.maximum = BigDecimal.valueOf(10.5);
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         verify(mockBuilder).appendSimple("citrus:randomNumberGenerator('2', '1.5', '10.5', 'false', 'false')");
     }
 
@@ -142,7 +142,7 @@ public class RandomNumberGeneratorTest {
         schema.multipleOf = BigDecimal.valueOf(0.5);
         schema.minimum = BigDecimal.valueOf(1.0);
         schema.maximum = BigDecimal.valueOf(5.0);
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         verify(mockBuilder).appendSimple("citrus:randomNumberGenerator('1', '1.0', '5.0', 'false', 'false', '0.5')");
     }
 

@@ -29,7 +29,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.actions.HttpServerResponseActionBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.openapi.AutoFillType;
-import org.citrusframework.openapi.OpenApiSettings;
 import org.citrusframework.openapi.actions.OpenApiActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiClientActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiClientRequestActionBuilder;
@@ -41,6 +40,8 @@ import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.actions.Message;
 import org.citrusframework.yaml.actions.Receive;
 import org.citrusframework.yaml.actions.Send;
+
+import static org.citrusframework.openapi.OpenApiSettings.getRequestAutoFillRandomValues;
 
 public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
@@ -266,7 +267,7 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         protected String uri;
         protected Boolean fork;
 
-        protected AutoFillType autoFill = OpenApiSettings.getRequestAutoFillRandomValues();
+        protected AutoFillType autoFill = getRequestAutoFillRandomValues();
 
         protected Message.Extract extract;
 

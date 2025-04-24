@@ -57,8 +57,8 @@ public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTe
     /**
      * Receive Http requests as server.
      */
-    public OpenApiServerRequestActionBuilder receive(String operationId) {
-        OpenApiServerRequestActionBuilder builder = new OpenApiServerRequestActionBuilder(openApiSpecificationSource, operationId);
+    public OpenApiServerRequestActionBuilder receive(String operationKey) {
+        OpenApiServerRequestActionBuilder builder = new OpenApiServerRequestActionBuilder(openApiSpecificationSource, operationKey);
         if (httpServer != null) {
             builder.endpoint(httpServer);
         } else {
@@ -76,36 +76,36 @@ public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTe
      * Sends Http response messages as server.
      * Uses default Http status 200 OK.
      */
-    public OpenApiServerResponseActionBuilder send(String operationId) {
-        return send(operationId, HttpStatus.OK);
+    public OpenApiServerResponseActionBuilder send(String operationKey) {
+        return send(operationKey, HttpStatus.OK);
     }
 
     /**
      * Send Http response messages as server to client.
      */
-    public OpenApiServerResponseActionBuilder send(String operationId, HttpStatus status) {
-        return send(operationId, String.valueOf(status.value()));
+    public OpenApiServerResponseActionBuilder send(String operationKey, HttpStatus status) {
+        return send(operationKey, String.valueOf(status.value()));
     }
 
     /**
      * Send Http response messages as server to client.
      */
-    public OpenApiServerResponseActionBuilder send(String operationId, HttpStatus status, String accept) {
-        return send(operationId, String.valueOf(status.value()), accept);
+    public OpenApiServerResponseActionBuilder send(String operationKey, HttpStatus status, String accept) {
+        return send(operationKey, String.valueOf(status.value()), accept);
     }
 
     /**
      * Send Http response messages as server to client.
      */
-    public OpenApiServerResponseActionBuilder send(String operationId, String statusCode) {
-        return send(operationId, statusCode, null);
+    public OpenApiServerResponseActionBuilder send(String operationKey, String statusCode) {
+        return send(operationKey, statusCode, null);
     }
 
     /**
      * Send Http response messages as server to client.
      */
-    public OpenApiServerResponseActionBuilder send(String operationId, String statusCode, String accept) {
-        OpenApiServerResponseActionBuilder builder = new OpenApiServerResponseActionBuilder(openApiSpecificationSource, operationId, statusCode, accept);
+    public OpenApiServerResponseActionBuilder send(String operationKey, String statusCode, String accept) {
+        OpenApiServerResponseActionBuilder builder = new OpenApiServerResponseActionBuilder(openApiSpecificationSource, operationKey, statusCode, accept);
         if (httpServer != null) {
             builder.endpoint(httpServer);
         } else {

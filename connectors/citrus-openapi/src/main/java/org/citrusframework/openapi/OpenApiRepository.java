@@ -28,11 +28,7 @@ import org.citrusframework.spi.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static java.lang.String.format;
 import static java.util.Collections.synchronizedList;
-import static org.citrusframework.openapi.OpenApiSettings.isNeglectBasePathGlobally;
-import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledGlobally;
-import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
 
 /**
  * OpenApi repository holding a set of {@link OpenApiSpecification} known in the test scope.
@@ -60,25 +56,23 @@ public class OpenApiRepository extends BaseRepository {
     /**
      * Flag to indicate whether the base path of the OpenAPI should be part of the path or not.
      */
-    private boolean neglectBasePath = isNeglectBasePathGlobally();
+    private boolean neglectBasePath = OpenApiSettings.isNeglectBasePathEnabled();
 
     /**
      * Flag to indicate whether OpenAPIs managed by this repository should perform request validation.
      */
-    private boolean requestValidationEnabled = isRequestValidationEnabledGlobally();
+    private boolean requestValidationEnabled = OpenApiSettings.isRequestValidationEnabled();
 
     /**
      * Flag to indicate whether OpenAPIs managed by this repository should perform response validation.
      */
-    private boolean responseValidationEnabled = isResponseValidationEnabledGlobally();
+    private boolean responseValidationEnabled = OpenApiSettings.isResponseValidationEnabled();
 
     private OpenApiValidationPolicy validationPolicy = OpenApiSettings.getOpenApiValidationPolicy();
 
     public OpenApiRepository() {
         super(DEFAULT_NAME);
     }
-
-
 
     public List<OpenApiSpecification> getOpenApiSpecifications() {
         return openApiSpecifications;
@@ -168,7 +162,7 @@ public class OpenApiRepository extends BaseRepository {
             openApiSpecification.neglectBasePath(neglectBasePath);
             addRepository(openApiSpecification);
         } catch (Exception e) {
-            logger.error(format("Unable to read OpenApiSpecification from location: %s", openApiResource.getURI()));
+            logger.error("Unable to read OpenApiSpecification from location: {}", openApiResource.getURI());
             throw new CitrusRuntimeException(e);
         }
 

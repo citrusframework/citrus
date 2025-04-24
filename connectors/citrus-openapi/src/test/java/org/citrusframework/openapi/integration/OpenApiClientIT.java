@@ -24,7 +24,6 @@ import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
-import org.citrusframework.message.MessageType;
 import org.citrusframework.openapi.AutoFillType;
 import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.openapi.actions.OpenApiClientResponseActionBuilder;
@@ -44,6 +43,7 @@ import org.testng.annotations.Test;
 
 import static java.util.Collections.singletonList;
 import static org.citrusframework.http.actions.HttpActionBuilder.http;
+import static org.citrusframework.message.MessageType.JSON;
 import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi;
 import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
 import static org.springframework.http.HttpStatus.OK;
@@ -123,8 +123,46 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
             .contentType(APPLICATION_JSON_VALUE));
 
         OpenApiClientResponseActionBuilder clientResponseActionBuilder = openapi("petstore-v3")
-            .client(httpClient).receive("getPetById", OK)
+            .client(httpClient)
+            .receive("getPetById", OK)
             .schemaValidation(true);
+        assertThrows(() -> then(clientResponseActionBuilder));
+    }
+
+    @CitrusTest
+    @Test
+    public void shouldFailOnWrongControlMessage() {
+
+        variable("petId", "1001");
+
+        when(openapi("petstore-v3")
+            .client(httpClient)
+            .send("getPetById")
+            .autoFill(AutoFillType.ALL)
+            .message()
+            .fork(true));
+
+        then(http().server(httpServer)
+            .receive()
+            .get("/pet/${petId}")
+            .message()
+            .accept("@contains('application/json')@"));
+
+        then(http().server(httpServer)
+            .send()
+            .response(OK)
+            .message()
+            .body(Resources.create(VALID_PET_PATH))
+            .contentType(APPLICATION_JSON_VALUE));
+
+        // Asserting against an empty json should fail due to standard json text validation
+        HttpClientResponseActionBuilder.HttpMessageBuilderSupport clientResponseActionBuilder = openapi("petstore-v3")
+            .client(httpClient)
+            .receive("getPetById", OK)
+            .schemaValidation(true)
+            .message()
+            .type(JSON)
+            .body("{}");
         assertThrows(() -> then(clientResponseActionBuilder));
     }
 
@@ -158,14 +196,15 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
             .contentType(APPLICATION_JSON_VALUE));
 
         // We can validate an OpenAPI response against a specific schema,
-        // even without using open api client.
+        // even without explicitly specifying the spec in the context.
+        // By default, the OpenApiSpecification will be resolved by the schemaRepository name.
         HttpClientResponseActionBuilder.HttpMessageBuilderSupport receiveGetPetById = http().client(
                 httpClient)
             .receive()
             .response(OK)
             .message()
-            .type(MessageType.JSON)
-            .validate(openApi(null)
+            .type(JSON)
+            .validate(openApi()
                 .schemaValidation(true)
                 .schemaRepository("petstore-v3.json")
                 .schema("getPetById"));

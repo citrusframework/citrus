@@ -55,12 +55,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.synchronizedSet;
-import static org.citrusframework.openapi.OpenApiSettings.getRequestAutoFillRandomValues;
 import static org.citrusframework.openapi.OpenApiSettings.getResponseAutoFillRandomValues;
-import static org.citrusframework.openapi.OpenApiSettings.isGenerateOptionalFieldsGlobally;
-import static org.citrusframework.openapi.OpenApiSettings.isNeglectBasePathGlobally;
-import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledGlobally;
-import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
 import static org.citrusframework.openapi.model.OasModelHelper.getBasePath;
 import static org.citrusframework.util.StringUtils.appendSegmentToUrlPath;
 import static org.citrusframework.util.StringUtils.hasText;
@@ -104,12 +99,12 @@ public class OpenApiSpecification {
     private final Set<String> aliases = synchronizedSet(new HashSet<>());
 
     /**
-     * Maps the identifier (id) of an operation to OperationPathAdapters. Two different keys may be
-     * used for each operation. Refer to
+     * Maps the keys of an operation to OperationPathAdapters. Two different keys may be
+     * available for each operation. Refer to
      * {@link org.citrusframework.openapi.OpenApiSpecification#storeOperationPathAdapter} for more
      * details.
      */
-    private final Map<String, OperationPathAdapter> operationIdToOperationPathAdapter = new ConcurrentHashMap<>();
+    private final Map<String, OperationPathAdapter> operationKeyToOperationPathAdapter = new ConcurrentHashMap<>();
 
     /**
      * Stores the unique identifier (uniqueId) of an operation, derived from its HTTP method and
@@ -135,7 +130,7 @@ public class OpenApiSpecification {
      *
      * @see #getFullPath(OasPathItem) for the method affected by this flag
      */
-    private boolean neglectBasePath = isNeglectBasePathGlobally();
+    private boolean neglectBasePath = OpenApiSettings.isNeglectBasePathEnabled();
 
     /**
      * The optional root context path to which the OpenAPI is hooked.
@@ -157,12 +152,12 @@ public class OpenApiSpecification {
     /**
      * Generate optional attributes when generating random schema objects.
      */
-    private boolean generateOptionalFields = isGenerateOptionalFieldsGlobally();
+    private boolean generateOptionalFields = OpenApiSettings.isGenerateOptionalFieldsEnabled();
 
     /**
      * Autofill parameters and body of request with random data.
      */
-    private AutoFillType requestAutoFill = getRequestAutoFillRandomValues();
+    private AutoFillType requestAutoFill = OpenApiSettings.getRequestAutoFillRandomValues();
 
     /**
      * Autofill parameters and body of response with random data.
@@ -174,13 +169,13 @@ public class OpenApiSpecification {
      * global level and may be overruled by request level.
      */
 
-    private boolean apiRequestValidationEnabled = isRequestValidationEnabledGlobally();
+    private boolean apiRequestValidationEnabled = OpenApiSettings.isRequestValidationEnabled();
 
     /**
      * Flag to indicate, whether response validation is enabled on api level. Api level overrules
      * global level and may be overruled by request level.
      */
-    private boolean apiResponseValidationEnabled = isResponseValidationEnabledGlobally();
+    private boolean apiResponseValidationEnabled = OpenApiSettings.isResponseValidationEnabled();
 
     /**
      * The policy that determines how OpenAPI validation errors are handled.
@@ -202,7 +197,6 @@ public class OpenApiSpecification {
      * @param specUrl the URL pointing to the OpenAPI specification to load
      * @return an OpenApiSpecification instance populated with the document and validation context
      */
-
     public static OpenApiSpecification from(String specUrl) {
         return from(specUrl, OpenApiSettings.getOpenApiValidationPolicy());
     }
@@ -333,7 +327,7 @@ public class OpenApiSpecification {
 
         specification.setOpenApiDoc(openApiDoc);
         specification.setOpenApiValidationContext(
-            OpenApiValidationContextLoader.fromString(openApi));
+            OpenApiValidationContextLoader.fromSpec(openApi, OpenApiSettings.getOpenApiValidationPolicy()));
 
         String schemeToUse = Optional.ofNullable(OasModelHelper.getSchemes(openApiDoc))
             .orElse(singletonList(HTTP))
@@ -473,7 +467,7 @@ public class OpenApiSpecification {
 
         determineUid();
 
-        operationIdToOperationPathAdapter.clear();
+        operationKeyToOperationPathAdapter.clear();
         OasModelHelper.visitOasOperations(this.openApiDoc, (oasPathItem, oasOperation) -> {
             String path = oasPathItem.getPath();
 
@@ -499,7 +493,7 @@ public class OpenApiSpecification {
 
     /**
      * Stores an {@link OperationPathAdapter} in
-     * {@link org.citrusframework.openapi.OpenApiSpecification#operationIdToOperationPathAdapter}.
+     * {@link org.citrusframework.openapi.OpenApiSpecification#operationKeyToOperationPathAdapter}.
      * The adapter is stored using two keys: the operationId (optional) and the full path of the
      * operation, including the method. The full path is always determinable and thus can always be
      * safely used.
@@ -520,10 +514,10 @@ public class OpenApiSpecification {
         OperationPathAdapter operationPathAdapter = new OperationPathAdapter(path, fullContextPath,
             appendSegmentToUrlPath(fullContextPath, path), operation, uniqueOperationId);
 
-        operationIdToOperationPathAdapter.put(uniqueOperationId, operationPathAdapter);
+        operationKeyToOperationPathAdapter.put(uniqueOperationId, operationPathAdapter);
 
         if (hasText(operation.operationId)) {
-            operationIdToOperationPathAdapter.put(operation.operationId, operationPathAdapter);
+            operationKeyToOperationPathAdapter.put(operation.operationId, operationPathAdapter);
         }
     }
 
@@ -674,8 +668,8 @@ public class OpenApiSpecification {
         return set;
     }
 
-    public Optional<OperationPathAdapter> getOperation(String operationId, TestContext context) {
-        if (operationId == null) {
+    public Optional<OperationPathAdapter> getOperation(String operationKey, TestContext context) {
+        if (operationKey == null) {
             return Optional.empty();
         }
 
@@ -683,7 +677,7 @@ public class OpenApiSpecification {
         // happen, when instance is created with org.citrusframework.openapi.OpenApiSpecification.from(java.lang.String)
         initOpenApiDoc(context);
 
-        return Optional.ofNullable(operationIdToOperationPathAdapter.get(operationId));
+        return Optional.ofNullable(operationKeyToOperationPathAdapter.get(operationKey));
     }
 
     public void initOpenApiDoc(TestContext context) {

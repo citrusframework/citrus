@@ -107,7 +107,7 @@ public class RandomGeneratorBuilderTest {
         RandomGenerator generator = RandomGeneratorBuilder.randomGeneratorBuilder()
                 .build(consumerMock);
 
-        generator.generate(contextMock, schemaMock);
+        generator.generateIntoContext(contextMock, schemaMock);
 
         verify(consumerMock).accept(contextMock, schemaMock);
     }

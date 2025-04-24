@@ -44,21 +44,21 @@ public class RandomStringGeneratorTest {
 
     @Test
     public void testGenerateDefaultLength() {
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         verify(mockBuilder).appendSimpleQuoted("citrus:randomString(10,MIXED,true,1)");
     }
 
     @Test
     public void testGenerateWithMinLength() {
         schema.minLength = 5;
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         verify(mockBuilder).appendSimpleQuoted("citrus:randomString(10,MIXED,true,5)");
     }
 
     @Test
     public void testGenerateWithMaxLength() {
         schema.maxLength = 15;
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         verify(mockBuilder).appendSimpleQuoted("citrus:randomString(15,MIXED,true,1)");
     }
 
@@ -66,21 +66,21 @@ public class RandomStringGeneratorTest {
     public void testGenerateWithMinAndMaxLength() {
         schema.minLength = 3;
         schema.maxLength = 8;
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         verify(mockBuilder).appendSimpleQuoted("citrus:randomString(8,MIXED,true,3)");
     }
 
     @Test
     public void testGenerateWithZeroMinLength() {
         schema.minLength = 0;
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         verify(mockBuilder).appendSimpleQuoted("citrus:randomString(10,MIXED,true,1)");
     }
 
     @Test
     public void testGenerateWithZeroMaxLength() {
         schema.maxLength = 0;
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
         verify(mockBuilder).appendSimpleQuoted("citrus:randomString(10,MIXED,true,1)");
     }
 }
