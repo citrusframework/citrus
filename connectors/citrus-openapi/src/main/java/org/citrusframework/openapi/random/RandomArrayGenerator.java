@@ -53,7 +53,7 @@ public class RandomArrayGenerator extends RandomGenerator {
     }
 
     @Override
-    void generate(RandomContext randomContext, OasSchema schema) {
+    void generateIntoContext(RandomContext randomContext, OasSchema schema) {
         Object items = schema.items;
 
         if (items instanceof OasSchema itemsSchema) {

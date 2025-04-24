@@ -45,7 +45,7 @@ public final class OpenApiUtils {
      * @return a unique scenario id for the {@link OasOperation}
      */
     public static String createFullPathOperationIdentifier(OasOperation oasOperation, String path) {
-        return createFullPathOperationIdentifier(oasOperation.getMethod().toUpperCase(), path);
+        return createFullPathOperationIdentifier(oasOperation.getMethod(), path);
     }
 
     /**

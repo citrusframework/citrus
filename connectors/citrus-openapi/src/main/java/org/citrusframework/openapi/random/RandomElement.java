@@ -20,16 +20,15 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
- * Interface representing a random element in a JSON structure. This interface provides default
- * methods to push values into the element, which can be overridden by implementing classes.
+ * Interface representing a random element. A random element represents a value in a data structure.
  */
-public interface RandomElement {
+interface RandomElement {
 
-    default void push(Object value) {
+    default void push(RandomElement value) {
         throw new UnsupportedOperationException();
     }
 
-    default void push(String key, Object value) {
+    default void push(String key, RandomElement value) {
         throw new UnsupportedOperationException();
     }
 
@@ -37,15 +36,15 @@ public interface RandomElement {
      * A random element representing an array. Array elements can be of type String (native
      * attribute) or {@link RandomElement}.
      */
-    class RandomList extends ArrayList<Object> implements RandomElement {
+    class RandomList extends ArrayList<RandomElement> implements RandomElement {
 
         @Override
-        public void push(Object value) {
+        public void push(RandomElement value) {
             add(value);
         }
 
         @Override
-        public void push(String key, Object value) {
+        public void push(String key, RandomElement value) {
             if (!isEmpty()) {
                 Object lastElement = get(size() - 1);
                 if (lastElement instanceof RandomElement randomElement) {
@@ -56,18 +55,18 @@ public interface RandomElement {
     }
 
     /**
-     * A random object representing a JSON object, with attributes stored as key-value pairs. Values
-     * are of type String (simple attributes) or {@link RandomElement}.
+     * A random object representing am object, with attributes stored as key-value pairs. Values
+     * are of type {@link RandomElement}.
      */
-    class RandomObject extends LinkedHashMap<String, Object> implements RandomElement {
+    class RandomObject extends LinkedHashMap<String, RandomElement> implements RandomElement {
 
         @Override
-        public void push(String key, Object value) {
+        public void push(String key, RandomElement value) {
             put(key, value);
         }
 
         @Override
-        public void push(Object value) {
+        public void push(RandomElement value) {
             if (value instanceof RandomObject randomObject) {
                 this.putAll(randomObject);
                 return;
@@ -97,7 +96,7 @@ public interface RandomElement {
         }
 
         @Override
-        public void push(Object pushedValue) {
+        public void push(RandomElement pushedValue) {
             if (value instanceof RandomElement randomElement) {
                 randomElement.push(pushedValue);
             } else {
@@ -106,7 +105,7 @@ public interface RandomElement {
         }
 
         @Override
-        public void push(String key, Object pushedValue) {
+        public void push(String key, RandomElement pushedValue) {
             if (value instanceof RandomElement randomElement) {
                 randomElement.push(key, pushedValue);
             } else {

@@ -70,7 +70,7 @@ public class RandomEnumGeneratorTest {
     public void testGenerateWithEnum() {
         mockSchema.enum_ = List.of("value1", "value2", "value3");
 
-        generator.generate(mockContext, mockSchema);
+        generator.generateIntoContext(mockContext, mockSchema);
 
         verify(mockBuilder).appendSimpleQuoted("citrus:randomEnumValue('value1','value2','value3')");
     }
@@ -79,7 +79,7 @@ public class RandomEnumGeneratorTest {
     public void testGenerateWithEmptyEnum() {
         mockSchema.enum_ = emptyList();
 
-        generator.generate(mockContext, mockSchema);
+        generator.generateIntoContext(mockContext, mockSchema);
 
         verify(mockBuilder).appendSimpleQuoted("citrus:randomEnumValue()");
     }
@@ -88,7 +88,7 @@ public class RandomEnumGeneratorTest {
     public void testGenerateWithNullEnum() {
         mockSchema.enum_ = null;
 
-        generator.generate(mockContext, mockSchema);
+        generator.generateIntoContext(mockContext, mockSchema);
 
         verify(mockBuilder, never()).appendSimpleQuoted(anyString());
     }

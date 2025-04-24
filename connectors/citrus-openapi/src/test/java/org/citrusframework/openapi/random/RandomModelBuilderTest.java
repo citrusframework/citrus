@@ -36,14 +36,14 @@ public class RandomModelBuilderTest {
 
     @Test
     public void testInitialState() {
-        String text = builder.write();
+        String text = builder.writeToJson();
         assertEquals(text, "");
     }
 
     @Test
     public void testAppendSimple() {
         builder.appendSimple("testValue");
-        String json = builder.write();
+        String json = builder.writeToJson();
         assertEquals(json, "testValue");
     }
 
@@ -51,14 +51,14 @@ public class RandomModelBuilderTest {
     public void testAppendSimpleToEmptyQueue() {
         ReflectionTestUtils.setField(builder, "deque", new ArrayDeque<>());
         builder.appendSimple("testValue");
-        String json = builder.write();
+        String json = builder.writeToJson();
         assertEquals(json, "testValue");
     }
 
     @Test
     public void testAppendSimpleQuoted() {
         builder.appendSimpleQuoted("testValue");
-        String json = builder.write();
+        String json = builder.writeToJson();
         assertEquals(json, "\"testValue\"");
     }
 
@@ -66,7 +66,7 @@ public class RandomModelBuilderTest {
     public void testAppendSimpleQuotedIfNotQuoting() {
         ReflectionTestUtils.setField(builder, "quote", false);
         builder.appendSimpleQuoted("testValue");
-        String json = builder.write();
+        String json = builder.writeToJson();
         assertEquals(json, "testValue");
     }
 
@@ -76,7 +76,7 @@ public class RandomModelBuilderTest {
             builder.property("key1", () -> builder.appendSimple("\"value1\""));
             builder.property("key2", () -> builder.appendSimple("\"value2\""));
         });
-        String json = builder.write();
+        String json = builder.writeToJson();
         assertEquals(json, "{\"key1\": \"value1\",\"key2\": \"value2\"}");
     }
 
@@ -87,7 +87,7 @@ public class RandomModelBuilderTest {
                         builder.property("innerKey", () -> builder.appendSimple("\"innerValue\""))
                 ))
         );
-        String json = builder.write();
+        String json = builder.writeToJson();
         assertEquals(json, "{\"outerKey\": {\"innerKey\": \"innerValue\"}}");
     }
 
@@ -98,7 +98,7 @@ public class RandomModelBuilderTest {
             builder.appendSimple("\"value2\"");
             builder.appendSimple("\"value3\"");
         });
-        String json = builder.write();
+        String json = builder.writeToJson();
         assertEquals(json, "[\"value1\",\"value2\",\"value3\"]");
     }
 
@@ -112,7 +112,7 @@ public class RandomModelBuilderTest {
             });
             builder.appendSimple("\"value2\"");
         });
-        String json = builder.write();
+        String json = builder.writeToJson();
         assertEquals(json, "[\"value1\",[\"nestedValue1\",\"nestedValue2\"],\"value2\"]");
     }
 
@@ -127,7 +127,7 @@ public class RandomModelBuilderTest {
             }));
             builder.property("key2", () -> builder.appendSimple("\"value2\""));
         });
-        String json = builder.write();
+        String json = builder.writeToJson();
         assertEquals(json, "{\"key1\": [\"value1\",{\"nestedKey\": \"nestedValue\"}],\"key2\": \"value2\"}");
     }
 

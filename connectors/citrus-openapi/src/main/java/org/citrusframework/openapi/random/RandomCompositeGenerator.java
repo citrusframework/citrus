@@ -76,7 +76,7 @@ public class RandomCompositeGenerator extends RandomGenerator {
     }
 
     @Override
-    void generate(RandomContext randomContext, OasSchema schema) {
+    void generateIntoContext(RandomContext randomContext, OasSchema schema) {
         if (!isEmpty(schema.allOf)) {
             createAllOf(randomContext, schema);
         } else if (schema instanceof Oas30Schema oas30Schema && !isEmpty(oas30Schema.anyOf)) {

@@ -56,7 +56,7 @@ public class RandomArrayGeneratorTest {
         itemsSchema.type = OpenApiConstants.TYPE_STRING;
         schema.items = itemsSchema;
 
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
 
         verify(builderSpy, atLeastOnce()).array(any());
         verify(mockContext, atLeastOnce()).generate(any(OasSchema.class));
@@ -72,7 +72,7 @@ public class RandomArrayGeneratorTest {
         itemsSchema.type = OpenApiConstants.TYPE_STRING;
         schema.items = itemsSchema;
 
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
 
         verify(builderSpy, atLeastOnce()).array(any());
         verify(mockContext, atLeast(5)).generate(any(OasSchema.class));
@@ -88,7 +88,7 @@ public class RandomArrayGeneratorTest {
         itemsSchema.type = OpenApiConstants.TYPE_STRING;
         schema.items = itemsSchema;
 
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
 
         verify(builderSpy, atLeastOnce()).array(any());
         verify(mockContext, atMost(3)).generate(any(OasSchema.class));
@@ -105,7 +105,7 @@ public class RandomArrayGeneratorTest {
         itemsSchema.type = OpenApiConstants.TYPE_STRING;
         schema.items = itemsSchema;
 
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
 
         verify(builderSpy, atLeastOnce()).array(any());
         verify(mockContext, atLeast(2)).generate(any(OasSchema.class));
@@ -117,6 +117,6 @@ public class RandomArrayGeneratorTest {
         Oas30Schema schema = new Oas30Schema();
         schema.items = new Object(); // Unsupported items type
 
-        generator.generate(mockContext, schema);
+        generator.generateIntoContext(mockContext, schema);
     }
 }

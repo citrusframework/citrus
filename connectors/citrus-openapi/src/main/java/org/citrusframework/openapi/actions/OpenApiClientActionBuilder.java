@@ -63,8 +63,8 @@ public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTe
     /**
      * Sends Http requests as client.
      */
-    public OpenApiClientRequestActionBuilder send(String operationId) {
-        OpenApiClientRequestActionBuilder builder = new OpenApiClientRequestActionBuilder(openApiSpecificationSource, operationId);
+    public OpenApiClientRequestActionBuilder send(String operationKey) {
+        OpenApiClientRequestActionBuilder builder = new OpenApiClientRequestActionBuilder(openApiSpecificationSource, operationKey);
         if (httpClient != null) {
             builder.endpoint(httpClient);
         } else {
@@ -82,22 +82,22 @@ public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTe
      * Receives Http response messages as client.
      * Uses default Http status 200 OK.
      */
-    public OpenApiClientResponseActionBuilder receive(String operationId) {
-        return receive(operationId, OK);
+    public OpenApiClientResponseActionBuilder receive(String operationKey) {
+        return receive(operationKey, OK);
     }
 
     /**
      * Receives Http response messages as client.
      */
-    public OpenApiClientResponseActionBuilder receive(String operationId, HttpStatus status) {
-        return receive(operationId, String.valueOf(status.value()));
+    public OpenApiClientResponseActionBuilder receive(String operationKey, HttpStatus status) {
+        return receive(operationKey, String.valueOf(status.value()));
     }
 
     /**
      * Receives Http response messages as client.
      */
-    public OpenApiClientResponseActionBuilder receive(String operationId, String statusCode) {
-        OpenApiClientResponseActionBuilder builder = new OpenApiClientResponseActionBuilder(openApiSpecificationSource, operationId, statusCode);
+    public OpenApiClientResponseActionBuilder receive(String operationKey, String statusCode) {
+        OpenApiClientResponseActionBuilder builder = new OpenApiClientResponseActionBuilder(openApiSpecificationSource, operationKey, statusCode);
         if (httpClient != null) {
             builder.endpoint(httpClient);
         } else {
