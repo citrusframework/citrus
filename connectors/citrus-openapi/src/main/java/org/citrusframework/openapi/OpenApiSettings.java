@@ -16,90 +16,144 @@
 
 package org.citrusframework.openapi;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.citrusframework.openapi.validation.OpenApiValidationPolicy;
+import org.citrusframework.util.SystemProvider;
 
 import static java.lang.Boolean.parseBoolean;
+import static org.citrusframework.openapi.AutoFillType.REQUIRED;
+import static org.citrusframework.openapi.validation.OpenApiValidationPolicy.REPORT;
+import static org.citrusframework.util.EnvUtils.booleanPropertyOrDefault;
+import static org.citrusframework.util.EnvUtils.enumPropertyOrDefault;
+import static org.citrusframework.util.EnvUtils.transformPropertyToEnv;
 
 /**
  * The {@code OpenApiSettings} class provides configuration settings for enabling or disabling
- * OpenAPI request and response validation globally. The settings can be controlled through
- * system properties or environment variables.
+ * OpenAPI request and response validation globally. The settings can be controlled through system
+ * properties or environment variables.
  */
 public class OpenApiSettings {
 
-    public static final String GENERATE_OPTIONAL_FIELDS_PROPERTY = "citrus.openapi.generate.optional.fields";
-    public static final String GENERATE_OPTIONAL_FIELDS_ENV = "CITRUS_OPENAPI_GENERATE_OPTIONAL_FIELDS";
+    public static final String GENERATE_OPTIONAL_FIELDS_ENABLED_PROPERTY = "citrus.openapi.generate.optional.fields";
+    public static final String GENERATE_OPTIONAL_FIELDS_ENABLED_ENV = transformPropertyToEnv(
+        GENERATE_OPTIONAL_FIELDS_ENABLED_PROPERTY);
 
     public static final String REQUEST_VALIDATION_ENABLED_PROPERTY = "citrus.openapi.validation.enabled.request";
-    public static final String REQUEST_VALIDATION_ENABLED_ENV = "CITRUS_OPENAPI_VALIDATION_DISABLE_REQUEST";
+    public static final String REQUEST_VALIDATION_ENABLED_ENV = transformPropertyToEnv(
+        REQUEST_VALIDATION_ENABLED_PROPERTY);
 
     public static final String RESPONSE_VALIDATION_ENABLED_PROPERTY = "citrus.openapi.validation.enabled.response";
-    public static final String RESPONSE_VALIDATION_ENABLED_ENV = "CITRUS_OPENAPI_VALIDATION_DISABLE_RESPONSE";
+    public static final String RESPONSE_VALIDATION_ENABLED_ENV = transformPropertyToEnv(
+        RESPONSE_VALIDATION_ENABLED_PROPERTY);
 
-    public static final String NEGLECT_OPEN_API_BASE_PATH_PROPERTY  = "citrus.openapi.neglect.base.path";
-    public static final String NEGLECT_OPEN_API_BASE_PATH_ENV = "CITRUS_OPENAPI_NEGLECT_BASE_PATH";
+    public static final String NEGLECT_OPEN_API_BASE_PATH_ENABLED_PROPERTY = "citrus.openapi.neglect.base.path";
+    public static final String NEGLECT_OPEN_API_BASE_PATH_ENABLED_ENV = transformPropertyToEnv(
+        NEGLECT_OPEN_API_BASE_PATH_ENABLED_PROPERTY);
 
     public static final String REQUEST_AUTO_FILL_RANDOM_VALUES_PROPERTY = "citrus.openapi.request.fill.random.values";
-    public static final String REQUEST_AUTO_FILL_RANDOM_VALUES_ENV = "CITRUS_OPENAPI_REQUEST_FILL_RANDOM_VALUES";
+    public static final String REQUEST_AUTO_FILL_RANDOM_VALUES_ENV = transformPropertyToEnv(
+        REQUEST_AUTO_FILL_RANDOM_VALUES_PROPERTY);
 
     public static final String RESPONSE_AUTO_FILL_RANDOM_VALUES_PROPERTY = "citrus.openapi.response.fill.random.values";
-    public static final String RESPONSE_AUTO_FILL_RANDOM_VALUES_ENV = "CITRUS_OPENAPI_RESPONSE_FILL_RANDOM_VALUES";
+    public static final String RESPONSE_AUTO_FILL_RANDOM_VALUES_ENV = transformPropertyToEnv(
+        RESPONSE_AUTO_FILL_RANDOM_VALUES_PROPERTY);
 
     public static final String OPEN_API_VALIDATION_POLICY_PROPERTY = "citrus.openapi.validation.policy";
-    public static final String OPEN_API_VALIDATION_POLICY_ENV = "CITRUS_OPENAPI_VALIDATION_POLICY";
+    public static final String OPEN_API_VALIDATION_POLICY_ENV = transformPropertyToEnv(
+        OPEN_API_VALIDATION_POLICY_PROPERTY);
+
+    private static final SystemProvider SYSTEM_PROVIDER = new SystemProvider();
 
     private OpenApiSettings() {
         // static access only
     }
 
-    public static boolean isGenerateOptionalFieldsGlobally() {
-        return parseBoolean(System.getProperty(GENERATE_OPTIONAL_FIELDS_PROPERTY, System.getenv(GENERATE_OPTIONAL_FIELDS_ENV) != null ?
-                System.getenv(GENERATE_OPTIONAL_FIELDS_ENV) : "true"));
+    public static boolean isGenerateOptionalFieldsEnabled() {
+        return isGenerateOptionalFieldsEnabled(SYSTEM_PROVIDER);
     }
 
-    public static boolean isRequestValidationEnabledGlobally() {
-        return parseBoolean(System.getProperty(
-                REQUEST_VALIDATION_ENABLED_PROPERTY, System.getenv(REQUEST_VALIDATION_ENABLED_ENV) != null ?
-                        System.getenv(REQUEST_VALIDATION_ENABLED_ENV) : "true"));
+    @VisibleForTesting
+    static boolean isGenerateOptionalFieldsEnabled(SystemProvider systemProvider) {
+        return booleanPropertyOrDefault(systemProvider, GENERATE_OPTIONAL_FIELDS_ENABLED_PROPERTY,
+            GENERATE_OPTIONAL_FIELDS_ENABLED_ENV, true);
     }
 
-    public static boolean isResponseValidationEnabledGlobally() {
-        return parseBoolean(System.getProperty(
-                RESPONSE_VALIDATION_ENABLED_PROPERTY, System.getenv(RESPONSE_VALIDATION_ENABLED_ENV) != null ?
-                        System.getenv(RESPONSE_VALIDATION_ENABLED_ENV) : "true"));
+    public static boolean isRequestValidationEnabled() {
+        return isRequestValidationEnabled(SYSTEM_PROVIDER);
     }
 
-    public static boolean isNeglectBasePathGlobally() {
+    @VisibleForTesting
+    static boolean isRequestValidationEnabled(SystemProvider systemProvider) {
+        return booleanPropertyOrDefault(systemProvider, REQUEST_VALIDATION_ENABLED_PROPERTY,
+            REQUEST_VALIDATION_ENABLED_ENV, true);
+    }
+
+    public static boolean isResponseValidationEnabled() {
         return parseBoolean(System.getProperty(
-            NEGLECT_OPEN_API_BASE_PATH_PROPERTY, System.getenv(NEGLECT_OPEN_API_BASE_PATH_ENV) != null ?
-                System.getenv(NEGLECT_OPEN_API_BASE_PATH_ENV) : "false"));
+            RESPONSE_VALIDATION_ENABLED_PROPERTY,
+            System.getenv(RESPONSE_VALIDATION_ENABLED_ENV) != null ?
+                System.getenv(RESPONSE_VALIDATION_ENABLED_ENV) : "true"));
+    }
+
+    @VisibleForTesting
+    static boolean isResponseValidationEnabled(SystemProvider systemProvider) {
+        return booleanPropertyOrDefault(systemProvider, RESPONSE_VALIDATION_ENABLED_PROPERTY,
+            RESPONSE_VALIDATION_ENABLED_ENV, true);
+    }
+
+    public static boolean isNeglectBasePathEnabled() {
+        return parseBoolean(System.getProperty(
+            NEGLECT_OPEN_API_BASE_PATH_ENABLED_PROPERTY, System.getenv(
+                NEGLECT_OPEN_API_BASE_PATH_ENABLED_ENV) != null ?
+                System.getenv(NEGLECT_OPEN_API_BASE_PATH_ENABLED_ENV) : "false"));
+    }
+
+    @VisibleForTesting
+    static boolean isNeglectBasePathEnabled(SystemProvider systemProvider) {
+        return booleanPropertyOrDefault(systemProvider, NEGLECT_OPEN_API_BASE_PATH_ENABLED_PROPERTY,
+            NEGLECT_OPEN_API_BASE_PATH_ENABLED_ENV, false);
     }
 
     /**
      * The default AutoFillType for request is set to REQUIRED to support backwards compatibility.
      */
     public static AutoFillType getRequestAutoFillRandomValues() {
-        return AutoFillType.valueOf(System.getProperty(
-            REQUEST_AUTO_FILL_RANDOM_VALUES_PROPERTY, System.getenv(REQUEST_AUTO_FILL_RANDOM_VALUES_ENV) != null ?
-                System.getenv(REQUEST_AUTO_FILL_RANDOM_VALUES_ENV) : AutoFillType.REQUIRED.name()));
+        return getRequestAutoFillRandomValues(SYSTEM_PROVIDER);
+    }
+
+    @VisibleForTesting
+    static AutoFillType getRequestAutoFillRandomValues(SystemProvider systemProvider) {
+        return enumPropertyOrDefault(systemProvider, AutoFillType.class,
+            REQUEST_AUTO_FILL_RANDOM_VALUES_PROPERTY,
+            REQUEST_AUTO_FILL_RANDOM_VALUES_ENV, REQUIRED);
     }
 
     /**
      * The default AutoFillType for response is set to REQUIRED to support backwards compatibility.
      */
     public static AutoFillType getResponseAutoFillRandomValues() {
-        return AutoFillType.valueOf(System.getProperty(
-            RESPONSE_AUTO_FILL_RANDOM_VALUES_PROPERTY, System.getenv(RESPONSE_AUTO_FILL_RANDOM_VALUES_ENV) != null ?
-                System.getenv(RESPONSE_AUTO_FILL_RANDOM_VALUES_ENV) : AutoFillType.REQUIRED.name()));
+        return getResponseAutoFillRandomValues(SYSTEM_PROVIDER);
+    }
+
+    @VisibleForTesting
+    static AutoFillType getResponseAutoFillRandomValues(SystemProvider systemProvider) {
+        return enumPropertyOrDefault(systemProvider, AutoFillType.class,
+            RESPONSE_AUTO_FILL_RANDOM_VALUES_PROPERTY, RESPONSE_AUTO_FILL_RANDOM_VALUES_ENV,
+            REQUIRED);
     }
 
     /**
      * The default OpenApiValidationPolicy for OpenAPI parsed for validation purposes.
      */
     public static OpenApiValidationPolicy getOpenApiValidationPolicy() {
-        return OpenApiValidationPolicy.valueOf(System.getProperty(
-            OPEN_API_VALIDATION_POLICY_PROPERTY, System.getenv(OPEN_API_VALIDATION_POLICY_ENV) != null ?
-                System.getenv(OPEN_API_VALIDATION_POLICY_ENV) : OpenApiValidationPolicy.REPORT.name()));
+        return getOpenApiValidationPolicy(SYSTEM_PROVIDER);
+    }
+
+    @VisibleForTesting
+    static OpenApiValidationPolicy getOpenApiValidationPolicy(
+        SystemProvider systemProvider) {
+        return enumPropertyOrDefault(systemProvider, OpenApiValidationPolicy.class,
+            OPEN_API_VALIDATION_POLICY_PROPERTY, OPEN_API_VALIDATION_POLICY_ENV, REPORT);
     }
 
 }

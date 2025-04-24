@@ -39,7 +39,7 @@ public class RandomStringGenerator extends RandomGenerator {
     }
 
     @Override
-    void generate(RandomContext randomContext, OasSchema schema) {
+    void generateIntoContext(RandomContext randomContext, OasSchema schema) {
         int min = 1;
         int max = 10;
 

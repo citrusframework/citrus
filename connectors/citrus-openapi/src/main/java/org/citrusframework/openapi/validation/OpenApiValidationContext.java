@@ -32,9 +32,6 @@ import com.atlassian.oai.validator.whitelist.rule.WhitelistRule;
 import io.swagger.v3.oas.models.OpenAPI;
 import jakarta.annotation.Nonnull;
 
-import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledGlobally;
-import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
-
 /**
  * Represents the context for OpenAPI validation, providing configuration and validators for request and response validation.
  * This context maintains settings for both request and response validation, which can be controlled at an instance level.
@@ -54,9 +51,9 @@ public class OpenApiValidationContext {
 
     private SchemaValidator schemaValidator;
 
-    private boolean responseValidationEnabled = isResponseValidationEnabledGlobally();
+    private boolean responseValidationEnabled = isResponseValidationEnabled();
 
-    private boolean requestValidationEnabled = isRequestValidationEnabledGlobally();
+    private boolean requestValidationEnabled = isRequestValidationEnabled();
 
     public OpenApiValidationContext(OpenAPI openApi) {
         this.openApi = openApi;

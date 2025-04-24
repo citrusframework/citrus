@@ -43,6 +43,8 @@ import org.springframework.http.HttpMethod;
 import static org.citrusframework.openapi.OpenApiMessageType.REQUEST;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
+import static org.citrusframework.openapi.model.OasModelHelper.getRequestBodySchema;
+import static org.citrusframework.openapi.model.OasModelHelper.isOperationRequestBodyRequired;
 import static org.citrusframework.util.StringUtils.isNotEmpty;
 
 /**
@@ -51,7 +53,7 @@ import static org.citrusframework.util.StringUtils.isNotEmpty;
 public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBuilder {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
-    private final String operationId;
+    private final String operationKey;
     private OpenApiOperationToMessageHeadersProcessor openApiOperationToMessageHeadersProcessor;
     private boolean schemaValidation = true;
 
@@ -60,25 +62,25 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
      * Default constructor initializes http request message builder.
      */
     public OpenApiClientRequestActionBuilder(OpenApiSpecificationSource openApiSpec,
-        String operationId) {
-        this(new HttpMessage(), openApiSpec, operationId);
+        String operationKey) {
+        this(new HttpMessage(), openApiSpec, operationKey);
     }
 
     public OpenApiClientRequestActionBuilder(HttpMessage httpMessage,
         OpenApiSpecificationSource openApiSpec,
-        String operationId) {
+        String operationKey) {
         this(openApiSpec,
-            new OpenApiClientRequestMessageBuilder(httpMessage, openApiSpec, operationId),
-            httpMessage, operationId);
+            new OpenApiClientRequestMessageBuilder(httpMessage, openApiSpec, operationKey),
+            httpMessage, operationKey);
     }
 
     public OpenApiClientRequestActionBuilder(OpenApiSpecificationSource openApiSpec,
         OpenApiClientRequestMessageBuilder messageBuilder,
         HttpMessage message,
-        String operationId) {
+        String operationKey) {
         super(messageBuilder, message);
         this.openApiSpecificationSource = openApiSpec;
-        this.operationId = operationId;
+        this.operationKey = operationKey;
     }
 
     public OpenApiClientRequestActionBuilder autoFill(AutoFillType autoFill) {
@@ -101,7 +103,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
         if (schemaValidation && !messageProcessors.contains(
             openApiOperationToMessageHeadersProcessor)) {
             openApiOperationToMessageHeadersProcessor = new OpenApiOperationToMessageHeadersProcessor(
-                openApiSpecification, operationId, REQUEST);
+                openApiSpecification, operationKey, REQUEST);
             process(openApiOperationToMessageHeadersProcessor);
         }
 
@@ -127,16 +129,16 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
 
         private final OpenApiSpecificationSource openApiSpecificationSource;
 
-        private final String operationId;
+        private final String operationKey;
 
         private AutoFillType autoFill ;
 
         public OpenApiClientRequestMessageBuilder(HttpMessage httpMessage,
             OpenApiSpecificationSource openApiSpec,
-            String operationId) {
+            String operationKey) {
             super(httpMessage);
             this.openApiSpecificationSource = openApiSpec;
-            this.operationId = operationId;
+            this.operationKey = operationKey;
         }
 
         public OpenApiClientRequestMessageBuilder autoFill(AutoFillType autoFill) {
@@ -154,14 +156,14 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
             }
 
             openApiSpecification.initOpenApiDoc(context);
-            openApiSpecification.getOperation(operationId, context)
+            openApiSpecification.getOperation(operationKey, context)
                 .ifPresentOrElse(operationPathAdapter ->
                         buildMessageFromOperation(openApiSpecification, operationPathAdapter,
                             context),
                     () -> {
                         throw new CitrusRuntimeException(
                             "Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(
-                                operationId, openApiSpecification.getSpecUrl()));
+                                operationKey, openApiSpecification.getSpecUrl()));
                     });
             context.setVariable(openApiSpecification.getUid(), openApiSpecification);
 
@@ -231,12 +233,13 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
             if (getMessage().getPayload() == null || (
                 getMessage().getPayload() instanceof String payloadString
                     && payloadString.isEmpty())) {
-                Optional<OasSchema> body = OasModelHelper.getRequestBodySchema(
+                Optional<OasSchema> body = getRequestBodySchema(
                     openApiSpecification.getOpenApiDoc(context), operation);
+
 
                 body.ifPresent(oasSchema -> {
 
-                    if (autoFill == AutoFillType.ALL || autoFill == AutoFillType.REQUIRED) {
+                    if (autoFill.shouldFill(isOperationRequestBodyRequired(openApiSpecification.getOpenApiDoc(context), operation))) {
                         getMessage().setPayload(
                             createOutboundPayload(oasSchema, openApiSpecification));
                     }
@@ -255,8 +258,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                 // Not configured manually
                 .filter(param -> !getMessage().getQueryParams().containsKey(param.getName()))
                 // Only targeted parameters
-                .filter(param -> autoFill == AutoFillType.ALL || (autoFill == AutoFillType.REQUIRED
-                    && Boolean.TRUE.equals(param.required)))
+                .filter(param -> autoFill.shouldFill(param.required))
                 .forEach(param -> {
                     Object queryParameterValue = context.getVariables()
                         .get(param.getName());
@@ -292,8 +294,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                 .filter(param -> getMessage().getHeader(param.getName()) == null
                     && !configuredHeaders.contains(param.getName()))
                 // Only targeted parameters
-                .filter(param -> autoFill == AutoFillType.ALL || (autoFill == AutoFillType.REQUIRED
-                    && Boolean.TRUE.equals(param.required)))
+                .filter(param -> autoFill.shouldFill(param.required))
                 .forEach(param -> {
                     Object headerValue = context.getVariables()
                         .get(param.getName());

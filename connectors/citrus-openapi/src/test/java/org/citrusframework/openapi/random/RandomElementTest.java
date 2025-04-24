@@ -16,6 +16,7 @@
 
 package org.citrusframework.openapi.random;
 
+import org.citrusframework.openapi.random.RandomElement.RandomValue;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -36,54 +37,60 @@ public class RandomElementTest {
 
     @Test
     public void testRandomListPushValue() {
-        randomList.push("testValue");
+        RandomValue value = new RandomValue("testValue");
+        randomList.push(value);
         assertEquals(randomList.size(), 1);
-        assertEquals(randomList.get(0), "testValue");
+        assertEquals(randomList.get(0), value);
     }
 
     @Test
     public void testRandomListPushKeyValue() {
+        RandomValue value = new RandomValue("value");
         randomList.push(new RandomElement.RandomObject());
-        randomList.push("key", "value");
-        assertEquals(((RandomElement.RandomObject) randomList.get(0)).get("key"), "value");
+        randomList.push("key", value);
+        assertEquals(((RandomElement.RandomObject) randomList.get(0)).get("key"), value);
     }
 
     @Test
     public void testRandomObjectPushKeyValue() {
-        randomObject.push("key", "value");
-        assertEquals(randomObject.get("key"), "value");
+        RandomValue value = new RandomValue("value");
+        randomObject.push("key", value);
+        assertEquals(randomObject.get("key"), value);
     }
 
     @Test
     public void testRandomObjectPushRandomObject() {
         RandomElement.RandomObject nestedObject = new RandomElement.RandomObject();
-        nestedObject.push("nestedKey", "nestedValue");
+        RandomValue value = new RandomValue("nestedValue");
+        nestedObject.push("nestedKey", value);
         randomObject.push(nestedObject);
         assertEquals(randomObject.size(), 1);
-        assertEquals(randomObject.get("nestedKey"), "nestedValue");
+        assertEquals(randomObject.get("nestedKey"), value);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testRandomObjectPushValueThrowsException() {
-        randomObject.push("value");
+        randomObject.push(new RandomValue("value"));
     }
 
     @Test
     public void testRandomValuePushValue() {
-        randomValue.push("testValue");
-        assertEquals(randomValue.getValue(), "testValue");
+        RandomValue value = new RandomValue("testValue");
+        randomValue.push(value);
+        assertEquals(randomValue.getValue(), value);
     }
 
     @Test
     public void testRandomValuePushRandomElement() {
         RandomElement.RandomObject nestedObject = new RandomElement.RandomObject();
         randomValue = new RandomElement.RandomValue(nestedObject);
-        randomValue.push("key", "value");
-        assertEquals(((RandomElement.RandomObject) randomValue.getValue()).get("key"), "value");
+        RandomValue value = new RandomValue("value");
+        randomValue.push("key", value);
+        assertEquals(((RandomElement.RandomObject) randomValue.getValue()).get("key"), value);
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void testRandomValuePushKeyValueThrowsException() {
-        randomValue.push("key", "value");
+        randomValue.push("key", new RandomValue("value"));
     }
 }

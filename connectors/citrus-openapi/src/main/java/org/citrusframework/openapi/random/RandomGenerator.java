@@ -22,7 +22,7 @@ import io.apicurio.datamodels.openapi.models.OasSchema;
 
 /**
  * Abstract base class for generators that produce random data based on an OpenAPI schema.
- * Subclasses must implement the {@link #generate} method to provide specific random data generation logic.
+ * Subclasses must implement the {@link #generateIntoContext} method to provide specific random data generation logic.
  *
  * <p>The class provides methods for determining if a generator can handle a given schema,
  * based on the schema type, format, pattern, and enum constraints.
@@ -33,10 +33,11 @@ public abstract class RandomGenerator {
     public static final RandomGenerator NOOP_RANDOM_GENERATOR = new RandomGenerator() {
 
         @Override
-        void generate(RandomContext randomContext, OasSchema schema) {
+        void generateIntoContext(RandomContext randomContext, OasSchema schema) {
             // Do nothing
         }
     };
+
     private final OasSchema schema;
 
     protected RandomGenerator() {
@@ -61,16 +62,12 @@ public abstract class RandomGenerator {
                 return (ANY.equals(schema.pattern) && other.pattern != null) || Objects.equals(schema.pattern, other.pattern);
             }
 
-            if (schema.enum_ != null && other.enum_ != null) {
-                return true;
-            }
-
             return true;
         }
 
         return false;
     }
 
-    abstract void generate(RandomContext randomContext, OasSchema schema);
+    abstract void generateIntoContext(RandomContext randomContext, OasSchema schema);
 
 }

@@ -1,2 +1,2 @@
 name=defaultOpenApiSchemaValidator
-type=org.citrusframework.openapi.validation.OpenApiSchemaValidation
+type=org.citrusframework.openapi.validation.schema.OpenApiSchemaValidation

@@ -69,7 +69,7 @@ public class RandomGeneratorBuilder {
     RandomGenerator build(BiConsumer<RandomContext, OasSchema> consumer) {
         return new RandomGenerator(schema) {
             @Override
-            void generate(RandomContext randomContext, OasSchema schema) {
+            void generateIntoContext(RandomContext randomContext, OasSchema schema) {
                 consumer.accept(randomContext, schema);
             }
         };

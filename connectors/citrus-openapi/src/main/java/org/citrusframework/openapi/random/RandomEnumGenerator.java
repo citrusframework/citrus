@@ -30,7 +30,7 @@ public class RandomEnumGenerator extends RandomGenerator {
     }
 
     @Override
-    void generate(RandomContext randomContext, OasSchema schema) {
+    void generateIntoContext(RandomContext randomContext, OasSchema schema) {
         List<String> anEnum = schema.enum_;
         if (anEnum != null) {
             String enumValues = schema.enum_.stream()

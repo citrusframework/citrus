@@ -21,16 +21,12 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.Nullable;
 
-import com.atlassian.oai.validator.OpenApiInteractionValidator.SpecSource;
-import com.atlassian.oai.validator.util.OpenApiLoader;
 import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.parser.core.models.ParseOptions;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
-import jakarta.annotation.Nonnull;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.openapi.OpenApiResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +54,13 @@ public final class OpenApiValidationContextLoader {
         // Static access only
     }
 
+    /**
+     * Creates an OpenApiValidationContext from an open api string.
+     *
+     * @param openApiSpecAsString the string representation of an OpenAPI
+     * @param openApiValidationPolicy the policy to be used for parsing
+     * @return the OpenApiValidationContext
+     */
     public static OpenApiValidationContext fromSpec(String openApiSpecAsString,
         OpenApiValidationPolicy openApiValidationPolicy) {
         OpenAPIParser openAPIParser = new OpenAPIParser();
@@ -109,18 +112,6 @@ public final class OpenApiValidationContextLoader {
                 )
             );
         }
-    }
-
-    /**
-     * Creates an OpenApiValidationContext from an open api string.
-     *
-     * @param openApi the string representation of an OpenAPI
-     * @return the OpenApiValidationContext
-     */
-    public static OpenApiValidationContext fromString(@Nonnull String openApi) {
-        return createValidationContext(new OpenApiLoader().loadApi(
-            SpecSource.inline(OpenApiResourceLoader.rawFromString(openApi)), emptyList(),
-            defaultParseOptions()));
     }
 
     private static OpenApiValidationContext createValidationContext(OpenAPI openApi) {

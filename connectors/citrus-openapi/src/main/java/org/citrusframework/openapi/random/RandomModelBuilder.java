@@ -19,14 +19,15 @@ package org.citrusframework.openapi.random;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+
 import org.citrusframework.openapi.random.RandomElement.RandomList;
 import org.citrusframework.openapi.random.RandomElement.RandomObject;
 import org.citrusframework.openapi.random.RandomElement.RandomValue;
 
 /**
- * RandomModelBuilder is a class for building random JSON models. It supports adding simple values,
- * objects, properties, and arrays to the JSON structure. The final model can be converted to a JSON
- * string using the `writeToJson` method.
+ * {@code RandomModelBuilder} is a class for building random models based on the RandomElement
+ * metamodel. It supports adding properties, objects, and arrays to the structure.
+ * The final model can be converted to a JSON string using the `writeToJson` method.
  * <p>
  * The builder is able to build nested structures and can also handle native string, number, and
  * boolean elements, represented as functions for later dynamic string conversion by Citrus.
@@ -51,9 +52,9 @@ public class RandomModelBuilder {
     private final boolean quote;
 
     /**
-     * Creates a {@link RandomModelBuilder} in respective quoting mode.
-     * Quoting should be activated in case an object is created by the builder. In this case,
-     * all properties added by respective "quoted" methods, will be quoted.
+     * Creates a {@link RandomModelBuilder} in respective quoting mode. Quoting should be activated
+     * in case an object is created by the builder. In this case, all properties added by respective
+     * "quoted" methods, will be quoted.
      *
      * @param quote whether to run the builder in quoting mode or not.
      */
@@ -62,8 +63,8 @@ public class RandomModelBuilder {
         this.quote = quote;
     }
 
-    public String write() {
-        return RandomModelWriter.toString(this);
+    public String writeToJson() {
+        return RandomModelJsonWriter.toString(this);
     }
 
     /**
@@ -73,14 +74,13 @@ public class RandomModelBuilder {
         if (deque.isEmpty()) {
             deque.push(new RandomValue(simpleValue));
         } else {
-            deque.peek().push(simpleValue);
+            deque.peek().push(new RandomValue(simpleValue));
         }
     }
 
     /**
      * If the builder is in quoting mode, the native value will be quoted, otherwise it will be
-     * added as ist.
-     * s
+     * added as ist. s
      *
      * @param simpleValue
      */

@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
 public class OpenApiOperationToMessageHeadersProcessorTest {
 
     private OpenApiSpecification openApiSpecification;
-    private String operationId;
+    private String operationKey;
     private OpenApiMessageType type;
     private OpenApiOperationToMessageHeadersProcessor processor;
     private Message message;
@@ -45,9 +45,9 @@ public class OpenApiOperationToMessageHeadersProcessorTest {
     @BeforeMethod
     public void setUp() {
         openApiSpecification = mock(OpenApiSpecification.class);
-        operationId = "testOperationId";
+        operationKey = "testOperationId";
         type = mock(OpenApiMessageType.class);
-        processor = new OpenApiOperationToMessageHeadersProcessor(openApiSpecification, operationId, type);
+        processor = new OpenApiOperationToMessageHeadersProcessor(openApiSpecification, operationKey, type);
 
         message = mock(Message.class);
         context = mock(TestContext.class);
@@ -56,7 +56,7 @@ public class OpenApiOperationToMessageHeadersProcessorTest {
     @Test
     public void testProcess() {
         OperationPathAdapter operationPathAdapter = mock(OperationPathAdapter.class);
-        when(openApiSpecification.getOperation(operationId, context))
+        when(openApiSpecification.getOperation(operationKey, context))
                 .thenReturn(Optional.of(operationPathAdapter));
         when(operationPathAdapter.uniqueOperationId()).thenReturn("uniqueOperationId");
         when(type.toHeaderName()).thenReturn("headerName");
@@ -69,7 +69,7 @@ public class OpenApiOperationToMessageHeadersProcessorTest {
 
     @Test
     public void testProcessOperationNotPresent() {
-        when(openApiSpecification.getOperation(operationId, context))
+        when(openApiSpecification.getOperation(operationKey, context))
                 .thenReturn(Optional.empty());
 
         processor.process(message, context);

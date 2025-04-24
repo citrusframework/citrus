@@ -17,10 +17,9 @@
 package org.citrusframework.openapi;
 
 /**
- * The {@code OpenApiMessageType} enum defines the types of OpenAPI messages,
- * specifically REQUEST and RESPONSE. Each type is associated with a specific
- * header name, which is used to identify the type of message in the OpenAPI
- * message headers.
+ * The {@code OpenApiMessageType} enum defines the types of OpenAPI messages, specifically
+ * {@code REQUEST} and {@code RESPONSE}. Each type is associated with a specific header name, which
+ * is used to identify the type of message in the OpenAPI message headers.
  */
 public enum OpenApiMessageType {
 

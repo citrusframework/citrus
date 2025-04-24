@@ -34,14 +34,14 @@ public class OpenApiOperationToMessageHeadersProcessor implements MessageProcess
 
     private final OpenApiSpecification openApiSpecification;
 
-    private final String operationId;
+    private final String operationKey;
 
     private final OpenApiMessageType type;
 
     public OpenApiOperationToMessageHeadersProcessor(OpenApiSpecification openApiSpecification,
-                                                     String operationId,
+                                                     String operationKey,
                                                      OpenApiMessageType type) {
-        this.operationId = operationId;
+        this.operationKey = operationKey;
         this.openApiSpecification = openApiSpecification;
         this.type = type;
     }
@@ -49,10 +49,10 @@ public class OpenApiOperationToMessageHeadersProcessor implements MessageProcess
     @Override
     public void process(Message message, TestContext context) {
         openApiSpecification
-                .getOperation(operationId, context)
+                .getOperation(operationKey, context)
                 .ifPresent(operationPathAdapter -> {
                     message.setHeader(OAS_SPECIFICATION_ID, openApiSpecification.getUid());
-                    // Store the uniqueId of the operation, rather than the operationId, to avoid clashes.
+                    // Store the uniqueId of the operation, rather than the operationKey, to avoid clashes.
                     message.setHeader(OAS_UNIQUE_OPERATION_ID, operationPathAdapter.uniqueOperationId());
                     message.setHeader(OAS_MESSAGE_TYPE, type.toHeaderName());
                 });

@@ -49,7 +49,7 @@ public class RandomObjectGenerator extends RandomGenerator {
     }
 
     @Override
-    void generate(RandomContext randomContext, OasSchema schema) {
+    void generateIntoContext(RandomContext randomContext, OasSchema schema) {
         Deque<OasSchema> objectStack = randomContext.get(OBJECT_STACK, k -> new ArrayDeque<>());
 
         if (objectStack.contains(schema)) {
