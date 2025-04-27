@@ -18,7 +18,6 @@ package org.citrusframework.openapi.actions;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;
@@ -31,33 +30,35 @@ import org.springframework.http.HttpStatus;
  */
 public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
 
-    private final OpenApiSpecification specification;
+    private final OpenApiSpecificationSource openApiSpecificationSource;
 
-    /** Target http client instance */
+    /**
+     * Target http client instance
+     */
     private Endpoint httpServer;
     private String httpServerUri;
 
     /**
      * Default constructor.
      */
-    public OpenApiServerActionBuilder(Endpoint httpServer, OpenApiSpecification specification) {
+    public OpenApiServerActionBuilder(Endpoint httpServer, OpenApiSpecificationSource specification) {
         this.httpServer = httpServer;
-        this.specification = specification;
+        this.openApiSpecificationSource = specification;
     }
 
     /**
      * Default constructor.
      */
-    public OpenApiServerActionBuilder(String httpServerUri, OpenApiSpecification specification) {
+    public OpenApiServerActionBuilder(String httpServerUri, OpenApiSpecificationSource specification) {
         this.httpServerUri = httpServerUri;
-        this.specification = specification;
+        this.openApiSpecificationSource = specification;
     }
 
     /**
      * Receive Http requests as server.
      */
-    public OpenApiServerRequestActionBuilder receive(String operationId) {
-        OpenApiServerRequestActionBuilder builder = new OpenApiServerRequestActionBuilder(specification, operationId);
+    public OpenApiServerRequestActionBuilder receive(String operationKey) {
+        OpenApiServerRequestActionBuilder builder = new OpenApiServerRequestActionBuilder(openApiSpecificationSource, operationKey);
         if (httpServer != null) {
             builder.endpoint(httpServer);
         } else {
@@ -75,22 +76,36 @@ public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTe
      * Sends Http response messages as server.
      * Uses default Http status 200 OK.
      */
-    public OpenApiServerResponseActionBuilder send(String operationId) {
-        return send(operationId, HttpStatus.OK);
+    public OpenApiServerResponseActionBuilder send(String operationKey) {
+        return send(operationKey, HttpStatus.OK);
     }
 
     /**
      * Send Http response messages as server to client.
      */
-    public OpenApiServerResponseActionBuilder send(String operationId, HttpStatus status) {
-        return send(operationId, String.valueOf(status.value()));
+    public OpenApiServerResponseActionBuilder send(String operationKey, HttpStatus status) {
+        return send(operationKey, String.valueOf(status.value()));
     }
 
     /**
      * Send Http response messages as server to client.
      */
-    public OpenApiServerResponseActionBuilder send(String operationId, String statusCode) {
-        OpenApiServerResponseActionBuilder builder = new OpenApiServerResponseActionBuilder(specification, operationId, statusCode);
+    public OpenApiServerResponseActionBuilder send(String operationKey, HttpStatus status, String accept) {
+        return send(operationKey, String.valueOf(status.value()), accept);
+    }
+
+    /**
+     * Send Http response messages as server to client.
+     */
+    public OpenApiServerResponseActionBuilder send(String operationKey, String statusCode) {
+        return send(operationKey, statusCode, null);
+    }
+
+    /**
+     * Send Http response messages as server to client.
+     */
+    public OpenApiServerResponseActionBuilder send(String operationKey, String statusCode, String accept) {
+        OpenApiServerResponseActionBuilder builder = new OpenApiServerResponseActionBuilder(openApiSpecificationSource, operationKey, statusCode, accept);
         if (httpServer != null) {
             builder.endpoint(httpServer);
         } else {
@@ -106,6 +121,7 @@ public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTe
 
     /**
      * Sets the Spring bean application context.
+     *
      * @param referenceResolver
      */
     public OpenApiServerActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
