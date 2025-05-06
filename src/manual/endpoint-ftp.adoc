@@ -630,7 +630,7 @@ The user configuration is read from a *user-manager-property* file. Let us have 
 [source,xml]
 ----
 # Password is "admin"
-ftpserver.user.admin.userpassword=21232F297A57A5A743894A0E4A801FC3
+ftpserver.user.admin.userpassword=c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23f3eab1d80b931dd472634dfac71cd34ebc35d16ab7fb8a90c81f975113d6c7538dc69dd8de9077ec
 ftpserver.user.admin.homedirectory=target/ftp/user/admin
 ftpserver.user.admin.enableflag=true
 ftpserver.user.admin.writepermission=true
