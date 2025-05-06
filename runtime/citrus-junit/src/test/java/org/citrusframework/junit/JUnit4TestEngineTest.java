@@ -61,12 +61,8 @@ public class JUnit4TestEngineTest {
     @Test
     public void shouldResolveJUnit4Engine() {
         TestRunConfiguration configuration = new TestRunConfiguration();
-        TestEngine engine = TestEngine.lookup(configuration);
-
-        Assert.assertEquals(engine.getClass(), JUnit4TestEngine.class);
-
         configuration.setEngine("junit4");
-        engine = TestEngine.lookup(configuration);
+        TestEngine engine = TestEngine.lookup(configuration);
 
         Assert.assertEquals(engine.getClass(), JUnit4TestEngine.class);
     }

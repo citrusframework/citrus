@@ -166,7 +166,7 @@
     <maven.clean.plugin.version>3.3.1</maven.clean.plugin.version>
     <maven.dependency.plugin.version>3.8.1</maven.dependency.plugin.version>
     <maven.deploy.plugin.version>3.1.1</maven.deploy.plugin.version>
-    <maven.failsafe.plugin.version>2.22.2</maven.failsafe.plugin.version>
+    <maven.failsafe.plugin.version>3.5.3</maven.failsafe.plugin.version>
     <maven.gpg.plugin.version>1.6</maven.gpg.plugin.version>
     <maven.helper.plugin.version>3.6.0</maven.helper.plugin.version>
     <maven.install.plugin.version>3.1.1</maven.install.plugin.version>
@@ -179,7 +179,7 @@
     <maven.resource.plugin.version>3.3.1</maven.resource.plugin.version>
     <maven.scm.plugin.version>1.11.2</maven.scm.plugin.version>
     <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
-    <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
+    <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
     <maven.war.plugin.version>3.4.0</maven.war.plugin.version>
     <maven.wagon.ssh.external.version>2.7</maven.wagon.ssh.external.version>
     <apache.rat.plugin.version>0.16.1</apache.rat.plugin.version>
@@ -1424,6 +1424,13 @@
             <skipTests>${skip.unit.tests}</skipTests>
             <workingDirectory>${project.build.directory}</workingDirectory>
           </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-testng</artifactId>
+              <version>${maven.surefire.plugin.version}</version>
+            </dependency>
+          </dependencies>
         </plugin>
 
         <plugin>
@@ -1443,6 +1450,13 @@
               </configuration>
             </execution>
           </executions>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-testng</artifactId>
+              <version>${maven.surefire.plugin.version}</version>
+            </dependency>
+          </dependencies>
         </plugin>
 
         <plugin>

@@ -6,11 +6,12 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.citrusframework.validation.GenericValidationProcessor;
 import org.citrusframework.xml.Unmarshaller;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-class XmlMarshallingValidationProcessorTest extends UnitTestSupport {
+public class XmlMarshallingValidationProcessorTest extends UnitTestSupport {
+
     final Unmarshaller unmarshaller = Object::toString;
     final GenericValidationProcessor<String> validationProcessor = (payload, headers, context) ->
             logger.info("Validating message %s".formatted(payload));

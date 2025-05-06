@@ -171,14 +171,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <configuration>
-          <properties>
-            <property>
-              <name>junit</name>
-              <value>false</value>
-            </property>
-          </properties>
-        </configuration>
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.surefire</groupId>
