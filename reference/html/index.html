@@ -661,8 +661,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 4.5.2,</span>
-<span id="revdate">2025-01-25</span>
+<span id="revnumber">version 4.6.0,</span>
+<span id="revdate">2025-05-07</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -791,9 +791,10 @@ $(addBlockSwitches);
 <li><a href="#jms-synchronous-endpoints">12.2. JMS synchronous endpoints</a></li>
 <li><a href="#jms-topics">12.3. JMS topics</a></li>
 <li><a href="#jms-topic-durable-subscription">12.4. JMS topic durable subscription</a></li>
-<li><a href="#jms-message-headers">12.5. JMS message headers</a></li>
-<li><a href="#dynamic-destination-names">12.6. Dynamic destination names</a></li>
-<li><a href="#soap-over-jms">12.7. SOAP over JMS</a></li>
+<li><a href="#jms-topic-purging">12.5. JMS topic purging</a></li>
+<li><a href="#jms-message-headers">12.6. JMS message headers</a></li>
+<li><a href="#dynamic-destination-names">12.7. Dynamic destination names</a></li>
+<li><a href="#soap-over-jms">12.8. SOAP over JMS</a></li>
 </ul>
 </li>
 <li><a href="#kafka">13. Apache Kafka Support</a>
@@ -1012,18 +1013,21 @@ $(addBlockSwitches);
 <li><a href="#kubernetes-create-labels">37.3. Create Labels</a></li>
 <li><a href="#kubernetes-create-annotations">37.4. Create Annotations</a></li>
 <li><a href="#kubernetes-create-service">37.5. Create Service</a></li>
-<li><a href="#kubernetes-create-config-map">37.6. Create ConfigMap</a></li>
-<li><a href="#kubernetes-create-secret">37.7. Create Secret</a></li>
-<li><a href="#kubernetes-create-resources">37.8. Create Resources</a></li>
-<li><a href="#kubernetes-delete-resources">37.9. Delete Resources</a></li>
-<li><a href="#kubernetes-create-custom-resource">37.10. Create Custom Resource</a></li>
-<li><a href="#kubernetes-delete-custom-resources">37.11. Delete Custom Resource</a></li>
-<li><a href="#kubernetes-verify-custom-resources">37.12. Verify Custom Resource</a></li>
-<li><a href="#kubernetes-verify-pods">37.13. Verify Pod Status</a></li>
-<li><a href="#kubernetes-verify-pod-logs">37.14. Verify Pod Logs</a></li>
-<li><a href="#kubernetes-spring">37.15. Spring bean config</a></li>
-<li><a href="#kubernetes-commands">37.16. Kubernetes commands</a></li>
-<li><a href="#kubernetes-command-bus">37.17. Kubernetes command bus</a></li>
+<li><a href="#kubernetes-connect-service">37.6. Connect with Service</a></li>
+<li><a href="#kubernetes-disconnect-service">37.7. Disconnect from Service</a></li>
+<li><a href="#kubernetes-create-config-map">37.8. Create ConfigMap</a></li>
+<li><a href="#kubernetes-create-secret">37.9. Create Secret</a></li>
+<li><a href="#kubernetes-create-resources">37.10. Create Resources</a></li>
+<li><a href="#kubernetes-delete-resources">37.11. Delete Resources</a></li>
+<li><a href="#kubernetes-create-custom-resource">37.12. Create Custom Resource</a></li>
+<li><a href="#kubernetes-delete-custom-resources">37.13. Delete Custom Resource</a></li>
+<li><a href="#kubernetes-verify-custom-resources">37.14. Verify Custom Resource</a></li>
+<li><a href="#kubernetes-verify-pods">37.15. Verify Pod Status</a></li>
+<li><a href="#kubernetes-verify-pod-logs">37.16. Verify Pod Logs</a></li>
+<li><a href="#kubernetes-agent">37.17. Kubernetes Citrus agent</a></li>
+<li><a href="#kubernetes-spring">37.18. Spring bean config</a></li>
+<li><a href="#kubernetes-commands">37.19. Kubernetes commands</a></li>
+<li><a href="#kubernetes-command-bus">37.20. Kubernetes command bus</a></li>
 </ul>
 </li>
 <li><a href="#knative">38. Knative support</a>
@@ -1060,34 +1064,36 @@ $(addBlockSwitches);
 <li><a href="#functions-floor">40.8. floor()</a></li>
 <li><a href="#functions-ceiling">40.9. ceiling()</a></li>
 <li><a href="#functions-random-number">40.10. randomNumber()</a></li>
-<li><a href="#functions-random-string">40.11. randomString()</a></li>
-<li><a href="#functions-random-enum-value">40.12. randomEnumValue()</a></li>
-<li><a href="#functions-current-date">40.13. currentDate()</a></li>
-<li><a href="#functions-uppercase">40.14. upperCase()</a></li>
-<li><a href="#functions-lowercase">40.15. lowerCase()</a></li>
-<li><a href="#functions-average">40.16. average()</a></li>
-<li><a href="#functions-minimum">40.17. minimum()</a></li>
-<li><a href="#functions-maximum">40.18. maximum()</a></li>
-<li><a href="#functions-sum">40.19. sum()</a></li>
-<li><a href="#functions-absolute">40.20. absolute()</a></li>
-<li><a href="#functions-map-value">40.21. mapValue()</a></li>
-<li><a href="#functions-random-uuid">40.22. randomUUID()</a></li>
-<li><a href="#functions-encode-base64">40.23. encodeBase64()</a></li>
-<li><a href="#functions-decode-base64">40.24. decodeBase64()</a></li>
-<li><a href="#functions-escape-xml">40.25. escapeXml()</a></li>
-<li><a href="#functions-escape-json">40.26. escapeJson()</a></li>
-<li><a href="#functions-cdata-section">40.27. cdataSection()</a></li>
-<li><a href="#functions-digest-auth-header">40.28. digestAuthHeader()</a></li>
-<li><a href="#functions-localhost-address">40.29. localHostAddress()</a></li>
-<li><a href="#functions-change-date">40.30. changeDate()</a></li>
-<li><a href="#functions-read-file">40.31. readFile()</a></li>
-<li><a href="#functions-message">40.32. message()</a></li>
-<li><a href="#functions-xpath">40.33. xpath()</a></li>
-<li><a href="#functions-jsonpath">40.34. jsonPath()</a></li>
-<li><a href="#functions-url-encode">40.35. urlEncode()/urlDecode()</a></li>
-<li><a href="#functions-system-properties">40.36. systemProperty()</a></li>
-<li><a href="#functions-env-settings">40.37. env()</a></li>
-<li><a href="#functions-unix-timestamp">40.38. unixTimestamp()</a></li>
+<li><a href="#function-random-number-generator">40.11. randomNumberGenerator()</a></li>
+<li><a href="#functions-random-string">40.12. randomString()</a></li>
+<li><a href="#functions-random-pattern">40.13. randomPattern()</a></li>
+<li><a href="#functions-random-enum-value">40.14. randomEnumValue()</a></li>
+<li><a href="#functions-current-date">40.15. currentDate()</a></li>
+<li><a href="#functions-uppercase">40.16. upperCase()</a></li>
+<li><a href="#functions-lowercase">40.17. lowerCase()</a></li>
+<li><a href="#functions-average">40.18. average()</a></li>
+<li><a href="#functions-minimum">40.19. minimum()</a></li>
+<li><a href="#functions-maximum">40.20. maximum()</a></li>
+<li><a href="#functions-sum">40.21. sum()</a></li>
+<li><a href="#functions-absolute">40.22. absolute()</a></li>
+<li><a href="#functions-map-value">40.23. mapValue()</a></li>
+<li><a href="#functions-random-uuid">40.24. randomUUID()</a></li>
+<li><a href="#functions-encode-base64">40.25. encodeBase64()</a></li>
+<li><a href="#functions-decode-base64">40.26. decodeBase64()</a></li>
+<li><a href="#functions-escape-xml">40.27. escapeXml()</a></li>
+<li><a href="#functions-escape-json">40.28. escapeJson()</a></li>
+<li><a href="#functions-cdata-section">40.29. cdataSection()</a></li>
+<li><a href="#functions-digest-auth-header">40.30. digestAuthHeader()</a></li>
+<li><a href="#functions-localhost-address">40.31. localHostAddress()</a></li>
+<li><a href="#functions-change-date">40.32. changeDate()</a></li>
+<li><a href="#functions-read-file">40.33. readFile()</a></li>
+<li><a href="#functions-message">40.34. message()</a></li>
+<li><a href="#functions-xpath">40.35. xpath()</a></li>
+<li><a href="#functions-jsonpath">40.36. jsonPath()</a></li>
+<li><a href="#functions-url-encode">40.37. urlEncode()/urlDecode()</a></li>
+<li><a href="#functions-system-properties">40.38. systemProperty()</a></li>
+<li><a href="#functions-env-settings">40.39. env()</a></li>
+<li><a href="#functions-unix-timestamp">40.40. unixTimestamp()</a></li>
 </ul>
 </li>
 <li><a href="#validation-matcher">41. Validation Matchers</a>
@@ -1113,58 +1119,68 @@ $(addBlockSwitches);
 <li><a href="#matcher-is-uuid-v4">41.19. isUUIDv4()</a></li>
 </ul>
 </li>
-<li><a href="#data-dictionaries">42. Data dictionaries</a>
+<li><a href="#agent">42. Citrus agent</a>
 <ul class="sectlevel2">
-<li><a href="#xml-data-dictionaries">42.1. XML data dictionaries</a></li>
-<li><a href="#json-data-dictionaries">42.2. JSON data dictionaries</a></li>
-<li><a href="#dictionary-scopes">42.3. Dictionary scopes</a></li>
-<li><a href="#path-mapping-strategies">42.4. Path mapping strategies</a></li>
+<li><a href="#agent-service">42.1. Agent REST service API</a></li>
+<li><a href="#agent-configuration">42.2. Configuration</a></li>
+<li><a href="#agent-ui">42.3. Web UI</a></li>
+<li><a href="#agent-docker-image">42.4. Docker container image</a></li>
+<li><a href="#agent-jbang">42.5. Agent JBang commands</a></li>
+<li><a href="#agent-maven-plugin">42.6. Maven plugin</a></li>
 </ul>
 </li>
-<li><a href="#test-actors">43. Test actors</a>
+<li><a href="#data-dictionaries">43. Data dictionaries</a>
 <ul class="sectlevel2">
-<li><a href="#test-actors-create">43.1. Create test actors</a></li>
-<li><a href="#test-actors-reference">43.2. Reference test actors</a></li>
-<li><a href="#test-actors-disable">43.3. Disable test actors</a></li>
-<li><a href="#test-actors-environment-setting">43.4. Test actor environment settings</a></li>
+<li><a href="#xml-data-dictionaries">43.1. XML data dictionaries</a></li>
+<li><a href="#json-data-dictionaries">43.2. JSON data dictionaries</a></li>
+<li><a href="#dictionary-scopes">43.3. Dictionary scopes</a></li>
+<li><a href="#path-mapping-strategies">43.4. Path mapping strategies</a></li>
 </ul>
 </li>
-<li><a href="#test-suite-actions">44. Test suite actions</a>
+<li><a href="#test-actors">44. Test actors</a>
 <ul class="sectlevel2">
-<li><a href="#before-suite">44.1. Before suite</a></li>
-<li><a href="#after-suite">44.2. After suite</a></li>
-<li><a href="#before-test">44.3. Before test</a></li>
-<li><a href="#after-test">44.4. After test</a></li>
+<li><a href="#test-actors-create">44.1. Create test actors</a></li>
+<li><a href="#test-actors-reference">44.2. Reference test actors</a></li>
+<li><a href="#test-actors-disable">44.3. Disable test actors</a></li>
+<li><a href="#test-actors-environment-setting">44.4. Test actor environment settings</a></li>
 </ul>
 </li>
-<li><a href="#customize-meta-information">45. Customize meta information</a></li>
-<li><a href="#tracing-incoming-outgoing-messages">46. Tracing incoming/outgoing messages</a></li>
-<li><a href="#reporting-and-test-results">47. Reporting and Test Results</a>
+<li><a href="#test-suite-actions">45. Test suite actions</a>
 <ul class="sectlevel2">
-<li><a href="#console-logging">47.1. Console logging</a></li>
-<li><a href="#junit-reports">47.2. JUnit reports</a></li>
-<li><a href="#html-reports">47.3. HTML reports</a></li>
+<li><a href="#before-suite">45.1. Before suite</a></li>
+<li><a href="#after-suite">45.2. After suite</a></li>
+<li><a href="#before-test">45.3. Before test</a></li>
+<li><a href="#after-test">45.4. After test</a></li>
 </ul>
 </li>
-<li><a href="#configuration">48. Configuration options</a>
+<li><a href="#customize-meta-information">46. Customize meta information</a></li>
+<li><a href="#tracing-incoming-outgoing-messages">47. Tracing incoming/outgoing messages</a></li>
+<li><a href="#reporting-and-test-results">48. Reporting and Test Results</a>
 <ul class="sectlevel2">
-<li><a href="#configuration-environment-settings">48.1. Environment settings</a></li>
-<li><a href="#configuration-spring">48.2. Spring configuration settings</a></li>
-<li><a href="#configuration-property-file">48.3. Property file settings</a></li>
+<li><a href="#console-logging">48.1. Console logging</a></li>
+<li><a href="#junit-reports">48.2. JUnit reports</a></li>
+<li><a href="#html-reports">48.3. HTML reports</a></li>
 </ul>
 </li>
-<li><a href="#spring-support">49. Spring support</a>
+<li><a href="#configuration">49. Configuration options</a>
 <ul class="sectlevel2">
-<li><a href="#spring-xml-config">49.1. Spring XML application context</a></li>
-<li><a href="#spring-java-config">49.2. Spring Java config</a></li>
+<li><a href="#configuration-environment-settings">49.1. Environment settings</a></li>
+<li><a href="#configuration-spring">49.2. Spring configuration settings</a></li>
+<li><a href="#configuration-property-file">49.3. Property file settings</a></li>
 </ul>
 </li>
-<li><a href="#samples">50. Samples</a>
+<li><a href="#spring-support">50. Spring support</a>
 <ul class="sectlevel2">
-<li><a href="#samples-flightbooking">50.1. The FlightBooking sample</a></li>
+<li><a href="#spring-xml-config">50.1. Spring XML application context</a></li>
+<li><a href="#spring-java-config">50.2. Spring Java config</a></li>
 </ul>
 </li>
-<li><a href="#appendix">51. Appendix</a>
+<li><a href="#samples">51. Samples</a>
+<ul class="sectlevel2">
+<li><a href="#samples-flightbooking">51.1. The FlightBooking sample</a></li>
+</ul>
+</li>
+<li><a href="#appendix">52. Appendix</a>
 <ul class="sectlevel2">
 <li><a href="#maven-archetypes">Maven archetype</a></li>
 </ul>
@@ -1176,7 +1192,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 4.5.2</strong></p>
+<p><strong>Version: 4.6.0</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -5385,8 +5401,27 @@ You can then use the <code>@CitrusTestSource</code> annotation to load the YAML 
 <h4 id="run-yaml-groovy-configuration"><a class="anchor" href="#run-yaml-groovy-configuration"></a><a class="link" href="#run-yaml-groovy-configuration">5.4.1. Configuration scripts</a></h4>
 <div class="paragraph">
 <p>The YAML test is able to create endpoints and other configuration entities as part of the test.
-The test leverages the Groovy programming language that provides a comfortable way to define beans in the Citrus registry.
-You can set any of the supported properties on the configuration components.</p>
+The test leverages the Groovy programming language that provides a comfortable way to define beans in the Citrus registry.</p>
+</div>
+<div class="paragraph">
+<p>The script creates the instances as beans in the Citrus registry.</p>
+</div>
+<div class="paragraph">
+<p>A configuration script may use methods and closures to define the bean instances.
+The configuration script supports following methods:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>queues()</p>
+</li>
+<li>
+<p>endpoints()</p>
+</li>
+<li>
+<p>beans()</p>
+</li>
+</ul>
 </div>
 <div class="listingblock">
 <div class="title">my-test.yaml</div>
@@ -5421,8 +5456,51 @@ You can set any of the supported properties on the configuration components.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The test above creates a new <code>direct</code> endpoint called <code>hello</code> that uses an im-memory queue <code>say-hello</code>.
-The send action is able to reference the endpoint by its name to send a message body to the queue.</p>
+<p>The test above creates a new <code>direct</code> endpoint called <code>hello</code> that uses an in-memory queue named <code>say-hello</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>send</code> test action is able to reference the new endpoint by its name to send a message body to the queue.</p>
+</div>
+<div class="paragraph">
+<p>You can also create bean instances with a Groovy script:</p>
+</div>
+<div class="listingblock">
+<div class="title">my-test.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">actions</span>:
+  - <span class="string"><span class="content">groovy:</span><span class="content">
+      beans:
+        script: |
+          beans {
+            bean(DefaultTextEqualsMessageValidator.class)
+          }</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The configuration script initializes a new bean instance of type <code>org.citrusframework.validation.DefaultTextEqualsMessageValidator.class</code>.
+A <code>receive</code> test action will automatically resolve the new message validator instance from the Citrus bean registry to perform its message validation.</p>
+</div>
+<div class="paragraph">
+<p>The bean type must have a default constructor in this case.</p>
+</div>
+<div class="listingblock">
+<div class="title">Create beans in registry</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy">beans {
+    bean(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, org.example.foo.FooBean.class)
+    fooClient = <span class="keyword">new</span> org.example.foo.FooClientBuilder().build()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The example creates a new instance of <code>FooBean</code> with the id <code>foo</code> in the Citrus bean registry.
+The <code>FooBean</code> class must have a default constructor in this case, too.</p>
+</div>
+<div class="paragraph">
+<p>You can also create the instances on your own (e.g. using a builder factory) as seen with the <code>fooClient</code> bean in this example.</p>
+</div>
+<div class="paragraph">
+<p>All beans added to the Citrus registry are subject to being injected into or resolved by test actions and other components in Citrus.</p>
 </div>
 </div>
 <div class="sect3">
@@ -5770,8 +5848,24 @@ actions {
 <h4 id="run-groovy-configuration-dsl"><a class="anchor" href="#run-groovy-configuration-dsl"></a><a class="link" href="#run-groovy-configuration-dsl">5.5.1. Configuration scripts</a></h4>
 <div class="paragraph">
 <p>A Groovy test is able to create endpoints and other configuration entities as part of the test.
-The Groovy language provides a comfortable way to define beans in the Citrus registry.
-You can set any of the supported properties on the configuration components.</p>
+The script creates these instances as beans in the Citrus registry.</p>
+</div>
+<div class="paragraph">
+<p>A configuration script may use methods and closures to define the bean instances.
+The configuration script supports following methods:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>queues()</p>
+</li>
+<li>
+<p>endpoints()</p>
+</li>
+<li>
+<p>beans()</p>
+</li>
+</ul>
 </div>
 <div class="listingblock">
 <div class="title">my-test.groovy</div>
@@ -5786,6 +5880,10 @@ You can set any of the supported properties on the configuration components.</p>
             .asynchronous()
             .queue(<span class="string"><span class="delimiter">'</span><span class="content">say-hello</span><span class="delimiter">'</span></span>)
     }
+
+    beans {
+        bean(DefaultTextEqualsMessageValidator.class)
+    }
 }
 
 actions {
@@ -5797,8 +5895,37 @@ actions {
 </div>
 </div>
 <div class="paragraph">
-<p>The test above creates a new <code>direct</code> endpoint called <code>hello</code> that uses an im-memory queue <code>say-hello</code>.
-The send action is able to reference the endpoint by its name to send a message body to the queue.</p>
+<p>The test above creates a new <code>direct</code> endpoint called <code>hello</code> that uses an in-memory queue named <code>say-hello</code>.
+Also, the configuration script initializes a new bean instance of type <code>org.citrusframework.validation.DefaultTextEqualsMessageValidator.class</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>send</code> test action is able to reference the new endpoint by its name to send a message body to the queue.
+A <code>receive</code> test action will automatically resolve the new message validator instance from the Citrus bean registry to perform its message validation.</p>
+</div>
+<div class="paragraph">
+<p>The Groovy language provides a comfortable way to define common beans in the Citrus registry.</p>
+</div>
+<div class="listingblock">
+<div class="title">Create beans in registry</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy">configuration {
+    beans {
+        bean(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, org.example.foo.FooBean.class)
+        fooClient = <span class="keyword">new</span> org.example.foo.FooClientBuilder().build()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The example creates a new instance of <code>FooBean</code> with the id <code>foo</code> in the Citrus bean registry.
+The <code>FooBean</code> class must have a default constructor in this case.</p>
+</div>
+<div class="paragraph">
+<p>You can also create the instances on your own (e.g. using a builder factory) as seen with the <code>fooClient</code> bean in this example.</p>
+</div>
+<div class="paragraph">
+<p>All beans added to the Citrus registry are subject to being injected into or resolved by test actions and other components in Citrus.
+For instance a JMS test action requires a client connection factory bean instance in the Citrus registry.</p>
 </div>
 </div>
 <div class="sect3">
@@ -7587,7 +7714,7 @@ With Json slurper the tester can validate the Json message body with closures fo
 The Json validator offers two different modes to operate.
 By default, <strong>strict</strong> mode is enabled and the validator will also check the exact amount of entries (object properties / array items) to match in received and control message.
 No additional fields in received Json data structure will be accepted.
-In <strong>soft</strong> mode the validator allows additional entries (object properties / array items) in received Json, so the control Json can be a subset of the recieved.
+In <strong>soft</strong> mode the validator allows additional entries (object properties / array items) in received Json, so the control Json can be a subset of the received.
 Additional entries in the received Json data structure are ignored.
 </td>
 </tr>
@@ -21122,7 +21249,18 @@ wrapper so we do not fail because of multiple connections with the same durable 
 </div>
 </div>
 <div class="sect2">
-<h3 id="jms-message-headers"><a class="anchor" href="#jms-message-headers"></a><a class="link" href="#jms-message-headers">12.5. JMS message headers</a></h3>
+<h3 id="jms-topic-purging"><a class="anchor" href="#jms-topic-purging"></a><a class="link" href="#jms-topic-purging">12.5. JMS topic purging</a></h3>
+<div class="paragraph">
+<p>As mentioned earlier, topic subscribers with <code>autoStart=true</code> consume all messages sent to the topic during the test run.
+Durable topic subscribers even consume messages sent outside the test run.
+Both cache the consumed messages internally in an in-memory-message-queue.
+To ensure that tests start with a clean in-memory-message-queue,
+it is necessary to purge the topic-subscribtion JmsEndpoint (which is defined in the code examples above) before the test begins.
+Endpoint-purging is explained in detail in this section: <a href="#actions-purging-endpoints">Purging Endpoints</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="jms-message-headers"><a class="anchor" href="#jms-message-headers"></a><a class="link" href="#jms-message-headers">12.6. JMS message headers</a></h3>
 <div class="paragraph">
 <p>The JMS specification defines a set of special message header entries that can go into your JMS message. These JMS headers
 are stored differently in a JMS message header than other custom header entries do. This is why these special header values
@@ -21178,7 +21316,7 @@ instance the following message header is of type double and is therefore transfe
 </div>
 </div>
 <div class="sect2">
-<h3 id="dynamic-destination-names"><a class="anchor" href="#dynamic-destination-names"></a><a class="link" href="#dynamic-destination-names">12.6. Dynamic destination names</a></h3>
+<h3 id="dynamic-destination-names"><a class="anchor" href="#dynamic-destination-names"></a><a class="link" href="#dynamic-destination-names">12.7. Dynamic destination names</a></h3>
 <div class="paragraph">
 <p>Usually you set the target destination as property on the JMS endpoint component. In some cases it might be useful to set
 the target destination in a more dynamic way during the test run. You can do this by adding a special message header named
@@ -21217,7 +21355,7 @@ variables. This means you can use variables and functions in the destination nam
 </div>
 </div>
 <div class="sect2">
-<h3 id="soap-over-jms"><a class="anchor" href="#soap-over-jms"></a><a class="link" href="#soap-over-jms">12.7. SOAP over JMS</a></h3>
+<h3 id="soap-over-jms"><a class="anchor" href="#soap-over-jms"></a><a class="link" href="#soap-over-jms">12.8. SOAP over JMS</a></h3>
 <div class="paragraph">
 <p>When sending SOAP messages you have to deal with proper envelope, body and header construction. In Citrus you can add a
 special message converter that performs the heavy lift for you. Just add the message converter to the JMS endpoint as shown
@@ -29457,7 +29595,7 @@ have to verify those commands in a test case. The server will automatically resp
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"># Password is &quot;admin&quot;
-ftpserver.user.admin.userpassword=21232F297A57A5A743894A0E4A801FC3
+ftpserver.user.admin.userpassword=c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23f3eab1d80b931dd472634dfac71cd34ebc35d16ab7fb8a90c81f975113d6c7538dc69dd8de9077ec
 ftpserver.user.admin.homedirectory=target/ftp/user/admin
 ftpserver.user.admin.enableflag=true
 ftpserver.user.admin.writepermission=true
@@ -37046,7 +37184,255 @@ In this case the auto creation is skipped for this test action and the custom se
 </div>
 </div>
 <div class="sect2">
-<h3 id="kubernetes-create-config-map"><a class="anchor" href="#kubernetes-create-config-map"></a><a class="link" href="#kubernetes-create-config-map">37.6. Create ConfigMap</a></h3>
+<h3 id="kubernetes-connect-service"><a class="anchor" href="#kubernetes-connect-service"></a><a class="link" href="#kubernetes-connect-service">37.6. Connect with Service</a></h3>
+<div class="paragraph">
+<p>Every Kubernetes Deployment is able to expose a service to other resources on the cluster so clients are able to call the service endpoint.
+Usually Kubernetes service exposes this endpoint to internal clients only (e.g. service type is ClusterIP).
+Internal client means that the client connects from within the same cluster (e.g. from another pod).
+Following from that your test that runs on your local machine may not have access to the Kubernetes service endpoint.</p>
+</div>
+<div class="paragraph">
+<p>The solution for that is to connect to the Kubernetes service as part of the Citrus test.
+This enables the access to such a Kubernetes service.
+The service connection uses a port forward to the Kubernetes service and the underlying Kubernetes pod.
+You can then use a local port on your machine to access the Kubernetes service.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> connectServiceTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .services()
+            .connect(<span class="string"><span class="delimiter">&quot;</span><span class="content">my-service</span><span class="delimiter">&quot;</span></span>)
+            .portMapping(<span class="integer">8080</span>, <span class="integer">31234</span>)
+            .inNamespace(<span class="string"><span class="delimiter">&quot;</span><span class="content">my-namespace</span><span class="delimiter">&quot;</span></span>));
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ServiceConnectTest</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;actions&gt;</span>
+    <span class="tag">&lt;kubernetes</span> <span class="attribute-name">client</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">k8sClient</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">namespace</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my-namespace</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+      <span class="tag">&lt;connect&gt;</span>
+        <span class="tag">&lt;service</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my-service</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">port</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">8080</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">local-port</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">31234</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+      <span class="tag">&lt;/connect&gt;</span>
+    <span class="tag">&lt;/kubernetes&gt;</span>
+  <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">ServiceConnectTest</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">kubernetes:</span><span class="content">
+      client: &quot;k8sClient&quot;
+      namespace: &quot;my-namespace&quot;
+      connect:
+        service:
+          name: &quot;my-service&quot;
+          port: 8080
+          localPort: 31234</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The service connect test action creates a new port forward using a local port on your machine connecting to the exposed port on the service.
+The user is able to define the port mapping with a fixed local port and the target exposed port on the Kubernetes service.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You can also skip the local port setting to choose a random local port.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This opens the connection of your local machine to the Kubernetes service so sending requests to the local endpoint will invoke the service on the Kubernetes cluster.
+The port forward is kept open for the rest of your test or until you explicitly disconnect.</p>
+</div>
+<div class="paragraph">
+<p>The connect test action automatically creates a new Http client instance and stores this in the Citrus registry.
+You can use the client in following test actions to connect to the new port forward service endpoint.
+As usual, you can reference the client by its name in the Citrus registry.
+The name of the Http client instance that connects to the new port forward service uses a default pattern: <code>&lt;service-name&gt;.client</code>.</p>
+</div>
+<div class="paragraph">
+<p>In our example the client is stored in the Citrus registry with the name <code>my-service.client</code>.
+You can use the client in a normal Http test action to call the new port forward service.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> connectServiceTest() {
+    when(http()
+        .client(<span class="string"><span class="delimiter">&quot;</span><span class="content">my-service.client</span><span class="delimiter">&quot;</span></span>)
+        .send()
+        .get()
+    );
+
+    then(http()
+        .client(<span class="string"><span class="delimiter">&quot;</span><span class="content">my-service.client</span><span class="delimiter">&quot;</span></span>)
+        .receive()
+        .response(HttpStatus.OK)
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ServiceConnectTest</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;actions&gt;</span>
+    <span class="tag">&lt;http</span> <span class="attribute-name">client</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my-service.client</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+      <span class="tag">&lt;send-request&gt;</span>
+        <span class="tag">&lt;GET</span><span class="tag">/&gt;</span>
+      <span class="tag">&lt;/send-request&gt;</span>
+    <span class="tag">&lt;/http&gt;</span>
+
+    <span class="tag">&lt;http</span> <span class="attribute-name">client</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my-service.client</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+      <span class="tag">&lt;receive-response&gt;</span>
+        <span class="tag">&lt;response</span> <span class="attribute-name">status</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">200</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">reason-phrase</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">OK</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+      <span class="tag">&lt;/receive-response&gt;</span>
+    <span class="tag">&lt;/http&gt;</span>
+  <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">ServiceConnectTest</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">http:</span><span class="content">
+      client: &quot;my-service.client&quot;
+      sendRequest:
+        GET: {}</span></span>
+  - <span class="string"><span class="content">http:</span><span class="content">
+      client: &quot;httpClient&quot;
+      receiveResponse:
+        status: 200
+        reasonPhrase: OK</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Instead of using the default generated Http client name you can also explicitly specify a client name.
+Citrus will search create the client and add it to the Citrus registry with that name.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The Kubernetes service port forward may require special permissions on your Kubernetes cluster. Please make sure to connect with a proper user that is able to create the port forward. On Kubernetes platforms such as Minikube or Kind this is given by default. On other cluster types you may need to set up special permissions for your local Kubernetes user.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The port forward connection is automatically closed when the test ends. This is done with an explicit disconnect test action that is run in the finally section of the current test. In case you need to keep the port forward connection open you can disable the <code>auto-remove</code> option on the connect test action.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="kubernetes-disconnect-service"><a class="anchor" href="#kubernetes-disconnect-service"></a><a class="link" href="#kubernetes-disconnect-service">37.7. Disconnect from Service</a></h3>
+<div class="paragraph">
+<p>By default, the port forward service connection is closed automatically when the test ends.
+In case you need to explicitly close the port forward connection you can do so with the following test action.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> connectServiceTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .services()
+            .disconnect(<span class="string"><span class="delimiter">&quot;</span><span class="content">my-service</span><span class="delimiter">&quot;</span></span>)
+            .inNamespace(<span class="string"><span class="delimiter">&quot;</span><span class="content">my-namespace</span><span class="delimiter">&quot;</span></span>));
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ServiceConnectTest</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;actions&gt;</span>
+    <span class="tag">&lt;kubernetes</span> <span class="attribute-name">client</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">k8sClient</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">namespace</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my-namespace</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+      <span class="tag">&lt;disconnect&gt;</span>
+        <span class="tag">&lt;service</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my-service</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+      <span class="tag">&lt;/disconnect&gt;</span>
+    <span class="tag">&lt;/kubernetes&gt;</span>
+  <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">ServiceConnectTest</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">kubernetes:</span><span class="content">
+      client: &quot;k8sClient&quot;
+      namespace: &quot;my-namespace&quot;
+      disconnect:
+        service:
+          name: &quot;my-service&quot;</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This closes the port forward to the Kubernetes service immediately.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="kubernetes-create-config-map"><a class="anchor" href="#kubernetes-create-config-map"></a><a class="link" href="#kubernetes-create-config-map">37.8. Create ConfigMap</a></h3>
 <div class="paragraph">
 <p>You can create a Kubernetes config map with this test action:</p>
 </div>
@@ -37157,7 +37543,7 @@ In this case the auto creation is skipped for this test action and the custom se
 </div>
 </div>
 <div class="sect2">
-<h3 id="kubernetes-create-secret"><a class="anchor" href="#kubernetes-create-secret"></a><a class="link" href="#kubernetes-create-secret">37.7. Create Secret</a></h3>
+<h3 id="kubernetes-create-secret"><a class="anchor" href="#kubernetes-create-secret"></a><a class="link" href="#kubernetes-create-secret">37.9. Create Secret</a></h3>
 <div class="paragraph">
 <p>You can create a Kubernetes secret with this test action:</p>
 </div>
@@ -37268,7 +37654,7 @@ In this case the auto creation is skipped for this test action and the custom se
 </div>
 </div>
 <div class="sect2">
-<h3 id="kubernetes-create-resources"><a class="anchor" href="#kubernetes-create-resources"></a><a class="link" href="#kubernetes-create-resources">37.8. Create Resources</a></h3>
+<h3 id="kubernetes-create-resources"><a class="anchor" href="#kubernetes-create-resources"></a><a class="link" href="#kubernetes-create-resources">37.10. Create Resources</a></h3>
 <div class="paragraph">
 <p>You can create standards Kubernetes resources such as Pods as part of the test.
 The easiest way to define the resource specification is to give a YAML file that represents the resource.</p>
@@ -37342,7 +37728,7 @@ The easiest way to define the resource specification is to give a YAML file that
 </div>
 </div>
 <div class="sect2">
-<h3 id="kubernetes-delete-resources"><a class="anchor" href="#kubernetes-delete-resources"></a><a class="link" href="#kubernetes-delete-resources">37.9. Delete Resources</a></h3>
+<h3 id="kubernetes-delete-resources"><a class="anchor" href="#kubernetes-delete-resources"></a><a class="link" href="#kubernetes-delete-resources">37.11. Delete Resources</a></h3>
 <div class="paragraph">
 <p>You can delete any resource on the Kubernetes cluster.
 Of course your client connection needs to have sufficient permissions to perform the delete operation.
@@ -37449,7 +37835,7 @@ The Kubernetes resource that should be deleted is identified by its name and an 
 </div>
 </div>
 <div class="sect2">
-<h3 id="kubernetes-create-custom-resource"><a class="anchor" href="#kubernetes-create-custom-resource"></a><a class="link" href="#kubernetes-create-custom-resource">37.10. Create Custom Resource</a></h3>
+<h3 id="kubernetes-create-custom-resource"><a class="anchor" href="#kubernetes-create-custom-resource"></a><a class="link" href="#kubernetes-create-custom-resource">37.12. Create Custom Resource</a></h3>
 <div class="paragraph">
 <p>Given the following Kubernetes custom resource:</p>
 </div>
@@ -37535,7 +37921,7 @@ Also, you can use a Java object instance directly to create the resource with th
 </div>
 </div>
 <div class="sect2">
-<h3 id="kubernetes-delete-custom-resources"><a class="anchor" href="#kubernetes-delete-custom-resources"></a><a class="link" href="#kubernetes-delete-custom-resources">37.11. Delete Custom Resource</a></h3>
+<h3 id="kubernetes-delete-custom-resources"><a class="anchor" href="#kubernetes-delete-custom-resources"></a><a class="link" href="#kubernetes-delete-custom-resources">37.13. Delete Custom Resource</a></h3>
 <div class="paragraph">
 <p>When you want to delete a Kubernetes custom resource you need to specify the Kind as well as the ApiVersion in combination with the resource name on the cluster.</p>
 </div>
@@ -37604,7 +37990,7 @@ When you have access to a Fabric8 Java model that represents the custom resource
 </div>
 </div>
 <div class="sect2">
-<h3 id="kubernetes-verify-custom-resources"><a class="anchor" href="#kubernetes-verify-custom-resources"></a><a class="link" href="#kubernetes-verify-custom-resources">37.12. Verify Custom Resource</a></h3>
+<h3 id="kubernetes-verify-custom-resources"><a class="anchor" href="#kubernetes-verify-custom-resources"></a><a class="link" href="#kubernetes-verify-custom-resources">37.14. Verify Custom Resource</a></h3>
 <div class="paragraph">
 <p>You can verify the ready condition status for a Kubernetes custom resource.
 Usually the custom resource exposes a Status sub-resource with that expose a ready condition.
@@ -37678,7 +38064,7 @@ Citrus tries to find the resource with the matching label.
 </div>
 </div>
 <div class="sect2">
-<h3 id="kubernetes-verify-pods"><a class="anchor" href="#kubernetes-verify-pods"></a><a class="link" href="#kubernetes-verify-pods">37.13. Verify Pod Status</a></h3>
+<h3 id="kubernetes-verify-pods"><a class="anchor" href="#kubernetes-verify-pods"></a><a class="link" href="#kubernetes-verify-pods">37.15. Verify Pod Status</a></h3>
 <div class="paragraph">
 <p>Each Pod in Kubernetes exposes its Ready state condition as well as the phase (Running, Error, Initializing, Terminating, &#8230;&#8203;).
 You can verify this Pod status in your test case:</p>
@@ -37746,7 +38132,7 @@ When asserting the <code>Running</code> phase the verification also checks for a
 </div>
 </div>
 <div class="sect2">
-<h3 id="kubernetes-verify-pod-logs"><a class="anchor" href="#kubernetes-verify-pod-logs"></a><a class="link" href="#kubernetes-verify-pod-logs">37.14. Verify Pod Logs</a></h3>
+<h3 id="kubernetes-verify-pod-logs"><a class="anchor" href="#kubernetes-verify-pod-logs"></a><a class="link" href="#kubernetes-verify-pod-logs">37.16. Verify Pod Logs</a></h3>
 <div class="paragraph">
 <p>You can read and verify the Pod logs as part of the test.</p>
 </div>
@@ -37807,13 +38193,253 @@ The action waits for the log message to appear in the Pod logs for given amount 
 </div>
 </div>
 <div class="sect2">
-<h3 id="kubernetes-spring"><a class="anchor" href="#kubernetes-spring"></a><a class="link" href="#kubernetes-spring">37.15. Spring bean config</a></h3>
+<h3 id="kubernetes-agent"><a class="anchor" href="#kubernetes-agent"></a><a class="link" href="#kubernetes-agent">37.17. Kubernetes Citrus agent</a></h3>
+<div class="paragraph">
+<p>The Citrus agent is a way to run tests as part of the Kubernetes platform.
+You can deploy the Citrus agent on the Kubernetes cluster.
+Usually the agent exposes a REST service endpoint so clients are then able to inject Citrus tests for execution.</p>
+</div>
+<div class="paragraph">
+<p>The Citrus agent runs as part of the Kubernetes cluster, so it has access to Kubernetes resources on the same namespace.
+This means the tests that run with the agent are able to access resources such as Knative eventing brokers, Services, ConfigMaps, Secrets and many more.</p>
+</div>
+<div class="sect3">
+<h4 id="kubernetes-agent-connect"><a class="anchor" href="#kubernetes-agent-connect"></a><a class="link" href="#kubernetes-agent-connect">37.17.1. Agent connect</a></h4>
+<div class="paragraph">
+<p>You can connect to a Citrus agent service as part of your test like follows:</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> agentConnectTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .agent()
+            .connect()
+            .service(<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus-agent</span><span class="delimiter">&quot;</span></span>)
+            .localPort(<span class="integer">12345</span>)
+            .inNamespace(<span class="string"><span class="delimiter">&quot;</span><span class="content">my-namespace</span><span class="delimiter">&quot;</span></span>));
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">AgentConnectTest</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;actions&gt;</span>
+      <span class="tag">&lt;kubernetes</span> <span class="attribute-name">client</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">k8sClient</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">namespace</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my-namespace</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+        <span class="tag">&lt;agent&gt;</span>
+          <span class="tag">&lt;connect</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus-agent</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">local-port</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">12345</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/agent&gt;</span>
+      <span class="tag">&lt;/kubernetes&gt;</span>
+    <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">AgentConnectTest</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">kubernetes:</span><span class="content">
+      client: &quot;k8sClient&quot;
+      namespace: &quot;my-namespace&quot;
+      agent:
+        connect:
+          name: &quot;citrus-agent&quot;
+          localPort: 12345</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The agent connect test action connects to the Citrus agent service on the given Kubernetes namespace.
+In case the Citrus agent application has been deployed already and the exposed service is available the test action connects to the service via local port forwarding (see also the section about <a href="#kubernetes-connect-service">connecting with a Kubernetes Service</a>).
+This means that you will be able to trigger test runs on the agent with calling REST operations on the local endpoint.</p>
+</div>
+<div class="paragraph">
+<p>In case the Citrus agent application is not present on the Kubernetes cluster the connect test action will automatically create the deployment on the given namespace.
+The deployment includes a ConfigMap that holds the test case sources (e.g. in the form of a <code>test-jar</code> Java archive).
+The agent deployment specification will mount the test sources into the agent Pod via volume mounts, so you can run the tests from the <code>test-jar</code> Java archive.</p>
+</div>
+<div class="paragraph">
+<p>Also, the action creates a new Kubernetes service that exposes the agent REST API and the Web UI.
+Once the connection is done you can start triggering test actions and test runs on the Citrus agent.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="kubernetes-agent-run"><a class="anchor" href="#kubernetes-agent-run"></a><a class="link" href="#kubernetes-agent-run">37.17.2. Agent run</a></h4>
+<div class="paragraph">
+<p>When the local test is connected to the Kubernetes Citrus agent you can trigger the test execution on the agent.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> agentRunTest() {
+    given(agent()
+            .run()
+            .sourceFile(<span class="string"><span class="delimiter">&quot;</span><span class="content">classpath:my-test.groovy</span><span class="delimiter">&quot;</span></span>));
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">AgentRunTest</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;actions&gt;</span>
+      <span class="tag">&lt;agent&gt;</span>
+        <span class="tag">&lt;run&gt;</span>
+          <span class="tag">&lt;source</span> <span class="attribute-name">file</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">classpath:my-test.groovy</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/run&gt;</span>
+      <span class="tag">&lt;/agent&gt;</span>
+    <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">AgentRunTest</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">agent:</span><span class="content">
+      source:
+        file: &quot;classpath:my-test.groovy&quot;</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The test source code can be any of the supported domain specific languages (e.g. XML, YAML, Java, Groovy, Cucumber).
+The example above loads a Groovy test source code file.
+The test actions will be sent to the Citrus agent and executed as a test within the agent runtime.
+The test results are validated for success outcome and in case the remote test execution fails the local Citrus agent run action will also fail accordingly.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+When using XML and YAML tests you can also leverage the possibility to use inline test actions as part of the Citrus agent run action
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock primary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">AgentRunTest</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">agent:</span><span class="content">
+      run:
+        actions:
+          - echo:
+              message: Citrus rocks!</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">AgentRunTest</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;actions&gt;</span>
+      <span class="tag">&lt;agent&gt;</span>
+        <span class="tag">&lt;run&gt;</span>
+          <span class="tag">&lt;actions&gt;</span>
+            <span class="tag">&lt;echo</span> <span class="attribute-name">message</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Citrus rocks!</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+          <span class="tag">&lt;/actions&gt;</span>
+        <span class="tag">&lt;/run&gt;</span>
+      <span class="tag">&lt;/agent&gt;</span>
+    <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All nested test actions within the Citrus agent run action will be run on the connected remote Citrus agent.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="kubernetes-agent-disconnect"><a class="anchor" href="#kubernetes-agent-disconnect"></a><a class="link" href="#kubernetes-agent-disconnect">37.17.3. Agent disconnect</a></h4>
+<div class="paragraph">
+<p>You can explicitly disconnect from the Citrus agent service.
+This terminates the local port forward and also removes the Citrus agent deployment and all dependent resources from the current Kubernetes namespace.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> agentDisconnectTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .agent()
+            .disconnect()
+            .service(<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus-agent</span><span class="delimiter">&quot;</span></span>)
+            .inNamespace(<span class="string"><span class="delimiter">&quot;</span><span class="content">my-namespace</span><span class="delimiter">&quot;</span></span>));
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">AgentDisconnectTest</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;actions&gt;</span>
+      <span class="tag">&lt;kubernetes</span> <span class="attribute-name">client</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">k8sClient</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">namespace</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my-namespace</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+        <span class="tag">&lt;agent&gt;</span>
+          <span class="tag">&lt;disconnect</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus-agent</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/agent&gt;</span>
+      <span class="tag">&lt;/kubernetes&gt;</span>
+    <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">AgentDisconnectTest</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">kubernetes:</span><span class="content">
+      client: &quot;k8sClient&quot;
+      namespace: &quot;my-namespace&quot;
+      agent:
+        disconnect:
+          name: &quot;citrus-agent&quot;</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="kubernetes-spring"><a class="anchor" href="#kubernetes-spring"></a><a class="link" href="#kubernetes-spring">37.18. Spring bean config</a></h3>
 <div class="paragraph">
 <p>Citrus provides a "citrus-kubernetes" configuration namespace and schema definition for Kubernetes related components and actions.
 Include this namespace into your Spring configuration in order to use the Citrus Kubernetes configuration elements.</p>
 </div>
 <div class="sect3">
-<h4 id="kubernetes-spring-config"><a class="anchor" href="#kubernetes-spring-config"></a><a class="link" href="#kubernetes-spring-config">37.15.1. Spring XML config namespace</a></h4>
+<h4 id="kubernetes-spring-config"><a class="anchor" href="#kubernetes-spring-config"></a><a class="link" href="#kubernetes-spring-config">37.18.1. Spring XML config namespace</a></h4>
 <div class="paragraph">
 <p>The namespace URI and schema location are added to the Spring configuration XML file as follows.</p>
 </div>
@@ -37838,7 +38464,7 @@ Include this namespace into your Spring configuration in order to use the Citrus
 </div>
 </div>
 <div class="sect3">
-<h4 id="kubernetes-spring-test"><a class="anchor" href="#kubernetes-spring-test"></a><a class="link" href="#kubernetes-spring-test">37.15.2. Spring XML testcase namespace</a></h4>
+<h4 id="kubernetes-spring-test"><a class="anchor" href="#kubernetes-spring-test"></a><a class="link" href="#kubernetes-spring-test">37.18.2. Spring XML testcase namespace</a></h4>
 <div class="paragraph">
 <p>We have several Citrus test actions each representing a Kubernetes command.
 These actions can be part of a test case where you can manage Kubernetes pods inside the test.
@@ -37956,7 +38582,7 @@ The info command connects the REST API and returns a list of status information 
 </div>
 </div>
 <div class="sect2">
-<h3 id="kubernetes-commands"><a class="anchor" href="#kubernetes-commands"></a><a class="link" href="#kubernetes-commands">37.16. Kubernetes commands</a></h3>
+<h3 id="kubernetes-commands"><a class="anchor" href="#kubernetes-commands"></a><a class="link" href="#kubernetes-commands">37.19. Kubernetes commands</a></h3>
 <div class="paragraph">
 <p>The Citrus test may use Kubernetes commands that get run as test actions.</p>
 </div>
@@ -38097,7 +38723,7 @@ You can also explicitly set the kubernetes client instance when using the Java D
 </div>
 </div>
 <div class="sect3">
-<h4 id="info-command"><a class="anchor" href="#info-command"></a><a class="link" href="#info-command">37.16.1. Info command</a></h4>
+<h4 id="info-command"><a class="anchor" href="#info-command"></a><a class="link" href="#info-command">37.19.1. Info command</a></h4>
 <div class="paragraph">
 <p>The info command just gets the client connection settings and provides them as a Json result to the action.</p>
 </div>
@@ -38131,7 +38757,7 @@ You can also explicitly set the kubernetes client instance when using the Java D
 </div>
 </div>
 <div class="sect3">
-<h4 id="list-resources"><a class="anchor" href="#list-resources"></a><a class="link" href="#list-resources">37.16.2. List resources</a></h4>
+<h4 id="list-resources"><a class="anchor" href="#list-resources"></a><a class="link" href="#list-resources">37.19.2. List resources</a></h4>
 <div class="paragraph">
 <p>We can list Kubernetes resources such as pods, services, endpoints and replication controllers.
 The list can be filtered by several properties such as</p>
@@ -38222,7 +38848,7 @@ The first label filter is negated so the label <code>stage</code> should <strong
 </div>
 </div>
 <div class="sect3">
-<h4 id="list-nodes-and-namespaces"><a class="anchor" href="#list-nodes-and-namespaces"></a><a class="link" href="#list-nodes-and-namespaces">37.16.3. List nodes and namespaces</a></h4>
+<h4 id="list-nodes-and-namespaces"><a class="anchor" href="#list-nodes-and-namespaces"></a><a class="link" href="#list-nodes-and-namespaces">37.19.3. List nodes and namespaces</a></h4>
 <div class="paragraph">
 <p>Nodes and namespaces are special resources that are not filtered by their namespace as they are more global resources. The rest is pretty similar to listing pods or services. We can
 add filters such as <code>name</code> and <code>label</code>.</p>
@@ -38255,7 +38881,7 @@ add filters such as <code>name</code> and <code>label</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="get-resources"><a class="anchor" href="#get-resources"></a><a class="link" href="#get-resources">37.16.4. Get resources</a></h4>
+<h4 id="get-resources"><a class="anchor" href="#get-resources"></a><a class="link" href="#get-resources">37.19.4. Get resources</a></h4>
 <div class="paragraph">
 <p>We can get a very special Kubernetes resource such as a pod or service for detailed validation of that resource.
 We need to specify a resource name in order to select the resource from list of available resources in Kubernetes.</p>
@@ -38342,7 +38968,7 @@ This means we can use <em>@ignore@</em> as well as test variables and JsonPath e
 </div>
 </div>
 <div class="sect3">
-<h4 id="create-resources"><a class="anchor" href="#create-resources"></a><a class="link" href="#create-resources">37.16.5. Create resources</a></h4>
+<h4 id="create-resources"><a class="anchor" href="#create-resources"></a><a class="link" href="#create-resources">37.19.5. Create resources</a></h4>
 <div class="paragraph">
 <p>We can create new Kubernetes resources within a Citrus test.
 This is very important in case we need to set up new pods or services for the test run.
@@ -38469,7 +39095,7 @@ Therefore, we might add a list-pods action that waits for the new resources to a
 </div>
 </div>
 <div class="sect3">
-<h4 id="delete-resources"><a class="anchor" href="#delete-resources"></a><a class="link" href="#delete-resources">37.16.6. Delete resources</a></h4>
+<h4 id="delete-resources"><a class="anchor" href="#delete-resources"></a><a class="link" href="#delete-resources">37.19.6. Delete resources</a></h4>
 <div class="paragraph">
 <p>With that command we are able to delete a resource in Kubernetes.
 Up to now deletion of pods and services is supported.
@@ -38499,7 +39125,7 @@ We have to give a name of the resource that we want to delete.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="watch-resources"><a class="anchor" href="#watch-resources"></a><a class="link" href="#watch-resources">37.16.7. Watch resources</a></h4>
+<h4 id="watch-resources"><a class="anchor" href="#watch-resources"></a><a class="link" href="#watch-resources">37.19.7. Watch resources</a></h4>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -38562,7 +39188,7 @@ This means that you may need multiple watch actions in your test case in case yo
 </div>
 </div>
 <div class="sect2">
-<h3 id="kubernetes-command-bus"><a class="anchor" href="#kubernetes-command-bus"></a><a class="link" href="#kubernetes-command-bus">37.17. Kubernetes command bus</a></h3>
+<h3 id="kubernetes-command-bus"><a class="anchor" href="#kubernetes-command-bus"></a><a class="link" href="#kubernetes-command-bus">37.20. Kubernetes command bus</a></h3>
 <div class="paragraph">
 <p>We have seen how to access the Kubernetes remote REST API by using special Citrus test actions in a test.
 As an alternative to that we can also use more generic send/receive actions in Citrus for accessing the Kubernetes API.</p>
@@ -40738,9 +41364,185 @@ Hello</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-random-string"><a class="anchor" href="#functions-random-string"></a><a class="link" href="#functions-random-string">40.11. randomString()</a></h3>
+<h3 id="function-random-number-generator"><a class="anchor" href="#function-random-number-generator"></a><a class="link" href="#function-random-number-generator">40.11. randomNumberGenerator()</a></h3>
 <div class="paragraph">
-<p>This function will generate a random string representation with a defined length. A second parameter for this function will define the case of the generated letters (UPPERCASE, LOWERCASE, MIXED). The last parameter allows also digit characters in the generated string. By default digit characters are not allowed.</p>
+<p>This function is the big brother of randomNumber it generates a random numeric value with customizable decimal precision and range.
+It provides options to control the minimum and maximum values, inclusivity, and numerical multiples of the generated number.</p>
+</div>
+<div class="paragraph">
+<p>The function accepts up to six parameters, which influence the generated number:</p>
+</div>
+<div class="paragraph">
+<p>Parameters</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Decimal places (optional, default: 0)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Defines the number of decimal places in the generated number.</p>
+</li>
+<li>
+<p>A value of 0 results in an integer output.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Minimum value (optional, default: -1,000,000)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The lower bound for the generated number.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Maximum value (optional, default: 1,000,000)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The upper bound for the generated number.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Exclude minimum (optional, default: false)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If true, the generated number will never be exactly the minimum value.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Exclude maximum (optional, default: false)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If true, the generated number will never be exactly the maximum value.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Multiple of (optional)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If provided, the generated number will be a multiple of this value.</p>
+</li>
+<li>
+<p>If no valid multiple exists within the given range, the function may return Infinity.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Format pattern (optional)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If no pattern is specified a plain string representation of the number will be returned.</p>
+</li>
+<li>
+<p>e.g. "<mark>,<mark></mark>.000", "<mark>.000", "</mark>.</mark>#E0"</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="title">XML Example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;variables&gt;</span>
+    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">rndNum1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${citrus:randomNumberGenerator()}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">rndNum2</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${citrus:randomNumberGenerator(2)}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">rndNum3</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${citrus:randomNumberGenerator(3, -10, 10)}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">rndNum4</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${citrus:randomNumberGenerator(0, 100, 200, true, false)}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">rndNum5</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${citrus:randomNumberGenerator(2, 0, 100, false, true, 5)}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">rndNum5</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${citrus:randomNumberGenerator(0, 10000000, 1000000000, false, false, null, #.###E0)}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/variables&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Function Output Examples</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>157
+23.78
+-5.462
+101
+15.00</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If no parameters are provided, the function generates a random integer between -1,000,000 and 1,000,000.</p>
+</div>
+<div class="paragraph">
+<p>If decimal places are specified, the number will be formatted accordingly.</p>
+</div>
+<div class="paragraph">
+<p>If multiple of is set, the generated number will always be a multiple of the given value within the range.</p>
+</div>
+<div class="paragraph">
+<p>If minimum or maximum values are excluded, the function ensures that the output never equals these boundaries.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="functions-random-string"><a class="anchor" href="#functions-random-string"></a><a class="link" href="#functions-random-string">40.12. randomString()</a></h3>
+<div class="paragraph">
+<p>This function will generate a random string representation with a defined length.</p>
+</div>
+<div class="paragraph">
+<p>Parameters</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Length  of the generated string. (Required, no default value)</p>
+</li>
+<li>
+<p>Case of the generated letters. (Optional, default: MIXED)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Possible values: UPPERCASE, LOWERCASE, MIXED.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Digits characters (0-9) included. (Optional, default: false)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If set to true, digits will be part of the output.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Minimum number of characters in the generated string. (Optional, default: length)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This value must be positive or zero and less than or equal to the total length.</p>
+</li>
+<li>
+<p>If smaller than the length, the generated string will have a random length between the minimum and the specified length.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -40751,6 +41553,7 @@ Hello</code></pre>
     <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">rndString3</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus:randomString(10, LOWERCASE)</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
     <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">rndString4</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus:randomString(10, MIXED)</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
     <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">rndString4</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus:randomString(10, MIXED, true)</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">rndString4</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus:randomString(10, MIXED, true, 2)</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
 <span class="tag">&lt;/variables&gt;</span></code></pre>
 </div>
 </div>
@@ -40763,14 +41566,55 @@ Hello</code></pre>
 AgSSwedetG
 JSDFUTTRKU
 dtkhirtsuz
-Vt567JkA32</code></pre>
+Vt567JkA32
+Vt56</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-random-enum-value"><a class="anchor" href="#functions-random-enum-value"></a><a class="link" href="#functions-random-enum-value">40.12. randomEnumValue()</a></h3>
+<h3 id="functions-random-pattern"><a class="anchor" href="#functions-random-pattern"></a><a class="link" href="#functions-random-pattern">40.13. randomPattern()</a></h3>
 <div class="paragraph">
-<p>This function returns one of its supplied arguments. Furthermore you can specify a custom function with a configured list of values (the enumeration). The function will randomly return an entry when called without arguments. This promotes code reuse and facilitates refactoring.</p>
+<p>This function generates a random string that matches the given regular expression pattern.
+It utilizes the <a href="https://github.com/mifmif/Generex">Generex library</a> to produce valid strings based on the provided regex.</p>
+</div>
+<div class="paragraph">
+<p>The function takes one parameter, which is the regular expression pattern to generate the string from.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;variables&gt;</span>
+    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">rndPattern1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${citrus:randomPattern('[A-Z]{5}')}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">rndPattern2</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${citrus:randomPattern('[0-9]{3}-[A-Z]{2}')}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">rndPattern3</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${citrus:randomPattern('[a-z]{4}[0-9]{2}')}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">rndPattern4</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${citrus:randomPattern('[A-Za-z0-9]{8,12}')}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/variables&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Function output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>ABCDE
+735-RT
+bcda42
+TgH56yJk12</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The generated string strictly adheres to the provided regex pattern.
+The function supports character ranges, quantifiers, and grouping as per standard Java regex syntax.
+If an invalid regex is provided, an error will be thrown.
+An error might also be thrown for very complex regex, which cannot be handled by the Generex library.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="functions-random-enum-value"><a class="anchor" href="#functions-random-enum-value"></a><a class="link" href="#functions-random-enum-value">40.14. randomEnumValue()</a></h3>
+<div class="paragraph">
+<p>This function returns one of its supplied arguments.
+Furthermore, you can specify a custom function with a configured list of values (the enumeration).
+The function will randomly return an entry when called without arguments.
+This promotes code reuse and facilitates refactoring.</p>
 </div>
 <div class="paragraph">
 <p>In the next sample the function is used to set a httpStatusCode variable to one of the given HTTP status codes (200, 401, 500)</p>
@@ -40810,7 +41654,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-current-date"><a class="anchor" href="#functions-current-date"></a><a class="link" href="#functions-current-date">40.13. currentDate()</a></h3>
+<h3 id="functions-current-date"><a class="anchor" href="#functions-current-date"></a><a class="link" href="#functions-current-date">40.15. currentDate()</a></h3>
 <div class="paragraph">
 <p>This function will definitely help you when accessing the current date. Some examples will show the usage in detail:</p>
 </div>
@@ -40845,7 +41689,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-uppercase"><a class="anchor" href="#functions-uppercase"></a><a class="link" href="#functions-uppercase">40.14. upperCase()</a></h3>
+<h3 id="functions-uppercase"><a class="anchor" href="#functions-uppercase"></a><a class="link" href="#functions-uppercase">40.16. upperCase()</a></h3>
 <div class="paragraph">
 <p>This function converts any string to upper case letters.</p>
 </div>
@@ -40864,7 +41708,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-lowercase"><a class="anchor" href="#functions-lowercase"></a><a class="link" href="#functions-lowercase">40.15. lowerCase()</a></h3>
+<h3 id="functions-lowercase"><a class="anchor" href="#functions-lowercase"></a><a class="link" href="#functions-lowercase">40.17. lowerCase()</a></h3>
 <div class="paragraph">
 <p>This function converts any string to lower case letters.</p>
 </div>
@@ -40883,7 +41727,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-average"><a class="anchor" href="#functions-average"></a><a class="link" href="#functions-average">40.16. average()</a></h3>
+<h3 id="functions-average"><a class="anchor" href="#functions-average"></a><a class="link" href="#functions-average">40.18. average()</a></h3>
 <div class="paragraph">
 <p>The function will sum up all specified number values and divide the result through the number of values.</p>
 </div>
@@ -40897,7 +41741,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-minimum"><a class="anchor" href="#functions-minimum"></a><a class="link" href="#functions-minimum">40.17. minimum()</a></h3>
+<h3 id="functions-minimum"><a class="anchor" href="#functions-minimum"></a><a class="link" href="#functions-minimum">40.19. minimum()</a></h3>
 <div class="paragraph">
 <p>This function returns the minimum value in a set of number values.</p>
 </div>
@@ -40911,7 +41755,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-maximum"><a class="anchor" href="#functions-maximum"></a><a class="link" href="#functions-maximum">40.18. maximum()</a></h3>
+<h3 id="functions-maximum"><a class="anchor" href="#functions-maximum"></a><a class="link" href="#functions-maximum">40.20. maximum()</a></h3>
 <div class="paragraph">
 <p>This function returns the maximum value in a set of number values.</p>
 </div>
@@ -40925,7 +41769,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-sum"><a class="anchor" href="#functions-sum"></a><a class="link" href="#functions-sum">40.19. sum()</a></h3>
+<h3 id="functions-sum"><a class="anchor" href="#functions-sum"></a><a class="link" href="#functions-sum">40.21. sum()</a></h3>
 <div class="paragraph">
 <p>The function will sum up all number values. The number values can also be negative.</p>
 </div>
@@ -40939,7 +41783,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-absolute"><a class="anchor" href="#functions-absolute"></a><a class="link" href="#functions-absolute">40.20. absolute()</a></h3>
+<h3 id="functions-absolute"><a class="anchor" href="#functions-absolute"></a><a class="link" href="#functions-absolute">40.22. absolute()</a></h3>
 <div class="paragraph">
 <p>The function will return the absolute number value.</p>
 </div>
@@ -40953,7 +41797,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-map-value"><a class="anchor" href="#functions-map-value"></a><a class="link" href="#functions-map-value">40.21. mapValue()</a></h3>
+<h3 id="functions-map-value"><a class="anchor" href="#functions-map-value"></a><a class="link" href="#functions-map-value">40.23. mapValue()</a></h3>
 <div class="paragraph">
 <p>This function implementation maps string keys to string values. This is very helpful when the used key is randomly chosen at runtime and the corresponding value is not defined during the design time.</p>
 </div>
@@ -40987,7 +41831,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-random-uuid"><a class="anchor" href="#functions-random-uuid"></a><a class="link" href="#functions-random-uuid">40.22. randomUUID()</a></h3>
+<h3 id="functions-random-uuid"><a class="anchor" href="#functions-random-uuid"></a><a class="link" href="#functions-random-uuid">40.24. randomUUID()</a></h3>
 <div class="paragraph">
 <p>The function will generate a random Java UUID.</p>
 </div>
@@ -41001,7 +41845,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-encode-base64"><a class="anchor" href="#functions-encode-base64"></a><a class="link" href="#functions-encode-base64">40.23. encodeBase64()</a></h3>
+<h3 id="functions-encode-base64"><a class="anchor" href="#functions-encode-base64"></a><a class="link" href="#functions-encode-base64">40.25. encodeBase64()</a></h3>
 <div class="paragraph">
 <p>The function will encode a string to binary data using base64 hexadecimal encoding.</p>
 </div>
@@ -41023,7 +41867,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-decode-base64"><a class="anchor" href="#functions-decode-base64"></a><a class="link" href="#functions-decode-base64">40.24. decodeBase64()</a></h3>
+<h3 id="functions-decode-base64"><a class="anchor" href="#functions-decode-base64"></a><a class="link" href="#functions-decode-base64">40.26. decodeBase64()</a></h3>
 <div class="paragraph">
 <p>The function will decode binary data to a character sequence using base64 hexadecimal decoding.</p>
 </div>
@@ -41045,7 +41889,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-escape-xml"><a class="anchor" href="#functions-escape-xml"></a><a class="link" href="#functions-escape-xml">40.25. escapeXml()</a></h3>
+<h3 id="functions-escape-xml"><a class="anchor" href="#functions-escape-xml"></a><a class="link" href="#functions-escape-xml">40.27. escapeXml()</a></h3>
 <div class="paragraph">
 <p>If you want to deal with escaped XML in your test case you may want to use this function. It automatically escapes all XML special characters.</p>
 </div>
@@ -41065,7 +41909,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-escape-json"><a class="anchor" href="#functions-escape-json"></a><a class="link" href="#functions-escape-json">40.26. escapeJson()</a></h3>
+<h3 id="functions-escape-json"><a class="anchor" href="#functions-escape-json"></a><a class="link" href="#functions-escape-json">40.28. escapeJson()</a></h3>
 <div class="paragraph">
 <p>If you want to deal with escaped JSON in your test case you may want to use this function.
 It automatically escapes all JSON special characters (especially double quotes).</p>
@@ -41088,7 +41932,7 @@ It automatically escapes all JSON special characters (especially double quotes).
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-cdata-section"><a class="anchor" href="#functions-cdata-section"></a><a class="link" href="#functions-cdata-section">40.27. cdataSection()</a></h3>
+<h3 id="functions-cdata-section"><a class="anchor" href="#functions-cdata-section"></a><a class="link" href="#functions-cdata-section">40.29. cdataSection()</a></h3>
 <div class="paragraph">
 <p>Usually we use CDATA sections to define message payload data inside a testcase. We might run into problems when the payload itself contains CDATA sections as nested CDATA sections are prohibited by XML nature. In this case the next function ships very usefull.</p>
 </div>
@@ -41102,7 +41946,7 @@ It automatically escapes all JSON special characters (especially double quotes).
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-digest-auth-header"><a class="anchor" href="#functions-digest-auth-header"></a><a class="link" href="#functions-digest-auth-header">40.28. digestAuthHeader()</a></h3>
+<h3 id="functions-digest-auth-header"><a class="anchor" href="#functions-digest-auth-header"></a><a class="link" href="#functions-digest-auth-header">40.30. digestAuthHeader()</a></h3>
 <div class="paragraph">
 <p>Digest authentication is a commonly used security algorithm, especially in Http communication and SOAP WebServices. Citrus offers a function to generate a digest authentication principle used in the Http header section of a message.</p>
 </div>
@@ -41139,7 +41983,7 @@ It automatically escapes all JSON special characters (especially double quotes).
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-localhost-address"><a class="anchor" href="#functions-localhost-address"></a><a class="link" href="#functions-localhost-address">40.29. localHostAddress()</a></h3>
+<h3 id="functions-localhost-address"><a class="anchor" href="#functions-localhost-address"></a><a class="link" href="#functions-localhost-address">40.31. localHostAddress()</a></h3>
 <div class="paragraph">
 <p>Test cases may use the local host address for some reason (e.g. used as authentication principle). As the tests may run on different machines at the same time we can not use static host addresses. The provided function localHostAddress() reads the local host name dynamically at runtime.</p>
 </div>
@@ -41156,7 +42000,7 @@ It automatically escapes all JSON special characters (especially double quotes).
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-change-date"><a class="anchor" href="#functions-change-date"></a><a class="link" href="#functions-change-date">40.30. changeDate()</a></h3>
+<h3 id="functions-change-date"><a class="anchor" href="#functions-change-date"></a><a class="link" href="#functions-change-date">40.32. changeDate()</a></h3>
 <div class="paragraph">
 <p>This function works with date values and manipulates those at runtime by adding or removing a date value offset. You can manipulate several date fields such as: year, month, day, hour, minute or second.</p>
 </div>
@@ -41205,7 +42049,7 @@ It automatically escapes all JSON special characters (especially double quotes).
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-read-file"><a class="anchor" href="#functions-read-file"></a><a class="link" href="#functions-read-file">40.31. readFile()</a></h3>
+<h3 id="functions-read-file"><a class="anchor" href="#functions-read-file"></a><a class="link" href="#functions-read-file">40.33. readFile()</a></h3>
 <div class="paragraph">
 <p>The <strong>readFile</strong> function reads a file resource from given file path and loads the complete file content as function result. The file path can be a system file path as well as a classpath file resource. The file path can have test variables as part of the path or file name. In addition to that the file content can also have test variable values and other functions.</p>
 </div>
@@ -41254,7 +42098,7 @@ It automatically escapes all JSON special characters (especially double quotes).
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-message"><a class="anchor" href="#functions-message"></a><a class="link" href="#functions-message">40.32. message()</a></h3>
+<h3 id="functions-message"><a class="anchor" href="#functions-message"></a><a class="link" href="#functions-message">40.34. message()</a></h3>
 <div class="paragraph">
 <p>When messages are exchanged in Citrus the content is automatically saved to an in memory storage for further access in the test case. That means that functions and test actions can access the messages
 that have been sent or received within the test case. The <strong>message</strong> function loads a message content from that message store. The message is identified by its name. Receive and send actions usually define
@@ -41311,7 +42155,7 @@ in the local message store. The <strong>message</strong> function is then able t
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-xpath"><a class="anchor" href="#functions-xpath"></a><a class="link" href="#functions-xpath">40.33. xpath()</a></h3>
+<h3 id="functions-xpath"><a class="anchor" href="#functions-xpath"></a><a class="link" href="#functions-xpath">40.35. xpath()</a></h3>
 <div class="paragraph">
 <p>The <strong>xpath</strong> function evaluates a Xpath expressions on some XML source and returns the expression result as String.</p>
 </div>
@@ -41349,7 +42193,7 @@ becomes very easy then.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-jsonpath"><a class="anchor" href="#functions-jsonpath"></a><a class="link" href="#functions-jsonpath">40.34. jsonPath()</a></h3>
+<h3 id="functions-jsonpath"><a class="anchor" href="#functions-jsonpath"></a><a class="link" href="#functions-jsonpath">40.36. jsonPath()</a></h3>
 <div class="paragraph">
 <p>The <strong>jsonPath</strong> function evaluates a JsonPath expressions on some JSON source and returns the expression result as String.</p>
 </div>
@@ -41402,7 +42246,7 @@ becomes very easy then.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-url-encode"><a class="anchor" href="#functions-url-encode"></a><a class="link" href="#functions-url-encode">40.35. urlEncode()/urlDecode()</a></h3>
+<h3 id="functions-url-encode"><a class="anchor" href="#functions-url-encode"></a><a class="link" href="#functions-url-encode">40.37. urlEncode()/urlDecode()</a></h3>
 <div class="paragraph">
 <p>The <strong>urlEncode</strong> function takes a String and performs proper URL encoding. The result is a URL encoded String that is using proper character escaping for Http.</p>
 </div>
@@ -41431,7 +42275,7 @@ becomes very easy then.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-system-properties"><a class="anchor" href="#functions-system-properties"></a><a class="link" href="#functions-system-properties">40.36. systemProperty()</a></h3>
+<h3 id="functions-system-properties"><a class="anchor" href="#functions-system-properties"></a><a class="link" href="#functions-system-properties">40.38. systemProperty()</a></h3>
 <div class="paragraph">
 <p>The <strong>systemProperty</strong> function resolves a System property expression at test runtime. The resulting value is returned as function result. In case the System property is not available in the JVM an optional default value is used.
 In case no default value is given the function will fail with errors.</p>
@@ -41445,7 +42289,7 @@ In case no default value is given the function will fail with errors.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-env-settings"><a class="anchor" href="#functions-env-settings"></a><a class="link" href="#functions-env-settings">40.37. env()</a></h3>
+<h3 id="functions-env-settings"><a class="anchor" href="#functions-env-settings"></a><a class="link" href="#functions-env-settings">40.39. env()</a></h3>
 <div class="paragraph">
 <p>The <strong>env</strong> function can be used to access an environment specific property at test runtime. The environment property can be a variable set on the underlying operating system. Also the <code>env()</code> function is able to access
 the Spring environment settings (see <code>org.springframework.core.env.Environment</code>).</p>
@@ -41465,7 +42309,7 @@ the Spring environment settings (see <code>org.springframework.core.env.Environm
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-unix-timestamp"><a class="anchor" href="#functions-unix-timestamp"></a><a class="link" href="#functions-unix-timestamp">40.38. unixTimestamp()</a></h3>
+<h3 id="functions-unix-timestamp"><a class="anchor" href="#functions-unix-timestamp"></a><a class="link" href="#functions-unix-timestamp">40.40. unixTimestamp()</a></h3>
 <div class="paragraph">
 <p><strong>unixTimestamp</strong> is a parameterless function that simply returns the current epoch timestamp as seconds.</p>
 </div>
@@ -41994,7 +42838,542 @@ Given the <code>&lt;variable name="validUuid" value="653ce6fd-dca4-4672-bbc0-16e
 </div>
 </div>
 <div class="sect1">
-<h2 id="data-dictionaries"><a class="anchor" href="#data-dictionaries"></a><a class="link" href="#data-dictionaries">42. Data dictionaries</a></h2>
+<h2 id="agent"><a class="anchor" href="#agent"></a><a class="link" href="#agent">42. Citrus agent</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Citrus agent provides a way to run tests as part of the Docker container environment and as part of the Kubernetes platform.</p>
+</div>
+<div class="paragraph">
+<p>The agent ships as a web application and users are able to run Citrus tests on demand.
+Usually the agent application runs as a Docker container or Kubernetes deployment so that the agent is able to access internal platform services such as Knative eventing brokers or a service resources exposed only to the current Kubernetes namespace.</p>
+</div>
+<div class="paragraph">
+<p>The agent application exposes a REST service API for clients to inject tests and trigger test runs.</p>
+</div>
+<div class="sect2">
+<h3 id="agent-service"><a class="anchor" href="#agent-service"></a><a class="link" href="#agent-service">42.1. Agent REST service API</a></h3>
+<div class="paragraph">
+<p>As a web application the agent exposes several REST endpoints.
+Http clients are able to trigger test runs and inspect the remote test results.</p>
+</div>
+<div class="paragraph">
+<p>At service startup the agent will automatically run all tests that can be found according to certain criteria.
+The agent performs a test scan looking for available tests on multiple sources applying multiple search criteria:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>name pattern: Tests that should be executed must match one of the given class name patterns (e.g. <code>.*IT</code>)</p>
+</li>
+<li>
+<p>packages: List of packages to scan in the agent classpath. All tests matching the given name patterns will be executed.</p>
+</li>
+<li>
+<p>source files: List of source file paths to test sources (e.g. XML, YAML, Cucumber feature). All sources found will be run.</p>
+</li>
+<li>
+<p>test-jar: A provided Java archive holding test classes for execution. All previous test filters (e.g. name patterns, package filters) get applied while scanning classes in this JAR.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+A test-jar that holds all tests and its dependencies can be injected into the agent application classpath. When using a Docker container image this injection may be accomplished through Docker volumes. In Kubernetes the test-jar injection may be done via ConfigMaps and volume mounts on the citrus-agent deployment.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The citrus-agent may also run tests on demand rather than on startup.
+The agent provides a REST service endpoint to trigger a test run.
+Each call to the service API may use different settings and test run criteria (e.g. name patterns, packages, source files).</p>
+</div>
+<div class="paragraph">
+<p>The agent REST API provides these operations:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. REST service operations</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Operation</th>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/health</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides general agent service status as a Json object (UP: true/false)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/run</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Triggers a new test run. The request query parameters may define the test run settings (e.g. name pattern, packages, source files). The operation blocks until the test run is finished and the response represents the test result summary using proper Http response codes for failure (500 INTERNAL_SERVER_ERROR) and success (200 OK).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/run</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Triggers a new test run. The request body may be a test configuration object that specifies the test run (e.g. name pattern, packages, source files). The operation blocks until the test run is finished and the response represents the test result summary using proper Http response codes for failure (500 INTERNAL_SERVER_ERROR) and success (200 OK).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/run</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same as GET/POST run operation but the call is not blocking until the test run is finished. Instead of this clients may inspect the test results calling/polling the <code>/results</code> service endpoint.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/results</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get cumulated test results for this agent. This represents the overall test results for all tests that have been run on this agent.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/results/latest</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the most recent test results for the latest test run. This also includes results from a pending test run which may deliver partial test results (Http response code partial 206). This way clients can check on when the current test run is finished or still pending.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/results/clear</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clear the cumulated test results to start fresh.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/results/files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get test results files that have been created as part of the test run. This includes JUnit test reports and HTML Citrus test suite reports.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="agent-configuration"><a class="anchor" href="#agent-configuration"></a><a class="link" href="#agent-configuration">42.2. Configuration</a></h3>
+<div class="paragraph">
+<p>The agent reads general settings on startup from system properties and environment variables.
+The environment settings are well suited for both usual Java runtime environment and containerized runtime environments such as Docker containers or Kubernetes deployments.</p>
+</div>
+<div class="paragraph">
+<p>The Citrus agent application supports the following settings.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. System properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System properties</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of this agent instance. Default value is <code>citrus-agent</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.server.port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The port to listen on for incoming client requests. Default port is <code>4567</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.test.engine</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The default engine used to run tests on this agent. One of junit, junit5, testng, cucumber. Default is <code>junit5</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.time.to.live</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The time to wait after the tests have run as part of the startup procedure. Default is <code>-1</code> which means indefinite.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.system.exit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Should use system exit to mark test failure (e.g. system exit = -1). Default is <code>false</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.skip.tests</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Test execution should bee skipped at server startup. Default is <code>false</code> which means that all tests found are automatically run as part of the server startup procedure.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.includes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of test name patterns to include in test runs. The server searches for tests matching these patterns when running all available tests. Default patterns are <code>["^.<strong>IT$", "^.*ITCase$", "^IT.</strong>$"]</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.packages</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of packages to include in test scan.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.default.properties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma separated list of key-value pairs that represent default system properties for a test run.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.test.sources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of test source paths to run. This may be paths to XML, YAML, Cucumber feature files that the agent should run as part of a test run.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.config.class</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bean configuration class to load as part of a test run.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.test.jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to a test Java archive that hold tests for a test run. Default value is <code>classpath:citrus-agent-tests.jar</code>. The test-jar execution is skipped when the file does not exist.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Same properties are settable via environment variables.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Environment variables</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_NAME</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of this agent instance. Default value is <code>citrus-agent</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_SERVER_PORT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The port to listen on for incoming client requests. Default port is <code>4567</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_TEST_ENGINE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The default engine used to run tests on this agent. One of junit, junit5, testng, cucumber. Default is <code>junit5</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_TIME_TO_LIVE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The time to wait after the tests have run as part of the startup procedure. Default is <code>-1</code> which means indefinite.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_SYSTEM_EXIT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Should use system exit to mark test failure (e.g. system exit = -1). Default is <code>false</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_SKIP_TESTS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Test execution should bee skipped at server startup. Default is <code>false</code> which means that all tests found are automatically run as part of the server startup procedure.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_INCLUDES</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of test name patterns to include in test runs. The server searches for tests matching these patterns when running all available tests. Default patterns are <code>["^.<strong>IT$", "^.*ITCase$", "^IT.</strong>$"]</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_PACKAGES</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of packages to include in test scan.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_DEFAULT_PROPERTIES</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma separated list of key-value pairs that represent default system properties for a test run.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_TEST_SOURCES</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of test source paths to run. This may be paths to XML, YAML, Cucumber feature files that the agent should run as part of a test run.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_CONFIG_CLASS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bean configuration class to load as part of a test run.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_TEST_JAR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to a test Java archive that hold tests for a test run. Default value is <code>classpath:citrus-agent-tests.jar</code>. The test-jar execution is skipped when the file does not exist.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="agent-ui"><a class="anchor" href="#agent-ui"></a><a class="link" href="#agent-ui">42.3. Web UI</a></h3>
+<div class="paragraph">
+<p>The Citrus agent application provides a Web user interface for clients to inspect previous test runs.
+You can access the user interface pointing your browser to the exposed server port.
+By default, when running the agent service locally (e.g. via JBang) the exposed Web UI endpoint is <a href="http://localhost:4567">http://localhost:4567</a>.</p>
+</div>
+<div class="paragraph">
+<p>When run on Docker or Kubernetes the exposed port may be mapped to a local port or Service resource that you can access with the browser.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="agent-docker-image"><a class="anchor" href="#agent-docker-image"></a><a class="link" href="#agent-docker-image">42.4. Docker container image</a></h3>
+<div class="paragraph">
+<p>The Citrus agent also ships as a Docker container image that you can use to run the agent as a Docker container or as part of a Kubernetes deployment.
+The Docker image is available on this <a href="https://quay.io/repository/citrusframework/citrus-agent">Quay.io repository</a>.</p>
+</div>
+<div class="paragraph">
+<p>You can use the image in a Kubernetes deployment:</p>
+</div>
+<div class="listingblock">
+<div class="title">Citrus agent deployment</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">apiVersion</span>: <span class="string"><span class="content">apps/v1</span></span>
+<span class="key">kind</span>: <span class="string"><span class="content">Deployment</span></span>
+<span class="key">metadata</span>:
+  <span class="key">labels</span>:
+    <span class="key">app.kubernetes.io/managed-by</span>: <span class="string"><span class="content">citrus</span></span>
+    <span class="key">app.kubernetes.io/name</span>: <span class="string"><span class="content">citrus-agent</span></span>
+  <span class="key">name</span>: <span class="string"><span class="content">citrus-agent</span></span>
+<span class="key">spec</span>:
+  <span class="key">selector</span>:
+    <span class="key">matchLabels</span>:
+      <span class="key">app.kubernetes.io/name</span>: <span class="string"><span class="content">citrus-agent</span></span>
+  <span class="key">template</span>:
+    <span class="key">metadata</span>:
+      <span class="key">labels</span>:
+        <span class="key">app.kubernetes.io/managed-by</span>: <span class="string"><span class="content">citrus</span></span>
+        <span class="key">app.kubernetes.io/name</span>: <span class="string"><span class="content">citrus-agent</span></span>
+    <span class="key">spec</span>:
+      <span class="key">containers</span>:
+      - <span class="string"><span class="content">name: citrus-agent</span></span>
+        <span class="key">env</span>:
+        - <span class="string"><span class="content">name: CITRUS_AGENT_SERVER_PORT</span></span>
+          <span class="key">value</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">8080</span><span class="delimiter">&quot;</span></span>
+        <span class="key">image</span>: <span class="string"><span class="content">quay.io/citrusframework/citrus-agent:latest</span></span>
+        <span class="key">imagePullPolicy</span>: <span class="string"><span class="content">IfNotPresent</span></span>
+        <span class="key">ports</span>:
+        - <span class="string"><span class="content">containerPort: 8080</span></span>
+          <span class="key">name</span>: <span class="string"><span class="content">http</span></span>
+          <span class="key">protocol</span>: <span class="string"><span class="content">TCP</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Deployment may use the environment variables to customize the Citrus agent application. The container exposes the Http port so you can access the Web UI with a Service resource.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You can inject a test jar that contains the tests to run with the agent. Just use a ConfigMap with the archive as binary content and mount the JAR into the Citrus agent pod with volumes.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Test jar ConfigMap</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="key">kind</span>: <span class="string"><span class="content">ConfigMap</span></span>
+<span class="key">metadata</span>:
+  <span class="key">name</span>: <span class="string"><span class="content">citrus-agent-resources</span></span>
+  <span class="key">labels</span>:
+    <span class="key">app.kubernetes.io/managed-by</span>: <span class="string"><span class="content">citrus</span></span>
+    <span class="key">app.kubernetes.io/name</span>: <span class="string"><span class="content">citrus-agent</span></span>
+<span class="key">binaryData</span>:
+  <span class="key">citrus-agent-tests.jar</span>: <span class="string"><span class="delimiter">|</span><span class="content">
+    [...]</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Citrus agent with volumes</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">apiVersion</span>: <span class="string"><span class="content">apps/v1</span></span>
+<span class="key">kind</span>: <span class="string"><span class="content">Deployment</span></span>
+<span class="key">metadata</span>:
+  <span class="key">labels</span>:
+    <span class="key">app.kubernetes.io/managed-by</span>: <span class="string"><span class="content">citrus</span></span>
+    <span class="key">app.kubernetes.io/name</span>: <span class="string"><span class="content">citrus-agent</span></span>
+  <span class="key">name</span>: <span class="string"><span class="content">citrus-agent</span></span>
+<span class="key">spec</span>:
+  <span class="key">selector</span>:
+    <span class="key">matchLabels</span>:
+      <span class="key">app.kubernetes.io/name</span>: <span class="string"><span class="content">citrus-agent</span></span>
+  <span class="key">template</span>:
+    <span class="key">metadata</span>:
+      <span class="key">labels</span>:
+        <span class="key">app.kubernetes.io/managed-by</span>: <span class="string"><span class="content">citrus</span></span>
+        <span class="key">app.kubernetes.io/name</span>: <span class="string"><span class="content">citrus-agent</span></span>
+    <span class="key">spec</span>:
+      <span class="key">containers</span>:
+      - <span class="string"><span class="content">name: citrus-agent</span></span>
+        <span class="key">env</span>:
+        - <span class="string"><span class="content">name: CITRUS_AGENT_TEST_JAR</span></span>
+          <span class="key">value</span>: <span class="string"><span class="content">/deployments/resources/citrus-agent-tests.jar</span></span>
+        - <span class="string"><span class="content">name: CITRUS_AGENT_SERVER_PORT</span></span>
+          <span class="key">value</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">8080</span><span class="delimiter">&quot;</span></span>
+        <span class="key">image</span>: <span class="string"><span class="content">quay.io/citrusframework/citrus-agent:latest</span></span>
+        <span class="key">imagePullPolicy</span>: <span class="string"><span class="content">IfNotPresent</span></span>
+        <span class="key">ports</span>:
+        - <span class="string"><span class="content">containerPort: 8080</span></span>
+          <span class="key">name</span>: <span class="string"><span class="content">http</span></span>
+          <span class="key">protocol</span>: <span class="string"><span class="content">TCP</span></span>
+        <span class="key">volumeMounts</span>:
+        - <span class="string"><span class="content">mountPath: /deployments/resources</span></span>
+          <span class="key">name</span>: <span class="string"><span class="content">resources</span></span>
+      <span class="key">volumes</span>:
+      - <span class="string"><span class="content">name: resources</span></span>
+        <span class="key">configMap</span>:
+          <span class="key">defaultMode</span>: <span class="string"><span class="content">420</span></span>
+          <span class="key">name</span>: <span class="string"><span class="content">citrus-agent-resources</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The volume mount adds the binary content from the ConfigMap to the Pod and the Citrus agent application will be able to run the tests from that Java archive.</p>
+</div>
+<div class="paragraph">
+<p>You may also use a ConfigMap that holds other test sources such as XML, YAML, Groovy or Cucumber test files.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="agent-jbang"><a class="anchor" href="#agent-jbang"></a><a class="link" href="#agent-jbang">42.5. Agent JBang commands</a></h3>
+<div class="paragraph">
+<p>The JBang integration is a perfect way to run the agent locally suited very well for rapid prototyping.</p>
+</div>
+<div class="paragraph">
+<p>The Citrus JBang command line tooling supports several agent related commands:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. JBang agent commands</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">command</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">agent start</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Start the Citrus agent application as a local JBang process.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">agent stop</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stop the current agent process.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="agent-maven-plugin"><a class="anchor" href="#agent-maven-plugin"></a><a class="link" href="#agent-maven-plugin">42.6. Maven plugin</a></h3>
+<div class="paragraph">
+<p>The Citrus agent provides a Maven plugin that you can include into your project build lifecycle.
+You can use the plugin to build a <code>test-jar</code> from your local test sources.
+The plugin will then start a new Citrus agent service (e.g. in Kubernetes) and run the tests from the <code>test-jar</code> artifact.
+The plugin waits for the remote test execution to finish and provides the test results to the local Maven build.</p>
+</div>
+<div class="paragraph">
+<p>The Citrus agent Maven plugin provides these goals to execute:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Goals</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Goal</th>
+<th class="tableblock halign-left valign-top">Build phase</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">test-jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">package</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Builds a test JAR artifact from your test scoped sources</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">start</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pre-integration-test</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create and run a new Citrus agent application instance (locally via JBang, as a Docker container or as a Kubernetes deployment)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">run</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">integration-test</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Run the tests from the test-jar artifact in the agent service (e.g. the tests run as part of the Kubernetes platform)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stop</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">post-integration-test</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stop the agent service</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">verify</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">verify</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify the remote test results and make sure that tests have executed successfully</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Each Maven plugin goal is bound to a default Maven build lifecycle phase.
+Like the Maven failsafe plugin the Citrus agent plugin binds its goals to the Maven <code>integration-test</code> phases in the build lifecycle.</p>
+</div>
+<div class="paragraph">
+<p>The agent plugin makes sure to run the <code>post-integration-test</code> phase even when tests are failing.
+The plugin propagates the remote test execution results to the local Maven build so the <code>verify</code> goal is able to fail the build in case of failed tests.</p>
+</div>
+<div class="paragraph">
+<p>A typical usage example for the Citrus agent Maven plugin looks like follows:</p>
+</div>
+<div class="listingblock">
+<div class="title">Maven POM</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;plugin&gt;</span>
+  <span class="tag">&lt;groupId&gt;</span>org.citrusframework.mvn<span class="tag">&lt;/groupId&gt;</span>
+  <span class="tag">&lt;artifactId&gt;</span>citrus-agent-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+  <span class="tag">&lt;version&gt;</span>${project.version}<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;configuration&gt;</span>
+    <span class="tag">&lt;run&gt;</span>
+      <span class="tag">&lt;async&gt;</span>true<span class="tag">&lt;/async&gt;</span>
+    <span class="tag">&lt;/run&gt;</span>
+    <span class="tag">&lt;kubernetes&gt;</span>
+      <span class="tag">&lt;enabled&gt;</span>true<span class="tag">&lt;/enabled&gt;</span>
+    <span class="tag">&lt;/kubernetes&gt;</span>
+  <span class="tag">&lt;/configuration&gt;</span>
+  <span class="tag">&lt;executions&gt;</span>
+    <span class="tag">&lt;execution&gt;</span>
+      <span class="tag">&lt;id&gt;</span>citrus-agent-tests<span class="tag">&lt;/id&gt;</span>
+      <span class="tag">&lt;goals&gt;</span>
+        <span class="tag">&lt;goal&gt;</span>test-jar<span class="tag">&lt;/goal&gt;</span>
+        <span class="tag">&lt;goal&gt;</span>start<span class="tag">&lt;/goal&gt;</span>
+        <span class="tag">&lt;goal&gt;</span>test<span class="tag">&lt;/goal&gt;</span>
+        <span class="tag">&lt;goal&gt;</span>stop<span class="tag">&lt;/goal&gt;</span>
+        <span class="tag">&lt;goal&gt;</span>verify<span class="tag">&lt;/goal&gt;</span>
+      <span class="tag">&lt;/goals&gt;</span>
+    <span class="tag">&lt;/execution&gt;</span>
+  <span class="tag">&lt;/executions&gt;</span>
+<span class="tag">&lt;/plugin&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The example above uses the Citrus agent Maven plugin amd binds its individual goals to the Maven build lifecycle.
+In this example the Kubernetes support is enabled.
+This means that the Citrus agent service will be started as a Deployment on the current Kubernetes cluster.
+Please make sure to connect to the Kubernetes cluster before the Maven build (e.g. via <code>kubectl</code>).</p>
+</div>
+<div class="paragraph">
+<p>The plugin uses the Kubernetes client to create the agent service as a deployment.
+It creates a ConfigMap from the built test-jar Java archive and makes sure the agent service has access to it (e.g. via volume mounts).
+It connects to the service and triggers the test run on the agent.
+It waits for the tes run to finish properly and the remote test results are propagated to the local Maven build.
+It verifies the test results and makes the local Maven build fail in case of test failures or errors.
+It automatically removes the Citrus agent service deployment and its related resources from the Kubernetes cluster.</p>
+</div>
+<div class="paragraph">
+<p>When the local Maven build is successful you can be sure that all tests have run successful on the agent.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-dictionaries"><a class="anchor" href="#data-dictionaries"></a><a class="link" href="#data-dictionaries">43. Data dictionaries</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Data dictionaries in Citrus provide a new way to manipulate message payload data before a message is sent or received. The dictionary defines a set of keys and respective values. Just like every other dictionary it is used to translate things. In our case we translate message data elements.</p>
@@ -42003,7 +43382,7 @@ Given the <code>&lt;variable name="validUuid" value="653ce6fd-dca4-4672-bbc0-16e
 <p>You can translate common message elements that are used widely throughout your domain model. As Citrus deals with different types of message data (e.g. XML, JSON) we have different dictionary implementations that are described in the next sections.</p>
 </div>
 <div class="sect2">
-<h3 id="xml-data-dictionaries"><a class="anchor" href="#xml-data-dictionaries"></a><a class="link" href="#xml-data-dictionaries">42.1. XML data dictionaries</a></h3>
+<h3 id="xml-data-dictionaries"><a class="anchor" href="#xml-data-dictionaries"></a><a class="link" href="#xml-data-dictionaries">43.1. XML data dictionaries</a></h3>
 <div class="paragraph">
 <p>As you would expect XML data dictionaries can be used together with XML formatted message payloads. To do so a dictionary has to be added to the basic Citrus Spring application context which will make the dictionary visible to all test cases:</p>
 </div>
@@ -42092,7 +43471,7 @@ TestMessage.TimeStamp=citrus:currentDate()</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="json-data-dictionaries"><a class="anchor" href="#json-data-dictionaries"></a><a class="link" href="#json-data-dictionaries">42.2. JSON data dictionaries</a></h3>
+<h3 id="json-data-dictionaries"><a class="anchor" href="#json-data-dictionaries"></a><a class="link" href="#json-data-dictionaries">43.2. JSON data dictionaries</a></h3>
 <div class="paragraph">
 <p>JSON data dictionaries complement with XML data dictionaries. As usual we have to add the JSON data dictionary to the basic Spring application context first. Once this is done the data dictionary automatically applies for all JSON message payloads in Citrus. This means that all JSON messages sent and received get translated with the JSON data dictionary implementation.</p>
 </div>
@@ -42166,7 +43545,7 @@ However when more complex JSON payloads apply for translation we might reach the
 </div>
 </div>
 <div class="sect2">
-<h3 id="dictionary-scopes"><a class="anchor" href="#dictionary-scopes"></a><a class="link" href="#dictionary-scopes">42.3. Dictionary scopes</a></h3>
+<h3 id="dictionary-scopes"><a class="anchor" href="#dictionary-scopes"></a><a class="link" href="#dictionary-scopes">43.3. Dictionary scopes</a></h3>
 <div class="paragraph">
 <p>Now that we have learned how to add data dictionaries to Citrus we need to discuss some advanced topics. Data dictionary scopes do define the boundaries where the dictionary may apply. By default data dictionaries are global scope dictionaries. This means that the data dictionary applies to all messages sent and received with Citrus. Of course message types are considered so XML data dictionaries do only apply to XML message types. However global scope dictionaries will be activated throughout all test cases and actions.</p>
 </div>
@@ -42254,7 +43633,7 @@ However when more complex JSON payloads apply for translation we might reach the
 </div>
 </div>
 <div class="sect2">
-<h3 id="path-mapping-strategies"><a class="anchor" href="#path-mapping-strategies"></a><a class="link" href="#path-mapping-strategies">42.4. Path mapping strategies</a></h3>
+<h3 id="path-mapping-strategies"><a class="anchor" href="#path-mapping-strategies"></a><a class="link" href="#path-mapping-strategies">43.4. Path mapping strategies</a></h3>
 <div class="paragraph">
 <p>Another advanced topic about data dictionaries is the path mapping strategy. When using simple path expressions the default strategy is always <strong>EXACT</strong> . This means that the path expression has to evaluate exactly to a message element within the payload data. And only this exact message element is translated.</p>
 </div>
@@ -42324,7 +43703,7 @@ However when more complex JSON payloads apply for translation we might reach the
 </div>
 </div>
 <div class="sect1">
-<h2 id="test-actors"><a class="anchor" href="#test-actors"></a><a class="link" href="#test-actors">43. Test actors</a></h2>
+<h2 id="test-actors"><a class="anchor" href="#test-actors"></a><a class="link" href="#test-actors">44. Test actors</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The concept of test actors is a way to enable/disable a group of tests actions and message endpoints based on configuration.
@@ -42350,7 +43729,7 @@ The test actor can be enabled/disabled via configuration and following from that
 <p>This means the same Citrus test case is runnable with different test actor configurations where some services are deployed as real applications and others may require simulation by Citrus.</p>
 </div>
 <div class="sect2">
-<h3 id="test-actors-create"><a class="anchor" href="#test-actors-create"></a><a class="link" href="#test-actors-create">43.1. Create test actors</a></h3>
+<h3 id="test-actors-create"><a class="anchor" href="#test-actors-create"></a><a class="link" href="#test-actors-create">44.1. Create test actors</a></h3>
 <div class="paragraph">
 <p>First thing to do is to define one or more test actors in the Citrus configuration.
 A test actor represents a participating party (e.g. interface partner, backend application, service).</p>
@@ -42414,7 +43793,7 @@ Now we have the test actors defined we can link those to message sender/receiver
 </div>
 </div>
 <div class="sect2">
-<h3 id="test-actors-reference"><a class="anchor" href="#test-actors-reference"></a><a class="link" href="#test-actors-reference">43.2. Reference test actors</a></h3>
+<h3 id="test-actors-reference"><a class="anchor" href="#test-actors-reference"></a><a class="link" href="#test-actors-reference">44.2. Reference test actors</a></h3>
 <div class="paragraph">
 <p>We need to reference the test actor and set it on a message send or receive action in our test case.
 We can do this in two different ways.
@@ -42542,7 +43921,7 @@ All linked test actions and message endpoints will be skipped when the reference
 </div>
 </div>
 <div class="sect2">
-<h3 id="test-actors-disable"><a class="anchor" href="#test-actors-disable"></a><a class="link" href="#test-actors-disable">43.3. Disable test actors</a></h3>
+<h3 id="test-actors-disable"><a class="anchor" href="#test-actors-disable"></a><a class="link" href="#test-actors-disable">44.3. Disable test actors</a></h3>
 <div class="paragraph">
 <p>By default, test actors are enabled.
 In some environments it may be required to disable the test actor and all its linked test actions and message endpoints though.</p>
@@ -42634,7 +44013,7 @@ The real life application may not use the same port and IP address as the Citrus
 </div>
 </div>
 <div class="sect2">
-<h3 id="test-actors-environment-setting"><a class="anchor" href="#test-actors-environment-setting"></a><a class="link" href="#test-actors-environment-setting">43.4. Test actor environment settings</a></h3>
+<h3 id="test-actors-environment-setting"><a class="anchor" href="#test-actors-environment-setting"></a><a class="link" href="#test-actors-environment-setting">44.4. Test actor environment settings</a></h3>
 <div class="paragraph">
 <p>You can enable/disable the test actor also by using System property or environment variable settings.
 The property and environment variable names follow a specific formatting that includes the test actor name:</p>
@@ -42668,7 +44047,7 @@ The property and environment variable names follow a specific formatting that in
 </div>
 </div>
 <div class="sect1">
-<h2 id="test-suite-actions"><a class="anchor" href="#test-suite-actions"></a><a class="link" href="#test-suite-actions">44. Test suite actions</a></h2>
+<h2 id="test-suite-actions"><a class="anchor" href="#test-suite-actions"></a><a class="link" href="#test-suite-actions">45. Test suite actions</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A test framework should also provide the functionality to do some work before and after the test run. You could think of preparing/deleting the data in a database or starting/stopping a server in this section before/after a test run. These tasks fit best into the initialization and cleanup phases of Citrus.</p>
@@ -42703,7 +44082,7 @@ It is important to notice that the Citrus configuration components that we are g
 </div>
 </div>
 <div class="sect2">
-<h3 id="before-suite"><a class="anchor" href="#before-suite"></a><a class="link" href="#before-suite">44.1. Before suite</a></h3>
+<h3 id="before-suite"><a class="anchor" href="#before-suite"></a><a class="link" href="#before-suite">45.1. Before suite</a></h3>
 <div class="paragraph">
 <p>You can influence the behavior of a test run in the initialization phase actually before the tests are executed. See the next code example to find out how it works with actions that take place before the first test is executed:</p>
 </div>
@@ -42849,7 +44228,7 @@ the sequence execution is skipped.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="after-suite"><a class="anchor" href="#after-suite"></a><a class="link" href="#after-suite">44.2. After suite</a></h3>
+<h3 id="after-suite"><a class="anchor" href="#after-suite"></a><a class="link" href="#after-suite">45.2. After suite</a></h3>
 <div class="paragraph">
 <p>A test run may require the test environment to be clean. Therefore it is a good idea to purge all JMS destinations or clean up the database after the test run in order to avoid errors in follow-up test runs. Just like we prepared some data in actions before suite we can clean up the test run in actions after the tests are finished. The Spring bean syntax here is not significantly different to those in before suite section:</p>
 </div>
@@ -42986,7 +44365,7 @@ the sequence execution is skipped.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="before-test"><a class="anchor" href="#before-test"></a><a class="link" href="#before-test">44.3. Before test</a></h3>
+<h3 id="before-test"><a class="anchor" href="#before-test"></a><a class="link" href="#before-test">45.3. Before test</a></h3>
 <div class="paragraph">
 <p>Before each test is executed it also might sound reasonable to purge all JMS queues for instance. In case a previous test fails some messages might be left in the JMS queues. Also the database might be in dirty state. The follow-up test then will be confronted with these invalid messages and data. Purging all JMS destinations before a test is therefore a good idea. Just like we prepared some data in actions before suite we can clean up the data before a test starts to execute.</p>
 </div>
@@ -43102,7 +44481,7 @@ the sequence execution is skipped.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="after-test"><a class="anchor" href="#after-test"></a><a class="link" href="#after-test">44.4. After test</a></h3>
+<h3 id="after-test"><a class="anchor" href="#after-test"></a><a class="link" href="#after-test">45.4. After test</a></h3>
 <div class="paragraph">
 <p>The same logic that applies to the <strong>before-test</strong> configuration component can be done after each test. The <strong>after-test</strong> configuration component defines test actions executed after each test. Just like we prepared some data in actions before a test we can clean up the data after a test has finished execution.</p>
 </div>
@@ -43221,7 +44600,7 @@ the sequence execution is skipped.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="customize-meta-information"><a class="anchor" href="#customize-meta-information"></a><a class="link" href="#customize-meta-information">45. Customize meta information</a></h2>
+<h2 id="customize-meta-information"><a class="anchor" href="#customize-meta-information"></a><a class="link" href="#customize-meta-information">46. Customize meta information</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Test cases in Citrus are usually provided with some meta information like the author’s name or the date of creation. In Citrus you are able to extend this test case meta information with your own very specific criteria.</p>
@@ -43332,7 +44711,7 @@ We use a separate namespace declaration with a custom namespace prefix “custom
 </div>
 </div>
 <div class="sect1">
-<h2 id="tracing-incoming-outgoing-messages"><a class="anchor" href="#tracing-incoming-outgoing-messages"></a><a class="link" href="#tracing-incoming-outgoing-messages">46. Tracing incoming/outgoing messages</a></h2>
+<h2 id="tracing-incoming-outgoing-messages"><a class="anchor" href="#tracing-incoming-outgoing-messages"></a><a class="link" href="#tracing-incoming-outgoing-messages">47. Tracing incoming/outgoing messages</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>As we deal with message based interfaces Citrus will send and receive a lot of messages during a test run. Now we may want to see these messages in chronological order as they were processed by Citrus. We can enable message tracing in Citrus in order to save messages to the file system for further investigations.</p>
@@ -43446,7 +44825,7 @@ Be aware of adding the Spring <strong>util</strong> XML namespace to the applica
 </div>
 </div>
 <div class="sect1">
-<h2 id="reporting-and-test-results"><a class="anchor" href="#reporting-and-test-results"></a><a class="link" href="#reporting-and-test-results">47. Reporting and Test Results</a></h2>
+<h2 id="reporting-and-test-results"><a class="anchor" href="#reporting-and-test-results"></a><a class="link" href="#reporting-and-test-results">48. Reporting and Test Results</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The framework generates different reports and results after a test run for you.
@@ -43491,7 +44870,7 @@ citrus.default.html.reporter.enabled=false</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="console-logging"><a class="anchor" href="#console-logging"></a><a class="link" href="#console-logging">47.1. Console logging</a></h3>
+<h3 id="console-logging"><a class="anchor" href="#console-logging"></a><a class="link" href="#console-logging">48.1. Console logging</a></h3>
 <div class="paragraph">
 <p>During the test run the framework will provide a huge amount of information that is printed out to the console. This includes current test progress, validation results and error information. This enables the user to quickly supervise the test run progress. Failures in tests will be printed to the console just the time the error occurred. The detailed stack trace information and the detailed error messages are helpful to get the idea what went wrong.</p>
 </div>
@@ -43531,7 +44910,7 @@ citrus.default.html.reporter.enabled=false</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="junit-reports"><a class="anchor" href="#junit-reports"></a><a class="link" href="#junit-reports">47.2. JUnit reports</a></h3>
+<h3 id="junit-reports"><a class="anchor" href="#junit-reports"></a><a class="link" href="#junit-reports">48.2. JUnit reports</a></h3>
 <div class="paragraph">
 <p>As tests are executed as TestNG test cases, the framework will also generate JUnit compliant XML and HTML reports. JUnit test reports are very popular and find support in many build management and development tools. In general the Citrus test reports give you an overall picture of all tests and tell you which of them were failing.</p>
 </div>
@@ -43540,7 +44919,7 @@ citrus.default.html.reporter.enabled=false</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="html-reports"><a class="anchor" href="#html-reports"></a><a class="link" href="#html-reports">47.3. HTML reports</a></h3>
+<h3 id="html-reports"><a class="anchor" href="#html-reports"></a><a class="link" href="#html-reports">48.3. HTML reports</a></h3>
 <div class="paragraph">
 <p>Citrus creates HTML reports after each test run. The report provides detailed information on the test run with a summary of all test results. You can find the report after a test run in the directory <strong><em>${project.build.directory}/citrus-reports</em></strong> .</p>
 </div>
@@ -43624,7 +45003,7 @@ citrus.html.report.logo
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuration"><a class="anchor" href="#configuration"></a><a class="link" href="#configuration">48. Configuration options</a></h2>
+<h2 id="configuration"><a class="anchor" href="#configuration"></a><a class="link" href="#configuration">49. Configuration options</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>You have several options to customize your Citrus project. Citrus uses default settings that can be overwritten to some
@@ -43633,7 +45012,7 @@ context). Citrus registers components in the context in order to share those wit
 customize the behavior of these components over environment variables and system properties.</p>
 </div>
 <div class="sect2">
-<h3 id="configuration-environment-settings"><a class="anchor" href="#configuration-environment-settings"></a><a class="link" href="#configuration-environment-settings">48.1. Environment settings</a></h3>
+<h3 id="configuration-environment-settings"><a class="anchor" href="#configuration-environment-settings"></a><a class="link" href="#configuration-environment-settings">49.1. Environment settings</a></h3>
 <div class="paragraph">
 <p>Citrus as an application reads general settings from system properties and environment variables. The Citrus framework
 settings initialize on the startup and evaluate environment settings in favor of using default values.</p>
@@ -43643,7 +45022,7 @@ settings initialize on the startup and evaluate environment settings in favor of
 such as Docker or Kubernetes. The following settings do support this kind of environment configuration.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. System properties</caption>
+<caption class="title">Table 7. System properties</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -43697,7 +45076,7 @@ such as Docker or Kubernetes. The following settings do support this kind of env
 <p>Same properties are settable via environment variables.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Environment variables</caption>
+<caption class="title">Table 8. Environment variables</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -43749,13 +45128,13 @@ such as Docker or Kubernetes. The following settings do support this kind of env
 </table>
 </div>
 <div class="sect2">
-<h3 id="configuration-spring"><a class="anchor" href="#configuration-spring"></a><a class="link" href="#configuration-spring">48.2. Spring configuration settings</a></h3>
+<h3 id="configuration-spring"><a class="anchor" href="#configuration-spring"></a><a class="link" href="#configuration-spring">49.2. Spring configuration settings</a></h3>
 <div class="paragraph">
 <p>When spring framework is enabled in Citrus you can set specific settings regarding the Spring
 application context.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. System properties</caption>
+<caption class="title">Table 9. System properties</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -43778,7 +45157,7 @@ application context.</p>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Environment variables</caption>
+<caption class="title">Table 10. Environment variables</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -43802,7 +45181,7 @@ application context.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="configuration-property-file"><a class="anchor" href="#configuration-property-file"></a><a class="link" href="#configuration-property-file">48.3. Property file settings</a></h3>
+<h3 id="configuration-property-file"><a class="anchor" href="#configuration-property-file"></a><a class="link" href="#configuration-property-file">49.3. Property file settings</a></h3>
 <div class="paragraph">
 <p>As mentioned in the previous section Citrus as a framework references some basic settings from system environment properties
 or variables. You can overwrite these settings in a central property file which is loaded at the very beginning of the
@@ -43850,7 +45229,7 @@ You can use <strong>classpath:</strong> and <strong>file:</strong> path prefix i
 </div>
 </div>
 <div class="sect1">
-<h2 id="spring-support"><a class="anchor" href="#spring-support"></a><a class="link" href="#spring-support">49. Spring support</a></h2>
+<h2 id="spring-support"><a class="anchor" href="#spring-support"></a><a class="link" href="#spring-support">50. Spring support</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Spring framework provides an awesome set of projects, libraries and tools and is a wide spread and well appreciated
@@ -43864,7 +45243,7 @@ context. In the following you can use Spring autowiring and configuration in you
 <p>Read the following chapters to know more about how to use Citrus together with Spring.</p>
 </div>
 <div class="sect2">
-<h3 id="spring-xml-config"><a class="anchor" href="#spring-xml-config"></a><a class="link" href="#spring-xml-config">49.1. Spring XML application context</a></h3>
+<h3 id="spring-xml-config"><a class="anchor" href="#spring-xml-config"></a><a class="link" href="#spring-xml-config">50.1. Spring XML application context</a></h3>
 <div class="paragraph">
 <p>Citrus supports the Spring framework as IoC container in order to load all components as Spring beans in a central
 application context. By default, Citrus loads basic components as Spring beans in a Spring Java config class.</p>
@@ -43932,7 +45311,7 @@ So you are free to modularize your configuration in several files that get loade
 </div>
 </div>
 <div class="sect2">
-<h3 id="spring-java-config"><a class="anchor" href="#spring-java-config"></a><a class="link" href="#spring-java-config">49.2. Spring Java config</a></h3>
+<h3 id="spring-java-config"><a class="anchor" href="#spring-java-config"></a><a class="link" href="#spring-java-config">50.2. Spring Java config</a></h3>
 <div class="paragraph">
 <p>You can also use pure Java code to load Spring beans as a configuration. Citrus is able to load the Spring beans from a
 configuration class. Please define the configuration class with the System property <code>citrus.spring.java.config</code> or with
@@ -44008,13 +45387,13 @@ application context during start.
 </div>
 </div>
 <div class="sect1">
-<h2 id="samples"><a class="anchor" href="#samples"></a><a class="link" href="#samples">50. Samples</a></h2>
+<h2 id="samples"><a class="anchor" href="#samples"></a><a class="link" href="#samples">51. Samples</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter gives some samples where you can see Citrus in action.</p>
 </div>
 <div class="sect2">
-<h3 id="samples-flightbooking"><a class="anchor" href="#samples-flightbooking"></a><a class="link" href="#samples-flightbooking">50.1. The FlightBooking sample</a></h3>
+<h3 id="samples-flightbooking"><a class="anchor" href="#samples-flightbooking"></a><a class="link" href="#samples-flightbooking">51.1. The FlightBooking sample</a></h3>
 <div class="paragraph">
 <p>A simple project example should give you the idea how Citrus works. The system under test is a flight booking service that handles travel requests from a travel agency. A travel request consists of a complete travel route including several flights. The FlightBookingService application will split the complete travel booking into separate flight bookings that are sent to the respective airlines in charge. The booking and customer data is persisted in a database.</p>
 </div>
@@ -44028,7 +45407,7 @@ application context during start.
 <p>In our example two different airlines are connected to the FlightBookingService application: the SmartAriline over JMS and the RoyalAirline over Http.</p>
 </div>
 <div class="sect3">
-<h4 id="flightbooking-use-case"><a class="anchor" href="#flightbooking-use-case"></a><a class="link" href="#flightbooking-use-case">50.1.1. The use case</a></h4>
+<h4 id="flightbooking-use-case"><a class="anchor" href="#flightbooking-use-case"></a><a class="link" href="#flightbooking-use-case">51.1.1. The use case</a></h4>
 <div class="paragraph">
 <p>The use case that we would like to test is quite simple. The test should handle a simple travel booking and expect a positive processing to the end. The test case neither simulates business errors nor technical problems. Next picture shows the use case as a sequence diagram.</p>
 </div>
@@ -44040,7 +45419,7 @@ application context during start.
 </div>
 </div>
 <div class="sect3">
-<h4 id="flightbooking-simulated-systems"><a class="anchor" href="#flightbooking-simulated-systems"></a><a class="link" href="#flightbooking-simulated-systems">50.1.2. Configure the simulated systems</a></h4>
+<h4 id="flightbooking-simulated-systems"><a class="anchor" href="#flightbooking-simulated-systems"></a><a class="link" href="#flightbooking-simulated-systems">51.1.2. Configure the simulated systems</a></h4>
 <div class="paragraph">
 <p>Citrus simulates all surrounding applications in their behavior during the test. The simulated applications are: TravelAgency, SmartAirline and RoyalAirline. The simulated systems have to be configured in the Citrus configuration first. The configuration is done in Spring XML configuration files, as Citrus uses Spring to glue all its services together.</p>
 </div>
@@ -44126,7 +45505,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="flightbooking-http-adapter"><a class="anchor" href="#flightbooking-http-adapter"></a><a class="link" href="#flightbooking-http-adapter">50.1.3. Configure the Http adapter</a></h4>
+<h4 id="flightbooking-http-adapter"><a class="anchor" href="#flightbooking-http-adapter"></a><a class="link" href="#flightbooking-http-adapter">51.1.3. Configure the Http adapter</a></h4>
 <div class="paragraph">
 <p>The RoyalAirline is connected to our system using Http request/response communication. This means we have to simulate a Http server in the test that accepts client requests and provides proper responses. Citrus offers a Http server implementation that will listen on a port for client requests. The adapter forwards incoming request to the test engine over JMS and receives a proper response that is forwarded as a Http response to the client. The next picture shows this mechanism in detail.</p>
 </div>
@@ -44160,7 +45539,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="flightbooking-test-case"><a class="anchor" href="#flightbooking-test-case"></a><a class="link" href="#flightbooking-test-case">50.1.4. The test case</a></h4>
+<h4 id="flightbooking-test-case"><a class="anchor" href="#flightbooking-test-case"></a><a class="link" href="#flightbooking-test-case">51.1.4. The test case</a></h4>
 <div class="paragraph">
 <p>The test case definition is also a Spring configuration file. Citrus offers a customized XML syntax to define a test case. This XML test defining language is supposed to be easy to understand and more specific to the domain we are dealing with. Next listing shows the whole test case definition. Keep in mind that a test case defines every step in the use case. So we define sending and receiving actions of the use case as described in the sequence diagram we saw earlier.</p>
 </div>
@@ -44424,7 +45803,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="appendix"><a class="anchor" href="#appendix"></a><a class="link" href="#appendix">51. Appendix</a></h2>
+<h2 id="appendix"><a class="anchor" href="#appendix"></a><a class="link" href="#appendix">52. Appendix</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="maven-archetypes"><a class="anchor" href="#maven-archetypes"></a><a class="link" href="#maven-archetypes">Maven archetype</a></h3>
@@ -44499,8 +45878,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 4.5.2<br>
-Last updated 2025-01-25 13:06:28 +0100
+Version 4.6.0<br>
+Last updated 2025-05-07 11:08:07 +0200
 </div>
 </div>
 <style>
