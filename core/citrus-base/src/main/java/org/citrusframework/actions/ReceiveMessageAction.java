@@ -62,6 +62,7 @@ import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.ValidationStatus;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.yaml.YamlMessageValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
@@ -313,6 +314,12 @@ public class ReceiveMessageAction extends AbstractTestAction {
                         getMessageType(), MessageType.JSON);
 
                 setMessageType(MessageType.JSON);
+            } else if (MessagePayloadUtils.isYaml(payload)
+                    && (isNull(getMessageType()) || !getMessageType().equalsIgnoreCase(MessageType.YAML.name()))) {
+                logger.warn("Detected YAML message payload type, but non-YAML message type '{}' configured! Assuming message type {}",
+                        getMessageType(), MessageType.YAML);
+
+                setMessageType(MessageType.YAML);
             }
         }
     }
@@ -835,6 +842,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
                         validationContext = new XmlMessageValidationContext();
                     } else if (type == MessageType.JSON) {
                         validationContext = new JsonMessageValidationContext();
+                    } else if (type == MessageType.YAML) {
+                        validationContext = new YamlMessageValidationContext();
                     } else if (type == MessageType.PLAINTEXT) {
                         validationContext = new DefaultMessageValidationContext();
                     }

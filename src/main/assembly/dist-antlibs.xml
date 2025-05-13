@@ -45,6 +45,7 @@
 
         <include>org.citrusframework:citrus-validation-xml</include>
         <include>org.citrusframework:citrus-validation-json</include>
+        <include>org.citrusframework:citrus-validation-yaml</include>
         <include>org.citrusframework:citrus-validation-text</include>
         <include>org.citrusframework:citrus-validation-binary</include>
         <include>org.citrusframework:citrus-validation-groovy</include>

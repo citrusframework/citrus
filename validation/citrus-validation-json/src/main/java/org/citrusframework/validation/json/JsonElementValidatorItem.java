@@ -16,17 +16,16 @@
 
 package org.citrusframework.validation.json;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.JsonPathException;
-import net.minidev.json.JSONArray;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
-
-import java.util.List;
-import java.util.stream.Stream;
 
 import static com.jayway.jsonpath.Option.AS_PATH_LIST;
 import static org.citrusframework.validation.ValidationUtils.buildValueMismatchErrorMessage;
@@ -176,13 +175,11 @@ public class JsonElementValidatorItem<T> {
         return foundJsonPaths.stream();
     }
 
-    public JsonElementValidatorItem<Object> child(int expectedIndex, Object other) {
-        var arrayControl = this.ensureType(JSONArray.class);
-
+    public JsonElementValidatorItem<Object> child(int expectedIndex, Object other, Object expected) {
         return new JsonElementValidatorItem<>(
                 expectedIndex,
                 other,
-                arrayControl.expected.get(expectedIndex)
-        ).parent(arrayControl);
+                expected
+        );
     }
 }

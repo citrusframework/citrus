@@ -24,6 +24,7 @@ defaultXpathMessageValidator:: org.citrusframework.validation.xml.XpathMessageVa
 defaultJsonMessageValidator:: org.citrusframework.validation.json.JsonTextMessageValidator
 defaultJsonPathMessageValidator:: org.citrusframework.validation.json.JsonPathMessageValidator
 defaultPlaintextMessageValidator:: org.citrusframework.validation.text.PlainTextMessageValidator
+defaultYamlMessageValidator:: org.citrusframework.validation.yaml.YamlMessageValidator
 defaultMessageHeaderValidator:: org.citrusframework.validation.DefaultMessageHeaderValidator
 defaultBinaryBase64MessageValidator:: org.citrusframework.validation.text.BinaryBase64MessageValidator
 defaultGzipBinaryBase64MessageValidator:: org.citrusframework.validation.text.GzipBinaryBase64MessageValidator
@@ -85,6 +86,7 @@ Citrus provides the following validation modules:
 
 * link:#json-message-validation[citrus-validation-json]
 * link:#xml-message-validation[citrus-validation-xml]
+* link:#yaml-message-validation[citrus-validation-yaml]
 * link:#plaintext-message-validation[citrus-validation-text]
 * link:#binary-message-validation[citrus-validation-binary]
 * link:#groovy-xml-validation[citrus-validation-groovy]

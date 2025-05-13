@@ -23,6 +23,7 @@ import java.util.Set;
 import net.minidev.json.parser.ParseException;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.json.JsonSchemaRepository;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.script.ScriptTypes;
@@ -52,6 +53,228 @@ public class JsonTextMessageValidatorTest extends UnitTestSupport {
     public void setup() {
         fixture = new JsonTextMessageValidator();
         validationContext = new JsonMessageValidationContext();
+    }
+
+    @Test
+    public void testJsonValidationExactMatch() {
+        var actualMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
+        var expectedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
+
+        assertThatNoException().isThrownBy(() -> fixture.validateMessage(actualMessage, expectedMessage, context, validationContext));
+    }
+
+    @Test
+    public void testJsonValidationPropertyOrdering() {
+        var actualMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
+        var expectedMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "index": 5
+        }
+        """);
+
+        assertThatNoException().isThrownBy(() -> fixture.validateMessage(actualMessage, expectedMessage, context, validationContext));
+    }
+
+    @Test
+    public void testJsonValidationIgnoreProperty() {
+        var actualMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "index": 5
+        }
+        """);
+        var expectedMessage = new DefaultMessage("""
+        {
+          "id": "@ignore@",
+          "text": "Hello World!",
+          "index": "@ignore@"
+        }
+        """);
+
+        assertThatNoException().isThrownBy(() -> fixture.validateMessage(actualMessage, expectedMessage, context, validationContext));
+    }
+
+    @Test
+    public void testJsonValidationPropertyValueMismatch() {
+        var actualMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
+        var expectedMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Something else!",
+          "index": 5
+        }
+        """);
+
+        assertThatThrownBy(() -> fixture.validateMessage(actualMessage, expectedMessage, context, validationContext))
+                .isInstanceOf(ValidationException.class)
+                .hasMessageContaining("Values not equal for entry: '$['text']', expected 'Something else!' but was 'Hello World!'");
+    }
+
+    @Test
+    public void testJsonValidationArrayMatch() {
+        var actualMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "numbers": [1, 2, 3, 4, 5]
+        }
+        """);
+        var expectedMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "numbers": [1, 2, 3, 4, 5]
+        }
+        """);
+
+        assertThatNoException().isThrownBy(() -> fixture.validateMessage(actualMessage, expectedMessage, context, validationContext));
+    }
+
+    @Test
+    public void testJsonValidationArrayObjectMatch() {
+        var actualMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "pets": [
+            { "name": "fluffy", "category": "cat" },
+            { "name": "hasso", "category": "dog" }
+          ]
+        }
+        """);
+        var expectedMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "pets": [
+            { "name": "fluffy", "category": "cat" },
+            { "name": "hasso", "category": "dog" }
+          ]
+        }
+        """);
+
+        assertThatNoException().isThrownBy(() -> fixture.validateMessage(actualMessage, expectedMessage, context, validationContext));
+    }
+
+    @Test
+    public void testJsonValidationArrayOrdering() {
+        var actualMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "numbers": [1, 2, 3, 4, 5]
+        }
+        """);
+        var expectedMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "numbers": [5, 4, 3, 2, 1]
+        }
+        """);
+
+        assertThatNoException().isThrownBy(() -> fixture.validateMessage(actualMessage, expectedMessage, context, validationContext));
+    }
+
+    @Test
+    public void testJsonValidationArrayObjectOrdering() {
+        var actualMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "pets": [
+            { "name": "fluffy", "category": "cat" },
+            { "name": "hasso", "category": "dog" }
+          ]
+        }
+        """);
+        var expectedMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "pets": [
+            { "category": "dog", "name": "hasso" },
+            { "name": "fluffy", "category": "cat" }
+          ]
+        }
+        """);
+
+        assertThatNoException().isThrownBy(() -> fixture.validateMessage(actualMessage, expectedMessage, context, validationContext));
+    }
+
+    @Test
+    public void testJsonValidationArrayMismatch() {
+        var actualMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "numbers": [1, 2, 3, 4, 5]
+        }
+        """);
+        var expectedMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "numbers": [1, 2, 3, 0, 5]
+        }
+        """);
+
+        assertThatThrownBy(() -> fixture.validateMessage(actualMessage, expectedMessage, context, validationContext))
+                .isInstanceOf(ValidationException.class)
+                .hasMessageContaining("An item in '$['numbers']' is missing, expected '0' to be in '[1,2,3,4,5]'");
+    }
+
+    @Test
+    public void testJsonValidationArraySizeMismatch() {
+        var actualMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "numbers": [1, 2, 3, 4, 5]
+        }
+        """);
+        var expectedMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "numbers": [1, 2, 3]
+        }
+        """);
+
+        assertThatThrownBy(() -> fixture.validateMessage(actualMessage, expectedMessage, context, validationContext))
+                .isInstanceOf(ValidationException.class)
+                .hasMessageContaining("Number of entries is not equal in element: '$['numbers']', expected '[1,2,3]' but was '[1,2,3,4,5]'");
+    }
+
+    @Test
+    public void testJsonValidationArrayObjectMismatch() {
+        var actualMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "pets": [
+            { "name": "fluffy", "category": "cat" },
+            { "name": "hasso", "category": "dog" }
+          ]
+        }
+        """);
+        var expectedMessage = new DefaultMessage("""
+        {
+          "id": "x123456789x",
+          "text": "Hello World!",
+          "pets": [
+            { "name": "fluffy", "category": "cat" },
+            { "name": "peppa", "category": "pig" }
+          ]
+        }
+        """);
+
+        assertThatThrownBy(() -> fixture.validateMessage(actualMessage, expectedMessage, context, validationContext))
+                .isInstanceOf(ValidationException.class)
+                .hasMessageContaining("An item in '$['pets']' is missing, expected '{\"name\":\"peppa\",\"category\":\"pig\"}' to be in '[{\"name\":\"fluffy\",\"category\":\"cat\"},{\"name\":\"hasso\",\"category\":\"dog\"}]'");
     }
 
     @Test

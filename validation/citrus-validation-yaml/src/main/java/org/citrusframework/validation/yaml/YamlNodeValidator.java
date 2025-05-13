@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.json;
+package org.citrusframework.validation.yaml;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.context.MessageValidationContext;
+import org.yaml.snakeyaml.scanner.ScannerException;
 
 import static java.util.Objects.requireNonNullElse;
 import static org.citrusframework.CitrusSettings.IGNORE_PLACEHOLDER;
@@ -34,58 +34,48 @@ import static org.citrusframework.validation.ValidationUtils.buildValueToBeInCol
 import static org.citrusframework.validation.matcher.ValidationMatcherUtils.isValidationMatcherExpression;
 import static org.citrusframework.validation.matcher.ValidationMatcherUtils.resolveValidationMatcher;
 
-public class JsonElementValidator {
+public class YamlNodeValidator {
     private final boolean strict;
     private final TestContext context;
     private final Collection<String> ignoreExpressions;
 
-    public JsonElementValidator(
-            boolean strict,
-            TestContext context,
-            Collection<String> ignoreExpressions
-    ) {
+    public YamlNodeValidator(boolean strict, TestContext context, Collection<String> ignoreExpressions) {
         this.strict = strict;
         this.context = context;
         this.ignoreExpressions = ignoreExpressions;
     }
 
-    public void validate(JsonElementValidatorItem<?> control) {
+    public void validate(YamlNodeValidatorItem<?> control) {
         if (isIgnoredByPlaceholderOrExpressionList(ignoreExpressions, control))
             return;
         if (isValidationMatcherExpression(requireNonNullElse(control.expectedAsStringOrNull(), ""))) {
-            resolveValidationMatcher(control.getJsonPath(), control.actualAsStringOrNull(), control.expectedAsStringOrNull(), context);
-        } else if (control.expected instanceof JSONObject) {
-            validateJSONObject(this, control);
-        } else if (control.expected instanceof JSONArray) {
-            validateJSONArray(this, control);
+            resolveValidationMatcher(control.getNodePath(), control.actualAsStringOrNull(), control.expectedAsStringOrNull(), context);
+        } else if (control.expected instanceof Map<?, ?>) {
+            validateObject(this, control);
+        } else if (control.expected instanceof Iterable<?>) {
+            validateArray(this, control);
         } else {
             validateNativeType(control);
         }
     }
 
-    private void validateJSONObject(JsonElementValidator validator, JsonElementValidatorItem<?> control) {
-        var objectControl = control.ensureType(JSONObject.class);
+    private void validateObject(YamlNodeValidator validator, YamlNodeValidatorItem<?> control) {
+        var objectControl = control.ensureType(Map.class);
 
         if (strict) {
-            validateSameSize(objectControl.getJsonPath(), objectControl.expected.keySet(), objectControl.actual.keySet());
+            validateSameSize(objectControl.getNodePath(), objectControl.expected.keySet(), objectControl.actual.keySet());
         }
 
-        var controlEntries = objectControl.expected
-                .entrySet()
-                .stream()
-                .map(entry -> new JsonElementValidatorItem<>(
-                        entry.getKey(), objectControl.actual.get(entry.getKey()), entry.getValue()
-                ).parent(objectControl))
-                .toList();
-
-        for (var entryControl : controlEntries) {
-            if (!objectControl.actual.containsKey(entryControl.getName())) {
+        Map<String, Object> expected = objectControl.expected;
+        Map<String, Object> actual = objectControl.actual;
+        for (var mapEntry : expected.entrySet()) {
+            if (!actual.containsKey(mapEntry.getKey())) {
                 throw new ValidationException(buildValueToBeInCollectionErrorMessage(
-                        "Missing JSON entry", entryControl.getName(), objectControl.actual.keySet()
-                ));
+                        "Missing property in YAML entry '%s'".formatted(objectControl.getNodePath()), mapEntry.getKey(), actual.keySet()));
             }
 
-            validator.validate(entryControl);
+            validator.validate(new YamlNodeValidatorItem<>(mapEntry.getKey(),
+                    actual.get(mapEntry.getKey()), mapEntry.getValue()).parent(objectControl));
         }
     }
 
@@ -93,7 +83,7 @@ public class JsonElementValidator {
      * Checks if given element node is either on ignore list or
      * contains @ignore@ tag inside control message
      */
-    static boolean isIgnoredByPlaceholderOrExpressionList(Collection<String> ignoreExpressions, JsonElementValidatorItem<?> controlEntry) {
+    static boolean isIgnoredByPlaceholderOrExpressionList(Collection<String> ignoreExpressions, YamlNodeValidatorItem<?> controlEntry) {
         String trimmedControlValue = requireNonNullElse(controlEntry.expectedAsStringOrNull(), "").trim();
         if (trimmedControlValue.equals(IGNORE_PLACEHOLDER)) {
             return true;
@@ -102,31 +92,40 @@ public class JsonElementValidator {
         return ignoreExpressions.stream().anyMatch(controlEntry::isPathIgnoredBy);
     }
 
-    private void validateJSONArray(JsonElementValidator validator, JsonElementValidatorItem<?> control) {
-        var arrayControl = control.ensureType(JSONArray.class);
-        if (strict) {
-            validateSameSize(control.getJsonPath(), arrayControl.expected, arrayControl.actual);
+    private void validateArray(YamlNodeValidator validator, YamlNodeValidatorItem<?> control) {
+        var arrayControl = control.ensureType(Iterable.class);
+        List<Object> controlItems = new ArrayList<>();
+        List<Object> actualItems = new ArrayList<>();
+        try {
+            arrayControl.expected.iterator().forEachRemaining(controlItems::add);
+            arrayControl.actual.iterator().forEachRemaining(actualItems::add);
+        } catch (ScannerException e) {
+            throw new ValidationException("Failed to read YAML source", e);
         }
 
-        List<Object> remaining = new ArrayList<>(arrayControl.actual.size());
+        if (strict) {
+            validateSameSize(control.getNodePath(), controlItems, actualItems);
+        }
+
+        List<Object> remaining = new ArrayList<>();
         arrayControl.actual.iterator().forEachRemaining(remaining::add);
-        for (int i = 0; i < arrayControl.expected.size(); i++) {
+        for (int i = 0; i < controlItems.size(); i++) {
             if (isIgnoredByPlaceholderOrExpressionList(ignoreExpressions,
-                    arrayControl.child(i, i, arrayControl.expected.get(i)).parent(arrayControl))) {
+                    arrayControl.child(i, i, controlItems.get(i)).parent(arrayControl))) {
                 continue;
             }
 
             if (remaining.isEmpty()) {
                 throwValueMismatch("Missing entries in array element: '" + control.getName() + "'",
-                        arrayControl.expected.size(), arrayControl.actual.size());
+                        controlItems.size(), actualItems.size());
             }
 
             boolean isValid = false;
 
             int actualIndex = 0;
             while (!isValid && actualIndex < remaining.size()) {
-                JsonElementValidatorItem<Object> item = arrayControl.child(i,
-                        remaining.get(actualIndex), arrayControl.expected.get(i))
+                YamlNodeValidatorItem<Object> item = arrayControl.child(i,
+                        remaining.get(actualIndex), controlItems.get(i))
                         .parent(arrayControl);
                 if (isValidItem(item, validator)) {
                     isValid = true;
@@ -137,15 +136,15 @@ public class JsonElementValidator {
 
             if (!isValid) {
                 throw new ValidationException(buildValueToBeInCollectionErrorMessage(
-                        "An item in '%s' is missing".formatted(arrayControl.getJsonPath()),
-                        arrayControl.expected.get(i),
-                        arrayControl.actual
+                        "An item in '%s' is missing".formatted(arrayControl.getNodePath()),
+                        controlItems.get(i),
+                        actualItems
                 ));
             }
         }
     }
 
-    private static boolean isValidItem(JsonElementValidatorItem<Object> validatorItem, JsonElementValidator validator) {
+    private static boolean isValidItem(YamlNodeValidatorItem<Object> validatorItem, YamlNodeValidator validator) {
         try {
             validator.validate(validatorItem);
             return true;
@@ -160,9 +159,9 @@ public class JsonElementValidator {
         }
     }
 
-    private static void validateNativeType(JsonElementValidatorItem<?> control) {
+    private static void validateNativeType(YamlNodeValidatorItem<?> control) {
         if (!Objects.equals(control.expected, control.actual)) {
-            throwValueMismatch("Values not equal for entry: '" + control.getJsonPath() + "'", control.expected, control.actual);
+            throwValueMismatch("Values not equal for entry: '" + control.getNodePath() + "'", control.expected, control.actual);
         }
     }
 
@@ -172,12 +171,12 @@ public class JsonElementValidator {
 
     @FunctionalInterface
     public interface Provider {
-        JsonElementValidator getValidator(boolean isStrict, TestContext context, MessageValidationContext validationContext);
+        YamlNodeValidator getValidator(boolean strict, TestContext context, MessageValidationContext validationContext);
 
         Provider DEFAULT = (
-                boolean isStrict,
+                boolean strict,
                 TestContext context,
                 MessageValidationContext validationContext
-        ) -> new JsonElementValidator(isStrict, context, validationContext.getIgnoreExpressions());
+        ) -> new YamlNodeValidator(strict, context, validationContext.getIgnoreExpressions());
     }
 }

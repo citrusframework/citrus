@@ -17,8 +17,9 @@
 package org.citrusframework.message;
 
 import org.citrusframework.CitrusSettings;
-
-import static java.util.Objects.nonNull;
+import org.citrusframework.util.IsJsonPredicate;
+import org.citrusframework.util.IsXmlPredicate;
+import org.citrusframework.util.IsYamlPredicate;
 
 public class MessagePayloadUtils {
 
@@ -57,7 +58,7 @@ public class MessagePayloadUtils {
      * @return
      */
     public static boolean isXml(String payload) {
-        return nonNull(payload) && payload.trim().startsWith("<");
+        return IsXmlPredicate.getInstance().test(payload);
     }
 
     /**
@@ -66,7 +67,16 @@ public class MessagePayloadUtils {
      * @return
      */
     public static boolean isJson(String payload) {
-        return nonNull(payload) && (payload.trim().startsWith("{") || payload.trim().startsWith("["));
+        return IsJsonPredicate.getInstance().test(payload);
+    }
+
+    /**
+     * Check if given message payload is of YAML nature.
+     * @param payload
+     * @return
+     */
+    public static boolean isYaml(String payload) {
+        return IsYamlPredicate.getInstance().test(payload);
     }
 
     /**

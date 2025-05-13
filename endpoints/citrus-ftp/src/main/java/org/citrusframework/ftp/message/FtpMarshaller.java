@@ -109,7 +109,7 @@ public class FtpMarshaller implements Marshaller, Unmarshaller {
                 try {
                     return mapper.readValue(((StreamSource) source).getReader(), type);
                 } catch (JsonParseException | JsonMappingException e2) {
-                    continue;
+                    // do nothing
                 } catch (IOException io) {
                     throw new CitrusRuntimeException("Failed to read ftp JSON object from source", io);
                 }
