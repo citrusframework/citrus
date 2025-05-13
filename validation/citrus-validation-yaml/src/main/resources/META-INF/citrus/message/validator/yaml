@@ -1,0 +1,2 @@
+name=defaultYamlMessageValidator
+type=org.citrusframework.validation.yaml.YamlMessageValidator

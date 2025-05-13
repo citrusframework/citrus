@@ -29,6 +29,7 @@ import org.citrusframework.message.MessagePayloadUtils;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.util.IsJsonPredicate;
 import org.citrusframework.util.IsXmlPredicate;
+import org.citrusframework.util.IsYamlPredicate;
 import org.citrusframework.validation.context.SchemaValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.slf4j.Logger;
@@ -102,6 +103,8 @@ public class MessageValidatorRegistry {
                     matchingValidators = findFallbackMessageValidators(MessageType.XML.name(), message);
                 } else if (MessagePayloadUtils.isJson(payload) && !messageType.equals(MessageType.JSON.name())) {
                     matchingValidators = findFallbackMessageValidators(MessageType.JSON.name(), message);
+                } else if (MessagePayloadUtils.isYaml(payload) && !messageType.equals(MessageType.YAML.name())) {
+                    matchingValidators = findFallbackMessageValidators(MessageType.YAML.name(), message);
                 } else if (!messageType.equals(MessageType.PLAINTEXT.name())) {
                     matchingValidators = findFallbackMessageValidators(MessageType.PLAINTEXT.name(), message);
                 }
@@ -292,6 +295,8 @@ public class MessageValidatorRegistry {
                     matchingSchemaValidators = findFallbackSchemaValidators(MessageType.XML.name(), message);
                 } else if (IsJsonPredicate.getInstance().test(payload) && !messageType.equals(MessageType.JSON.name())) {
                     matchingSchemaValidators = findFallbackSchemaValidators(MessageType.JSON.name(), message);
+                } else if (IsYamlPredicate.getInstance().test(payload) && !messageType.equals(MessageType.YAML.name())) {
+                    matchingSchemaValidators = findFallbackSchemaValidators(MessageType.YAML.name(), message);
                 }
             }
         }

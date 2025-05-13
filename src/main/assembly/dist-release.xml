@@ -41,6 +41,7 @@
 
         <include>org.citrusframework:citrus-validation-xml</include>
         <include>org.citrusframework:citrus-validation-json</include>
+        <include>org.citrusframework:citrus-validation-yaml</include>
         <include>org.citrusframework:citrus-validation-text</include>
         <include>org.citrusframework:citrus-validation-binary</include>
         <include>org.citrusframework:citrus-validation-groovy</include>
@@ -262,6 +263,13 @@
     </fileSet>
     <fileSet>
       <directory>validation/citrus-validation-json/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>validation/citrus-validation-yaml/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>

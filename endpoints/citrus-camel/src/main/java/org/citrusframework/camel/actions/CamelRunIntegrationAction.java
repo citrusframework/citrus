@@ -35,6 +35,7 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.IsJsonPredicate;
 import org.citrusframework.util.IsXmlPredicate;
+import org.citrusframework.util.IsYamlPredicate;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -173,6 +174,8 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
             return "yaml";
         } else if (sourceCode.contains("kind: Kamelet") || sourceCode.contains("kind: KameletBinding") ||
                 sourceCode.contains("kind: Pipe") || sourceCode.contains("kind: Integration")) {
+            return "yaml";
+        } else if (IsYamlPredicate.getInstance().test(sourceCode)) {
             return "yaml";
         } else {
             return "groovy";

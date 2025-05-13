@@ -207,6 +207,13 @@
       </includes>
     </fileSet>
     <fileSet>
+      <directory>validation/citrus-validation-yaml/target</directory>
+      <outputDirectory/>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
       <directory>validation/citrus-validation-text/target</directory>
       <outputDirectory/>
       <includes>

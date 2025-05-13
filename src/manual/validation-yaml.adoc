@@ -1,0 +1,212 @@
+[[yaml-message-validation]]
+== YAML validation
+
+Message formats such as YAML have become very popular, in particular when dealing with Kubernetes APIs.
+Citrus is able to expect and validate YAML message content with a powerful comparison of YAML documents.
+
+IMPORTANT: By default, Citrus will use XML message formats when sending and receiving messages.
+This also reflects to the message validation logic that Citrus uses for incoming messages.
+In case we would like to enable YAML message validation we have to tell Citrus that we expect a YAML message right now.
+
+YAML message validation is not enabled by default in your project.
+You need to add the validation module to your project as a Maven dependency.
+
+.YAML validation module dependency
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-validation-yaml</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+Citrus provides a default message validator implementations for YAML message content:
+
+[horizontal]
+YamlMessageValidator:: Basic YAML message validator implementation compares YAML documents with objects/arrays (expected and received).
+- The order of YAML object properties can differ, also the ordering of items in arrays is not validated.
+- Test variables and ignored-placeholders (`@ignore@`) can be used.
+
+IMPORTANT: The YAML validator offers two different modes to operate.
+By default, *strict* mode is enabled and the validator will also check the exact amount of entries (object properties / array items) to match in received and control message.
+No additional fields in received YAML data structure will be accepted.
+In *soft* mode the validator allows additional entries (object properties / array items) in received YAML, so the control YAML can be a subset of the received.
+Additional entries in the received YAML data structure are ignored.
+
+TIP: The YAML validation mode (strict or soft) is settable via environment variable `CITRUS_YAML_MESSAGE_VALIDATION_STRICT` or system property `citrus.yaml.message.validation.strict=false`.
+This will set soft mode to all YAML message validators.
+
+You can also overwrite these default message validators for YAML by placing a bean into the Spring Application context.
+The bean uses a default name as identifier.
+Then your custom bean will overwrite the default validator:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public YamlMessageValidator defaultYamlMessageValidator() {
+    return new YamlMessageValidator();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<bean id="defaultYamlMessageValidator" class="org.citrusframework.validation.yaml.YamlMessageValidator"/>
+----
+
+This is how you can customize the message validators used for YAML message data.
+
+When a message has been received in Citrus the message validation will try to find a matching message validator according to the message content.
+You can also specify the YAML message format on a receive action in order to force YAML message validation.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+receive(someEndpoint)
+    .message()
+    .type(MessageType.YAML)
+    .body("""
+          type: "read"
+          mbean: "java.lang:type=Memory"
+          attribute: "HeapMemoryUsage"
+          path: "@equalsIgnoreCase('USED')@"
+          value: "${heapUsage}"
+          timestamp: "@ignore@"
+          """);
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+    <message type="yaml">
+        <data>
+           type: "read"
+           mbean: "java.lang:type=Memory"
+           attribute: "HeapMemoryUsage"
+           path: "@equalsIgnoreCase('USED')@"
+           value: "${heapUsage}"
+           timestamp: "@ignore@"
+        </data>
+    </message>
+</receive>
+----
+
+The message receiving action in our test case specifies a message format type `type="yaml". This tells Citrus to look for some message validator implementation capable of validating YAML messages.
+As we have added the proper message validator to the Spring application context Citrus will pick the right validator and YAML message validation is performed on this message.
+
+IMPORTANT: Using several message validator implementations at the same time in the Spring application context is also no problem.
+Citrus automatically searches for all available message validators applicable for the given message format and executes these validators in sequence.
+This means that multiple message validators can coexist in a Citrus project.
+
+TIP: By default, Citrus consolidates all available message validators.
+You can explicitly pick a special message validator in the receive message action as shown in the example above.
+In this case all other validators will not take part in this special message validation.
+But be careful: When picking a message validator explicitly you are of course limited to this message validator capabilities.
+Validation features of other validators are not valid in this case (e.g. message header validation, XPath validation, etc.)
+
+[[yaml-ignore-validation]]
+=== Ignore YAML elements
+
+This section uses YAML path expressions and placeholders to ignore elements during message validation.
+
+You can use special ignore placeholders in the YAML content to ignore entries in the YAML object structure.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+receive(someEndpoint)
+    .message()
+    .type(MessageType.YAML)
+    .body("""
+         users:
+           - name: "Jane"
+             token": "@ignore@"
+             lastLogin: "@ignore@"
+           - name: "Penny"
+             token: "@ignore@"
+             lastLogin: "@ignore@"
+           - name: "Mary"
+             token: "@ignore@"
+             lastLogin: "@ignore@"
+         """);
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+    <message type="yaml">
+      <data>
+         users:
+           - name: "Jane"
+             token": "@ignore@"
+             lastLogin: "@ignore@"
+           - name: "Penny"
+             token: "@ignore@"
+             lastLogin: "@ignore@"
+           - name: "Mary"
+             token: "@ignore@"
+             lastLogin: "@ignore@"
+      </data>
+    </message>
+</receive>
+----
+
+You can also use the path expression to ignore identified entries in the YAML object structure.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+receive(someEndpoint)
+    .message()
+    .type(MessageType.YAML)
+    .body("""
+         users:
+           - name: "Jane"
+             token": "?"
+             lastLogin: 0
+           - name: "Penny"
+             token: "?"
+             lastLogin: 0
+           - name: "Mary"
+             token: "?"
+             lastLogin: 0
+         """
+    .validate(yaml()
+                .ignore("$.users.token")
+                .ignore("$.users.lastLogin"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+    <message type="yaml">
+      <data>
+         users:
+           - name: "Jane"
+             token": "?"
+             lastLogin: 0
+           - name: "Penny"
+             token: "?"
+             lastLogin: 0
+           - name: "Mary"
+             token: "?"
+             lastLogin: 0
+      </data>
+      <ignore expression="$.users.token" />
+      <ignore expression="$.users.lastLogin" />
+    </message>
+</receive>
+----
+
+With this we add path expressions as ignore statements.
+This means that we explicitly leave out the evaluated elements from validation.
+Obviously this mechanism is a good thing to do when dynamic message data simply is not deterministic such as timestamps and dynamic identifiers.
+In the example above we explicitly skip the *token* entry and all *lastLogin* values that are obviously timestamp values in milliseconds.
+
+The path expression evaluation is very powerful when it comes to select a set of YAML objects and elements.
+This is how we can ignore several elements with one single path expression which is very powerful.

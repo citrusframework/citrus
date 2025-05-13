@@ -60,4 +60,20 @@ public class MessageUtils {
                 .map(payload->IsJsonPredicate.getInstance().test(payload))
                 .orElse(true);
     }
+
+    /**
+     * Checks if message payload is of type Json. An empty payload is considered to be a valid Json payload.
+     * @param message to check.
+     * @return true if payload is Json, false otherwise.
+     */
+    public static boolean hasYamlPayload(Message message) {
+        if (!(message.getPayload() instanceof String)) {
+            return false;
+        }
+
+        return Optional.ofNullable(message.getPayload(String.class))
+                .map(String::trim)
+                .map(payload->IsYamlPredicate.getInstance().test(payload))
+                .orElse(true);
+    }
 }

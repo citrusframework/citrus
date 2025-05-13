@@ -16,13 +16,13 @@
 
 package org.citrusframework.validation.json;
 
+import java.util.List;
+import java.util.Set;
+
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.util.List;
-import java.util.Set;
 
 import static net.minidev.json.parser.JSONParser.DEFAULT_PERMISSIVE_MODE;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -35,14 +35,14 @@ public class JsonElementValidatorTest extends UnitTestSupport {
 
     JsonElementValidator fixture;
 
-    @Test(dataProvider = "validJsonPairsIfNotStrict")
+    @Test(dataProvider = "validJsonPairs")
     public void shouldBeValidIfNotStrict(JsonAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new JsonElementValidator(NOT_STRICT, context, Set.of());
         assertThatNoException().isThrownBy(() -> fixture.validate(validationItem));
     }
 
-    @Test(dataProvider = "validJsonPairsIfNotStrict")
+    @Test(dataProvider = "validJsonPairs")
     public void shouldBeInvalidIfStrict(JsonAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new JsonElementValidator(STRICT, context, Set.of());
@@ -50,7 +50,7 @@ public class JsonElementValidatorTest extends UnitTestSupport {
     }
 
     @DataProvider
-    public static JsonAssertion[] validJsonPairsIfNotStrict() {
+    public static JsonAssertion[] validJsonPairs() {
         return List.of(
                 new JsonAssertion(
                         "{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}",
@@ -79,6 +79,10 @@ public class JsonElementValidatorTest extends UnitTestSupport {
                 new JsonAssertion(
                         "[1, 2, 1]",
                         "[1, 2]"
+                ),
+                new JsonAssertion(
+                        "{ \"books\": [\"book-a\", \"book-b\", \"book-c\"] }",
+                        "{ \"books\": [\"book-a\", \"book-b\"] }"
                 )
         ).toArray(new JsonAssertion[0]);
     }
@@ -138,20 +142,32 @@ public class JsonElementValidatorTest extends UnitTestSupport {
                         "[1, 2, 3]"
                 ),
                 new JsonAssertion(
+                        "[1, 3, 2]",
+                        "[1, 2, 3]"
+                ),
+                new JsonAssertion(
+                        "[3, 2, 1]",
+                        "[1, 2, 3]"
+                ),
+                new JsonAssertion(
                         "{ \"books\": [\"book-a\", \"book-b\", \"book-c\"] }",
                         "{ \"books\": [\"book-a\", \"book-b\", \"book-c\"] }"
+                ),
+                new JsonAssertion(
+                        "{ \"books\": [\"book-a\", \"book-b\", \"book-c\"] }",
+                        "{ \"books\": [\"book-b\", \"book-a\", \"book-c\"] }"
                 )
         ).toArray(new JsonAssertion[0]);
     }
 
-    @Test(dataProvider = "invalidJsonPairsOnStrictAndNonStrict")
+    @Test(dataProvider = "invalidJsonPairs")
     public void shouldBeInvalid(JsonAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new JsonElementValidator(STRICT, context, Set.of());
         assertThatThrownBy(() -> fixture.validate(validationItem)).isInstanceOf(ValidationException.class);
     }
 
-    @Test(dataProvider = "invalidJsonPairsOnStrictAndNonStrict")
+    @Test(dataProvider = "invalidJsonPairs")
     public void shouldBeInvalidIfNotStrict(JsonAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new JsonElementValidator(NOT_STRICT, context, Set.of());
@@ -159,7 +175,7 @@ public class JsonElementValidatorTest extends UnitTestSupport {
     }
 
     @DataProvider
-    public static JsonAssertion[] invalidJsonPairsOnStrictAndNonStrict() {
+    public static JsonAssertion[] invalidJsonPairs() {
         return List.of(
                 new JsonAssertion(
                         "{\"myNumbers\": [11, 22, 44]}",
@@ -235,14 +251,6 @@ public class JsonElementValidatorTest extends UnitTestSupport {
                 new JsonAssertion(
                         "[1]",
                         "[1, 1]"
-                ),
-                new JsonAssertion(
-                        "[1, 3, 2]",
-                        "[1, 2, 3]"
-                ),
-                new JsonAssertion(
-                        "[3, 2, 1]",
-                        "[1, 2, 3]"
                 )
         ).toArray(new JsonAssertion[0]);
     }
@@ -291,7 +299,7 @@ public class JsonElementValidatorTest extends UnitTestSupport {
         return JsonElementValidatorItem.parseJson(DEFAULT_PERMISSIVE_MODE, jsonAssertion.actual, jsonAssertion.expected);
     }
 
-    public record JsonAssertion(
+    public record JsonAssertion (
             String actual,
             String expected,
             Set<String> ignoreExpressions,

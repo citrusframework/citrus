@@ -251,10 +251,13 @@ public class DefaultMessage implements Message {
                 type = MessageType.JSON.name();
             } else if (MessageUtils.hasXmlPayload(this)) {
                 type = MessageType.XML.name();
+            } else if (MessageUtils.hasYamlPayload(this)) {
+                type = MessageType.YAML.name();
             } else if (getPayload() instanceof String) {
                 type = MessageType.PLAINTEXT.name();
             } else if (!CitrusSettings.DEFAULT_MESSAGE_TYPE.equals(MessageType.XML.name())
-                    && !CitrusSettings.DEFAULT_MESSAGE_TYPE.equals(MessageType.JSON.name())) {
+                    && !CitrusSettings.DEFAULT_MESSAGE_TYPE.equals(MessageType.JSON.name())
+                    && !CitrusSettings.DEFAULT_MESSAGE_TYPE.equals(MessageType.YAML.name())) {
                 type = CitrusSettings.DEFAULT_MESSAGE_TYPE;
             } else {
                 type = MessageType.UNSPECIFIED.name();
