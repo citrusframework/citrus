@@ -168,7 +168,6 @@ Options for release:
                               Works only when on a branch, not when checked out directly.
     --log <log-file>          Write full log to <log-file>, only print progress to screen
     --skip-tests              Do not run tests
-    --keep-staging-repo       Do not drop the staging repo (for manual review of what has been uploaded on a dry run)
     --no-strict-checksums     Do not insist on strict checksum policy for downloaded Maven artifacts
 -q  --quiet                   Adds quiet option to Maven options - only show errors
 ----
@@ -203,12 +202,13 @@ To perform a release, certain preconditions need to be given.
 First of all, you need to have access to the various systems to which release artifacts are uploaded:
 
 * You have to have `gpg` installed and set up a gpg-agent for being able to sign Maven artifacts during deployment in a non-interactive mode.
+You may also use the property `gpg.autosign=true`. This requires you to add a Maven profile to `~/.m2/settings.xml` that sets the GPG passphrase with a `gpg.passphrase` property.
 * You need to have access to the "citrus" account on https://oss.sonatype.org/[oss.sonatype.org] for being able to publish Maven artifacts.
-This credential needs to be added to either your `~/.m2/settings.xml` or you can use an settings file with the `--settings-xml` option.
-The credential needs to be added to the server with the id `sonatype-nexus-staging`.
+This credential needs to be added to either your `~/.m2/settings.xml` or you can use a settings file with the `--settings-xml` option.
+The credential needs to be added to the server with the id `sonatype-central`.
 
 You have to perform the release from a locally checked out project repository, which can be either checkout from a branch like `1.0.x` for a
-patch release or directly from `master`.
+patch release or directly from `main`.
 It is highly recommended to run the release directly from a freshly cloned directory:
 
 [source,bash,indent=0,subs="verbatim,quotes"]

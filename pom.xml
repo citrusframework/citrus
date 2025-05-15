@@ -172,12 +172,12 @@
     <maven.install.plugin.version>3.1.1</maven.install.plugin.version>
     <maven.jar.plugin.version>3.3.0</maven.jar.plugin.version>
     <maven.javadoc.plugin.version>3.11.2</maven.javadoc.plugin.version>
-    <maven.nexus-staging.plugin.version>1.6.13</maven.nexus-staging.plugin.version>
     <maven.plugin.plugin.version>3.9.0</maven.plugin.plugin.version>
     <maven.plugin.annotations.version>3.13.1</maven.plugin.annotations.version>
     <maven.release.plugin.version>3.0.1</maven.release.plugin.version>
     <maven.resource.plugin.version>3.3.1</maven.resource.plugin.version>
     <maven.scm.plugin.version>1.11.2</maven.scm.plugin.version>
+    <maven.sonatype.central.plugin.version>0.7.0</maven.sonatype.central.plugin.version>
     <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
     <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
     <maven.war.plugin.version>3.4.0</maven.war.plugin.version>
@@ -1115,12 +1115,6 @@
         <artifactId>okhttp</artifactId>
         <version>${okhttp.version}</version>
       </dependency>
-      <dependency>
-        <groupId>com.squareup.okhttp3</groupId>
-        <artifactId>mockwebserver</artifactId>
-        <version>${okhttp.version}</version>
-        <scope>test</scope>
-      </dependency>
 
       <dependency>
         <groupId>com.kohlschutter.junixsocket</groupId>
@@ -1359,25 +1353,9 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <groupId>org.sonatype.plugins</groupId>
-          <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>${maven.nexus-staging.plugin.version}</version>
-          <dependencies>
-            <!--
-              TODO: Remove after OSSRH-66257, NEXUS-26993 are fixed,
-            -->
-            <dependency>
-              <groupId>com.thoughtworks.xstream</groupId>
-              <artifactId>xstream</artifactId>
-              <version>${xstream.version}</version>
-            </dependency>
-          </dependencies>
-          <configuration>
-            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-            <serverId>sonatype-nexus-staging</serverId>
-            <stagingProgressTimeoutMinutes>120</stagingProgressTimeoutMinutes>
-            <keepStagingRepositoryOnCloseRuleFailure>true</keepStagingRepositoryOnCloseRuleFailure>
-          </configuration>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <version>${maven.sonatype.central.plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -1701,17 +1679,18 @@
           </plugin>
 
           <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>default-deploy</id>
-                <phase>deploy</phase>
-                <goals>
-                  <goal>deploy</goal>
-                </goals>
-              </execution>
-            </executions>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>sonatype-central</publishingServerId>
+              <excludeArtifacts>
+                <artifact>citrus-utils</artifact>
+                <artifact>citrus-test-support</artifact>
+                <artifact>citrus-quarkus-it</artifact>
+                <artifact>citrus-maven-plugin-integration</artifact>
+              </excludeArtifacts>
+            </configuration>
           </plugin>
         </plugins>
       </build>
