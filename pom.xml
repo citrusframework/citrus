@@ -241,7 +241,7 @@
     <junit.version>4.13.2</junit.version>
     <junixsocket.version>2.10.1</junixsocket.version>
     <k8s.client.version>7.2.0</k8s.client.version>
-    <kafka.version>3.9.0</kafka.version>
+    <kafka.version>3.9.1</kafka.version>
     <knative-client.version>7.2.0</knative-client.version>
     <log4j2.version>2.23.1</log4j2.version>
     <mockito.version>5.17.0</mockito.version>
