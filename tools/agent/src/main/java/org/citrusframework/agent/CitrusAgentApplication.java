@@ -46,6 +46,8 @@ import io.vertx.ext.web.common.template.TemplateEngine;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.templ.thymeleaf.ThymeleafTemplateEngine;
 import org.apache.hc.core5.http.ContentType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.io.IoBuilder;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.CitrusInstanceProcessor;
@@ -84,6 +86,12 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     private TemplateEngine templateEngine;
+
+    static {
+      System.setOut(IoBuilder
+          .forLogger(LogManager.getLogger("system.out"))
+          .buildPrintStream());
+    }
 
     /**
      * Constructor with given application configuration and route customizations.
