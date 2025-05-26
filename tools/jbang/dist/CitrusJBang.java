@@ -28,7 +28,6 @@
 //DEPS org.citrusframework:citrus-yaml
 //DEPS org.citrusframework:citrus-http
 //DEPS org.citrusframework:citrus-validation-json
-//DEPS org.citrusframework:citrus-validation-yaml
 //DEPS org.citrusframework:citrus-validation-xml
 package main;
 
