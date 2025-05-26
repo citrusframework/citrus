@@ -234,12 +234,19 @@
             </configuration>
             <executions>
               <execution>
+                <id>image-build</id>
                 <goals>
                   <goal>build</goal>
                   <goal>resource</goal>
-                  <goal>push</goal>
                 </goals>
                 <phase>package</phase>
+              </execution>
+              <execution>
+                <id>image-push</id>
+                <goals>
+                  <goal>push</goal>
+                </goals>
+                <phase>install</phase>
               </execution>
             </executions>
           </plugin>
