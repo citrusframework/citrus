@@ -82,7 +82,7 @@ public class CamelKubernetesVerifyTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 2L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesVerifyAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "kubernetes-verify-integration");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel-k8s-verify-integration");
 
         verify(k8sPlugin).logs("--name", "my-route");
         verify(k8sPlugin).logs("--label", "app=camel");

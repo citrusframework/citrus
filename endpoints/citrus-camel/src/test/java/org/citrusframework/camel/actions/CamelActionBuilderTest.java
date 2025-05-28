@@ -16,13 +16,14 @@
 
 package org.citrusframework.camel.actions;
 
+import java.util.Map;
+
+import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -80,6 +81,6 @@ public class CamelActionBuilderTest {
         verifyNoInteractions(referenceResolverAware);
     }
 
-    private static abstract class TestReferenceResolver implements TestActionBuilder, ReferenceResolverAware {
+    private static abstract class TestReferenceResolver implements TestActionBuilder<TestAction>, ReferenceResolverAware {
     }
 }

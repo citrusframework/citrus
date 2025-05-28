@@ -45,6 +45,8 @@ import org.citrusframework.camel.actions.StartCamelRouteAction;
 import org.citrusframework.camel.actions.StopCamelContextAction;
 import org.citrusframework.camel.actions.StopCamelRouteAction;
 import org.citrusframework.camel.actions.CamelKubernetesVerifyAction;
+import org.citrusframework.camel.actions.infra.CamelRunInfraAction;
+import org.citrusframework.camel.actions.infra.CamelStopInfraAction;
 import org.citrusframework.camel.util.CamelUtils;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
@@ -176,6 +178,26 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
         }
 
         this.builder = builder;
+        return this;
+    }
+
+    @XmlElement(name = "infra")
+    public Camel setInfra(Infra infra) {
+        if (infra.getRun() != null) {
+            CamelRunInfraAction.Builder builder = new CamelRunInfraAction.Builder()
+                    .service(infra.getRun().getService())
+                    .implementation(infra.getRun().getImplementation());
+
+            builder.autoRemove(infra.getRun().isAutoRemove());
+            builder.dumpServiceOutput(infra.getRun().isDumpServiceOutput());
+
+            this.builder = builder;
+        } else if (infra.getStop() != null) {
+            CamelStopInfraAction.Builder builder = new CamelStopInfraAction.Builder()
+                    .service(infra.getStop().getService())
+                    .implementation(infra.getStop().getImplementation());
+            this.builder = builder;
+        }
         return this;
     }
 

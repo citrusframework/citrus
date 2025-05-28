@@ -1045,6 +1045,29 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="infra">
+          <xs:annotation>
+            <xs:documentation>Creates new Camel infra actions</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:choice>
+              <xs:element name="run">
+                <xs:complexType>
+                  <xs:attribute name="service" use="required" type="xs:string"/>
+                  <xs:attribute name="implementation" type="xs:string"/>
+                  <xs:attribute name="catalog" type="xs:string"/>
+                  <xs:attribute name="auto-remove" type="xs:boolean"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="stop">
+                <xs:complexType>
+                  <xs:attribute name="service" use="required" type="xs:string"/>
+                  <xs:attribute name="implementation" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
         <xs:element name="jbang">
           <xs:annotation>
             <xs:documentation>Creates new Camel JBang action</xs:documentation>

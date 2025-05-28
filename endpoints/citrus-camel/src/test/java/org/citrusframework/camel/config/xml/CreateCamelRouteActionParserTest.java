@@ -28,7 +28,7 @@ public class CreateCamelRouteActionParserTest extends AbstractActionParserTest<C
     @Test
     public void testCreateRouteActionParser() {
         assertActionCount(2);
-        assertActionClassAndName(CreateCamelRouteAction.class, "create-routes");
+        assertActionClassAndName(CreateCamelRouteAction.class, "camel-create-routes");
 
         CreateCamelRouteAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());

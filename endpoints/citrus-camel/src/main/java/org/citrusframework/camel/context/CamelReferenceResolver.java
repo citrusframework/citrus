@@ -47,6 +47,10 @@ public class CamelReferenceResolver implements ReferenceResolver {
         Set<T> components = camelContext.getRegistry().findByType(type);
 
         if (components.isEmpty()) {
+            if (fallback.isResolvable(type)) {
+                return fallback.resolve(type);
+            }
+
             throw new CitrusRuntimeException(String.format("Unable to find bean reference for type '%s'", type));
         }
 

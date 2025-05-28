@@ -22,6 +22,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
+import org.citrusframework.camel.actions.infra.CamelInfraActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
@@ -112,6 +113,16 @@ public class CamelActionBuilder implements TestActionBuilder.DelegatingTestActio
     public CamelRouteActionBuilder route() {
         CamelRouteActionBuilder builder = new CamelRouteActionBuilder()
                 .context(camelContext);
+        this.delegate = builder;
+        return builder;
+    }
+
+    /**
+     * Perform actions with Camel infra.
+     * @return
+     */
+    public CamelInfraActionBuilder infra() {
+        CamelInfraActionBuilder builder = new CamelInfraActionBuilder();
         this.delegate = builder;
         return builder;
     }

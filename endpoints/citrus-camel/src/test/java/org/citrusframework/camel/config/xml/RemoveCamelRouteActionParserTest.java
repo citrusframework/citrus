@@ -28,7 +28,7 @@ public class RemoveCamelRouteActionParserTest extends AbstractActionParserTest<R
     @Test
     public void testRemoveRouteActionParser() {
         assertActionCount(2);
-        assertActionClassAndName(RemoveCamelRouteAction.class, "remove-routes");
+        assertActionClassAndName(RemoveCamelRouteAction.class, "camel-remove-routes");
 
         RemoveCamelRouteAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());

@@ -67,7 +67,7 @@ public class StartRoutesTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 2L);
         Assert.assertEquals(result.getTestAction(0).getClass(), StartCamelRouteAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "start-routes");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel-start-routes");
 
         int actionIndex = 0;
 

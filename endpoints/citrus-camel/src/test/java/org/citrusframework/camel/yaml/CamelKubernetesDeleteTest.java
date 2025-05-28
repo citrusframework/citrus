@@ -26,7 +26,6 @@ import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CamelKubernetesDeleteAction;
 import org.citrusframework.camel.jbang.CamelJBang;
 import org.citrusframework.camel.jbang.KubernetesPlugin;
-import org.citrusframework.jbang.JBangSupport;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.yaml.YamlTestLoader;
@@ -87,7 +86,7 @@ public class CamelKubernetesDeleteTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 1L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesDeleteAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "kubernetes-delete-integration");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel-k8s-delete-integration");
 
         verify(camelJBang).workingDir(Paths.get(Resources.create("classpath:org/citrusframework/camel/integration/route.yaml")
                 .getFile().getParentFile().toPath().toAbsolutePath().toString()));

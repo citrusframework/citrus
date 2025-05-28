@@ -67,7 +67,7 @@ public class CamelKubernetesDeleteAction extends AbstractCamelJBangAction {
      * Default constructor.
      */
     public CamelKubernetesDeleteAction(Builder builder) {
-        super("kubernetes-delete-integration", builder);
+        super("k8s-delete-integration", builder);
 
         this.integrationResource = builder.integrationResource;
         this.integrationName = builder.integrationName;

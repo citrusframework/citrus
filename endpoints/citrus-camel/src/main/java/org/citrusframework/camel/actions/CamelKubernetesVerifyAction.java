@@ -52,7 +52,7 @@ public class CamelKubernetesVerifyAction extends AbstractCamelJBangAction {
     private final List<String> args;
 
     protected CamelKubernetesVerifyAction(CamelKubernetesVerifyAction.Builder builder) {
-        super("kubernetes-verify-integration", builder);
+        super("k8s-verify-integration", builder);
         this.integrationName = builder.integrationName;
         this.label = builder.label;
         this.namespace = builder.namespace;

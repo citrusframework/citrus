@@ -34,6 +34,7 @@ import org.citrusframework.camel.actions.CamelExchangeActionBuilder;
 import org.citrusframework.camel.actions.CamelJBangActionBuilder;
 import org.citrusframework.camel.actions.CamelRouteActionBuilder;
 import org.citrusframework.camel.actions.CreateCamelComponentAction;
+import org.citrusframework.camel.actions.infra.CamelInfraActionBuilder;
 import org.citrusframework.camel.endpoint.CamelEndpoint;
 import org.citrusframework.camel.endpoint.CamelEndpointBuilder;
 import org.citrusframework.camel.endpoint.CamelEndpointConfiguration;
@@ -207,6 +208,16 @@ public class CamelSupport {
         return new CamelActionBuilder()
                 .camelContext(camelContext)
                 .route();
+    }
+
+    /**
+     * Perform actions with Camel infra.
+     * @return
+     */
+    public CamelInfraActionBuilder infra() {
+        return new CamelActionBuilder()
+                .camelContext(camelContext)
+                .infra();
     }
 
     /**

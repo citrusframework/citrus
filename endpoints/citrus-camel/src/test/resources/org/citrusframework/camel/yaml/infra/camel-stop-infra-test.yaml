@@ -1,0 +1,14 @@
+name: "CamelStopInfraTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      infra:
+        stop:
+          service: my-service
+
+  - camel:
+      infra:
+        stop:
+          service: service
+          implementation: one

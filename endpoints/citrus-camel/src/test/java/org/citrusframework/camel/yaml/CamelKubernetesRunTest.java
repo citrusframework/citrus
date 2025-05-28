@@ -26,7 +26,6 @@ import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CamelKubernetesRunIntegrationAction;
 import org.citrusframework.camel.jbang.CamelJBang;
 import org.citrusframework.camel.jbang.KubernetesPlugin;
-import org.citrusframework.jbang.JBangSupport;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.yaml.YamlTestLoader;
@@ -89,7 +88,7 @@ public class CamelKubernetesRunTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 2L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesRunIntegrationAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "kubernetes-run-integration");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel-k8s-run-integration");
 
         int actionIndex = 0;
 
