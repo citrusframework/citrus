@@ -105,7 +105,7 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
      * Default constructor.
      */
     public CamelKubernetesRunIntegrationAction(CamelKubernetesRunIntegrationAction.Builder builder) {
-        super("kubernetes-run-integration", builder);
+        super("k8s-run-integration", builder);
 
         this.integrationName = builder.integrationName;
         this.integrationResource = builder.integrationResource;

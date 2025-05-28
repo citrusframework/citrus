@@ -88,7 +88,7 @@ public class CamelKubernetesRunTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 2L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesRunIntegrationAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "kubernetes-run-integration");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel-k8s-run-integration");
 
         int actionIndex = 0;
 

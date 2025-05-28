@@ -34,7 +34,7 @@ public abstract class AbstractCamelJBangAction extends AbstractTestAction {
     private final CamelJBang camelJBang;
 
     protected AbstractCamelJBangAction(String name, Builder<?, ?> builder) {
-        super(name, builder);
+        super(name.startsWith("camel") ? name : "camel-" + name, builder);
 
         this.camelVersion = builder.camelVersion;
         this.kameletsVersion = builder.kameletsVersion;

@@ -64,7 +64,7 @@ public class StopRoutesTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 2L);
         Assert.assertEquals(result.getTestAction(0).getClass(), StopCamelRouteAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "stop-routes");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel-stop-routes");
 
         int actionIndex = 0;
 

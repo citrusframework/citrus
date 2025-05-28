@@ -85,6 +85,10 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
         this.delegate = builder;
     }
 
+    public void setInfra(Infra builder) {
+        this.delegate = builder;
+    }
+
     public void setJbang(JBang builder) {
         this.delegate = builder;
     }

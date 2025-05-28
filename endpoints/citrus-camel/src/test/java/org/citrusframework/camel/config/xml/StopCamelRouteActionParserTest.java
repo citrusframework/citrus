@@ -28,7 +28,7 @@ public class StopCamelRouteActionParserTest extends AbstractActionParserTest<Sto
     @Test
     public void testStopRouteActionParser() {
         assertActionCount(2);
-        assertActionClassAndName(StopCamelRouteAction.class, "stop-routes");
+        assertActionClassAndName(StopCamelRouteAction.class, "camel-stop-routes");
 
         StopCamelRouteAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());

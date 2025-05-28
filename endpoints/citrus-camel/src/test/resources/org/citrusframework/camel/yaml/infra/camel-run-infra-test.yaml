@@ -1,0 +1,15 @@
+name: "CamelRunInfraTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      infra:
+        run:
+          service: my-service
+
+  - camel:
+      infra:
+        run:
+          service: service
+          implementation: two
+          autoRemove: false

@@ -317,4 +317,8 @@ public class CamelJBang {
         return new KubernetesPlugin(app);
     }
 
+    public InfraPlugin infra() {
+        return new InfraPlugin(app);
+    }
+
 }
