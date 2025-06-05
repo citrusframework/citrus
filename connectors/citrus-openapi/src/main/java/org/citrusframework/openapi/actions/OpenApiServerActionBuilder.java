@@ -28,7 +28,9 @@ import org.springframework.http.HttpStatus;
  *
  * @since 4.1
  */
-public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
+public class OpenApiServerActionBuilder extends
+    AbstractReferenceResolverAwareTestActionBuilder<TestAction> implements
+    OpenApiSpecificationSourceAwareBuilder<TestAction> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
 
@@ -41,7 +43,8 @@ public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTe
     /**
      * Default constructor.
      */
-    public OpenApiServerActionBuilder(Endpoint httpServer, OpenApiSpecificationSource specification) {
+    public OpenApiServerActionBuilder(Endpoint httpServer,
+        OpenApiSpecificationSource specification) {
         this.httpServer = httpServer;
         this.openApiSpecificationSource = specification;
     }
@@ -49,16 +52,23 @@ public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTe
     /**
      * Default constructor.
      */
-    public OpenApiServerActionBuilder(String httpServerUri, OpenApiSpecificationSource specification) {
+    public OpenApiServerActionBuilder(String httpServerUri,
+        OpenApiSpecificationSource specification) {
         this.httpServerUri = httpServerUri;
         this.openApiSpecificationSource = specification;
+    }
+
+    @Override
+    public OpenApiSpecificationSource getOpenApiSpecificationSource() {
+        return openApiSpecificationSource;
     }
 
     /**
      * Receive Http requests as server.
      */
     public OpenApiServerRequestActionBuilder receive(String operationKey) {
-        OpenApiServerRequestActionBuilder builder = new OpenApiServerRequestActionBuilder(openApiSpecificationSource, operationKey);
+        OpenApiServerRequestActionBuilder builder = new OpenApiServerRequestActionBuilder(
+            openApiSpecificationSource, operationKey);
         if (httpServer != null) {
             builder.endpoint(httpServer);
         } else {
@@ -73,8 +83,7 @@ public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTe
     }
 
     /**
-     * Sends Http response messages as server.
-     * Uses default Http status 200 OK.
+     * Sends Http response messages as server. Uses default Http status 200 OK.
      */
     public OpenApiServerResponseActionBuilder send(String operationKey) {
         return send(operationKey, HttpStatus.OK);
@@ -90,7 +99,8 @@ public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTe
     /**
      * Send Http response messages as server to client.
      */
-    public OpenApiServerResponseActionBuilder send(String operationKey, HttpStatus status, String accept) {
+    public OpenApiServerResponseActionBuilder send(String operationKey, HttpStatus status,
+        String accept) {
         return send(operationKey, String.valueOf(status.value()), accept);
     }
 
@@ -104,8 +114,10 @@ public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTe
     /**
      * Send Http response messages as server to client.
      */
-    public OpenApiServerResponseActionBuilder send(String operationKey, String statusCode, String accept) {
-        OpenApiServerResponseActionBuilder builder = new OpenApiServerResponseActionBuilder(openApiSpecificationSource, operationKey, statusCode, accept);
+    public OpenApiServerResponseActionBuilder send(String operationKey, String statusCode,
+        String accept) {
+        OpenApiServerResponseActionBuilder builder = new OpenApiServerResponseActionBuilder(
+            openApiSpecificationSource, operationKey, statusCode, accept);
         if (httpServer != null) {
             builder.endpoint(httpServer);
         } else {
@@ -121,8 +133,6 @@ public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTe
 
     /**
      * Sets the Spring bean application context.
-     *
-     * @param referenceResolver
      */
     public OpenApiServerActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;

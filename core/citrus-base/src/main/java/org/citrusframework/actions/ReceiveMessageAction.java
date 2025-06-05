@@ -546,7 +546,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
     }
 
-    public static abstract class ReceiveMessageActionBuilder<T extends ReceiveMessageAction, M extends ReceiveMessageBuilderSupport<T, B, M>, B extends ReceiveMessageActionBuilder<T, M, B>>
+    public abstract static class ReceiveMessageActionBuilder<T extends ReceiveMessageAction, M extends ReceiveMessageBuilderSupport<T, B, M>, B extends ReceiveMessageActionBuilder<T, M, B>>
             extends MessageBuilderSupport.MessageActionBuilder<T, M, B> {
 
         private long receiveTimeout = 0L;
@@ -617,7 +617,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @param validationContexts
          * @return
          */
-        public B validate(ValidationContext.Builder<?, ?> ... validationContexts) {
+        public B validate(ValidationContext.Builder<?, ?>... validationContexts) {
             return validate(Arrays.asList(validationContexts));
         }
 
@@ -735,10 +735,10 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
         @Override
         public B process(MessageProcessor processor) {
-            if (processor instanceof VariableExtractor) {
-                this.variableExtractors.add((VariableExtractor) processor);
-            } else if (processor instanceof ValidationProcessor) {
-                validate((ValidationProcessor) processor);
+            if (processor instanceof VariableExtractor variableExtractor) {
+                this.variableExtractors.add(variableExtractor);
+            } else if (processor instanceof ValidationProcessor validationProcessor) {
+                validate(validationProcessor);
             } else {
                 this.messageProcessors.add(processor);
             }
@@ -759,9 +759,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
                     .forEach(c -> ((HeaderValidationContext.Builder) c).ignoreCase(getMessageBuilderSupport().isHeaderNameIgnoreCase()));
 
             if (referenceResolver != null) {
-                if (validationProcessor != null &&
-                        validationProcessor instanceof ReferenceResolverAware) {
-                    ((ReferenceResolverAware) validationProcessor).setReferenceResolver(referenceResolver);
+                if (validationProcessor instanceof ReferenceResolverAware referenceResolverAware) {
+                    referenceResolverAware.setReferenceResolver(referenceResolver);
                 }
 
                 while (!validatorNames.isEmpty()) {
@@ -822,10 +821,10 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         private void injectMessageValidationContext() {
-            // if still no Json or Xml message validation context is set check the message payload and set proper context
+            // If we have a non-empty payload (in control message), we need a respective context for validating it.
             ValidationContext validationContext = null;
             Optional<String> payload = getMessagePayload();
-            if (payload.isPresent()) {
+            if (payload.isPresent() && hasText(payload.get())) {
                 if (MessagePayloadUtils.isXml(payload.get())) {
                     validationContext = new XmlMessageValidationContext();
                 } else if (MessagePayloadUtils.isJson(payload.get())) {
@@ -835,18 +834,18 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 }
             }
 
+            // If we have not yet added a context, we might have a typed builder capable to create a
+            // message. In that case add a context for the respective type.
             if (validationContext == null && messageBuilderSupport != null) {
-                if (messageBuilderSupport.getMessageBuilder().getClass().isAnnotationPresent(MessagePayload.class)) {
-                    MessageType type = messageBuilderSupport.getMessageBuilder().getClass().getAnnotation(MessagePayload.class).value();
-                    if (type == MessageType.XML || type == MessageType.XHTML) {
-                        validationContext = new XmlMessageValidationContext();
-                    } else if (type == MessageType.JSON) {
-                        validationContext = new JsonMessageValidationContext();
-                    } else if (type == MessageType.YAML) {
-                        validationContext = new YamlMessageValidationContext();
-                    } else if (type == MessageType.PLAINTEXT) {
-                        validationContext = new DefaultMessageValidationContext();
-                    }
+                MessageType type = getMessageType(messageBuilderSupport);
+                if (type == MessageType.XML || type == MessageType.XHTML) {
+                    validationContext = new XmlMessageValidationContext();
+                } else if (type == MessageType.JSON) {
+                    validationContext = new JsonMessageValidationContext();
+                } else if (type == MessageType.YAML) {
+                    validationContext = new YamlMessageValidationContext();
+                } else if (type == MessageType.PLAINTEXT) {
+                    validationContext = new DefaultMessageValidationContext();
                 }
             }
 
@@ -854,21 +853,11 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 Optional<String> resource = getMessageResource();
                 if (resource.isPresent()) {
                     String fileExt = FileUtils.getFileExtension(resource.get());
-                    if ("xml".equals(fileExt)) {
+                    if ("xml".equalsIgnoreCase(fileExt)) {
                         validationContext = new XmlMessageValidationContext();
-                    } else if ("json".equals(fileExt)) {
+                    } else if ("json".equalsIgnoreCase(fileExt)) {
                         validationContext = new JsonMessageValidationContext();
                     } else {
-                        validationContext = new DefaultMessageValidationContext();
-                    }
-                }
-            }
-
-            if (validationContext == null && messageBuilderSupport != null) {
-                if (messageBuilderSupport.getMessageBuilder() instanceof StaticMessageBuilder) {
-                    validationContext = new DefaultMessageValidationContext();
-                } else if (messageBuilderSupport.getMessageBuilder() instanceof WithPayloadBuilder payloadBuilder) {
-                    if (payloadBuilder.getPayloadBuilder() != null) {
                         validationContext = new DefaultMessageValidationContext();
                     }
                 }
@@ -877,6 +866,36 @@ public class ReceiveMessageAction extends AbstractTestAction {
             if (validationContext != null) {
                 validate(validationContext);
             }
+        }
+
+        /**
+         * Determine the message type for relevant messageBuilderSupports. The type is relevant, as
+         * the context should match with the validator, which might later be chosen for validation.
+         */
+        private MessageType getMessageType(M messageBuilderSupport) {
+            if (messageBuilderSupport.getMessageBuilder().getClass()
+                .isAnnotationPresent(MessagePayload.class)) {
+                return messageBuilderSupport.getMessageBuilder().getClass()
+                    .getAnnotation(MessagePayload.class).value();
+            } else if (messageBuilderSupport.getMessageBuilder() instanceof StaticMessageBuilder
+                || (
+                messageBuilderSupport.getMessageBuilder() instanceof WithPayloadBuilder payloadBuilder
+                    && payloadBuilder.getPayloadBuilder() != null)) {
+                MessageType messageType = MessageType.PLAINTEXT;
+                try {
+                    // The reason for this is to guess the best message type possible. In case we fail here,
+                    // the default type will in worst case just lead to a validation failure, because the
+                    // validation context stays untouched.
+                    messageType = hasText(messageBuilderSupport.getMessageType())
+                        ? MessageType.valueOf(messageBuilderSupport.getMessageType())
+                        : messageType;
+                } catch (IllegalArgumentException e) {
+                    // Ignore and use default message type
+                }
+                return messageType;
+            }
+
+            return null;
         }
 
         /**
@@ -927,8 +946,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
          */
         public List<ValidationContext> getValidationContexts() {
             return validationContexts.stream()
-                    .map(ValidationContext.Builder::build)
-                    .collect(Collectors.toList());
+                .map(ValidationContext.Builder::build)
+                .collect(Collectors.toList());
         }
 
         /**

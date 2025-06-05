@@ -32,10 +32,25 @@ public class JarWSDLLocatorTest {
         Assert.assertNotNull(locator.getBaseInputSource());
         Assert.assertNotNull(locator.getBaseURI());
         Assert.assertTrue(locator.getBaseURI().endsWith("org/citrusframework/validation/SampleService.wsdl"));
-
         Assert.assertNull(locator.getLatestImportURI());
         Assert.assertNotNull(locator.getImportInputSource(locator.getBaseURI(), "types.xsd"));
         Assert.assertTrue(locator.getLatestImportURI().endsWith("org/citrusframework/validation/types.xsd"));
+    }
+
+    @Test
+    public void testGetImportInputSourceFromSpecialCharDir() {
+        // Running from maven, rather than from IDE, URLs might get decoded, in case they contain special chars like @.
+        Resource wsdlFromSpecialCharDir = Resources.fromClasspath(
+            "org/citrusframework/validation/dirWithSpecialChar@/SampleService2.wsdl");
+        JarWSDLLocator locator = new JarWSDLLocator(wsdlFromSpecialCharDir);
+        Assert.assertNotNull(locator.getBaseInputSource());
+        Assert.assertNotNull(locator.getBaseURI());
+        Assert.assertTrue(locator.getBaseURI().endsWith(
+            "org/citrusframework/validation/dirWithSpecialChar@/SampleService2.wsdl"));
+        Assert.assertNull(locator.getLatestImportURI());
+        Assert.assertNotNull(locator.getImportInputSource(locator.getBaseURI(), "types2.xsd"));
+        Assert.assertTrue(locator.getLatestImportURI().endsWith(
+            "org/citrusframework/validation/dirWithSpecialChar@/types2.xsd"));
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = ".* does not exists")

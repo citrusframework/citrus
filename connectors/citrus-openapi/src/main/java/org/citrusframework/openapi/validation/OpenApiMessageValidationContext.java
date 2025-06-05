@@ -18,7 +18,7 @@ package org.citrusframework.openapi.validation;
 
 import org.citrusframework.openapi.OpenApiSettings;
 import org.citrusframework.openapi.OpenApiSpecification;
-import org.citrusframework.validation.context.DefaultValidationContext;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.SchemaValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 
@@ -27,7 +27,7 @@ import org.citrusframework.validation.context.ValidationContext;
  *
  * @since 4.3
  */
-public class OpenApiMessageValidationContext extends DefaultValidationContext implements SchemaValidationContext {
+public class OpenApiMessageValidationContext extends DefaultMessageValidationContext implements SchemaValidationContext {
 
     /**
      * Should message be validated with its schema definition. This is enabled with respect to

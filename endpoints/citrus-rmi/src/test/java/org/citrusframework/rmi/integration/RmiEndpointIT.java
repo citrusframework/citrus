@@ -19,14 +19,12 @@ package org.citrusframework.rmi.integration;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 /**
  * @since 2.5
  */
 @Test
-@Ignore
 public class RmiEndpointIT extends TestNGCitrusSpringSupport {
 
     @CitrusTestSource(type = TestLoader.SPRING, name = "RmiClientIT")

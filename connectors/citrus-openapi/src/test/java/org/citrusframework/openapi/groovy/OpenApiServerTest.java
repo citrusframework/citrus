@@ -38,7 +38,6 @@ import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
 import org.testng.Assert;
@@ -49,6 +48,7 @@ import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertListContains;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
@@ -126,11 +126,13 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         int actionIndex = 0;
 
         ReceiveMessageAction receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        assertEquals(receiveMessageAction.getValidationContexts().size(), 4);
-        assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
-        assertTrue(receiveMessageAction.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
-        assertTrue(receiveMessageAction.getValidationContexts().get(3) instanceof OpenApiMessageValidationContext);
+        assertEquals(receiveMessageAction.getValidationContexts().size(), 3);
+        assertListContains(receiveMessageAction.getValidationContexts(),
+            HeaderValidationContext.class::isInstance, "List must contain HeaderValidationContext");
+        assertListContains(receiveMessageAction.getValidationContexts(),
+            OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
+        assertListContains(receiveMessageAction.getValidationContexts(),
+            JsonMessageValidationContext.class::isInstance, "List must contain JsonMessageValidationContext");
         assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
 
         assertTrue(receiveMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
@@ -160,11 +162,13 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         assertEquals(sendMessageAction.getMessageProcessors().size(), 1);
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        assertEquals(receiveMessageAction.getValidationContexts().size(), 4);
-        assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
-        assertTrue(receiveMessageAction.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
-        assertTrue(receiveMessageAction.getValidationContexts().get(3) instanceof OpenApiMessageValidationContext);
+        assertEquals(receiveMessageAction.getValidationContexts().size(), 3);
+        assertListContains(receiveMessageAction.getValidationContexts(),
+            HeaderValidationContext.class::isInstance, "List must contain HeaderValidationContext");
+        assertListContains(receiveMessageAction.getValidationContexts(),
+            OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
+        assertListContains(receiveMessageAction.getValidationContexts(),
+            JsonMessageValidationContext.class::isInstance, "List must contain JsonMessageValidationContext");
         assertEquals(receiveMessageAction.getReceiveTimeout(), 2000L);
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
