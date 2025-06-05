@@ -16,9 +16,12 @@
 
 package org.citrusframework.xml;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.citrusframework.xml.schema.WsdlXsdSchema;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.testng.annotations.Test;
+import org.xml.sax.SAXException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -26,7 +29,7 @@ import static org.testng.Assert.assertTrue;
 public class XsdSchemaRepositoryTest {
 
     @Test
-    public void testResourceLocation() throws Exception {
+    public void testResourceLocation() {
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
 
         schemaRepository.getLocations().add("classpath:org/citrusframework/schema/citrus-config.xsd");
@@ -38,7 +41,7 @@ public class XsdSchemaRepositoryTest {
     }
 
     @Test
-    public void testUnknownLocation() throws Exception {
+    public void testUnknownLocation() {
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
 
         schemaRepository.getLocations().add("classpath:org/citrusframework/unknown/unknown.xsd");
@@ -48,7 +51,7 @@ public class XsdSchemaRepositoryTest {
     }
 
     @Test
-    public void testResourceLocationPattern() throws Exception {
+    public void testResourceLocationPattern() {
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
 
         schemaRepository.getLocations().add("classpath:org/citrusframework/schema/*.xsd");
@@ -60,7 +63,7 @@ public class XsdSchemaRepositoryTest {
     }
 
     @Test
-    public void testResourceLocationPatternNothingFound() throws Exception {
+    public void testResourceLocationPatternNothingFound() {
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
 
         schemaRepository.getLocations().add("classpath:org/citrusframework/tests/*.xsd");
@@ -71,20 +74,20 @@ public class XsdSchemaRepositoryTest {
     }
 
     @Test
-    public void testResourceLocationPatternWithExclusion() throws Exception {
+    public void testResourceLocationPatternWithExclusion() {
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
         schemaRepository.getLocations().add("classpath:org/citrusframework/validation/*");
 
         schemaRepository.initialize();
 
-        assertEquals(schemaRepository.getSchemas().size(), 15);
+        assertEquals(schemaRepository.getSchemas().size(), 17);
 
         schemaRepository = new XsdSchemaRepository();
         schemaRepository.getLocations().add("classpath:org/citrusframework/validation/*.xsd");
 
         schemaRepository.initialize();
 
-        assertEquals(schemaRepository.getSchemas().size(), 6);
+        assertEquals(schemaRepository.getSchemas().size(), 7);
         assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
         assertEquals(schemaRepository.getSchemas().get(1).getClass(), SimpleXsdSchema.class);
         assertEquals(schemaRepository.getSchemas().get(2).getClass(), SimpleXsdSchema.class);
@@ -94,7 +97,7 @@ public class XsdSchemaRepositoryTest {
 
         schemaRepository.initialize();
 
-        assertEquals(schemaRepository.getSchemas().size(), 9);
+        assertEquals(schemaRepository.getSchemas().size(), 10);
         assertEquals(schemaRepository.getSchemas().get(0).getClass(), WsdlXsdSchema.class);
         assertEquals(schemaRepository.getSchemas().get(1).getClass(), WsdlXsdSchema.class);
         assertEquals(schemaRepository.getSchemas().get(2).getClass(), WsdlXsdSchema.class);
@@ -104,10 +107,11 @@ public class XsdSchemaRepositoryTest {
         assertEquals(schemaRepository.getSchemas().get(6).getClass(), WsdlXsdSchema.class);
         assertEquals(schemaRepository.getSchemas().get(7).getClass(), WsdlXsdSchema.class);
         assertEquals(schemaRepository.getSchemas().get(8).getClass(), WsdlXsdSchema.class);
+        assertEquals(schemaRepository.getSchemas().get(9).getClass(), WsdlXsdSchema.class);
     }
 
     @Test
-    public void testWsdlResourceLocation() throws Exception {
+    public void testWsdlResourceLocation() {
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
 
         schemaRepository.getLocations().add("classpath:org/citrusframework/xml/BookStore.wsdl");
@@ -119,7 +123,7 @@ public class XsdSchemaRepositoryTest {
     }
 
     @Test
-    public void testDefaultCitrusSchemas() throws Exception {
+    public void testDefaultCitrusSchemas() throws ParserConfigurationException, SAXException {
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
 
         schemaRepository.addCitrusSchema("citrus-unknown-config");

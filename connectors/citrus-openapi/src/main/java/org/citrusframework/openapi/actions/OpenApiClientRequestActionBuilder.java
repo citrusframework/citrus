@@ -50,7 +50,7 @@ import static org.citrusframework.util.StringUtils.isNotEmpty;
 /**
  * @since 4.1
  */
-public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBuilder {
+public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBuilder implements OpenApiSpecificationSourceAwareBuilder<SendMessageAction> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
     private final String operationKey;
@@ -81,6 +81,11 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
         super(messageBuilder, message);
         this.openApiSpecificationSource = openApiSpec;
         this.operationKey = operationKey;
+    }
+
+    @Override
+    public OpenApiSpecificationSource getOpenApiSpecificationSource() {
+        return openApiSpecificationSource;
     }
 
     public OpenApiClientRequestActionBuilder autoFill(AutoFillType autoFill) {

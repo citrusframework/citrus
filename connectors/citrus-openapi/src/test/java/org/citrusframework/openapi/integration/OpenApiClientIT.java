@@ -46,6 +46,7 @@ import static org.citrusframework.http.actions.HttpActionBuilder.http;
 import static org.citrusframework.message.MessageType.JSON;
 import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi;
 import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
+import static org.citrusframework.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.testng.Assert.assertThrows;
@@ -93,6 +94,214 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
         then(openapi("petstore-v3")
             .client(httpClient).receive("getPetById", OK)
             .schemaValidation(true));
+
+    }
+
+    @CitrusTest
+    @Test
+    public void shouldExecuteGetPetByIdAndSucceedOnJsonMessageValidation() {
+
+        variable("petId", "1001");
+
+        when(openapi("petstore-v3")
+            .client(httpClient)
+            .send("getPetById")
+            .message()
+            .fork(true));
+
+        then(http().server(httpServer)
+            .receive()
+            .get("/pet/1001")
+            .message()
+            .accept("@contains('application/json')@"));
+
+        then(http().server(httpServer)
+            .send()
+            .response(OK)
+            .message()
+            .body(Resources.create(VALID_PET_PATH))
+            .contentType(APPLICATION_JSON_VALUE));
+
+        then(openapi("petstore-v3")
+            .client(httpClient).receive("getPetById", OK)
+            .schemaValidation(true)
+            .message().body("""
+                {
+                "id": 1001,
+                  "name": "@assertThat(anyOf(equalTo('hasso'), equalTo('cutie'), equalTo('fluffy')))@",
+                  "category": {
+                    "id": 1001,
+                    "name": "@assertThat(anyOf(equalTo('dog'), equalTo('cat'), equalTo('fish')))@"
+                  },
+                  "photoUrls": [ "http://localhost:8080/photos/1001" ],
+                  "tags": [
+                    {
+                      "id": 1001,
+                      "name": "generated"
+                    }
+                  ],
+                  "status": "@assertThat(anyOf(equalTo('available'), equalTo('pending'), equalTo('sold')))@"
+                }"""));
+
+    }
+
+    @CitrusTest
+    @Test
+    public void shouldExecuteGetPetByIdAndSucceedOnJsonPathMessageValidation() {
+
+        variable("petId", "1001");
+
+        when(openapi("petstore-v3")
+            .client(httpClient)
+            .send("getPetById")
+            .message()
+            .fork(true));
+
+        then(http().server(httpServer)
+            .receive()
+            .get("/pet/1001")
+            .message()
+            .accept("@contains('application/json')@"));
+
+        then(http().server(httpServer)
+            .send()
+            .response(OK)
+            .message()
+            .body(Resources.create(VALID_PET_PATH))
+            .contentType(APPLICATION_JSON_VALUE));
+
+        then(openapi("petstore-v3")
+            .client(httpClient).receive("getPetById", OK)
+            .schemaValidation(true)
+            .message()
+            .validate(
+                jsonPath().expression("$.name",
+                    "@assertThat(anyOf(equalTo('hasso'), equalTo('cutie'), equalTo('fluffy')))@")));
+
+    }
+
+    @CitrusTest
+    @Test
+    public void shouldExecuteGetPetByIdAndFailOnJsonPathMessageValidation() {
+
+        variable("petId", "1001");
+
+        when(openapi("petstore-v3")
+            .client(httpClient)
+            .send("getPetById")
+            .message()
+            .fork(true));
+
+        then(http().server(httpServer)
+            .receive()
+            .get("/pet/1001")
+            .message()
+            .accept("@contains('application/json')@"));
+
+        then(http().server(httpServer)
+            .send()
+            .response(OK)
+            .message()
+            .body(Resources.create(VALID_PET_PATH))
+            .contentType(APPLICATION_JSON_VALUE));
+
+        HttpClientResponseActionBuilder.HttpMessageBuilderSupport clientResponseActionBuilder = openapi(
+            "petstore-v3")
+            .client(httpClient).receive("getPetById", OK)
+            .schemaValidation(true)
+            .message()
+            .validate(
+                jsonPath().expression("$.name",
+                    "other name"));
+        assertThrows(() -> then(clientResponseActionBuilder));
+
+    }
+
+    @CitrusTest
+    @Test
+    public void shouldExecuteGetPetByIdAndFailOnJsonMessageValidation() {
+
+        variable("petId", "1001");
+
+        when(openapi("petstore-v3")
+            .client(httpClient)
+            .send("getPetById")
+            .message()
+            .fork(true));
+
+        then(http().server(httpServer)
+            .receive()
+            .get("/pet/1001")
+            .message()
+            .accept("@contains('application/json')@"));
+
+        then(http().server(httpServer)
+            .send()
+            .response(OK)
+            .message()
+            .body(Resources.create(VALID_PET_PATH))
+            .contentType(APPLICATION_JSON_VALUE));
+
+        HttpClientResponseActionBuilder.HttpMessageBuilderSupport clientResponseActionBuilder = openapi(
+            "petstore-v3")
+            .client(httpClient).receive("getPetById", OK)
+            .schemaValidation(true)
+            .message().body("""
+                {
+                "id": 1001,
+                  "name": "other name",
+                  "category": {
+                    "id": 1001,
+                    "name": "@assertThat(anyOf(equalTo('dog'), equalTo('cat'), equalTo('fish')))@"
+                  },
+                  "photoUrls": [ "http://localhost:8080/photos/1001" ],
+                  "tags": [
+                    {
+                      "id": 1001,
+                      "name": "generated"
+                    }
+                  ],
+                  "status": "@assertThat(anyOf(equalTo('available'), equalTo('pending'), equalTo('sold')))@"
+                }""");
+        assertThrows(() -> then(clientResponseActionBuilder));
+
+    }
+
+    @CitrusTest
+    @Test
+    public void shouldExecuteGetPetByIdAndFailOnXmlMessageValidation() {
+
+        variable("petId", "1001");
+
+        when(openapi("petstore-v3")
+            .client(httpClient)
+            .send("getPetById")
+            .message()
+            .fork(true));
+
+        then(http().server(httpServer)
+            .receive()
+            .get("/pet/1001")
+            .message()
+            .accept("@contains('application/json')@"));
+
+        then(http().server(httpServer)
+            .send()
+            .response(OK)
+            .message()
+            .body(Resources.create(VALID_PET_PATH))
+            .contentType(APPLICATION_JSON_VALUE));
+
+        // ensure that we fail, even if we get the wrong type of message
+        HttpClientResponseActionBuilder.HttpMessageBuilderSupport clientResponseActionBuilder = openapi(
+            "petstore-v3")
+            .client(httpClient).receive("getPetById", OK)
+            .schemaValidation(true)
+            .message().body("""
+                <some-soap-response>
+                </some-soap-response>
+                """);
+        assertThrows(() -> then(clientResponseActionBuilder));
 
     }
 
@@ -156,7 +365,8 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
             .contentType(APPLICATION_JSON_VALUE));
 
         // Asserting against an empty json should fail due to standard json text validation
-        HttpClientResponseActionBuilder.HttpMessageBuilderSupport clientResponseActionBuilder = openapi("petstore-v3")
+        HttpClientResponseActionBuilder.HttpMessageBuilderSupport clientResponseActionBuilder = openapi(
+            "petstore-v3")
             .client(httpClient)
             .receive("getPetById", OK)
             .schemaValidation(true)
@@ -330,7 +540,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
     @DataProvider
     public Object[][] aliases() {
-        return new Object[][] {
+        return new Object[][]{
             {"petstore-v3"},
             {"Swagger Petstore"},
             {"Swagger Petstore/1.0.1"},

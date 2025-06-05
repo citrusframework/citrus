@@ -23,10 +23,10 @@ import java.util.Optional;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.ReceiveMessageAction.ReceiveMessageActionBuilder;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.http.actions.HttpServerResponseActionBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.openapi.AutoFillType;
 import org.citrusframework.openapi.actions.OpenApiActionBuilder;
@@ -35,6 +35,9 @@ import org.citrusframework.openapi.actions.OpenApiClientRequestActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiClientResponseActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiServerActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiServerRequestActionBuilder;
+import org.citrusframework.openapi.actions.OpenApiServerResponseActionBuilder;
+import org.citrusframework.openapi.actions.OpenApiSpecificationSourceAwareBuilder;
+import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.actions.Message;
@@ -45,7 +48,7 @@ import static org.citrusframework.openapi.OpenApiSettings.getRequestAutoFillRand
 
 public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
-    private TestActionBuilder<?> builder;
+    private OpenApiSpecificationSourceAwareBuilder<?> builder;
 
     private Receive receive;
     private Send send;
@@ -185,7 +188,7 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
     }
 
     public void setSendResponse(ServerResponse response) {
-        HttpServerResponseActionBuilder responseBuilder =
+        OpenApiServerResponseActionBuilder responseBuilder =
                 asServerBuilder().send(response.getOperation(), response.getStatus());
 
         responseBuilder.name("openapi:send-response");
@@ -226,6 +229,9 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
             receive.build();
         }
 
+        if (builder instanceof ReceiveMessageActionBuilder<?,?,?> receiveMessageActionBuilder) {
+            receiveMessageActionBuilder.validate(OpenApiMessageValidationContext.Builder.openApi(builder.getOpenApiSpecificationSource().resolve(referenceResolver)));
+        }
         return builder.build();
     }
 

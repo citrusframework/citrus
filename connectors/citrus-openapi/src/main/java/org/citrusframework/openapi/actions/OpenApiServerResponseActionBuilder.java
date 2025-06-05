@@ -65,7 +65,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 /**
  * @since 4.1
  */
-public class OpenApiServerResponseActionBuilder extends HttpServerResponseActionBuilder {
+public class OpenApiServerResponseActionBuilder extends HttpServerResponseActionBuilder implements OpenApiSpecificationSourceAwareBuilder<SendMessageAction> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
     private final String operationKey;
@@ -91,6 +91,11 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             operationKey, statusCode, accept), httpMessage);
         this.openApiSpecificationSource = openApiSpecificationSource;
         this.operationKey = operationKey;
+    }
+
+    @Override
+    public OpenApiSpecificationSource getOpenApiSpecificationSource() {
+        return openApiSpecificationSource;
     }
 
     public OpenApiServerResponseActionBuilder autoFill(AutoFillType autoFill) {

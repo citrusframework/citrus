@@ -21,17 +21,15 @@ import javax.wsdl.xml.WSDLLocator;
 
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
+
+import static java.net.URLDecoder.decode;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Locates WSDL import sources in Jar files
  */
 public class JarWSDLLocator implements WSDLLocator {
-
-    /** Logger */
-    private static final Logger logger = LoggerFactory.getLogger(JarWSDLLocator.class);
 
     private final Resource wsdl;
     private Resource importResource = null;
@@ -48,11 +46,13 @@ public class JarWSDLLocator implements WSDLLocator {
     @Override
     public InputSource getImportInputSource(String parentLocation, String importLocation) {
         String resolvedImportLocation;
-        URI importURI = URI.create(importLocation);
+        String decodedImportLocation = decode(importLocation, UTF_8);
+        URI importURI = URI.create(decodedImportLocation);
         if (importURI.isAbsolute()) {
-            resolvedImportLocation = importLocation;
+            resolvedImportLocation = decodedImportLocation;
         } else {
-            resolvedImportLocation = parentLocation.substring(0, parentLocation.lastIndexOf('/') + 1) + importLocation;
+            String decodedParentLocation = decode(parentLocation, UTF_8);
+            resolvedImportLocation = decodedParentLocation.substring(0, decodedParentLocation.lastIndexOf('/') + 1) + decodedImportLocation;
         }
 
         importResource = Resources.create(resolvedImportLocation);
@@ -61,7 +61,7 @@ public class JarWSDLLocator implements WSDLLocator {
 
     @Override
     public String getBaseURI() {
-        return wsdl.getURI().toString();
+        return decode(wsdl.getURI().toString(), UTF_8);
     }
 
     @Override
@@ -76,4 +76,5 @@ public class JarWSDLLocator implements WSDLLocator {
     @Override
     public void close() {
     }
+
 }

@@ -35,7 +35,7 @@ import static org.citrusframework.openapi.OpenApiSettings.getOpenApiValidationPo
  *
  * @since 4.1
  */
-public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
+public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> implements OpenApiSpecificationSourceAwareBuilder<TestAction> {
 
     private OpenApiSpecificationSource openApiSpecificationSource;
 
@@ -48,6 +48,11 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
 
     public OpenApiActionBuilder(String openApiAlias) {
         this.openApiSpecificationSource = new OpenApiSpecificationSource(openApiAlias);
+    }
+
+    @Override
+    public OpenApiSpecificationSource getOpenApiSpecificationSource() {
+        return openApiSpecificationSource;
     }
 
     /**

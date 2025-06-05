@@ -20,7 +20,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.openapi.validation.schema.OpenApiSchemaValidation;
-import org.citrusframework.util.IsJsonPredicate;
 import org.citrusframework.validation.AbstractMessageValidator;
 
 import static org.citrusframework.openapi.OpenApiMessageHeaders.OAS_UNIQUE_OPERATION_ID;
@@ -49,17 +48,20 @@ public class OpenApiMessageValidator extends
         TestContext context,
         OpenApiMessageValidationContext validationContext) {
 
-        // No control message validation, only schema validation
+        logger.debug("Start OpenAPI message validation ...");
+
+        // No control message validation - we rely on specific message validators (JSON) for content validation,
+        // only OpenAPI schema validation is performed.
         if (validationContext.isSchemaValidationEnabled()) {
             schemaValidator.validate(receivedMessage, context, validationContext);
         }
+
+        logger.debug("OpenAPI message validation successful: All values OK");
     }
 
     /**
      * When the correct {@link OpenApiRepository} is installed, schema validation can be performed
-     * on any JSON message where a response can be derived based on the request method, URL, and
-     * OpenAPI operation. Validation is also possible if the operationId is explicitly specified, as
-     * set by an OpenApiClient.
+     * if the operationId is explicitly specified, as set by an OpenApiClient.
      *
      * @param messageType The type of message to be validated.
      * @param message     The message content for validation.
@@ -67,10 +69,7 @@ public class OpenApiMessageValidator extends
      */
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        return "JSON".equals(messageType)
-            || (
-            message != null && (IsJsonPredicate.getInstance().test(message.getPayload(String.class))
-                || message.getHeader(OAS_UNIQUE_OPERATION_ID) != null));
+        return message != null && message.getHeader(OAS_UNIQUE_OPERATION_ID) != null;
     }
 
 }

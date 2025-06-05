@@ -39,15 +39,13 @@ import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.MessageQueue;
+import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.util.SocketUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
-import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.YamlTestActionBuilder;
 import org.mockito.Mockito;
@@ -63,8 +61,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class OpenApiClientTest extends AbstractYamlActionTest {
 
-    @BindToRegistry
-    final TestActor testActor = Mockito.mock(TestActor.class);
 
     @BindToRegistry
     private final DefaultMessageHeaderValidator headerValidator = new DefaultMessageHeaderValidator();
@@ -177,11 +173,11 @@ public class OpenApiClientTest extends AbstractYamlActionTest {
         validator.validateMessage(request, controlMessage, context, new DefaultValidationContext());
 
         ReceiveMessageAction receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 4);
+        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
         Assert.assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
         Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
+        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof OpenApiMessageValidationContext);
+        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof HeaderValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
@@ -214,10 +210,9 @@ public class OpenApiClientTest extends AbstractYamlActionTest {
         Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpClient");
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex);
-        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 4);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(2) instanceof HeaderValidationContext);
+        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
+        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof OpenApiMessageValidationContext);
+        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof HeaderValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);

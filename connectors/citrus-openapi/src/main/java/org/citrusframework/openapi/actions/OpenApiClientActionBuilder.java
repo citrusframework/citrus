@@ -30,7 +30,7 @@ import static org.springframework.http.HttpStatus.OK;
  *
  * @since 4.1
  */
-public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
+public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> implements OpenApiSpecificationSourceAwareBuilder<TestAction> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
 
@@ -58,6 +58,11 @@ public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTe
 
     public OpenApiClientActionBuilder(OpenApiSpecificationSource openApiSpecificationSource) {
         this.openApiSpecificationSource = openApiSpecificationSource;
+    }
+
+    @Override
+    public OpenApiSpecificationSource getOpenApiSpecificationSource() {
+        return openApiSpecificationSource;
     }
 
     /**
@@ -112,8 +117,6 @@ public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTe
 
     /**
      * Sets the bean reference resolver.
-     *
-     * @param referenceResolver
      */
     public OpenApiClientActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;

@@ -51,7 +51,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 /**
  * @since 4.1
  */
-public class OpenApiClientResponseActionBuilder extends HttpClientResponseActionBuilder {
+public class OpenApiClientResponseActionBuilder extends HttpClientResponseActionBuilder implements OpenApiSpecificationSourceAwareBuilder<ReceiveMessageAction> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
     private final String operationKey;
@@ -80,9 +80,11 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
         super(messageBuilder, message);
         this.openApiSpecificationSource = openApiSpec;
         this.operationKey = operationKey;
+    }
 
-        // Set json as default instead of xml. This is most common for rest.
-        this.getMessageBuilderSupport().type(JSON);
+    @Override
+    public OpenApiSpecificationSource getOpenApiSpecificationSource() {
+        return openApiSpecificationSource;
     }
 
     public static void fillMessageTypeFromResponse(OpenApiSpecification openApiSpecification,
@@ -120,6 +122,17 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
     }
 
     @Override
+    protected void reconcileValidationContexts() {
+        super.reconcileValidationContexts();
+        OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(referenceResolver);
+        if (getValidationContexts().stream().noneMatch(OpenApiMessageValidationContext.class::isInstance)) {
+            validate(openApi(openApiSpecification)
+                .schemaValidation(schemaValidation)
+                .build());
+        }
+    }
+
+    @Override
     public ReceiveMessageAction doBuild() {
         OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(referenceResolver);
 
@@ -129,16 +142,10 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
             schemaValidation = openApiValidationContext.isResponseValidationEnabled();
         }
 
-        if (schemaValidation && !messageProcessors.contains(openApiOperationToMessageHeadersProcessor)) {
+        if (!messageProcessors.contains(openApiOperationToMessageHeadersProcessor)) {
             openApiOperationToMessageHeadersProcessor = new OpenApiOperationToMessageHeadersProcessor(openApiSpecification,
                 operationKey, RESPONSE);
             process(openApiOperationToMessageHeadersProcessor);
-        }
-
-        if (schemaValidation && getValidationContexts().stream().noneMatch(OpenApiMessageValidationContext.class::isInstance)) {
-            validate(openApi(openApiSpecification)
-                    .schemaValidation(schemaValidation)
-                    .build());
         }
 
         return super.doBuild();
