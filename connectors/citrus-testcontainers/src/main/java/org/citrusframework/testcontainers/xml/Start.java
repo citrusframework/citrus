@@ -68,6 +68,10 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         builder.autoCreateClients(container.isAutoCreateClients());
 
+        if (container.getOptions() != null) {
+            container.getOptions().forEach(option -> builder.withOption(option.getName(), option.getValue()));
+        }
+
         configureStartActionBuilder(builder, container);
 
         if (container.getServices() != null) {
@@ -502,7 +506,8 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-            "services"
+            "services",
+            "options"
     })
     public static class LocalStack extends Container {
 
@@ -518,6 +523,8 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         @XmlElement
         protected Services services;
 
+        @XmlElement
+        protected List<Option> options;
 
         public String getVersion() {
             return version;
@@ -542,6 +549,12 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         public void setServices(Services services) {
             this.services = services;
         }
+
+        public List<Option> getOptions() {
+            return options;
+        }
+
+        public void setOptions(List<Option> options) {}
 
         public boolean isAutoCreateClients() {
             return autoCreateClients;
@@ -570,6 +583,32 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             public void setServices(List<String> services) {
                 this.services = services;
             }
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+        })
+        public static class Option {
+
+            @XmlAttribute
+            private String name;
+
+            @XmlAttribute
+            private String value;
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getValue() {
+                return value;
+            }
+
+            public void setValue(String value) {}
         }
     }
 

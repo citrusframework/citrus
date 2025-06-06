@@ -16,6 +16,7 @@
 
 package org.citrusframework.testcontainers.aws2;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.citrusframework.spi.ReferenceResolver;
@@ -27,9 +28,10 @@ public interface ClientFactory<T> {
     /**
      * Create client for given LocalStackContainer.
      * @param container
+     * @param options
      * @return
      */
-    T createClient(LocalStackContainer container);
+    T createClient(LocalStackContainer container, Map<String, String> options);
 
     /**
      * Checks if created client is suitable for given service.

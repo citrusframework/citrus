@@ -17,7 +17,9 @@
 package org.citrusframework.testcontainers.aws2;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -35,9 +37,12 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
 
     private final boolean autoCreateClients;
 
+    private final Map<String, String> options;
+
     public StartLocalStackAction(Builder builder) {
         super(builder);
         this.autoCreateClients = builder.autoCreateClients;
+        this.options = builder.options;
     }
 
     @Override
@@ -54,7 +59,7 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
 
                 Optional<ClientFactory<?>> clientFactory = ClientFactory.lookup(context.getReferenceResolver(), service);
                 if (clientFactory.isPresent()) {
-                    Object client = clientFactory.get().createClient(container);
+                    Object client = clientFactory.get().createClient(container, context.resolveDynamicValuesInMap(options));
                     container.addClient(service, client);
                     context.getReferenceResolver().bind(clientName, client);
                 } else {
@@ -74,6 +79,8 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
         private final Set<LocalStackContainer.Service> services = new HashSet<>();
 
         private boolean autoCreateClients = LocalStackSettings.isAutoCreateClients();
+
+        private Map<String, String> options = new HashMap<>();
 
         public Builder() {
             withStartupTimeout(LocalStackSettings.getStartupTimeout());
@@ -97,6 +104,16 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
         public Builder withServices(Set<LocalStackContainer.Service> services) {
             this.services.addAll(services);
            return this;
+        }
+
+        public Builder withOptions(Map<String, String> options) {
+            this.options.putAll(options);
+            return this;
+        }
+
+        public Builder withOption(String key, String value) {
+            this.options.put(key, value);
+            return this;
         }
 
         public Builder autoCreateClients(boolean enabled) {

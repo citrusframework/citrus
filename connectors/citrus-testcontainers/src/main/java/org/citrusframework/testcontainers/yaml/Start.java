@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -56,6 +57,10 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         }
 
         builder.autoCreateClients(container.isAutoCreateClients());
+
+        if (container.getOptions() != null) {
+            builder.withOptions(container.getOptions());
+        }
 
         configureStartActionBuilder(builder, container);
 
@@ -346,12 +351,22 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         protected List<String> services;
 
+        protected Map<String, String> options;
+
         public boolean isAutoCreateClients() {
             return autoCreateClients;
         }
 
         public void setAutoCreateClients(boolean autoCreateClients) {
             this.autoCreateClients = autoCreateClients;
+        }
+
+        public Map<String, String> getOptions() {
+            return options;
+        }
+
+        public void setOptions(Map<String, String> options) {
+            this.options = options;
         }
 
         public String getVersion() {

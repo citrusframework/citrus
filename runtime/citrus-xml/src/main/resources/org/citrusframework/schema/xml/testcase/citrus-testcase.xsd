@@ -2177,332 +2177,344 @@
       <xs:documentation>Start and stop Docker containers via Testcontainers</xs:documentation>
     </xs:annotation>
     <xs:sequence>
-    <xs:element name="description" type="xs:string" minOccurs="0"/>
-    <xs:choice>
-      <xs:element name="compose">
-        <xs:complexType>
-          <xs:choice>
-            <xs:element name="up">
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="exposedService" minOccurs="0" maxOccurs="unbounded">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="wait-for" minOccurs="0">
-                          <xs:complexType>
-                            <xs:attribute name="log-message" type="xs:string"/>
-                            <xs:attribute name="url" type="xs:string"/>
-                            <xs:attribute name="disabled" type="xs:boolean"/>
-                          </xs:complexType>
-                        </xs:element>
-                      </xs:sequence>
-                      <xs:attribute name="name" use="required" type="xs:string"/>
-                      <xs:attribute name="port" use="required" type="xs:string"/>
-                    </xs:complexType>
-                  </xs:element>
-                </xs:sequence>
-                <xs:attribute name="name" type="xs:string"/>
-                <xs:attribute name="file" type="xs:string"/>
-                <xs:attribute name="auto-remove" type="xs:boolean"/>
-                <xs:attribute name="startup-timeout" type="xs:int"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="down">
-              <xs:complexType>
-                <xs:attribute name="name" type="xs:string"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="start">
-        <xs:complexType>
-          <xs:choice>
-            <xs:element name="container">
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="labels" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="label" maxOccurs="unbounded">
-                          <xs:complexType>
-                            <xs:attribute name="name" use="required" type="xs:string"/>
-                            <xs:attribute name="value" use="required" type="xs:string"/>
-                          </xs:complexType>
-                        </xs:element>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                  <xs:element name="env" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="variable" maxOccurs="unbounded">
-                          <xs:complexType>
-                            <xs:attribute name="name" use="required" type="xs:string"/>
-                            <xs:attribute name="value" use="required" type="xs:string"/>
-                          </xs:complexType>
-                        </xs:element>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                  <xs:element name="exposed-ports" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="port" maxOccurs="unbounded" type="xs:int"/>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                  <xs:element name="port-bindings" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="binding" maxOccurs="unbounded" type="xs:string"/>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                  <xs:element name="wait-for" minOccurs="0">
-                    <xs:complexType>
-                      <xs:attribute name="log-message" type="xs:string"/>
-                      <xs:attribute name="url" type="xs:string"/>
-                      <xs:attribute name="disabled" type="xs:boolean"/>
-                    </xs:complexType>
-                  </xs:element>
-                  <xs:element name="volume-mounts" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="mount" maxOccurs="unbounded">
-                          <xs:complexType>
-                            <xs:attribute name="file" use="required" type="xs:string"/>
-                            <xs:attribute name="mount-path" use="required" type="xs:string"/>
-                          </xs:complexType>
-                        </xs:element>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                </xs:sequence>
-                <xs:attribute name="name" type="xs:string"/>
-                <xs:attribute name="service-name" type="xs:string"/>
-                <xs:attribute name="image" type="xs:string"/>
-                <xs:attribute name="auto-remove" type="xs:boolean"/>
-                <xs:attribute name="command" type="xs:string"/>
-                <xs:attribute name="startup-timeout" type="xs:int"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="localstack">
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="labels" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="label" maxOccurs="unbounded">
-                          <xs:complexType>
-                            <xs:attribute name="name" use="required" type="xs:string"/>
-                            <xs:attribute name="value" use="required" type="xs:string"/>
-                          </xs:complexType>
-                        </xs:element>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                  <xs:element name="env" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="variable" maxOccurs="unbounded">
-                          <xs:complexType>
-                            <xs:attribute name="name" use="required" type="xs:string"/>
-                            <xs:attribute name="value" use="required" type="xs:string"/>
-                          </xs:complexType>
-                        </xs:element>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                  <xs:element name="services" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="service" maxOccurs="unbounded" type="xs:string"/>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                </xs:sequence>
-                <xs:attribute name="name" type="xs:string"/>
-                <xs:attribute name="service-name" type="xs:string"/>
-                <xs:attribute name="version" type="xs:string"/>
-                <xs:attribute name="auto-remove" type="xs:boolean"/>
-                <xs:attribute name="auto-create-clients" type="xs:boolean"/>
-                <xs:attribute name="services" type="xs:string"/>
-                <xs:attribute name="image" type="xs:string"/>
-                <xs:attribute name="command" type="xs:string"/>
-                <xs:attribute name="startup-timeout" type="xs:int"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="mongodb">
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="labels" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="label" maxOccurs="unbounded">
-                          <xs:complexType>
-                            <xs:attribute name="name" use="required" type="xs:string"/>
-                            <xs:attribute name="value" use="required" type="xs:string"/>
-                          </xs:complexType>
-                        </xs:element>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                  <xs:element name="env" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="variable" maxOccurs="unbounded">
-                          <xs:complexType>
-                            <xs:attribute name="name" use="required" type="xs:string"/>
-                            <xs:attribute name="value" use="required" type="xs:string"/>
-                          </xs:complexType>
-                        </xs:element>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                </xs:sequence>
-                <xs:attribute name="name" type="xs:string"/>
-                <xs:attribute name="service-name" type="xs:string"/>
-                <xs:attribute name="version" type="xs:string"/>
-                <xs:attribute name="auto-remove" type="xs:boolean"/>
-                <xs:attribute name="image" type="xs:string"/>
-                <xs:attribute name="command" type="xs:string"/>
-                <xs:attribute name="startup-timeout" type="xs:int"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="kafka">
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="labels" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="label" maxOccurs="unbounded">
-                          <xs:complexType>
-                            <xs:attribute name="name" use="required" type="xs:string"/>
-                            <xs:attribute name="value" use="required" type="xs:string"/>
-                          </xs:complexType>
-                        </xs:element>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                  <xs:element name="env" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="variable" maxOccurs="unbounded">
-                          <xs:complexType>
-                            <xs:attribute name="name" use="required" type="xs:string"/>
-                            <xs:attribute name="value" use="required" type="xs:string"/>
-                          </xs:complexType>
-                        </xs:element>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                </xs:sequence>
-                <xs:attribute name="name" type="xs:string"/>
-                <xs:attribute name="service-name" type="xs:string"/>
-                <xs:attribute name="version" type="xs:string"/>
-                <xs:attribute name="auto-remove" type="xs:boolean"/>
-                <xs:attribute name="image" type="xs:string"/>
-                <xs:attribute name="command" type="xs:string"/>
-                <xs:attribute name="startup-timeout" type="xs:int"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="redpanda">
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="labels" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="label" maxOccurs="unbounded">
-                          <xs:complexType>
-                            <xs:attribute name="name" use="required" type="xs:string"/>
-                            <xs:attribute name="value" use="required" type="xs:string"/>
-                          </xs:complexType>
-                        </xs:element>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                  <xs:element name="env" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="variable" maxOccurs="unbounded">
-                          <xs:complexType>
-                            <xs:attribute name="name" use="required" type="xs:string"/>
-                            <xs:attribute name="value" use="required" type="xs:string"/>
-                          </xs:complexType>
-                        </xs:element>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                </xs:sequence>
-                <xs:attribute name="name" type="xs:string"/>
-                <xs:attribute name="service-name" type="xs:string"/>
-                <xs:attribute name="version" type="xs:string"/>
-                <xs:attribute name="auto-remove" type="xs:boolean"/>
-                <xs:attribute name="image" type="xs:string"/>
-                <xs:attribute name="command" type="xs:string"/>
-                <xs:attribute name="startup-timeout" type="xs:int"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="postgresql">
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="labels" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="label" maxOccurs="unbounded">
-                          <xs:complexType>
-                            <xs:attribute name="name" use="required" type="xs:string"/>
-                            <xs:attribute name="value" use="required" type="xs:string"/>
-                          </xs:complexType>
-                        </xs:element>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                  <xs:element name="env" minOccurs="0">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="variable" maxOccurs="unbounded">
-                          <xs:complexType>
-                            <xs:attribute name="name" use="required" type="xs:string"/>
-                            <xs:attribute name="value" use="required" type="xs:string"/>
-                          </xs:complexType>
-                        </xs:element>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                  <xs:element name="init-script" minOccurs="0">
-                    <xs:complexType>
-                      <xs:complexContent>
-                        <xs:extension base="xs:string">
-                          <xs:attribute name="file" type="xs:string"/>
-                        </xs:extension>
-                      </xs:complexContent>
-                    </xs:complexType>
-                  </xs:element>
-                </xs:sequence>
-                <xs:attribute name="name" type="xs:string"/>
-                <xs:attribute name="service-name" type="xs:string"/>
-                <xs:attribute name="version" type="xs:string"/>
-                <xs:attribute name="auto-remove" type="xs:boolean"/>
-                <xs:attribute name="datasource-name" type="xs:string"/>
-                <xs:attribute name="database" type="xs:string"/>
-                <xs:attribute name="username" type="xs:string"/>
-                <xs:attribute name="password" type="xs:string"/>
-                <xs:attribute name="image" type="xs:string"/>
-                <xs:attribute name="command" type="xs:string"/>
-                <xs:attribute name="startup-timeout" type="xs:int"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="stop">
-        <xs:complexType>
-          <xs:attribute name="name" use="required" type="xs:string"/>
-        </xs:complexType>
-      </xs:element>
-    </xs:choice>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:choice>
+        <xs:element name="compose">
+          <xs:complexType>
+            <xs:choice>
+              <xs:element name="up">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="exposedService" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="wait-for" minOccurs="0">
+                            <xs:complexType>
+                              <xs:attribute name="log-message" type="xs:string"/>
+                              <xs:attribute name="url" type="xs:string"/>
+                              <xs:attribute name="disabled" type="xs:boolean"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="name" use="required" type="xs:string"/>
+                        <xs:attribute name="port" use="required" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="name" type="xs:string"/>
+                  <xs:attribute name="file" type="xs:string"/>
+                  <xs:attribute name="auto-remove" type="xs:boolean"/>
+                  <xs:attribute name="startup-timeout" type="xs:int"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="down">
+                <xs:complexType>
+                  <xs:attribute name="name" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="start">
+          <xs:complexType>
+            <xs:choice>
+              <xs:element name="container">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="env" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="variable" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="exposed-ports" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="port" maxOccurs="unbounded" type="xs:int"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="port-bindings" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="binding" maxOccurs="unbounded" type="xs:string"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="wait-for" minOccurs="0">
+                      <xs:complexType>
+                        <xs:attribute name="log-message" type="xs:string"/>
+                        <xs:attribute name="url" type="xs:string"/>
+                        <xs:attribute name="disabled" type="xs:boolean"/>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="volume-mounts" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="mount" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="file" use="required" type="xs:string"/>
+                              <xs:attribute name="mount-path" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="name" type="xs:string"/>
+                  <xs:attribute name="service-name" type="xs:string"/>
+                  <xs:attribute name="image" type="xs:string"/>
+                  <xs:attribute name="auto-remove" type="xs:boolean"/>
+                  <xs:attribute name="command" type="xs:string"/>
+                  <xs:attribute name="startup-timeout" type="xs:int"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="localstack">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="env" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="variable" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="services" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="service" maxOccurs="unbounded" type="xs:string"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="options" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="option" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="name" type="xs:string"/>
+                  <xs:attribute name="service-name" type="xs:string"/>
+                  <xs:attribute name="version" type="xs:string"/>
+                  <xs:attribute name="auto-remove" type="xs:boolean"/>
+                  <xs:attribute name="auto-create-clients" type="xs:boolean"/>
+                  <xs:attribute name="services" type="xs:string"/>
+                  <xs:attribute name="image" type="xs:string"/>
+                  <xs:attribute name="command" type="xs:string"/>
+                  <xs:attribute name="startup-timeout" type="xs:int"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="mongodb">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="env" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="variable" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="name" type="xs:string"/>
+                  <xs:attribute name="service-name" type="xs:string"/>
+                  <xs:attribute name="version" type="xs:string"/>
+                  <xs:attribute name="auto-remove" type="xs:boolean"/>
+                  <xs:attribute name="image" type="xs:string"/>
+                  <xs:attribute name="command" type="xs:string"/>
+                  <xs:attribute name="startup-timeout" type="xs:int"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="kafka">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="env" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="variable" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="name" type="xs:string"/>
+                  <xs:attribute name="service-name" type="xs:string"/>
+                  <xs:attribute name="version" type="xs:string"/>
+                  <xs:attribute name="auto-remove" type="xs:boolean"/>
+                  <xs:attribute name="image" type="xs:string"/>
+                  <xs:attribute name="command" type="xs:string"/>
+                  <xs:attribute name="startup-timeout" type="xs:int"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="redpanda">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="env" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="variable" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="name" type="xs:string"/>
+                  <xs:attribute name="service-name" type="xs:string"/>
+                  <xs:attribute name="version" type="xs:string"/>
+                  <xs:attribute name="auto-remove" type="xs:boolean"/>
+                  <xs:attribute name="image" type="xs:string"/>
+                  <xs:attribute name="command" type="xs:string"/>
+                  <xs:attribute name="startup-timeout" type="xs:int"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="postgresql">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="env" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="variable" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="init-script" minOccurs="0">
+                      <xs:complexType>
+                        <xs:complexContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute name="file" type="xs:string"/>
+                          </xs:extension>
+                        </xs:complexContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="name" type="xs:string"/>
+                  <xs:attribute name="service-name" type="xs:string"/>
+                  <xs:attribute name="version" type="xs:string"/>
+                  <xs:attribute name="auto-remove" type="xs:boolean"/>
+                  <xs:attribute name="datasource-name" type="xs:string"/>
+                  <xs:attribute name="database" type="xs:string"/>
+                  <xs:attribute name="username" type="xs:string"/>
+                  <xs:attribute name="password" type="xs:string"/>
+                  <xs:attribute name="image" type="xs:string"/>
+                  <xs:attribute name="command" type="xs:string"/>
+                  <xs:attribute name="startup-timeout" type="xs:int"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="stop">
+          <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
     </xs:sequence>
   </xs:complexType>
 

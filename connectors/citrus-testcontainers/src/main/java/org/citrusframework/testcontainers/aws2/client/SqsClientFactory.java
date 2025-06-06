@@ -16,6 +16,8 @@
 
 package org.citrusframework.testcontainers.aws2.client;
 
+import java.util.Map;
+
 import org.citrusframework.testcontainers.aws2.ClientFactory;
 import org.citrusframework.testcontainers.aws2.LocalStackContainer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -26,8 +28,8 @@ import software.amazon.awssdk.services.sqs.SqsClient;
 public class SqsClientFactory implements ClientFactory<SqsClient> {
 
     @Override
-    public SqsClient createClient(LocalStackContainer container) {
-        return SqsClient.builder()
+    public SqsClient createClient(LocalStackContainer container, Map<String, String> options) {
+        SqsClient sqsClient = SqsClient.builder()
                 .endpointOverride(container.getServiceEndpoint())
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
@@ -36,6 +38,15 @@ public class SqsClientFactory implements ClientFactory<SqsClient> {
                 )
                 .region(Region.of(container.getRegion()))
                 .build();
+
+        if (options.containsKey("queues")) {
+            String[] queueNames = options.get("queues").split(",");
+            for (String queueName : queueNames) {
+                sqsClient.createQueue(builder -> builder.queueName(queueName));
+            }
+        }
+
+        return sqsClient;
     }
 
     @Override
