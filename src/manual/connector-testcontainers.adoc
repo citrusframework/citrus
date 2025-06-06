@@ -408,8 +408,11 @@ actions:
 </spring:beans>
 ----
 
-Each LocalStack instance receives a list of enables services.
+Each LocalStack instance receives a list of services that should be enabled.
 In the example above the AWS S3 service is enabled.
+
+[[testcontainers-localstack-settings]]
+=== Exposed connection settings
 
 Citrus exposes special test variables that represent connection settings for the LocalStack container:
 
@@ -441,7 +444,136 @@ For each enabled service on the LocalStack instance these variables are exposed:
 
 |===
 
-You can use these test variables to connect to the LocalStack Testcontainers instance.
+[[testcontainers-localstack-auto-clients]]
+=== Service client auto creation
+
+The Citrus LocalStack container action is able to automatically create clients for the enabled services.
+
+By default, Citrus creates the client instances and stores them in the bean Citrus registry. You can then reference the clients by their name.
+
+The following services support auto creation of clients:
+
+* S3 ("s3Client")
+* SNS ("snsClient")
+* SQS ("sqsClient")
+* KINESIS (kinesisClient)
+* DYNAMODB (dnyamodbClient)
+* EVENT_BRIDGE("eventbridgeClient")
+
+For instance the S3 service creates a client instance called `s3Client`. The clients are automatically configured with the container service settings such as endpointUri, accessKey, secretKey and region for S3.
+
+The underlying client factory is able to handle specific options. For the S3 client factory for instance this is a comma separated list of bucket names to auto create S3 buckets.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void testcontainersTest() {
+    given(testcontainers()
+            .localstack()
+            .start()
+            .withService(LocalStackContainer.Service.S3))
+            .withOption("buckets", "my_bucket_name,another_bucket_name");
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <testcontainers>
+          <start>
+            <localstack services="S3">
+              <options>
+                <option name="buckets" value="my_bucket_name,another_bucket_name"/>
+              </options>
+            </localstack>
+          </start>
+        </testcontainers>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: TestcontainersTest
+actions:
+  - testcontainers:
+      start:
+        localstack:
+          services:
+            - "S3"
+          options:
+            buckets: "my_bucket_name,another_bucket_name"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+Please see this list of supported options on the individual client factories:
+
+|===
+|Client |Option |Description
+
+|s3Client
+|buckets
+|Comma separated list of bucket names that get auto created
+
+|sqsClient
+|queues
+|Comma separated list of queue names that get auto created
+
+|snsClient
+|topics
+|Comma separated list of topic names that get auto created
+
+|kinesisClient
+|streams
+|Comma separated list of stream names that get auto created
+
+|kinesisClient
+|<stream_name>.shard.count
+|Shard count set on the given stream
+
+|dynamodbClient
+|tables
+|Comma separated list of table names that get auto created.
+
+|dynamodbClient
+|<table_name>.id
+|Id attribute name set on the table as a primary id.
+
+|dynamodbClient
+|<table_name>.view.type
+|View type set on the table stream specification (default=NEW_AND_OLD_IMAGES).
+
+|dynamodbClient
+|<table_name>.read.capacity
+|Read capacity set as provisioned throughput (default=1).
+
+|dynamodbClient
+|<table_name>.write.capacity
+|Write capacity set as provisioned throughput (default=1).
+
+|eventbridgeClient
+|eventBusNames
+|Comma separated list of event bus names that get auto created
+
+|===
+
+[[testcontainers-localstack-clients]]
+=== Custom service clients
+
+You can use the exposed connections settings in the test variables to connect to the LocalStack Testcontainers instance.
+
 As an example this S3 client connects to the LocalStack Testcontainers instance and creates a test bucket:
 
 .Java

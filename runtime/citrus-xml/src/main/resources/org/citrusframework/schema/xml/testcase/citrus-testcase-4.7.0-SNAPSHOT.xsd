@@ -2321,6 +2321,18 @@
                         </xs:sequence>
                       </xs:complexType>
                     </xs:element>
+                    <xs:element name="options" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="option" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
                   </xs:sequence>
                   <xs:attribute name="name" type="xs:string"/>
                   <xs:attribute name="service-name" type="xs:string"/>

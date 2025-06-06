@@ -21,6 +21,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -205,7 +206,7 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
         // lazy load client for this container
         Optional<ClientFactory<?>> clientFactory = ClientFactory.lookup(service);
         if (clientFactory.isPresent()) {
-            client = clientFactory.get().createClient(this);
+            client = clientFactory.get().createClient(this, Collections.emptyMap());
             clients.put(service, client);
         }
 

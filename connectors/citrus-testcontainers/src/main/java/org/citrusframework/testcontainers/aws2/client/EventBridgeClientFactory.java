@@ -16,6 +16,8 @@
 
 package org.citrusframework.testcontainers.aws2.client;
 
+import java.util.Map;
+
 import org.citrusframework.testcontainers.aws2.ClientFactory;
 import org.citrusframework.testcontainers.aws2.LocalStackContainer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -26,8 +28,8 @@ import software.amazon.awssdk.services.eventbridge.EventBridgeClient;
 public class EventBridgeClientFactory implements ClientFactory<EventBridgeClient> {
 
     @Override
-    public EventBridgeClient createClient(LocalStackContainer container) {
-        return EventBridgeClient.builder()
+    public EventBridgeClient createClient(LocalStackContainer container, Map<String, String> options) {
+        EventBridgeClient eventBridgeClient = EventBridgeClient.builder()
                 .endpointOverride(container.getServiceEndpoint())
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
@@ -36,6 +38,15 @@ public class EventBridgeClientFactory implements ClientFactory<EventBridgeClient
                 )
                 .region(Region.of(container.getRegion()))
                 .build();
+
+        if (options.containsKey("eventBusNames")) {
+            String[] eventBusNames = options.get("eventBusNames").split(",");
+            for (String eventBus : eventBusNames) {
+                eventBridgeClient.createEventBus(builder -> builder.name(eventBus));
+            }
+        }
+
+        return eventBridgeClient;
     }
 
     @Override

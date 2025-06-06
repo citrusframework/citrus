@@ -16,6 +16,8 @@
 
 package org.citrusframework.testcontainers.aws2.client;
 
+import java.util.Map;
+
 import org.citrusframework.testcontainers.aws2.ClientFactory;
 import org.citrusframework.testcontainers.aws2.LocalStackContainer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -26,8 +28,8 @@ import software.amazon.awssdk.services.kinesis.KinesisClient;
 public class KinesisClientFactory implements ClientFactory<KinesisClient> {
 
     @Override
-    public KinesisClient createClient(LocalStackContainer container) {
-        return KinesisClient.builder()
+    public KinesisClient createClient(LocalStackContainer container, Map<String, String> options) {
+        KinesisClient kinesisClient = KinesisClient.builder()
                 .endpointOverride(container.getServiceEndpoint())
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
@@ -36,6 +38,16 @@ public class KinesisClientFactory implements ClientFactory<KinesisClient> {
                 )
                 .region(Region.of(container.getRegion()))
                 .build();
+
+        if (options.containsKey("streams")) {
+            String[] streams = options.get("streams").split(",");
+            for (String stream : streams) {
+                int shardCount = Integer.parseInt(options.getOrDefault("%s.shard.count".formatted(stream), "1"));
+                kinesisClient.createStream(builder -> builder.streamName(stream).shardCount(shardCount));
+            }
+        }
+
+        return kinesisClient;
     }
 
     @Override

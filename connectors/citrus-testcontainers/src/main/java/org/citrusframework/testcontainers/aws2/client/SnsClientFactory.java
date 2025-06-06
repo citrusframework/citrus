@@ -16,6 +16,8 @@
 
 package org.citrusframework.testcontainers.aws2.client;
 
+import java.util.Map;
+
 import org.citrusframework.testcontainers.aws2.ClientFactory;
 import org.citrusframework.testcontainers.aws2.LocalStackContainer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -26,8 +28,8 @@ import software.amazon.awssdk.services.sns.SnsClient;
 public class SnsClientFactory implements ClientFactory<SnsClient> {
 
     @Override
-    public SnsClient createClient(LocalStackContainer container) {
-        return SnsClient.builder()
+    public SnsClient createClient(LocalStackContainer container, Map<String, String> options) {
+        SnsClient snsClient = SnsClient.builder()
                 .endpointOverride(container.getServiceEndpoint())
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
@@ -36,6 +38,15 @@ public class SnsClientFactory implements ClientFactory<SnsClient> {
                 )
                 .region(Region.of(container.getRegion()))
                 .build();
+
+        if (options.containsKey("topics")) {
+            String[] topics = options.get("topics").split(",");
+            for (String topic : topics) {
+                snsClient.createTopic(builder -> builder.name(topic));
+            }
+        }
+
+        return snsClient;
     }
 
     @Override
