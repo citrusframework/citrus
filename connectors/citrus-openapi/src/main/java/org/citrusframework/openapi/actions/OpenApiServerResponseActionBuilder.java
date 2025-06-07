@@ -16,16 +16,6 @@
 
 package org.citrusframework.openapi.actions;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
-
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
@@ -48,6 +38,16 @@ import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.citrusframework.openapi.validation.OpenApiOperationToMessageHeadersProcessor;
 import org.citrusframework.openapi.validation.OpenApiValidationContext;
 import org.springframework.http.HttpStatus;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 import static java.lang.Integer.parseInt;
 import static java.util.Collections.singletonMap;
@@ -205,18 +205,16 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             return super.build(context, messageType);
         }
 
-        private void fillRandomData(OpenApiSpecification openApiSpecification,
-            OperationPathAdapter operationPathAdapter, TestContext context) {
+        private void fillRandomData(OpenApiSpecification openApiSpecification, OperationPathAdapter operationPathAdapter, TestContext context) {
 
             if (operationPathAdapter.operation().responses != null) {
                 buildResponse(context, openApiSpecification, operationPathAdapter.operation());
             }
         }
 
-        private void buildResponse(TestContext context, OpenApiSpecification openApiSpecification,
-            OasOperation operation) {
-            Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
-                openApiSpecification.getOpenApiDoc(context), operation, statusCode, null);
+        private void buildResponse(TestContext context, OpenApiSpecification openApiSpecification, OasOperation operation) {
+            var oasDocument = openApiSpecification.getOpenApiDoc(context);
+            Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(oasDocument, operation, statusCode, null);
 
             if (responseForRandomGeneration.isPresent()) {
                 OasResponse oasResponse = responseForRandomGeneration.get();
@@ -227,7 +225,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
                 }
 
                 // Always override existing headers by context variables. This way we can also override random values.
-                Map<String, OasSchema> headers = OasModelHelper.getHeaders(oasResponse);
+                Map<String, OasSchema> headers = OasModelHelper.getHeaders(oasDocument, oasResponse);
                 headers.entrySet().stream()
                     .filter(entry -> context.getVariables().containsKey(entry.getKey()))
                     .forEach((entry -> addHeaderBuilder(
@@ -238,8 +236,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             }
         }
 
-        private void buildRandomHeaders(TestContext context,
-            OpenApiSpecification openApiSpecification, OasResponse response) {
+        private void buildRandomHeaders(TestContext context, OpenApiSpecification openApiSpecification, OasResponse response) {
             if (autoFill == NONE) {
                 return;
             }
@@ -248,11 +245,13 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             Predicate<Entry<String, OasSchema>> filteredHeadersPredicate = entry -> !filteredHeaders.contains(
                 entry.getKey());
 
+            var oasDocument = openApiSpecification.getOpenApiDoc(context);
+
             Map<String, OasSchema> headersToFill;
             if (autoFill == REQUIRED) {
-                headersToFill = OasModelHelper.getRequiredHeaders(response);
+                headersToFill = OasModelHelper.getRequiredHeaders(oasDocument, response);
             } else {
-                headersToFill = OasModelHelper.getHeaders(response);
+                headersToFill = OasModelHelper.getHeaders(oasDocument, response);
             }
 
             headersToFill.entrySet().stream()
