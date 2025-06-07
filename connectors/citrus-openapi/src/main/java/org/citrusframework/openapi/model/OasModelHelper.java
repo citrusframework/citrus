@@ -16,19 +16,6 @@
 
 package org.citrusframework.openapi.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 import io.apicurio.datamodels.combined.visitors.CombinedVisitorAdapter;
 import io.apicurio.datamodels.openapi.io.OasDataModelWriter;
 import io.apicurio.datamodels.openapi.models.OasDocument;
@@ -60,6 +47,19 @@ import jakarta.annotation.Nullable;
 import org.citrusframework.openapi.model.v2.Oas20ModelHelper;
 import org.citrusframework.openapi.model.v3.Oas30ModelHelper;
 import org.citrusframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
@@ -247,8 +247,7 @@ public final class OasModelHelper {
     }
 
     public static Optional<OasAdapter<OasSchema, String>> getRandomizableSchema(OasOperation oasOperation, OasResponse response, String acceptedMediaTypes) {
-        List<String> acceptedRandomizableMediaTypes = OasModelHelper.toAcceptedRandomizableMediaTypes(
-            acceptedMediaTypes);
+        List<String> acceptedRandomizableMediaTypes = OasModelHelper.toAcceptedRandomizableMediaTypes(acceptedMediaTypes);
 
         if (oasOperation instanceof Oas20Operation oas20Operation && response instanceof Oas20Response oas20Response) {
             return Oas20ModelHelper.getSchema(oas20Operation, oas20Response, acceptedRandomizableMediaTypes);
@@ -262,12 +261,12 @@ public final class OasModelHelper {
         return delegate(parameter, Oas20ModelHelper::getParameterSchema, Oas30ModelHelper::getParameterSchema);
     }
 
-    public static Map<String, OasSchema> getRequiredHeaders(OasResponse response) {
-        return delegate(response, Oas20ModelHelper::getHeaders, Oas30ModelHelper::getRequiredHeaders);
+    public static Map<String, OasSchema> getRequiredHeaders(OasDocument oasDocument, OasResponse response) {
+        return delegate(response, Oas20ModelHelper::getHeaders, (r) -> Oas30ModelHelper.getRequiredHeaders(Oas30Document.class.cast(oasDocument), r));
     }
 
-    public static Map<String, OasSchema> getHeaders(OasResponse response) {
-        return delegate(response, Oas20ModelHelper::getHeaders, Oas30ModelHelper::getHeaders);
+    public static Map<String, OasSchema> getHeaders(OasDocument oasDocument, OasResponse response) {
+        return delegate(response, Oas20ModelHelper::getHeaders, (r) -> Oas30ModelHelper.getHeaders(Oas30Document.class.cast(oasDocument), r));
     }
 
     public static Optional<String> getRequestContentType(OasOperation operation) {
@@ -612,10 +611,10 @@ public final class OasModelHelper {
     public static String toJson(OasDocument openApiDoc) {
         OasDataModelWriter writer;
         OasTraverser oasTraverser;
-        if (openApiDoc instanceof  Oas20Document) {
+        if (openApiDoc instanceof Oas20Document) {
             writer = new Oas20DataModelWriter();
             oasTraverser = new Oas20Traverser((IOas20Visitor) writer);
-        } else if (openApiDoc instanceof  Oas30Document) {
+        } else if (openApiDoc instanceof Oas30Document) {
             writer = new Oas30DataModelWriter();
             oasTraverser = new Oas30Traverser((IOas30Visitor) writer);
         } else {

@@ -16,12 +16,9 @@
 
 package org.citrusframework.openapi.model.v3;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Components;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Header;
 import io.apicurio.datamodels.openapi.v3.models.Oas30MediaType;
@@ -30,54 +27,174 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Responses;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import io.apicurio.datamodels.openapi.v3.models.Oas30SchemaDefinition;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.springframework.http.MediaType;
 import org.testng.annotations.Test;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+
+import static java.util.Collections.emptyMap;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 public class Oas30ModelHelperTest {
 
     @Test
-    public void shouldNotFindRequiredHeadersWithoutRequiredAttribute() {
+    public void getRequiredHeaders_shouldNotFindRequiredHeadersWithoutRequiredAttribute() {
         var header = new Oas30Header("X-TEST");
         header.schema = new Oas30Schema();
         header.required = null;
         var response = new Oas30Response("200");
         response.headers.put(header.getName(), header);
 
-        Map<String, OasSchema> result = Oas30ModelHelper.getRequiredHeaders(response);
+        Map<String, OasSchema> result = Oas30ModelHelper.getRequiredHeaders(null, response);
 
-        assertEquals(result.size(), 0);
+        assertThat(result).isEmpty();
     }
 
     @Test
-    public void shouldFindRequiredHeaders() {
+    public void getRequiredHeaders_shouldFindRequiredHeaders() {
         var header = new Oas30Header("X-TEST");
         header.schema = new Oas30Schema();
         header.required = Boolean.TRUE;
         var response = new Oas30Response("200");
         response.headers.put(header.getName(), header);
 
-        Map<String, OasSchema> result = Oas30ModelHelper.getRequiredHeaders(response);
+        Map<String, OasSchema> result = Oas30ModelHelper.getRequiredHeaders(null, response);
 
-        assertEquals(result.size(), 1);
-        assertSame(result.get(header.getName()), header.schema);
+        assertThat(result)
+                .containsExactly(Map.entry(header.getName(), header.schema));
     }
 
     @Test
-    public void shouldNotFindOptionalHeaders() {
+    public void getRequiredHeaders_shouldNotFindOptionalHeaders() {
         var header = new Oas30Header("X-TEST");
         header.schema = new Oas30Schema();
         header.required = Boolean.FALSE;
         var response = new Oas30Response("200");
         response.headers.put(header.getName(), header);
 
-        Map<String, OasSchema> result = Oas30ModelHelper.getRequiredHeaders(response);
+        Map<String, OasSchema> result = Oas30ModelHelper.getRequiredHeaders(null, response);
 
-        assertEquals(result.size(), 0);
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    public void getRequiredHeaders_shouldResolveReferencesOfRequiredHeaders() {
+        var header = new Oas30Header("X-TEST");
+        var reference = "reference";
+        header.setReference(reference);
+        header.required = Boolean.TRUE;
+        var response = new Oas30Response("200");
+        response.headers.put(header.getName(), header);
+
+        var oasDocument = new Oas30Document();
+        oasDocument.components = new Oas30Components();
+        var referencedSchema = new Oas30SchemaDefinition(reference);
+        oasDocument.components.schemas = Map.of(reference, referencedSchema);
+
+        Map<String, OasSchema> result = Oas30ModelHelper.getRequiredHeaders(oasDocument, response);
+
+        assertThat(result)
+                .containsExactly(Map.entry(header.getName(), referencedSchema));
+    }
+
+    @Test
+    public void getRequiredHeaders_shouldThrowException_whenHeaderDefinitionIsInvalid() {
+        var header = new Oas30Header("X-TEST");
+        header.required = Boolean.TRUE;
+        var response = new Oas30Response("200");
+        response.headers.put(header.getName(), header);
+
+        var oasDocument = new Oas30Document();
+        oasDocument.components = new Oas30Components();
+        oasDocument.components.schemas = emptyMap();
+
+        assertThatThrownBy(() -> Oas30ModelHelper.getHeaders(oasDocument, response))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessage("Failed to resolve schema in OpenAPI specification, tried reference as well!");
+    }
+
+    @Test
+    public void getHeaders_shouldFindRequiredHeadersWithoutRequiredAttribute() {
+        var header = new Oas30Header("X-TEST");
+        header.schema = new Oas30Schema();
+        header.required = null;
+        var response = new Oas30Response("200");
+        response.headers.put(header.getName(), header);
+
+        Map<String, OasSchema> result = Oas30ModelHelper.getHeaders(null, response);
+
+        assertThat(result)
+                .containsExactly(Map.entry(header.getName(), header.schema));
+    }
+
+    @Test
+    public void getHeaders_shouldFindRequiredHeaders() {
+        var header = new Oas30Header("X-TEST");
+        header.schema = new Oas30Schema();
+        header.required = Boolean.TRUE;
+        var response = new Oas30Response("200");
+        response.headers.put(header.getName(), header);
+
+        Map<String, OasSchema> result = Oas30ModelHelper.getHeaders(null, response);
+
+        assertThat(result)
+                .containsExactly(Map.entry(header.getName(), header.schema));
+    }
+
+    @Test
+    public void getHeaders_shouldFindOptionalHeaders() {
+        var header = new Oas30Header("X-TEST");
+        header.schema = new Oas30Schema();
+        header.required = Boolean.FALSE;
+        var response = new Oas30Response("200");
+        response.headers.put(header.getName(), header);
+
+        Map<String, OasSchema> result = Oas30ModelHelper.getHeaders(null, response);
+
+        assertThat(result)
+                .containsExactly(Map.entry(header.getName(), header.schema));
+    }
+
+    @Test
+    public void getHeaders_shouldResolveReferencesOfHeaders() {
+        var header = new Oas30Header("X-TEST");
+        var reference = "reference";
+        header.setReference(reference);
+        var response = new Oas30Response("200");
+        response.headers.put(header.getName(), header);
+
+        var oasDocument = new Oas30Document();
+        oasDocument.components = new Oas30Components();
+        var referencedSchema = new Oas30SchemaDefinition(reference);
+        oasDocument.components.schemas = Map.of(reference, referencedSchema);
+
+        Map<String, OasSchema> result = Oas30ModelHelper.getHeaders(oasDocument, response);
+
+        assertThat(result)
+                .containsExactly(Map.entry(header.getName(), referencedSchema));
+    }
+
+    @Test
+    public void getHeaders_shouldThrowException_whenHeaderDefinitionIsInvalid() {
+        var header = new Oas30Header("X-TEST");
+        var response = new Oas30Response("200");
+        response.headers.put(header.getName(), header);
+
+        var oasDocument = new Oas30Document();
+        oasDocument.components = new Oas30Components();
+        oasDocument.components.schemas = emptyMap();
+
+        assertThatThrownBy(() -> Oas30ModelHelper.getHeaders(oasDocument, response))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessage("Failed to resolve schema in OpenAPI specification, tried reference as well!");
     }
 
     @Test

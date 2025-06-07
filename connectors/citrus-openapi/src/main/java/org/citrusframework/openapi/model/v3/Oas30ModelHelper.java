@@ -16,6 +16,23 @@
 
 package org.citrusframework.openapi.model.v3;
 
+import io.apicurio.datamodels.core.models.common.Server;
+import io.apicurio.datamodels.core.models.common.ServerVariable;
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Header;
+import io.apicurio.datamodels.openapi.v3.models.Oas30MediaType;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
+import io.apicurio.datamodels.openapi.v3.models.Oas30RequestBody;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.openapi.model.OasAdapter;
+import org.citrusframework.openapi.model.OasModelHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,27 +42,14 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.apicurio.datamodels.core.models.common.Server;
-import io.apicurio.datamodels.core.models.common.ServerVariable;
-import io.apicurio.datamodels.openapi.models.OasSchema;
-import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
-import io.apicurio.datamodels.openapi.v3.models.Oas30MediaType;
-import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
-import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
-import io.apicurio.datamodels.openapi.v3.models.Oas30RequestBody;
-import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
-import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
-import org.citrusframework.openapi.model.OasAdapter;
-import org.citrusframework.openapi.model.OasModelHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
+import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toMap;
 import static org.citrusframework.openapi.model.OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES;
+import static org.citrusframework.openapi.model.OasModelHelper.getReferenceName;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
@@ -139,7 +143,7 @@ public final class Oas30ModelHelper {
 
     public static Optional<OasAdapter<OasSchema, String>> getSchema(Oas30Operation ignoredOas30Operation, Oas30Response response, List<String> acceptedMediaTypes) {
         acceptedMediaTypes = OasModelHelper.resolveAllTypes(acceptedMediaTypes);
-        acceptedMediaTypes = acceptedMediaTypes.isEmpty()  ? DEFAULT_ACCEPTED_MEDIA_TYPES : acceptedMediaTypes;
+        acceptedMediaTypes = acceptedMediaTypes.isEmpty() ? DEFAULT_ACCEPTED_MEDIA_TYPES : acceptedMediaTypes;
 
         Map<String, Oas30MediaType> content = response.content;
         if (content == null) {
@@ -172,7 +176,7 @@ public final class Oas30ModelHelper {
         if (openApiDoc.components != null
                 && openApiDoc.components.requestBodies != null
                 && bodyToUse.$ref != null) {
-            bodyToUse = openApiDoc.components.requestBodies.get(OasModelHelper.getReferenceName(bodyToUse.$ref));
+            bodyToUse = openApiDoc.components.requestBodies.get(getReferenceName(bodyToUse.$ref));
         }
 
         if (bodyToUse.content == null) {
@@ -212,7 +216,7 @@ public final class Oas30ModelHelper {
         return response.content != null ? response.content.keySet() : emptyList();
     }
 
-    public static Map<String, OasSchema> getRequiredHeaders(Oas30Response response) {
+    public static Map<String, OasSchema> getRequiredHeaders(Oas30Document oasDocument, Oas30Response response) {
         if (response.headers == null) {
             return emptyMap();
         }
@@ -220,17 +224,36 @@ public final class Oas30ModelHelper {
         return response.headers.entrySet()
                 .stream()
                 .filter(entry -> Boolean.TRUE.equals(entry.getValue().required))
-                .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().schema));
+                .map((entry) -> Map.entry(entry.getKey(), resolveRequiredSchema(oasDocument, entry.getValue())))
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public static Map<String, OasSchema> getHeaders(Oas30Response response) {
+    public static Map<String, OasSchema> getHeaders(Oas30Document oasDocument, Oas30Response response) {
         if (response.headers == null) {
             return emptyMap();
         }
 
         return response.headers.entrySet()
                 .stream()
-                .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().schema));
+                .map((entry) -> Map.entry(entry.getKey(), resolveRequiredSchema(oasDocument, entry.getValue())))
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    private static OasSchema resolveRequiredSchema(Oas30Document oasDocument, Oas30Header oas30Header) {
+        OasSchema oasSchema;
+
+        if (isNull(oas30Header.schema)) {
+            oasSchema = getSchemaDefinitions(oasDocument)
+                    .get(getReferenceName(oas30Header.getReference()));
+        } else {
+            oasSchema = oas30Header.schema;
+        }
+
+        if (isNull(oasSchema)) {
+            throw new CitrusRuntimeException("Failed to resolve schema in OpenAPI specification, tried reference as well!");
+        }
+
+        return oasSchema;
     }
 
     private static boolean isFormDataMediaType(String type) {
