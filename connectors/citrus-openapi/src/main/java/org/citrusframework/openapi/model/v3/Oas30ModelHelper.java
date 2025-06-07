@@ -16,19 +16,11 @@
 
 package org.citrusframework.openapi.model.v3;
 
-import java.net.URI;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Optional;
-
 import io.apicurio.datamodels.core.models.common.Server;
 import io.apicurio.datamodels.core.models.common.ServerVariable;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Header;
 import io.apicurio.datamodels.openapi.v3.models.Oas30MediaType;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
@@ -40,12 +32,24 @@ import org.citrusframework.openapi.model.OasModelHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
+
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toMap;
 import static org.citrusframework.openapi.model.OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES;
+import static org.citrusframework.openapi.model.OasModelHelper.getReferenceName;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
@@ -53,6 +57,7 @@ public final class Oas30ModelHelper {
 
     private static final Logger logger = LoggerFactory.getLogger(Oas30ModelHelper.class);
 
+    private static final NoopOasSchema NOOP_OAS_SCHEMA = new NoopOasSchema();
     public static final String NO_URL_ERROR_MESSAGE = "Unable to determine base path from server URL: %s";
 
     private Oas30ModelHelper() {
@@ -139,7 +144,7 @@ public final class Oas30ModelHelper {
 
     public static Optional<OasAdapter<OasSchema, String>> getSchema(Oas30Operation ignoredOas30Operation, Oas30Response response, List<String> acceptedMediaTypes) {
         acceptedMediaTypes = OasModelHelper.resolveAllTypes(acceptedMediaTypes);
-        acceptedMediaTypes = acceptedMediaTypes.isEmpty()  ? DEFAULT_ACCEPTED_MEDIA_TYPES : acceptedMediaTypes;
+        acceptedMediaTypes = acceptedMediaTypes.isEmpty() ? DEFAULT_ACCEPTED_MEDIA_TYPES : acceptedMediaTypes;
 
         Map<String, Oas30MediaType> content = response.content;
         if (content == null) {
@@ -172,7 +177,7 @@ public final class Oas30ModelHelper {
         if (openApiDoc.components != null
                 && openApiDoc.components.requestBodies != null
                 && bodyToUse.$ref != null) {
-            bodyToUse = openApiDoc.components.requestBodies.get(OasModelHelper.getReferenceName(bodyToUse.$ref));
+            bodyToUse = openApiDoc.components.requestBodies.get(getReferenceName(bodyToUse.$ref));
         }
 
         if (bodyToUse.content == null) {
@@ -212,7 +217,7 @@ public final class Oas30ModelHelper {
         return response.content != null ? response.content.keySet() : emptyList();
     }
 
-    public static Map<String, OasSchema> getRequiredHeaders(Oas30Response response) {
+    public static Map<String, OasSchema> getRequiredHeaders(Oas30Document oasDocument, Oas30Response response) {
         if (response.headers == null) {
             return emptyMap();
         }
@@ -220,17 +225,33 @@ public final class Oas30ModelHelper {
         return response.headers.entrySet()
                 .stream()
                 .filter(entry -> Boolean.TRUE.equals(entry.getValue().required))
-                .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().schema));
+                .map((entry) -> Map.entry(entry.getKey(), getResolvedReferenceOrSchema(oasDocument, entry.getValue())))
+                .filter(Oas30ModelHelper::isNoNoopOas3Schema)
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public static Map<String, OasSchema> getHeaders(Oas30Response response) {
+    public static Map<String, OasSchema> getHeaders(Oas30Document oasDocument, Oas30Response response) {
         if (response.headers == null) {
             return emptyMap();
         }
 
         return response.headers.entrySet()
                 .stream()
-                .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().schema));
+                .map((entry) -> Map.entry(entry.getKey(), getResolvedReferenceOrSchema(oasDocument, entry.getValue())))
+                .filter(Oas30ModelHelper::isNoNoopOas3Schema)
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    private static OasSchema getResolvedReferenceOrSchema(Oas30Document oasDocument, Oas30Header oas30Header) {
+        if (isNull(oas30Header.schema)) {
+            return getSchemaDefinitions(oasDocument).getOrDefault(getReferenceName(oas30Header.getReference()), NOOP_OAS_SCHEMA);
+        }
+
+        return oas30Header.schema;
+    }
+
+    private static boolean isNoNoopOas3Schema(Entry<String, OasSchema> headers) {
+        return nonNull(headers.getValue()) && !(headers.getValue() instanceof NoopOasSchema);
     }
 
     private static boolean isFormDataMediaType(String type) {
@@ -258,5 +279,9 @@ public final class Oas30ModelHelper {
 
     public static Optional<OasSchema> getParameterSchema(Oas30Parameter parameter) {
         return Optional.ofNullable((OasSchema) parameter.schema);
+    }
+
+    private static class NoopOasSchema extends Oas30Schema {
+
     }
 }
