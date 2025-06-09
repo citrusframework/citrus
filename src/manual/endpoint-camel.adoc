@@ -984,6 +984,26 @@ actions:
 </spring:beans>
 ----
 
+Once the infrastructure service is started Citrus exposes connection settings as test variables. You can use the exposed connection settings to create proper clients that connect to the services.
+
+The exposed connection settings follow a naming pattern that looks like this:
+
+* `CITRUS_CAMEL_INFRA_SERVICE_<SERVICE_NAME>_<PROPERTY_NAME>`
+* `CITRUS_CAMEL_INFRA_SERVICE_<SERVICE_NAME>_<IMPLEMENTATION>_<PROPERTY_NAME>`
+
+For instance a infrastructure service called `foo` that exposes the settings `url` and `port` expose the following test variables.
+
+|===
+|Variable
+
+| CITRUS_CAMEL_INFRA_SERVICE_FOO_URL
+| CITRUS_CAMEL_INFRA_SERVICE_FOO_PORT
+
+|===
+
+You can now use these test variables when connecting to the service.
+Please see the individual Apache Camel infrastructure services documentation to see which properties get exposed by the service.
+
 Some infrastructure services provide multiple implementations (e.g. Kafka provides both Redpanda and Strimzi).
 
 You may need to choose the implementation as follows:
