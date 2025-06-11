@@ -253,7 +253,7 @@
     <org.openapitools.version>7.9.0</org.openapitools.version>
     <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
     <picoli-version>4.7.7</picoli-version>
-    <postgresql.version>42.7.5</postgresql.version>
+    <postgresql.version>42.7.7</postgresql.version>
     <quarkus.platform.version>3.22.1</quarkus.platform.version>
     <saaj.version>3.0.4</saaj.version>
     <selenium.version>4.32.0</selenium.version>
