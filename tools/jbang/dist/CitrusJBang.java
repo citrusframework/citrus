@@ -25,7 +25,6 @@
 //DEPS org.citrusframework:citrus-jbang-connector
 //DEPS org.citrusframework:citrus-groovy
 //DEPS org.citrusframework:citrus-xml
-//DEPS org.citrusframework:citrus-yaml
 //DEPS org.citrusframework:citrus-http
 //DEPS org.citrusframework:citrus-validation-json
 //DEPS org.citrusframework:citrus-validation-xml
