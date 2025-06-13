@@ -1,0 +1,75 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:bookservice="http://www.citrusframework.org/citrus-test-schema/bookservice-api"
+    xmlns:bookstore="http://www.citrusframework.org/bookstore/datatypes"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/bookservice-api
+    http://www.citrusframework.org/citrus-test-schema/bookservice-api/bookservice-api.xsd
+    http://www.citrusframework.org/bookstore/datatypes
+    http://www.citrusframework.org/bookstore/datatypes/BookDatatypes.xsd"
+>
+    <testcase name="withSoapTest">
+        <actions>
+            <create-variables>
+                <variable name="petId" value="1234"/>
+            </create-variables>
+
+            <bookservice:send-add-book fork="true">
+                <message>
+                    <payload>
+                        <bookstore:Book>
+                            <bookstore:Author>J.R. Tolkien</bookstore:Author>
+                            <bookstore:ID>0815</bookstore:ID>
+                            <bookstore:Title>Lord of the Rings</bookstore:Title>
+                        </bookstore:Book>
+                    </payload>
+                </message>
+            </bookservice:send-add-book>
+
+            <receive endpoint="soapServer">
+                <message>
+                    <payload>
+                            <bookstore:Book>
+                                <bookstore:Author>J.R. Tolkien</bookstore:Author>
+                                <bookstore:ID>0815</bookstore:ID>
+                                <bookstore:Title>Lord of the Rings</bookstore:Title>
+                            </bookstore:Book>
+                    </payload>
+                </message>
+            </receive>
+
+            <send endpoint="soapServer">
+                <message>
+                    <payload>
+                        <bookstore:AddBookResponse>
+                            <bookstore:Book>
+                                <bookstore:Author>J.R. Tolkien</bookstore:Author>
+                                <bookstore:ID>0815</bookstore:ID>
+                                <bookstore:Title>Lord of the Rings</bookstore:Title>
+                            </bookstore:Book>
+                        </bookstore:AddBookResponse>
+                    </payload>
+                </message>
+            </send>
+
+            <bookservice:receive-add-book>
+                <message>
+                    <payload>
+                        <bookstore:AddBookResponse>
+                            <bookstore:Book>
+                                <bookstore:Author>J.R. Tolkien</bookstore:Author>
+                                <bookstore:ID>0815</bookstore:ID>
+                                <bookstore:Title>Lord of the Rings</bookstore:Title>
+                            </bookstore:Book>
+                        </bookstore:AddBookResponse>
+                    </payload>
+                </message>
+            </bookservice:receive-add-book>
+        </actions>
+    </testcase>
+</spring:beans>

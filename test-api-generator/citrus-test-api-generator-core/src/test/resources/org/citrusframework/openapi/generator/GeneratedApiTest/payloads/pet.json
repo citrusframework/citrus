@@ -1,0 +1,16 @@
+{
+  "id": ${petId},
+  "name": "citrus:randomEnumValue('hasso','cutie','fluffy')",
+  "category": {
+    "id": ${petId},
+    "name": "citrus:randomEnumValue('dog', 'cat', 'fish')"
+  },
+  "photoUrls": [ "http://localhost:8080/photos/${petId}" ],
+  "tags": [
+    {
+      "id": ${petId},
+      "name": "generated"
+    }
+  ],
+  "status": "citrus:randomEnumValue('available', 'pending', 'sold')"
+}
