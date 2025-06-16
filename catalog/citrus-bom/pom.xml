@@ -245,7 +245,7 @@
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
-        <artifactId>citrus-test-api-generator-core</artifactId>
+        <artifactId>citrus-openapi-codegen</artifactId>
         <version>4.7.0-SNAPSHOT</version>
       </dependency>
       <dependency>

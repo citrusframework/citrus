@@ -35,8 +35,8 @@ import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.spi.BindToRegistry;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.xml.XmlTestLoader;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
@@ -132,7 +132,7 @@ public class OpenApiServerTest extends AbstractXmlActionTest {
         assertListContains(receiveMessageAction.getValidationContexts(),
             OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
         assertListContains(receiveMessageAction.getValidationContexts(),
-            JsonMessageValidationContext.class::isInstance, "List must contain JsonMessageValidationContext");
+            DefaultMessageValidationContext.class::isInstance, "List must contain DefaultMessageValidationContext");
 
         assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
 
@@ -169,7 +169,7 @@ public class OpenApiServerTest extends AbstractXmlActionTest {
         assertListContains(receiveMessageAction.getValidationContexts(),
             OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
         assertListContains(receiveMessageAction.getValidationContexts(),
-            JsonMessageValidationContext.class::isInstance, "List must contain JsonMessageValidationContext");
+            DefaultMessageValidationContext.class::isInstance, "List must contain DefaultMessageValidationContext");
         assertEquals(receiveMessageAction.getReceiveTimeout(), 2000L);
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());

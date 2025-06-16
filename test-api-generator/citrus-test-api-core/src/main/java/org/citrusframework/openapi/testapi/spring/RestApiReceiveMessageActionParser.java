@@ -44,6 +44,7 @@ import org.w3c.dom.Element;
 
 import static java.lang.Integer.parseInt;
 import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
+import static org.citrusframework.util.StringUtils.hasText;
 import static org.springframework.beans.factory.support.BeanDefinitionBuilder.genericBeanDefinition;
 
 /**
@@ -157,25 +158,38 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
     }
 
     @Override
-    protected List<ValidationContext> parseValidationContexts(Element messageElement,
+    protected List<ValidationContext.Builder<?, ?>> parseValidationContexts(Element messageElement,
                                                               BeanDefinitionBuilder builder) {
-        List<ValidationContext> validationContexts = super.parseValidationContexts(messageElement, builder);
-        OpenApiMessageValidationContext openApiMessageValidationContext = getOpenApiMessageValidationContext(messageElement);
-        validationContexts.add(openApiMessageValidationContext);
-        return validationContexts;
+        List<ValidationContext.Builder<?, ?>> validationContextBuilders = super.parseValidationContexts(messageElement, builder);
+        OpenApiMessageValidationContext.Builder openApiMessageValidationContextBuilder = getOpenApiMessageValidationContext(messageElement);
+        validationContextBuilders.add(openApiMessageValidationContextBuilder);
+        return validationContextBuilders;
     }
 
     /**
      * Constructs the OpenAPI message validation context based on the XML element.
      */
-    private OpenApiMessageValidationContext getOpenApiMessageValidationContext(Element messageElement) {
-        OpenApiMessageValidationContext.Builder context = openApi(openApiSpecification);
+    private OpenApiMessageValidationContext.Builder getOpenApiMessageValidationContext(Element messageElement) {
+        OpenApiMessageValidationContext.Builder validationContextBuilder = openApi(openApiSpecification);
 
         if (messageElement != null) {
-            addSchemaInformationToValidationContext(messageElement, context);
+            String schema = messageElement.getAttribute("schema");
+            if (hasText(schema)) {
+                validationContextBuilder.schema(schema);
+            }
+
+            String schemaRepository = messageElement.getAttribute("schema-repository");
+            if (hasText(schemaRepository)) {
+                validationContextBuilder.schema(schemaRepository);
+            }
+
+            String schemaValidation = messageElement.getAttribute("schema-validation");
+            if (hasText(schemaValidation)) {
+                validationContextBuilder.schemaValidation(Boolean.parseBoolean(schemaValidation));
+            }
         }
 
-        return context.build();
+        return validationContextBuilder;
     }
 
     /**

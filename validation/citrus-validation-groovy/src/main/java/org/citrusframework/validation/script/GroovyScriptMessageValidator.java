@@ -125,7 +125,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
 
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        // only support plaintext message type
-        return messageType.equalsIgnoreCase(MessageType.PLAINTEXT.toString());
+        // Validate any message but JSON and XML type, there are specific groovy validators for those.
+        return !messageType.equalsIgnoreCase(MessageType.JSON.toString()) && !messageType.equalsIgnoreCase(MessageType.XML.toString()) && !messageType.equalsIgnoreCase(MessageType.XHTML.toString());
     }
 }

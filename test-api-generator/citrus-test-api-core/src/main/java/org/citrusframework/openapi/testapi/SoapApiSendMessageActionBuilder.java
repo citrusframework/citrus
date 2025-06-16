@@ -19,11 +19,10 @@ package org.citrusframework.openapi.testapi;
 import java.util.List;
 
 import org.citrusframework.ws.actions.SendSoapMessageAction;
-import org.citrusframework.ws.actions.SendSoapMessageAction.Builder;
 
 import static java.lang.String.format;
 
-public class SoapApiSendMessageActionBuilder extends Builder {
+public class SoapApiSendMessageActionBuilder extends SendSoapMessageAction.Builder {
 
     private final GeneratedApi generatedApi;
 

@@ -20,6 +20,10 @@ import org.citrusframework.actions.ReceiveMessageAction.ReceiveMessageActionBuil
 import org.citrusframework.actions.SendMessageAction.SendMessageActionBuilder;
 
 /**
+ * Implementors of this interface can be used to customize requests or responses before they are being sent, respectively received.
+ * For example, you could use such a customizer to add {@code traceparent} headers for tracing to each request.
+ */
+/**
  * Implementors of this interface are used to customize the SendMessageActionBuilder with application specific information. E.g. cookies
  * or transactionIds.
  */

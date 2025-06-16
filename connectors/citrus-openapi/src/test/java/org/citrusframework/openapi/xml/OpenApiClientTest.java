@@ -47,9 +47,9 @@ import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.SocketUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.xml.actions.XmlTestActionBuilder;
 import org.mockito.Mockito;
@@ -194,7 +194,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         assertListContains(receiveMessageAction.getValidationContexts(),
             OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
         assertListContains(receiveMessageAction.getValidationContexts(),
-            JsonMessageValidationContext.class::isInstance, "List must contain JsonMessageValidationContext");
+            DefaultMessageValidationContext.class::isInstance, "List must contain DefaultMessageValidationContext");
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
@@ -233,7 +233,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         assertListContains(receiveMessageAction.getValidationContexts(),
             OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
         assertListContains(receiveMessageAction.getValidationContexts(),
-            JsonMessageValidationContext.class::isInstance, "List must contain JsonMessageValidationContext");
+            DefaultMessageValidationContext.class::isInstance, "List must contain DefaultMessageValidationContext");
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);

@@ -16,7 +16,6 @@
 
 package org.citrusframework.openapi.actions;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -24,9 +23,6 @@ import java.util.regex.Pattern;
 
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasResponse;
-import io.apicurio.datamodels.openapi.models.OasSchema;
-import jakarta.annotation.Nullable;
-import org.citrusframework.CitrusSettings;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -42,11 +38,9 @@ import org.citrusframework.openapi.validation.OpenApiOperationToMessageHeadersPr
 import org.citrusframework.openapi.validation.OpenApiValidationContext;
 import org.springframework.http.HttpStatus;
 
-import static org.citrusframework.message.MessageType.JSON;
 import static org.citrusframework.openapi.OpenApiMessageType.RESPONSE;
-import static org.citrusframework.openapi.model.OasModelHelper.resolveSchema;
+import static org.citrusframework.openapi.util.OpenApiUtils.fillMessageTypeFromResponse;
 import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * @since 4.1
@@ -85,40 +79,6 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
     @Override
     public OpenApiSpecificationSource getOpenApiSpecificationSource() {
         return openApiSpecificationSource;
-    }
-
-    public static void fillMessageTypeFromResponse(OpenApiSpecification openApiSpecification,
-                                                   HttpMessage httpMessage,
-                                                   @Nullable OasOperation operation,
-                                                   @Nullable OasResponse response) {
-        if (operation == null || response == null) {
-            return;
-        }
-
-        Optional<OasSchema> responseSchema = OasModelHelper.getSchema(response);
-        responseSchema.ifPresent(oasSchema -> {
-                    OasSchema resolvedSchema = resolveSchema(openApiSpecification.getOpenApiDoc(null), oasSchema);
-                    if (OasModelHelper.isObjectType(resolvedSchema) || OasModelHelper.isObjectArrayType(resolvedSchema)) {
-                        Collection<String> responseTypes = OasModelHelper.getResponseTypes(operation,response);
-                        if (responseTypes.contains(APPLICATION_JSON_VALUE)) {
-                            httpMessage.setType(JSON);
-                        }
-                    }
-                }
-        );
-    }
-
-    /**
-     * Overridden to change the default message type to JSON, as Json is more common in OpenAPI context.
-     */
-    @Override
-    protected HttpMessageBuilderSupport createHttpMessageBuilderSupport() {
-        HttpMessageBuilderSupport support = super.createHttpMessageBuilderSupport();
-        support.type(CitrusSettings.getPropertyEnvOrDefault(
-                CitrusSettings.DEFAULT_MESSAGE_TYPE_PROPERTY,
-                CitrusSettings.DEFAULT_MESSAGE_TYPE_ENV,
-                JSON.toString()));
-        return support;
     }
 
     @Override

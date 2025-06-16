@@ -16,17 +16,27 @@
 
 package org.citrusframework.openapi.util;
 
+import java.util.Collection;
+import java.util.Optional;
+
 import io.apicurio.datamodels.openapi.models.OasOperation;
+import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.openapi.OpenApiConstants;
 import org.citrusframework.openapi.OpenApiRepository;
+import org.citrusframework.openapi.OpenApiSpecification;
+import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.spi.ReferenceResolver;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
+import static org.citrusframework.message.MessageType.JSON;
+import static org.citrusframework.openapi.model.OasModelHelper.resolveSchema;
 import static org.citrusframework.util.StringUtils.hasText;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public final class OpenApiUtils {
 
@@ -85,6 +95,28 @@ public final class OpenApiUtils {
                 .flatMap(openApiRepository -> openApiRepository.getOpenApiSpecifications().stream())
                 .flatMap(spec -> spec.getAliases().stream())
                 .collect(joining(", "));
+    }
+
+    public static void fillMessageTypeFromResponse(OpenApiSpecification openApiSpecification,
+        HttpMessage httpMessage,
+        @Nullable OasOperation operation,
+        @Nullable OasResponse response) {
+        if (operation == null || response == null) {
+            return;
+        }
+
+        Optional<OasSchema> responseSchema = OasModelHelper.getSchema(response);
+        responseSchema.ifPresent(oasSchema -> {
+                OasSchema resolvedSchema = resolveSchema(openApiSpecification.getOpenApiDoc(null), oasSchema);
+                if (OasModelHelper.isObjectType(resolvedSchema) || OasModelHelper.isObjectArrayType(resolvedSchema)) {
+                    Collection<String> responseTypes = OasModelHelper.getResponseTypes(operation,response);
+
+                    if (responseTypes.contains(APPLICATION_JSON_VALUE)) {
+                        httpMessage.setType(JSON);
+                    }
+                }
+            }
+        );
     }
 
 }

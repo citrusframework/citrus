@@ -36,8 +36,8 @@ import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.spi.BindToRegistry;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
 import org.testng.Assert;
@@ -56,6 +56,7 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
 
     @BindToRegistry
     final TestActor testActor = Mockito.mock(TestActor.class);
+
     private final MessageQueue inboundQueue = new DefaultMessageQueue("inboundQueue");
     private final EndpointAdapter endpointAdapter = new DirectEndpointAdapter(direct()
         .synchronous()
@@ -132,7 +133,7 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         assertListContains(receiveMessageAction.getValidationContexts(),
             OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
         assertListContains(receiveMessageAction.getValidationContexts(),
-            JsonMessageValidationContext.class::isInstance, "List must contain JsonMessageValidationContext");
+            DefaultMessageValidationContext.class::isInstance, "List must contain DefaultMessageValidationContext");
         assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
 
         assertTrue(receiveMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
@@ -168,7 +169,7 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         assertListContains(receiveMessageAction.getValidationContexts(),
             OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
         assertListContains(receiveMessageAction.getValidationContexts(),
-            JsonMessageValidationContext.class::isInstance, "List must contain JsonMessageValidationContext");
+            DefaultMessageValidationContext.class::isInstance, "List must contain DefaultMessageValidationContext");
         assertEquals(receiveMessageAction.getReceiveTimeout(), 2000L);
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
