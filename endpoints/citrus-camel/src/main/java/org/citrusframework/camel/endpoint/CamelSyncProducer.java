@@ -16,6 +16,7 @@
 
 package org.citrusframework.camel.endpoint;
 
+import org.citrusframework.camel.util.CamelUtils;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ReplyMessageTimeoutException;
@@ -60,14 +61,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
     @Override
     public void send(final Message message, final TestContext context) {
-        String endpointUri;
-        if (endpointConfiguration.getEndpointUri() != null) {
-            endpointUri = context.replaceDynamicContentInString(endpointConfiguration.getEndpointUri());
-        } else if (endpointConfiguration.getEndpoint() != null){
-            endpointUri = endpointConfiguration.getEndpoint().getEndpointUri();
-        } else {
-            throw new CitrusRuntimeException("Missing endpoint or endpointUri on Camel producer");
-        }
+        String endpointUri = CamelUtils.resolveEndpointUri(context, endpointConfiguration);
 
         if (logger.isDebugEnabled()) {
             logger.debug("Sending message to camel endpoint: '" + endpointUri + "'");

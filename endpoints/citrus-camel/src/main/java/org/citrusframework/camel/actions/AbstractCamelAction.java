@@ -17,12 +17,11 @@
 package org.citrusframework.camel.actions;
 
 import org.apache.camel.CamelContext;
-import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.CamelTestActor;
 import org.citrusframework.camel.context.CamelReferenceResolver;
+import org.citrusframework.camel.util.CamelUtils;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
@@ -84,21 +83,9 @@ public abstract class AbstractCamelAction extends AbstractTestAction implements 
         @Override
         public final T build() {
             if (camelContext == null) {
-                ObjectHelper.assertNotNull(referenceResolver, "Insufficient Camel action configuration - either set Camel context or proper reference resolver!");
-
-                if (referenceResolver.isResolvable(CamelSettings.getContextName())) {
-                    camelContext = referenceResolver.resolve(CamelSettings.getContextName(), CamelContext.class);
-                } else if (referenceResolver.isResolvable(CamelContext.class)) {
-                    camelContext = referenceResolver.resolve(CamelContext.class);
-                } else {
-                    camelContext = new DefaultCamelContext();
-                    try {
-                        camelContext.start();
-                    } catch (Exception e) {
-                        throw new IllegalStateException("Failed to start Camel context '%s'".formatted(CamelSettings.getContextName()), e);
-                    }
-                    referenceResolver.bind(CamelSettings.getContextName(), camelContext);
-                }
+                ObjectHelper.assertNotNull(referenceResolver, "Insufficient Camel action configuration - " +
+                        "either set Camel context or proper reference resolver!");
+                camelContext = CamelUtils.resolveCamelContext(referenceResolver, null);
             }
 
             if (referenceResolver == null) {

@@ -21,6 +21,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.camel.CamelSettings;
+import org.citrusframework.camel.util.CamelUtils;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
@@ -57,14 +58,7 @@ public class CamelProducer implements Producer {
 
     @Override
     public void send(final Message message, final TestContext context) {
-        String endpointUri;
-        if (endpointConfiguration.getEndpointUri() != null) {
-            endpointUri = context.replaceDynamicContentInString(endpointConfiguration.getEndpointUri());
-        } else if (endpointConfiguration.getEndpoint() != null) {
-            endpointUri = endpointConfiguration.getEndpoint().getEndpointUri();
-        } else {
-            throw new CitrusRuntimeException("Missing endpoint or endpointUri on Camel producer");
-        }
+        String endpointUri = CamelUtils.resolveEndpointUri(context, endpointConfiguration);
 
         if (logger.isDebugEnabled()) {
             logger.debug("Sending message to camel endpoint: '" + endpointUri + "'");

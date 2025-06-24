@@ -113,12 +113,12 @@ public class DefaultEndpointFactory implements EndpointFactory {
         String componentName = tok.nextToken();
         Optional<EndpointComponent> component = Optional.ofNullable(getEndpointComponents(context.getReferenceResolver()).get(componentName));
 
-        if (!component.isPresent()) {
+        if (component.isEmpty()) {
             // try to get component from default Citrus modules
             component = EndpointComponent.lookup(componentName);
         }
 
-        if (!component.isPresent()) {
+        if (component.isEmpty()) {
             throw new CitrusRuntimeException(String.format("Unable to create endpoint component with name '%s'", componentName));
         }
 
