@@ -19,6 +19,7 @@ package org.citrusframework.camel.context;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.camel.NoSuchBeanException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.SimpleReferenceResolver;
@@ -59,24 +60,31 @@ public class CamelReferenceResolver implements ReferenceResolver {
 
     @Override
     public <T> T resolve(String name, Class<T> type) {
-        T component = camelContext.getRegistry().lookupByNameAndType(name, type);
-
-        if (component != null) {
-            return component;
+        try {
+            T component = camelContext.getRegistry().lookupByNameAndType(name, type);
+            if (component != null) {
+                return component;
+            }
+        } catch (NoSuchBeanException e) {
+            // do nothing
         }
 
         if (fallback.isResolvable(name)) {
             return fallback.resolve(name, type);
         }
+
         throw new CitrusRuntimeException(String.format("Unable to find bean reference for name '%s'", name));
     }
 
     @Override
     public Object resolve(String name) {
-        Object component = camelContext.getRegistry().lookupByName(name);
-
-        if (component != null) {
-            return component;
+        try {
+            Object component = camelContext.getRegistry().lookupByName(name);
+            if (component != null) {
+                return component;
+            }
+        } catch (NoSuchBeanException e) {
+            // do nothing
         }
 
         if (fallback.isResolvable(name)) {
@@ -93,17 +101,29 @@ public class CamelReferenceResolver implements ReferenceResolver {
 
     @Override
     public boolean isResolvable(String name) {
-        return camelContext.getRegistry().lookupByName(name) != null || fallback.isResolvable(name);
+        try {
+            return camelContext.getRegistry().lookupByName(name) != null || fallback.isResolvable(name);
+        } catch (NoSuchBeanException e) {
+            return fallback.isResolvable(name);
+        }
     }
 
     @Override
     public boolean isResolvable(Class<?> type) {
-        return !camelContext.getRegistry().findByType(type).isEmpty() || fallback.isResolvable(type);
+        try {
+            return !camelContext.getRegistry().findByType(type).isEmpty() || fallback.isResolvable(type);
+        } catch (NoSuchBeanException e) {
+            return fallback.isResolvable(type);
+        }
     }
 
     @Override
     public boolean isResolvable(String name, Class<?> type) {
-        return camelContext.getRegistry().lookupByNameAndType(name, type) != null || fallback.isResolvable(name, type);
+        try {
+            return camelContext.getRegistry().lookupByNameAndType(name, type) != null || fallback.isResolvable(name, type);
+        } catch (NoSuchBeanException e) {
+            return fallback.isResolvable(name, type);
+        }
     }
 
     /**
