@@ -45,10 +45,10 @@ public class DirectEndpointComponent extends AbstractEndpointComponent {
         if (resourcePath.startsWith("sync:")) {
             DirectSyncEndpointConfiguration endpointConfiguration = new DirectSyncEndpointConfiguration();
             endpoint = new DirectSyncEndpoint(endpointConfiguration);
-            queueName = resourcePath.substring("sync:".length());
+            queueName = parameters.getOrDefault("queueName", resourcePath.substring("sync:".length()));
         } else {
             endpoint = new DirectEndpoint();
-            queueName = resourcePath;
+            queueName = parameters.getOrDefault("queueName", resourcePath);
         }
 
         endpoint.getEndpointConfiguration().setQueueName(queueName);

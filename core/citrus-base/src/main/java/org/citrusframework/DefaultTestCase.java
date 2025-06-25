@@ -65,6 +65,11 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     private Map<String, Object> variableDefinitions = new LinkedHashMap<>();
 
     /**
+     * Adhoc endpoint definitions that create endpoints as part of the test.
+     */
+    private final List<String> endpointDefinitions = new ArrayList<>();
+
+    /**
      * Meta-Info
      */
     private TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
@@ -142,7 +147,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     @Override
     public void start(final TestContext context) {
         context.getTestListeners().onTestStart(this);
-        
+
         try {
             logger.debug("Initializing test case");
 
@@ -150,6 +155,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             initializeTestParameters(parameters, context);
             initializeTestVariables(variableDefinitions, context);
             debugVariables("Test", context);
+            initializeEndpoints(endpointDefinitions, context);
 
             beforeTest(context);
         } catch (final Exception | Error e) {
@@ -423,6 +429,17 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     }
 
     /**
+     * Initialize endpoints with given uris in the test context.
+     */
+    private void initializeEndpoints(List<String> endpointUris, TestContext context) {
+        /* use given endpoint uris to create endpoints adhoc with the current test context */
+        for (final String endpointUri : endpointUris) {
+            logger.debug("Initializing endpoint '{}'", endpointUri);
+            context.getEndpointFactory().create(endpointUri, context);
+        }
+    }
+
+    /**
      * Setter for variables.
      */
     public void setVariableDefinitions(final Map<String, Object> variableDefinitions) {
@@ -432,6 +449,11 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     @Override
     public Map<String, Object> getVariableDefinitions() {
         return variableDefinitions;
+    }
+
+    @Override
+    public List<String> getEndpointDefinitions() {
+        return endpointDefinitions;
     }
 
     /**

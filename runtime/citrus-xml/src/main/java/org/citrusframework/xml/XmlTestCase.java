@@ -21,6 +21,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -85,6 +87,21 @@ public class XmlTestCase {
                 }
             } else {
                 delegate.getVariableDefinitions().put(variable.name, variable.value);
+            }
+        });
+    }
+
+    @XmlElement
+    public void setEndpoints(Endpoints endpoints) {
+        endpoints.getEndpoints().forEach(endpoint -> {
+            if (endpoint.getProperties().isEmpty()) {
+                delegate.getEndpointDefinitions().add(endpoint.getType());
+            } else {
+                delegate.getEndpointDefinitions().add("%s?%s".formatted(endpoint.getType(),
+                        endpoint.getProperties()
+                                .stream()
+                                .map(prop -> "%s=%s".formatted(prop.getName(), prop.getValue()))
+                                .collect(Collectors.joining("&"))));
             }
         });
     }
@@ -177,6 +194,91 @@ public class XmlTestCase {
 
                 public void setData(String value) {
                     this.data = value;
+                }
+            }
+        }
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+            "endpoints"
+    })
+    public static class Endpoints {
+
+        @XmlElement(name = "endpoint", required = true)
+        protected List<Endpoint> endpoints;
+
+        public List<Endpoint> getEndpoints() {
+            if (endpoints == null) {
+                endpoints = new ArrayList<>();
+            }
+            return this.endpoints;
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+                "properties"
+        })
+        public static class Endpoint {
+
+            @XmlAttribute(name = "type", required = true)
+            protected String type;
+            @XmlAttribute
+            protected String name;
+            @XmlElement
+            protected List<Property> properties;
+
+            public String getType() {
+                return type;
+            }
+
+            public void setType(String type) {
+                this.type = type;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String value) {
+                this.name = value;
+            }
+
+            public List<Property> getProperties() {
+                if (properties == null) {
+                    properties = new ArrayList<>();
+                }
+                return properties;
+            }
+
+            public void setProperties(List<Property> properties) {
+                this.properties = properties;
+            }
+
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = "", propOrder = {
+            })
+            public static class Property {
+
+                @XmlAttribute
+                protected String name;
+                @XmlAttribute
+                protected String value;
+
+                public String getName() {
+                    return name;
+                }
+
+                public void setName(String name) {
+                    this.name = name;
+                }
+
+                public String getValue() {
+                    return value;
+                }
+
+                public void setValue(String value) {
+                    this.value = value;
                 }
             }
         }

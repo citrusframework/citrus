@@ -16,13 +16,13 @@
 
 package org.citrusframework;
 
+import java.util.List;
+import java.util.Map;
+
 import org.citrusframework.common.Described;
 import org.citrusframework.common.Named;
 import org.citrusframework.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Test case executing a list of {@link TestAction} in sequence.
@@ -119,6 +119,11 @@ public interface TestCase extends TestActionContainer, Named, Described {
      * Gets the variables for this test case.
      */
     Map<String, Object> getVariableDefinitions();
+
+    /**
+     * Gets the adhoc endpoints for this test case.
+     */
+    List<String> getEndpointDefinitions();
 
     /**
      * Adds action to finally action chain.

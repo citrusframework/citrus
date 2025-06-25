@@ -100,6 +100,10 @@ public class TestActions implements Supplier<TestActionBuilder<?>> {
         this.builder = builder;
     }
 
+    public void setCreateEndpoint(CreateEndpoint builder) {
+        this.builder = builder;
+    }
+
     public void setSend(Send builder) {
         this.builder = builder;
     }

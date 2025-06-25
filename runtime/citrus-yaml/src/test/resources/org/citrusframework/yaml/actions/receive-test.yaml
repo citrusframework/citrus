@@ -1,7 +1,18 @@
 name: ReceiveTest
 author: Christoph
 status: FINAL
+endpoints:
+  - type: "direct"
+    name: "greetings"
+    properties:
+      queueName: "greetings"
 actions:
+  - receive:
+      endpoint: greetings
+      timeout: 10000
+      message:
+        body:
+          data: Hello from Citrus!
   - receive:
       endpoint: helloEndpoint
       timeout: 10000

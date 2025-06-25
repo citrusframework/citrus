@@ -317,7 +317,9 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                 .setHeader("operation","foo"));
         when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
+        when(referenceResolver.isResolvable("replyMessageEndpoint", Endpoint.class)).thenReturn(true);
         when(referenceResolver.resolve("replyMessageEndpoint", Endpoint.class)).thenReturn(server);
+        when(referenceResolver.isResolvable("fooMessageEndpoint", Endpoint.class)).thenReturn(true);
         when(referenceResolver.resolve("fooMessageEndpoint", Endpoint.class)).thenReturn(server);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());

@@ -19,7 +19,6 @@ package org.citrusframework.endpoint;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.Optional;
-import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.citrusframework.annotations.CitrusEndpoint;
@@ -102,15 +101,29 @@ public class DefaultEndpointFactory implements EndpointFactory {
     public Endpoint create(String uri, TestContext context) {
         String endpointUri = context.replaceDynamicContentInString(uri);
         if (!endpointUri.contains(":")) {
-            return context.getReferenceResolver().resolve(endpointUri, Endpoint.class);
+            if (context.getReferenceResolver().isResolvable(endpointUri, Endpoint.class)) {
+                return context.getReferenceResolver().resolve(endpointUri, Endpoint.class);
+            } else {
+                synchronized (endpointCache) {
+                    if (endpointCache.containsKey(endpointUri)) {
+                        if (logger.isDebugEnabled()) {
+                            logger.debug("Found cached endpoint for uri '{}'", endpointUri);
+                        }
+                        return endpointCache.get(endpointUri);
+                    }
+                }
+            }
         }
 
-        StringTokenizer tok = new StringTokenizer(endpointUri, ":");
-        if (tok.countTokens() < 2) {
+        final String componentName;
+        if (endpointUri.contains(":") && !endpointUri.endsWith(":")) {
+            componentName = endpointUri.substring(0, endpointUri.indexOf(":"));
+        } else if (endpointUri.contains("?")) {
+            componentName = endpointUri.substring(0, endpointUri.indexOf("?"));
+        } else {
             throw new CitrusRuntimeException(String.format("Invalid endpoint uri '%s'", endpointUri));
         }
 
-        String componentName = tok.nextToken();
         Optional<EndpointComponent> component = Optional.ofNullable(getEndpointComponents(context.getReferenceResolver()).get(componentName));
 
         if (component.isEmpty()) {

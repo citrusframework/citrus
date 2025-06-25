@@ -59,6 +59,7 @@ public class TestActions {
             @XmlElementRef(name = "delay", type = Delay.class, required = false),
             @XmlElementRef(name = "receive", type = Receive.class, required = false),
             @XmlElementRef(name = "create-variables", type = CreateVariables.class, required = false),
+            @XmlElementRef(name = "create-endpoint", type = CreateEndpoint.class, required = false),
             @XmlElementRef(name = "load", type = LoadProperties.class, required = false),
             @XmlElementRef(name = "expect-timeout", type = ExpectTimeout.class, required = false),
             @XmlElementRef(name = "fail", type = Fail.class, required = false),
