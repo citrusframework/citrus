@@ -36,6 +36,20 @@ public class DirectEndpointComponentTest {
     }
 
     @Test
+    public void testCreateDirectEndpointWithQueueName() {
+        DirectEndpointComponent component = new DirectEndpointComponent();
+
+        Assert.assertFalse(context.getReferenceResolver().isResolvable("queueName"));
+        Endpoint endpoint = component.createEndpoint("direct?queueName=queueName", context);
+
+        Assert.assertEquals(endpoint.getClass(), DirectEndpoint.class);
+
+        Assert.assertEquals(((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName(), "queueName");
+        Assert.assertEquals(((DirectEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assert.assertTrue(context.getReferenceResolver().isResolvable("queueName"));
+    }
+
+    @Test
     public void testCreateDirectEndpoint() {
         DirectEndpointComponent component = new DirectEndpointComponent();
 

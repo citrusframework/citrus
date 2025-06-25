@@ -43,6 +43,11 @@
     <xs:attribute name="value" type="xs:string"/>
   </xs:complexType>
 
+  <xs:complexType name="PropertyType">
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="value" type="xs:string" use="required"/>
+  </xs:complexType>
+
   <xs:simpleType name="StatusType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="DRAFT"/>
@@ -166,6 +171,7 @@
         <xs:element ref="tns:delay"/>
         <xs:element ref="tns:receive"/>
         <xs:element ref="tns:create-variables"/>
+        <xs:element ref="tns:create-endpoint"/>
         <xs:element ref="tns:load"/>
         <xs:element ref="tns:expect-timeout"/>
         <xs:element ref="tns:fail"/>
@@ -370,6 +376,22 @@
       <xs:element name="description" type="xs:string" minOccurs="0"/>
       <xs:element name="variable" type="tns:VariableType" maxOccurs="unbounded"/>
     </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CreateEndpoint">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="properties" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="property" type="tns:PropertyType" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="uri" type="xs:string"/>
+    <xs:attribute name="type" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="StopTimer">
@@ -692,6 +714,7 @@
   <xs:element name="catch" type="tns:Catch"/>
   <xs:element name="conditional" type="tns:Conditional"/>
   <xs:element name="create-variables" type="tns:CreateVariables"/>
+  <xs:element name="create-endpoint" type="tns:CreateEndpoint"/>
   <xs:element name="delay" type="tns:Delay"/>
   <xs:element name="echo" type="tns:Echo"/>
   <xs:element name="expect-timeout" type="tns:ExpectTimeout"/>

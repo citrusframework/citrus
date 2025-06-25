@@ -74,6 +74,7 @@ public class ReceiveTest extends AbstractYamlActionTest {
     public void shouldLoadReceive() throws IOException {
         YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/receive-test.yaml");
 
+        MessageQueue greetings = new DefaultMessageQueue("greetings");
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");
         context.getMessageValidatorRegistry().addMessageValidator("textEqualsMessageValidator", new DefaultTextEqualsMessageValidator().enableTrim().normalizeLineEndings());
         context.getMessageValidatorRegistry().addMessageValidator("scriptMessageValidator", new DefaultMessageValidator() {
@@ -107,6 +108,7 @@ public class ReceiveTest extends AbstractYamlActionTest {
             }
         });
 
+        context.getReferenceResolver().bind("greetings", greetings);
         context.getReferenceResolver().bind("helloQueue", helloQueue);
         context.getReferenceResolver().bind("helloEndpoint", direct().asynchronous().queue(helloQueue).build());
 
@@ -126,6 +128,7 @@ public class ReceiveTest extends AbstractYamlActionTest {
             return null;
         }).when(defaultMessageValidator).validateMessage(any(org.citrusframework.message.Message.class), any(Message.class), eq(context), anyList());
 
+        greetings.send(new DefaultMessage("Hello from Citrus!"));
         helloQueue.send(new DefaultMessage("Hello from Citrus!").setHeader("operation", "sayHello"));
         helloQueue.send(new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>").setHeader("operation", "sayHello"));
         helloQueue.send(new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
@@ -156,11 +159,16 @@ public class ReceiveTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getName(), "ReceiveTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 17L);
+        Assert.assertEquals(result.getActionCount(), 18L);
 
         int actionIndex = 0;
 
         ReceiveMessageAction action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
+        Assert.assertEquals(action.getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(action.getReceiveTimeout(), 10000L);
+        Assert.assertEquals(action.getMessageBuilder().build(context, MessageType.PLAINTEXT.name()).getPayload(String.class), "Hello from Citrus!");
+
+        action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
         Assert.assertEquals(action.getClass(), ReceiveMessageAction.class);
         Assert.assertEquals(action.getReceiveTimeout(), 10000L);
         Assert.assertEquals(action.getMessageBuilder().build(context, MessageType.PLAINTEXT.name()).getPayload(String.class), "Hello from Citrus!");

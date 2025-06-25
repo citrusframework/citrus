@@ -34,11 +34,12 @@ import static org.mockito.Mockito.when;
 
 public class DefaultEndpointFactoryTest {
 
-    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
+    private final ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
     @Test
     public void testResolveDirectEndpoint() {
         reset(referenceResolver);
+        when(referenceResolver.isResolvable("myEndpoint", Endpoint.class)).thenReturn(true);
         when(referenceResolver.resolve("myEndpoint", Endpoint.class)).thenReturn(Mockito.mock(Endpoint.class));
         TestContext context = new TestContext();
         context.setReferenceResolver(referenceResolver);

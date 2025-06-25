@@ -108,6 +108,7 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
         when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
+        when(referenceResolver.isResolvable("soapServer", Endpoint.class)).thenReturn(true);
         when(referenceResolver.resolve("soapServer", Endpoint.class)).thenReturn(soapServer);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());

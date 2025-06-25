@@ -56,7 +56,9 @@ public class SendTest extends AbstractYamlActionTest {
     public void shouldLoadSend() throws IOException {
         YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/send-test.yaml");
 
+        MessageQueue greetings = new DefaultMessageQueue("greetings");
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");
+        context.getReferenceResolver().bind("greetings", greetings);
         context.getReferenceResolver().bind("helloQueue", helloQueue);
         context.getReferenceResolver().bind("helloEndpoint", direct().asynchronous().queue(helloQueue).build());
 
@@ -69,7 +71,7 @@ public class SendTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getName(), "SendTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 9L);
+        Assert.assertEquals(result.getActionCount(), 10L);
         Assert.assertEquals(result.getTestAction(0).getClass(), SendMessageAction.class);
 
         int actionIndex = 0;
@@ -79,9 +81,19 @@ public class SendTest extends AbstractYamlActionTest {
         DefaultMessageBuilder messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.build(context, MessageType.PLAINTEXT.name()).getPayload(String.class), "Hello from Citrus!");
 
-        Message controlMessage = new DefaultMessage("Hello from Citrus!")
+        Message controlMessage = new DefaultMessage("Hello from Citrus!");
+        Message receivedMessage = greetings.receive();
+        headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
+        validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
+
+        action = (SendMessageAction) result.getTestAction(actionIndex++);
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.build(context, MessageType.PLAINTEXT.name()).getPayload(String.class), "Hello from Citrus!");
+
+        controlMessage = new DefaultMessage("Hello from Citrus!")
                                         .setHeader("operation", "sayHello");
-        Message receivedMessage = helloQueue.receive();
+        receivedMessage = helloQueue.receive();
         headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext.Builder().build());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 

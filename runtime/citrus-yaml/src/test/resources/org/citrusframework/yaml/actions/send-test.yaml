@@ -1,7 +1,17 @@
 name: SendTest
 author: Christoph
 status: FINAL
+endpoints:
+  - type: "direct"
+    name: "greetings"
+    properties:
+      queueName: "greetings"
 actions:
+  - send:
+      endpoint: greetings
+      message:
+        body:
+          data: Hello from Citrus!
   - send:
       endpoint: helloEndpoint
       message:

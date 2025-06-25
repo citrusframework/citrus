@@ -1,0 +1,13 @@
+name: CreateEndpointTest
+author: Christoph
+status: FINAL
+description: "Sample test in YAML"
+actions:
+  - createEndpoint:
+      name: "sayHello"
+      uri: "direct:hello"
+  - createEndpoint:
+      type: "direct"
+      properties:
+        queueName: "hello"
+        timeout: 2000

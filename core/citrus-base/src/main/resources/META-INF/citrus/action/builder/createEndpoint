@@ -1,0 +1,2 @@
+name=createEndpoint
+type=org.citrusframework.actions.CreateEndpointAction$Builder

@@ -1,0 +1,228 @@
+[[actions-create-endpoint]]
+== Create endpoints
+
+Endpoints represent the connectivity to other services in Citrus.
+An endpoint may create producers and consumers to send and receive messages as part of the test.
+
+Users are able to declare endpoints in the form of a project wide configuration in Citrus.
+Also, users are able to use dynamic endpoint definitions with a `send` or `receive` action where the endpoint is defined as a URI.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void useDynamicEndpoints() {
+    $(send()
+        .endpoint("kafka:bookings?server=${kafka.bootstrapServer}")
+        .message()
+        // ...
+    );
+
+    $(receive()
+        .endpoint("kafka:bookings?server=${kafka.bootstrapServer}")
+        .message()
+        // ...
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="UseDynamicEndpoints" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <send endpoint="kafka:bookings?server=${kafka.bootstrapServer}">
+            <message>
+              <!--
+              ...
+              -->
+            </message>
+        </send>
+        <receive endpoint="kafka:bookings?server=${kafka.bootstrapServer}">
+            <message>
+              <!--
+              ...
+              -->
+            </message>
+        </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: "UseDynamicEndpoints"
+actions:
+  - send:
+      endpoint: "kafka:bookings?server=${kafka.bootstrapServer}"
+      message:
+        # ...
+  - receive:
+      endpoint: "kafka:bookings?server=${kafka.bootstrapServer}"
+      message:
+        # ...
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="useDynamicEndpoints">
+        <actions>
+            <send endpoint="kafka:bookings?server=${kafka.bootstrapServer}">
+                <message>
+                  <!--
+                  ...
+                  -->
+                </message>
+            </send>
+            <receive endpoint="kafka:bookings?server=${kafka.bootstrapServer}">
+                <message>
+                  <!--
+                  ...
+                  -->
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+The dynamic endpoint receives its properties in the form of endpoint URI parameters: `kafka:bookings?server=${kafka.bootstrapServer}`
+
+The test needs to repeat the same configuration endpoint URI several times with multiple send/receive test actions.
+
+This can be improved by using the `createEndpoint()` test action that declares the endpoint once with a given name.
+Following test actions are able to reference the endpoint as usual by its give name.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void useDynamicEndpoints() {
+    $(createEndpoint()
+        .endpointName("bookings")
+        .uri("kafka:bookings?server=${kafka.bootstrapServer}")
+    );
+
+    $(send()
+        .endpoint("bookings")
+        .message()
+        // ...
+    );
+
+    $(receive()
+        .endpoint("bookings")
+        .message()
+        // ...
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="UseDynamicEndpoints" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <create-endpoint name="bookings"
+                         uri="kafka:bookings?server=${kafka.bootstrapServer}"/>
+
+        <send endpoint="bookings">
+            <message>
+              <!--
+              ...
+              -->
+            </message>
+        </send>
+        <receive endpoint="bookings">
+            <message>
+              <!--
+              ...
+              -->
+            </message>
+        </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: "UseDynamicEndpoints"
+actions:
+  - createEndpoint:
+      name: bookings
+      uri: "kafka:bookings?server=${kafka.bootstrapServer}"
+  - send:
+      endpoint: "bookings"
+      message:
+        # ...
+  - receive:
+      endpoint: "bookings"
+      message:
+        # ...
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+As an alternative syntax aou may also declare the properties with key-value pairs in the `createEndpoint()` action:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void useDynamicEndpoints() {
+    $(createEndpoint()
+        .endpointName("bookings")
+        .type("kafka")
+        .property("topic", "bookings")
+        .property("server", "${kafka.bootstrapServer}")
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="UseDynamicEndpoints" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <create-endpoint name="bookings" type="kafka">
+          <properties>
+            <property name="topic" value="bookings"/>
+            <property name="server" value="${kafka.bootstrapServer}"/>
+          </properties>
+        </create-endpoint>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: "UseDynamicEndpoints"
+actions:
+  - createEndpoint:
+      name: bookings
+      type: "kafka"
+      properties:
+        topic: bookings
+        server: "${kafka.bootstrapServer}"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----

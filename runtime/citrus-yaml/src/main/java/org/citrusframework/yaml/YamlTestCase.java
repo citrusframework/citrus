@@ -18,12 +18,16 @@ package org.citrusframework.yaml;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.variable.VariableUtils;
@@ -77,6 +81,20 @@ public class YamlTestCase {
         });
     }
 
+    public void setEndpoints(List<Endpoint> endpoints) {
+        endpoints.forEach(endpoint -> {
+            if (endpoint.getProperties().isEmpty()) {
+                delegate.getEndpointDefinitions().add(endpoint.getType());
+            } else {
+                delegate.getEndpointDefinitions().add("%s?%s".formatted(endpoint.getType(),
+                        endpoint.getProperties().entrySet()
+                                .stream()
+                                .map(entry -> "%s=%s".formatted(entry.getKey(), entry.getValue()))
+                                .collect(Collectors.joining("&"))));
+            }
+        });
+    }
+
     public void setActions(List<TestActions> actions) {
         actions.forEach(action -> delegate.addTestAction(action.get()));
     }
@@ -113,6 +131,38 @@ public class YamlTestCase {
 
         public void setValue(String value) {
             this.value = value;
+        }
+    }
+
+    public static class Endpoint {
+
+        protected String type;
+        protected String name;
+        protected final Map<String, String> properties = new HashMap<>();
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String value) {
+            this.name = value;
+            this.properties.put(EndpointComponent.ENDPOINT_NAME, value);
+        }
+
+        public Map<String, String> getProperties() {
+            return properties;
+        }
+
+        public void setProperties(Map<String, String> properties) {
+            this.properties.putAll(properties);
         }
     }
 }

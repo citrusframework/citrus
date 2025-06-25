@@ -963,6 +963,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         }
 
         @Override
+        public List<String> getEndpointDefinitions() {
+            return Collections.emptyList();
+        }
+
+        @Override
         public TestActionContainer setActions(List<TestAction> actions) {
             return this;
         }

@@ -91,6 +91,8 @@ public class TestActionBuilderLookupTest {
         Assert.assertEquals(TestActionBuilder.lookup("load").get().getClass(), LoadPropertiesAction.Builder.class);
         Assert.assertTrue(TestActionBuilder.lookup("createVariables").isPresent());
         Assert.assertEquals(TestActionBuilder.lookup("createVariables").get().getClass(), CreateVariablesAction.Builder.class);
+        Assert.assertTrue(TestActionBuilder.lookup("createEndpoint").isPresent());
+        Assert.assertEquals(TestActionBuilder.lookup("createEndpoint").get().getClass(), CreateEndpointAction.Builder.class);
         Assert.assertTrue(TestActionBuilder.lookup("traceVariables").isPresent());
         Assert.assertEquals(TestActionBuilder.lookup("traceVariables").get().getClass(), TraceVariablesAction.Builder.class);
         Assert.assertTrue(TestActionBuilder.lookup("start").isPresent());
