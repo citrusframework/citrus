@@ -38,7 +38,7 @@ http\://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-confi
 http\://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config-4.5.1.xsd=org/citrusframework/schema/citrus-kubernetes-config-4.5.1.xsd
 http\://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config-4.5.2.xsd=org/citrusframework/schema/citrus-kubernetes-config-4.5.2.xsd
 http\://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config-4.6.0.xsd=org/citrusframework/schema/citrus-kubernetes-config-4.6.0.xsd
-http\://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config-4.7.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-kubernetes-config-4.7.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config-4.8.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-kubernetes-config-4.8.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config-4.7.0.xsd=org/citrusframework/schema/citrus-kubernetes-config-4.7.0.xsd
 http\://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config.xsd=org/citrusframework/schema/citrus-kubernetes-config.xsd
 http\://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase-2.7.1.xsd=com/consol/citrus/schema/citrus-kubernetes-testcase-2.7.1.xsd
@@ -81,6 +81,6 @@ http\://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-tes
 http\://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase-4.5.1.xsd=org/citrusframework/schema/citrus-kubernetes-testcase-4.5.1.xsd
 http\://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase-4.5.2.xsd=org/citrusframework/schema/citrus-kubernetes-testcase-4.5.2.xsd
 http\://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase-4.6.0.xsd=org/citrusframework/schema/citrus-kubernetes-testcase-4.6.0.xsd
-http\://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase-4.7.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-kubernetes-testcase-4.7.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase-4.8.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-kubernetes-testcase-4.8.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase-4.7.0.xsd=org/citrusframework/schema/citrus-kubernetes-testcase-4.7.0.xsd
 http\://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase.xsd=org/citrusframework/schema/citrus-kubernetes-testcase.xsd
