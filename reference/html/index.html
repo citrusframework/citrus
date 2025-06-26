@@ -661,8 +661,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 4.6.0,</span>
-<span id="revdate">2025-05-07</span>
+<span id="revnumber">version 4.7.0,</span>
+<span id="revdate">2025-06-26</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -736,21 +736,22 @@ $(addBlockSwitches);
 <li><a href="#actions-print">8.9. Print</a></li>
 <li><a href="#actions-stop-time">8.10. Stop time</a></li>
 <li><a href="#actions-create-variables">8.11. Create variables</a></li>
-<li><a href="#actions-trace-variables">8.12. Trace variables</a></li>
-<li><a href="#actions-transform">8.13. Transform</a></li>
-<li><a href="#actions-groovy">8.14. Groovy script execution</a></li>
-<li><a href="#actions-fail">8.15. Failing the test</a></li>
-<li><a href="#actions-input">8.16. Input</a></li>
-<li><a href="#actions-load">8.17. Load Properties</a></li>
-<li><a href="#actions-purging-jms-destinations">8.18. Purging JMS destinations</a></li>
-<li><a href="#actions-purging-message-channels">8.19. Purging Spring Message Channels</a></li>
-<li><a href="#actions-purging-endpoints">8.20. Purging endpoints</a></li>
-<li><a href="#actions-assert-failure">8.21. Assert failure</a></li>
-<li><a href="#actions-catch-exceptions">8.22. Catch exceptions</a></li>
-<li><a href="#actions-ant-build">8.23. Apache Ant build</a></li>
-<li><a href="#actions-start-stop">8.24. Start/Stop server</a></li>
-<li><a href="#actions-stop-timer">8.25. Stop Timer</a></li>
-<li><a href="#actions-custom">8.26. Custom action</a></li>
+<li><a href="#actions-create-endpoint">8.12. Create endpoints</a></li>
+<li><a href="#actions-trace-variables">8.13. Trace variables</a></li>
+<li><a href="#actions-transform">8.14. Transform</a></li>
+<li><a href="#actions-groovy">8.15. Groovy script execution</a></li>
+<li><a href="#actions-fail">8.16. Failing the test</a></li>
+<li><a href="#actions-input">8.17. Input</a></li>
+<li><a href="#actions-load">8.18. Load Properties</a></li>
+<li><a href="#actions-purging-jms-destinations">8.19. Purging JMS destinations</a></li>
+<li><a href="#actions-purging-message-channels">8.20. Purging Spring Message Channels</a></li>
+<li><a href="#actions-purging-endpoints">8.21. Purging endpoints</a></li>
+<li><a href="#actions-assert-failure">8.22. Assert failure</a></li>
+<li><a href="#actions-catch-exceptions">8.23. Catch exceptions</a></li>
+<li><a href="#actions-ant-build">8.24. Apache Ant build</a></li>
+<li><a href="#actions-start-stop">8.25. Start/Stop server</a></li>
+<li><a href="#actions-stop-timer">8.26. Stop Timer</a></li>
+<li><a href="#actions-custom">8.27. Custom action</a></li>
 </ul>
 </li>
 <li><a href="#containers">9. Containers</a>
@@ -864,9 +865,10 @@ $(addBlockSwitches);
 <li><a href="#camel-context-handling">16.5. Camel context handling</a></li>
 <li><a href="#camel-route-actions">16.6. Camel route actions</a></li>
 <li><a href="#camel-controlbus-actions">16.7. Camel controlbus actions</a></li>
-<li><a href="#camel-endpoint-dsl">16.8. Camel endpoint DSL</a></li>
-<li><a href="#camel-processor-support">16.9. Camel processor support</a></li>
-<li><a href="#camel-data-format-support">16.10. Camel data format support</a></li>
+<li><a href="#camel-infra">16.8. Camel infrastructure services</a></li>
+<li><a href="#camel-endpoint-dsl">16.9. Camel endpoint DSL</a></li>
+<li><a href="#camel-processor-support">16.10. Camel processor support</a></li>
+<li><a href="#camel-data-format-support">16.11. Camel data format support</a></li>
 </ul>
 </li>
 <li><a href="#message-channels">17. Message channel support</a>
@@ -1192,7 +1194,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 4.6.0</strong></p>
+<p><strong>Version: 4.7.0</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -3754,6 +3756,9 @@ You may add the additional modules to the <code>jbang.properties</code> as descr
 </li>
 <li>
 <p>org.citrusframework:citrus-validation-json</p>
+</li>
+<li>
+<p>org.citrusframework:citrus-validation-yaml</p>
 </li>
 <li>
 <p>org.citrusframework:citrus-validation-xml</p>
@@ -7482,6 +7487,14 @@ defaultPlaintextMessageValidator
 </tr>
 <tr>
 <td class="hdlist1">
+defaultYamlMessageValidator
+</td>
+<td class="hdlist2">
+<p>org.citrusframework.validation.yaml.YamlMessageValidator</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
 defaultMessageHeaderValidator
 </td>
 <td class="hdlist2">
@@ -7613,6 +7626,9 @@ JsonPath support. Now your Citrus project is able to validate Json messages.</p>
 </li>
 <li>
 <p><a href="#xml-message-validation">citrus-validation-xml</a></p>
+</li>
+<li>
+<p><a href="#yaml-message-validation">citrus-validation-yaml</a></p>
 </li>
 <li>
 <p><a href="#plaintext-message-validation">citrus-validation-text</a></p>
@@ -15018,7 +15034,242 @@ Trailing actions can reference the variables as usual with the variable expressi
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-trace-variables"><a class="anchor" href="#actions-trace-variables"></a><a class="link" href="#actions-trace-variables">8.12. Trace variables</a></h3>
+<h3 id="actions-create-endpoint"><a class="anchor" href="#actions-create-endpoint"></a><a class="link" href="#actions-create-endpoint">8.12. Create endpoints</a></h3>
+<div class="paragraph">
+<p>Endpoints represent the connectivity to other services in Citrus.
+An endpoint may create producers and consumers to send and receive messages as part of the test.</p>
+</div>
+<div class="paragraph">
+<p>Users are able to declare endpoints in the form of a project wide configuration in Citrus.
+Also, users are able to use dynamic endpoint definitions with a <code>send</code> or <code>receive</code> action where the endpoint is defined as a URI.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> useDynamicEndpoints() {
+    <span class="error">$</span>(send()
+        .endpoint(<span class="string"><span class="delimiter">&quot;</span><span class="content">kafka:bookings?server=${kafka.bootstrapServer}</span><span class="delimiter">&quot;</span></span>)
+        .message()
+        <span class="comment">// ...</span>
+    );
+
+    <span class="error">$</span>(receive()
+        .endpoint(<span class="string"><span class="delimiter">&quot;</span><span class="content">kafka:bookings?server=${kafka.bootstrapServer}</span><span class="delimiter">&quot;</span></span>)
+        .message()
+        <span class="comment">// ...</span>
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">UseDynamicEndpoints</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;actions&gt;</span>
+        <span class="tag">&lt;send</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">kafka:bookings?server=${kafka.bootstrapServer}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;message&gt;</span>
+              <span class="comment">&lt;!--
+              ...
+              --&gt;</span>
+            <span class="tag">&lt;/message&gt;</span>
+        <span class="tag">&lt;/send&gt;</span>
+        <span class="tag">&lt;receive</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">kafka:bookings?server=${kafka.bootstrapServer}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;message&gt;</span>
+              <span class="comment">&lt;!--
+              ...
+              --&gt;</span>
+            <span class="tag">&lt;/message&gt;</span>
+        <span class="tag">&lt;/receive&gt;</span>
+    <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">UseDynamicEndpoints</span><span class="delimiter">&quot;</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">send:</span><span class="content">
+      endpoint: &quot;kafka:bookings?server=${kafka.bootstrapServer}&quot;
+      message:
+        # ...</span></span>
+  - <span class="string"><span class="content">receive:</span><span class="content">
+      endpoint: &quot;kafka:bookings?server=${kafka.bootstrapServer}&quot;
+      message:
+        # ...</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;testcase</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">useDynamicEndpoints</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+        <span class="tag">&lt;actions&gt;</span>
+            <span class="tag">&lt;send</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">kafka:bookings?server=${kafka.bootstrapServer}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+                <span class="tag">&lt;message&gt;</span>
+                  <span class="comment">&lt;!--
+                  ...
+                  --&gt;</span>
+                <span class="tag">&lt;/message&gt;</span>
+            <span class="tag">&lt;/send&gt;</span>
+            <span class="tag">&lt;receive</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">kafka:bookings?server=${kafka.bootstrapServer}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+                <span class="tag">&lt;message&gt;</span>
+                  <span class="comment">&lt;!--
+                  ...
+                  --&gt;</span>
+                <span class="tag">&lt;/message&gt;</span>
+            <span class="tag">&lt;/receive&gt;</span>
+        <span class="tag">&lt;/actions&gt;</span>
+    <span class="tag">&lt;/testcase&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The dynamic endpoint receives its properties in the form of endpoint URI parameters: <code>kafka:bookings?server=${kafka.bootstrapServer}</code></p>
+</div>
+<div class="paragraph">
+<p>The test needs to repeat the same configuration endpoint URI several times with multiple send/receive test actions.</p>
+</div>
+<div class="paragraph">
+<p>This can be improved by using the <code>createEndpoint()</code> test action that declares the endpoint once with a given name.
+Following test actions are able to reference the endpoint as usual by its give name.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> useDynamicEndpoints() {
+    <span class="error">$</span>(createEndpoint()
+        .endpointName(<span class="string"><span class="delimiter">&quot;</span><span class="content">bookings</span><span class="delimiter">&quot;</span></span>)
+        .uri(<span class="string"><span class="delimiter">&quot;</span><span class="content">kafka:bookings?server=${kafka.bootstrapServer}</span><span class="delimiter">&quot;</span></span>)
+    );
+
+    <span class="error">$</span>(send()
+        .endpoint(<span class="string"><span class="delimiter">&quot;</span><span class="content">bookings</span><span class="delimiter">&quot;</span></span>)
+        .message()
+        <span class="comment">// ...</span>
+    );
+
+    <span class="error">$</span>(receive()
+        .endpoint(<span class="string"><span class="delimiter">&quot;</span><span class="content">bookings</span><span class="delimiter">&quot;</span></span>)
+        .message()
+        <span class="comment">// ...</span>
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">UseDynamicEndpoints</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;actions&gt;</span>
+        <span class="tag">&lt;create-endpoint</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">bookings</span><span class="delimiter">&quot;</span></span>
+                         <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">kafka:bookings?server=${kafka.bootstrapServer}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+
+        <span class="tag">&lt;send</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">bookings</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;message&gt;</span>
+              <span class="comment">&lt;!--
+              ...
+              --&gt;</span>
+            <span class="tag">&lt;/message&gt;</span>
+        <span class="tag">&lt;/send&gt;</span>
+        <span class="tag">&lt;receive</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">bookings</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;message&gt;</span>
+              <span class="comment">&lt;!--
+              ...
+              --&gt;</span>
+            <span class="tag">&lt;/message&gt;</span>
+        <span class="tag">&lt;/receive&gt;</span>
+    <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">UseDynamicEndpoints</span><span class="delimiter">&quot;</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">createEndpoint:</span><span class="content">
+      name: bookings
+      uri: &quot;kafka:bookings?server=${kafka.bootstrapServer}&quot;</span></span>
+  - <span class="string"><span class="content">send:</span><span class="content">
+      endpoint: &quot;bookings&quot;
+      message:
+        # ...</span></span>
+  - <span class="string"><span class="content">receive:</span><span class="content">
+      endpoint: &quot;bookings&quot;
+      message:
+        # ...</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As an alternative syntax aou may also declare the properties with key-value pairs in the <code>createEndpoint()</code> action:</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> useDynamicEndpoints() {
+    <span class="error">$</span>(createEndpoint()
+        .endpointName(<span class="string"><span class="delimiter">&quot;</span><span class="content">bookings</span><span class="delimiter">&quot;</span></span>)
+        .type(<span class="string"><span class="delimiter">&quot;</span><span class="content">kafka</span><span class="delimiter">&quot;</span></span>)
+        .property(<span class="string"><span class="delimiter">&quot;</span><span class="content">topic</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bookings</span><span class="delimiter">&quot;</span></span>)
+        .property(<span class="string"><span class="delimiter">&quot;</span><span class="content">server</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">${kafka.bootstrapServer}</span><span class="delimiter">&quot;</span></span>)
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">UseDynamicEndpoints</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;actions&gt;</span>
+        <span class="tag">&lt;create-endpoint</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">bookings</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">kafka</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+          <span class="tag">&lt;properties&gt;</span>
+            <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">topic</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">bookings</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+            <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">server</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${kafka.bootstrapServer}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+          <span class="tag">&lt;/properties&gt;</span>
+        <span class="tag">&lt;/create-endpoint&gt;</span>
+    <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">UseDynamicEndpoints</span><span class="delimiter">&quot;</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">createEndpoint:</span><span class="content">
+      name: bookings
+      type: &quot;kafka&quot;
+      properties:
+        topic: bookings
+        server: &quot;${kafka.bootstrapServer}&quot;</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="actions-trace-variables"><a class="anchor" href="#actions-trace-variables"></a><a class="link" href="#actions-trace-variables">8.13. Trace variables</a></h3>
 <div class="paragraph">
 <p>You already know the &lt;echo&gt; action that prints messages to the console or logger. The &lt;trace-variables&gt; action is specially designed to trace all currently valid test variables to the console. This was mainly used by us for debug reasons. The usage is quite simple:</p>
 </div>
@@ -15104,7 +15355,7 @@ Current value of variable nextVariable = 54321</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-transform"><a class="anchor" href="#actions-transform"></a><a class="link" href="#actions-transform">8.13. Transform</a></h3>
+<h3 id="actions-transform"><a class="anchor" href="#actions-transform"></a><a class="link" href="#actions-transform">8.14. Transform</a></h3>
 <div class="paragraph">
 <p>The <strong><em>`&lt;transform&gt;`</em></strong> action transforms XML fragments with XSLT in order to construct various XML representations. The transformation result is stored into a test variable for further usage. The property <strong>xml-data</strong> defines the XML source, that is going to be transformed, while <strong>xslt-data</strong> defines the XSLT transformation rules. The attribute <strong>variable</strong> specifies the target test variable which receives the transformation result. The tester might use the action to transform XML messages as shown in the next code example:</p>
 </div>
@@ -15329,7 +15580,7 @@ In fact, you could also use script languages like Groovy or Scala that have much
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-groovy"><a class="anchor" href="#actions-groovy"></a><a class="link" href="#actions-groovy">8.14. Groovy script execution</a></h3>
+<h3 id="actions-groovy"><a class="anchor" href="#actions-groovy"></a><a class="link" href="#actions-groovy">8.15. Groovy script execution</a></h3>
 <div class="paragraph">
 <p>Groovy is an agile dynamic language for the Java Platform.
 Groovy ships with a lot of very powerful features and fits perfectly with Java as it is based on Java and runs inside the JVM.</p>
@@ -15723,7 +15974,7 @@ The implicit TestContext access that was shown in the previous sample works with
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-fail"><a class="anchor" href="#actions-fail"></a><a class="link" href="#actions-fail">8.15. Failing the test</a></h3>
+<h3 id="actions-fail"><a class="anchor" href="#actions-fail"></a><a class="link" href="#actions-fail">8.16. Failing the test</a></h3>
 <div class="paragraph">
 <p>The fail action will generate an exception in order to terminate the test case with error. The test case will therefore not be successful in the reports.</p>
 </div>
@@ -15812,7 +16063,7 @@ Tests successfully:  0 (0.0%)</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-input"><a class="anchor" href="#actions-input"></a><a class="link" href="#actions-input">8.16. Input</a></h3>
+<h3 id="actions-input"><a class="anchor" href="#actions-input"></a><a class="link" href="#actions-input">8.17. Input</a></h3>
 <div class="paragraph">
 <p>During the test case execution it is possible to read some user input from the command line. The test execution will stop and wait for keyboard inputs over the standard input stream. The user has to type the input and end it with the return key.</p>
 </div>
@@ -15935,7 +16186,7 @@ User inputs may not fit to automatic testing in terms of continuous integration 
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-load"><a class="anchor" href="#actions-load"></a><a class="link" href="#actions-load">8.17. Load Properties</a></h3>
+<h3 id="actions-load"><a class="anchor" href="#actions-load"></a><a class="link" href="#actions-load">8.18. Load Properties</a></h3>
 <div class="paragraph">
 <p>You are able to load properties from external property files and store them as test variables. The action will require a file resource either from class path or file system in order to read the property values.</p>
 </div>
@@ -16019,7 +16270,7 @@ Please be aware of the fact that existing variables are overwritten!
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-purging-jms-destinations"><a class="anchor" href="#actions-purging-jms-destinations"></a><a class="link" href="#actions-purging-jms-destinations">8.18. Purging JMS destinations</a></h3>
+<h3 id="actions-purging-jms-destinations"><a class="anchor" href="#actions-purging-jms-destinations"></a><a class="link" href="#actions-purging-jms-destinations">8.19. Purging JMS destinations</a></h3>
 <div class="paragraph">
 <p>Purging JMS destinations during the test run is quite essential. Different test cases can influence each other when sending messages to the same JMS destinations. A test case should only receive those messages that actually belong to it.</p>
 </div>
@@ -16270,7 +16521,7 @@ You can mix queue name and queue object references as you like within one single
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-purging-message-channels"><a class="anchor" href="#actions-purging-message-channels"></a><a class="link" href="#actions-purging-message-channels">8.19. Purging Spring Message Channels</a></h3>
+<h3 id="actions-purging-message-channels"><a class="anchor" href="#actions-purging-message-channels"></a><a class="link" href="#actions-purging-message-channels">8.20. Purging Spring Message Channels</a></h3>
 <div class="paragraph">
 <p>The Spring Integration project defines message channels as a central messaging destination.
 These are in-memory message queues holding messages for test cases.
@@ -16529,7 +16780,7 @@ Purging message channels becomes also very interesting when working with server 
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-purging-endpoints"><a class="anchor" href="#actions-purging-endpoints"></a><a class="link" href="#actions-purging-endpoints">8.20. Purging endpoints</a></h3>
+<h3 id="actions-purging-endpoints"><a class="anchor" href="#actions-purging-endpoints"></a><a class="link" href="#actions-purging-endpoints">8.21. Purging endpoints</a></h3>
 <div class="paragraph">
 <p>Citrus works with message endpoints when sending and receiving messages.
 In general endpoints can also queue messages.
@@ -16741,7 +16992,7 @@ Purging message endpoints becomes also very interesting when working with server
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-assert-failure"><a class="anchor" href="#actions-assert-failure"></a><a class="link" href="#actions-assert-failure">8.21. Assert failure</a></h3>
+<h3 id="actions-assert-failure"><a class="anchor" href="#actions-assert-failure"></a><a class="link" href="#actions-assert-failure">8.22. Assert failure</a></h3>
 <div class="paragraph">
 <p>Citrus test actions fail with Java exceptions and error messages.
 This gives you the opportunity to expect an action to fail during test execution.
@@ -16845,7 +17096,7 @@ As you expect the failure to happen the test continues with its work once the as
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-catch-exceptions"><a class="anchor" href="#actions-catch-exceptions"></a><a class="link" href="#actions-catch-exceptions">8.22. Catch exceptions</a></h3>
+<h3 id="actions-catch-exceptions"><a class="anchor" href="#actions-catch-exceptions"></a><a class="link" href="#actions-catch-exceptions">8.23. Catch exceptions</a></h3>
 <div class="paragraph">
 <p>In the previous chapter we have seen how to expect failures in Citrus with assert action.
 Now the assert action is designed for single actions to be monitored and for failures to be expected in any case.
@@ -16956,7 +17207,7 @@ The only reliable way to add the catch capability to the test as part of the tes
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-ant-build"><a class="anchor" href="#actions-ant-build"></a><a class="link" href="#actions-ant-build">8.23. Apache Ant build</a></h3>
+<h3 id="actions-ant-build"><a class="anchor" href="#actions-ant-build"></a><a class="link" href="#actions-ant-build">8.24. Apache Ant build</a></h3>
 <div class="paragraph">
 <p>The &lt;ant&gt; action loads a build.xml Ant file and executes one or more targets in the Ant project. The target is executed with optional build properties passed to the Ant run. The Ant build output is logged with Citrus logger and the test case success is bound to the Ant build success. This means in case the Ant build fails for some reason the test case will also fail with build exception accordingly.</p>
 </div>
@@ -17207,7 +17458,7 @@ The only reliable way to add the catch capability to the test as part of the tes
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-start-stop"><a class="anchor" href="#actions-start-stop"></a><a class="link" href="#actions-start-stop">8.24. Start/Stop server</a></h3>
+<h3 id="actions-start-stop"><a class="anchor" href="#actions-start-stop"></a><a class="link" href="#actions-start-stop">8.25. Start/Stop server</a></h3>
 <div class="paragraph">
 <p>Citrus is working with server components that are started and stopped within a test run. This can be a Http server or some SMTP mail server for instance. Usually the Citrus server components are automatically started when Citrus is starting and respectively stopped when Citrus is shutting down. Sometimes it might be helpful to explicitly start and stop a server instance within your test case. Here you can use special start and stop test actions inside your test. This is a good way to test downtime scenarios of interface partners with respective error handling when connections to servers are lost</p>
 </div>
@@ -17401,7 +17652,7 @@ Starting and stopping server instances is a synchronous test action. This means 
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-stop-timer"><a class="anchor" href="#actions-stop-timer"></a><a class="link" href="#actions-stop-timer">8.25. Stop Timer</a></h3>
+<h3 id="actions-stop-timer"><a class="anchor" href="#actions-stop-timer"></a><a class="link" href="#actions-stop-timer">8.26. Stop Timer</a></h3>
 <div class="paragraph">
 <p>The &lt;stop-timer&gt; action can be used for stopping either a specific timer (<a href="#containers-timer">containers-timer</a>) or all timers running within a test. This action is useful when timers are started in the background (using parallel or fork=true) and you wish to stop these timers at the end of the test. Some examples of using this action are provided below:</p>
 </div>
@@ -17530,7 +17781,7 @@ Starting and stopping server instances is a synchronous test action. This means 
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-custom"><a class="anchor" href="#actions-custom"></a><a class="link" href="#actions-custom">8.26. Custom action</a></h3>
+<h3 id="actions-custom"><a class="anchor" href="#actions-custom"></a><a class="link" href="#actions-custom">8.27. Custom action</a></h3>
 <div class="paragraph">
 <p>Now we have a look at the opportunity to add custom test actions to the test case flow. Let us start this section with an example:</p>
 </div>
@@ -27451,7 +27702,351 @@ Also, here we can define an optional outcome as expected result.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="camel-endpoint-dsl"><a class="anchor" href="#camel-endpoint-dsl"></a><a class="link" href="#camel-endpoint-dsl">16.8. Camel endpoint DSL</a></h3>
+<h3 id="camel-infra"><a class="anchor" href="#camel-infra"></a><a class="link" href="#camel-infra">16.8. Camel infrastructure services</a></h3>
+<div class="paragraph">
+<p>The Apache Camel project maintains a huge set of test infrastructure services that you can also start and stop during a Citrus test. See this documentation about the <a href="https://camel.apache.org/manual/test-infra.html">Camel test infra services</a>.</p>
+</div>
+<div class="paragraph">
+<p>The Camel infra services usually start Docker/Podman containers and/or use Testcontainers.</p>
+</div>
+<div class="paragraph">
+<p>See this list of supported infrastructure services in Apache Camel:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>arangodb</p>
+</li>
+<li>
+<p>artemis (amqp, mqtt, persistent)</p>
+</li>
+<li>
+<p>aws (cloud-watch, config, dynamo-db, dynamodb, ec2, event-bridge, iam, kinesis, kms, lambda, s3, secrets-manager, sns, sqs, sts)</p>
+</li>
+<li>
+<p>azure</p>
+</li>
+<li>
+<p>cassandra</p>
+</li>
+<li>
+<p>chat-script</p>
+</li>
+<li>
+<p>couchbase</p>
+</li>
+<li>
+<p>couchdb</p>
+</li>
+<li>
+<p>elasticsearch</p>
+</li>
+<li>
+<p>fhir</p>
+</li>
+<li>
+<p>ftp</p>
+</li>
+<li>
+<p>ftps</p>
+</li>
+<li>
+<p>google (pub-sub)</p>
+</li>
+<li>
+<p>hashicorp (vault)</p>
+</li>
+<li>
+<p>hazelcast</p>
+</li>
+<li>
+<p>hive-mq (sparkplug)</p>
+</li>
+<li>
+<p>kafka (redpanda, strimzi)</p>
+</li>
+<li>
+<p>microprofile (lra)</p>
+</li>
+<li>
+<p>milvus</p>
+</li>
+<li>
+<p>minio</p>
+</li>
+<li>
+<p>mongodb</p>
+</li>
+<li>
+<p>mosquitto</p>
+</li>
+<li>
+<p>nats</p>
+</li>
+<li>
+<p>ollama</p>
+</li>
+<li>
+<p>openldap</p>
+</li>
+<li>
+<p>postgres</p>
+</li>
+<li>
+<p>pulsar</p>
+</li>
+<li>
+<p>qdrant</p>
+</li>
+<li>
+<p>rabbitmq</p>
+</li>
+<li>
+<p>redis</p>
+</li>
+<li>
+<p>rocketmq</p>
+</li>
+<li>
+<p>sftp</p>
+</li>
+<li>
+<p>smb</p>
+</li>
+<li>
+<p>solr</p>
+</li>
+<li>
+<p>torch-serve</p>
+</li>
+<li>
+<p>xmpp</p>
+</li>
+<li>
+<p>zookeeper</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can start/stop such an infra service via test actions in Citrus.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CamelInfraIT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@CitrusTest</span>
+    <span class="directive">public</span> <span class="type">void</span> createInfraService() {
+        <span class="error">$</span>(camel()
+            .infra()
+            .run()
+            .service(<span class="string"><span class="delimiter">&quot;</span><span class="content">postgres</span><span class="delimiter">&quot;</span></span>));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">CamelInfraTest</span><span class="delimiter">&quot;</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">camel:</span><span class="content">
+      infra:
+        run:
+          service: postgres</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">CamelInfraIT</span><span class="delimiter">&quot;</span></span>
+      <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span>
+      <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span>
+      <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;actions&gt;</span>
+    <span class="tag">&lt;camel&gt;</span>
+      <span class="tag">&lt;infra&gt;</span>
+        <span class="tag">&lt;run</span> <span class="attribute-name">service</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">postgres</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+      <span class="tag">&lt;/infra&gt;</span>
+    <span class="tag">&lt;/camel&gt;</span>
+  <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/testcase&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once the infrastructure service is started Citrus exposes connection settings as test variables. You can use the exposed connection settings to create proper clients that connect to the services.</p>
+</div>
+<div class="paragraph">
+<p>The exposed connection settings follow a naming pattern that looks like this:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CITRUS_CAMEL_INFRA_SERVICE_&lt;SERVICE_NAME&gt;_&lt;PROPERTY_NAME&gt;</code></p>
+</li>
+<li>
+<p><code>CITRUS_CAMEL_INFRA_SERVICE_&lt;SERVICE_NAME&gt;_&lt;IMPLEMENTATION&gt;_&lt;PROPERTY_NAME&gt;</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For instance a infrastructure service called <code>foo</code> that exposes the settings <code>url</code> and <code>port</code> expose the following test variables.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_CAMEL_INFRA_SERVICE_FOO_URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_CAMEL_INFRA_SERVICE_FOO_PORT</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>You can now use these test variables when connecting to the service.
+Please see the individual Apache Camel infrastructure services documentation to see which properties get exposed by the service.</p>
+</div>
+<div class="paragraph">
+<p>Some infrastructure services provide multiple implementations (e.g. Kafka provides both Redpanda and Strimzi).</p>
+</div>
+<div class="paragraph">
+<p>You may need to choose the implementation as follows:</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CamelInfraIT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@CitrusTest</span>
+    <span class="directive">public</span> <span class="type">void</span> createInfraService() {
+        <span class="error">$</span>(camel()
+            .infra()
+            .run()
+            .service(<span class="string"><span class="delimiter">&quot;</span><span class="content">kafka</span><span class="delimiter">&quot;</span></span>)
+            .implementation(<span class="string"><span class="delimiter">&quot;</span><span class="content">strimzi</span><span class="delimiter">&quot;</span></span>));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">CamelInfraTest</span><span class="delimiter">&quot;</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">camel:</span><span class="content">
+      infra:
+        run:
+          service: kafka
+          implementation: strimzi</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">CamelInfraIT</span><span class="delimiter">&quot;</span></span>
+      <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span>
+      <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span>
+      <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;actions&gt;</span>
+    <span class="tag">&lt;camel&gt;</span>
+      <span class="tag">&lt;infra&gt;</span>
+        <span class="tag">&lt;run</span> <span class="attribute-name">service</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">kafka</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">implementation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">strimzi</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+      <span class="tag">&lt;/infra&gt;</span>
+    <span class="tag">&lt;/camel&gt;</span>
+  <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/testcase&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, the infrastructure services get automatically removed after the test. You can disable the auto removal when running the service (<code>auto-remove</code> setting).</p>
+</div>
+<div class="paragraph">
+<p>To explicitly stop a running infrastructure service use the following test action.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CamelInfraIT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@CitrusTest</span>
+    <span class="directive">public</span> <span class="type">void</span> createInfraService() {
+        <span class="error">$</span>(camel()
+            .infra()
+            .stop()
+            .service(<span class="string"><span class="delimiter">&quot;</span><span class="content">postgres</span><span class="delimiter">&quot;</span></span>));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">CamelInfraTest</span><span class="delimiter">&quot;</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">camel:</span><span class="content">
+      infra:
+        stop:
+          service: postgres</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">CamelInfraIT</span><span class="delimiter">&quot;</span></span>
+      <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span>
+      <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span>
+      <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;actions&gt;</span>
+    <span class="tag">&lt;camel&gt;</span>
+      <span class="tag">&lt;infra&gt;</span>
+        <span class="tag">&lt;stop</span> <span class="attribute-name">service</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">postgres</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+      <span class="tag">&lt;/infra&gt;</span>
+    <span class="tag">&lt;/camel&gt;</span>
+  <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/testcase&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="camel-endpoint-dsl"><a class="anchor" href="#camel-endpoint-dsl"></a><a class="link" href="#camel-endpoint-dsl">16.9. Camel endpoint DSL</a></h3>
 <div class="paragraph">
 <p>Since Camel 3 the endpoint DSL provides a convenient way to construct an endpoint uri.
 In Citrus you can use the Camel endpoint DSL to send/receive messages in a test.</p>
@@ -27471,7 +28066,7 @@ The endpoint DSL provides all settings and properties that you can set for a Cam
 </div>
 </div>
 <div class="sect2">
-<h3 id="camel-processor-support"><a class="anchor" href="#camel-processor-support"></a><a class="link" href="#camel-processor-support">16.9. Camel processor support</a></h3>
+<h3 id="camel-processor-support"><a class="anchor" href="#camel-processor-support"></a><a class="link" href="#camel-processor-support">16.10. Camel processor support</a></h3>
 <div class="paragraph">
 <p>Camel implements the concept of processors as enterprise integration pattern.
 A processor is able to add custom logic to a Camel route.
@@ -27622,7 +28217,7 @@ This enables many capabilities as Camel implements the enterprise integration pa
 </div>
 </div>
 <div class="sect2">
-<h3 id="camel-data-format-support"><a class="anchor" href="#camel-data-format-support"></a><a class="link" href="#camel-data-format-support">16.10. Camel data format support</a></h3>
+<h3 id="camel-data-format-support"><a class="anchor" href="#camel-data-format-support"></a><a class="link" href="#camel-data-format-support">16.11. Camel data format support</a></h3>
 <div class="paragraph">
 <p>Camel uses the concept of data format to transform message content in form of marshal/unmarshal operations.
 You can use the data formats supported in Camel in Citrus, too.</p>
@@ -40562,9 +41157,11 @@ You can start a LocslStack instance with the following test action.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Each LocalStack instance receives a list of enables services.
+<p>Each LocalStack instance receives a list of services that should be enabled.
 In the example above the AWS S3 service is enabled.</p>
 </div>
+<div class="sect3">
+<h4 id="testcontainers-localstack-settings"><a class="anchor" href="#testcontainers-localstack-settings"></a><a class="link" href="#testcontainers-localstack-settings">39.4.1. Exposed connection settings</a></h4>
 <div class="paragraph">
 <p>Citrus exposes special test variables that represent connection settings for the LocalStack container:</p>
 </div>
@@ -40637,9 +41234,182 @@ In the example above the AWS S3 service is enabled.</p>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="sect3">
+<h4 id="testcontainers-localstack-auto-clients"><a class="anchor" href="#testcontainers-localstack-auto-clients"></a><a class="link" href="#testcontainers-localstack-auto-clients">39.4.2. Service client auto creation</a></h4>
 <div class="paragraph">
-<p>You can use these test variables to connect to the LocalStack Testcontainers instance.
-As an example this S3 client connects to the LocalStack Testcontainers instance and creates a test bucket:</p>
+<p>The Citrus LocalStack container action is able to automatically create clients for the enabled services.</p>
+</div>
+<div class="paragraph">
+<p>By default, Citrus creates the client instances and stores them in the bean Citrus registry. You can then reference the clients by their name.</p>
+</div>
+<div class="paragraph">
+<p>The following services support auto creation of clients:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>S3 ("s3Client")</p>
+</li>
+<li>
+<p>SNS ("snsClient")</p>
+</li>
+<li>
+<p>SQS ("sqsClient")</p>
+</li>
+<li>
+<p>KINESIS (kinesisClient)</p>
+</li>
+<li>
+<p>DYNAMODB (dnyamodbClient)</p>
+</li>
+<li>
+<p>EVENT_BRIDGE("eventbridgeClient")</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For instance the S3 service creates a client instance called <code>s3Client</code>. The clients are automatically configured with the container service settings such as endpointUri, accessKey, secretKey and region for S3.</p>
+</div>
+<div class="paragraph">
+<p>The underlying client factory is able to handle specific options. For the S3 client factory for instance this is a comma separated list of bucket names to auto create S3 buckets.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> testcontainersTest() {
+    given(testcontainers()
+            .localstack()
+            .start()
+            .withService(LocalStackContainer.Service.S3))
+            .withOption(<span class="string"><span class="delimiter">&quot;</span><span class="content">buckets</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">my_bucket_name,another_bucket_name</span><span class="delimiter">&quot;</span></span>);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">TestcontainersTest</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;actions&gt;</span>
+        <span class="tag">&lt;testcontainers&gt;</span>
+          <span class="tag">&lt;start&gt;</span>
+            <span class="tag">&lt;localstack</span> <span class="attribute-name">services</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">S3</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+              <span class="tag">&lt;options&gt;</span>
+                <span class="tag">&lt;option</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">buckets</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my_bucket_name,another_bucket_name</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+              <span class="tag">&lt;/options&gt;</span>
+            <span class="tag">&lt;/localstack&gt;</span>
+          <span class="tag">&lt;/start&gt;</span>
+        <span class="tag">&lt;/testcontainers&gt;</span>
+    <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">TestcontainersTest</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">testcontainers:</span><span class="content">
+      start:
+        localstack:
+          services:
+            - &quot;S3&quot;
+          options:
+            buckets: &quot;my_bucket_name,another_bucket_name&quot;</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please see this list of supported options on the individual client factories:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Client</th>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">s3Client</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">buckets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma separated list of bucket names that get auto created</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sqsClient</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">queues</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma separated list of queue names that get auto created</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">snsClient</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">topics</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma separated list of topic names that get auto created</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kinesisClient</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">streams</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma separated list of stream names that get auto created</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kinesisClient</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;stream_name&gt;.shard.count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shard count set on the given stream</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dynamodbClient</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tables</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma separated list of table names that get auto created.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dynamodbClient</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;table_name&gt;.id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Id attribute name set on the table as a primary id.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dynamodbClient</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;table_name&gt;.view.type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">View type set on the table stream specification (default=NEW_AND_OLD_IMAGES).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dynamodbClient</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;table_name&gt;.read.capacity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read capacity set as provisioned throughput (default=1).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dynamodbClient</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;table_name&gt;.write.capacity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Write capacity set as provisioned throughput (default=1).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">eventbridgeClient</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">eventBusNames</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma separated list of event bus names that get auto created</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="testcontainers-localstack-clients"><a class="anchor" href="#testcontainers-localstack-clients"></a><a class="link" href="#testcontainers-localstack-clients">39.4.3. Custom service clients</a></h4>
+<div class="paragraph">
+<p>You can use the exposed connections settings in the test variables to connect to the LocalStack Testcontainers instance.</p>
+</div>
+<div class="paragraph">
+<p>As an example this S3 client connects to the LocalStack Testcontainers instance and creates a test bucket:</p>
 </div>
 <div class="listingblock primary">
 <div class="title">Java</div>
@@ -40674,6 +41444,7 @@ You can access the Citrus TesContext via <code>@CitrusResource</code> injection 
 </td>
 </tr>
 </table>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -45878,8 +46649,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 4.6.0<br>
-Last updated 2025-05-07 11:08:07 +0200
+Version 4.7.0<br>
+Last updated 2025-06-26 16:05:45 +0200
 </div>
 </div>
 <style>
