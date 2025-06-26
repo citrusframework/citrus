@@ -180,10 +180,10 @@ build_and_stage_artifacts() {
         ./mvnw ${maven_opts} install
     elif [ $(hasflag --dry-run -n) ]; then
         echo "==== Release to Maven Central - dry run"
-        ./mvnw ${maven_opts} install deploy -Dsurefire.failIfNoSpecifiedTests=false -Dfailsafe.failIfNoSpecifiedTests=false -DfailIfNoTests=false -Dtest -Dit.test -Dgpg.autosign=true -Prelease-central
+        ./mvnw ${maven_opts} install deploy -Dsurefire.failIfNoSpecifiedTests=false -Dfailsafe.failIfNoSpecifiedTests=false -DfailIfNoTests=false -Dtest -Dit.test -Prelease-central
     else
         echo "==== Release to Maven central"
-        ./mvnw ${maven_opts} install deploy -Dsurefire.failIfNoSpecifiedTests=false -Dfailsafe.failIfNoSpecifiedTests=false -DfailIfNoTests=false -Dtest -Dit.test -Dgpg.autosign=true -DautoPublish=true -Prelease-central
+        ./mvnw ${maven_opts} install deploy -Dsurefire.failIfNoSpecifiedTests=false -Dfailsafe.failIfNoSpecifiedTests=false -DfailIfNoTests=false -Dtest -Dit.test -DautoPublish=true -Prelease-central
     fi
 }
 
