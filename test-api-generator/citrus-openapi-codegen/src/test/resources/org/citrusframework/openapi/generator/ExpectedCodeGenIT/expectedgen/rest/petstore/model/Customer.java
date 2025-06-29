@@ -28,18 +28,21 @@ import org.citrusframework.openapi.generator.rest.petstore.model.Address;
 /**
  * Customer
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-26T12:43:00.994595900+02:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:42.828969400+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class Customer {
+  @jakarta.annotation.Nullable
   private Long id;
 
+  @jakarta.annotation.Nullable
   private String username;
 
+  @jakarta.annotation.Nullable
   private List<Address> address = new ArrayList<>();
 
   public Customer() {
   }
 
-  public Customer id(Long id) {
+  public Customer id(@jakarta.annotation.Nullable Long id) {
     
     this.id = id;
     return this;
@@ -56,11 +59,11 @@ public class Customer {
   }
 
 
-  public void setId(Long id) {
+  public void setId(@jakarta.annotation.Nullable Long id) {
     this.id = id;
   }
 
-  public Customer username(String username) {
+  public Customer username(@jakarta.annotation.Nullable String username) {
     
     this.username = username;
     return this;
@@ -77,11 +80,11 @@ public class Customer {
   }
 
 
-  public void setUsername(String username) {
+  public void setUsername(@jakarta.annotation.Nullable String username) {
     this.username = username;
   }
 
-  public Customer address(List<Address> address) {
+  public Customer address(@jakarta.annotation.Nullable List<Address> address) {
     
     this.address = address;
     return this;
@@ -106,7 +109,7 @@ public class Customer {
   }
 
 
-  public void setAddress(List<Address> address) {
+  public void setAddress(@jakarta.annotation.Nullable List<Address> address) {
     this.address = address;
   }
 

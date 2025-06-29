@@ -43,7 +43,7 @@ import java.util.UUID;
 import org.citrusframework.openapi.generator.rest.extpetstore.model.VaccinationDocumentResult;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-26T12:43:01.728341200+02:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:47.279105500+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class ExtPetApi implements GeneratedApi
 {
 

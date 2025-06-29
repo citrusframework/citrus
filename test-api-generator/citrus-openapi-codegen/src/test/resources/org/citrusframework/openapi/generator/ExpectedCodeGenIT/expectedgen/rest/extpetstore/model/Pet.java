@@ -29,27 +29,32 @@ import org.citrusframework.openapi.generator.rest.extpetstore.model.Tag;
 /**
  * Pet
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-26T12:43:01.728341200+02:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:47.279105500+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class Pet {
+  @jakarta.annotation.Nullable
   private Long id;
 
+  @jakarta.annotation.Nonnull
   private String _name;
 
+  @jakarta.annotation.Nullable
   private Category category;
 
+  @jakarta.annotation.Nonnull
   private List<String> photoUrls = new ArrayList<>();
 
+  @jakarta.annotation.Nullable
   private List<Tag> tags = new ArrayList<>();
 
   /**
    * pet status in the store
    */
   public enum StatusEnum {
-    AVAILABLE("available"),
+    AVAILABLE(String.valueOf("available")),
     
-    PENDING("pending"),
+    PENDING(String.valueOf("pending")),
     
-    SOLD("sold");
+    SOLD(String.valueOf("sold"));
 
     private String value;
 
@@ -76,12 +81,13 @@ public class Pet {
     }
   }
 
+  @jakarta.annotation.Nullable
   private StatusEnum status;
 
   public Pet() {
   }
 
-  public Pet id(Long id) {
+  public Pet id(@jakarta.annotation.Nullable Long id) {
     
     this.id = id;
     return this;
@@ -98,11 +104,11 @@ public class Pet {
   }
 
 
-  public void setId(Long id) {
+  public void setId(@jakarta.annotation.Nullable Long id) {
     this.id = id;
   }
 
-  public Pet _name(String _name) {
+  public Pet _name(@jakarta.annotation.Nonnull String _name) {
     
     this._name = _name;
     return this;
@@ -119,11 +125,11 @@ public class Pet {
   }
 
 
-  public void setName(String _name) {
+  public void setName(@jakarta.annotation.Nonnull String _name) {
     this._name = _name;
   }
 
-  public Pet category(Category category) {
+  public Pet category(@jakarta.annotation.Nullable Category category) {
     
     this.category = category;
     return this;
@@ -140,11 +146,11 @@ public class Pet {
   }
 
 
-  public void setCategory(Category category) {
+  public void setCategory(@jakarta.annotation.Nullable Category category) {
     this.category = category;
   }
 
-  public Pet photoUrls(List<String> photoUrls) {
+  public Pet photoUrls(@jakarta.annotation.Nonnull List<String> photoUrls) {
     
     this.photoUrls = photoUrls;
     return this;
@@ -169,11 +175,11 @@ public class Pet {
   }
 
 
-  public void setPhotoUrls(List<String> photoUrls) {
+  public void setPhotoUrls(@jakarta.annotation.Nonnull List<String> photoUrls) {
     this.photoUrls = photoUrls;
   }
 
-  public Pet tags(List<Tag> tags) {
+  public Pet tags(@jakarta.annotation.Nullable List<Tag> tags) {
     
     this.tags = tags;
     return this;
@@ -198,11 +204,11 @@ public class Pet {
   }
 
 
-  public void setTags(List<Tag> tags) {
+  public void setTags(@jakarta.annotation.Nullable List<Tag> tags) {
     this.tags = tags;
   }
 
-  public Pet status(StatusEnum status) {
+  public Pet status(@jakarta.annotation.Nullable StatusEnum status) {
     
     this.status = status;
     return this;
@@ -219,7 +225,7 @@ public class Pet {
   }
 
 
-  public void setStatus(StatusEnum status) {
+  public void setStatus(@jakarta.annotation.Nullable StatusEnum status) {
     this.status = status;
   }
 

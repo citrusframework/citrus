@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import org.citrusframework.openapi.generator.rest.petstore.PetStoreOpenApi;
 
 @Configuration
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-26T12:43:00.994595900+02:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:42.828969400+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class PetStoreBeanConfiguration {
 
     @Bean
@@ -27,17 +27,17 @@ public class PetStoreBeanConfiguration {
         return openApiRepository;
     }
 
-    @Bean(name="PetApi")
+    @Bean
     public PetApi petApi(@Autowired(required = false) @Qualifier("petstore.endpoint") Endpoint defaultEndpoint, @Autowired(required = false) List<ApiActionBuilderCustomizer> customizers) {
         return new PetApi(defaultEndpoint, customizers);
     }
 
-    @Bean(name="StoreApi")
+    @Bean
     public StoreApi storeApi(@Autowired(required = false) @Qualifier("petstore.endpoint") Endpoint defaultEndpoint, @Autowired(required = false) List<ApiActionBuilderCustomizer> customizers) {
         return new StoreApi(defaultEndpoint, customizers);
     }
 
-    @Bean(name="UserApi")
+    @Bean
     public UserApi userApi(@Autowired(required = false) @Qualifier("petstore.endpoint") Endpoint defaultEndpoint, @Autowired(required = false) List<ApiActionBuilderCustomizer> customizers) {
         return new UserApi(defaultEndpoint, customizers);
     }

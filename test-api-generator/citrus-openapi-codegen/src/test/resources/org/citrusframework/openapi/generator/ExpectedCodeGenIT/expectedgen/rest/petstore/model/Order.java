@@ -25,25 +25,29 @@ import java.time.OffsetDateTime;
 /**
  * Order
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-26T12:43:00.994595900+02:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:42.828969400+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class Order {
+  @jakarta.annotation.Nullable
   private Long id;
 
+  @jakarta.annotation.Nullable
   private Long petId;
 
+  @jakarta.annotation.Nullable
   private Integer quantity;
 
+  @jakarta.annotation.Nullable
   private OffsetDateTime shipDate;
 
   /**
    * Order Status
    */
   public enum StatusEnum {
-    PLACED("placed"),
+    PLACED(String.valueOf("placed")),
     
-    APPROVED("approved"),
+    APPROVED(String.valueOf("approved")),
     
-    DELIVERED("delivered");
+    DELIVERED(String.valueOf("delivered"));
 
     private String value;
 
@@ -70,14 +74,16 @@ public class Order {
     }
   }
 
+  @jakarta.annotation.Nullable
   private StatusEnum status;
 
+  @jakarta.annotation.Nullable
   private Boolean complete;
 
   public Order() {
   }
 
-  public Order id(Long id) {
+  public Order id(@jakarta.annotation.Nullable Long id) {
     
     this.id = id;
     return this;
@@ -94,11 +100,11 @@ public class Order {
   }
 
 
-  public void setId(Long id) {
+  public void setId(@jakarta.annotation.Nullable Long id) {
     this.id = id;
   }
 
-  public Order petId(Long petId) {
+  public Order petId(@jakarta.annotation.Nullable Long petId) {
     
     this.petId = petId;
     return this;
@@ -115,11 +121,11 @@ public class Order {
   }
 
 
-  public void setPetId(Long petId) {
+  public void setPetId(@jakarta.annotation.Nullable Long petId) {
     this.petId = petId;
   }
 
-  public Order quantity(Integer quantity) {
+  public Order quantity(@jakarta.annotation.Nullable Integer quantity) {
     
     this.quantity = quantity;
     return this;
@@ -136,11 +142,11 @@ public class Order {
   }
 
 
-  public void setQuantity(Integer quantity) {
+  public void setQuantity(@jakarta.annotation.Nullable Integer quantity) {
     this.quantity = quantity;
   }
 
-  public Order shipDate(OffsetDateTime shipDate) {
+  public Order shipDate(@jakarta.annotation.Nullable OffsetDateTime shipDate) {
     
     this.shipDate = shipDate;
     return this;
@@ -157,11 +163,11 @@ public class Order {
   }
 
 
-  public void setShipDate(OffsetDateTime shipDate) {
+  public void setShipDate(@jakarta.annotation.Nullable OffsetDateTime shipDate) {
     this.shipDate = shipDate;
   }
 
-  public Order status(StatusEnum status) {
+  public Order status(@jakarta.annotation.Nullable StatusEnum status) {
     
     this.status = status;
     return this;
@@ -178,11 +184,11 @@ public class Order {
   }
 
 
-  public void setStatus(StatusEnum status) {
+  public void setStatus(@jakarta.annotation.Nullable StatusEnum status) {
     this.status = status;
   }
 
-  public Order complete(Boolean complete) {
+  public Order complete(@jakarta.annotation.Nullable Boolean complete) {
     
     this.complete = complete;
     return this;
@@ -199,7 +205,7 @@ public class Order {
   }
 
 
-  public void setComplete(Boolean complete) {
+  public void setComplete(@jakarta.annotation.Nullable Boolean complete) {
     this.complete = complete;
   }
 

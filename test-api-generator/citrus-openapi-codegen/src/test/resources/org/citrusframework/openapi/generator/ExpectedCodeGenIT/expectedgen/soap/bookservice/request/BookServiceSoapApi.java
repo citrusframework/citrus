@@ -17,7 +17,7 @@ import org.citrusframework.openapi.testapi.SoapApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.testapi.SoapApiSendMessageActionBuilder;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-26T12:43:02.133191500+02:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:48.787357800+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class BookServiceSoapApi implements GeneratedApi
 {
 

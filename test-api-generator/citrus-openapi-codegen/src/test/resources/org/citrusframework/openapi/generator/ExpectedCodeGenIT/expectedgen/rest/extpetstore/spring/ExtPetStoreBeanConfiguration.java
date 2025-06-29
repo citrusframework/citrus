@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStoreOpenApi;
 
 @Configuration
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-26T12:43:01.728341200+02:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:47.279105500+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class ExtPetStoreBeanConfiguration {
 
     @Bean
@@ -25,7 +25,7 @@ public class ExtPetStoreBeanConfiguration {
         return openApiRepository;
     }
 
-    @Bean(name="ExtPetApi")
+    @Bean
     public ExtPetApi extPetApi(@Autowired(required = false) @Qualifier("extpetstore.endpoint") Endpoint defaultEndpoint, @Autowired(required = false) List<ApiActionBuilderCustomizer> customizers) {
         return new ExtPetApi(defaultEndpoint, customizers);
     }

@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.citrusframework.openapi.generator.soap.bookservice.BookServiceOpenApi;
 
 @Configuration
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-26T12:43:02.133191500+02:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:48.787357800+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class BookServiceBeanConfiguration {
 
     @Bean
@@ -25,7 +25,7 @@ public class BookServiceBeanConfiguration {
         return openApiRepository;
     }
 
-    @Bean(name="BookServiceSoapApi")
+    @Bean
     public BookServiceSoapApi bookServiceSoapApi(@Autowired(required = false) @Qualifier("bookstore.endpoint") Endpoint defaultEndpoint, @Autowired(required = false) List<ApiActionBuilderCustomizer> customizers) {
         return new BookServiceSoapApi(defaultEndpoint, customizers);
     }

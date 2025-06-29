@@ -24,16 +24,18 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * PetIdentifier
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-26T12:43:01.728341200+02:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:47.279105500+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class PetIdentifier {
+  @jakarta.annotation.Nullable
   private String _name;
 
+  @jakarta.annotation.Nullable
   private String alias;
 
   public PetIdentifier() {
   }
 
-  public PetIdentifier _name(String _name) {
+  public PetIdentifier _name(@jakarta.annotation.Nullable String _name) {
     
     this._name = _name;
     return this;
@@ -50,11 +52,11 @@ public class PetIdentifier {
   }
 
 
-  public void setName(String _name) {
+  public void setName(@jakarta.annotation.Nullable String _name) {
     this._name = _name;
   }
 
-  public PetIdentifier alias(String alias) {
+  public PetIdentifier alias(@jakarta.annotation.Nullable String alias) {
     
     this.alias = alias;
     return this;
@@ -71,7 +73,7 @@ public class PetIdentifier {
   }
 
 
-  public void setAlias(String alias) {
+  public void setAlias(@jakarta.annotation.Nullable String alias) {
     this.alias = alias;
   }
 

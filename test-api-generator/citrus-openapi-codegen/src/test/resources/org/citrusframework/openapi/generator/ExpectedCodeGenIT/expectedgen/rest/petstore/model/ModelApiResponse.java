@@ -24,18 +24,21 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * ModelApiResponse
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-26T12:43:00.994595900+02:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:42.828969400+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class ModelApiResponse {
+  @jakarta.annotation.Nullable
   private Integer code;
 
+  @jakarta.annotation.Nullable
   private String type;
 
+  @jakarta.annotation.Nullable
   private String _message;
 
   public ModelApiResponse() {
   }
 
-  public ModelApiResponse code(Integer code) {
+  public ModelApiResponse code(@jakarta.annotation.Nullable Integer code) {
     
     this.code = code;
     return this;
@@ -52,11 +55,11 @@ public class ModelApiResponse {
   }
 
 
-  public void setCode(Integer code) {
+  public void setCode(@jakarta.annotation.Nullable Integer code) {
     this.code = code;
   }
 
-  public ModelApiResponse type(String type) {
+  public ModelApiResponse type(@jakarta.annotation.Nullable String type) {
     
     this.type = type;
     return this;
@@ -73,11 +76,11 @@ public class ModelApiResponse {
   }
 
 
-  public void setType(String type) {
+  public void setType(@jakarta.annotation.Nullable String type) {
     this.type = type;
   }
 
-  public ModelApiResponse _message(String _message) {
+  public ModelApiResponse _message(@jakarta.annotation.Nullable String _message) {
     
     this._message = _message;
     return this;
@@ -94,7 +97,7 @@ public class ModelApiResponse {
   }
 
 
-  public void setMessage(String _message) {
+  public void setMessage(@jakarta.annotation.Nullable String _message) {
     this._message = _message;
   }
 

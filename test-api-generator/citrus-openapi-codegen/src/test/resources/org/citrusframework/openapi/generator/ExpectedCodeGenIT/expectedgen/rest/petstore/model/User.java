@@ -24,28 +24,36 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * User
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-26T12:43:00.994595900+02:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:42.828969400+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class User {
+  @jakarta.annotation.Nullable
   private Long id;
 
+  @jakarta.annotation.Nullable
   private String username;
 
+  @jakarta.annotation.Nullable
   private String firstName;
 
+  @jakarta.annotation.Nullable
   private String lastName;
 
+  @jakarta.annotation.Nullable
   private String email;
 
+  @jakarta.annotation.Nullable
   private String password;
 
+  @jakarta.annotation.Nullable
   private String phone;
 
+  @jakarta.annotation.Nullable
   private Integer userStatus;
 
   public User() {
   }
 
-  public User id(Long id) {
+  public User id(@jakarta.annotation.Nullable Long id) {
     
     this.id = id;
     return this;
@@ -62,11 +70,11 @@ public class User {
   }
 
 
-  public void setId(Long id) {
+  public void setId(@jakarta.annotation.Nullable Long id) {
     this.id = id;
   }
 
-  public User username(String username) {
+  public User username(@jakarta.annotation.Nullable String username) {
     
     this.username = username;
     return this;
@@ -83,11 +91,11 @@ public class User {
   }
 
 
-  public void setUsername(String username) {
+  public void setUsername(@jakarta.annotation.Nullable String username) {
     this.username = username;
   }
 
-  public User firstName(String firstName) {
+  public User firstName(@jakarta.annotation.Nullable String firstName) {
     
     this.firstName = firstName;
     return this;
@@ -104,11 +112,11 @@ public class User {
   }
 
 
-  public void setFirstName(String firstName) {
+  public void setFirstName(@jakarta.annotation.Nullable String firstName) {
     this.firstName = firstName;
   }
 
-  public User lastName(String lastName) {
+  public User lastName(@jakarta.annotation.Nullable String lastName) {
     
     this.lastName = lastName;
     return this;
@@ -125,11 +133,11 @@ public class User {
   }
 
 
-  public void setLastName(String lastName) {
+  public void setLastName(@jakarta.annotation.Nullable String lastName) {
     this.lastName = lastName;
   }
 
-  public User email(String email) {
+  public User email(@jakarta.annotation.Nullable String email) {
     
     this.email = email;
     return this;
@@ -146,11 +154,11 @@ public class User {
   }
 
 
-  public void setEmail(String email) {
+  public void setEmail(@jakarta.annotation.Nullable String email) {
     this.email = email;
   }
 
-  public User password(String password) {
+  public User password(@jakarta.annotation.Nullable String password) {
     
     this.password = password;
     return this;
@@ -167,11 +175,11 @@ public class User {
   }
 
 
-  public void setPassword(String password) {
+  public void setPassword(@jakarta.annotation.Nullable String password) {
     this.password = password;
   }
 
-  public User phone(String phone) {
+  public User phone(@jakarta.annotation.Nullable String phone) {
     
     this.phone = phone;
     return this;
@@ -188,11 +196,11 @@ public class User {
   }
 
 
-  public void setPhone(String phone) {
+  public void setPhone(@jakarta.annotation.Nullable String phone) {
     this.phone = phone;
   }
 
-  public User userStatus(Integer userStatus) {
+  public User userStatus(@jakarta.annotation.Nullable Integer userStatus) {
     
     this.userStatus = userStatus;
     return this;
@@ -209,7 +217,7 @@ public class User {
   }
 
 
-  public void setUserStatus(Integer userStatus) {
+  public void setUserStatus(@jakarta.annotation.Nullable Integer userStatus) {
     this.userStatus = userStatus;
   }
 

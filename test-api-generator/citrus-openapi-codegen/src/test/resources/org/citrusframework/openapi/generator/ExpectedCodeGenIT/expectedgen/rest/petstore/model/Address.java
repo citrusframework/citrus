@@ -24,20 +24,24 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * Address
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-26T12:43:00.994595900+02:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:42.828969400+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class Address {
+  @jakarta.annotation.Nullable
   private String street;
 
+  @jakarta.annotation.Nullable
   private String city;
 
+  @jakarta.annotation.Nullable
   private String state;
 
+  @jakarta.annotation.Nullable
   private String zip;
 
   public Address() {
   }
 
-  public Address street(String street) {
+  public Address street(@jakarta.annotation.Nullable String street) {
     
     this.street = street;
     return this;
@@ -54,11 +58,11 @@ public class Address {
   }
 
 
-  public void setStreet(String street) {
+  public void setStreet(@jakarta.annotation.Nullable String street) {
     this.street = street;
   }
 
-  public Address city(String city) {
+  public Address city(@jakarta.annotation.Nullable String city) {
     
     this.city = city;
     return this;
@@ -75,11 +79,11 @@ public class Address {
   }
 
 
-  public void setCity(String city) {
+  public void setCity(@jakarta.annotation.Nullable String city) {
     this.city = city;
   }
 
-  public Address state(String state) {
+  public Address state(@jakarta.annotation.Nullable String state) {
     
     this.state = state;
     return this;
@@ -96,11 +100,11 @@ public class Address {
   }
 
 
-  public void setState(String state) {
+  public void setState(@jakarta.annotation.Nullable String state) {
     this.state = state;
   }
 
-  public Address zip(String zip) {
+  public Address zip(@jakarta.annotation.Nullable String zip) {
     
     this.zip = zip;
     return this;
@@ -117,7 +121,7 @@ public class Address {
   }
 
 
-  public void setZip(String zip) {
+  public void setZip(@jakarta.annotation.Nullable String zip) {
     this.zip = zip;
   }
 

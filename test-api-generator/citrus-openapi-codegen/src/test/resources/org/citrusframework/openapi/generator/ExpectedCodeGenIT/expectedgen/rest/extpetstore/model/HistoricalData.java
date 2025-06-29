@@ -25,16 +25,18 @@ import java.time.LocalDate;
 /**
  * Additional historical data for a vaccination report, not contained in internal storage. 
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-26T12:43:01.728341200+02:00[Europe/Zurich]", comments = "Generator version: 7.9.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:47.279105500+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class HistoricalData {
+  @jakarta.annotation.Nullable
   private LocalDate lastVaccinationDate;
 
+  @jakarta.annotation.Nullable
   private Integer vaccinationCount;
 
   public HistoricalData() {
   }
 
-  public HistoricalData lastVaccinationDate(LocalDate lastVaccinationDate) {
+  public HistoricalData lastVaccinationDate(@jakarta.annotation.Nullable LocalDate lastVaccinationDate) {
     
     this.lastVaccinationDate = lastVaccinationDate;
     return this;
@@ -51,11 +53,11 @@ public class HistoricalData {
   }
 
 
-  public void setLastVaccinationDate(LocalDate lastVaccinationDate) {
+  public void setLastVaccinationDate(@jakarta.annotation.Nullable LocalDate lastVaccinationDate) {
     this.lastVaccinationDate = lastVaccinationDate;
   }
 
-  public HistoricalData vaccinationCount(Integer vaccinationCount) {
+  public HistoricalData vaccinationCount(@jakarta.annotation.Nullable Integer vaccinationCount) {
     
     this.vaccinationCount = vaccinationCount;
     return this;
@@ -72,7 +74,7 @@ public class HistoricalData {
   }
 
 
-  public void setVaccinationCount(Integer vaccinationCount) {
+  public void setVaccinationCount(@jakarta.annotation.Nullable Integer vaccinationCount) {
     this.vaccinationCount = vaccinationCount;
   }
 
