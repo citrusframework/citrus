@@ -16,6 +16,8 @@
 
 package org.citrusframework.message;
 
+import jakarta.annotation.Nullable;
+
 /**
  * Enumeration for message protocol types used in test cases.
  *
@@ -70,5 +72,9 @@ public enum MessageType {
     public static boolean isXml(String messageType) {
         return MessageType.XML.name().equalsIgnoreCase(messageType)
                 || MessageType.XHTML.name().equalsIgnoreCase(messageType);
+    }
+
+    public static MessageType mapToMessageType(@Nullable String contentTypeHeader, @Nullable String encodingHeader) {
+        return MediaTypeMapper.mapToMessageType(contentTypeHeader, encodingHeader);
     }
 }

@@ -61,6 +61,11 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
 
     protected String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
 
+    /**
+     * Set to true, if explicitly set. Can be used to distinguish from CitrusSettings.DEFAULT_MESSAGE_TYPE
+     */
+    private boolean isExplictMessageType = false;
+
     protected DataDictionary<?> dataDictionary;
     protected String dataDictionaryName;
 
@@ -107,6 +112,7 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
      */
     public S type(final String messageType) {
         this.messageType = messageType;
+        isExplictMessageType = true;
         return self;
     }
 
@@ -380,13 +386,20 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
     }
 
     /**
+     * @return true if the messageType has been explicitly set (to distinguish from default)
+     */
+    public boolean isExplictMessageType() {
+        return isExplictMessageType;
+    }
+
+    /**
      * Basic message action builder provides settings on a message object and common message related operations such as
      * processors.
      * @param <T>
      * @param <M>
      * @param <B>
      */
-    public static abstract class MessageActionBuilder<T extends TestAction, M extends MessageBuilderSupport<T, B, M>, B extends MessageActionBuilder<T, M, B>> extends AbstractTestActionBuilder<T, B>
+    public abstract static class MessageActionBuilder<T extends TestAction, M extends MessageBuilderSupport<T, B, M>, B extends MessageActionBuilder<T, M, B>> extends AbstractTestActionBuilder<T, B>
             implements ReferenceResolverAware {
 
         protected Endpoint endpoint;
@@ -487,8 +500,8 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
          * @return
          */
         public B process(MessageProcessor processor) {
-            if (processor instanceof VariableExtractor) {
-                this.variableExtractors.add((VariableExtractor) processor);
+            if (processor instanceof VariableExtractor variableExtractor) {
+                this.variableExtractors.add(variableExtractor);
             } else {
                 this.messageProcessors.add(processor);
             }

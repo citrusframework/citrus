@@ -12,6 +12,12 @@
   <artifactId>citrus-rmi</artifactId>
   <name>Citrus :: Endpoints :: RMI</name>
 
+  <properties>
+    <!-- RMI tests typically do not run behind a company proxy. Set this property if required, when building locally-->
+    <skipRmiTests>false</skipRmiTests>
+  </properties>
+
+
   <build>
     <plugins>
       <plugin>
@@ -34,6 +40,20 @@
             <xjbSource>src/main/resources/binding.xjb</xjbSource>
           </xjbSources>
           <clearOutputDir>true</clearOutputDir>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>${skipRmiTests}</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <skip>${skipRmiTests}</skip>
         </configuration>
       </plugin>
     </plugins>

@@ -65,8 +65,14 @@ public class BinaryMessageValidator extends DefaultMessageValidator {
                     throw new ValidationException(("Received input stream reached end-of-stream - " +
                             "control input stream is not finished yet"));
                 } else if (n2 == -1) {
-                    throw new ValidationException(("Control input stream reached end-of-stream - " +
-                            "received input stream is not finished yet"));
+                    if (controlResult.size() > 0) {
+                        throw new ValidationException(
+                            ("Control input stream reached end-of-stream - " +
+                                "received input stream is not finished yet"));
+                    } else {
+                        // Binary message validation without a specific control message - skip.
+                        return;
+                    }
                 }
 
                 receivedBuffer.flip();
