@@ -1,0 +1,44 @@
+<project
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>full-config</artifactId>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>citrus-openapi-codegen-maven-plugin</artifactId>
+                <configuration>
+                    <globalProperties>
+                        <debugOpenAPI>true</debugOpenAPI>
+                        <debugModels>true</debugModels>
+                    </globalProperties>
+                    <globalConfigOptions>
+                        <a>a</a>
+                        <other>otherOption</other>
+                    </globalConfigOptions>
+                    <apis>
+                        <api>
+                            <prefix>Minimal</prefix>
+                            <source>api/test-api.yml</source>
+                            <apiConfigOptions>
+                                <a>b</a>
+                                <c>d</c>
+                            </apiConfigOptions>
+                        </api>
+                    </apis>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>create-test-api</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
