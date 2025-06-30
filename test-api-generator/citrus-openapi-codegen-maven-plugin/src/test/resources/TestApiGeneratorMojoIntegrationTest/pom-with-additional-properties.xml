@@ -10,7 +10,7 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>citrus-test-api-generator-maven-plugin</artifactId>
+                <artifactId>citrus-openapi-codegen-maven-plugin</artifactId>
                 <configuration>
                     <globalConfigOptions>
                         <rootContextPath>/base/a/b</rootContextPath>
@@ -34,5 +34,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
