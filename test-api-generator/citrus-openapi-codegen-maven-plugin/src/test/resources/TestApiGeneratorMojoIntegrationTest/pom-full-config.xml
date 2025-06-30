@@ -1,0 +1,57 @@
+<project
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>full-config</artifactId>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>citrus-test-api-generator-maven-plugin</artifactId>
+                <configuration>
+                    <globalConfigOptions>
+                        <a>b</a>
+                        <other>otherOption</other>
+                    </globalConfigOptions>
+                    <globalProperties>
+                        <debugOpenAPI>true</debugOpenAPI>
+                        <debugModels>true</debugModels>
+                    </globalProperties>
+                    <apis>
+                        <api>
+                            <apiPackage>org.mypackage.%PREFIX%.api</apiPackage>
+                            <endpoint>myEndpoint</endpoint>
+                            <invokerPackage>org.mypackage.%PREFIX%.invoker</invokerPackage>
+                            <modelPackage>org.mypackage.%PREFIX%.model</modelPackage>
+                            <prefix>Full</prefix>
+                            <source>api/test-api.yml</source>
+                            <targetXmlnsNamespace>"http://myNamespace"</targetXmlnsNamespace>
+                            <additionalProperties>a=b,c=d</additionalProperties>
+                            <rootContextPath>/a/b/c/d</rootContextPath>
+                            <apiConfigOptions>
+                                <a>b</a>
+                                <c>d</c>
+                                <output>target/pom-full-config/target/generated-sources-mod/openapi-mod</output>
+                                <sourceFolder>src/main/java-mod</sourceFolder>
+                                <resourceFolder>src/main/resource-mod</resourceFolder>
+                            </apiConfigOptions>
+                        </api>
+                    </apis>
+                    <schemaFolder>myschema/xsd</schemaFolder>
+                    <metaInfFolder>src/main/resource-mod/META-INF-MOD</metaInfFolder>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>create-test-api</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
