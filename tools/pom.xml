@@ -31,7 +31,7 @@
         <version>${swagger.parser.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.swagger</groupId>
+        <groupId>io.swagger.core.v3</groupId>
         <artifactId>swagger-core</artifactId>
         <version>${swagger.version}</version>
         <exclusions>
@@ -42,9 +42,9 @@
         </exclusions>
       </dependency>
       <dependency>
-        <groupId>io.swagger</groupId>
+        <groupId>io.swagger.core.v3</groupId>
         <artifactId>swagger-models</artifactId>
-        <version>${swagger.version}</version>
+          <version>${swagger.version}</version>
         <exclusions>
           <exclusion>
             <groupId>javax.validation</groupId>
