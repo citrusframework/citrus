@@ -18,6 +18,7 @@
     <modules>
         <module>citrus-test-api-core</module>
         <module>citrus-openapi-codegen</module>
+        <module>citrus-openapi-codegen-maven-plugin</module>
     </modules>
 
     <dependencies>

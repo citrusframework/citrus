@@ -155,7 +155,7 @@
     <project.docs.version>${project.version}</project.docs.version>
     <java.version>17</java.version>
 
-    <maven.version>3.9.6</maven.version>
+    <maven.version>3.9.9</maven.version>
     <maven.compiler.version>3.14.0</maven.compiler.version>
     <maven.compiler.release>${java.version}</maven.compiler.release>
     <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -173,8 +173,10 @@
     <maven.install.plugin.version>3.1.1</maven.install.plugin.version>
     <maven.jar.plugin.version>3.3.0</maven.jar.plugin.version>
     <maven.javadoc.plugin.version>3.11.2</maven.javadoc.plugin.version>
-    <maven.plugin.plugin.version>3.9.0</maven.plugin.plugin.version>
+    <maven.nexus-staging.plugin.version>1.6.13</maven.nexus-staging.plugin.version>
+    <maven.plugin.plugin.version>3.15.1</maven.plugin.plugin.version>
     <maven.plugin.annotations.version>3.13.1</maven.plugin.annotations.version>
+    <maven.plugin.testing.harness.version>3.3.0</maven.plugin.testing.harness.version>
     <maven.release.plugin.version>3.0.1</maven.release.plugin.version>
     <maven.resource.plugin.version>3.3.1</maven.resource.plugin.version>
     <maven.scm.plugin.version>1.11.2</maven.scm.plugin.version>
