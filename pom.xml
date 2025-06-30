@@ -269,7 +269,7 @@
     <spring.integration.version>6.4.4</spring.integration.version>
     <spring.restdocs.version>3.0.3</spring.restdocs.version>
     <sshd.version>2.15.0</sshd.version>
-    <swagger.version>1.6.9</swagger.version>
+    <swagger.version>2.2.31</swagger.version>
     <swagger.parser.version>2.1.22</swagger.parser.version>
     <swagger-request-validator.version>2.44.1</swagger-request-validator.version>
     <system-stubs.version>2.1.7</system-stubs.version>

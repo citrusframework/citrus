@@ -6,8 +6,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>citrus-test-api-generator</artifactId>
         <groupId>org.citrusframework</groupId>
+        <artifactId>citrus-test-api-generator</artifactId>
         <version>4.8.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -17,10 +17,6 @@
 
     <name>Citrus :: Test API Generator :: Maven Plugin</name>
     <description>Maven Plugin for generation of Citrus Test API</description>
-
-    <properties>
-        <swagger.version>2.2.21</swagger.version>
-    </properties>
 
     <build>
         <pluginManagement>
@@ -67,7 +63,7 @@
     <dependencies>
         <dependency>
             <groupId>org.citrusframework</groupId>
-            <artifactId>citrus-test-api-generator-core</artifactId>
+            <artifactId>citrus-openapi-codegen</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
