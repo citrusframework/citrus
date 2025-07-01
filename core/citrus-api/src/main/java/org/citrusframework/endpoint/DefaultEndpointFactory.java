@@ -115,15 +115,7 @@ public class DefaultEndpointFactory implements EndpointFactory {
             }
         }
 
-        final String componentName;
-        if (endpointUri.contains(":") && !endpointUri.endsWith(":")) {
-            componentName = endpointUri.substring(0, endpointUri.indexOf(":"));
-        } else if (endpointUri.contains("?")) {
-            componentName = endpointUri.substring(0, endpointUri.indexOf("?"));
-        } else {
-            throw new CitrusRuntimeException(String.format("Invalid endpoint uri '%s'", endpointUri));
-        }
-
+        String componentName = getComponentName(endpointUri);
         Optional<EndpointComponent> component = Optional.ofNullable(getEndpointComponents(context.getReferenceResolver()).get(componentName));
 
         if (component.isEmpty()) {
@@ -155,6 +147,22 @@ public class DefaultEndpointFactory implements EndpointFactory {
                 return endpoint;
             }
         }
+    }
+
+    private static String getComponentName(String endpointUri) {
+        String componentName = endpointUri;
+        if (componentName.contains("?")) {
+            componentName = componentName.substring(0, componentName.indexOf("?"));
+        }
+
+        if (componentName.contains(":")) {
+            componentName = componentName.substring(0, componentName.indexOf(":"));
+        }
+
+        if (componentName.isEmpty() || endpointUri.endsWith(":") || endpointUri.endsWith("?")) {
+            throw new CitrusRuntimeException(String.format("Invalid endpoint uri '%s'", endpointUri));
+        }
+        return componentName;
     }
 
     private Map<String, EndpointComponent> getEndpointComponents(ReferenceResolver referenceResolver) {

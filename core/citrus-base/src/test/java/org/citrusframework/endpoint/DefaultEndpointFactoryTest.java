@@ -68,6 +68,40 @@ public class DefaultEndpointFactoryTest {
     }
 
     @Test
+    public void testResolveCustomEndpointWithParameters() {
+        Map<String, EndpointComponent> components = new HashMap<>();
+        components.put("custom", new DirectEndpointComponent());
+
+        reset(referenceResolver);
+        when(referenceResolver.resolveAll(EndpointComponent.class)).thenReturn(components);
+        TestContext context = new TestContext();
+        context.setReferenceResolver(referenceResolver);
+
+        DefaultEndpointFactory factory = new DefaultEndpointFactory();
+        Endpoint endpoint = factory.create("custom:custom.queue?endpointName=foo", context);
+
+        Assert.assertEquals(endpoint.getClass(), DirectEndpoint.class);
+        Assert.assertEquals(((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName(), "custom.queue");
+    }
+
+    @Test
+    public void testResolveCustomEndpointQueueNameAsParameters() {
+        Map<String, EndpointComponent> components = new HashMap<>();
+        components.put("custom", new DirectEndpointComponent());
+
+        reset(referenceResolver);
+        when(referenceResolver.resolveAll(EndpointComponent.class)).thenReturn(components);
+        TestContext context = new TestContext();
+        context.setReferenceResolver(referenceResolver);
+
+        DefaultEndpointFactory factory = new DefaultEndpointFactory();
+        Endpoint endpoint = factory.create("custom?queueName=foo:bar", context);
+
+        Assert.assertEquals(endpoint.getClass(), DirectEndpoint.class);
+        Assert.assertEquals(((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName(), "foo:bar");
+    }
+
+    @Test
     public void testOverwriteEndpointComponent() {
         Map<String, EndpointComponent> components = new HashMap<>();
         components.put("jms", new DirectEndpointComponent());

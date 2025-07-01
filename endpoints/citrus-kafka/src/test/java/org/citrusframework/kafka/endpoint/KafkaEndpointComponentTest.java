@@ -16,6 +16,8 @@
 
 package org.citrusframework.kafka.endpoint;
 
+import java.util.Map;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointComponent;
@@ -23,8 +25,6 @@ import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 public class KafkaEndpointComponentTest {
 
@@ -48,6 +48,19 @@ public class KafkaEndpointComponentTest {
         KafkaEndpointComponent component = new KafkaEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("kafka:test?server=localhost:9091&timeout=10000", context);
+
+        Assert.assertEquals(endpoint.getClass(), KafkaEndpoint.class);
+
+        Assert.assertEquals(((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic(), "test");
+        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getServer(), "localhost:9091");
+        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+    }
+
+    @Test
+    public void testCreateEndpointWithTopicNameAsParameter() {
+        KafkaEndpointComponent component = new KafkaEndpointComponent();
+
+        Endpoint endpoint = component.createEndpoint("kafka?topic=test&server=localhost:9091&timeout=10000", context);
 
         Assert.assertEquals(endpoint.getClass(), KafkaEndpoint.class);
 
