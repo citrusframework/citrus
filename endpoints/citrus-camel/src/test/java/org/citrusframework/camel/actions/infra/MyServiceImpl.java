@@ -47,6 +47,11 @@ public class MyServiceImpl implements MyService {
     }
 
     @Override
+    public String password() {
+        return "secret";
+    }
+
+    @Override
     public boolean isFaultTolerant() {
         return false;
     }

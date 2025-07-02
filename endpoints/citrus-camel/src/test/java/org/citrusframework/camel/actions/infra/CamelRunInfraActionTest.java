@@ -21,14 +21,17 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.camel.catalog.CamelCatalog;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.log.LogModifier;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CamelRunInfraActionTest extends AbstractTestNGUnitTest {
@@ -93,6 +96,7 @@ public class CamelRunInfraActionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_SERVER_URL"), "tcp://my-host:18088");
         Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_HOST"), "my-host");
         Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_PORT", Integer.class), 18088);
+        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_PASSWORD"), "secret");
         Assert.assertFalse(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_FAULT_TOLERANT", Boolean.class));
 
         MyServiceImpl myService = context.getVariable("citrus.camel.infra.my-service", MyServiceImpl.class);
@@ -119,6 +123,7 @@ public class CamelRunInfraActionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_SERVER_URL"), "tcp://my-host:18088");
         Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_HOST"), "my-host");
         Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_PORT", Integer.class), 18088);
+        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_PASSWORD"), "secret");
         Assert.assertFalse(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_FAULT_TOLERANT", Boolean.class));
 
         MyServiceImpl myService = context.getVariable("citrus.camel.infra.service.two", MyServiceImpl.class);
@@ -129,6 +134,21 @@ public class CamelRunInfraActionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(meta.version(), "1.0");
 
         Assert.assertEquals(context.getFinalActions().size(), 0);
+    }
+
+    @Test
+    public void testRunInfraMaskSensitiveProperty() {
+        CamelRunInfraAction action = new CamelRunInfraAction.Builder()
+                .service("my-service")
+                .catalog(catalog)
+                .build();
+
+        LogModifier modifier = Mockito.mock(LogModifier.class);
+        context.setLogModifier(modifier);
+
+        action.execute(context);
+
+        verify(modifier).mask("CITRUS_CAMEL_INFRA_MY_SERVICE_PASSWORD='secret'");
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "No Camel infra service found for 'unknown'")

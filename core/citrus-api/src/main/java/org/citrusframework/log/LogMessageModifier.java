@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.citrusframework.CitrusSettings;
 import org.citrusframework.message.Message;
 
 /**
@@ -56,7 +55,7 @@ public interface LogMessageModifier extends LogModifier {
 
                     String keyValuePair = String.format("%s=%s", entry.getKey(), entry.getValue());
                     if (!keyValuePair.equals(mask(keyValuePair))) {
-                        return CitrusSettings.getLogMaskValue();
+                        return CitrusLogSettings.getLogMaskValue();
                     }
 
                     return entry.getValue();
