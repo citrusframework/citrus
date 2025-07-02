@@ -20,47 +20,53 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.citrusframework.CitrusSettings;
+import org.citrusframework.util.IsJsonPredicate;
+import org.citrusframework.util.IsXmlPredicate;
+import org.citrusframework.util.IsYamlPredicate;
 
 /**
  * Default modifier implementation uses regular expressions to mask logger output.
  * Regular expressions match on default keywords.
- *
  */
 public class DefaultLogModifier implements LogMessageModifier {
 
-    private final Set<String> keywords =  CitrusSettings.getLogMaskKeywords();
-    private final String logMaskValue = CitrusSettings.getLogMaskValue();
+    private final Set<String> keywords = CitrusLogSettings.getLogMaskKeywords();
+    private final String logMaskValue = CitrusLogSettings.getLogMaskValue();
 
-    private boolean maskXml = true;
-    private boolean maskJson = true;
-    private boolean maskKeyValue = true;
-    private boolean maskFormUrlEncoded = true;
+    private boolean maskXml = CitrusLogSettings.isMaskXmlEnabled();
+    private boolean maskJson = CitrusLogSettings.isMaskJsonEnabled();
+    private boolean maskYaml = CitrusLogSettings.isMaskYamlEnabled();
+    private boolean maskKeyValue = CitrusLogSettings.isMaskKeyValueEnabled();
+    private boolean maskFormUrlEncoded = CitrusLogSettings.isMaskFormUrlEncodedEnabled();
 
     private Pattern keyValuePattern;
     private Pattern xmlPattern;
     private Pattern jsonPattern;
+    private Pattern yamlPattern;
     private Pattern formUrlEncodedPattern;
 
     @Override
     public String mask(String source) {
-        if (!CitrusSettings.isLogModifierEnabled() || source == null || source.isEmpty()) {
+        if (!CitrusLogSettings.isLogModifierEnabled() || source == null || source.isEmpty()) {
             return source;
         }
 
-        boolean xml = maskXml && source.startsWith("<");
-        boolean json = maskJson && !xml && (source.startsWith("{") || source.startsWith("["));
-        boolean formUrlEncoded = maskFormUrlEncoded && !json && source.contains("&") && source.contains("=");
+        boolean xml = maskXml && IsXmlPredicate.getInstance().test(source);
+        boolean json = maskJson && !xml && IsJsonPredicate.getInstance().test(source);
+        boolean yaml = maskYaml && !xml && !json && IsYamlPredicate.getInstance().test(source);
+        boolean formUrlEncoded = maskFormUrlEncoded && !yaml && source.contains("&") && source.contains("=");
 
         String masked = source;
         if (xml) {
             masked = createXmlPattern(keywords).matcher(masked).replaceAll("$1" + logMaskValue + "$2");
             if (maskKeyValue) {
                 // used for the attributes in the XML tags
-                masked = createKeyValuePattern(keywords).matcher(masked).replaceAll("$1" + logMaskValue + "");
+                masked = createKeyValuePattern(keywords).matcher(masked).replaceAll("$1" + logMaskValue);
             }
         } else if (json) {
             masked = createJsonPattern(keywords).matcher(masked).replaceAll("$1\"" + logMaskValue + "\"");
+        } else if (yaml) {
+            masked = createYamlPattern(keywords).matcher(masked).replaceAll("$1" + logMaskValue);
         } else if (formUrlEncoded) {
             masked = createFormUrlEncodedPattern(keywords).matcher(masked).replaceAll("$1" + logMaskValue);
         } else if (maskKeyValue) {
@@ -126,6 +132,20 @@ public class DefaultLogModifier implements LogMessageModifier {
         return jsonPattern;
     }
 
+    protected Pattern createYamlPattern(Set<String> keywords) {
+        if (yamlPattern == null) {
+            String keywordExpression = createKeywordsExpression(keywords);
+            if (keywordExpression.isEmpty()) {
+                return null;
+            }
+
+            String regex = "((?>" + keywordExpression + "):\\s*['\"]?)([^'\"]+)";
+            yamlPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        }
+
+        return yamlPattern;
+    }
+
     protected String createKeywordsExpression(Set<String> keywords) {
         if (keywords == null || keywords.isEmpty()) {
             return "";
@@ -138,11 +158,19 @@ public class DefaultLogModifier implements LogMessageModifier {
         this.maskJson = maskJson;
     }
 
+    public void setMaskYaml(boolean maskYaml) {
+        this.maskYaml = maskYaml;
+    }
+
     public void setMaskXml(boolean maskXml) {
         this.maskXml = maskXml;
     }
 
     public void setMaskKeyValue(boolean maskKeyValue) {
         this.maskKeyValue = maskKeyValue;
+    }
+
+    public void setMaskFormUrlEncoded(boolean maskFormUrlEncoded) {
+        this.maskFormUrlEncoded = maskFormUrlEncoded;
     }
 }

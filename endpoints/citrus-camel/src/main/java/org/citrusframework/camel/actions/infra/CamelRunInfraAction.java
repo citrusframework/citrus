@@ -125,7 +125,7 @@ public class CamelRunInfraAction extends AbstractCamelAction {
             if (logger.isDebugEnabled()) {
                 logger.debug("Camel infra service properties: {}", serviceProperties.entrySet()
                         .stream()
-                        .map((entry) -> "%s = %s".formatted(entry.getKey(), entry.getValue()))
+                        .map((entry) -> context.getLogModifier().mask("%s='%s'".formatted(entry.getKey(), entry.getValue().toString())))
                         .collect(Collectors.joining(System.lineSeparator())));
             }
 
@@ -133,9 +133,8 @@ public class CamelRunInfraAction extends AbstractCamelAction {
             serviceProperties.forEach((key, value) -> {
                 String name = "%s%s_%s".formatted(CamelInfraSettings.CAMEL_INFRA_ENV_PREFIX, serviceVariableName, normalizeKey(key));
                 context.setVariable(name, value);
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Exposing service property '{}' with value '{}'", name, value);
-                }
+                logger.info("Exposing service property {}",
+                        context.getLogModifier().mask("%s='%s'".formatted(name, value.toString())));
             });
 
             if (autoRemove) {

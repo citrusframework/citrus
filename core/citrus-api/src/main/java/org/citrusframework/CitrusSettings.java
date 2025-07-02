@@ -255,26 +255,6 @@ public final class CitrusSettings {
     public static final String PRETTY_PRINT_ENV = "CITRUS_MESSAGE_PRETTY_PRINT";
     public static final String PRETTY_PRINT_DEFAULT = Boolean.TRUE.toString();
 
-    /**
-     * Flag to enable/disable logger modifier
-     */
-    public static final String LOG_MODIFIER_PROPERTY = "citrus.logger.modifier";
-    public static final String LOG_MODIFIER_ENV = "CITRUS_LOG_MODIFIER";
-    public static final String LOG_MODIFIER_DEFAULT = Boolean.TRUE.toString();
-
-    /**
-     * Default logger modifier mask value
-     */
-    public static final String LOG_MASK_VALUE_PROPERTY = "citrus.logger.mask.value";
-    public static final String LOG_MASK_VALUE_ENV = "CITRUS_LOG_MASK_VALUE";
-    public static final String LOG_MASK_VALUE_DEFAULT = "****";
-
-    /**
-     * Default logger modifier keywords
-     */
-    public static final String LOG_MASK_KEYWORDS_PROPERTY = "citrus.logger.mask.keywords";
-    public static final String LOG_MASK_KEYWORDS_ENV = "CITRUS_LOG_MASK_KEYWORDS";
-    public static final String LOG_MASK_KEYWORDS_DEFAULT = "password,secret,secretKey";
 
     /**
      * File path charset parameter
@@ -376,30 +356,6 @@ public final class CitrusSettings {
     }
 
     /**
-     * Gets the logger modifier enabled/disabled setting.
-     *
-     * @return
-     */
-    public static boolean isLogModifierEnabled() {
-        return parseBoolean(getPropertyEnvOrDefault(
-                LOG_MODIFIER_PROPERTY,
-                LOG_MODIFIER_ENV,
-                LOG_MODIFIER_DEFAULT));
-    }
-
-    /**
-     * Get logger mask value.
-     *
-     * @return
-     */
-    public static String getLogMaskValue() {
-        return getPropertyEnvOrDefault(
-                LOG_MASK_VALUE_PROPERTY,
-                LOG_MASK_VALUE_ENV,
-                LOG_MASK_VALUE_DEFAULT);
-    }
-
-    /**
      * Get the file path charset parameter.
      *
      * @return
@@ -409,21 +365,6 @@ public final class CitrusSettings {
                 FILE_PATH_CHARSET_PARAMETER_PROPERTY,
                 FILE_PATH_CHARSET_PARAMETER_ENV,
                 FILE_PATH_CHARSET_PARAMETER_DEFAULT);
-    }
-
-    /**
-     * Get logger mask keywords.
-     *
-     * @return
-     */
-    public static Set<String> getLogMaskKeywords() {
-        return Stream.of(getPropertyEnvOrDefault(
-                        LOG_MASK_KEYWORDS_PROPERTY,
-                        LOG_MASK_KEYWORDS_ENV,
-                        LOG_MASK_KEYWORDS_DEFAULT)
-                        .split(","))
-                .map(String::trim)
-                .collect(toSet());
     }
 
     /**

@@ -20,5 +20,6 @@ public interface MyService {
     String getServerUrl();
     String host();
     int port();
+    String password();
     boolean isFaultTolerant();
 }

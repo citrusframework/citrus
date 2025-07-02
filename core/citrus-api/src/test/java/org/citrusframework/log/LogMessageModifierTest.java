@@ -18,7 +18,6 @@ package org.citrusframework.log;
 
 import java.util.Collections;
 
-import org.citrusframework.CitrusSettings;
 import org.citrusframework.message.Message;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -52,7 +51,7 @@ public class LogMessageModifierTest {
         Assert.assertEquals(modifier.maskHeaders(message), Collections.singletonMap("key", "value"));
 
         modifier = new MockLogModifier("key=masked");
-        Assert.assertEquals(modifier.maskHeaders(message), Collections.singletonMap("key", CitrusSettings.getLogMaskValue()));
+        Assert.assertEquals(modifier.maskHeaders(message), Collections.singletonMap("key", CitrusLogSettings.getLogMaskValue()));
     }
 
     private static class MockLogModifier implements LogMessageModifier {
