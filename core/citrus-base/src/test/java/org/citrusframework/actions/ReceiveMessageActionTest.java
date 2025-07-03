@@ -16,12 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
@@ -64,8 +58,15 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.message.MessageType.JSON;
+import static org.citrusframework.message.MessageType.PLAINTEXT;
 import static org.citrusframework.message.MessageType.XHTML;
 import static org.citrusframework.message.MessageType.XML;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -1271,8 +1272,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         }
 
         @Test(dataProvider = "emptyOrNullString")
-        void shouldNotAssumeAnything_forEmptyPayload(String payload) {
-            shouldAssumeMessageTypeOnPayload(payload, XML);
+        void shouldAssumePlaintext_forEmptyPayload(String payload) {
+            shouldAssumeMessageTypeOnPayload(payload, PLAINTEXT);
         }
 
         private void shouldAssumeMessageTypeOnPayload(String payload, MessageType messageType) {
