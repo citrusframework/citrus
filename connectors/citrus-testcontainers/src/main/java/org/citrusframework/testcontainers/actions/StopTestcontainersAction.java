@@ -16,7 +16,10 @@
 
 package org.citrusframework.testcontainers.actions;
 
+import java.util.Optional;
+
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testcontainers.containers.GenericContainer;
 
 public class StopTestcontainersAction extends AbstractTestcontainersAction {
@@ -34,12 +37,29 @@ public class StopTestcontainersAction extends AbstractTestcontainersAction {
     @Override
     public void doExecute(TestContext context) {
         if (container != null) {
-            container.stop();
-        } else if (containerName != null && context.getReferenceResolver().isResolvable(containerName)) {
-            Object maybeContainer = context.getReferenceResolver().resolve(containerName);
-            if (maybeContainer instanceof GenericContainer<?> genericContainer) {
-                genericContainer.stop();
+            stop(container, "");
+        } else if (containerName != null) {
+            if (context.getReferenceResolver().isResolvable(containerName)) {
+                Object maybeContainer = context.getReferenceResolver().resolve(containerName);
+                if (maybeContainer instanceof GenericContainer<?> genericContainer) {
+                    stop(genericContainer, containerName);
+                }
+            } else {
+                logger.warn("Unable to stop Testcontainers container '{}'", containerName);
             }
+        } else {
+            throw new CitrusRuntimeException("Unable to stop Testcontainers container - neither container nor container name provided");
+        }
+    }
+
+    private void stop(GenericContainer<?> container, String name) {
+        String containerName = getContainerName(container, name);
+        if (container.isRunning()) {
+            String containerId = Optional.ofNullable(container.getContainerId()).orElse("unknown");
+            container.stop();
+            logger.info("Successfully stopped Testcontainers container '{}' with id {}", containerName, containerId);
+        } else {
+            logger.info("Testcontainers container '{}' is stopped", containerName);
         }
     }
 

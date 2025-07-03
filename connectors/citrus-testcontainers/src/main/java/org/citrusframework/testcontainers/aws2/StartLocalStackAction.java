@@ -52,7 +52,10 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
         if (autoCreateClients) {
             for (LocalStackContainer.Service service : container.getServices()) {
                 String clientName = "%sClient".formatted(service.getServiceName());
+                clientName = options.getOrDefault(clientName + "Name", clientName);
+
                 if (context.getReferenceResolver().isResolvable(clientName)) {
+                    logger.debug("Client {} already exists - do not overwrite", clientName);
                     // client bean with same name already exists - do not overwrite
                     continue;
                 }
@@ -61,9 +64,10 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
                 if (clientFactory.isPresent()) {
                     Object client = clientFactory.get().createClient(container, context.resolveDynamicValuesInMap(options));
                     container.addClient(service, client);
+                    logger.debug("Auto create client {} for service {}", clientName, service.name());
                     context.getReferenceResolver().bind(clientName, client);
                 } else {
-                    logger.warn("Missing client factory for service '%s' - no client created for this service".formatted(service));
+                    logger.warn("Missing client factory for service '{}' - no client created for this service", service.name());
                 }
             }
         }
@@ -80,7 +84,7 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
 
         private boolean autoCreateClients = LocalStackSettings.isAutoCreateClients();
 
-        private Map<String, String> options = new HashMap<>();
+        private final Map<String, String> options = new HashMap<>();
 
         public Builder() {
             withStartupTimeout(LocalStackSettings.getStartupTimeout());

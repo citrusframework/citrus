@@ -17,11 +17,30 @@
 package org.citrusframework.testcontainers.actions;
 
 import org.citrusframework.TestAction;
+import org.testcontainers.containers.GenericContainer;
 
 /**
  * Base action representing interactions with Testcontainers.
  */
 public interface TestcontainersAction extends TestAction {
+
+    default String getContainerName(GenericContainer<?> container, String containerName) {
+        String name = container.getDockerImageName();
+
+        if (container.getContainerInfo() != null) {
+            name = container.getContainerInfo().getName();
+        } else if (container.getContainerId() != null) {
+            name = container.getCurrentContainerInfo().getName();
+        }
+
+        name = name.startsWith("/") ? name.substring(1) : name;
+
+        if (containerName != null && !containerName.equals(name)) {
+            return "%s (%s)".formatted(containerName, name);
+        }
+
+        return name;
+    }
 
 }
 

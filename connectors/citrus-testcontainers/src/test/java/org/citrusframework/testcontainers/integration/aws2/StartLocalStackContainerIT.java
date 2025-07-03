@@ -58,5 +58,8 @@ public class StartLocalStackContainerIT extends AbstractTestcontainersIT {
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to verify Docker container", e);
         }
+
+        // verify auto created S3 client
+        Assert.assertTrue(context.getReferenceResolver().isResolvable("s3Client"));
     }
 }

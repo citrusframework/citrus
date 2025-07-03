@@ -58,6 +58,8 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
 
     @Override
     public void doExecute(TestContext context) {
+        logger.info("Starting Testcontainers container '{}'", containerName);
+
         container.start();
 
         if (containerName != null && !context.getReferenceResolver().isResolvable(containerName)) {
@@ -67,10 +69,17 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
         exposeConnectionSettings(container, context);
 
         if (autoRemoveResources) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Auto remove enabled for Testcontainers container '{}' " +
+                        "- container will be stopped automatically after the test", getContainerName(container, containerName));
+            }
+
             context.doFinally(testcontainers()
                     .stop()
                     .container(container));
         }
+
+        logger.info("Successfully started Testcontainers container '{}' with id {}", getContainerName(container, containerName), container.getContainerId());
     }
 
     /**

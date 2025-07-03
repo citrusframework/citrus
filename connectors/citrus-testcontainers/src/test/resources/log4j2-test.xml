@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+-->
+<Configuration status="INFO">
+  <Appenders>
+    <Console name="STDOUT" target="SYSTEM_OUT">
+      <PatternLayout pattern="%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{Dim} %highlight{%5p} %style{%pid}{Magenta} %style{---}{Dim} %style{[%15.15t]}{Dim} %style{%-35.35c}{Cyan} %style{:}{Dim} %m%n"/>
+    </Console>
+  </Appenders>
+
+  <Loggers>
+    <Root level="INFO">
+      <AppenderRef ref="STDOUT"/>
+    </Root>
+
+    <!-- Our own classes-->
+    <Logger name="org.citrusframework" additivity="false" level="INFO">
+      <AppenderRef ref="STDOUT"/>
+    </Logger>
+
+    <Logger name="Logger.Message_IN" additivity="false" level="DEBUG">
+      <AppenderRef ref="STDOUT"/>
+    </Logger>
+
+    <Logger name="Logger.Message_OUT" additivity="false" level="DEBUG">
+      <AppenderRef ref="STDOUT"/>
+    </Logger>
+
+    <Logger name="org.springframework" additivity="false" level="WARN">
+      <AppenderRef ref="STDOUT"/>
+    </Logger>
+
+    <Logger name="org.eclipse" additivity="false" level="WARN">
+      <AppenderRef ref="STDOUT"/>
+    </Logger>
+
+    <Logger name="org.apache" additivity="false" level="WARN">
+      <AppenderRef ref="STDOUT"/>
+    </Logger>
+  </Loggers>
+
+</Configuration>
