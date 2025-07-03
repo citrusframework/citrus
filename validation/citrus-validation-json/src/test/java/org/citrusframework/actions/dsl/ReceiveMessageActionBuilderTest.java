@@ -31,7 +31,6 @@ import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.json.schema.SimpleJsonSchema;
 import org.citrusframework.message.DefaultMessage;
-import org.citrusframework.message.MessageType;
 import org.citrusframework.message.builder.ObjectMappingHeaderDataBuilder;
 import org.citrusframework.message.builder.ObjectMappingPayloadBuilder;
 import org.citrusframework.messaging.Consumer;
@@ -63,6 +62,8 @@ import static org.citrusframework.dsl.JsonSupport.json;
 import static org.citrusframework.dsl.MessageSupport.MessageBodySupport.fromBody;
 import static org.citrusframework.dsl.PathExpressionSupport.path;
 import static org.citrusframework.message.MessageType.JSON;
+import static org.citrusframework.message.MessageType.PLAINTEXT;
+import static org.citrusframework.message.MessageType.XML;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.nullValue;
@@ -103,14 +104,14 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .message()
-                        .body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"))));
+                .message()
+                .body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"))));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getMessageType(), JSON.name());
@@ -120,7 +121,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultMessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()),
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()),
                 "{\"message\":\"Hello Citrus!\"}");
     }
 
@@ -136,14 +137,14 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                         .setHeader("operation", "foo"));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .message()
-                        .body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), mapper)));
+                .message()
+                .body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), mapper)));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getMessageType(), JSON.name());
@@ -153,7 +154,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultMessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "{\"message\":\"Hello Citrus!\"}");
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "{\"message\":\"Hello Citrus!\"}");
 
     }
 
@@ -178,14 +179,14 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .message()
-                        .body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), "myObjectMapper")));
+                .message()
+                .body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), "myObjectMapper")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getMessageType(), JSON.name());
@@ -195,7 +196,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultMessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "{\"message\":\"Hello Citrus!\"}");
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "{\"message\":\"Hello Citrus!\"}");
 
     }
 
@@ -221,24 +222,24 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .message()
-                        .header(new ObjectMappingHeaderDataBuilder(new TestRequest("Hello Citrus!"))));
+                .message()
+                .header(new ObjectMappingHeaderDataBuilder(new TestRequest("Hello Citrus!"))));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageType(), PLAINTEXT.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0),
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0),
                 "{\"message\":\"Hello Citrus!\"}");
 
     }
@@ -256,24 +257,24 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                         .setHeader("operation", "foo"));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .message()
-                        .header(new ObjectMappingHeaderDataBuilder(new TestRequest("Hello Citrus!"), mapper)));
+                .message()
+                .header(new ObjectMappingHeaderDataBuilder(new TestRequest("Hello Citrus!"), mapper)));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageType(), PLAINTEXT.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "{\"message\":\"Hello Citrus!\"}");
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "{\"message\":\"Hello Citrus!\"}");
 
     }
 
@@ -299,24 +300,24 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .message()
-                        .header(new ObjectMappingHeaderDataBuilder(new TestRequest("Hello Citrus!"), "myObjectMapper")));
+                .message()
+                .header(new ObjectMappingHeaderDataBuilder(new TestRequest("Hello Citrus!"), "myObjectMapper")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageType(), PLAINTEXT.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "{\"message\":\"Hello Citrus!\"}");
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "{\"message\":\"Hello Citrus!\"}");
 
     }
 
@@ -337,44 +338,44 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         when(resource.exists()).thenReturn(true);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes()))
-                                       .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()));
+                .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()));
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .message()
-                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                        .header(resource));
+                .message()
+                .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                .header(resource));
 
         runner.run(receive(messageEndpoint)
-                        .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
-                        .header(resource));
+                .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
+                .header(resource));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageType(), XML.name());
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
 
-        action = ((ReceiveMessageAction)test.getActions().get(1));
+        action = ((ReceiveMessageAction) test.getActions().get(1));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageType(), XML.name());
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
-        Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>bar</Value></Header>");
+        Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>bar</Value></Header>");
 
     }
 
@@ -394,53 +395,53 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         when(resource.exists()).thenReturn(true);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes()))
-                                       .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()))
-                                       .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes()))
-                                       .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()));
+                .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()))
+                .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes()))
+                .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .message()
-                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                        .header("<Header><Name>operation</Name><Value>sayHello</Value></Header>")
-                        .header(resource)
-                        .header(resource));
+                .message()
+                .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                .header("<Header><Name>operation</Name><Value>sayHello</Value></Header>")
+                .header(resource)
+                .header(resource));
 
         runner.run(receive(messageEndpoint)
-                        .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
-                        .header("<Header><Name>operation</Name><Value>sayHello</Value></Header>")
-                        .header(resource)
-                        .header(resource));
+                .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
+                .header("<Header><Name>operation</Name><Value>sayHello</Value></Header>")
+                .header(resource)
+                .header(resource));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageType(), XML.name());
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size(), 3L);
         Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>sayHello</Value></Header>");
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(1), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(2), "<Header><Name>operation</Name><Value>bar</Value></Header>");
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(1), "<Header><Name>operation</Name><Value>foo</Value></Header>");
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(2), "<Header><Name>operation</Name><Value>bar</Value></Header>");
 
-        action = ((ReceiveMessageAction)test.getActions().get(1));
+        action = ((ReceiveMessageAction) test.getActions().get(1));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageType(), XML.name());
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
         Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size(), 3L);
-        Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>sayHello</Value></Header>");
-        Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(1), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(2), "<Header><Name>operation</Name><Value>bar</Value></Header>");
+        Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>sayHello</Value></Header>");
+        Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(1), "<Header><Name>operation</Name><Value>foo</Value></Header>");
+        Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(2), "<Header><Name>operation</Name><Value>bar</Value></Header>");
 
     }
 
@@ -482,7 +483,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getMessageType(), JSON.name());
@@ -532,7 +533,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getMessageType(), JSON.name());
@@ -582,7 +583,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getMessageType(), JSON.name());
@@ -608,21 +609,21 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .message()
-                                .type(JSON)
-                                .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\",\"active\": true}, \"index\":5, \"id\":\"x123456789x\"}")
-                                .validate(jsonPath()
-                                        .expression("$.person.name", "John")
-                                        .expression("$.person.active", true)
-                                        .expression("$.id", anyOf(containsString("123456789"), nullValue()))
-                                        .expression("$.text", "Hello World!")
-                                        .expression("$.index", 5)));
+                .message()
+                .type(JSON)
+                .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\",\"active\": true}, \"index\":5, \"id\":\"x123456789x\"}")
+                .validate(jsonPath()
+                        .expression("$.person.name", "John")
+                        .expression("$.person.active", true)
+                        .expression("$.id", anyOf(containsString("123456789"), nullValue()))
+                        .expression("$.text", "Hello World!")
+                        .expression("$.index", 5)));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getMessageType(), JSON.name());
@@ -659,19 +660,19 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .message()
-                                .type(JSON)
-                                .body("{\"text\":\"Citrus rocks!\", \"user\":\"christoph\"}")
-                                .validate(jsonPath()
-                                        .expression("$.user", "christoph"))
-                                .validate(jsonPath()
-                                        .expression("$.text", "Citrus rocks!")));
+                .message()
+                .type(JSON)
+                .body("{\"text\":\"Citrus rocks!\", \"user\":\"christoph\"}")
+                .validate(jsonPath()
+                        .expression("$.user", "christoph"))
+                .validate(jsonPath()
+                        .expression("$.text", "Citrus rocks!")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getMessageType(), JSON.name());
@@ -734,7 +735,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getMessageType(), JSON.name());
@@ -761,12 +762,12 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .message()
-                                .type(JSON)
-                                .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                                .validate(jsonPath()
-                                        .expression("$.person.name", "John")
-                                        .expression("$.text", "Hello Citrus!")));
+                .message()
+                .type(JSON)
+                .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                .validate(jsonPath()
+                        .expression("$.person.name", "John")
+                        .expression("$.text", "Hello Citrus!")));
     }
 
     @Test(expectedExceptions = TestCaseFailedException.class)
@@ -782,12 +783,12 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .message()
-                                .type(JSON)
-                                .body("{\"text\":\"Hello Citrus!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                                .validate(json()
-                                        .expression("$.person.name", "John")
-                                        .expression("$.text", "Hello World!")));
+                .message()
+                .type(JSON)
+                .body("{\"text\":\"Hello Citrus!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                .validate(json()
+                        .expression("$.person.name", "John")
+                        .expression("$.text", "Hello World!")));
     }
 
     @Test
@@ -803,19 +804,19 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .message()
-                                .type(JSON)
-                                .body("{\"text\":\"?\", \"person\":{\"name\":\"John\",\"surname\":\"?\"}, \"index\":0, \"id\":\"x123456789x\"}")
-                                .validate(json()
-                                        .ignore("$..text")
-                                        .ignore("$.person.surname")
-                                        .ignore("$.index")));
+                .message()
+                .type(JSON)
+                .body("{\"text\":\"?\", \"person\":{\"name\":\"John\",\"surname\":\"?\"}, \"index\":0, \"id\":\"x123456789x\"}")
+                .validate(json()
+                        .ignore("$..text")
+                        .ignore("$.person.surname")
+                        .ignore("$.index")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getMessageType(), JSON.name());
@@ -868,7 +869,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -882,7 +883,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "{}");
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "{}");
         Assert.assertEquals(validationContext.getSchemaRepository(), "customJsonSchemaRepository");
 
     }
@@ -917,7 +918,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -931,7 +932,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "{}");
+        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "{}");
         Assert.assertEquals(validationContext.getSchema(), "jsonTestSchema");
 
     }
@@ -964,7 +965,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -1002,7 +1003,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
