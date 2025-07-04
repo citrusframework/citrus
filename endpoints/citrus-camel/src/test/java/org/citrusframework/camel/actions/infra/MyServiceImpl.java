@@ -16,6 +16,7 @@
 
 package org.citrusframework.camel.actions.infra;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MyServiceImpl implements MyService {
@@ -49,6 +50,11 @@ public class MyServiceImpl implements MyService {
     @Override
     public String password() {
         return "secret";
+    }
+
+    @Override
+    public Map<String, Object> getConnectionProperties() {
+        return Map.of("foo", "bar", "baz.value", "quux");
     }
 
     @Override

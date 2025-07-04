@@ -18,6 +18,7 @@ package org.citrusframework.camel.actions.infra;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import org.apache.camel.catalog.CamelCatalog;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -98,6 +99,9 @@ public class CamelRunInfraActionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_PORT", Integer.class), 18088);
         Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_PASSWORD"), "secret");
         Assert.assertFalse(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_FAULT_TOLERANT", Boolean.class));
+        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_CONNECTION_PROPERTIES", Map.class), Map.of("foo", "bar", "baz.value", "quux"));
+        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_FOO"), "bar");
+        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_BAZ_VALUE"), "quux");
 
         MyServiceImpl myService = context.getVariable("citrus.camel.infra.my-service", MyServiceImpl.class);
         Assert.assertTrue(myService.initialized.get());
@@ -125,6 +129,8 @@ public class CamelRunInfraActionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_PORT", Integer.class), 18088);
         Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_PASSWORD"), "secret");
         Assert.assertFalse(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_FAULT_TOLERANT", Boolean.class));
+        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_CONNECTION_PROPERTIES", Map.class), Map.of("foo", "bar", "baz.value", "quux"));
+
 
         MyServiceImpl myService = context.getVariable("citrus.camel.infra.service.two", MyServiceImpl.class);
         Assert.assertTrue(myService.initialized.get());

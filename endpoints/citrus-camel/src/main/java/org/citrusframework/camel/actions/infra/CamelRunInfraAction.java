@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -113,7 +114,11 @@ public class CamelRunInfraAction extends AbstractCamelAction {
 
             HashMap<String, Object> serviceProperties = new HashMap<>();
             ReflectionHelper.doWithMethods(serviceType, method -> {
-                if (method.getParameterCount() == 0 && !method.getName().contains("registerProperties")) {
+                if (method.getParameterCount() == 0 &&
+                        !method.getName().equals("initialize") &&
+                        !method.getName().equals("close") &&
+                        !method.getName().equals("shutdown") &&
+                        !method.getName().contains("registerProperties")) {
                     try {
                         serviceProperties.put(method.getName(), method.invoke(instance));
                     } catch (InvocationTargetException e) {
@@ -130,12 +135,7 @@ public class CamelRunInfraAction extends AbstractCamelAction {
             }
 
             String serviceVariableName = fullServiceName.replaceAll("[^a-zA-Z0-9]", "_").toUpperCase();
-            serviceProperties.forEach((key, value) -> {
-                String name = "%s%s_%s".formatted(CamelInfraSettings.CAMEL_INFRA_ENV_PREFIX, serviceVariableName, normalizeKey(key));
-                context.setVariable(name, value);
-                logger.info("Exposing service property {}",
-                        context.getLogModifier().mask("%s='%s'".formatted(name, value.toString())));
-            });
+            exposeServiceProperties(serviceProperties, serviceVariableName, context);
 
             if (autoRemove) {
                 context.doFinally(camel()
@@ -151,6 +151,19 @@ public class CamelRunInfraAction extends AbstractCamelAction {
                  IllegalAccessException | InvocationTargetException e) {
             throw new CitrusRuntimeException("Failed to run Camel infra service '%s'".formatted(fullServiceName), e);
         }
+    }
+
+    private void exposeServiceProperties(Map<String, Object> serviceProperties, String serviceVariableName, TestContext context) {
+        serviceProperties.forEach((key, value) -> {
+            if (value instanceof Map valueMap) {
+                exposeServiceProperties(valueMap, serviceVariableName, context);
+            }
+
+            String name = "%s%s_%s".formatted(CamelInfraSettings.CAMEL_INFRA_ENV_PREFIX, serviceVariableName, normalizeKey(key));
+            context.setVariable(name, Optional.ofNullable(value).orElse(""));
+            logger.info("Exposing service property {}",
+                    context.getLogModifier().mask("%s='%s'".formatted(name, Optional.ofNullable(value).orElse(""))));
+        });
     }
 
     private static Optional<InfraService> resolveInfraService(CamelCatalog catalog, String serviceName, String implementation) throws IOException {
@@ -176,14 +189,14 @@ public class CamelRunInfraAction extends AbstractCamelAction {
         String result =  key.replaceAll("([A-Z])", "_$1");
 
         if (result.startsWith("get_")) {
-            return result.replaceFirst("get_", "").toUpperCase();
+            result = result.replaceFirst("get_", "").toUpperCase();
         }
 
         if (result.startsWith("is_")) {
-            return result.replaceFirst("is_", "").toUpperCase();
+            result = result.replaceFirst("is_", "").toUpperCase();
         }
 
-        return result.toUpperCase();
+        return result.replaceAll("\\.", "_").toUpperCase();
     }
 
     private static boolean isNotInfrastructureService(Object instance) {

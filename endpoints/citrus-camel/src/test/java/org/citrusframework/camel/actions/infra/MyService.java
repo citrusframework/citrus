@@ -16,10 +16,13 @@
 
 package org.citrusframework.camel.actions.infra;
 
+import java.util.Map;
+
 public interface MyService {
     String getServerUrl();
     String host();
     int port();
     String password();
     boolean isFaultTolerant();
+    Map<String, Object> getConnectionProperties();
 }
