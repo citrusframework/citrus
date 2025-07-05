@@ -16,17 +16,16 @@
 
 package org.citrusframework;
 
+import org.citrusframework.common.TestLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Stream;
-
-import org.citrusframework.common.TestLoader;
-import org.citrusframework.message.MessageType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.System.getProperty;
@@ -40,6 +39,7 @@ import static org.citrusframework.common.TestLoader.GROOVY;
 import static org.citrusframework.common.TestLoader.JAVA;
 import static org.citrusframework.common.TestLoader.SPRING;
 import static org.citrusframework.common.TestLoader.YAML;
+import static org.citrusframework.message.MessageType.XML;
 
 public final class CitrusSettings {
 
@@ -211,7 +211,7 @@ public final class CitrusSettings {
     public static final String DEFAULT_MESSAGE_TYPE = getPropertyEnvOrDefault(
             DEFAULT_MESSAGE_TYPE_PROPERTY,
             DEFAULT_MESSAGE_TYPE_ENV,
-            MessageType.XML.toString());
+            XML.toString());
 
     /**
      * Flag to allow deactivation of the http message builder citrus header update. See <a href="https://github.com/citrusframework/citrus/issues/1143">ISSUE-1143</a> for details.

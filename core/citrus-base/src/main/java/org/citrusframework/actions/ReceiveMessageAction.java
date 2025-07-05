@@ -16,16 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
@@ -68,6 +58,16 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.citrusframework.message.MessageType.mapToMessageType;
@@ -84,52 +84,80 @@ import static org.citrusframework.util.StringUtils.hasText;
  */
 public class ReceiveMessageAction extends AbstractTestAction {
 
-    /** Build message selector with name value pairs */
+    /**
+     * Build message selector with name value pairs
+     */
     private final Map<String, Object> messageSelectorMap;
 
-    /** Select messages via message selector string */
+    /**
+     * Select messages via message selector string
+     */
     private final String messageSelector;
 
-    /** Message endpoint */
+    /**
+     * Message endpoint
+     */
     private final Endpoint endpoint;
 
-    /** Message endpoint uri - either bean name or dynamic endpoint uri */
+    /**
+     * Message endpoint uri - either bean name or dynamic endpoint uri
+     */
     private final String endpointUri;
 
-    /** Receive timeout */
+    /**
+     * Receive timeout
+     */
     private final long receiveTimeout;
 
-    /** Builder constructing a control message */
+    /**
+     * Builder constructing a control message
+     */
     private final MessageBuilder messageBuilder;
 
-    /** MessageValidator responsible for message validation */
+    /**
+     * MessageValidator responsible for message validation
+     */
     private final List<MessageValidator<? extends ValidationContext>> validators;
 
-    /** Optional data dictionary that explicitly modifies message content before validation */
+    /**
+     * Optional data dictionary that explicitly modifies message content before validation
+     */
     private final DataDictionary<?> dataDictionary;
 
-    /** Callback able to additionally validate received message */
+    /**
+     * Callback able to additionally validate received message
+     */
     private final ValidationProcessor validationProcessor;
 
-    /** List of validation contexts for this receive action */
+    /**
+     * List of validation contexts for this receive action
+     */
     private final List<ValidationContext> validationContexts;
 
-    /** List of variable extractors responsible for creating variables from received message content */
+    /**
+     * List of variable extractors responsible for creating variables from received message content
+     */
     private final List<VariableExtractor> variableExtractors;
 
-    /** List of processors that handle the received message */
+    /**
+     * List of processors that handle the received message
+     */
     private final List<MessageProcessor> messageProcessors;
 
-    /** List of processors that handle the control message builder */
+    /**
+     * List of processors that handle the control message builder
+     */
     private final List<MessageProcessor> controlMessageProcessors;
 
     /**
      * The expected message type to arrive in this receive action.
      * This information is needed to find a proper message validator for this message
-     * */
+     */
     private String messageType;
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger logger = LoggerFactory.getLogger(ReceiveMessageAction.class);
 
     /**
@@ -182,6 +210,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Receives the message with respective message receiver implementation.
+     *
      * @return
      */
     private Message receive(TestContext context) {
@@ -193,7 +222,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /**
      * Receives the message with the respective message receiver implementation
      * also using a message selector.
-     * @param context the test context.
+     *
+     * @param context        the test context.
      * @param selectorString the message selector string.
      * @return
      */
@@ -220,6 +250,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Override this message if you want to add additional message validation
+     *
      * @param message
      */
     protected void validateMessage(Message message, TestContext context) {
@@ -258,7 +289,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 if (validators.parallelStream()
                         .map(Object::getClass)
                         .noneMatch(DefaultMessageHeaderValidator.class::isAssignableFrom)) {
-                    MessageValidator<?extends ValidationContext> defaultMessageHeaderValidator = context.getMessageValidatorRegistry().getDefaultMessageHeaderValidator();
+                    MessageValidator<? extends ValidationContext> defaultMessageHeaderValidator = context.getMessageValidatorRegistry().getDefaultMessageHeaderValidator();
                     if (defaultMessageHeaderValidator != null) {
                         defaultMessageHeaderValidator.validateMessage(message, controlMessage, context, validationContexts);
                     }
@@ -289,19 +320,18 @@ public class ReceiveMessageAction extends AbstractTestAction {
             if (!unknown.isEmpty()) {
                 unknown.forEach(validationContext -> logger.warn("Found validation context that has not been processed: {}", validationContext.getClass().getName()));
                 throw new ValidationException("Incomplete message validation of message with type %s - no validation has been performed on the following contexts: %s".formatted(messageType, unknown.stream().map(validationContext -> validationContext.getClass().getSimpleName()).collect(
-                    Collectors.joining(", "))));
+                        Collectors.joining(", "))));
             }
         }
     }
 
     private void assumeMessageType(Message message) {
-
         Object contentType = message.getHeaders().get("Content-Type");
         if (contentType instanceof String contentTypeString) {
             Object encoding = message.getHeaders().get("Content-Transfer-Encoding");
             MessageType messageType = mapToMessageType(
-                contentTypeString,
-                encoding != null ? encoding.toString() : null);
+                    contentTypeString,
+                    encoding != null ? encoding.toString() : null);
             if (messageType != null) {
                 setMessageType(messageType);
                 return;
@@ -309,11 +339,11 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         if (MessageType.isBinary(getMessageType()) ||
-            MessageType.FORM_URL_ENCODED.equalsIgnoreCase(getMessageType())) {
+                MessageType.FORM_URL_ENCODED.equalsIgnoreCase(getMessageType())) {
             return;
         }
 
-        var payload = message.getPayload(String.class);
+        var payload = isNull(message.getPayload()) && "null".equals(message.getPayload(String.class)) ? null : message.getPayload(String.class);
         if (hasText(payload)) {
             payload = payload.trim();
 
@@ -336,11 +366,14 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
                 setMessageType(MessageType.YAML);
             }
+        } else {
+            setMessageType(MessageType.PLAINTEXT);
         }
     }
 
     /**
      * Create control message that is expected. Apply global and local message processors and data dictionaries.
+     *
      * @param context
      * @param messageType
      * @return
@@ -374,6 +407,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Creates or gets the endpoint instance.
+     *
      * @param context
      * @return
      */
@@ -389,6 +423,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Get the message endpoint.
+     *
      * @return the message endpoint
      */
     public Endpoint getEndpoint() {
@@ -397,6 +432,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Gets the endpoint uri.
+     *
      * @return
      */
     public String getEndpointUri() {
@@ -405,6 +441,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Gets the variable extractors.
+     *
      * @return the variableExtractors
      */
     public List<VariableExtractor> getVariableExtractors() {
@@ -413,6 +450,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Obtains the message processors.
+     *
      * @return
      */
     public List<MessageProcessor> getMessageProcessors() {
@@ -421,6 +459,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Obtains the control message processors.
+     *
      * @return
      */
     public List<MessageProcessor> getControlMessageProcessors() {
@@ -429,6 +468,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Gets the message type for this receive action.
+     *
      * @return the messageType
      */
     public String getMessageType() {
@@ -441,6 +481,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Gets the messageSelectorMap.
+     *
      * @return the messageSelectorMap
      */
     public Map<String, Object> getMessageSelectorMap() {
@@ -449,6 +490,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Gets the messageSelector.
+     *
      * @return the messageSelector
      */
     public String getMessageSelector() {
@@ -457,6 +499,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Gets the receiveTimeout.
+     *
      * @return the receiveTimeout
      */
     public long getReceiveTimeout() {
@@ -465,6 +508,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Gets the validator.
+     *
      * @return the validator
      */
     public List<MessageValidator<? extends ValidationContext>> getValidators() {
@@ -473,6 +517,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Gets the validationContexts.
+     *
      * @return the validationContexts
      */
     public List<ValidationContext> getValidationContexts() {
@@ -481,6 +526,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Gets the validationProcessor.
+     *
      * @return the validationProcessor to get.
      */
     public ValidationProcessor getValidationProcessor() {
@@ -489,6 +535,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Gets the data dictionary.
+     *
      * @return
      */
     public DataDictionary<?> getDataDictionary() {
@@ -497,6 +544,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Gets the messageBuilder.
+     *
      * @return the messageBuilder
      */
     public MessageBuilder getMessageBuilder() {
@@ -510,6 +558,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
         /**
          * Fluent API action building entry method used in Java DSL.
+         *
          * @return
          */
         public static Builder receive() {
@@ -573,7 +622,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
         private ValidationProcessor validationProcessor;
         private final List<ValidationContext.Builder<?, ?>> validationContexts = new ArrayList<>();
 
-        /** Validation context used in this action builder */
+        /**
+         * Validation context used in this action builder
+         */
         private HeaderValidationContext.Builder headerValidationContext;
 
         private final List<String> validatorNames = new ArrayList<>();
@@ -591,6 +642,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
         /**
          * Adds a validation context.
+         *
          * @param validationContext
          * @return
          */
@@ -601,6 +653,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
         /**
          * Adds a validation context.
+         *
          * @param validationContext
          * @return
          */
@@ -610,6 +663,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
         /**
          * Adds an expression based validation context.
+         *
          * @param adapter
          * @return
          */
@@ -619,6 +673,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
         /**
          * Sets validation contexts.
+         *
          * @param validationContexts
          * @return
          */
@@ -629,6 +684,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
         /**
          * Sets validation contexts.
+         *
          * @param validationContexts
          * @return
          */
@@ -890,21 +946,21 @@ public class ReceiveMessageAction extends AbstractTestAction {
          */
         private MessageType getMessageType(M messageBuilderSupport) {
             if (messageBuilderSupport.getMessageBuilder().getClass()
-                .isAnnotationPresent(MessagePayload.class)) {
+                    .isAnnotationPresent(MessagePayload.class)) {
                 return messageBuilderSupport.getMessageBuilder().getClass()
-                    .getAnnotation(MessagePayload.class).value();
+                        .getAnnotation(MessagePayload.class).value();
             } else if (messageBuilderSupport.getMessageBuilder() instanceof StaticMessageBuilder
-                || (
-                messageBuilderSupport.getMessageBuilder() instanceof WithPayloadBuilder payloadBuilder
-                    && payloadBuilder.getPayloadBuilder() != null)) {
+                    || (
+                    messageBuilderSupport.getMessageBuilder() instanceof WithPayloadBuilder payloadBuilder
+                            && payloadBuilder.getPayloadBuilder() != null)) {
                 MessageType messageType = MessageType.PLAINTEXT;
                 try {
                     // Determine the message type from builder support if it has EXPLICITLY been set.
                     // If it has not been set explicitly, we rely on validation context reconciliation
                     // on validation, based on the received message type.
                     messageType = hasText(messageBuilderSupport.getMessageType()) && messageBuilderSupport.isExplictMessageType()
-                        ? MessageType.valueOf(messageBuilderSupport.getMessageType().toUpperCase())
-                        : messageType;
+                            ? MessageType.valueOf(messageBuilderSupport.getMessageType().toUpperCase())
+                            : messageType;
                 } catch (IllegalArgumentException e) {
                     // Unknown message type
                     return null;
@@ -917,6 +973,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
         /**
          * Gets message payload String representation from configured message builder.
+         *
          * @return
          */
         protected Optional<String> getMessagePayload() {
@@ -941,6 +998,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
         /**
          * Gets message resource file path from configured message builder.
+         *
          * @return
          */
         protected Optional<String> getMessageResource() {
@@ -959,16 +1017,18 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
         /**
          * Obtains the validationContexts.
+         *
          * @return
          */
         public List<ValidationContext> getValidationContexts() {
             return validationContexts.stream()
-                .map(ValidationContext.Builder::build)
-                .collect(Collectors.toList());
+                    .map(ValidationContext.Builder::build)
+                    .collect(Collectors.toList());
         }
 
         /**
          * Obtains the validationContext builders.
+         *
          * @return
          */
         public List<ValidationContext.Builder<?, ?>> getValidationContextBuilders() {
