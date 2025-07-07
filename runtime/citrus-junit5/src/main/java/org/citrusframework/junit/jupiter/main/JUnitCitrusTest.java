@@ -16,20 +16,25 @@
 
 package org.citrusframework.junit.jupiter.main;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Stream;
+
 import org.citrusframework.Citrus;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestSource;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
-import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.citrusframework.junit.jupiter.CitrusTestFactory;
+import org.citrusframework.junit.jupiter.CitrusTestFactorySupport;
 import org.citrusframework.util.FileUtils;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DynamicTest;
 
 /**
  * JUnit test wrapper to run Citrus polyglot test definitions such as XML, YAML, Groovy.
@@ -43,8 +48,7 @@ import org.junit.jupiter.api.Test;
 @CitrusSupport
 public class JUnitCitrusTest {
 
-    private static String sourceName;
-    private static TestSource source;
+    private static final Map<String, TestSource> sources = new LinkedHashMap<>();
 
     @CitrusFramework
     Citrus citrus;
@@ -55,36 +59,35 @@ public class JUnitCitrusTest {
     @CitrusResource
     TestContext context;
 
-    @Test
-    @CitrusTest
-    public void execute() {
-        String type;
-        if (source != null) {
-            type = source.getType();
-        } else {
-            type = FileUtils.getFileExtension(sourceName);
-        }
+    @CitrusTestFactory
+    public Stream<DynamicTest> execute() {
+        return sources.entrySet().stream()
+                .map(entry -> {
+                    String type;
+                    if (entry.getValue() != null) {
+                        type = entry.getValue().getType();
+                    } else {
+                        type = FileUtils.getFileExtension(entry.getKey());
+                    }
 
-        TestLoader testLoader = TestLoader.lookup(type)
-                .orElseThrow(() -> new CitrusRuntimeException(String.format("Failed to resolve test loader for type %s", type)));
+                    TestLoader testLoader = TestLoader.lookup(type)
+                            .orElseThrow(() -> new CitrusRuntimeException(String.format("Failed to resolve test loader for type %s", type)));
 
-        testLoader.setTestClass(this.getClass());
-        testLoader.setTestName(sourceName);
+                    testLoader.setTestClass(this.getClass());
+                    testLoader.setTestName(entry.getKey());
 
-        if (testLoader instanceof TestSourceAware sourceAwareTestLoader) {
-            sourceAwareTestLoader.setSource(source);
-        }
+                    if (testLoader instanceof TestSourceAware sourceAwareTestLoader) {
+                        sourceAwareTestLoader.setSource(entry.getValue());
+                    }
 
-        CitrusAnnotations.injectAll(testLoader, citrus, context);
-        CitrusAnnotations.injectTestRunner(testLoader, runner);
-        testLoader.load();
+                    CitrusAnnotations.injectAll(testLoader, citrus, context);
+                    CitrusAnnotations.injectTestRunner(testLoader, runner);
+
+                    return CitrusTestFactorySupport.factory(type).dynamicTest(entry.getKey(), testLoader);
+                });
     }
 
-    public static void setSourceName(String name) {
-        sourceName = name;
-    }
-
-    public static void setSource(TestSource testSource) {
-        source = testSource;
+    public static void addTest(String sourceName, TestSource testSource) {
+        sources.put(sourceName, testSource);
     }
 }
