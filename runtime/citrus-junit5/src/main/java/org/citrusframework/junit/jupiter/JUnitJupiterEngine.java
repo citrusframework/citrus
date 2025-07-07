@@ -148,10 +148,11 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
                 .toList();
 
         for (TestSource source : filtered) {
-            logger.info("Running test source {}", source.getName());
+            logger.info("Adding test source {}", source.getName());
+            JUnitCitrusTest.addTest(source.getName(), source);
+        }
 
-            JUnitCitrusTest.setSourceName(source.getName());
-            JUnitCitrusTest.setSource(source);
+        if (!filtered.isEmpty()) {
             requestBuilder.selectors(selectClass(JUnitCitrusTest.class));
         }
     }
@@ -209,6 +210,7 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
         List<TestClass> testClasses = configuration.getTestSources().stream()
                 .filter(source -> "java".equals(source.getType()))
                 .map(TestSource::getName)
+                .filter(TestClass::isKnownToClasspath)
                 .map(TestClass::fromString)
                 .toList();
 

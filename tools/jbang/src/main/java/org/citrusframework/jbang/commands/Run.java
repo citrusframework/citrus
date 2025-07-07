@@ -115,7 +115,13 @@ public class Run extends CitrusCommand {
         // if no specific file to run then try to auto-detect
         if (files == null || files.length == 0) {
             // auto-detect test files
-            files = new File(".").list((dir, name) -> Arrays.stream(ACCEPTED_FILE_EXT).anyMatch(name::endsWith));
+            files = new File(".").list((dir, name) -> {
+                if (new File(dir, name).isDirectory()) {
+                    return true;
+                }
+
+                return Arrays.stream(ACCEPTED_FILE_EXT).anyMatch(name::endsWith);
+            });
         }
 
         // filter out duplicate files
@@ -124,23 +130,11 @@ public class Run extends CitrusCommand {
         }
 
         List<String> tests = new ArrayList<>();
-        if (files != null) {
-            for (String file : files) {
-                if (file.startsWith("clipboard") && !(new File(file).exists())) {
-                    file = loadFromClipboard(file);
-                } else if (skipFile(file)) {
-                    continue;
-                }
-
-                // check if file exist
-                File inputFile = FileUtils.getFileResource(file).getFile();
-                if (!inputFile.exists() && !inputFile.isFile()) {
-                    printer().printErr("File does not exist: " + file);
-                    return 1;
-                }
-
-                tests.add(file);
-            }
+        try {
+            resolveTests(files, tests);
+        } catch (Exception e) {
+            printer().printErr("Failed to resolve tests", e);
+            return 1;
         }
 
         if (tests.isEmpty()) {
@@ -161,6 +155,39 @@ public class Run extends CitrusCommand {
 
         engine.run();
         return exitStatus.exitStatus();
+    }
+
+    private void resolveTests(String[] files, List<String> tests) throws Exception {
+        if (files == null) {
+            return;
+        }
+
+        for (String file : files) {
+            File f = new File(file);
+            if (file.startsWith("clipboard") && !(f.exists())) {
+                file = loadFromClipboard(file);
+            } else if (f.isDirectory()) {
+                resolveTests(Stream.of(Optional.ofNullable(f.list()).orElseGet(() -> new String[] {}))
+                        .map(it -> f.getName() + "/" + it)
+                        .collect(Collectors.toSet()).toArray(String[]::new), tests);
+                continue;
+            } else if (skipFile(file)) {
+                continue;
+            }
+
+            // check if file exist
+            File inputFile = FileUtils.getFileResource(file).getFile();
+            if (!inputFile.isFile()) {
+                continue;
+            }
+
+            if (!inputFile.exists()) {
+                printer().printErr("File does not exist: " + file);
+                throw new CitrusRuntimeException("File does not exist: " + file);
+            }
+
+            tests.add(file);
+        }
     }
 
     protected TestRunConfiguration getRunConfiguration(List<String> files) {

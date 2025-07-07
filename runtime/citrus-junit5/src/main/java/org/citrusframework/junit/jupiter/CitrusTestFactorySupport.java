@@ -132,7 +132,16 @@ public final class CitrusTestFactorySupport {
      * @return
      */
     public DynamicTest dynamicTest(String packageName, String testName) {
-        TestLoader testLoader = createTestLoader(testName, packageName);
+        return dynamicTest(testName, createTestLoader(testName, packageName));
+    }
+
+    /**
+     * Creates dynamic test that uses the given test loader to load the test.
+     * @param testName
+     * @param testLoader
+     * @return
+     */
+    public DynamicTest dynamicTest(String testName, TestLoader testLoader) {
         return DynamicTest.dynamicTest(testName, () -> handler.accept(testLoader));
     }
 
