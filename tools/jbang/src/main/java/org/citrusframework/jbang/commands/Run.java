@@ -28,12 +28,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.citrusframework.CitrusInstanceManager;
+import org.citrusframework.agent.CitrusAgentConfiguration;
+import org.citrusframework.agent.util.ConfigurationHelper;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.CitrusJBangMain;
 import org.citrusframework.jbang.LoggingSupport;
 import org.citrusframework.main.TestEngine;
@@ -42,6 +47,7 @@ import org.citrusframework.report.TestReporter;
 import org.citrusframework.report.TestReporterSettings;
 import org.citrusframework.report.TestResults;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -62,6 +68,15 @@ public class Run extends CitrusCommand {
 
     private static final Pattern CLASS_PATTERN = Pattern.compile(
             "^\\s*public class\\s+([a-zA-Z0-9]*)[\\s+|;].*$", Pattern.MULTILINE);
+
+    @Option(names = { "--engine" }, description = "Name of the test engine that is used to run tests. One of junit, junit5, testng, cucumber")
+    private String engine;
+
+    @Option(names = { "--includes" }, arity = "0..*", description = "Includes test name pattern.")
+    private String[] includes;
+
+    @Option(names = { "--property" }, arity = "0..*", description = "Default System property to set before the test run.")
+    private String[] properties;
 
     @Option(names = { "--logging" }, defaultValue = "true", description = "Can be used to turn off logging")
     private boolean logging = true;
@@ -149,18 +164,35 @@ public class Run extends CitrusCommand {
     }
 
     protected TestRunConfiguration getRunConfiguration(List<String> files) {
-        TestRunConfiguration configuration = new TestRunConfiguration();
+        CitrusAgentConfiguration configuration = fromCliOptions(ConfigurationHelper.fromEnvVars());
 
         String ext = FileUtils.getFileExtension(files.get(0));
         if (ext.equals("feature")) {
             configuration.setEngine("cucumber");
-        } else {
-            configuration.setEngine("testng");
         }
 
         configuration.setTestSources(files.stream()
                 .map(FileUtils::getTestSource)
                 .collect(Collectors.toList()));
+
+        return configuration;
+    }
+
+    private CitrusAgentConfiguration fromCliOptions(CitrusAgentConfiguration configuration) {
+        if (StringUtils.hasText(engine)) {
+            configuration.setEngine(engine);
+        }
+
+        if (includes != null) {
+            configuration.setIncludes(includes);
+        }
+
+        if (properties != null) {
+            configuration.addDefaultProperties(Arrays.stream(properties)
+                    .filter(p -> p.contains("="))
+                    .map(p -> p.split("=", 2))
+                    .collect(Collectors.toMap(p -> p[0], p -> p[1])));
+        }
 
         return configuration;
     }

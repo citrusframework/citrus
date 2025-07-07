@@ -131,7 +131,7 @@ public final class ConfigurationHelper {
         if (testJar.exists()) {
             configuration.setTestJar(testJar.getFile());
         } else {
-            logger.warn("Ignore test jar artifact {} - not found", testJarPath);
+            logger.debug("Ignore test jar artifact {} - not found", testJarPath);
         }
 
         configuration.setTimeToLive(CitrusAgentSettings.getTimeToLive());
