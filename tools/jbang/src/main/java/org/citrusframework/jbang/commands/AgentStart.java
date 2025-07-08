@@ -38,6 +38,9 @@ public class AgentStart extends CitrusCommand {
     @Option(names = { "--port" }, description = "Server port.")
     private String port;
 
+    @Option(names = { "--verbose" }, defaultValue = "true", description = "Should the test engine print verbose test summary information.")
+    private String verbose;
+
     @Option(names = { "--system-exit" }, description = "Should the server exit based on success or failure of the test run.")
     private String systemExit;
 
@@ -85,6 +88,10 @@ public class AgentStart extends CitrusCommand {
     private CitrusAgentConfiguration fromCliOptions(CitrusAgentConfiguration configuration) {
         if (StringUtils.hasText(engine)) {
             configuration.setEngine(engine);
+        }
+
+        if (StringUtils.hasText(verbose)) {
+            configuration.setVerbose(Boolean.parseBoolean(verbose));
         }
 
         if (StringUtils.hasText(port)) {

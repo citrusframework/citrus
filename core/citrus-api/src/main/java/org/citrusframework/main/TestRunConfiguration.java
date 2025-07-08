@@ -47,6 +47,9 @@ public class TestRunConfiguration {
     /** Optional test jar artifact holding tests */
     private File testJar;
 
+    /** Should test engine print verbose summary details */
+    private boolean verbose = true;
+
     /**
      * Gets the engine.
      * @return
@@ -155,5 +158,13 @@ public class TestRunConfiguration {
 
     public boolean hasTests() {
         return !getTestSources().isEmpty() || !getPackages().isEmpty() || getTestJar() != null;
+    }
+
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 }

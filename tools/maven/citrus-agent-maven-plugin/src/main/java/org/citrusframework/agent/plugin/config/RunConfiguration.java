@@ -41,6 +41,9 @@ public class RunConfiguration {
     @Parameter(property = "citrus.agent.run.async", defaultValue = "false")
     private boolean async;
 
+    @Parameter(property = "citrus.agent.run.verbose", defaultValue = "true")
+    private boolean verbose = true;
+
     @Parameter(property = "citrus.agent.run.polling.interval", defaultValue = "2000")
     private long pollingInterval;
 
@@ -122,5 +125,13 @@ public class RunConfiguration {
 
     public void setEngine(String engine) {
         this.engine = engine;
+    }
+
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 }

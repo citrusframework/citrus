@@ -51,6 +51,10 @@ public final class CitrusAgentSettings {
     private static final String SKIP_TESTS_ENV = AGENT_ENV_PREFIX + "SKIP_TESTS";
     private static final String SKIP_TESTS_DEFAULT = "false";
 
+    private static final String VERBOSE_PROPERTY = AGENT_PROPERTY_PREFIX + "verbose";
+    private static final String VERBOSE_ENV = AGENT_ENV_PREFIX + "VERBOSE";
+    private static final String VERBOSE_DEFAULT = "true";
+
     private static final String INCLUDES_PROPERTY = AGENT_PROPERTY_PREFIX + "includes";
     private static final String INCLUDES_ENV = AGENT_ENV_PREFIX + "INCLUDES";
     private static final String[] INCLUDES_DEFAULT = new String[] { "^.*IT$", "^.*ITCase$", "^IT.*$" };
@@ -107,6 +111,11 @@ public final class CitrusAgentSettings {
     public static boolean isSkipTests() {
         return Boolean.parseBoolean(Optional.ofNullable(System.getProperty(SKIP_TESTS_PROPERTY, System.getenv(SKIP_TESTS_ENV)))
                 .orElse(SKIP_TESTS_DEFAULT));
+    }
+
+    public static boolean isVerbose() {
+        return Boolean.parseBoolean(Optional.ofNullable(System.getProperty(VERBOSE_PROPERTY, System.getenv(VERBOSE_ENV)))
+                .orElse(VERBOSE_DEFAULT));
     }
 
     public static String[] getPackages() {

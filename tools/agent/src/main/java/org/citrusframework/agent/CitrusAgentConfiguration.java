@@ -50,6 +50,7 @@ public class CitrusAgentConfiguration extends CitrusAppConfiguration {
         setPackages(configuration.getPackages());
         setTestSources(configuration.getTestSources());
         setIncludes(configuration.getIncludes());
+        setVerbose(configuration.isVerbose());
         addDefaultProperties(configuration.getDefaultProperties());
         setConfigClass(configuration.getConfigClass());
     }

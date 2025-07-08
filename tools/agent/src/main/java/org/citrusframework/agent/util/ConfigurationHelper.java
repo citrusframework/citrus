@@ -81,6 +81,12 @@ public final class ConfigurationHelper {
             }
         }
 
+        if (queryParams.contains("verbose")) {
+            options.setVerbose(Boolean.parseBoolean(queryParams.get("verbose")));
+        } else {
+            options.setVerbose(parent.isVerbose());
+        }
+
         options.setTestJar(parent.getTestJar());
 
         return options;
@@ -103,6 +109,8 @@ public final class ConfigurationHelper {
             }
         }
 
+        options.setVerbose(options.isVerbose() && parent.isVerbose());
+
         options.setTestJar(parent.getTestJar());
 
         return options;
@@ -124,6 +132,7 @@ public final class ConfigurationHelper {
                 .map(FileUtils::getTestSource)
                 .collect(Collectors.toList()));
 
+        configuration.setVerbose(CitrusAgentSettings.isVerbose());
         configuration.addDefaultProperties(CitrusAgentSettings.getDefaultProperties());
 
         String testJarPath = CitrusAgentSettings.getTestJar();

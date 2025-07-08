@@ -83,6 +83,7 @@ public class TestNGEngine extends AbstractTestEngine {
         }
 
         XmlSuite suite = new XmlSuite();
+        suite.setVerbose(getConfiguration().isVerbose() ? 1 : 0);
         testng.setXmlSuites(Collections.singletonList(suite));
 
         if (getConfiguration().getTestSources().isEmpty()) {

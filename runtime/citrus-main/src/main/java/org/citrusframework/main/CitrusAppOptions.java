@@ -132,7 +132,18 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
                 if (StringUtils.hasText(value)) {
                     configuration.setSystemExit(Boolean.parseBoolean(value));
                 } else {
-                    throw new CitrusRuntimeException("Missing parameter value for -e/--exit option");
+                    throw new CitrusRuntimeException("Missing parameter value for --exit option");
+                }
+            }
+        });
+
+        options.add(new CliOption<>("", "verbose", "Should print verbose test summary") {
+            @Override
+            protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
+                if (StringUtils.hasText(value)) {
+                    configuration.setVerbose(Boolean.parseBoolean(value));
+                } else {
+                    throw new CitrusRuntimeException("Missing parameter value for --verbose option");
                 }
             }
         });

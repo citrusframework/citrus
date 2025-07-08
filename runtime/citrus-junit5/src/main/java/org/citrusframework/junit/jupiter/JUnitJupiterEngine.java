@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -67,8 +68,6 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
 
     private final Set<TestExecutionListener> testExecutionListeners = new LinkedHashSet<>();
 
-    private boolean printSummary = true;
-
     public JUnitJupiterEngine(TestRunConfiguration configuration) {
         super(configuration);
     }
@@ -87,7 +86,7 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
         LauncherDiscoveryRequest request = requestBuilder.build();
 
         SummaryGeneratingListener listener = null;
-        if (printSummary) {
+        if (getConfiguration().isVerbose()) {
             listener = new SummaryGeneratingListener();
         }
 
@@ -98,17 +97,29 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
                     testExecutionListeners.toArray(TestExecutionListener[]::new));
             }
 
-            if (printSummary) {
+            if (getConfiguration().isVerbose()) {
                 launcher.registerTestExecutionListeners(listener);
             }
 
             launcher.execute(request);
         }
 
-        if (printSummary) {
+        if (getConfiguration().isVerbose()) {
           Optional.ofNullable(listener)
               .map(SummaryGeneratingListener::getSummary)
-              .ifPresent(summary -> summary.printTo(new PrintWriter(System.out)));
+              .ifPresent(summary -> {
+                  PrintWriter writer = new PrintWriter(System.out);
+                  writer.printf("%n" +
+                          "Tests finished after %d ms%n" +
+                          "Total tests run: %d, Passes: %d, Failures: %d, Skips: %d%n",
+                              Duration.ofMillis(summary.getTimeFinished() - summary.getTimeStarted()).toMillis(),
+                              summary.getTestsFoundCount(),
+                              summary.getTestsSucceededCount(),
+                              summary.getTestsFailedCount(),
+                              summary.getTestsSkippedCount())
+                              .flush();
+                  summary.printFailuresTo(writer);
+              });
         }
     }
 
@@ -247,11 +258,6 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
 
     public JUnitJupiterEngine addTestListener(TestExecutionListener testExecutionListener) {
         testExecutionListeners.add(testExecutionListener);
-        return this;
-    }
-
-    public JUnitJupiterEngine withPrintSummary(boolean enabled) {
-        this.printSummary = enabled;
         return this;
     }
 }

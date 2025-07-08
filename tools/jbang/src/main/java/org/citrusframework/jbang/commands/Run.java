@@ -72,6 +72,9 @@ public class Run extends CitrusCommand {
     @Option(names = { "--engine" }, description = "Name of the test engine that is used to run tests. One of junit, junit5, testng, cucumber")
     private String engine;
 
+    @Option(names = { "--verbose" }, defaultValue = "true", description = "Should the test engine print verbose test summary information.")
+    private String verbose;
+
     @Option(names = { "--includes" }, arity = "0..*", description = "Includes test name pattern.")
     private String[] includes;
 
@@ -208,6 +211,10 @@ public class Run extends CitrusCommand {
     private CitrusAgentConfiguration fromCliOptions(CitrusAgentConfiguration configuration) {
         if (StringUtils.hasText(engine)) {
             configuration.setEngine(engine);
+        }
+
+        if (StringUtils.hasText(verbose)) {
+            configuration.setVerbose(Boolean.parseBoolean(verbose));
         }
 
         if (includes != null) {
