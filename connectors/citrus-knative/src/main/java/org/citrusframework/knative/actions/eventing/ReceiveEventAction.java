@@ -30,6 +30,7 @@ import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.ce.CloudEvent;
 import org.citrusframework.knative.ce.CloudEventMessage;
 import org.citrusframework.knative.ce.CloudEventSupport;
+import org.citrusframework.util.PropertyUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -175,9 +176,11 @@ public class ReceiveEventAction extends AbstractKnativeAction {
                             .timeout(timeout)
                             .port(servicePort)
                             .name(serviceName)
+                            .referenceResolver(referenceResolver)
                             .build();
 
                     httpServer.initialize();
+                    PropertyUtils.configure(serviceName, httpServer, referenceResolver);
                 }
             }
 

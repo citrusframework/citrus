@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Abstract base class for {@link Server} implementations.
- *
  */
 public abstract class AbstractServer extends AbstractEndpoint
         implements Server, InitializingPhase, ShutdownPhase, ReferenceResolverAware {

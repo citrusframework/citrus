@@ -18,12 +18,17 @@ package org.citrusframework.util;
 
 import java.util.Properties;
 
+import org.citrusframework.TestActor;
 import org.citrusframework.UnitTestSupport;
+import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.log.LogModifier;
+import org.citrusframework.message.DefaultMessageQueue;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class PropertyUtilsTest extends UnitTestSupport {
+
     @Test
     public void testPropertyReplacementSingleProperty() {
         Properties props = new Properties();
@@ -33,7 +38,7 @@ public class PropertyUtilsTest extends UnitTestSupport {
 
         String result = PropertyUtils.replacePropertiesInString(content, props);
 
-        Assert.assertEquals("This test has the name MyTest!", result);
+        Assert.assertEquals(result, "This test has the name MyTest!");
     }
 
     @Test
@@ -45,7 +50,7 @@ public class PropertyUtilsTest extends UnitTestSupport {
 
         String result = PropertyUtils.replacePropertiesInString(content, props);
 
-        Assert.assertEquals("MyTest is the test's name!", result);
+        Assert.assertEquals(result, "MyTest is the test's name!");
     }
 
     @Test
@@ -58,7 +63,7 @@ public class PropertyUtilsTest extends UnitTestSupport {
 
         String result = PropertyUtils.replacePropertiesInString(content, props);
 
-        Assert.assertEquals("This test has the name MyTest and its author is Mickey Mouse", result);
+        Assert.assertEquals(result, "This test has the name MyTest and its author is Mickey Mouse");
     }
 
     @Test(expectedExceptions = {CitrusRuntimeException.class})
@@ -82,7 +87,7 @@ public class PropertyUtilsTest extends UnitTestSupport {
 
         String result = PropertyUtils.replacePropertiesInString(content, props);
 
-        Assert.assertEquals("This test has the name MyTest and its author is Mickey Mouse (mail:mickey@mouse.de) and Donald Duck (mail:donald@duck.de)", result);
+        Assert.assertEquals(result, "This test has the name MyTest and its author is Mickey Mouse (mail:mickey@mouse.de) and Donald Duck (mail:donald@duck.de)");
     }
 
     @Test
@@ -95,7 +100,7 @@ public class PropertyUtilsTest extends UnitTestSupport {
 
         String result = PropertyUtils.replacePropertiesInString(content, props);
 
-        Assert.assertEquals("This @test@ has the name MyTest and its author is Mickey Mouse", result);
+        Assert.assertEquals(result, "This @test@ has the name MyTest and its author is Mickey Mouse");
     }
 
     @Test
@@ -108,6 +113,126 @@ public class PropertyUtilsTest extends UnitTestSupport {
 
         String result = PropertyUtils.replacePropertiesInString(content, props);
 
-        Assert.assertEquals("This @test@ has the name @MyTest@ and its author is Mickey Mouse", result);
+        Assert.assertEquals(result, "This @test@ has the name @MyTest@ and its author is Mickey Mouse");
+    }
+
+    @Test
+    public void shouldBindEndpointConfigurationProperties() {
+        System.setProperty("citrus.endpoint.config.foo.queueName", "fooQueue");
+        System.setProperty("citrus.endpoint.config.foo.timeout", "100");
+
+        DirectEndpoint endpoint = new DirectEndpoint();
+        context.getReferenceResolver().bind("foo", endpoint);
+
+        PropertyUtils.configure("foo", endpoint, context.getReferenceResolver());
+
+        Assert.assertEquals(endpoint.getEndpointConfiguration().getQueueName(), "fooQueue");
+        Assert.assertEquals(endpoint.getEndpointConfiguration().getTimeout(), 100L);
+    }
+
+    @Test
+    public void shouldBindEndpointBeanReference() {
+        System.setProperty("citrus.endpoint.bar.actor", "#bean:testActor");
+        System.setProperty("citrus.endpoint.config.bar.queue", "#bean:fooQueue");
+
+        DirectEndpoint endpoint = new DirectEndpoint();
+        context.getReferenceResolver().bind("bar", endpoint);
+        context.getReferenceResolver().bind("fooQueue", new DefaultMessageQueue("fooQueue"));
+        context.getReferenceResolver().bind("testActor", new TestActor("testActor"));
+
+        PropertyUtils.configure("bar", endpoint, context.getReferenceResolver());
+
+        Assert.assertEquals(endpoint.getEndpointConfiguration().getQueue(), context.getReferenceResolver().resolve("fooQueue"));
+        Assert.assertEquals(endpoint.getActor(), context.getReferenceResolver().resolve("testActor"));
+    }
+
+    @Test
+    public void shouldBindProperties() {
+        System.setProperty("citrus.component.foo.text", "Citrus rocks!");
+        System.setProperty("citrus.component.foo.number", "1000");
+        System.setProperty("citrus.component.foo.longNumber", "5000");
+        FooComponent component = new FooComponent();
+        context.getReferenceResolver().bind("foo", component);
+
+        PropertyUtils.configure("foo", component, context.getReferenceResolver());
+
+        Assert.assertEquals(component.getText(), "Citrus rocks!");
+        Assert.assertEquals(component.getNumber(), 1000);
+        Assert.assertEquals(component.getLongNumber(), 5000L);
+        Assert.assertEquals(component.getConstant(), "unchanged");
+    }
+
+    @Test
+    public void shouldBindBeanReference() {
+        System.setProperty("citrus.component.myBean.logModifier", "#bean:modifier");
+
+        FooComponent component = new FooComponent();
+        context.getReferenceResolver().bind("myBean", component);
+        context.getReferenceResolver().bind("modifier", context.getLogModifier());
+
+        PropertyUtils.configure("myBean", component, context.getReferenceResolver());
+
+        Assert.assertEquals(component.getLogModifier(), context.getLogModifier());
+    }
+
+    @Test
+    public void shouldBindBeanReferenceDashStyleProperty() {
+        System.setProperty("citrus.component.anotherBean.log-modifier", "#bean:modifier");
+        System.setProperty("citrus.component.anotherBean.long-number", "1000");
+
+        FooComponent component = new FooComponent();
+        context.getReferenceResolver().bind("anotherBean", component);
+        context.getReferenceResolver().bind("modifier", context.getLogModifier());
+
+        PropertyUtils.configure("anotherBean", component, context.getReferenceResolver());
+
+        Assert.assertEquals(component.getLogModifier(), context.getLogModifier());
+        Assert.assertEquals(component.getLongNumber(), 1000L);
+    }
+
+    private static class FooComponent {
+
+        private String text;
+        private int number;
+        private Long longNumber;
+        private LogModifier logModifier;
+
+        private String constant = "unchanged";
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setNumber(int number) {
+            this.number = number;
+        }
+
+        public int getNumber() {
+            return number;
+        }
+
+        public void setLongNumber(Long longNumber) {
+            this.longNumber = longNumber;
+        }
+
+        public Long getLongNumber() {
+            return longNumber;
+        }
+
+        public void setLogModifier(LogModifier logModifier) {
+            this.logModifier = logModifier;
+        }
+
+        public LogModifier getLogModifier() {
+            return logModifier;
+        }
+
+        public String getConstant() {
+            return constant;
+        }
     }
 }

@@ -26,6 +26,7 @@ import java.util.Set;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
+import org.citrusframework.util.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -63,6 +64,7 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
                 Optional<ClientFactory<?>> clientFactory = ClientFactory.lookup(context.getReferenceResolver(), service);
                 if (clientFactory.isPresent()) {
                     Object client = clientFactory.get().createClient(container, context.resolveDynamicValuesInMap(options));
+                    PropertyUtils.configure(clientName, client, context.getReferenceResolver());
                     container.addClient(service, client);
                     logger.debug("Auto create client {} for service {}", clientName, service.name());
                     context.getReferenceResolver().bind(clientName, client);

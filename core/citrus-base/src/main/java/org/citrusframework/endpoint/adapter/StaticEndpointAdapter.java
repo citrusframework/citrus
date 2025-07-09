@@ -19,7 +19,8 @@ package org.citrusframework.endpoint.adapter;
 import org.citrusframework.endpoint.AbstractEndpointAdapter;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
-import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.endpoint.StaticEndpoint;
+import org.citrusframework.message.Message;
 
 /**
  * Static endpoint adapter always responds with static response message. No endpoint is provided as this is a
@@ -27,15 +28,35 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
  *
  * @since 1.4
  */
-public abstract class StaticEndpointAdapter extends AbstractEndpointAdapter {
+public class StaticEndpointAdapter extends AbstractEndpointAdapter {
+
+    private final StaticEndpoint endpoint;
+
+    public StaticEndpointAdapter() {
+        this.endpoint = new StaticEndpoint();
+    }
+
+    public StaticEndpointAdapter(Message message) {
+        this.endpoint = new StaticEndpoint(message);
+    }
+
+    @Override
+    protected Message handleMessageInternal(Message message) {
+        return endpoint.getMessage();
+    }
 
     @Override
     public Endpoint getEndpoint() {
-        throw new CitrusRuntimeException(String.format("Unable to create endpoint for static endpoint adapter type '%s'", getClass()));
+        return endpoint;
     }
 
     @Override
     public EndpointConfiguration getEndpointConfiguration() {
-        throw new CitrusRuntimeException(String.format("Unable to provide endpoint configuration for static endpoint adapter type '%s'", getClass()));
+        return endpoint.getEndpointConfiguration();
+    }
+
+    public StaticEndpointAdapter withReuseMessage(boolean reuseMessage) {
+        this.endpoint.getEndpointConfiguration().setReuseMessage(reuseMessage);
+        return this;
     }
 }

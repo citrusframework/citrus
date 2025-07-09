@@ -27,6 +27,7 @@ import org.citrusframework.knative.KnativeSupport;
 import org.citrusframework.knative.KnativeVariableNames;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.kubernetes.KubernetesSettings;
+import org.citrusframework.util.PropertyUtils;
 
 import static org.citrusframework.knative.actions.KnativeActionBuilder.knative;
 
@@ -67,8 +68,8 @@ public class CreateBrokerAction extends AbstractKnativeAction {
                     .build();
 
             brokerServer.initialize();
-            context.getReferenceResolver()
-                    .bind(resolvedBrokerName, brokerServer);
+            PropertyUtils.configure(resolvedBrokerName, brokerServer, context.getReferenceResolver());
+            context.getReferenceResolver().bind(resolvedBrokerName, brokerServer);
         } else {
             brokerServer = context.getReferenceResolver().resolve(resolvedBrokerName, HttpServer.class);
         }

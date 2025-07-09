@@ -45,6 +45,7 @@ import org.citrusframework.spi.ReferenceRegistry;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.SimpleReferenceResolver;
+import org.citrusframework.util.PropertyUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.TypeConverter;
 import org.citrusframework.validation.DefaultMessageValidatorRegistry;
@@ -369,9 +370,11 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
             referenceResolverAware.setReferenceResolver(referenceResolver);
         }
 
-        if (component instanceof InitializingPhase c) {
-            c.initialize();
+        if (component instanceof InitializingPhase initializingBean) {
+            initializingBean.initialize();
         }
+
+        PropertyUtils.configure(name, component, referenceResolver);
 
         referenceResolver.bind(name, component);
 

@@ -60,19 +60,20 @@ public abstract class CitrusEndpointAnnotations {
             logger.debug("Injecting Citrus endpoint on test class field '{}'", field.getName());
             CitrusEndpoint endpointAnnotation = field.getAnnotation(CitrusEndpoint.class);
 
+            ReferenceResolver referenceResolver = context.getReferenceResolver();
             for (Annotation annotation : field.getAnnotations()) {
                 if (annotation.annotationType().getAnnotation(CitrusEndpointConfig.class) != null) {
                     Endpoint endpoint = context.getEndpointFactory().create(getEndpointName(field), annotation, context);
                     ReflectionHelper.setField(field, target, endpoint);
 
                     if (field.isAnnotationPresent(BindToRegistry.class)) {
-                        context.getReferenceResolver().bind(ReferenceRegistry.getName(field.getAnnotation(BindToRegistry.class), endpoint.getName()), endpoint);
+                        String endpointName = ReferenceRegistry.getName(field.getAnnotation(BindToRegistry.class), endpoint.getName());
+                        referenceResolver.bind(endpointName, endpoint);
                     }
                     return;
                 }
             }
 
-            ReferenceResolver referenceResolver = context.getReferenceResolver();
             if (endpointAnnotation.properties().length > 0) {
                 ReflectionHelper.setField(field, target, context.getEndpointFactory().create(getEndpointName(field), endpointAnnotation, field.getType(), context));
             } else if (endpointAnnotation.name() != null && !endpointAnnotation.name().isBlank() &&
