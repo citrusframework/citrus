@@ -81,6 +81,124 @@ Same properties are settable via environment variables.
 | File name patterns used for Java test sources package scan (default="/\\**/*Test.java,/**/*IT.java")
 |===
 
+[[configuration-property-binding]]
+== Property binding support
+
+The Citrus project defines components and endpoints in the form of beans in the Citrus registry, which is either the Java configuration or a Spring bean configuration. The beans in the registry provide properties that you can overwrite with environment variables and system properties.
+
+Each bean that is added to the Citrus registry is being post processed with the Citrus property binding support.
+Users can overwrite these properties on components, endpoints and endpoint configuration with environment specific settings.
+
+The Citrus property binding support follows a naming convention that looks like follows:
+
+.Environment variables
+[source, properties]
+----
+CITRUS_COMPONENT_<COMPONENT_NAME>_<PROPERTY_NAME>=<VALUE>
+----
+
+Also, specific to endpoints the naming convention looks like this:
+
+.Environment variables
+[source, properties]
+----
+CITRUS_ENDPOINT_<ENDPOINT_NAME>_<PROPERTY_NAME>=<VALUE>
+CITRUS_ENDPOINT_CONFIG_<ENDPOINT_NAME>_<PROPERTY_NAME>=<VALUE>
+----
+
+According to that users can also use system property settings that follow the same rules:
+
+.System properties
+[source, properties]
+----
+citrus.component.<component-name>.<property-name>=<value>
+citrus.endpoint.<endpoint-name>.<property-name>=<value>
+citrus.endpoint.config.<endpoint-name>.<property-name>=<value>
+----
+
+The difference of using `CITRUS_ENDPOINT` compared to using `CITRUS_ENDPOINT_CONFIG` is that the latter targets the specific endpoint configuration of the bean. The former will just set properties on the endpoint itself.
+
+The component or endpoint name references the bean name that is used to store the object into the Citrus registry.
+The property name is the name of the setter method available on the object (without the `set` prefix)
+
+Given an endpoint named `foo` with a `setPort(int port)` method the environment setting to overwrite the property would be like this:
+
+.Environment variable
+[source, properties]
+----
+CITRUS_ENDPOINT_FOO_PORT=12345
+----
+
+.System property
+[source, properties]
+----
+citrus.endpoint.foo.port=12345
+----
+
+When the bean name or the property name uses camel case style you have multiple ways to represent this in the environment settings.
+
+As an example the given endpoint named `myBean` exposes the method `setRequestUrl(String url)`.
+You have multiple ways to set this property:
+
+.Environment variable
+[source, properties]
+----
+CITRUS_ENDPOINT_MYBEAN_REQUESTURL=http://whatever
+
+CITRUS_ENDPOINT_MY_BEAN_REQUEST_URL=http://whatever
+----
+
+.System properties
+[source, properties]
+----
+citrus.endpoint.myBean.requestUrl=http://whatever
+
+citrus.endpoint.myBean.request-url=http://whatever
+----
+
+The property bindings may reference other beans in the Citrus registry.
+Given a bean named `myLog` of type `org.citrusframework.LogModifier`, that is stored to the Citrus registry, you can be reference the bean with the `#bean:` prefix like this:
+
+[source, properties]
+----
+CITRUS_ENDPOINT_FOO_LOG_MODIFIER=#bean:myLog
+----
+
+This will resolve the bean named `myLog` from the Citrus registry and set this as a reference on the endpoint `foo` with the `setLogModifier()` method.
+
+The property binding support is enabled by default for components, endpoints and endpoint configuration.
+You can disable the bindings with the environment setting:
+
+.System properties
+|===
+|System properties |Description
+
+| citrus.env.var.property.binding.enabled
+| Set this to `false` to disable the property binding completely.
+
+| citrus.component.property.binding.enabled
+| Set this to `false` to disable the property binding for components.
+
+| citrus.endpoint.property.binding.enabled
+| Set this to `false` to disable the property binding for endpoints.
+
+|===
+
+.Environment variables
+|===
+|Environment variable |Description
+
+| CITRUS_ENV_VAR_PROPERTY_BINDING_ENABLED
+| Set this to `false` to disable the property binding completely.
+
+| CITRUS_COMPONENT_PROPERTY_BINDING_ENABLED
+| Set this to `false` to disable the property binding for components.
+
+| CITRUS_ENDPOINT_PROPERTY_BINDING_ENABLED
+| Set this to `false` to disable the property binding for endpoints.
+
+|===
+
 [[configuration-spring]]
 == Spring configuration settings
 

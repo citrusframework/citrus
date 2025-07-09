@@ -16,6 +16,10 @@
 
 package org.citrusframework.http.config.annotation;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 import jakarta.servlet.Filter;
 import org.citrusframework.TestActor;
 import org.citrusframework.annotations.CitrusAnnotations;
@@ -24,6 +28,7 @@ import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.config.annotation.ChannelEndpointConfigParser;
 import org.citrusframework.config.annotation.ChannelSyncEndpointConfigParser;
 import org.citrusframework.endpoint.EndpointAdapter;
+import org.citrusframework.endpoint.StaticEndpoint;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfigParser;
 import org.citrusframework.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import org.citrusframework.http.message.HttpMessageConverter;
@@ -45,17 +50,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.citrusframework.config.annotation.AnnotationConfigParser.lookup;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
 
@@ -159,6 +156,9 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         when(referenceResolver.resolve("clientInterceptor2", HandlerInterceptor.class)).thenReturn(clientInterceptor2);
         when(referenceResolver.resolve(new String[]{"clientInterceptor1", "clientInterceptor2"}, HandlerInterceptor.class)).thenReturn(Arrays.asList(clientInterceptor1, clientInterceptor2));
         when(referenceResolver.resolve("endpointAdapter", EndpointAdapter.class)).thenReturn(endpointAdapter);
+
+        when(endpointAdapter.getEndpoint()).thenReturn(new StaticEndpoint());
+        when(endpointAdapter.getEndpointConfiguration()).thenReturn(new StaticEndpoint.StaticEndpointConfiguration());
     }
 
     @BeforeMethod

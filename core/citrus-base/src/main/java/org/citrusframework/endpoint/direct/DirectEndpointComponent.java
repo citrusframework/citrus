@@ -22,6 +22,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpointComponent;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.message.DefaultMessageQueue;
+import org.citrusframework.util.PropertyUtils;
 
 /**
  * Direct endpoint component creates synchronous or asynchronous channel endpoint and sets configuration properties
@@ -53,7 +54,9 @@ public class DirectEndpointComponent extends AbstractEndpointComponent {
 
         endpoint.getEndpointConfiguration().setQueueName(queueName);
         if (!context.getReferenceResolver().isResolvable(queueName)) {
-            context.getReferenceResolver().bind(queueName, new DefaultMessageQueue(queueName));
+            DefaultMessageQueue messageQueue = new DefaultMessageQueue(queueName);
+            PropertyUtils.configure(queueName, messageQueue, context.getReferenceResolver());
+            context.getReferenceResolver().bind(queueName, messageQueue);
         }
 
         enrichEndpointConfiguration(endpoint.getEndpointConfiguration(), parameters, context);

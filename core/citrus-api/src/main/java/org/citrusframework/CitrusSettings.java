@@ -218,7 +218,34 @@ public final class CitrusSettings {
      */
     public static final String HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED_PROPERTY = "citrus.http.message.builder.force.citrus.header.update.enabled";
     public static final String HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED_ENV = "CITRUS_HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED";
-    public static final String HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED_DEFAULT = "true";
+    public static final String HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED_DEFAULT = Boolean.TRUE.toString();
+
+    /**
+     * Flag to enable/disable environment variable based endpoint and component configuration.
+     */
+    public static final String ENV_VAR_PROPERTY_BINDING_ENABLED_PROPERTY = "citrus.env.var.property.binding.enabled";
+    public static final String ENV_VAR_PROPERTY_BINDING_ENABLED_ENV = "CITRUS_ENV_VAR_PROPERTY_BINDING_ENABLED";
+    public static final String ENV_VAR_PROPERTY_BINDING_ENABLED_DEFAULT = Boolean.TRUE.toString();
+
+    /**
+     * Flag to enable/disable environment variable based endpoint and component configuration.
+     */
+    public static final String COMPONENT_PROPERTY_BINDING_ENABLED_PROPERTY = "citrus.component.property.binding.enabled";
+    public static final String COMPONENT_PROPERTY_BINDING_ENABLED_ENV = "CITRUS_COMPONENT_PROPERTY_BINDING_ENABLED";
+    public static final String COMPONENT_PROPERTY_BINDING_ENABLED_DEFAULT = getPropertyEnvOrDefault(
+            ENV_VAR_PROPERTY_BINDING_ENABLED_PROPERTY,
+            ENV_VAR_PROPERTY_BINDING_ENABLED_ENV,
+            Boolean.TRUE.toString());
+
+    /**
+     * Flag to enable/disable environment variable based endpoint and component configuration.
+     */
+    public static final String ENDPOINT_PROPERTY_BINDING_ENABLED_PROPERTY = "citrus.endpoint.property.binding.enabled";
+    public static final String ENDPOINT_PROPERTY_BINDING_ENABLED_ENV = "CITRUS_ENDPOINT_PROPERTY_BINDING_ENABLED";
+    public static final String ENDPOINT_PROPERTY_BINDING_ENABLED_DEFAULT = getPropertyEnvOrDefault(
+            ENV_VAR_PROPERTY_BINDING_ENABLED_PROPERTY,
+            ENV_VAR_PROPERTY_BINDING_ENABLED_ENV,
+            Boolean.TRUE.toString());;
 
     /**
      * Default message trace output directory
@@ -406,5 +433,38 @@ public final class CitrusSettings {
      */
     public static String getPropertyEnvOrDefault(String prop, String env, String def) {
         return getProperty(prop, getenv(env) != null ? getenv(env) : def);
+    }
+
+    /**
+     * Gets the setting that marks environment variable property binding enabled/disabled.
+     * If enabled endpoints and components are configured using system properties and environment variables.
+     */
+    public static boolean isEnvVarPropertyBindingEnabled() {
+        return parseBoolean(getPropertyEnvOrDefault(
+                ENV_VAR_PROPERTY_BINDING_ENABLED_PROPERTY,
+                ENV_VAR_PROPERTY_BINDING_ENABLED_ENV,
+                ENV_VAR_PROPERTY_BINDING_ENABLED_DEFAULT));
+    }
+
+    /**
+     * Gets the setting that marks environment variable property binding enabled/disabled for all components.
+     * If enabled components are configured using system properties and environment variables.
+     */
+    public static boolean isComponentPropertyBindingEnabled() {
+        return parseBoolean(getPropertyEnvOrDefault(
+                COMPONENT_PROPERTY_BINDING_ENABLED_PROPERTY,
+                COMPONENT_PROPERTY_BINDING_ENABLED_ENV,
+                COMPONENT_PROPERTY_BINDING_ENABLED_DEFAULT));
+    }
+
+    /**
+     * Gets the setting that marks environment variable property binding enabled/disabled for all endpoints.
+     * If enabled endpoints are configured using system properties and environment variables.
+     */
+    public static boolean isEndpointPropertyBindingEnabled() {
+        return parseBoolean(getPropertyEnvOrDefault(
+                ENDPOINT_PROPERTY_BINDING_ENABLED_PROPERTY,
+                ENDPOINT_PROPERTY_BINDING_ENABLED_ENV,
+                ENDPOINT_PROPERTY_BINDING_ENABLED_DEFAULT));
     }
 }

@@ -70,10 +70,7 @@
                         port="8086"
                         endpoint-adapter="httpServerAdapter6"/>
 
-    <bean id="httpServerAdapter6" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg><value type="java.lang.Class">org.citrusframework.endpoint.EndpointAdapter</value></constructor-arg>
-      <constructor-arg value="httpServerAdapter6"/>
-    </bean>
+    <bean id="httpServerAdapter6" class="org.citrusframework.endpoint.adapter.StaticEndpointAdapter"/>
 
     <bean id="connectionFactory" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg><value type="java.lang.Class">jakarta.jms.ConnectionFactory</value></constructor-arg>

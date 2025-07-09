@@ -17,6 +17,7 @@
 package org.citrusframework.integration.server;
 
 import org.citrusframework.context.TestContextFactoryBean;
+import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.message.RawMessage;
 import org.citrusframework.server.AbstractServer;
@@ -66,5 +67,10 @@ public class SimpleServer extends AbstractServer {
      */
     public void setStatusEndpoint(DirectEndpoint statusEndpoint) {
         this.statusEndpoint = statusEndpoint;
+    }
+
+    @Override
+    public EndpointConfiguration getEndpointConfiguration() {
+        return statusEndpoint.getEndpointConfiguration();
     }
 }

@@ -16,8 +16,6 @@
 
 package org.citrusframework.endpoint.adapter;
 
-import org.citrusframework.message.Message;
-
 /**
  * Endpoint adapter produces no response message forcing a request timeout on client side.
  *
@@ -25,8 +23,7 @@ import org.citrusframework.message.Message;
  */
 public class TimeoutProducingEndpointAdapter extends StaticEndpointAdapter {
 
-    @Override
-    public Message handleMessageInternal(Message message) {
-        return null;
+    public TimeoutProducingEndpointAdapter() {
+        super(null);
     }
 }

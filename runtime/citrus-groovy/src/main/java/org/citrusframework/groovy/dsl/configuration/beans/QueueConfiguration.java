@@ -20,6 +20,7 @@ import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.util.PropertyUtils;
 
 public class QueueConfiguration {
 
@@ -38,6 +39,8 @@ public class QueueConfiguration {
     }
 
     public void queue(String name) {
-        referenceResolver.bind(name, new DefaultMessageQueue(name));
+        DefaultMessageQueue messageQueue = new DefaultMessageQueue(name);
+        PropertyUtils.configure(name, messageQueue, referenceResolver);
+        referenceResolver.bind(name, messageQueue);
     }
 }

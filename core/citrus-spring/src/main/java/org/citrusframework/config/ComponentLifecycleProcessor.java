@@ -22,6 +22,7 @@ import org.citrusframework.common.ShutdownPhase;
 import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -46,10 +47,12 @@ public class ComponentLifecycleProcessor implements DestructionAwareBeanPostProc
             ((ReferenceResolverAware) bean).setReferenceResolver(referenceResolver);
         }
 
-        if (bean instanceof InitializingPhase) {
+        if (bean instanceof InitializingPhase initializingBean) {
             logger.debug("Initializing component '{}'", beanName);
-            ((InitializingPhase) bean).initialize();
+            initializingBean.initialize();
         }
+
+        PropertyUtils.configure(beanName, bean, referenceResolver);
 
         return bean;
     }

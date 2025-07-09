@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 public class AbstractEndpointAdapterTest {
 
     /** Endpoint adapter mock */
-    private EndpointAdapter endpointAdapter = Mockito.mock(EndpointAdapter.class);
+    private final EndpointAdapter endpointAdapter = Mockito.mock(EndpointAdapter.class);
 
     @Test
     public void testEndpointAdapter() {
@@ -79,6 +79,5 @@ public class AbstractEndpointAdapterTest {
 
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getPayload(String.class), "OK");
-
     }
 }

@@ -16,22 +16,55 @@
 
 package org.citrusframework.endpoint.adapter;
 
-import org.citrusframework.endpoint.EndpointAdapter;
-import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.UnitTestSupport;
+import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class StaticEndpointAdapterTest {
+public class StaticEndpointAdapterTest extends UnitTestSupport {
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testEndpointAdapter() {
-        EndpointAdapter endpointAdapter = new StaticEndpointAdapter() {
-            @Override
-            protected Message handleMessageInternal(Message message) {
-                return null;
-            }
-        };
+        StaticEndpointAdapter endpointAdapter = new StaticEndpointAdapter(new DefaultMessage("just works!"));
 
-        endpointAdapter.getEndpoint();
+        Message received = endpointAdapter.handleMessage(new DefaultMessage("hello"));
+        Assert.assertEquals(received.getPayload(), "just works!");
+
+        received = endpointAdapter.getEndpoint().createConsumer().receive(context);
+        Assert.assertEquals(received.getPayload(), "just works!");
+
+        Message received2nd = endpointAdapter.handleMessage(new DefaultMessage("something else"));
+        Assert.assertEquals(received2nd.getPayload(), "just works!");
+
+        Assert.assertEquals(received.getId(), received2nd.getId());
+    }
+
+    @Test
+    public void testEndpointAdapterNewMessageInstances() {
+        StaticEndpointAdapter endpointAdapter = new StaticEndpointAdapter(new DefaultMessage("just works!"))
+                .withReuseMessage(false);
+
+        Message received = endpointAdapter.handleMessage(new DefaultMessage("hello"));
+        Assert.assertEquals(received.getPayload(), "just works!");
+
+        Message received2nd = endpointAdapter.handleMessage(new DefaultMessage("something else"));
+        Assert.assertEquals(received2nd.getPayload(), "just works!");
+
+        Assert.assertNotEquals(received.getId(), received2nd.getId());
+    }
+
+    @Test
+    public void testEmptyMessageEndpointAdapter() {
+        Message request = new DefaultMessage("hello");
+        StaticEndpointAdapter endpointAdapter = new StaticEndpointAdapter();
+
+        Message received = endpointAdapter.handleMessage(request);
+        Assert.assertEquals(received.getPayload(), "");
+
+        received = endpointAdapter.getEndpoint().createConsumer().receive(context);
+        Assert.assertEquals(received.getPayload(), "");
+
+        endpointAdapter.getEndpoint().createProducer().send(request, context);
     }
 }

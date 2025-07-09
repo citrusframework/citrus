@@ -32,6 +32,7 @@ import org.citrusframework.knative.ce.CloudEvent;
 import org.citrusframework.knative.ce.CloudEventMessage;
 import org.citrusframework.knative.ce.CloudEventSupport;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.PropertyUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
@@ -188,10 +189,15 @@ public class SendEventAction extends AbstractKnativeAction {
                     httpClient = new HttpClientBuilder()
                             .timeout(timeout)
                             .requestUrl(brokerUrl)
+                            .referenceResolver(referenceResolver)
                             .build();
 
                     if (brokerUrl.startsWith("https")) {
                         httpClient.getEndpointConfiguration().setRequestFactory(KnativeSupport.sslRequestFactory());
+                    }
+
+                    if (brokerName != null) {
+                        PropertyUtils.configure(brokerName, httpClient, referenceResolver);
                     }
                 }
             }

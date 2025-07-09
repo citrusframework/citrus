@@ -23,10 +23,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusEndpointConfig;
+import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +64,16 @@ public class DefaultEndpointFactory implements EndpointFactory {
         if (parser.isPresent()) {
             Endpoint endpoint = parser.get().parse(endpointConfig, context.getReferenceResolver());
             endpoint.setName(endpointName);
+
+            if (endpoint instanceof ReferenceResolverAware referenceResolverAware) {
+                referenceResolverAware.setReferenceResolver(context.getReferenceResolver());
+            }
+
+            if (endpoint instanceof InitializingPhase initializingBean) {
+                initializingBean.initialize();
+            }
+
+            PropertyUtils.configure(endpointName, endpoint, context.getReferenceResolver());
             return endpoint;
         }
 

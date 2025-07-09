@@ -27,6 +27,7 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.PropertyUtils;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.ext.ScriptUtils;
@@ -81,6 +82,7 @@ public class StartPostgreSQLAction extends StartTestcontainersAction<PostgreSQLC
         postgreSQLDataSource.setUsername(getContainer().getUsername());
         postgreSQLDataSource.setPassword(getContainer().getPassword());
 
+        PropertyUtils.configure(dataSourceName, postgreSQLDataSource, context.getReferenceResolver());
         context.getReferenceResolver().bind(dataSourceName, postgreSQLDataSource);
     }
 

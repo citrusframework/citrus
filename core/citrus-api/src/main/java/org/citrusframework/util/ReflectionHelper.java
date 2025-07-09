@@ -160,7 +160,7 @@ public class ReflectionHelper {
      * supplied {@code name} and/or {@link Class type}. Searches all superclasses
      * up to {@link Object}.
      * @param clazz the class to introspect
-     * @param name the name of the field (may be {@code null} if type is specified)
+     * @param name the name of the field (maybe {@code null} if type is specified)
      * @return the corresponding Field object, or {@code null} if not found
      */
     public static Field findField(Class<?> clazz, String name) {

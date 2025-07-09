@@ -17,7 +17,6 @@
 package org.citrusframework.endpoint.adapter;
 
 import org.citrusframework.message.DefaultMessage;
-import org.citrusframework.message.Message;
 
 /**
  * Endpoint adapter always returning empty response message.
@@ -26,8 +25,7 @@ import org.citrusframework.message.Message;
  */
 public class EmptyResponseEndpointAdapter extends StaticEndpointAdapter {
 
-    @Override
-    public Message handleMessageInternal(Message message) {
-        return new DefaultMessage("");
+    public EmptyResponseEndpointAdapter() {
+        super(new DefaultMessage(""));
     }
 }

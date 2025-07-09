@@ -26,9 +26,12 @@ import groovy.lang.GroovyRuntimeException;
 import groovy.lang.MissingMethodException;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
+import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.PropertyUtils;
 
 public class BeansConfiguration extends GroovyObjectSupport {
 
@@ -58,7 +61,18 @@ public class BeansConfiguration extends GroovyObjectSupport {
 
     public void bean(String name, Class<?> type) {
         try {
-            referenceResolver.bind(name, type.getConstructor().newInstance());
+            Object bean = type.getConstructor().newInstance();
+            if (bean instanceof ReferenceResolverAware referenceResolverAware) {
+                referenceResolverAware.setReferenceResolver(referenceResolver);
+            }
+
+            if (bean instanceof InitializingPhase initializingBean) {
+                initializingBean.initialize();
+            }
+
+            PropertyUtils.configure(name, bean, referenceResolver);
+
+            referenceResolver.bind(name, bean);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new CitrusRuntimeException(String.format("Failed to instantiate bean of type '%s' - no default constructor available", type));
         }
@@ -71,6 +85,16 @@ public class BeansConfiguration extends GroovyObjectSupport {
             callable.setDelegate(bean);
             callable.call();
 
+            if (bean instanceof ReferenceResolverAware referenceResolverAware) {
+                referenceResolverAware.setReferenceResolver(referenceResolver);
+            }
+
+            if (bean instanceof InitializingPhase initializingBean) {
+                initializingBean.initialize();
+            }
+
+            PropertyUtils.configure(name, bean, referenceResolver);
+
             referenceResolver.bind(name, bean);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new CitrusRuntimeException(String.format("Failed to instantiate bean of type '%s' - no default constructor available", type));
@@ -82,14 +106,28 @@ public class BeansConfiguration extends GroovyObjectSupport {
         if (bean == null) {
             throw new CitrusRuntimeException("Failed to instantiate bean from closure - expected bean instance return value but was null");
         }
+
+        if (bean instanceof ReferenceResolverAware referenceResolverAware) {
+            referenceResolverAware.setReferenceResolver(referenceResolver);
+        }
+
+        if (bean instanceof InitializingPhase initializingBean) {
+            initializingBean.initialize();
+        }
+
+        PropertyUtils.configure(name, bean, referenceResolver);
+
         referenceResolver.bind(name, bean);
     }
 
     public void queue(String name) {
-        referenceResolver.bind(name, new DefaultMessageQueue(name));
+        DefaultMessageQueue messageQueue = new DefaultMessageQueue(name);
+        PropertyUtils.configure(name, messageQueue, referenceResolver);
+        referenceResolver.bind(name, messageQueue);
     }
 
     public void propertyMissing(String name, Object value) {
+        PropertyUtils.configure(name, value, referenceResolver);
         referenceResolver.bind(name, value);
     }
 
@@ -109,6 +147,16 @@ public class BeansConfiguration extends GroovyObjectSupport {
                     closure.setDelegate(bean);
                     closure.call();
 
+                    if (bean instanceof ReferenceResolverAware referenceResolverAware) {
+                        referenceResolverAware.setReferenceResolver(referenceResolver);
+                    }
+
+                    if (bean instanceof InitializingPhase initializingBean) {
+                        initializingBean.initialize();
+                    }
+
+                    PropertyUtils.configure(name, bean, referenceResolver);
+
                     referenceResolver.bind(name, bean);
                     return bean;
                 } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
@@ -120,6 +168,17 @@ public class BeansConfiguration extends GroovyObjectSupport {
                 closure.setResolveStrategy(Closure.DELEGATE_ONLY);
 
                 Object bean = closure.call();
+
+                if (bean instanceof ReferenceResolverAware referenceResolverAware) {
+                    referenceResolverAware.setReferenceResolver(referenceResolver);
+                }
+
+                if (bean instanceof InitializingPhase initializingBean) {
+                    initializingBean.initialize();
+                }
+
+                PropertyUtils.configure(name, bean, referenceResolver);
+
                 referenceResolver.bind(name, bean);
             }
         }

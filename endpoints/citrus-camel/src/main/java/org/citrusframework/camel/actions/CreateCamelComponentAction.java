@@ -26,6 +26,7 @@ import org.citrusframework.groovy.dsl.GroovySupport;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.PropertyUtils;
 import org.citrusframework.util.StringUtils;
 
 /**
@@ -53,8 +54,8 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
                     .withTestContext(context)
                     .load(context.replaceDynamicContentInString(script), "org.apache.camel.*");
 
-            if (toCreate instanceof InitializingPhase) {
-                ((InitializingPhase) toCreate).initialize();
+            if (toCreate instanceof InitializingPhase initializingBean) {
+                initializingBean.initialize();
             }
         } else {
             toCreate = component;
@@ -64,6 +65,16 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
     }
 
     private void bindComponent(String name, Object component) {
+        if (component instanceof ReferenceResolverAware referenceResolverAware) {
+            referenceResolverAware.setReferenceResolver(referenceResolver);
+        }
+
+        if (component instanceof InitializingPhase initializingBean) {
+            initializingBean.initialize();
+        }
+
+        PropertyUtils.configure(name, component, referenceResolver);
+
         if (referenceResolver instanceof CamelReferenceResolver camelReferenceResolver) {
             camelReferenceResolver.bind(name, component);
         } else {

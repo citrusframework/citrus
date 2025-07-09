@@ -24,6 +24,7 @@ import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.util.PropertyUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 
@@ -57,6 +58,7 @@ public class AgentConnectAction extends AbstractAgentAction {
             httpClient = new HttpClientBuilder()
                     .requestUrl(url)
                     .build();
+            PropertyUtils.configure(clientName, httpClient, context.getReferenceResolver());
             context.getReferenceResolver().bind(clientName, httpClient);
         }
 

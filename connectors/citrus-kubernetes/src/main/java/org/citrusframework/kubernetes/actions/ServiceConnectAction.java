@@ -23,6 +23,7 @@ import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.kubernetes.KubernetesSettings;
+import org.citrusframework.util.PropertyUtils;
 import org.citrusframework.util.StringUtils;
 
 import static org.citrusframework.kubernetes.actions.KubernetesActionBuilder.kubernetes;
@@ -103,7 +104,10 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
         } else {
             HttpClient serviceClient = new HttpClientBuilder()
                     .requestUrl("http://localhost:%d".formatted(localPort))
+                    .referenceResolver(context.getReferenceResolver())
                     .build();
+
+            PropertyUtils.configure(clientName, serviceClient, context.getReferenceResolver());
             context.getReferenceResolver().bind(clientName, serviceClient);
         }
     }

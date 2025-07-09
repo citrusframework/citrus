@@ -52,9 +52,9 @@ public abstract class AbstractEndpointBuilder<T extends Endpoint> implements End
      * @return
      */
     public AbstractEndpointBuilder<T> initialize() {
-        if (getEndpoint() instanceof InitializingPhase) {
+        if (getEndpoint() instanceof InitializingPhase initializingBean) {
             try {
-                ((InitializingPhase) getEndpoint()).initialize();
+                initializingBean.initialize();
             } catch (Exception e) {
                 throw new CitrusRuntimeException("Failed to initialize server", e);
             }

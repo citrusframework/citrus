@@ -24,6 +24,7 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.groovy.dsl.GroovyShellUtils;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.PropertyUtils;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
 public class EndpointConfigurationScript implements ReferenceResolverAware {
@@ -55,16 +56,24 @@ public class EndpointConfigurationScript implements ReferenceResolverAware {
         GroovyShellUtils.run(ic, configuration, context.replaceDynamicContentInString(script), null, context);
 
         configuration.getEndpoints().forEach(endpoint -> {
-            onCreate(endpoint);
-            if (endpoint instanceof InitializingPhase) {
-                ((InitializingPhase) endpoint).initialize();
+            ReferenceResolver resolverToUse = referenceResolver;
+            if (resolverToUse == null) {
+                resolverToUse = context.getReferenceResolver();
             }
 
-            if (referenceResolver != null) {
-                referenceResolver.bind(endpoint.getName(), endpoint);
-            } else {
-                context.getReferenceResolver().bind(endpoint.getName(), endpoint);
+            if (endpoint instanceof ReferenceResolverAware referenceResolverAware) {
+                referenceResolverAware.setReferenceResolver(resolverToUse);
             }
+
+            if (endpoint instanceof InitializingPhase initializingBean) {
+                initializingBean.initialize();
+            }
+
+            PropertyUtils.configure(endpoint.getName(), endpoint, resolverToUse);
+
+            onCreate(endpoint);
+
+            resolverToUse.bind(endpoint.getName(), endpoint);
         });
     }
 
