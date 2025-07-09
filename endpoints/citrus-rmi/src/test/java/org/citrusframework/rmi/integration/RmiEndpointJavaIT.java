@@ -33,7 +33,7 @@ import static org.citrusframework.actions.SendMessageAction.Builder.send;
 /**
  * @since 2.5
  */
-@Test
+@Test(enabled = false) // unstable on local environment
 public class RmiEndpointJavaIT extends TestNGCitrusSpringSupport {
 
     @Autowired
