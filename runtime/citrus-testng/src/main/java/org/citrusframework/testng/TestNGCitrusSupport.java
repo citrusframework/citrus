@@ -17,8 +17,10 @@
 package org.citrusframework.testng;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
@@ -182,7 +184,10 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
         CitrusAnnotations.injectCitrusFramework(this, citrus);
         beforeSuite(citrus.getCitrusContext());
         citrus.beforeSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
-                Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
+            Arrays.stream(Reporter.getCurrentTestResult().getTestContext().getAllTestMethods())
+                    .flatMap(method -> Arrays.stream(method.getGroups()))
+                    .collect(Collectors.toSet())
+                    .toArray(new String[]{}));
     }
 
     /**
@@ -197,7 +202,10 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
         if (citrus != null) {
             afterSuite(citrus.getCitrusContext());
             citrus.afterSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
-                    Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
+                Arrays.stream(Reporter.getCurrentTestResult().getTestContext().getAllTestMethods())
+                        .flatMap(method -> Arrays.stream(method.getGroups()))
+                        .collect(Collectors.toSet())
+                        .toArray(new String[]{}));
         }
     }
 

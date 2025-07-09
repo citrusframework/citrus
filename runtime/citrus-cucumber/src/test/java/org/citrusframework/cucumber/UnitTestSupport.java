@@ -16,6 +16,9 @@
 
 package org.citrusframework.cucumber;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusSpringContextProvider;
 import org.citrusframework.config.CitrusSpringConfig;
@@ -53,7 +56,10 @@ public class UnitTestSupport extends AbstractTestNGUnitTest {
     public void beforeSuite() throws Exception {
         citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         citrus.beforeSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
-                Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
+            Arrays.stream(Reporter.getCurrentTestResult().getTestContext().getAllTestMethods())
+                    .flatMap(method -> Arrays.stream(method.getGroups()))
+                    .collect(Collectors.toSet())
+                    .toArray(new String[]{}));
     }
 
     /**
@@ -63,7 +69,10 @@ public class UnitTestSupport extends AbstractTestNGUnitTest {
     public void afterSuite() {
         if (citrus != null) {
             citrus.afterSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
-                    Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
+                Arrays.stream(Reporter.getCurrentTestResult().getTestContext().getAllTestMethods())
+                        .flatMap(method -> Arrays.stream(method.getGroups()))
+                        .collect(Collectors.toSet())
+                        .toArray(new String[]{}));
         }
     }
 

@@ -16,6 +16,9 @@
 
 package org.citrusframework;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import org.citrusframework.config.CitrusSpringConfig;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
@@ -54,7 +57,10 @@ public class BeanDefinitionParserTestSupport extends AbstractBeanDefinitionParse
 
         citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         citrus.beforeSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
-                Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
+            Arrays.stream(Reporter.getCurrentTestResult().getTestContext().getAllTestMethods())
+                    .flatMap(method -> Arrays.stream(method.getGroups()))
+                    .collect(Collectors.toSet())
+                    .toArray(new String[]{}));
     }
 
     /**
@@ -64,7 +70,10 @@ public class BeanDefinitionParserTestSupport extends AbstractBeanDefinitionParse
     public void afterSuite() {
         if (citrus != null) {
             citrus.afterSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
-                    Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
+                Arrays.stream(Reporter.getCurrentTestResult().getTestContext().getAllTestMethods())
+                        .flatMap(method -> Arrays.stream(method.getGroups()))
+                        .collect(Collectors.toSet())
+                        .toArray(new String[]{}));
         }
     }
 
