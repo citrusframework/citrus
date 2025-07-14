@@ -64,7 +64,7 @@ import static org.citrusframework.util.StringUtils.isEmpty;
  *
  * @see ValueMatchingStrategy
  */
-public class KafkaMessageByHeaderSelector implements KafkaMessageSelector {
+public class KafkaMessageByHeaderSelector implements KafkaMessageSelector<String> {
 
     /**
      * @see KafkaMessageByHeaderSelector#key
@@ -193,17 +193,17 @@ public class KafkaMessageByHeaderSelector implements KafkaMessageSelector {
     }
 
     @Override
-    public <T> Map<String, T> asSelector() {
-        Map<String, T> selector = new HashMap<>();
+    public Map<String, String> asSelector() {
+        Map<String, String> selector = new HashMap<>();
 
         if (nonNull(key)) {
-            selector.put(HEADER_FILTER_KEY, (T) key);
+            selector.put(HEADER_FILTER_KEY, key);
         }
         if (nonNull(value)) {
-            selector.put(HEADER_FILTER_VALUE, (T) value);
+            selector.put(HEADER_FILTER_VALUE, value);
         }
 
-        selector.put(HEADER_FILTER_COMPARATOR, (T) Optional.ofNullable(valueMatchingStrategy).orElse(EQUALS).toString());
+        selector.put(HEADER_FILTER_COMPARATOR, Optional.ofNullable(valueMatchingStrategy).orElse(EQUALS).toString());
 
         return selector;
     }

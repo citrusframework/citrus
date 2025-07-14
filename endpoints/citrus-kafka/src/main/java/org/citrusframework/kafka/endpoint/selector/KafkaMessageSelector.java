@@ -27,7 +27,7 @@ import java.util.Map;
  *
  * @see org.citrusframework.kafka.endpoint.KafkaMessageFilteringConsumer
  */
-public interface KafkaMessageSelector {
+public interface KafkaMessageSelector<T> {
 
     /**
      * Determines whether a given ConsumerRecord matches specific criteria.
@@ -42,5 +42,5 @@ public interface KafkaMessageSelector {
      *
      * @return Selector representation of the matcher.
      */
-    <T> Map<String, T> asSelector();
+    Map<String, T> asSelector();
 }

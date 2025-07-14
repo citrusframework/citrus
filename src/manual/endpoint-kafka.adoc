@@ -510,7 +510,7 @@ then(
   For example, `PT1S` represents a duration of 1 second.
 
 | `kafkaMessageSelector`
-| See <<kafka-message-selector-types,Selector Types
+| See <<kafka-message-selector-types,Selector Types>>
 | This specifies the criteria for message selection.
   In the examples, we're using `kafkaHeaderEquals("key", "value")`, which selects messages where a header with the `key` "key" exactly matches the `value` "value".
 
@@ -583,6 +583,58 @@ If the `value` is `null` however, all headers with the exact `key` match.
   It defaults to `EQUALS`, if not specified.
 
 |===
+
+.Custom Selector Strategy
+
+In addition to the default Kafka message selection strategies in Citrus, it additionally allows you to define custom message selectors.
+This is especially useful when you want to select messages based on predicates Citrus does not (yet) support.
+
+A custom selector strategy consists of two parts:
+
+* A *predicate* to determine if a custom selector applies.
+* A *constructor function* that returns the appropriate `KafkaMessageSelector`.
+
+You register your strategy using the `KafkaMessageSelectorFactory#setCustomStrategies` method, typically within your test setup:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+kafkaWithRandomConsumerGroupEndpoint.getEndpointConfiguration()
+    .getKafkaMessageSelectorFactory()
+    .setCustomStrategies(
+        factoryWithKafkaMessageSelector(
+            messageSelectors -> messageSelectors.containsKey(MESSAGE_KEY_FILTER_KEY),
+            messageSelectors -> new KafkaMessageByKeySelector(
+                (String) messageSelectors.get(MESSAGE_KEY_FILTER_KEY)
+            )
+        )
+    );
+----
+
+Here, the `MESSAGE_KEY_FILTER_KEY` is a custom key used to recognize and extract the expected Kafka message key from the selector.
+
+The `KafkaMessageByKeySelector` is an implementation of `KafkaMessageSelector` and matches messages by key:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+record KafkaMessageByKeySelector(String key) implements KafkaMessageSelector {
+    static final String MESSAGE_KEY_FILTER_KEY = "message-key";
+
+    @Override
+    public boolean matches(ConsumerRecord<Object, Object> consumerRecord) {
+        return nonNull(consumerRecord.key()) && consumerRecord.key().equals(key);
+    }
+
+    @Override
+    public Map<String, String> asSelector() {
+        return Map.of(MESSAGE_KEY_FILTER_KEY, key);
+    }
+}
+----
+
+* The `matches` method defines the filter logic.
+* The `asSelector` method returns a key-value map representation of the selector.
 
 [[kafka-message-selector-best-practices]]
 === Best Practices

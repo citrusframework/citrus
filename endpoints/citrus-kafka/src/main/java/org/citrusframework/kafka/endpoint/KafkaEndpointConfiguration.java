@@ -16,11 +16,13 @@
 
 package org.citrusframework.kafka.endpoint;
 
+import jakarta.annotation.Nonnull;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.citrusframework.endpoint.AbstractPollableEndpointConfiguration;
+import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory;
 import org.citrusframework.kafka.message.KafkaMessageConverter;
 import org.citrusframework.kafka.message.KafkaMessageHeaderMapper;
 import org.citrusframework.kafka.message.KafkaMessageHeaders;
@@ -95,6 +97,8 @@ public class KafkaEndpointConfiguration extends AbstractPollableEndpointConfigur
     private int partition = 0;
 
     private boolean useThreadSafeConsumer;
+
+    private @Nonnull KafkaMessageSelectorFactory kafkaMessageSelectorFactory = new KafkaMessageSelectorFactory();
 
     public String getClientId() {
         return clientId;
@@ -230,5 +234,13 @@ public class KafkaEndpointConfiguration extends AbstractPollableEndpointConfigur
 
     public void setUseThreadSafeConsumer(boolean useThreadSafeConsumer) {
         this.useThreadSafeConsumer = useThreadSafeConsumer;
+    }
+
+    public @Nonnull KafkaMessageSelectorFactory getKafkaMessageSelectorFactory() {
+        return kafkaMessageSelectorFactory;
+    }
+
+    public void setKafkaMessageSelectorFactory(@Nonnull KafkaMessageSelectorFactory kafkaMessageSelectorFactory) {
+        this.kafkaMessageSelectorFactory = kafkaMessageSelectorFactory;
     }
 }

@@ -27,6 +27,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.HEADER_FILTER_KEY;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.HEADER_FILTER_VALUE;
+import static org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory.KafkaMessageSelectorFactories.factoryWithKafkaMessageSelector;
+import static org.mockito.Mockito.mock;
 
 public class KafkaMessageSelectorFactoryTest {
 
@@ -48,8 +50,7 @@ public class KafkaMessageSelectorFactoryTest {
 
     @Test
     public void parseFromSelector_returnsKafkaMessageByHeaderSelector_ifKeyIsPresent() {
-        var messageSelectors = Map.of(
-                HEADER_FILTER_KEY, "foo");
+        var messageSelectors = Map.of(HEADER_FILTER_KEY, "foo");
 
         var result = fixture.parseFromSelector(messageSelectors);
 
@@ -68,5 +69,26 @@ public class KafkaMessageSelectorFactoryTest {
         assertThat(result)
                 .isInstanceOf(KafkaMessageByHeaderSelector.class)
                 .isNotNull();
+    }
+
+    @Test
+    public void parseFromSelector_returnsCustomSelector() {
+        var customKey = getClass().getSimpleName();
+        var customSelector = mock(KafkaMessageSelector.class);
+
+        fixture.setCustomStrategies(
+                factoryWithKafkaMessageSelector(
+                        messageSelectors -> messageSelectors.containsKey(customKey),
+                        messageSelectors -> customSelector
+                )
+        );
+
+        var messageSelectors = Map.of(customKey, "baz");
+
+        var result = fixture.parseFromSelector(messageSelectors);
+
+        assertThat(result)
+                .isInstanceOf(KafkaMessageSelector.class)
+                .isEqualTo(customSelector);
     }
 }
