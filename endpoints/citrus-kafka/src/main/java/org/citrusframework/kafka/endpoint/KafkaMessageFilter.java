@@ -69,10 +69,6 @@ public final class KafkaMessageFilter {
                 .kafkaMessageSelectorFactory(new KafkaMessageSelectorFactory());
     }
 
-    static KafkaMessageFilter kafkaMessageFilter(String selector) {
-        return kafkaMessageFilter(selector, new KafkaMessageSelectorFactory());
-    }
-
     static KafkaMessageFilter kafkaMessageFilter(String selector, KafkaMessageSelectorFactory kafkaMessageSelectorFactory) {
         return new KafkaMessageFilterBuilder().
                 kafkaMessageSelectorFactory(kafkaMessageSelectorFactory)

@@ -108,7 +108,7 @@ class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
         if (isEmpty(selector) && (isNull(kafkaMessageFilter))) {
             throw new CitrusRuntimeException("Cannot invoke filtering kafka message consumer without selectors");
         } else if (hasText(selector)) {
-            kafkaMessageFilter = KafkaMessageFilter.kafkaMessageFilter(selector);
+            kafkaMessageFilter = KafkaMessageFilter.kafkaMessageFilter(selector, getEndpointConfiguration().getKafkaMessageSelectorFactory());
         }
 
         kafkaMessageFilter.sanitize();

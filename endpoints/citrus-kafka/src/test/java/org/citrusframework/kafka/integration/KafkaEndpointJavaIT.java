@@ -16,9 +16,7 @@
 
 package org.citrusframework.kafka.integration;
 
-import java.time.Duration;
-import java.util.concurrent.TimeoutException;
-
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.assertj.core.api.ThrowableAssert;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -26,11 +24,17 @@ import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.internal.GitHubIssue;
 import org.citrusframework.kafka.endpoint.KafkaEndpoint;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector;
+import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelector;
 import org.citrusframework.kafka.message.KafkaMessage;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
+
+import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
@@ -41,6 +45,8 @@ import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSe
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.ValueMatchingStrategy.STARTS_WITH;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderContains;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderEquals;
+import static org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory.KafkaMessageSelectorFactories.factoryWithKafkaMessageSelector;
+import static org.citrusframework.kafka.integration.KafkaEndpointJavaIT.KafkaMessageByKeySelector.MESSAGE_KEY_FILTER_KEY;
 
 @Test(singleThreaded = true)
 public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
@@ -61,20 +67,20 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         var value = "Bilbo";
 
         when(
-            send(kafkaWithRandomConsumerGroupEndpoint)
-                .message(new KafkaMessage(body).setHeader(key, value))
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).setHeader(key, value))
         );
 
         then(
-            receive(kafkaWithRandomConsumerGroupEndpoint)
-                    .selector(
-                            kafkaMessageFilter()
-                                    .eventLookbackWindow(Duration.ofSeconds(1L))
-                                    .kafkaMessageSelector(kafkaHeaderEquals(key, value))
-                                    .build()
-                    )
-                    .getMessageBuilderSupport()
-                    .body(body)
+                receive(kafkaWithRandomConsumerGroupEndpoint)
+                        .selector(
+                                kafkaMessageFilter()
+                                        .eventLookbackWindow(Duration.ofSeconds(1L))
+                                        .kafkaMessageSelector(kafkaHeaderEquals(key, value))
+                                        .build()
+                        )
+                        .getMessageBuilderSupport()
+                        .body(body)
         );
     }
 
@@ -87,20 +93,20 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         var value = "Frodo";
 
         when(
-            send(kafkaWithRandomConsumerGroupEndpoint)
-                .message(new KafkaMessage(body).setHeader(key, value))
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).setHeader(key, value))
         );
 
         then(
-            receive(kafkaWithRandomConsumerGroupEndpoint)
-                    .selector(
-                            kafkaMessageFilter()
-                                    .eventLookbackWindow(Duration.ofSeconds(1L))
-                                    .kafkaMessageSelector(kafkaHeaderContains(key, "odo"))
-                                    .build()
-                    )
-                    .getMessageBuilderSupport()
-                    .body(body)
+                receive(kafkaWithRandomConsumerGroupEndpoint)
+                        .selector(
+                                kafkaMessageFilter()
+                                        .eventLookbackWindow(Duration.ofSeconds(1L))
+                                        .kafkaMessageSelector(kafkaHeaderContains(key, "odo"))
+                                        .build()
+                        )
+                        .getMessageBuilderSupport()
+                        .body(body)
         );
     }
 
@@ -113,27 +119,76 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         var value = "Galadriel";
 
         when(
-            send(kafkaWithRandomConsumerGroupEndpoint)
-                .message(new KafkaMessage(body).setHeader(key, value))
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).setHeader(key, value))
         );
 
         then(
-            receive(kafkaWithRandomConsumerGroupEndpoint)
-                    .selector(
-                            kafkaMessageFilter()
-                                    .eventLookbackWindow(Duration.ofSeconds(1L))
-                                    .kafkaMessageSelector(
-                                            KafkaMessageByHeaderSelector.builder()
-                                                    .key(key)
-                                                    .value("Gala")
-                                                    .valueMatchingStrategy(STARTS_WITH)
-                                                    .build()
-                                    )
-                                    .build()
-                    )
-                    .getMessageBuilderSupport()
-                    .body(body)
+                receive(kafkaWithRandomConsumerGroupEndpoint)
+                        .selector(
+                                kafkaMessageFilter()
+                                        .eventLookbackWindow(Duration.ofSeconds(1L))
+                                        .kafkaMessageSelector(
+                                                KafkaMessageByHeaderSelector.builder()
+                                                        .key(key)
+                                                        .value("Gala")
+                                                        .valueMatchingStrategy(STARTS_WITH)
+                                                        .build()
+                                        )
+                                        .build()
+                        )
+                        .getMessageBuilderSupport()
+                        .body(body)
         );
+    }
+
+    @Test
+    @CitrusTest
+    public void findKafkaEvent_customSelector_byKey_citrus_DSL() {
+        var messageKey = "important random key";
+        var body = "findKafkaEvent_customSelector_byKey_citrus_DSL";
+
+        kafkaWithRandomConsumerGroupEndpoint.getEndpointConfiguration()
+                .getKafkaMessageSelectorFactory()
+                .setCustomStrategies(
+                        factoryWithKafkaMessageSelector(
+                                messageSelectors -> messageSelectors.containsKey(MESSAGE_KEY_FILTER_KEY),
+                                messageSelectors -> new KafkaMessageByKeySelector((String) messageSelectors.get(MESSAGE_KEY_FILTER_KEY))
+                        )
+                );
+
+        when(
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).messageKey(messageKey))
+        );
+
+        then(
+                receive(kafkaWithRandomConsumerGroupEndpoint)
+                        .selector(
+                                kafkaMessageFilter()
+                                        .eventLookbackWindow(Duration.ofSeconds(1L))
+                                        .kafkaMessageSelector(
+                                                new KafkaMessageByKeySelector(messageKey)
+                                        )
+                                        .build()
+                        )
+                        .getMessageBuilderSupport()
+                        .body(body)
+        );
+    }
+
+    record KafkaMessageByKeySelector(String key) implements KafkaMessageSelector<String> {
+        static final String MESSAGE_KEY_FILTER_KEY = "message-key";
+
+        @Override
+        public boolean matches(ConsumerRecord<Object, Object> consumerRecord) {
+            return nonNull(consumerRecord.key()) && consumerRecord.key().equals(key);
+        }
+
+        @Override
+        public Map<String, String> asSelector() {
+            return Map.of(MESSAGE_KEY_FILTER_KEY, key);
+        }
     }
 
     @Test
@@ -145,26 +200,26 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         var value = "Celeborn";
 
         when(
-            send(kafkaWithRandomConsumerGroupEndpoint)
-                .message(new KafkaMessage(body).setHeader(key, value))
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).setHeader(key, value))
         );
 
         then(
-            receive(kafkaWithRandomConsumerGroupEndpoint)
-                    .selector(
-                            kafkaMessageFilter()
-                                    .eventLookbackWindow(Duration.ofSeconds(1L))
-                                    .kafkaMessageSelector(
-                                            KafkaMessageByHeaderSelector.builder()
-                                                    .key(key)
-                                                    .value("born")
-                                                    .valueMatchingStrategy(ENDS_WITH)
-                                                    .build()
-                                    )
-                                    .build()
-                    )
-                    .getMessageBuilderSupport()
-                    .body(body)
+                receive(kafkaWithRandomConsumerGroupEndpoint)
+                        .selector(
+                                kafkaMessageFilter()
+                                        .eventLookbackWindow(Duration.ofSeconds(1L))
+                                        .kafkaMessageSelector(
+                                                KafkaMessageByHeaderSelector.builder()
+                                                        .key(key)
+                                                        .value("born")
+                                                        .valueMatchingStrategy(ENDS_WITH)
+                                                        .build()
+                                        )
+                                        .build()
+                        )
+                        .getMessageBuilderSupport()
+                        .body(body)
         );
     }
 
@@ -177,20 +232,20 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         var value = "Elrond";
 
         when(
-            send(kafkaWithRandomConsumerGroupEndpoint)
-                .message(new KafkaMessage(body).setHeader(key, value))
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).setHeader(key, value))
         );
 
         ThrowableAssert.ThrowingCallable receiver = () -> then(
-            receive(kafkaWithRandomConsumerGroupEndpoint)
-                    .selector(
-                            kafkaMessageFilter()
-                                    .eventLookbackWindow(Duration.ofSeconds(1L))
-                                    .kafkaMessageSelector(kafkaHeaderEquals(key, "Arwen"))
-                                    .build()
-                    )
-                    .getMessageBuilderSupport()
-                    .body(body)
+                receive(kafkaWithRandomConsumerGroupEndpoint)
+                        .selector(
+                                kafkaMessageFilter()
+                                        .eventLookbackWindow(Duration.ofSeconds(1L))
+                                        .kafkaMessageSelector(kafkaHeaderEquals(key, "Arwen"))
+                                        .build()
+                        )
+                        .getMessageBuilderSupport()
+                        .body(body)
         );
 
         assertThatThrownBy(receiver)
@@ -208,22 +263,22 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         var value = "Gimli";
 
         given(
-            send(kafkaWithRandomConsumerGroupEndpoint)
-                .message(new KafkaMessage(body).setHeader(key, value))
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).setHeader(key, value))
         );
 
         when(sleep().seconds(2));
 
         ThrowableAssert.ThrowingCallable receiver = () -> then(
-            receive(kafkaWithRandomConsumerGroupEndpoint)
-                    .selector(
-                            kafkaMessageFilter()
-                                    .eventLookbackWindow(Duration.ofSeconds(1L))
-                                    .kafkaMessageSelector(kafkaHeaderEquals(key, value))
-                                    .build()
-                    )
-                    .getMessageBuilderSupport()
-                    .body(body)
+                receive(kafkaWithRandomConsumerGroupEndpoint)
+                        .selector(
+                                kafkaMessageFilter()
+                                        .eventLookbackWindow(Duration.ofSeconds(1L))
+                                        .kafkaMessageSelector(kafkaHeaderEquals(key, value))
+                                        .build()
+                        )
+                        .getMessageBuilderSupport()
+                        .body(body)
         );
 
         assertThatThrownBy(receiver)
@@ -240,25 +295,25 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         var key = "Name";
 
         given(
-            send(kafkaWithRandomConsumerGroupEndpoint)
-                .message(new KafkaMessage(body).setHeader(key, "Gandalf the Grey"))
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).setHeader(key, "Gandalf the Grey"))
         );
 
         when(
-            send(kafkaWithRandomConsumerGroupEndpoint)
-                .message(new KafkaMessage(body).setHeader(key, "Gandalf the White"))
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).setHeader(key, "Gandalf the White"))
         );
 
         ThrowableAssert.ThrowingCallable receiver = () -> then(
-            receive(kafkaWithRandomConsumerGroupEndpoint)
-                    .selector(
-                            kafkaMessageFilter()
-                                    .eventLookbackWindow(Duration.ofSeconds(1L))
-                                    .kafkaMessageSelector(kafkaHeaderContains(key, "Gandalf"))
-                                    .build()
-                    )
-                    .getMessageBuilderSupport()
-                    .body(body)
+                receive(kafkaWithRandomConsumerGroupEndpoint)
+                        .selector(
+                                kafkaMessageFilter()
+                                        .eventLookbackWindow(Duration.ofSeconds(1L))
+                                        .kafkaMessageSelector(kafkaHeaderContains(key, "Gandalf"))
+                                        .build()
+                        )
+                        .getMessageBuilderSupport()
+                        .body(body)
         );
 
         assertThatThrownBy(receiver)
@@ -276,13 +331,13 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         var value = "Gollum";
 
         when(
-            send(kafkaWithRandomConsumerGroupEndpoint)
-                .message(new KafkaMessage(body).setHeader(key, value))
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).setHeader(key, value))
         );
 
         then(
-            kafkaWithRandomConsumerGroupEndpoint.findKafkaEventHeaderEquals(Duration.ofSeconds(1L), key, value)
-                    .body(body)
+                kafkaWithRandomConsumerGroupEndpoint.findKafkaEventHeaderEquals(Duration.ofSeconds(1L), key, value)
+                        .body(body)
         );
     }
 
@@ -301,22 +356,22 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         var value = "Aragorn";
 
         when(
-            send(kafkaEndpoint)
-                .message(new KafkaMessage(body).setHeader(key, value))
+                send(kafkaEndpoint)
+                        .message(new KafkaMessage(body).setHeader(key, value))
         );
 
         ThrowableAssert.ThrowingCallable receiver = () -> then(
-            receive(kafkaEndpoint)
-                    .timeout(2_000)
-                    .selector(
-                            kafkaMessageFilter()
-                                    .eventLookbackWindow(Duration.ofSeconds(1L))
-                                    .kafkaMessageSelector(kafkaHeaderEquals(key, "Samwise"))
-                                    .pollTimeout(Duration.ofSeconds(3)) // Note that pollTimeout > overall receive timeout
-                                    .build()
-                    )
-                    .getMessageBuilderSupport()
-                    .body(body)
+                receive(kafkaEndpoint)
+                        .timeout(2_000)
+                        .selector(
+                                kafkaMessageFilter()
+                                        .eventLookbackWindow(Duration.ofSeconds(1L))
+                                        .kafkaMessageSelector(kafkaHeaderEquals(key, "Samwise"))
+                                        .pollTimeout(Duration.ofSeconds(3)) // Note that pollTimeout > overall receive timeout
+                                        .build()
+                        )
+                        .getMessageBuilderSupport()
+                        .body(body)
         );
 
         assertThatThrownBy(receiver)
@@ -337,23 +392,23 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
         var brother2 = "Elrohir";
 
         when(
-            send(kafkaWithRandomConsumerGroupEndpoint)
-                .message(new KafkaMessage(body).setHeader(key, brother1))
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).setHeader(key, brother1))
         );
 
         when(
-            send(kafkaWithRandomConsumerGroupEndpoint)
-                .message(new KafkaMessage(body).setHeader(key, brother2))
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).setHeader(key, brother2))
         );
 
         then(
-            parallel()
-                .actions(
-                      kafkaWithRandomConsumerGroupEndpoint.findKafkaEventHeaderEquals(Duration.ofSeconds(1L), key, brother1)
-                              .body(body),
-                      kafkaWithRandomConsumerGroupEndpoint.findKafkaEventHeaderEquals(Duration.ofSeconds(1L), key, brother2)
-                              .body(body)
-                )
+                parallel()
+                        .actions(
+                                kafkaWithRandomConsumerGroupEndpoint.findKafkaEventHeaderEquals(Duration.ofSeconds(1L), key, brother1)
+                                        .body(body),
+                                kafkaWithRandomConsumerGroupEndpoint.findKafkaEventHeaderEquals(Duration.ofSeconds(1L), key, brother2)
+                                        .body(body)
+                        )
         );
     }
 }

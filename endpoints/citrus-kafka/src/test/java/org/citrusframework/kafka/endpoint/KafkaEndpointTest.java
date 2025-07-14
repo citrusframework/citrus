@@ -16,9 +16,17 @@
 
 package org.citrusframework.kafka.endpoint;
 
+import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.MAP;
 import static org.assertj.core.api.InstanceOfAssertFactories.OPTIONAL;
 import static org.assertj.core.api.InstanceOfAssertFactories.STRING;
 import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
@@ -27,15 +35,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
 public class KafkaEndpointTest {
 
     @Test
     public void classHasBuilder() {
         assertThat(KafkaEndpoint.builder().build())
-            .isInstanceOf(KafkaEndpoint.class);
+                .isInstanceOf(KafkaEndpoint.class);
     }
 
     @Test
@@ -43,8 +48,8 @@ public class KafkaEndpointTest {
         var fixture = new KafkaEndpoint();
 
         assertThat(fixture)
-            .extracting(KafkaEndpoint::getEndpointConfiguration)
-            .isNotNull();
+                .extracting(KafkaEndpoint::getEndpointConfiguration)
+                .isNotNull();
     }
 
     @Test
@@ -52,16 +57,16 @@ public class KafkaEndpointTest {
         var kafkaConsumerMock = mock(org.apache.kafka.clients.consumer.KafkaConsumer.class);
 
         var fixture = KafkaEndpoint.newKafkaEndpoint(
-            kafkaConsumerMock,
-            null, null, null, null, null, false
+                kafkaConsumerMock,
+                null, null, null, null, null, null, false
         );
 
         assertThat(fixture)
-            .isNotNull()
-            .extracting(KafkaEndpoint::createConsumer)
-            .isNotNull()
-            .extracting(org.citrusframework.kafka.endpoint.KafkaConsumer::getConsumer)
-            .isEqualTo(kafkaConsumerMock);
+                .isNotNull()
+                .extracting(KafkaEndpoint::createConsumer)
+                .isNotNull()
+                .extracting(org.citrusframework.kafka.endpoint.KafkaConsumer::getConsumer)
+                .isEqualTo(kafkaConsumerMock);
     }
 
     @Test
@@ -69,17 +74,17 @@ public class KafkaEndpointTest {
         var kafkaProducerMock = mock(org.apache.kafka.clients.producer.KafkaProducer.class);
 
         var fixture = KafkaEndpoint.newKafkaEndpoint(
-            null,
-            kafkaProducerMock,
-            null, null, null, null, false
+                null,
+                kafkaProducerMock,
+                null, null, null, null, null, false
         );
 
         assertThat(fixture)
-            .isNotNull()
-            .extracting(KafkaEndpoint::createProducer)
-            .isNotNull()
-            .extracting(org.citrusframework.kafka.endpoint.KafkaProducer::getProducer)
-            .isEqualTo(kafkaProducerMock);
+                .isNotNull()
+                .extracting(KafkaEndpoint::createProducer)
+                .isNotNull()
+                .extracting(org.citrusframework.kafka.endpoint.KafkaProducer::getProducer)
+                .isEqualTo(kafkaProducerMock);
     }
 
     @DataProvider
@@ -90,45 +95,45 @@ public class KafkaEndpointTest {
     @Test(dataProvider = "defaultConsumerGroups")
     public void newKafkaEndpoint_usesDefaultConsumerGroup(Boolean useRandomConsumerGroup) {
         var fixture = KafkaEndpoint.newKafkaEndpoint(
-            useRandomConsumerGroup,
-            null, null, null, false
+                useRandomConsumerGroup,
+                null, null, null, null, false
         );
 
         assertThat(fixture)
-            .isNotNull()
-            .extracting(KafkaEndpoint::getEndpointConfiguration)
-            .isNotNull()
-            .extracting(KafkaEndpointConfiguration::getConsumerGroup)
-            .asInstanceOf(STRING)
-            .isNotEmpty()
-            .isEqualTo("citrus_kafka_group");
+                .isNotNull()
+                .extracting(KafkaEndpoint::getEndpointConfiguration)
+                .isNotNull()
+                .extracting(KafkaEndpointConfiguration::getConsumerGroup)
+                .asInstanceOf(STRING)
+                .isNotEmpty()
+                .isEqualTo("citrus_kafka_group");
     }
 
     @Test
     public void newKafkaEndpoint_isAbleToCreateRandomConsumerGroup() {
         var fixture = KafkaEndpoint.newKafkaEndpoint(
-            TRUE,
-            null, null, null, false
+                TRUE,
+                null, null, null, null, false
         );
 
         assertThat(fixture)
-            .isNotNull()
-            .extracting(KafkaEndpoint::getEndpointConfiguration)
-            .isNotNull()
-            .extracting(KafkaEndpointConfiguration::getConsumerGroup)
-            .asInstanceOf(STRING)
-            .isNotEmpty()
-            .startsWith(KAFKA_PREFIX)
-            .hasSize(23)
-            .containsPattern(".*[a-z]{10}$")
-            // Make sure the random group id is propagated to new consumers
-            .satisfies(
-                groupId -> assertThat(fixture.createConsumer().getConsumer())
-                    .extracting("delegate")
-                    .extracting("groupId")
-                    .asInstanceOf(OPTIONAL)
-                    .hasValue(groupId)
-            );
+                .isNotNull()
+                .extracting(KafkaEndpoint::getEndpointConfiguration)
+                .isNotNull()
+                .extracting(KafkaEndpointConfiguration::getConsumerGroup)
+                .asInstanceOf(STRING)
+                .isNotEmpty()
+                .startsWith(KAFKA_PREFIX)
+                .hasSize(23)
+                .containsPattern(".*[a-z]{10}$")
+                // Make sure the random group id is propagated to new consumers
+                .satisfies(
+                        groupId -> assertThat(fixture.createConsumer().getConsumer())
+                                .extracting("delegate")
+                                .extracting("groupId")
+                                .asInstanceOf(OPTIONAL)
+                                .hasValue(groupId)
+                );
     }
 
     @Test
@@ -136,17 +141,17 @@ public class KafkaEndpointTest {
         var server = "localhost";
 
         var fixture = KafkaEndpoint.newKafkaEndpoint(
-            null,
-            server,
-            null, null, false
+                null,
+                server,
+                null, null, null, false
         );
 
         assertThat(fixture)
-            .isNotNull()
-            .extracting(KafkaEndpoint::getEndpointConfiguration)
-            .isNotNull()
-            .extracting(KafkaEndpointConfiguration::getServer)
-            .isEqualTo(server);
+                .isNotNull()
+                .extracting(KafkaEndpoint::getEndpointConfiguration)
+                .isNotNull()
+                .extracting(KafkaEndpointConfiguration::getServer)
+                .isEqualTo(server);
     }
 
     @Test
@@ -154,17 +159,17 @@ public class KafkaEndpointTest {
         var timeout = 1234L;
 
         var fixture = KafkaEndpoint.newKafkaEndpoint(
-            null, null,
-            timeout,
-            null, false
+                null, null,
+                timeout,
+                null, null, false
         );
 
         assertThat(fixture)
-            .isNotNull()
-            .extracting(KafkaEndpoint::getEndpointConfiguration)
-            .isNotNull()
-            .extracting(KafkaEndpointConfiguration::getTimeout)
-            .isEqualTo(timeout);
+                .isNotNull()
+                .extracting(KafkaEndpoint::getEndpointConfiguration)
+                .isNotNull()
+                .extracting(KafkaEndpointConfiguration::getTimeout)
+                .isEqualTo(timeout);
     }
 
     @Test
@@ -172,35 +177,54 @@ public class KafkaEndpointTest {
         var topic = "citrus";
 
         var fixture = KafkaEndpoint.newKafkaEndpoint(
-            null, null, null,
-            topic,
-            false
+                null, null, null,
+                topic,
+                null, false
         );
 
         assertThat(fixture)
-            .isNotNull()
-            .extracting(KafkaEndpoint::getEndpointConfiguration)
-            .isNotNull()
-            .extracting(KafkaEndpointConfiguration::getTopic)
-            .isEqualTo(topic);
+                .isNotNull()
+                .extracting(KafkaEndpoint::getEndpointConfiguration)
+                .isNotNull()
+                .extracting(KafkaEndpointConfiguration::getTopic)
+                .isEqualTo(topic);
+    }
+
+    @Test
+    public void newKafkaEndpoint_acceptsCustomStrategies() {
+        var customStrategy = new KafkaMessageSelectorFactory.KafkaMessageSelectorFactories();
+        customStrategy.put(mock(Predicate.class), mock(Function.class));
+
+        var fixture = KafkaEndpoint.newKafkaEndpoint(
+                null, null, null, null,
+                customStrategy,
+                false
+        );
+
+        assertThat(fixture)
+                .isNotNull()
+                .extracting(KafkaEndpoint::getEndpointConfiguration)
+                .isNotNull()
+                .extracting(KafkaEndpointConfiguration::getKafkaMessageSelectorFactory)
+                .isNotNull()
+                .extracting("customStrategies")
+                .asInstanceOf(MAP)
+                .hasSize(1);
     }
 
     @Test
     public void newKafkaEndpoint_acceptsThreadSafetyConfiguration() {
-        var topic = "citrus";
-
         var fixture = KafkaEndpoint.newKafkaEndpoint(
-            null, null, null,
-            topic,
-            true
+                null, null, null, null, null,
+                true
         );
 
         assertThat(fixture)
-            .isNotNull()
-            .extracting(KafkaEndpoint::getEndpointConfiguration)
-            .isNotNull()
-            .extracting(KafkaEndpointConfiguration::useThreadSafeConsumer)
-            .isEqualTo(true);
+                .isNotNull()
+                .extracting(KafkaEndpoint::getEndpointConfiguration)
+                .isNotNull()
+                .extracting(KafkaEndpointConfiguration::useThreadSafeConsumer)
+                .isEqualTo(true);
     }
 
     @Test
@@ -211,10 +235,10 @@ public class KafkaEndpointTest {
         var secondConsumer = fixture.createConsumer();
 
         assertThat(firstConsumer)
-            .isNotNull();
+                .isNotNull();
         assertThat(secondConsumer)
-            .isNotNull()
-            .isSameAs(firstConsumer);
+                .isNotNull()
+                .isSameAs(firstConsumer);
     }
 
     @Test
@@ -231,7 +255,7 @@ public class KafkaEndpointTest {
         var consumer = fixture.createConsumer();
 
         assertThat(consumer)
-            .isEqualTo(kafkaConsumerMock);
+                .isEqualTo(kafkaConsumerMock);
         verify(threadLocalKafkaConsumerMock).get();
     }
 
@@ -244,10 +268,10 @@ public class KafkaEndpointTest {
         var secondConsumer = fixture.createConsumer();
 
         assertThat(firstConsumer)
-            .isNotNull();
+                .isNotNull();
         assertThat(secondConsumer)
-            .isNotNull()
-            .isSameAs(firstConsumer);
+                .isNotNull()
+                .isSameAs(firstConsumer);
     }
 
     @Test
@@ -258,10 +282,10 @@ public class KafkaEndpointTest {
         var secondProducer = fixture.createProducer();
 
         assertThat(firstProducer)
-            .isNotNull();
+                .isNotNull();
         assertThat(secondProducer)
-            .isNotNull()
-            .isSameAs(firstProducer);
+                .isNotNull()
+                .isSameAs(firstProducer);
     }
 
     @Test
@@ -271,8 +295,8 @@ public class KafkaEndpointTest {
         var fixture = new KafkaEndpoint(kafkaEndpointConfigurationMock);
 
         assertThat(fixture)
-            .extracting(KafkaEndpoint::getEndpointConfiguration)
-            .isEqualTo(kafkaEndpointConfigurationMock);
+                .extracting(KafkaEndpoint::getEndpointConfiguration)
+                .isEqualTo(kafkaEndpointConfigurationMock);
     }
 
     @Test

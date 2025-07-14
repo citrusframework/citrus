@@ -142,6 +142,7 @@ public class KafkaMessageFilteringConsumerTest {
         var kafkaMessageFilterMock = mock(KafkaMessageFilter.class);
 
         var fixture = KafkaMessageFilteringConsumer.builder()
+                .endpointConfiguration(new KafkaEndpointConfiguration())
                 .build();
 
         setField(fixture, "kafkaMessageFilter", kafkaMessageFilterMock, KafkaMessageFilter.class);
@@ -154,8 +155,8 @@ public class KafkaMessageFilteringConsumerTest {
 
         assertThatThrownBy(() -> fixture.receive(selector, testContextMock, TIMEOUT))
                 // Resolving the topic is the next step, but it isn't specified
-                .isInstanceOf(NullPointerException.class)
-                .hasMessageContaining("Cannot invoke", "kafkaEndpointConfiguration", "is null");
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessage("Missing Kafka topic to receive messages from - add topic to endpoint configuration");
 
         assertThat(fixture.getKafkaMessageFilter())
                 .isNotNull()

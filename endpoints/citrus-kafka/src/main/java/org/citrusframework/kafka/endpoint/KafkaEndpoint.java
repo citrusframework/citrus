@@ -16,6 +16,19 @@
 
 package org.citrusframework.kafka.endpoint;
 
+import jakarta.annotation.Nullable;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.common.ShutdownPhase;
+import org.citrusframework.endpoint.AbstractEndpoint;
+import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelector;
+import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory;
+
+import java.time.Duration;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 import static java.lang.Boolean.TRUE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -23,13 +36,7 @@ import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderEquals;
 import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
 import static org.citrusframework.util.StringUtils.hasText;
-
-import jakarta.annotation.Nullable;
-import java.time.Duration;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.citrusframework.actions.ReceiveMessageAction;
-import org.citrusframework.common.ShutdownPhase;
-import org.citrusframework.endpoint.AbstractEndpoint;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * Kafka message endpoint capable of sending/receiving messages from Kafka message destination.
@@ -69,17 +76,18 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
     }
 
     static KafkaEndpoint newKafkaEndpoint(
-        @Nullable Boolean randomConsumerGroup,
-        @Nullable String server,
-        @Nullable Long timeout,
-        @Nullable String topic,
-        boolean useThreadSafeConsumer
+            @Nullable Boolean randomConsumerGroup,
+            @Nullable String server,
+            @Nullable Long timeout,
+            @Nullable String topic,
+            KafkaMessageSelectorFactory.KafkaMessageSelectorFactories customStrategies,
+            boolean useThreadSafeConsumer
     ) {
         var kafkaEndpoint = new KafkaEndpoint();
 
         if (TRUE.equals(randomConsumerGroup)) {
             kafkaEndpoint.getEndpointConfiguration()
-                .setConsumerGroup(KAFKA_PREFIX + RandomStringUtils.insecure().nextAlphabetic(10).toLowerCase());
+                    .setConsumerGroup(KAFKA_PREFIX + RandomStringUtils.insecure().nextAlphabetic(10).toLowerCase());
         }
         if (hasText(server)) {
             kafkaEndpoint.getEndpointConfiguration().setServer(server);
@@ -90,6 +98,9 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
         if (hasText(topic)) {
             kafkaEndpoint.getEndpointConfiguration().setTopic(topic);
         }
+        if (!isEmpty(customStrategies)) {
+            kafkaEndpoint.getEndpointConfiguration().getKafkaMessageSelectorFactory().setCustomStrategies(customStrategies);
+        }
 
         kafkaEndpoint.getEndpointConfiguration().setUseThreadSafeConsumer(useThreadSafeConsumer);
 
@@ -99,20 +110,21 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
     /**
      * @deprecated {@link org.apache.kafka.clients.consumer.KafkaConsumer} is <b>not</b> thread-safe
      * and manual consumer management is error-prone. Use
-     * {@link #newKafkaEndpoint(Boolean, String, Long, String, boolean)} instead to obtain properly
+     * {@link #newKafkaEndpoint(Boolean, String, Long, String, KafkaMessageSelectorFactory.KafkaMessageSelectorFactories, boolean)} instead to obtain properly
      * managed consumer instances. This method will be removed in a future release.
      */
     @Deprecated(forRemoval = true)
     static KafkaEndpoint newKafkaEndpoint(
-        @Nullable org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumer,
-        @Nullable org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer,
-        @Nullable Boolean randomConsumerGroup,
-        @Nullable String server,
-        @Nullable Long timeout,
-        @Nullable String topic,
-        boolean useThreadSafeConsumer
+            @Nullable org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumer,
+            @Nullable org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer,
+            @Nullable Boolean randomConsumerGroup,
+            @Nullable String server,
+            @Nullable Long timeout,
+            @Nullable String topic,
+            KafkaMessageSelectorFactory.KafkaMessageSelectorFactories customStrategies,
+            boolean useThreadSafeConsumer
     ) {
-        var kafkaEndpoint = newKafkaEndpoint(randomConsumerGroup, server, timeout, topic, useThreadSafeConsumer);
+        var kafkaEndpoint = newKafkaEndpoint(randomConsumerGroup, server, timeout, topic, customStrategies, useThreadSafeConsumer);
 
         // Make sure these come at the end, so endpoint configuration is already initialized
         if (nonNull(kafkaConsumer)) {
@@ -154,7 +166,7 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
     public void destroy() {
         if (getEndpointConfiguration().useThreadSafeConsumer()) {
             threadLocalKafkaConsumer.get()
-                .stop();
+                    .stop();
             threadLocalKafkaConsumer.remove();
         } else if (nonNull(kafkaConsumer)) {
             kafkaConsumer.stop();
@@ -163,13 +175,13 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
 
     public ReceiveMessageAction.ReceiveMessageActionBuilderSupport findKafkaEventHeaderEquals(Duration lookbackWindow, String key, String value) {
         return receive(this)
-            .selector(
-                KafkaMessageFilter.kafkaMessageFilter()
-                    .eventLookbackWindow(lookbackWindow)
-                    .kafkaMessageSelector(kafkaHeaderEquals(key, value))
-                    .build()
-            )
-            .getMessageBuilderSupport();
+                .selector(
+                        KafkaMessageFilter.kafkaMessageFilter()
+                                .eventLookbackWindow(lookbackWindow)
+                                .kafkaMessageSelector(kafkaHeaderEquals(key, value))
+                                .build()
+                )
+                .getMessageBuilderSupport();
     }
 
     public static class SimpleKafkaEndpointBuilder {
@@ -181,6 +193,7 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
         private Long timeout;
         private String topic;
         private boolean useThreadSafeConsumer = false;
+        private KafkaMessageSelectorFactory.KafkaMessageSelectorFactories customStrategies;
 
         /**
          * @deprecated {@link org.apache.kafka.clients.consumer.KafkaConsumer} is <b>not</b> thread-safe and manual consumer management is error-prone.
@@ -192,6 +205,7 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
             return this;
         }
 
+        @Deprecated(forRemoval = true)
         public SimpleKafkaEndpointBuilder kafkaProducer(org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer) {
             this.kafkaProducer = kafkaProducer;
             return this;
@@ -222,8 +236,15 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
             return this;
         }
 
+        public SimpleKafkaEndpointBuilder withCustomStrategy(
+                Predicate<Map<String, Object>> selector, Function<Map<String, Object>, KafkaMessageSelector> initializer
+        ) {
+            this.customStrategies.put(selector, initializer);
+            return this;
+        }
+
         public KafkaEndpoint build() {
-            return newKafkaEndpoint(kafkaConsumer, kafkaProducer, randomConsumerGroup, server, timeout, topic, useThreadSafeConsumer);
+            return newKafkaEndpoint(kafkaConsumer, kafkaProducer, randomConsumerGroup, server, timeout, topic, customStrategies, useThreadSafeConsumer);
         }
     }
 }

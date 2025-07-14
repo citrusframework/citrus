@@ -59,7 +59,7 @@ public class KafkaMessageFilterTest {
 
     @Test
     public void kafkaMessageFilter_throwsException_whenNoOffsetConfigured() {
-        assertThatThrownBy(() -> KafkaMessageFilter.kafkaMessageFilter(""))
+        assertThatThrownBy(() -> KafkaMessageFilter.kafkaMessageFilter("", new KafkaMessageSelectorFactory()))
                 .isInstanceOf(CitrusRuntimeException.class)
                 .hasMessage("Cannot find Kafka messages without offset limitation");
     }
