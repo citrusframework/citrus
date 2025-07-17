@@ -42,25 +42,36 @@ public class ProcessAndOutput {
     private static final Logger LOG = LoggerFactory.getLogger(ProcessAndOutput.class);
 
     private final Process process;
-    private String output;
+    private String output = "";
+
+    private final ProcessOutputListener outputListener;
 
     private BufferedReader reader;
 
     ProcessAndOutput(Process process) {
-        this(process, "");
+        this(process, null, null);
     }
 
-    ProcessAndOutput(Process process, String output) {
-        this.process = process;
-        this.output = output;
+    ProcessAndOutput(Process process, ProcessOutputListener outputListener) {
+        this(process, null, outputListener);
     }
 
     ProcessAndOutput(Process process, File outputFile) {
+        this(process, outputFile, null);
+    }
+
+    ProcessAndOutput(Process process, File outputFile, ProcessOutputListener outputListener) {
         this.process = process;
-        try {
-            this.reader = new BufferedReader(new InputStreamReader(new FileInputStream(outputFile)));
-        } catch (FileNotFoundException e) {
-            throw new CitrusRuntimeException(String.format("Failed to access process output file %s", outputFile.getName()), e);
+        this.outputListener = outputListener;
+
+        if (outputFile != null) {
+            try {
+                this.reader = new BufferedReader(new InputStreamReader(new FileInputStream(outputFile)));
+            } catch (FileNotFoundException e) {
+                throw new CitrusRuntimeException(String.format("Failed to access process output file %s", outputFile.getName()), e);
+            }
+        } else {
+            this.reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         }
     }
 
@@ -78,6 +89,16 @@ public class ProcessAndOutput {
         return output;
     }
 
+    public String waitFor() throws InterruptedException {
+        if (reader != null) {
+            readAllAndClose();
+        }
+
+        process.waitFor();
+
+        return output;
+    }
+
     /**
      * Reads process output until EOF and closes the stream reader.
      */
@@ -87,6 +108,9 @@ public class ProcessAndOutput {
         try {
             while ((line = reader.readLine()) != null) {
                 builder.append(line).append(System.lineSeparator());
+                if (outputListener != null) {
+                    outputListener.handle(line + System.lineSeparator());
+                }
             }
 
             if (!builder.isEmpty()) {
@@ -110,10 +134,6 @@ public class ProcessAndOutput {
      * no process output available). Chunk is added to the cached process output.
      */
     private void readChunk() {
-        if (reader == null) {
-            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        }
-
         String line;
         int read = 1;
         int maxRead = 100;
@@ -121,6 +141,9 @@ public class ProcessAndOutput {
         try {
             while (read <= maxRead && reader.ready() && (line = reader.readLine()) != null) {
                 builder.append(line).append(System.lineSeparator());
+                if (outputListener != null) {
+                    outputListener.handle(line + System.lineSeparator());
+                }
                 read++;
             }
         } catch (IOException e) {

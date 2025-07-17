@@ -110,9 +110,47 @@ public class CitrusJBang {
     /**
      * Adds classpath entries to the command line.
      */
+    public CitrusJBang withClasspathEntries(List<String> entries) {
+        app.withClasspathEntries(entries);
+        return this;
+    }
+
+    /**
+     * Adds classpath entries to the command line.
+     */
     public CitrusJBang addToClasspath(String path) {
         app.addToClasspath(path);
         return this;
+    }
+
+    /**
+     * Sets the output listener.
+     */
+    public CitrusJBang withOutputListener(ProcessOutputListener outputListener) {
+        app.withOutputListener(outputListener);
+        return this;
+    }
+
+    /**
+     * Explicitly sets the Citrus version that should be used to run the JBang commands.
+     */
+    public CitrusJBang withVersion(String version) {
+        app.withSystemProperty("citrus.jbang.version", version);
+        return this;
+    }
+
+    /**
+     * Run any command with given arguments.
+     */
+    public ProcessAndOutput run(String command, String... args) {
+        return app.run(command, args);
+    }
+
+    /**
+     * Provide access to the underlying JBang application.
+     */
+    public JBangSupport app() {
+        return app;
     }
 
     /**
@@ -121,6 +159,22 @@ public class CitrusJBang {
      */
     public Agent agent() {
         return new Agent();
+    }
+
+    /**
+     * Run test with given arguments.
+     */
+    public void run(String fileNameOrDir, Map<String, Object> args) {
+        List<String> argsList = new ArrayList<>();
+        argsList.add(fileNameOrDir);
+        args.entrySet().stream()
+                .map(entry -> "%s=%s".formatted(entry.getKey(), entry.getValue()))
+                .forEach(argsList::add);
+        ProcessAndOutput pao = app.run("run", argsList);
+
+        if (pao.getProcess().exitValue() != 0) {
+            throw new CitrusRuntimeException("Test run failed - process exited with exit code: " + pao.getProcess().exitValue());
+        }
     }
 
     /**
