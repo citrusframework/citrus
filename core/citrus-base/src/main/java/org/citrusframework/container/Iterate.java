@@ -61,23 +61,16 @@ public class Iterate extends AbstractIteratingActionContainer {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractIteratingContainerBuilder<Iterate, Builder> {
+    public static class Builder extends AbstractIteratingContainerBuilder<Iterate, Builder>
+            implements IterateContainerBuilder<Iterate, Builder> {
 
         private int step = 1;
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder iterate() {
             return new Builder();
         }
 
-        /**
-         * Sets the step for each iteration.
-         * @param step
-         * @return
-         */
+        @Override
         public Builder step(int step) {
             this.step = step;
             return this;

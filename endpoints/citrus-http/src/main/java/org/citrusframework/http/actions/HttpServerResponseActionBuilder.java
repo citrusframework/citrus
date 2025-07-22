@@ -18,19 +18,22 @@ package org.citrusframework.http.actions;
 
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.actions.SendMessageAction;
+import org.citrusframework.actions.http.HttpSendResponseMessageBuilderFactory;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpMessageUtils;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageBuilder;
 import org.citrusframework.message.builder.SendMessageBuilderSupport;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
 /**
  * @since 2.4
  */
-public class HttpServerResponseActionBuilder extends SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport, HttpServerResponseActionBuilder> {
+public class HttpServerResponseActionBuilder extends
+        SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport, HttpServerResponseActionBuilder>
+        implements org.citrusframework.actions.http.HttpServerResponseActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport> {
 
     /** Http message to send or receive */
     private final HttpMessage httpMessage;
@@ -63,7 +66,9 @@ public class HttpServerResponseActionBuilder extends SendMessageAction.SendMessa
         return new HttpMessageBuilderSupport(httpMessage, this);
     }
 
-    public static class HttpMessageBuilderSupport extends SendMessageBuilderSupport<SendMessageAction, HttpServerResponseActionBuilder, HttpMessageBuilderSupport> {
+    public static class HttpMessageBuilderSupport extends
+            SendMessageBuilderSupport<SendMessageAction, HttpServerResponseActionBuilder, HttpMessageBuilderSupport>
+            implements HttpSendResponseMessageBuilderFactory<SendMessageAction, HttpMessageBuilderSupport> {
 
         private final HttpMessage httpMessage;
 
@@ -93,40 +98,53 @@ public class HttpServerResponseActionBuilder extends SendMessageAction.SendMessa
         /**
          * Sets the response status.
          */
-        public HttpMessageBuilderSupport status(HttpStatus status) {
+        public HttpMessageBuilderSupport status(HttpStatusCode status) {
             httpMessage.status(status);
             return this;
         }
 
-        /**
-         * Sets the response status code.
-         */
-        public HttpMessageBuilderSupport statusCode(Integer statusCode) {
+        @Override
+        public HttpMessageBuilderSupport status(int status) {
+            status(HttpStatusCode.valueOf(status));
+            return this;
+        }
+
+        @Override
+        public HttpMessageBuilderSupport statusCode(int statusCode) {
             httpMessage.status(HttpStatusCode.valueOf(statusCode));
             return this;
         }
 
-        /**
-         * Sets the response reason phrase.
-         */
+        @Override
         public HttpMessageBuilderSupport reasonPhrase(String reasonPhrase) {
             httpMessage.reasonPhrase(reasonPhrase);
             return this;
         }
 
-        /**
-         * Sets the http version.
-         */
+        @Override
         public HttpMessageBuilderSupport version(String version) {
             httpMessage.version(version);
             return this;
         }
 
-        /**
-         * Sets the response content type header.
-         */
+        @Override
         public HttpMessageBuilderSupport contentType(String contentType) {
             httpMessage.contentType(contentType);
+            return this;
+        }
+
+        @Override
+        public HttpMessageBuilderSupport cookie(Object o) {
+            if (o == null) {
+                return this;
+            }
+
+            if (o instanceof Cookie cookie) {
+                httpMessage.cookie(cookie);
+            } else {
+                throw new CitrusRuntimeException("Invalid cookie type: " + o.getClass());
+            }
+
             return this;
         }
 

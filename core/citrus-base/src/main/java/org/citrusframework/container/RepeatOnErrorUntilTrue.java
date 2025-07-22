@@ -112,46 +112,34 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractIteratingContainerBuilder<RepeatOnErrorUntilTrue, Builder> {
+    public static class Builder extends AbstractIteratingContainerBuilder<RepeatOnErrorUntilTrue, Builder>
+            implements RepeatOnErrorUntilTrueContainerBuilder<RepeatOnErrorUntilTrue, Builder> {
 
         private Duration autoSleep = Duration.ofMillis(1_000L);
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         */
         public static Builder repeatOnError() {
             return new Builder();
         }
 
-        /**
-         * Adds a condition to this iterate container.
-         */
+        @Override
         public Builder until(String condition) {
             condition(condition);
             return this;
         }
 
-        /**
-         * Adds a condition expression to this iterate container.
-         */
+        @Override
         public Builder until(IteratingConditionExpression condition) {
             condition(condition);
             return this;
         }
 
-        /**
-         * Sets the auto sleep time in between repeats in milliseconds.
-         *
-         * @deprecated use {@link Builder#autoSleep(Duration)} instead
-         */
+        @Override
         public Builder autoSleep(long autoSleepInMillis) {
             this.autoSleep = Duration.ofMillis(autoSleepInMillis);
             return this;
         }
 
-        /**
-         * Sets the sleep interval between retries of this action.
-         */
+        @Override
         public Builder autoSleep(Duration autoSleep) {
             this.autoSleep = autoSleep;
             return this;

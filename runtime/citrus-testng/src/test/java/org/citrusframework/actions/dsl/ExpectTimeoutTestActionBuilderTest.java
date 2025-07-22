@@ -35,7 +35,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ReceiveTimeoutAction.Builder.expectTimeout;
 import static org.mockito.Mockito.*;
 
 /**

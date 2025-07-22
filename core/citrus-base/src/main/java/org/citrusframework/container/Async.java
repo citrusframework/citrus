@@ -103,95 +103,60 @@ public class Async extends AbstractActionContainer {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractTestContainerBuilder<Async, Builder> {
+    public static class Builder extends AbstractTestContainerBuilder<Async, Builder>
+            implements AsyncContainerBuilder<Async, Builder> {
 
         private final List<TestActionBuilder<?>> errorActions = new ArrayList<>();
         private final List<TestActionBuilder<?>> successActions = new ArrayList<>();
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder async() {
             return new Builder();
         }
 
-        /**
-         * Adds a error action.
-         * @param action
-         * @return
-         */
+        @Override
         public Builder errorAction(TestAction action) {
             this.errorActions.add(() -> action);
             return this;
         }
 
-        /**
-         * Adds a success action.
-         * @param action
-         * @return
-         */
+        @Override
         public Builder successAction(TestAction action) {
             this.successActions.add(() -> action);
             return this;
         }
 
-        /**
-         * Adds a error action.
-         * @param action
-         * @return
-         */
+        @Override
         public Builder errorAction(TestActionBuilder<?> action) {
             this.errorActions.add(action);
             return this;
         }
 
-        /**
-         * Adds a success action.
-         * @param action
-         * @return
-         */
+        @Override
         public Builder successAction(TestActionBuilder<?> action) {
             this.successActions.add(action);
             return this;
         }
 
-        /**
-         * Adds one to many error actions.
-         * @param actions
-         * @return
-         */
-        public Builder errorActions(TestActionBuilder<?> ... actions) {
+        @Override
+        public Builder errorActions(TestActionBuilder<?>... actions) {
             this.errorActions.addAll(Arrays.asList(actions));
             return this;
         }
 
-        /**
-         * Adds one to many success actions.
-         * @param actions
-         * @return
-         */
-        public Builder successActions(TestActionBuilder<?> ... actions) {
+        @Override
+        public Builder successActions(TestActionBuilder<?>... actions) {
             this.successActions.addAll(Arrays.asList(actions));
             return this;
         }
 
-        /**
-         * Adds one to many error actions.
-         * @param actions
-         * @return
-         */
-        public Builder errorActions(TestAction ... actions) {
+        @Override
+        public Builder errorActions(TestAction... actions) {
             Stream.of(actions).map(action -> (TestActionBuilder<?>) () -> action).forEach(this::errorAction);
             return this;
         }
 
-        /**
-         * Adds one to many success actions.
-         * @param actions
-         * @return
-         */
-        public Builder successActions(TestAction ... actions) {
+        @Override
+        public Builder successActions(TestAction... actions) {
             Stream.of(actions).map(action -> (TestActionBuilder<?>) () -> action).forEach(this::successAction);
             return this;
         }

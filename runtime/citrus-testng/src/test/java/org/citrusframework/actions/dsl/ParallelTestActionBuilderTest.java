@@ -23,10 +23,6 @@ import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.Parallel;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.SleepAction.Builder.sleep;
-import static org.citrusframework.container.Parallel.Builder.parallel;
-import static org.citrusframework.container.Sequence.Builder.sequential;
 import static org.testng.Assert.assertEquals;
 
 public class ParallelTestActionBuilderTest extends UnitTestSupport {

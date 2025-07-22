@@ -47,31 +47,20 @@ public class RepeatUntilTrue extends AbstractIteratingActionContainer {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractIteratingContainerBuilder<RepeatUntilTrue, Builder> {
+    public static class Builder extends AbstractIteratingContainerBuilder<RepeatUntilTrue, Builder>
+            implements RepeatUntilTrueContainerBuilder<RepeatUntilTrue, Builder> {
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static RepeatUntilTrue.Builder repeat() {
             return new RepeatUntilTrue.Builder();
         }
 
-        /**
-         * Adds a condition to this iterate container.
-         * @param condition
-         * @return
-         */
+        @Override
         public RepeatUntilTrue.Builder until(String condition) {
             condition(condition);
             return this;
         }
 
-        /**
-         * Adds a condition expression to this iterate container.
-         * @param condition
-         * @return
-         */
+        @Override
         public RepeatUntilTrue.Builder until(IteratingConditionExpression condition) {
             condition(condition);
             return this;

@@ -25,12 +25,17 @@ import groovy.lang.GroovyRuntimeException;
 import groovy.lang.MissingMethodException;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.actions.ReceiveActionBuilder;
+import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.ReceiveMessageBuilderFactory;
+import org.citrusframework.actions.SendActionBuilder;
+import org.citrusframework.actions.SendMessageAction;
+import org.citrusframework.actions.SendMessageBuilderFactory;
 import org.citrusframework.groovy.dsl.test.TestCaseScript;
 import org.citrusframework.util.ReflectionHelper;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
-public interface ActionsBuilder {
+public interface ActionsBuilder extends TestActionSupport {
 
     /**
      * Shortcut method running given test action builder.
@@ -38,7 +43,7 @@ public interface ActionsBuilder {
      * @param <T>
      * @return
      */
-    <T extends TestAction> T $(TestActionBuilder<T> builder);
+    <T extends TestAction> void $(TestActionBuilder<T> builder);
 
     default void actions(Closure<?> callable) {
         callable.setResolveStrategy(Closure.DELEGATE_FIRST);
@@ -75,17 +80,15 @@ public interface ActionsBuilder {
 
     /**
      * Special send message action wrapper adding Groovy closure support when specifying the message to send.
-     * @return
      */
-    default SendActionBuilderWrapper send() {
+    default SendActionBuilder<? extends SendMessageAction, ? extends SendMessageBuilderFactory<?, ?>> send() {
         return new SendActionBuilderWrapper();
     }
 
     /**
      * Special receive message action wrapper adding Groovy closure support when specifying the message to receive.
-     * @return
      */
-    default ReceiveActionBuilderWrapper receive() {
+    default ReceiveActionBuilder<? extends ReceiveMessageAction, ? extends ReceiveMessageBuilderFactory<?, ?>> receive() {
         return new ReceiveActionBuilderWrapper();
     }
 
@@ -106,7 +109,7 @@ public interface ActionsBuilder {
     /**
      * Lookup test action build by its name via resource path.
      * When given arguments are empty instantiates the test action builder with default constructor.
-     * Otherwise tries to find matching static instantiation method and calls this method with given arguments.
+     * Otherwise, tries to find matching static instantiation method and calls this method with given arguments.
      * @param id name of the test action builder. Must match the action builder key in resource path lookup.
      * @param args optional method arguments.
      * @return test action builder instance.

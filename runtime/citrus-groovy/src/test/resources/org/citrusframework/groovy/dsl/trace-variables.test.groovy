@@ -16,9 +16,6 @@
 
 package org.citrusframework.groovy.dsl
 
-import static org.citrusframework.actions.TraceVariablesAction.Builder.trace
-import static org.citrusframework.actions.TraceVariablesAction.Builder.traceVariables
-
 name "TraceVariablesTest"
 author "Christoph"
 status "FINAL"

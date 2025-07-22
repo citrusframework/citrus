@@ -23,7 +23,7 @@ import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHe
 import static org.citrusframework.dsl.PathExpressionSupport.path
 import static org.citrusframework.validation.json.JsonMessageValidationContext.Builder.json
 import static org.citrusframework.validation.json.JsonPathMessageValidationContext.Builder.jsonPath
-import static org.citrusframework.validation.script.ScriptValidationContext.Builder.groovy
+import static org.citrusframework.validation.script.DefaultScriptValidationContext.Builder.groovy
 import static org.citrusframework.validation.xml.XmlMessageValidationContext.Builder.xml
 import static org.citrusframework.validation.xml.XpathMessageValidationContext.Builder.xpath
 

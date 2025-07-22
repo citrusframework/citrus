@@ -26,9 +26,6 @@ import org.citrusframework.container.Sequence;
 import org.citrusframework.context.TestContext;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.SleepAction.Builder.sleep;
-import static org.citrusframework.container.Sequence.Builder.sequential;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 

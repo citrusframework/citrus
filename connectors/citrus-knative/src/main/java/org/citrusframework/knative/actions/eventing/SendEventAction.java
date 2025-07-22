@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import org.citrusframework.context.TestContext;
+import org.citrusframework.http.actions.HttpActionBuilder;
 import org.citrusframework.http.actions.HttpClientRequestActionBuilder;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
@@ -37,8 +38,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
-
 /**
  * Send CloudEvent event to Knative message broker. Uses the Http transport to send the CloudEvent data.
  */
@@ -49,6 +48,8 @@ public class SendEventAction extends AbstractKnativeAction {
     private final long timeout;
     private final CloudEventMessage message;
     private final boolean forkMode;
+
+    private final HttpActionBuilder http = new HttpActionBuilder();
 
     public SendEventAction(Builder builder) {
         super("send-event", builder);
@@ -89,7 +90,7 @@ public class SendEventAction extends AbstractKnativeAction {
 
         request.setHeader("Host", KnativeSettings.getBrokerHost());
 
-        HttpClientRequestActionBuilder.HttpMessageBuilderSupport requestBuilder = http().client(httpClient)
+        HttpClientRequestActionBuilder.HttpMessageBuilderSupport requestBuilder = http.client(httpClient)
                 .send()
                 .post()
                 .message(request);
@@ -103,7 +104,7 @@ public class SendEventAction extends AbstractKnativeAction {
         requestBuilder.build().execute(context);
 
         if (KnativeSettings.isVerifyBrokerResponse()) {
-            http().client(httpClient)
+            http.client(httpClient)
                     .receive()
                     .response(HttpStatus.valueOf(KnativeSettings.getBrokerResponseStatus()))
                     .timeout(timeout)

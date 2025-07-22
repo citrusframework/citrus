@@ -16,6 +16,7 @@
 
 package org.citrusframework.integration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.JsonSupport;
@@ -27,12 +28,8 @@ import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
 
 /**
  * @since 3.3.1

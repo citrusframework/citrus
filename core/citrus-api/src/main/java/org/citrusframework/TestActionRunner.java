@@ -16,6 +16,8 @@
 
 package org.citrusframework;
 
+import java.util.List;
+
 public interface TestActionRunner {
 
     /**
@@ -24,7 +26,7 @@ public interface TestActionRunner {
      * @param <T>
      * @return
      */
-    default <T extends TestAction> T run(T action) {
+    default <T extends TestAction> TestActionRunner run(T action) {
         return run((TestActionBuilder<T>) () -> action);
     }
 
@@ -34,7 +36,7 @@ public interface TestActionRunner {
      * @param <T>
      * @return
      */
-    default <T extends TestAction> T $(T action) {
+    default <T extends TestAction> TestActionRunner $(T action) {
         return run((TestActionBuilder<T>) () -> action);
     }
 
@@ -44,9 +46,22 @@ public interface TestActionRunner {
      * @param <T>
      * @return
      */
-    default <T extends TestAction> T $(TestActionBuilder<T> builder) {
+    default <T extends TestAction> TestActionRunner $(TestActionBuilder<T> builder) {
         return run(builder);
     }
+
+    /**
+     * Builds and runs given test action.
+     */
+    default TestActionRunner run(List<TestActionBuilder<?>> builders) {
+        builders.forEach(this::run);
+        return this;
+    }
+
+    /**
+     * Provide access to all available test actions.
+     */
+    TestActions actions();
 
     /**
      * Builds and runs given test action.
@@ -54,7 +69,7 @@ public interface TestActionRunner {
      * @param <T>
      * @return
      */
-    <T extends TestAction> T run(TestActionBuilder<T> builder);
+    <T extends TestAction> TestActionRunner run(TestActionBuilder<T> builder);
 
     /**
      * Apply test behavior on this test action runner.

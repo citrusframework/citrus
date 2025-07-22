@@ -18,7 +18,6 @@ package org.citrusframework.http.actions;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;
@@ -28,7 +27,8 @@ import org.citrusframework.util.ObjectHelper;
  *
  * @since 2.4
  */
-public class HttpActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
+public class HttpActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
+		implements org.citrusframework.actions.http.HttpActionBuilder<TestAction, HttpActionBuilder> {
 
 	/**
 	 * Static entrance method for the Http fluent action builder.
@@ -38,19 +38,15 @@ public class HttpActionBuilder extends AbstractReferenceResolverAwareTestActionB
 		return new HttpActionBuilder();
 	}
 
-	/**
-	 * Initiate http client action.
-	 */
-	public HttpClientActionBuilder client(HttpClient httpClient) {
+	@Override
+	public HttpClientActionBuilder client(Endpoint httpClient) {
 		HttpClientActionBuilder clientActionBuilder = new HttpClientActionBuilder(httpClient)
 				.withReferenceResolver(referenceResolver);
 		this.delegate = clientActionBuilder;
 		return clientActionBuilder;
 	}
 
-	/**
-	 * Initiate http client action.
-	 */
+	@Override
 	public HttpClientActionBuilder client(String httpClient) {
 		HttpClientActionBuilder clientActionBuilder = new HttpClientActionBuilder(httpClient)
 				.withReferenceResolver(referenceResolver);
@@ -58,9 +54,7 @@ public class HttpActionBuilder extends AbstractReferenceResolverAwareTestActionB
 		return clientActionBuilder;
 	}
 
-	/**
-	 * Initiate http server action.
-	 */
+	@Override
 	public HttpServerActionBuilder server(Endpoint endpoint) {
 		HttpServerActionBuilder serverActionBuilder = new HttpServerActionBuilder(endpoint)
 				.withReferenceResolver(referenceResolver);
@@ -68,9 +62,7 @@ public class HttpActionBuilder extends AbstractReferenceResolverAwareTestActionB
 		return serverActionBuilder;
 	}
 
-	/**
-	 * Initiate http server action.
-	 */
+	@Override
 	public HttpServerActionBuilder server(String httpServer) {
 		HttpServerActionBuilder serverActionBuilder = new HttpServerActionBuilder(httpServer)
 				.withReferenceResolver(referenceResolver);
@@ -78,10 +70,7 @@ public class HttpActionBuilder extends AbstractReferenceResolverAwareTestActionB
 		return serverActionBuilder;
 	}
 
-	/**
-	 * Sets the bean reference resolver.
-	 * @param referenceResolver
-	 */
+	@Override
 	public HttpActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
 		this.referenceResolver = referenceResolver;
 		return this;

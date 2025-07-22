@@ -16,10 +16,6 @@
 
 package org.citrusframework.groovy.dsl.container
 
-
-import static org.citrusframework.actions.EchoAction.Builder.echo
-import static org.citrusframework.container.Async.Builder.async
-
 name "AsyncTest"
 author "Christoph"
 status "FINAL"

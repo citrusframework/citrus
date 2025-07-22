@@ -21,11 +21,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.FailAction.Builder.fail;
-import static org.citrusframework.container.Assert.Builder.assertException;
-import static org.citrusframework.container.RepeatOnErrorUntilTrue.Builder.repeatOnError;
-
 @Test
 public class RepeatOnErrorJavaIT extends TestNGCitrusSpringSupport {
 

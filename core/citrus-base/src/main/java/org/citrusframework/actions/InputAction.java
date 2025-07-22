@@ -155,63 +155,43 @@ public class InputAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<InputAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<InputAction, Builder>
+            implements InputActionBuilder<InputAction> {
 
         private String message = "Press return key to continue ...";
         private String variable = "userinput";
         private String validAnswers;
         private BufferedReader inputReader;
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder input() {
             return new Builder();
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param message
-         * @return
-         */
         public static Builder input(String message) {
             Builder builder = new Builder();
             builder.message(message);
             return builder;
         }
 
-        /**
-         * Sets the message displayed to the user.
-         * @param message the message to set
-         */
+        @Override
         public Builder message(String message) {
             this.message = message;
             return this;
         }
 
-        /**
-         * Stores the result to a test variable.
-         * @param variable the variable to set
-         */
+        @Override
         public Builder result(String variable) {
             this.variable = variable;
             return this;
         }
 
-        /**
-         * Sets the input reader.
-         * @param reader the input reader to set
-         */
+        @Override
         public Builder reader(BufferedReader reader) {
             this.inputReader = reader;
             return this;
         }
 
-        /**
-         * Sets the valid answers.
-         * @param answers the validAnswers to set
-         */
+        @Override
         public Builder answers(String... answers) {
             if (answers.length == 0) {
                 throw new CitrusRuntimeException("Please specify proper answer possibilities for input action");

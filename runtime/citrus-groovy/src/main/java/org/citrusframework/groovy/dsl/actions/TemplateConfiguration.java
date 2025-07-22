@@ -62,10 +62,8 @@ public class TemplateConfiguration implements ActionsBuilder {
     }
 
     @Override
-    public <T extends TestAction> T $(TestActionBuilder<T> builder) {
-        T action = builder.build();
-        target.actions(action);
-        return action;
+    public <T extends TestAction> void $(TestActionBuilder<T> builder) {
+        target.actions(builder);
     }
 
     private static class ParameterConfiguration extends GroovyObjectSupport {

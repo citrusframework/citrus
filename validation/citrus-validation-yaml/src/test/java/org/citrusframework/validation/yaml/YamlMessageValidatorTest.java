@@ -30,7 +30,7 @@ import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.script.ScriptValidationContext;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -338,8 +338,8 @@ public class YamlMessageValidatorTest extends UnitTestSupport {
     public void shouldFindProperValidationContext() {
         List<ValidationContext> validationContexts = new ArrayList<>();
         validationContexts.add(new HeaderValidationContext());
-        validationContexts.add(new ScriptValidationContext(ScriptTypes.GROOVY));
-        validationContexts.add(new ScriptValidationContext("something"));
+        validationContexts.add(new DefaultScriptValidationContext(ScriptTypes.GROOVY));
+        validationContexts.add(new DefaultScriptValidationContext("something"));
 
         assertThat(fixture.findValidationContext(validationContexts)).isNull();
 

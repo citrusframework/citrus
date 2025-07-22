@@ -27,10 +27,6 @@ import org.citrusframework.container.Catch;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.FailAction.Builder.fail;
-import static org.citrusframework.actions.SleepAction.Builder.sleep;
-import static org.citrusframework.container.Catch.Builder.catchException;
 import static org.testng.Assert.assertEquals;
 
 public class CatchExceptionTestActionBuilderTest extends UnitTestSupport {

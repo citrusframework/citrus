@@ -61,7 +61,8 @@ public class CreateEndpointAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<CreateEndpointAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<CreateEndpointAction, Builder>
+            implements CreateEndpointActionBuilder<CreateEndpointAction> {
 
         private String endpointUri;
         private String type;
@@ -82,25 +83,30 @@ public class CreateEndpointAction extends AbstractTestAction {
             return new Builder();
         }
 
+        @Override
         public Builder uri(String endpointUri) {
             this.endpointUri = endpointUri;
             return this;
         }
 
+        @Override
         public Builder type(String type) {
             this.type = type;
             return this;
         }
 
+        @Override
         public Builder endpointName(String name) {
             return property(EndpointComponent.ENDPOINT_NAME, name);
         }
 
+        @Override
         public Builder property(String name, String value) {
             this.properties.put(name, value);
             return this;
         }
 
+        @Override
         public Builder properties(Map<String, String> properties) {
             this.properties.putAll(properties);
             return this;

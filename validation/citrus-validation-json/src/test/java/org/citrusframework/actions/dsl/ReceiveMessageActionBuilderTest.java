@@ -16,9 +16,16 @@
 
 package org.citrusframework.actions.dsl;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.JsonSchema;
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.ReceiveMessageAction;
@@ -50,13 +57,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.dsl.JsonPathSupport.jsonPath;
 import static org.citrusframework.dsl.JsonSupport.json;
 import static org.citrusframework.dsl.MessageSupport.MessageBodySupport.fromBody;
@@ -67,13 +67,9 @@ import static org.citrusframework.message.MessageType.XML;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
+public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
     private final Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
     private final Consumer messageConsumer = Mockito.mock(Consumer.class);

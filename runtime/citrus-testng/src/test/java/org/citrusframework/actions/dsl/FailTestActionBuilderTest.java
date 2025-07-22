@@ -24,8 +24,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.FailAction.Builder.fail;
-
 /**
  * @since 2.3
  */

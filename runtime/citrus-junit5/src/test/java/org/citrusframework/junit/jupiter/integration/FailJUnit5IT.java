@@ -17,6 +17,7 @@
 package org.citrusframework.junit.jupiter.integration;
 
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.jupiter.CitrusExtension;
@@ -27,10 +28,8 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
 @ExtendWith({CitrusExtension.class, FailJUnit5IT.ShouldFailExtension.class})
-public class FailJUnit5IT {
+public class FailJUnit5IT implements TestActionSupport {
 
     @Test
     @CitrusTest

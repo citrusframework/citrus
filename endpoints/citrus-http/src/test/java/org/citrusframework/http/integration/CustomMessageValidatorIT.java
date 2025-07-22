@@ -30,11 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.StopServerAction.Builder.stop;
-import static org.citrusframework.container.Assert.Builder.assertException;
-import static org.citrusframework.container.FinallySequence.Builder.doFinally;
 import static org.citrusframework.dsl.XpathSupport.xpath;
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
 
 /**
  * @since 2.7.5
@@ -77,7 +73,7 @@ public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
                 .send()
-                .response(HttpStatus.OK));
+                .response(HttpStatus.OK.value()));
     }
 
     @Test

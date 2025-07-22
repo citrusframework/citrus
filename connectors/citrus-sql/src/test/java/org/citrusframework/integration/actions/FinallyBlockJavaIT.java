@@ -24,11 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.ExecuteSQLAction.Builder.sql;
-import static org.citrusframework.actions.ExecuteSQLQueryAction.Builder.query;
-import static org.citrusframework.container.FinallySequence.Builder.doFinally;
-
 @Test
 public class FinallyBlockJavaIT extends TestNGCitrusSpringSupport {
 
@@ -41,14 +36,14 @@ public class FinallyBlockJavaIT extends TestNGCitrusSpringSupport {
         variable("orderId", "citrus:randomNumber(5)");
 
         run(doFinally().actions(
-                sql(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'"),
+                sql().dataSource(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'"),
                 echo("ORDER deletion time: ${date}")
         ));
 
-        run(sql(dataSource)
+        run(sql().dataSource(dataSource)
             .statement("INSERT INTO ORDERS (ORDER_ID, REQUEST_TAG, CONVERSATION_ID, CREATION_DATE) VALUES (${orderId},1,1,'citrus:currentDate(dd.MM.yyyy)')"));
 
-        run(query(dataSource)
+        run(query().dataSource(dataSource)
             .statement("SELECT CREATION_DATE FROM ORDERS WHERE ORDER_ID='${orderId}'")
             .extract("CREATION_DATE", "date"));
 

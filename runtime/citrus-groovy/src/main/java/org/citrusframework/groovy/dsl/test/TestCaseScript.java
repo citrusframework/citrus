@@ -91,7 +91,7 @@ public class TestCaseScript extends GroovyObjectSupport implements ActionsBuilde
     }
 
     @Override
-    public <T extends TestAction> T $(TestActionBuilder<T> builder) {
-        return runner.run(builder);
+    public <T extends TestAction> void $(TestActionBuilder<T> builder) {
+        runner.run(builder);
     }
 }

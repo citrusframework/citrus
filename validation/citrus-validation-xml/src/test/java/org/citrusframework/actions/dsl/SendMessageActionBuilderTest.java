@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.SendMessageAction;
@@ -44,14 +45,13 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.citrusframework.dsl.XpathSupport.xpath;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class SendMessageActionBuilderTest extends UnitTestSupport {
+public class SendMessageActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
     @Mock
     private ReferenceResolver referenceResolver;

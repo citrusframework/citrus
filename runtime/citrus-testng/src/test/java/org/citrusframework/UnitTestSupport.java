@@ -21,7 +21,7 @@ import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.testng.annotations.BeforeMethod;
 
-public abstract class UnitTestSupport {
+public abstract class UnitTestSupport implements TestActionSupport {
 
     protected TestContextFactory testContextFactory;
     protected TestContext context;

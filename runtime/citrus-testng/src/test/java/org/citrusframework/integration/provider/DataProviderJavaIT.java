@@ -22,9 +22,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.SleepAction.Builder.sleep;
-
 public class DataProviderJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest

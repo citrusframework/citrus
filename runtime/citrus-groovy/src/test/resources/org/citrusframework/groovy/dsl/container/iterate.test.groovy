@@ -16,9 +16,6 @@
 
 package org.citrusframework.groovy.dsl.container
 
-import static org.citrusframework.actions.EchoAction.Builder.echo
-import static org.citrusframework.container.Iterate.Builder.iterate
-
 name "IterateTest"
 author "Christoph"
 status "FINAL"

@@ -26,8 +26,6 @@ import org.citrusframework.spi.Resources;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.TransformAction.Builder.transform;
-
 public class TransformTestActionBuilderTest extends UnitTestSupport {
     @Test
     public void testTransformBuilderWithData() {

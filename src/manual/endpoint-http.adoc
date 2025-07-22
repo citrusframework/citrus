@@ -298,7 +298,7 @@ the success response with Http status code.
 ----
 http().client("httpClient")
         .receive()
-        .response(HttpStatus.OK)
+        .response(HttpStatus.OK.value())
         .message()
         .body("<customer>" +
                 "<id>citrus:randomNumber()</id>" +
@@ -543,7 +543,7 @@ http().server("httpServer")
 
 http().server("httpServer")
     .send()
-    .response(HttpStatus.OK)
+    .response(HttpStatus.OK.value())
     .message()
     .contentType("application/xml")
     .body("<testResponseMessage>" +
@@ -725,7 +725,7 @@ names. See the following example to find out how that works for you.
 ----
 http().server("httpServer")
     .send()
-    .response(HttpStatus.OK)
+    .response(HttpStatus.OK.value())
     .message()
     .contentType("application/xml")
     .body("<testResponseMessage>" +
@@ -782,7 +782,7 @@ Citrus test case. It is very easy as you can use the Citrus reserved header name
 ----
 http().client("httpClient")
     .receive()
-    .response(HttpStatus.OK)
+    .response(HttpStatus.OK.value())
     .message()
     .contentType("application/xml")
     .body("<testResponseMessage>" +
@@ -1096,7 +1096,7 @@ http().client("httpClient")
 
 http().client("httpClient")
         .receive()
-        .response(HttpStatus.FORBIDDEN);
+        .response(HttpStatus.FORBIDDEN.value());
 ----
 
 .XML
@@ -1591,7 +1591,7 @@ http().server("httpServer")
 
 http().server("httpServer")
     .send()
-    .response(HttpStatus.OK)
+    .response(HttpStatus.OK.value())
     .message()
     .body("Some response body")
     .header("Operation", "sayHello")
@@ -1660,7 +1660,7 @@ cookie.setMaxAge(86400);
 
 http().client("echoHttpClient")
     .receive()
-    .response(HttpStatus.OK)
+    .response(HttpStatus.OK.value())
     .message()
     .body("Some response body")
     .header("Operation", "sayHello")
@@ -1802,7 +1802,7 @@ http().client("gzipClient")
 
 http().client("gzipClient")
     .receive()
-    .response(HttpStatus.OK)
+    .response(HttpStatus.OK.value())
     .message()
     .type(MessageType.PLAINTEXT)
     .contentType("text/plain")
@@ -1848,7 +1848,7 @@ http().server("httpServer")
 
 http().server("httpServer")
     .send()
-    .response(HttpStatus.OK)
+    .response(HttpStatus.OK.value())
     .message()
     .contentType("text/plain")
     .body("${text}");

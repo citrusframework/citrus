@@ -19,6 +19,7 @@ package org.citrusframework.integration.actions;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestBehavior;
 import org.citrusframework.actions.ApplyTestBehaviorAction;
 import org.citrusframework.actions.EchoAction;
@@ -27,11 +28,6 @@ import org.citrusframework.container.Sequence;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static org.citrusframework.actions.ApplyTestBehaviorAction.Builder.apply;
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.container.FinallySequence.Builder.doFinally;
-import static org.citrusframework.container.Sequence.Builder.sequential;
 
 @Test
 public class ApplyTestBehaviorIT extends TestNGCitrusSpringSupport {
@@ -57,13 +53,15 @@ public class ApplyTestBehaviorIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void shouldApplyInContainer() {
-        Sequence sequence = run(sequential()
+        Sequence sequence = sequential()
                 .actions(
                         echo("In Germany they say:"),
                         apply().behavior(new SayHelloBehavior("Hallo")).on(this),
                         echo("In Spain they say:"),
                         applyBehavior(new SayHelloBehavior("Hola"))
-                ));
+                ).build();
+
+        run(sequence);
 
         Assert.assertEquals(sequence.getActionCount(), 4);
 
@@ -82,13 +80,15 @@ public class ApplyTestBehaviorIT extends TestNGCitrusSpringSupport {
     public void shouldApplyInContainerTwice() {
         SayHelloBehavior sayHello = new SayHelloBehavior();
 
-        Sequence sequence = run(sequential()
+        Sequence sequence = sequential()
                 .actions(
                         echo("before"),
                         apply().behavior(sayHello).on(this),
                         echo("after"),
                         applyBehavior(sayHello)
-                ));
+                ).build();
+
+        run(sequence);
 
         Assert.assertEquals(sequence.getActionCount(), 4);
 
@@ -144,7 +144,7 @@ public class ApplyTestBehaviorIT extends TestNGCitrusSpringSupport {
                 ));
     }
 
-    private static class SayHelloBehavior implements TestBehavior {
+    private static class SayHelloBehavior implements TestBehavior, TestActionSupport {
         private final String greeting;
 
         public SayHelloBehavior() {
@@ -161,7 +161,7 @@ public class ApplyTestBehaviorIT extends TestNGCitrusSpringSupport {
         }
     }
 
-    private static class InceptionBehavior implements TestBehavior {
+    private static class InceptionBehavior implements TestBehavior, TestActionSupport {
         private final String greeting;
 
         public InceptionBehavior() {

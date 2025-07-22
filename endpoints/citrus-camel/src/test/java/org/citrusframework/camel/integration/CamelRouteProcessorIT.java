@@ -16,22 +16,19 @@
 
 package org.citrusframework.camel.integration;
 
+import org.apache.camel.CamelContext;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.camel.message.CamelRouteProcessor;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.apache.camel.CamelContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariable;
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
-import static org.citrusframework.camel.dsl.CamelSupport.camel;
 import static org.apache.camel.builder.Builder.constant;
 import static org.apache.camel.builder.Builder.jsonpath;
 import static org.apache.camel.builder.Builder.simple;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
+import static org.citrusframework.camel.dsl.CamelSupport.camel;
 
 public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport {
 

@@ -31,9 +31,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.FailAction.Builder.fail;
-import static org.citrusframework.actions.SleepAction.Builder.sleep;
-import static org.citrusframework.container.Wait.Builder.waitFor;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;

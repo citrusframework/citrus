@@ -20,6 +20,8 @@ import java.util.Optional;
 
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.http.HttpReceiveResponseMessageBuilderFactory;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpMessageUtils;
@@ -31,7 +33,9 @@ import org.springframework.http.HttpStatusCode;
 /**
  * @since 2.4
  */
-public class HttpClientResponseActionBuilder extends ReceiveMessageAction.ReceiveMessageActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport, HttpClientResponseActionBuilder> {
+public class HttpClientResponseActionBuilder extends
+        ReceiveMessageAction.ReceiveMessageActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport, HttpClientResponseActionBuilder>
+        implements org.citrusframework.actions.http.HttpClientResponseActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport> {
 
     /** Http message to send or receive */
     private final HttpMessage httpMessage;
@@ -66,7 +70,9 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageAction.Receiv
         return new HttpMessageBuilderSupport(httpMessage, this);
     }
 
-    public static class HttpMessageBuilderSupport extends ReceiveMessageBuilderSupport<ReceiveMessageAction, HttpClientResponseActionBuilder, HttpMessageBuilderSupport> {
+    public static class HttpMessageBuilderSupport extends
+            ReceiveMessageBuilderSupport<ReceiveMessageAction, HttpClientResponseActionBuilder, HttpMessageBuilderSupport>
+            implements HttpReceiveResponseMessageBuilderFactory<ReceiveMessageAction, HttpMessageBuilderSupport> {
 
         private final HttpMessage httpMessage;
 
@@ -101,35 +107,48 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageAction.Receiv
             return this;
         }
 
-        /**
-         * Sets the response status code.
-         */
-        public HttpMessageBuilderSupport statusCode(Integer statusCode) {
+        @Override
+        public HttpMessageBuilderSupport status(int status) {
+            status(HttpStatusCode.valueOf(status));
+            return this;
+        }
+
+        @Override
+        public HttpMessageBuilderSupport statusCode(int statusCode) {
             httpMessage.status(HttpStatusCode.valueOf(statusCode));
             return this;
         }
 
-        /**
-         * Sets the response reason phrase.
-         */
+        @Override
         public HttpMessageBuilderSupport reasonPhrase(String reasonPhrase) {
             httpMessage.reasonPhrase(reasonPhrase);
             return this;
         }
 
-        /**
-         * Sets the http version.
-         */
+        @Override
         public HttpMessageBuilderSupport version(String version) {
             httpMessage.version(version);
             return this;
         }
 
-        /**
-         * Sets the request content type header.
-         */
+        @Override
         public HttpMessageBuilderSupport contentType(String contentType) {
             httpMessage.contentType(contentType);
+            return this;
+        }
+
+        @Override
+        public HttpMessageBuilderSupport cookie(Object o) {
+            if (o == null) {
+                return this;
+            }
+
+            if (o instanceof Cookie cookie) {
+                httpMessage.cookie(cookie);
+            } else {
+                throw new CitrusRuntimeException("Invalid cookie type: " + o.getClass());
+            }
+
             return this;
         }
 
@@ -149,7 +168,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageAction.Receiv
 
 
     /**
-     * Creates the actual SendMessageAction. Subclasses may override this method to provide specific
+     * Creates the actual ReceiveMessageAction. Subclasses may override this method to provide specific
      * implementations.
      */
     protected ReceiveMessageAction createReceiveMessageAction() {

@@ -46,12 +46,9 @@ public class FinallySequence extends Sequence {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractTestContainerBuilder<FinallySequence, Builder> {
+    public static class Builder extends AbstractTestContainerBuilder<FinallySequence, Builder>
+            implements FinallyContainerBuilder<FinallySequence, Builder> {
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder doFinally() {
             return new Builder();
         }

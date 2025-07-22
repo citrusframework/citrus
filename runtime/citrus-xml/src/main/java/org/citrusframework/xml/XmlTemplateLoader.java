@@ -29,7 +29,7 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.xml.container.Template;
 
-public class XmlTemplateLoader implements TemplateLoader, ReferenceResolverAware {
+public class XmlTemplateLoader implements TemplateLoader<org.citrusframework.container.Template>, ReferenceResolverAware {
 
     private final JAXBContext jaxbContext;
 

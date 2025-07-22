@@ -16,6 +16,8 @@
 
 package org.citrusframework;
 
+import java.util.List;
+
 /**
  * Runner adds default alias methods using Gherkin behavior driven development style (GIVEN, WHEN, THEN).
  */
@@ -23,81 +25,93 @@ public interface GherkinTestActionRunner extends TestActionRunner {
 
     /**
      * Behavior driven style alias for run method.
-     * @param action
-     * @param <T>
-     * @return
      */
-    default <T extends TestAction> T given(T action) {
+    default <T extends TestAction> GherkinTestActionRunner given(T action) {
         return given((TestActionBuilder<T>) () -> action);
     }
 
     /**
      * Behavior driven style alias for run method.
-     * @param builder
-     * @param <T>
-     * @return
      */
-    default <T extends TestAction> T given(TestActionBuilder<T> builder) {
-        return run(builder);
+    default <T extends TestAction> GherkinTestActionRunner given(TestActionBuilder<T> builder) {
+        run(builder);
+        return this;
     }
 
     /**
      * Behavior driven style alias for run method.
-     * @param action
-     * @param <T>
-     * @return
      */
-    default <T extends TestAction> T when(T action) {
+    default GherkinTestActionRunner given(List<TestActionBuilder<?>> builders) {
+        run(builders);
+        return this;
+    }
+
+    /**
+     * Behavior driven style alias for run method.
+     */
+    default <T extends TestAction> GherkinTestActionRunner when(T action) {
         return when((TestActionBuilder<T>) () -> action);
     }
 
     /**
      * Behavior driven style alias for run method.
-     * @param builder
-     * @param <T>
-     * @return
      */
-    default <T extends TestAction> T when(TestActionBuilder<T> builder) {
-        return run(builder);
+    default <T extends TestAction> GherkinTestActionRunner when(TestActionBuilder<T> builder) {
+        run(builder);
+        return this;
     }
 
     /**
      * Behavior driven style alias for run method.
-     * @param action
-     * @param <T>
-     * @return
      */
-    default <T extends TestAction> T then(T action) {
+    default GherkinTestActionRunner when(List<TestActionBuilder<?>> builders) {
+        run(builders);
+        return this;
+    }
+
+    /**
+     * Behavior driven style alias for run method.
+     */
+    default <T extends TestAction> GherkinTestActionRunner then(T action) {
         return then((TestActionBuilder<T>) () -> action);
     }
 
     /**
      * Behavior driven style alias for run method.
-     * @param builder
-     * @param <T>
-     * @return
      */
-    default <T extends TestAction> T then(TestActionBuilder<T> builder) {
-        return run(builder);
+    default <T extends TestAction> GherkinTestActionRunner then(TestActionBuilder<T> builder) {
+        run(builder);
+        return this;
     }
 
     /**
      * Behavior driven style alias for run method.
-     * @param action
-     * @param <T>
-     * @return
      */
-    default <T extends TestAction> T and(T action) {
+    default GherkinTestActionRunner then(List<TestActionBuilder<?>> builders) {
+        run(builders);
+        return this;
+    }
+
+    /**
+     * Behavior driven style alias for run method.
+     */
+    default <T extends TestAction> GherkinTestActionRunner and(T action) {
         return and((TestActionBuilder<T>) () -> action);
     }
 
     /**
      * Behavior driven style alias for run method.
-     * @param builder
-     * @param <T>
-     * @return
      */
-    default <T extends TestAction> T and(TestActionBuilder<T> builder) {
-        return run(builder);
+    default <T extends TestAction> GherkinTestActionRunner and(TestActionBuilder<T> builder) {
+        run(builder);
+        return this;
+    }
+
+    /**
+     * Behavior driven style alias for run method.
+     */
+    default GherkinTestActionRunner and(List<TestActionBuilder<?>> builders) {
+        run(builders);
+        return this;
     }
 }

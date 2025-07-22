@@ -18,6 +18,7 @@ package org.citrusframework.config.xml;
 
 import org.citrusframework.actions.ExecuteSQLQueryAction;
 import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
@@ -94,8 +95,9 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
         Assert.assertEquals(action.getExtractVariables().size(), 0);
 
         Assert.assertNotNull(action.getScriptValidationContext());
-        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResourcePath());
-        Assert.assertEquals(action.getScriptValidationContext().getValidationScript().trim(), "assert rows.size() == 2");
+        DefaultScriptValidationContext scriptValidationContext = (DefaultScriptValidationContext) action.getScriptValidationContext();
+        Assert.assertNull(scriptValidationContext.getValidationScriptResourcePath());
+        Assert.assertEquals(scriptValidationContext.getValidationScript().trim(), "assert rows.size() == 2");
 
         // 5th action
         action = getNextTestActionFromTest();
@@ -107,9 +109,10 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
         Assert.assertEquals(action.getExtractVariables().size(), 0);
 
         Assert.assertNotNull(action.getScriptValidationContext());
-        Assert.assertNotNull(action.getScriptValidationContext().getValidationScriptResourcePath());
-        Assert.assertEquals(action.getScriptValidationContext().getValidationScriptResourcePath(), "classpath:org/citrusframework/script/example.groovy");
-        Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "");
+        scriptValidationContext = (DefaultScriptValidationContext) action.getScriptValidationContext();
+        Assert.assertNotNull(scriptValidationContext.getValidationScriptResourcePath());
+        Assert.assertEquals(scriptValidationContext.getValidationScriptResourcePath(), "classpath:org/citrusframework/script/example.groovy");
+        Assert.assertEquals(scriptValidationContext.getValidationScript(), "");
     }
 
     @Test

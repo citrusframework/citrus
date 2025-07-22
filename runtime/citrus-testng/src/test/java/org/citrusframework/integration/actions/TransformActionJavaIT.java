@@ -21,9 +21,6 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.TransformAction.Builder.transform;
-
 @Test
 public class TransformActionJavaIT extends TestNGCitrusSpringSupport {
 

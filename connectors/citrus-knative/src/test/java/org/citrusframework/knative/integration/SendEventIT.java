@@ -26,7 +26,6 @@ import org.springframework.http.MediaType;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
 import static org.citrusframework.knative.actions.KnativeActionBuilder.knative;
 
 public class SendEventIT extends AbstractKnativeIT {
@@ -71,7 +70,7 @@ public class SendEventIT extends AbstractKnativeIT {
         then(
             http().server(knativeBroker)
                     .send()
-                    .response(HttpStatus.ACCEPTED)
+                    .response(HttpStatus.ACCEPTED.value())
         );
     }
 

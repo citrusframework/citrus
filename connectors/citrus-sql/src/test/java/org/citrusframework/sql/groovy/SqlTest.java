@@ -23,6 +23,7 @@ import org.citrusframework.actions.ExecuteSQLAction;
 import org.citrusframework.actions.ExecuteSQLQueryAction;
 import org.citrusframework.groovy.GroovyTestLoader;
 import org.citrusframework.spi.BindToRegistry;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -163,7 +164,7 @@ public class SqlTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(queryAction.getStatements().get(0), "select * from message where id>=1000");
         Assert.assertEquals(queryAction.getControlResultSet().size(), 0L);
         Assert.assertNotNull(queryAction.getScriptValidationContext());
-        Assert.assertEquals(queryAction.getScriptValidationContext().getValidationScript().trim(), "assert rows.size() == 2");
+        Assert.assertEquals(((DefaultScriptValidationContext) queryAction.getScriptValidationContext()).getValidationScript().trim(), "assert rows.size() == 2");
 
         queryAction = (ExecuteSQLQueryAction) result.getTestAction(actionIndex);
         Assert.assertNotNull(queryAction.getDataSource());
@@ -173,6 +174,6 @@ public class SqlTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(queryAction.getStatements().get(0), "select * from message where id>=1000");
         Assert.assertEquals(queryAction.getControlResultSet().size(), 0L);
         Assert.assertNotNull(queryAction.getScriptValidationContext());
-        Assert.assertEquals(queryAction.getScriptValidationContext().getValidationScriptResourcePath(), "classpath:org/citrusframework/sql/validate.groovy");
+        Assert.assertEquals(((DefaultScriptValidationContext) queryAction.getScriptValidationContext()).getValidationScriptResourcePath(), "classpath:org/citrusframework/sql/validate.groovy");
     }
 }

@@ -45,7 +45,6 @@ import org.citrusframework.openapi.testapi.ApiActionBuilderCustomizer;
 import org.citrusframework.openapi.testapi.GeneratedApiOperationInfo;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.validation.json.JsonPathVariableExtractor;
-import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.citrusframework.ws.endpoint.builder.WebServiceEndpoints;
@@ -66,6 +65,7 @@ import static org.citrusframework.util.FileUtils.copyToByteArray;
 import static org.citrusframework.util.FileUtils.readToString;
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 import static org.citrusframework.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
+import static org.citrusframework.validation.script.DefaultScriptValidationContext.Builder.groovy;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
@@ -1955,7 +1955,7 @@ class GeneratedRestApiIT {
                     .receive()
                     .put("/api/v3/ext/pet/1234")
                     .message()
-                    .validate(ScriptValidationContext.Builder.groovy().script("""
+                    .validate(groovy().script("""
                         assert receivedMessage.getHeader("sampleStringHeader") == header1
                         org.assertj.core.api.Assertions.assertThat(((org.citrusframework.http.message.HttpMessage)receivedMessage).getQueryParams()).containsExactlyInAnyOrderEntriesOf(
                                                              java.util.Map.of(

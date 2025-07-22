@@ -29,7 +29,7 @@ import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
-public class YamlTemplateLoader implements ReferenceResolverAware, TemplateLoader {
+public class YamlTemplateLoader implements TemplateLoader<org.citrusframework.container.Template>, ReferenceResolverAware {
 
     private final Yaml yaml;
 

@@ -19,17 +19,7 @@ package org.citrusframework.junit.spring;
 import java.util.Date;
 import java.util.Optional;
 
-import org.citrusframework.Citrus;
-import org.citrusframework.CitrusSpringContext;
-import org.citrusframework.CitrusSpringContextProvider;
-import org.citrusframework.GherkinTestActionRunner;
-import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
-import org.citrusframework.TestBehavior;
-import org.citrusframework.TestCase;
-import org.citrusframework.TestCaseMetaInfo;
-import org.citrusframework.TestCaseRunner;
-import org.citrusframework.TestSource;
+import org.citrusframework.*;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
@@ -53,7 +43,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 @RunWith(CitrusSpringJUnit4Runner.class)
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
-        implements GherkinTestActionRunner, CitrusFrameworkMethod.Runner {
+        implements GherkinTestActionRunner, TestActionSupport, CitrusFrameworkMethod.Runner {
 
     /** Citrus instance */
     protected Citrus citrus;
@@ -155,7 +145,12 @@ public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
     }
 
     @Override
-    public <T extends TestAction> T run(TestActionBuilder<T> builder) {
+    public TestActions actions() {
+        return new DefaultTestActions();
+    }
+
+    @Override
+    public <T extends TestAction> TestActionRunner run(TestActionBuilder<T> builder) {
         return delegate.run(builder);
     }
 

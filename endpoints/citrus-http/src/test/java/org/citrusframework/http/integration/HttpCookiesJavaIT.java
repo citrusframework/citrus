@@ -23,8 +23,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
-
 @Test
 public class HttpCookiesJavaIT extends TestNGCitrusSpringSupport {
 
@@ -67,7 +65,7 @@ public class HttpCookiesJavaIT extends TestNGCitrusSpringSupport {
 
        then(http().server("echoHttpServer")
            .send()
-           .response(HttpStatus.OK)
+           .response(HttpStatus.OK.value())
            .message()
            .body("<HelloResponse>" +
                        "<MessageId>${messageId}</MessageId>" +
@@ -79,7 +77,7 @@ public class HttpCookiesJavaIT extends TestNGCitrusSpringSupport {
 
        then(http().client("echoHttpClient")
             .receive()
-            .response(HttpStatus.OK)
+            .response(HttpStatus.OK.value())
             .message()
             .body("<HelloResponse>" +
                         "<MessageId>${messageId}</MessageId>" +

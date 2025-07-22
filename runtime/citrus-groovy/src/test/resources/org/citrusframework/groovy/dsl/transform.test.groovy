@@ -16,8 +16,6 @@
 
 package org.citrusframework.groovy.dsl
 
-import static org.citrusframework.actions.TransformAction.Builder.transform
-
 name "TransformTest"
 author "Christoph"
 status "FINAL"

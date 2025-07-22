@@ -157,7 +157,8 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<PurgeMessageChannelAction, Builder> implements ReferenceResolverAware {
+    public static final class Builder extends AbstractTestActionBuilder<PurgeMessageChannelAction, Builder>
+            implements ReferenceResolverAware, PurgeMessageChannelActionBuilder<PurgeMessageChannelAction> {
 
         private final List<String> channelNames = new ArrayList<>();
         private final List<MessageChannel> channels = new ArrayList<>();
@@ -167,111 +168,75 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
 
         private ReferenceResolver referenceResolver;
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder purgeChannels() {
             return new Builder();
         }
 
-        /**
-         * Sets the messageSelector.
-         * @param messageSelector the messageSelector to set
-         */
+        @Override
         public Builder selector(MessageSelector messageSelector) {
             this.messageSelector = messageSelector;
             return this;
         }
 
-        /**
-         * Sets the bean reference resolver channel resolver for using channel names.
-         * @param referenceResolver
-         */
+        @Override
         public Builder channelResolver(ReferenceResolver referenceResolver) {
             this.channelResolver = channelName -> referenceResolver.resolve(channelName, MessageChannel.class);
             return this;
         }
 
-        /**
-         * Sets the channelResolver for using channel names.
-         * @param channelResolver the channelResolver to set
-         */
+        @Override
         public Builder channelResolver(DestinationResolver<MessageChannel> channelResolver) {
             this.channelResolver = channelResolver;
             return this;
         }
 
-        /**
-         * Adds list of channel names to purge in this action.
-         * @param channelNames the channelNames to set
-         */
+        @Override
         public Builder channelNames(List<String> channelNames) {
             this.channelNames.addAll(channelNames);
             return this;
         }
 
-        /**
-         * Adds several channel names to the list of channels to purge in this action.
-         * @param channelNames
-         * @return
-         */
+        @Override
         public Builder channelNames(String... channelNames) {
             return channelNames(Arrays.asList(channelNames));
         }
 
-        /**
-         * Adds a channel name to the list of channels to purge in this action.
-         * @param name
-         * @return
-         */
+        @Override
         public Builder channel(String name) {
             this.channelNames.add(name);
             return this;
         }
 
-        /**
-         * Adds list of channels to purge in this action.
-         * @param channels the channels to set
-         */
+        @Override
         public Builder channels(List<MessageChannel> channels) {
             this.channels.addAll(channels);
             return this;
         }
 
-        /**
-         * Sets several channels to purge in this action.
-         * @param channels
-         * @return
-         */
+        @Override
         public Builder channels(MessageChannel... channels) {
             return channels(Arrays.asList(channels));
         }
 
-        /**
-         * Adds a channel to the list of channels to purge in this action.
-         * @param channel
-         * @return
-         */
+        @Override
         public Builder channel(MessageChannel channel) {
             this.channels.add(channel);
             return this;
         }
 
-        /**
-         * Sets the Spring bean factory for using endpoint names.
-         * @param applicationContext
-         */
+        @Override
         public Builder withApplicationContext(ApplicationContext applicationContext) {
             this.beanFactory = applicationContext;
             return this;
         }
 
+        @Override
         public Builder beanFactory(BeanFactory beanFactory) {
             this.beanFactory = beanFactory;
             return this;
         }
 
+        @Override
         public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
             this.referenceResolver = referenceResolver;
             return this;

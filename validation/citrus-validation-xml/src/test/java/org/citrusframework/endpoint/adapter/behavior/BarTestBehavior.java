@@ -17,16 +17,13 @@
 package org.citrusframework.endpoint.adapter.behavior;
 
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestBehavior;
 import org.citrusframework.message.MessageType;
 import org.springframework.stereotype.Component;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
-
 @Component("BarTestBehavior")
-public class BarTestBehavior implements TestBehavior {
+public class BarTestBehavior implements TestBehavior, TestActionSupport {
 
     @Override
     public void apply(TestActionRunner runner) {

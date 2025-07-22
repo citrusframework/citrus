@@ -28,7 +28,6 @@ import org.citrusframework.testcontainers.redpanda.RedpandaSettings;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.container.FinallySequence.Builder.doFinally;
 import static org.citrusframework.testcontainers.actions.TestcontainersActionBuilder.testcontainers;
 
 public class StartRedpandaContainerIT extends AbstractTestcontainersIT {

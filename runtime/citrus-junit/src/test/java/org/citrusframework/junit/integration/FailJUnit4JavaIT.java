@@ -23,8 +23,6 @@ import org.citrusframework.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
 public class FailJUnit4JavaIT extends JUnit4CitrusSpringSupport {
 
     @Test(expected = TestCaseFailedException.class)

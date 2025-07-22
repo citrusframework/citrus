@@ -21,7 +21,8 @@ import org.citrusframework.condition.HttpCondition;
 /**
  * @since 2.4
  */
-public class WaitHttpConditionBuilder extends WaitConditionBuilder<HttpCondition, WaitHttpConditionBuilder> {
+public class WaitHttpConditionBuilder extends WaitConditionBuilder<HttpCondition, WaitHttpConditionBuilder>
+        implements WaitContainerBuilder.HttpConditionBuilder<Wait, HttpCondition, WaitHttpConditionBuilder> {
 
     /**
      * Default constructor using fields.
@@ -31,46 +32,31 @@ public class WaitHttpConditionBuilder extends WaitConditionBuilder<HttpCondition
         super(builder);
     }
 
+    @Override
     public WaitHttpConditionBuilder url(String requestUrl) {
         getCondition().setUrl(requestUrl);
         return this;
     }
 
-    /**
-     * Sets the Http connection timeout.
-     * @param timeout
-     * @return
-     */
+    @Override
     public WaitHttpConditionBuilder timeout(String timeout) {
         getCondition().setTimeout(timeout);
         return this;
     }
 
-    /**
-     * Sets the Http connection timeout.
-     * @param timeout
-     * @return
-     */
+    @Override
     public WaitHttpConditionBuilder timeout(Long timeout) {
         getCondition().setTimeout(timeout.toString());
         return this;
     }
 
-    /**
-     * Sets the Http status code to check.
-     * @param status
-     * @return
-     */
+    @Override
     public WaitHttpConditionBuilder status(int status) {
         getCondition().setHttpResponseCode(String.valueOf(status));
         return this;
     }
 
-    /**
-     * Sets the Http method.
-     * @param method
-     * @return
-     */
+    @Override
     public WaitHttpConditionBuilder method(String method) {
         getCondition().setMethod(method.toUpperCase());
         return this;

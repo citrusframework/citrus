@@ -24,9 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ExecuteSQLAction.Builder.sql;
-import static org.citrusframework.actions.ExecuteSQLQueryAction.Builder.query;
-
 @Test
 public class ExecuteSQLJavaIT extends TestNGCitrusSpringSupport {
 
@@ -39,10 +36,10 @@ public class ExecuteSQLJavaIT extends TestNGCitrusSpringSupport {
         variable("rowsCount", "0");
         variable("customerId", "1");
 
-        run(sql(dataSource)
+        run(sql().dataSource(dataSource)
             .sqlResource("classpath:org/citrusframework/integration/actions/script.sql"));
 
-        run(query(dataSource)
+        run(query().dataSource(dataSource)
             .statement("select NAME from CUSTOMERS where CUSTOMER_ID='${customerId}'")
             .statement("select COUNT(1) as overall_cnt from ERRORS")
             .statement("select ORDER_ID from ORDERS where DESCRIPTION LIKE 'Migrate%'")
@@ -52,14 +49,14 @@ public class ExecuteSQLJavaIT extends TestNGCitrusSpringSupport {
             .validate("OVERALL_CNT", "${rowsCount}")
             .validate("DESCRIPTION", "NULL"));
 
-        run(query(dataSource)
+        run(query().dataSource(dataSource)
             .sqlResource("classpath:org/citrusframework/integration/actions/query-script.sql")
             .validate("ORDER_ID", "1")
             .validate("NAME", "Christoph")
             .validate("OVERALL_CNT", "${rowsCount}")
             .validate("DESCRIPTION", "NULL"));
 
-        run(query(dataSource)
+        run(query().dataSource(dataSource)
             .statement("select REQUEST_TAG as RTAG, DESCRIPTION as DESC from ORDERS")
             .validate("RTAG", "requestTag", "@ignore@")
             .validate("DESC", "Migrate")
@@ -67,10 +64,10 @@ public class ExecuteSQLJavaIT extends TestNGCitrusSpringSupport {
             .extract("RTAG", "tags")
             .extract("DESC", "description"));
 
-        run(sql(dataSource)
+        run(sql().dataSource(dataSource)
             .statement("DELETE FROM CUSTOMERS"));
 
-        run(query(dataSource)
+        run(query().dataSource(dataSource)
             .statement("select DESCRIPTION as desc from ORDERS where ORDER_ID = 2")
             .validate("DESC", ""));
     }

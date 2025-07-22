@@ -16,12 +16,13 @@
 
 package org.citrusframework;
 
+import java.time.Duration;
+
 import org.citrusframework.container.AbstractIteratingActionContainer;
 import org.citrusframework.container.IteratingConditionExpression;
 
-import java.time.Duration;
-
-public abstract class AbstractIteratingContainerBuilder<T extends AbstractIteratingActionContainer, S extends AbstractIteratingContainerBuilder<T, S>> extends AbstractTestContainerBuilder<T, S> {
+public abstract class AbstractIteratingContainerBuilder<T extends AbstractIteratingActionContainer, S extends AbstractIteratingContainerBuilder<T, S>>
+        extends AbstractTestContainerBuilder<T, S> {
 
     protected String condition;
     protected IteratingConditionExpression conditionExpression;
@@ -54,6 +55,9 @@ public abstract class AbstractIteratingContainerBuilder<T extends AbstractIterat
         return self;
     }
 
+    /**
+     * Sets the timeout.
+     */
     public S timeout(Duration timeout) {
         this.timeout = timeout;
         return self;

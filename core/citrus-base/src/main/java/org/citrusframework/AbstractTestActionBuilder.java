@@ -16,7 +16,8 @@
 
 package org.citrusframework;
 
-public abstract class AbstractTestActionBuilder<T extends TestAction, S extends TestActionBuilder<T>> implements TestActionBuilder<T> {
+public abstract class AbstractTestActionBuilder<T extends TestAction, S extends TestActionBuilder<T>>
+        implements TestActionBuilder<T> {
 
     protected final S self;
 
@@ -28,31 +29,16 @@ public abstract class AbstractTestActionBuilder<T extends TestAction, S extends 
         self = (S) this;
     }
 
-    /**
-     * Sets the test action name.
-     * @param name the test action name.
-     * @return
-     */
     public S name(String name) {
         this.name = name;
         return self;
     }
 
-    /**
-     * Sets the description.
-     * @param description
-     * @return
-     */
     public S description(String description) {
         this.description = description;
         return self;
     }
 
-    /**
-     * Sets the test actor for this action.
-     * @param actor the actor.
-     * @return
-     */
     public S actor(TestActor actor) {
         this.actor = actor;
         return self;

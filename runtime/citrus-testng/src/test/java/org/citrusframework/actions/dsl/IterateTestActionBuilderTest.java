@@ -26,8 +26,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static java.lang.Integer.parseInt;
-import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariable;
-import static org.citrusframework.container.Iterate.Builder.iterate;
 import static org.testng.Assert.assertEquals;
 
 public class IterateTestActionBuilderTest extends UnitTestSupport {

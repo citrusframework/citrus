@@ -41,7 +41,8 @@ public class ApplyTestBehaviorAction extends AbstractTestAction {
         behavior.apply(runner);
     }
 
-    public static final class Builder extends AbstractTestActionBuilder<ApplyTestBehaviorAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<ApplyTestBehaviorAction, Builder>
+            implements ApplyTestBehaviorActionBuilder<ApplyTestBehaviorAction> {
         private TestActionRunner runner;
         private TestBehavior behavior;
 
@@ -55,11 +56,13 @@ public class ApplyTestBehaviorAction extends AbstractTestAction {
             return builder;
         }
 
+        @Override
         public Builder behavior(TestBehavior behavior) {
             this.behavior = behavior;
             return this;
         }
 
+        @Override
         public Builder on(TestActionRunner runner) {
             this.runner = runner;
             return this;

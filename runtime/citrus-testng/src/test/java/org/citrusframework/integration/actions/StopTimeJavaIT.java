@@ -20,9 +20,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.SleepAction.Builder.sleep;
-import static org.citrusframework.actions.StopTimeAction.Builder.stopTime;
-
 @Test
 public class StopTimeJavaIT extends TestNGCitrusSpringSupport {
 

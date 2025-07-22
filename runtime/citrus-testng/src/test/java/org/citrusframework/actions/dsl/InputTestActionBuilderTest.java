@@ -23,8 +23,6 @@ import org.citrusframework.actions.InputAction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.InputAction.Builder.input;
-
 public class InputTestActionBuilderTest extends UnitTestSupport {
 
     @Test

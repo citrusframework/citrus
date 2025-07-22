@@ -22,12 +22,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.DefaultTestActionBuilder.action;
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.FailAction.Builder.fail;
-import static org.citrusframework.actions.SleepAction.Builder.sleep;
-import static org.citrusframework.actions.StopTimeAction.Builder.stopTime;
-import static org.citrusframework.actions.TraceVariablesAction.Builder.traceVariables;
-import static org.citrusframework.container.Async.Builder.async;
 
 /**
  * @since 2.7.4

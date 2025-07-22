@@ -16,8 +16,6 @@
 
 package org.citrusframework.groovy.dsl
 
-import static org.citrusframework.actions.LoadPropertiesAction.Builder.load;
-
 name "LoadPropertiesTest"
 author "Christoph"
 status "FINAL"

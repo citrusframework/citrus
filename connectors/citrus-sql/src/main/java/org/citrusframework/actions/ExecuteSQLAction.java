@@ -19,6 +19,7 @@ package org.citrusframework.actions;
 import java.util.List;
 import javax.sql.DataSource;
 
+import org.citrusframework.actions.sql.ExecuteSqlActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -121,7 +122,8 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractDatabaseConnectingTestAction.Builder<ExecuteSQLAction, Builder> {
+    public static final class Builder extends AbstractDatabaseConnectingTestAction.Builder<ExecuteSQLAction, Builder>
+            implements ExecuteSqlActionBuilder<ExecuteSQLAction, Builder> {
 
         private boolean ignoreErrors = false;
 
@@ -130,19 +132,14 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
         }
 
         public static Builder sql(DataSource dataSource) {
-            Builder builder = new Builder();
-            builder.dataSource(dataSource);
-            return builder;
+            return sql().dataSource(dataSource);
         }
 
         public ExecuteSQLQueryAction.Builder query() {
             return new ExecuteSQLQueryAction.Builder().dataSource(dataSource);
         }
 
-        /**
-         * Ignore errors during execution.
-         * @param ignoreErrors boolean flag to set
-         */
+        @Override
         public Builder ignoreErrors(boolean ignoreErrors) {
             this.ignoreErrors = ignoreErrors;
             return this;

@@ -19,6 +19,8 @@ package org.citrusframework.http.actions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.citrusframework.TestAction;
+import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
@@ -36,7 +38,8 @@ import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
  *
  * @since 2.4
  */
-public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
+public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
+        implements org.citrusframework.actions.http.HttpServerActionBuilder<TestAction, HttpServerActionBuilder> {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().enable(INDENT_OUTPUT);
 
@@ -58,10 +61,7 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
         this.httpServerUri = httpServerUri;
     }
 
-    /**
-     * Generic response builder for sending response messages to client.
-     * @return
-     */
+    @Override
     public HttpServerResponseActionBuilder respond() {
         return new HttpServerSendActionBuilder().response();
     }
@@ -71,27 +71,24 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
      * @return
      */
     public HttpServerResponseActionBuilder respond(HttpStatus status) {
+        return respond(status.value());
+    }
+
+    @Override
+    public HttpServerResponseActionBuilder respond(int status) {
         return new HttpServerSendActionBuilder().response(status);
     }
 
-    /**
-     * Generic response builder for sending JSON response messages to client with response status 200 (OK).
-     *
-     * @return
-     */
+    @Override
     public HttpServerResponseActionBuilder.HttpMessageBuilderSupport respondOkJson(String json) {
         return new HttpServerSendActionBuilder()
-                .response(HttpStatus.OK)
+                .response(HttpStatus.OK.value())
                 .message()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(json);
     }
 
-    /**
-     * Generic response builder for sending JSON response messages to client with response status 200 (OK).
-     *
-     * @return
-     */
+    @Override
     public HttpServerResponseActionBuilder.HttpMessageBuilderSupport respondOkJson(Object json) {
         try {
             return respondOkJson(OBJECT_MAPPER.writeValueAsString(json));
@@ -100,27 +97,25 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
         }
     }
 
-    /**
-     * Receive Http requests as server.
-     */
+    @Override
     public HttpServerReceiveActionBuilder receive() {
         return new HttpServerReceiveActionBuilder();
     }
 
-    /**
-     * Send Http response messages as server to client.
-     */
+    @Override
     public HttpServerSendActionBuilder send() {
         return new HttpServerSendActionBuilder();
     }
 
     /**
      * Generic request builder with request method and path.
-     * @param method
-     * @param path
-     * @return
      */
-    private HttpServerRequestActionBuilder request(HttpMethod method, String path) {
+    public HttpServerRequestActionBuilder request(HttpMethod method, String path) {
+        return request(method.name(), path);
+    }
+
+    @Override
+    public HttpServerRequestActionBuilder request(String method, String path) {
         HttpServerRequestActionBuilder builder = new HttpServerRequestActionBuilder();
         if (httpServer != null) {
             builder.endpoint(httpServer);
@@ -140,10 +135,7 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
-    /**
-     * Sets the Spring bean application context.
-     * @param referenceResolver
-     */
+    @Override
     public HttpServerActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
         return this;
@@ -152,11 +144,10 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
     /**
      * Provides send response action methods.
      */
-    public class HttpServerSendActionBuilder {
-        /**
-         * Generic response builder for sending response messages to client.
-         * @return
-         */
+    public class HttpServerSendActionBuilder implements
+            org.citrusframework.actions.http.HttpServerSendActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport> {
+
+        @Override
         public HttpServerResponseActionBuilder response() {
             HttpServerResponseActionBuilder builder =  new HttpServerResponseActionBuilder();
             if (httpServer != null) {
@@ -177,6 +168,11 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
          * @return
          */
         public HttpServerResponseActionBuilder response(HttpStatus status) {
+            return response(status.value());
+        }
+
+        @Override
+        public HttpServerResponseActionBuilder response(int status) {
             HttpServerResponseActionBuilder builder = new HttpServerResponseActionBuilder();
             if (httpServer != null) {
                 builder.endpoint(httpServer);
@@ -196,7 +192,9 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
     /**
      * Provides receive request action methods.
      */
-    public class HttpServerReceiveActionBuilder {
+    public class HttpServerReceiveActionBuilder implements
+            org.citrusframework.actions.http.HttpServerReceiveActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport> {
+
         /**
          * Receive Http GET request as server.
          */

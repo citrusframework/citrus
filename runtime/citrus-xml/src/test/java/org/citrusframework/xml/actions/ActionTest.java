@@ -16,6 +16,7 @@
 
 package org.citrusframework.xml.actions;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.EchoAction;
@@ -23,9 +24,7 @@ import org.citrusframework.xml.XmlTestLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
-public class ActionTest extends AbstractXmlActionTest {
+public class ActionTest extends AbstractXmlActionTest implements TestActionSupport {
 
     @Test
     public void shouldLoadAction() {

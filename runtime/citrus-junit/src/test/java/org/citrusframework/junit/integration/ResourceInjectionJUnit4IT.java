@@ -32,8 +32,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import static org.citrusframework.DefaultTestActionBuilder.action;
-import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariable;
-import static org.citrusframework.actions.EchoAction.Builder.echo;
 
 /**
  * @since 2.5

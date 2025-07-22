@@ -29,6 +29,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.codec.binary.Base64;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.actions.sql.ExecuteSqlQueryActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.UnknownElementException;
@@ -37,6 +38,7 @@ import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
 import org.slf4j.Logger;
@@ -415,7 +417,8 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractDatabaseConnectingTestAction.Builder<ExecuteSQLQueryAction, Builder> {
+    public static final class Builder extends AbstractDatabaseConnectingTestAction.Builder<ExecuteSQLQueryAction, Builder>
+            implements ExecuteSqlQueryActionBuilder<ExecuteSQLQueryAction, Builder> {
 
         private final Map<String, List<String>> controlResultSet = new HashMap<>();
         private final Map<String, String> extractVariables = new HashMap<>();
@@ -427,52 +430,32 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         }
 
         public static Builder query(DataSource dataSource) {
-            Builder builder = new Builder();
-            builder.dataSource(dataSource);
-            return builder;
+            return query().dataSource(dataSource);
         }
 
-        /**
-         * Set expected control result set. Keys represent the column names, values
-         * the expected values.
-         * @param column
-         * @param values
-         */
-        public Builder validate(String column, String ... values) {
+        @Override
+        public Builder validate(String column, String... values) {
             this.controlResultSet.put(column, Arrays.asList(values));
             return this;
         }
 
-        /**
-         * Validate SQL result set via validation script, for instance Groovy.
-         * @param script
-         * @param type
-         */
+        @Override
         public Builder validateScript(String script, String type) {
-            this.scriptValidationContext = new ScriptValidationContext.Builder()
+            this.scriptValidationContext = new DefaultScriptValidationContext.Builder()
                     .scriptType(type)
                     .script(script)
                     .build();
             return this;
         }
 
-        /**
-         * Validate SQL result set via validation script, for instance Groovy.
-         * @param scriptResource
-         * @param type
-         */
+        @Override
         public Builder validateScript(Resource scriptResource, String type) {
             return validateScript(scriptResource, type, FileUtils.getDefaultCharset());
         }
 
-        /**
-         * Validate SQL result set via validation script, for instance Groovy.
-         * @param scriptResource
-         * @param type
-         * @param charset
-         */
+        @Override
         public Builder validateScript(Resource scriptResource, String type, Charset charset) {
-            ScriptValidationContext.Builder scriptValidationContext = new ScriptValidationContext.Builder()
+            DefaultScriptValidationContext.Builder scriptValidationContext = new DefaultScriptValidationContext.Builder()
                     .scriptType(type);
             try {
                 scriptValidationContext.script(FileUtils.readToString(scriptResource, charset));
@@ -483,14 +466,9 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             return this;
         }
 
-        /**
-         * Validate SQL result set via validation script resource.
-         * @param scriptResourcePath
-         * @param type
-         * @param charset
-         */
+        @Override
         public Builder validateScriptResource(String scriptResourcePath, String type, Charset charset) {
-            this.scriptValidationContext = new ScriptValidationContext.Builder()
+            this.scriptValidationContext = new DefaultScriptValidationContext.Builder()
                     .scriptResource(scriptResourcePath)
                     .scriptResourceCharset(charset.toString())
                     .scriptType(type)
@@ -498,38 +476,29 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             return this;
         }
 
-        /**
-         * Validate SQL result set via validation script, for instance Groovy.
-         * @param script
-         */
+        @Override
+        public Builder validate(ScriptValidationContext scriptValidationContext) {
+            this.scriptValidationContext = scriptValidationContext;
+            return this;
+        }
+
+        @Override
         public Builder groovy(String script) {
             return validateScript(script, ScriptTypes.GROOVY);
         }
 
-        /**
-         * Validate SQL result set via validation script, for instance Groovy.
-         * @param scriptResource
-         */
+        @Override
         public Builder groovy(Resource scriptResource) {
             return validateScript(scriptResource, ScriptTypes.GROOVY);
         }
 
-        /**
-         * User can extract column values to test variables. Map holds column names (keys) and
-         * respective target variable names (values).
-         *
-         * @param columnName
-         * @param variableName
-         */
+        @Override
         public Builder extract(String columnName, String variableName) {
             this.extractVariables.put(columnName, variableName);
             return this;
         }
 
-        /**
-         * Sets an explicit validator implementation for this action.
-         * @param validator the validator to set
-         */
+        @Override
         public Builder validator(SqlResultSetScriptValidator validator) {
             this.validator = validator;
             return this;

@@ -5,8 +5,6 @@ import org.testng.annotations.Test;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
 /**
  * This is a sample Java DSL Citrus integration test.
  *

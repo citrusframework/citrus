@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
 import static org.citrusframework.restdocs.http.CitrusRestDocsSupport.restDocsConfigurer;
 import static org.citrusframework.restdocs.http.CitrusRestDocsSupport.restDocsInterceptor;
 
@@ -79,7 +78,7 @@ public class RestDocConfigurationIT extends TestNGCitrusSpringSupport {
 
         then(http().client(httpClient)
                 .receive()
-                .response(HttpStatus.OK)
+                .response(HttpStatus.OK.value())
                 .message()
                 .body("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                     "<MessageId>1234567890</MessageId>" +

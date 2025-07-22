@@ -16,10 +16,6 @@
 
 package org.citrusframework.groovy.dsl.container
 
-import static org.citrusframework.actions.EchoAction.Builder.echo
-import static org.citrusframework.actions.FailAction.Builder.fail
-import static org.citrusframework.container.Catch.Builder.catchException
-
 name "CatchTest"
 author "Christoph"
 status "FINAL"

@@ -16,6 +16,16 @@
 
 package org.citrusframework.actions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
@@ -57,16 +67,6 @@ import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -520,7 +520,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     public abstract static class ReceiveMessageActionBuilder<T extends ReceiveMessageAction, M extends ReceiveMessageBuilderSupport<T, B, M>, B extends ReceiveMessageActionBuilder<T, M, B>>
-            extends MessageBuilderSupport.MessageActionBuilder<T, M, B> {
+            extends MessageBuilderSupport.MessageActionBuilder<T, M, B> implements ReceiveActionBuilder<T, M> {
 
         private long receiveTimeout = 0L;
 
@@ -538,82 +538,94 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
         private final List<String> validatorNames = new ArrayList<>();
 
+        @Override
         public B timeout(final long receiveTimeout) {
             this.receiveTimeout = receiveTimeout;
             return self;
         }
 
+        @Override
         public B validate(final ValidationContext.Builder<?, ?> validationContext) {
             this.validationContexts.add(validationContext);
             return self;
         }
 
+        @Override
         public B validate(final ValidationContext validationContext) {
             return validate((ValidationContext.Builder) () -> validationContext);
         }
 
+        @Override
         public B validate(final ValidationContextAdapter adapter) {
             return validate(adapter.asValidationContext());
         }
 
+        @Override
         public B validate(final List<ValidationContext.Builder<?, ?>> validationContexts) {
             this.validationContexts.addAll(validationContexts);
             return self;
         }
 
+        @Override
         public B validate(ValidationContext.Builder<?, ?>... validationContexts) {
             return validate(Arrays.asList(validationContexts));
         }
 
+        @Override
         public B selector(final String messageSelector) {
             this.messageSelector = messageSelector;
             return self;
         }
 
+        @Override
         public B selector(final Map<String, String> messageSelector) {
             this.messageSelectorMap.putAll(messageSelector);
             return self;
         }
 
+        @Override
         public B validator(final MessageValidator<? extends ValidationContext> validator) {
             this.validators.add(validator);
             return self;
         }
 
+        @Override
         public final B validators(final String... validators) {
             Arrays.stream(validators).forEach(this::validator);
             return self;
         }
 
+        @Override
         @SafeVarargs
         public final B validators(final MessageValidator<? extends ValidationContext>... validators) {
             return validators(Arrays.asList(validators));
         }
 
+        @Override
         public B validators(final List<MessageValidator<? extends ValidationContext>> validators) {
             this.validators.addAll(validators);
             return self;
         }
 
+        @Override
         public final B validators(final HeaderValidator... validators) {
             Stream.of(validators).forEach(this::validator);
             return self;
         }
 
-        @SuppressWarnings("unchecked")
+        @Override
         public B validator(final String validatorName) {
             this.validatorNames.add(validatorName);
             return self;
         }
 
+        @Override
         public B validator(final HeaderValidator validators) {
             Stream.of(validators).forEach(getHeaderValidationContext()::validator);
             return self;
         }
 
-        /**
-         * Adds validation processor to the receive action for validating the received message with Java code.
-         */
+        @Override
         public B validate(final ValidationProcessor processor) {
             this.validationProcessor = processor;
             return self;
@@ -637,7 +649,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
             if (messageBuilderSupport == null) {
                 messageBuilderSupport = getMessageBuilderSupport();
             }
-
 
             reconcileValidationContexts();
 
@@ -773,7 +784,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                     // Determine the message type from builder support if it has EXPLICITLY been set.
                     // If it has not been set explicitly, we rely on validation context reconciliation
                     // on validation, based on the received message type.
-                    messageType = hasText(messageBuilderSupport.getMessageType()) && messageBuilderSupport.isExplictMessageType()
+                    messageType = hasText(messageBuilderSupport.getMessageType()) && messageBuilderSupport.isExplicitMessageType()
                             ? MessageType.valueOf(messageBuilderSupport.getMessageType().toUpperCase())
                             : messageType;
                 } catch (IllegalArgumentException e) {

@@ -17,14 +17,11 @@
 package org.citrusframework.junit.integration;
 
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestBehavior;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Test;
-
-import static org.citrusframework.actions.ApplyTestBehaviorAction.Builder.apply;
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.container.Sequence.Builder.sequential;
 
 public class ApplyTestBehaviorIT extends JUnit4CitrusSpringSupport {
 
@@ -48,7 +45,7 @@ public class ApplyTestBehaviorIT extends JUnit4CitrusSpringSupport {
                 ));
     }
 
-    private static class SayHelloBehavior implements TestBehavior {
+    private static class SayHelloBehavior implements TestBehavior, TestActionSupport {
         private final String greeting;
 
         public SayHelloBehavior() {

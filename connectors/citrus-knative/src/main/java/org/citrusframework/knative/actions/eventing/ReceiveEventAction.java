@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.citrusframework.context.TestContext;
+import org.citrusframework.http.actions.HttpActionBuilder;
 import org.citrusframework.http.actions.HttpServerActionBuilder;
 import org.citrusframework.http.actions.HttpServerRequestActionBuilder;
 import org.citrusframework.http.message.HttpMessage;
@@ -34,8 +35,6 @@ import org.citrusframework.util.PropertyUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
-
 /**
  * Receives CloudEvent event from Knative message broker.
  * Uses Knative trigger and service binding to receive the CloudEvent data.
@@ -44,6 +43,8 @@ public class ReceiveEventAction extends AbstractKnativeAction {
 
     private final CloudEventMessage message;
     private final HttpServer httpServer;
+
+    private final HttpActionBuilder http = new HttpActionBuilder();
 
     public ReceiveEventAction(Builder builder) {
         super("receive-event", builder);
@@ -66,36 +67,39 @@ public class ReceiveEventAction extends AbstractKnativeAction {
             httpServer.start();
         }
 
-        HttpServerActionBuilder.HttpServerReceiveActionBuilder receiveBuilder = http().server(httpServer).receive();
-        HttpServerRequestActionBuilder.HttpMessageBuilderSupport requestBuilder;
+        HttpServerActionBuilder.HttpServerReceiveActionBuilder receiveBuilder = http.server(httpServer).receive();
+        HttpServerRequestActionBuilder requestBuilder;
 
         if (request.getRequestMethod() == null || request.getRequestMethod().equals(RequestMethod.POST)) {
-            requestBuilder = receiveBuilder.post().message(request);
+            requestBuilder = receiveBuilder.post();
         } else if (request.getRequestMethod().equals(RequestMethod.GET)) {
-            requestBuilder = receiveBuilder.get().message(request);
+            requestBuilder = receiveBuilder.get();
         } else if (request.getRequestMethod().equals(RequestMethod.PUT)) {
-            requestBuilder = receiveBuilder.put().message(request);
+            requestBuilder = receiveBuilder.put();
         } else if (request.getRequestMethod().equals(RequestMethod.DELETE)) {
-            requestBuilder = receiveBuilder.delete().message(request);
+            requestBuilder = receiveBuilder.delete();
         } else if (request.getRequestMethod().equals(RequestMethod.HEAD)) {
-            requestBuilder = receiveBuilder.head().message(request);
+            requestBuilder = receiveBuilder.head();
         } else if (request.getRequestMethod().equals(RequestMethod.TRACE)) {
-            requestBuilder = receiveBuilder.trace().message(request);
+            requestBuilder = receiveBuilder.trace();
         } else if (request.getRequestMethod().equals(RequestMethod.PATCH)) {
-            requestBuilder = receiveBuilder.patch().message(request);
+            requestBuilder = receiveBuilder.patch();
         } else if (request.getRequestMethod().equals(RequestMethod.OPTIONS)) {
-            requestBuilder = receiveBuilder.options().message(request);
+            requestBuilder = receiveBuilder.options();
         } else {
-            requestBuilder = receiveBuilder.post().message(request);
+            requestBuilder = receiveBuilder.post();
         }
 
-        requestBuilder.headerNameIgnoreCase(true);
-        requestBuilder.type(message.getType());
-        requestBuilder.build().execute(context);
+        requestBuilder
+                .message(request)
+                .headerNameIgnoreCase(true)
+                .type(message.getType())
+                .build().execute(context);
 
-        http().server(httpServer)
+        http.server(httpServer)
                 .send()
-                .response(HttpStatus.ACCEPTED);
+                .response(HttpStatus.ACCEPTED)
+                .build().execute(context);
     }
 
     /**

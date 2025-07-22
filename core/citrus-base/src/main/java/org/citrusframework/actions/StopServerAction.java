@@ -69,7 +69,8 @@ public class StopServerAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<StopServerAction, Builder> implements ReferenceResolverAware {
+    public static final class Builder extends AbstractTestActionBuilder<StopServerAction, Builder>
+            implements ReferenceResolverAware, StopServerActionBuilder<StopServerAction> {
 
         private final List<Server> servers = new ArrayList<>();
         private final List<String> serverNames = new ArrayList<>();
@@ -80,73 +81,59 @@ public class StopServerAction extends AbstractTestAction {
             return new Builder();
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param servers
-         * @return
-         */
         public static Builder stop(Server... servers) {
             Builder builder = new Builder();
             Stream.of(servers).forEach(builder::server);
             return builder;
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param server
-         * @return
-         */
         public static Builder stop(Server server) {
             Builder builder = new Builder();
             builder.server(server);
             return builder;
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param serverNames
-         * @return
-         */
         public static Builder stop(String... serverNames) {
             Builder builder = new Builder();
             Stream.of(serverNames).forEach(builder::server);
             return builder;
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param server
-         * @return
-         */
         public static Builder stop(String server) {
             Builder builder = new Builder();
             builder.server(server);
             return builder;
         }
 
+        @Override
         public Builder server(Server server) {
             this.servers.add(server);
             return this;
         }
 
+        @Override
         public Builder server(Server... server) {
             return server(Arrays.asList(server));
         }
 
+        @Override
         public Builder server(List<Server> servers) {
             this.servers.addAll(servers);
             return this;
         }
 
+        @Override
         public Builder server(String server) {
             this.serverNames.add(server);
             return this;
         }
 
+        @Override
         public Builder server(String... server) {
             return serverNames(Arrays.asList(server));
         }
 
+        @Override
         public Builder serverNames(List<String> servers) {
             this.serverNames.addAll(servers);
             return this;
@@ -161,6 +148,12 @@ public class StopServerAction extends AbstractTestAction {
             }
 
             return new StopServerAction(this);
+        }
+
+        @Override
+        public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
+            return this;
         }
 
         @Override

@@ -26,13 +26,6 @@ import org.citrusframework.util.SocketUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
-import static org.citrusframework.actions.StartServerAction.Builder.start;
-import static org.citrusframework.actions.StopServerAction.Builder.stop;
-import static org.citrusframework.container.FinallySequence.Builder.doFinally;
-import static org.citrusframework.container.Wait.Builder.waitFor;
-
 @Test
 public class WaitJavaIT extends TestNGCitrusSpringSupport {
 

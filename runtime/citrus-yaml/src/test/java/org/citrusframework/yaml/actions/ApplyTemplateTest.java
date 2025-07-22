@@ -16,6 +16,7 @@
 
 package org.citrusframework.yaml.actions;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.container.Template;
@@ -23,9 +24,7 @@ import org.citrusframework.yaml.YamlTestLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
-public class ApplyTemplateTest extends AbstractYamlActionTest {
+public class ApplyTemplateTest extends AbstractYamlActionTest implements TestActionSupport {
 
     @Test
     public void shouldLoadApplyTemplate() {

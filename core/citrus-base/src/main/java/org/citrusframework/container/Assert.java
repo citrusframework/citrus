@@ -143,17 +143,13 @@ public class Assert extends AbstractActionContainer {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractExceptionContainerBuilder<Assert, Builder> {
+    public static class Builder extends AbstractExceptionContainerBuilder<Assert, Builder>
+            implements AssertContainerBuilder<Assert, Builder> {
 
         private TestActionBuilder<?> action;
         private Class<? extends Throwable> exception = CitrusRuntimeException.class;
         private String message;
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         *
-         * @return
-         */
         public static Builder assertException() {
             return new Builder();
         }
@@ -164,23 +160,13 @@ public class Assert extends AbstractActionContainer {
             return super.actions(actions[0]);
         }
 
-        /**
-         * Catch exception type during execution.
-         *
-         * @param exception
-         * @return
-         */
+        @Override
         public Builder exception(Class<? extends Throwable> exception) {
             this.exception = exception;
             return this;
         }
 
-        /**
-         * Catch exception type during execution.
-         *
-         * @param type
-         * @return
-         */
+        @Override
         public Builder exception(String type) {
             try {
                 this.exception = (Class<? extends Throwable>) Class.forName(type);
@@ -190,28 +176,18 @@ public class Assert extends AbstractActionContainer {
             return this;
         }
 
-        /**
-         * Expect error message in exception.
-         *
-         * @param message
-         */
+        @Override
         public Builder message(String message) {
             this.message = message;
             return this;
         }
 
-        /**
-         * Sets the test action to execute during assert.
-         *
-         * @param action
-         */
+        @Override
         public Builder action(TestAction action) {
             return action(() -> action);
         }
 
-        /**
-         * Sets the test action to execute during assert.
-         */
+        @Override
         public Builder action(TestActionBuilder<?> builder) {
             return actions(builder);
         }

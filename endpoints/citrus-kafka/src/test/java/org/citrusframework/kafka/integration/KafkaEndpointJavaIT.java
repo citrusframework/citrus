@@ -16,6 +16,10 @@
 
 package org.citrusframework.kafka.integration;
 
+import java.time.Duration;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.assertj.core.api.ThrowableAssert;
 import org.citrusframework.annotations.CitrusTest;
@@ -30,16 +34,8 @@ import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import java.time.Duration;
-import java.util.Map;
-import java.util.concurrent.TimeoutException;
-
 import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
-import static org.citrusframework.actions.SleepAction.Builder.sleep;
-import static org.citrusframework.container.Parallel.Builder.parallel;
 import static org.citrusframework.kafka.endpoint.KafkaMessageFilter.kafkaMessageFilter;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.ValueMatchingStrategy.ENDS_WITH;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.ValueMatchingStrategy.STARTS_WITH;
@@ -79,7 +75,7 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
                                         .kafkaMessageSelector(kafkaHeaderEquals(key, value))
                                         .build()
                         )
-                        .getMessageBuilderSupport()
+                        .message()
                         .body(body)
         );
     }
@@ -105,7 +101,7 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
                                         .kafkaMessageSelector(kafkaHeaderContains(key, "odo"))
                                         .build()
                         )
-                        .getMessageBuilderSupport()
+                        .message()
                         .body(body)
         );
     }
@@ -137,7 +133,7 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
                                         )
                                         .build()
                         )
-                        .getMessageBuilderSupport()
+                        .message()
                         .body(body)
         );
     }
@@ -172,7 +168,7 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
                                         )
                                         .build()
                         )
-                        .getMessageBuilderSupport()
+                        .message()
                         .body(body)
         );
     }
@@ -218,7 +214,7 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
                                         )
                                         .build()
                         )
-                        .getMessageBuilderSupport()
+                        .message()
                         .body(body)
         );
     }
@@ -244,7 +240,7 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
                                         .kafkaMessageSelector(kafkaHeaderEquals(key, "Arwen"))
                                         .build()
                         )
-                        .getMessageBuilderSupport()
+                        .message()
                         .body(body)
         );
 
@@ -277,7 +273,7 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
                                         .kafkaMessageSelector(kafkaHeaderEquals(key, value))
                                         .build()
                         )
-                        .getMessageBuilderSupport()
+                        .message()
                         .body(body)
         );
 
@@ -312,7 +308,7 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
                                         .kafkaMessageSelector(kafkaHeaderContains(key, "Gandalf"))
                                         .build()
                         )
-                        .getMessageBuilderSupport()
+                        .message()
                         .body(body)
         );
 
@@ -370,7 +366,7 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
                                         .pollTimeout(Duration.ofSeconds(3)) // Note that pollTimeout > overall receive timeout
                                         .build()
                         )
-                        .getMessageBuilderSupport()
+                        .message()
                         .body(body)
         );
 

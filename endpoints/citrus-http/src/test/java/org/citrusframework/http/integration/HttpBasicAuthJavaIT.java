@@ -26,7 +26,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
 import static org.citrusframework.http.security.HttpAuthentication.basic;
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
@@ -68,14 +67,14 @@ public class HttpBasicAuthJavaIT extends TestNGCitrusSpringSupport {
 
         then(http().server(basicAuthServer)
                 .send()
-                .response(HttpStatus.OK)
+                .response(HttpStatus.OK.value())
                 .message()
                 .body("Hi from secured Http server")
                 .contentType("text/plain"));
 
         then(http().client(basicAuthClient)
                 .receive()
-                .response(HttpStatus.OK)
+                .response(HttpStatus.OK.value())
                 .message()
                 .body("Hi from secured Http server")
                 .contentType("text/plain"));
@@ -89,7 +88,7 @@ public class HttpBasicAuthJavaIT extends TestNGCitrusSpringSupport {
 
         then(http().client("http://localhost:%d".formatted(port))
                 .receive()
-                .response(HttpStatus.NO_CONTENT)
+                .response(HttpStatus.NO_CONTENT.value())
                 .message());
     }
 
@@ -103,7 +102,7 @@ public class HttpBasicAuthJavaIT extends TestNGCitrusSpringSupport {
 
         then(http().client("http://localhost:%d".formatted(port))
                 .receive()
-                .response(HttpStatus.NO_CONTENT)
+                .response(HttpStatus.NO_CONTENT.value())
                 .message());
     }
 
@@ -115,7 +114,7 @@ public class HttpBasicAuthJavaIT extends TestNGCitrusSpringSupport {
 
         then(http().client("http://localhost:%d".formatted(port))
                 .receive()
-                .response(HttpStatus.UNAUTHORIZED)
+                .response(HttpStatus.UNAUTHORIZED.value())
                 .message());
     }
 }

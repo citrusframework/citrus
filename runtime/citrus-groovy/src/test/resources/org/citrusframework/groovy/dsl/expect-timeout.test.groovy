@@ -16,9 +16,6 @@
 
 package org.citrusframework.groovy.dsl
 
-
-import static org.citrusframework.actions.ReceiveTimeoutAction.Builder.expectTimeout
-
 name "ExpectTimeoutTest"
 author "Christoph"
 status "FINAL"

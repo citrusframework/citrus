@@ -16,8 +16,6 @@
 
 package org.citrusframework.groovy.dsl
 
-import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariable
-
 name "CreateVariablesTest"
 author "Christoph"
 status "FINAL"

@@ -18,9 +18,6 @@ package org.citrusframework.groovy.dsl.container
 
 import java.time.Duration
 
-import static org.citrusframework.actions.EchoAction.Builder.echo
-import static org.citrusframework.container.Wait.Builder.waitFor
-
 name "WaitForTest"
 author "Christoph"
 status "FINAL"

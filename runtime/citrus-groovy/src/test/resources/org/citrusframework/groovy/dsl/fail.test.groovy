@@ -16,9 +16,6 @@
 
 package org.citrusframework.groovy.dsl
 
-import static org.citrusframework.actions.FailAction.Builder.fail
-import static org.citrusframework.container.Assert.Builder.assertException;
-
 name "FailTest"
 author "Christoph"
 status "FINAL"

@@ -30,6 +30,7 @@ import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.xml.XpathMessageValidationContext;
@@ -203,7 +204,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         assertTrue(action.getValidationContexts().get(1) instanceof ScriptValidationContext);
         assertTrue(action.getValidationContexts().get(2) instanceof HeaderValidationContext);
         xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(0);
-        ScriptValidationContext scriptValidationContext = (ScriptValidationContext)action.getValidationContexts().get(1);
+        DefaultScriptValidationContext scriptValidationContext = (DefaultScriptValidationContext)action.getValidationContexts().get(1);
         Assert.assertNull(action.getEndpoint());
         assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
 
@@ -220,7 +221,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         assertEquals(action.getValidationContexts().size(), 2);
         assertTrue(action.getValidationContexts().get(0) instanceof ScriptValidationContext);
         assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
-        scriptValidationContext = (ScriptValidationContext)action.getValidationContexts().get(0);
+        scriptValidationContext = (DefaultScriptValidationContext)action.getValidationContexts().get(0);
         Assert.assertNull(action.getEndpoint());
         assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
 

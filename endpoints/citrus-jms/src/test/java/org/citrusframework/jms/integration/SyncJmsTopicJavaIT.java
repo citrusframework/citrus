@@ -20,11 +20,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
-import static org.citrusframework.actions.SleepAction.Builder.delay;
-import static org.citrusframework.container.Async.Builder.async;
-
 @Test
 public class SyncJmsTopicJavaIT extends TestNGCitrusSpringSupport {
 

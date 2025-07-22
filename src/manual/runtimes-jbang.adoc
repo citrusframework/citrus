@@ -123,13 +123,11 @@ citrus init MyTest.java
 .MyTest.java
 [source,java,indent=0]
 ----
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 
-import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariables;
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
-public class MyTest implements Runnable {
+public class MyTest implements Runnable, TestActionSupport {
 
     @CitrusResource
     TestCaseRunner t;
@@ -221,8 +219,6 @@ citrus init my-test.groovy
 .my-test.groovy
 [source,groovy,indent=0]
 ----
-import static org.citrusframework.actions.EchoAction.Builder.echo
-
 name "EchoTest"
 description "Sample test in Groovy"
 

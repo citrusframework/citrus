@@ -17,6 +17,8 @@
 package org.citrusframework.http.actions;
 
 import org.citrusframework.TestAction;
+import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
@@ -30,7 +32,8 @@ import org.springframework.http.HttpStatusCode;
  *
  * @since 2.4
  */
-public class HttpClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
+public class HttpClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
+        implements org.citrusframework.actions.http.HttpClientActionBuilder<TestAction, HttpClientActionBuilder> {
 
     /** Target http client instance */
     private Endpoint httpClient;
@@ -50,27 +53,28 @@ public class HttpClientActionBuilder extends AbstractReferenceResolverAwareTestA
         this.httpClientUri = httpClientUri;
     }
 
-    /**
-     * Sends Http requests as client.
-     */
+    @Override
+    @SuppressWarnings("unchecked")
     public HttpClientSendActionBuilder send() {
         return new HttpClientSendActionBuilder();
     }
 
-    /**
-     * Receives Http response messages as client.
-     */
+    @Override
+    @SuppressWarnings("unchecked")
     public HttpClientReceiveActionBuilder receive() {
         return new HttpClientReceiveActionBuilder();
     }
 
     /**
      * Generic request builder with request method and path.
-     * @param method
-     * @param path
-     * @return
      */
-    private HttpClientRequestActionBuilder request(HttpMethod method, String path) {
+    public HttpClientRequestActionBuilder request(HttpMethod method, String path) {
+        return request(method.name(), path);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public HttpClientRequestActionBuilder request(String method, String path) {
         HttpClientRequestActionBuilder builder = new HttpClientRequestActionBuilder();
         if (httpClient != null) {
             builder.endpoint(httpClient);
@@ -90,10 +94,7 @@ public class HttpClientActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
-    /**
-     * Sets the bean reference resolver.
-     * @param referenceResolver
-     */
+    @Override
     public HttpClientActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
         return this;
@@ -102,116 +103,85 @@ public class HttpClientActionBuilder extends AbstractReferenceResolverAwareTestA
     /**
      * Provides send request action methods.
      */
-    public class HttpClientSendActionBuilder {
+    public class HttpClientSendActionBuilder implements
+            org.citrusframework.actions.http.HttpClientSendActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport> {
 
-        /**
-         * Sends Http GET request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder get() {
             return request(HttpMethod.GET, null);
         }
 
-        /**
-         * Sends Http GET request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder get(String path) {
             return request(HttpMethod.GET, path);
         }
 
-        /**
-         * Sends Http POST request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder post() {
             return request(HttpMethod.POST, null);
         }
 
-        /**
-         * Sends Http POST request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder post(String path) {
             return request(HttpMethod.POST, path);
         }
 
-        /**
-         * Sends Http PUT request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder put() {
             return request(HttpMethod.PUT, null);
         }
 
-        /**
-         * Sends Http PUT request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder put(String path) {
             return request(HttpMethod.PUT, path);
         }
 
-        /**
-         * Sends Http DELETE request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder delete() {
             return request(HttpMethod.DELETE, null);
         }
 
-        /**
-         * Sends Http DELETE request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder delete(String path) {
             return request(HttpMethod.DELETE, path);
         }
 
-        /**
-         * Sends Http HEAD request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder head() {
             return request(HttpMethod.HEAD, null);
         }
 
-        /**
-         * Sends Http HEAD request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder head(String path) {
             return request(HttpMethod.HEAD, path);
         }
 
-        /**
-         * Sends Http OPTIONS request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder options() {
             return request(HttpMethod.OPTIONS, null);
         }
 
-        /**
-         * Sends Http OPTIONS request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder options(String path) {
             return request(HttpMethod.OPTIONS, path);
         }
 
-        /**
-         * Sends Http TRACE request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder trace() {
             return request(HttpMethod.TRACE, null);
         }
 
-        /**
-         * Sends Http TRACE request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder trace(String path) {
             return request(HttpMethod.TRACE, path);
         }
 
-        /**
-         * Sends Http PATCH request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder patch() {
             return request(HttpMethod.PATCH, null);
         }
 
-        /**
-         * Sends Http PATCH request as client to server.
-         */
+        @Override
         public HttpClientRequestActionBuilder patch(String path) {
             return request(HttpMethod.PATCH, path);
         }
@@ -220,11 +190,10 @@ public class HttpClientActionBuilder extends AbstractReferenceResolverAwareTestA
     /**
      * Provides receive response action methods.
      */
-    public class HttpClientReceiveActionBuilder {
-        /**
-         * Generic response builder for expecting response messages on client.
-         * @return
-         */
+    public class HttpClientReceiveActionBuilder implements
+            org.citrusframework.actions.http.HttpClientReceiveActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport> {
+
+        @Override
         public HttpClientResponseActionBuilder response() {
             HttpClientResponseActionBuilder builder = new HttpClientResponseActionBuilder();
             if (httpClient != null) {
@@ -244,6 +213,11 @@ public class HttpClientActionBuilder extends AbstractReferenceResolverAwareTestA
          * @return
          */
         public HttpClientResponseActionBuilder response(HttpStatusCode status) {
+            return response(status.value());
+        }
+
+        @Override
+        public HttpClientResponseActionBuilder response(int status) {
             HttpClientResponseActionBuilder builder = new HttpClientResponseActionBuilder();
             if (httpClient != null) {
                 builder.endpoint(httpClient);

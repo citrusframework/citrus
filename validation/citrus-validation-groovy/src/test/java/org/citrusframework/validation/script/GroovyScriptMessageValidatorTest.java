@@ -50,7 +50,7 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
                 assert payload == 'This is plain text!'
                 assert payload.contains('!')""";
 
-        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+        ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
                 .script(validationScript)
                 .build();
@@ -67,7 +67,7 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
 
         context.setVariable("plainText", "This is plain text!");
 
-        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+        ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
                 .script(validationScript)
                 .build();
@@ -82,7 +82,7 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
                 assert payload == 'This is plain text!'
                 assert payload.contains('!')""";
 
-        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+        ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
                 .script(validationScript)
                 .build();
@@ -102,7 +102,7 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
         String validationScript = "context.setVariable('operation', 'unitTesting')\n" +
                 "context.setVariable('text', 'This is plain text!')";
 
-        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+        ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
                 .script(validationScript)
                 .build();
@@ -124,11 +124,11 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
         validationContexts.add(new JsonMessageValidationContext());
-        validationContexts.add(new ScriptValidationContext("scala"));
+        validationContexts.add(new DefaultScriptValidationContext("scala"));
 
         Assert.assertNull(validator.findValidationContext(validationContexts));
 
-        validationContexts.add(new ScriptValidationContext(ScriptTypes.GROOVY));
+        validationContexts.add(new DefaultScriptValidationContext(ScriptTypes.GROOVY));
 
         Assert.assertNotNull(validator.findValidationContext(validationContexts));
     }

@@ -17,10 +17,11 @@
 package org.citrusframework.message.builder;
 
 import org.citrusframework.actions.SendMessageAction;
+import org.citrusframework.actions.SendMessageBuilderFactory;
 import org.citrusframework.message.MessageProcessor;
 
 public class SendMessageBuilderSupport<T extends SendMessageAction, B extends SendMessageAction.SendMessageActionBuilder<T, S, B>, S extends SendMessageBuilderSupport<T, B, S>>
-        extends MessageBuilderSupport<T, B, S> {
+        extends MessageBuilderSupport<T, B, S> implements SendMessageBuilderFactory<T, S> {
 
     protected boolean schemaValidation;
     protected String  schema;
@@ -30,22 +31,13 @@ public class SendMessageBuilderSupport<T extends SendMessageAction, B extends Se
         super(delegate);
     }
 
-    /**
-     * Sets the fork mode for this send action builder.
-     * @param forkMode
-     * @return The modified send message action builder
-     */
+    @Override
     public S fork(boolean forkMode) {
         delegate.fork(forkMode);
         return self;
     }
 
-    /**
-     * Sets schema validation enabled/disabled for this message.
-     *
-     * @param enabled
-     * @return
-     */
+    @Override
     public S schemaValidation(final boolean enabled) {
         this.schemaValidation = enabled;
         return self;
@@ -59,12 +51,7 @@ public class SendMessageBuilderSupport<T extends SendMessageAction, B extends Se
         return schemaValidation;
     }
 
-    /**
-     * Sets explicit schema instance name to use for schema validation.
-     *
-     * @param schemaName
-     * @return
-     */
+    @Override
     public S schema(final String schemaName) {
         this.schema = schemaName;
         return self;
@@ -78,12 +65,7 @@ public class SendMessageBuilderSupport<T extends SendMessageAction, B extends Se
         return schema;
     }
 
-    /**
-     * Sets explicit schema repository instance to use for validation.
-     *
-     * @param schemaRepository
-     * @return
-     */
+    @Override
     public S schemaRepository(final String schemaRepository) {
         this.schemaRepository = schemaRepository;
         return self;
@@ -97,20 +79,12 @@ public class SendMessageBuilderSupport<T extends SendMessageAction, B extends Se
         return schemaRepository;
     }
 
-    /**
-     * Adds message processor on the message to be sent.
-     * @param processor
-     * @return The modified send message action builder
-     */
+    @Override
     public S transform(MessageProcessor processor) {
         return process(processor);
     }
 
-    /**
-     * Adds message processor on the message to be sent as fluent builder.
-     * @param builder
-     * @return The modified send message action builder
-     */
+    @Override
     public S transform(MessageProcessor.Builder<?, ?> builder) {
         return transform(builder.build());
     }

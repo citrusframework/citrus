@@ -30,7 +30,7 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
-public class GroovyTemplateLoader implements TemplateLoader, ReferenceResolverAware {
+public class GroovyTemplateLoader implements TemplateLoader<Template>, ReferenceResolverAware {
 
     private ReferenceResolver referenceResolver;
 

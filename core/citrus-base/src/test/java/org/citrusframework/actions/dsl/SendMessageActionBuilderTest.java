@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.SendMessageAction;
@@ -51,14 +52,13 @@ import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.citrusframework.dsl.MessageSupport.message;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class SendMessageActionBuilderTest extends UnitTestSupport {
+public class SendMessageActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
     private final ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
     private final Endpoint messageEndpoint = Mockito.mock(Endpoint.class);

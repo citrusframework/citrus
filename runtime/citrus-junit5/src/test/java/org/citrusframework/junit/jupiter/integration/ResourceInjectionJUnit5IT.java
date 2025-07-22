@@ -19,6 +19,7 @@ package org.citrusframework.junit.jupiter.integration;
 import org.citrusframework.Citrus;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
@@ -32,11 +33,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.DefaultTestActionBuilder.action;
-import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariable;
-import static org.citrusframework.actions.EchoAction.Builder.echo;
 
 @CitrusSupport
-public class ResourceInjectionJUnit5IT {
+public class ResourceInjectionJUnit5IT implements TestActionSupport {
 
     @CitrusFramework
     private Citrus citrus;

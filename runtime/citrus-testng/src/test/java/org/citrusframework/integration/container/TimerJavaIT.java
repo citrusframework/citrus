@@ -20,12 +20,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.SleepAction.Builder.sleep;
-import static org.citrusframework.actions.StopTimerAction.Builder.stopTimer;
-import static org.citrusframework.container.FinallySequence.Builder.doFinally;
-import static org.citrusframework.container.Timer.Builder.timer;
-
 /**
  * @since 2.5
  */

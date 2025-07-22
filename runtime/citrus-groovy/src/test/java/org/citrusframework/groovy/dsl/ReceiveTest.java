@@ -46,6 +46,7 @@ import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.ValidationStatus;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.xml.XpathMessageValidationContext;
@@ -318,7 +319,7 @@ public class ReceiveTest extends AbstractGroovyActionDslTest {
         Assert.assertTrue(action.getValidationContexts().get(1) instanceof XpathMessageValidationContext);
         Assert.assertTrue(action.getValidationContexts().get(2) instanceof HeaderValidationContext);
         xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(1);
-        ScriptValidationContext scriptValidationContext = (ScriptValidationContext)action.getValidationContexts().get(0);
+        DefaultScriptValidationContext scriptValidationContext = (DefaultScriptValidationContext)action.getValidationContexts().get(0);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "direct:helloQueue");
 
@@ -334,7 +335,7 @@ public class ReceiveTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof ScriptValidationContext);
         Assert.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
-        scriptValidationContext = (ScriptValidationContext)action.getValidationContexts().get(0);
+        scriptValidationContext = (DefaultScriptValidationContext)action.getValidationContexts().get(0);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "direct:helloQueue");
 

@@ -16,8 +16,6 @@
 
 package org.citrusframework.groovy
 
-import static org.citrusframework.actions.EchoAction.Builder.echo
-
 name "myTemplate"
 description "Sample template in Groovy"
 

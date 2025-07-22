@@ -57,29 +57,22 @@ public class StopTimerAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<StopTimerAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<StopTimerAction, Builder>
+            implements StopTimerActionBuilder<StopTimerAction> {
 
         private String timerId;
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder stopTimer() {
             return new Builder();
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param timerId
-         * @return
-         */
         public static Builder stopTimer(String timerId) {
             Builder builder = new Builder();
             builder.id(timerId);
             return builder;
         }
 
+        @Override
         public Builder id(String timerId) {
             this.timerId = timerId;
             return this;

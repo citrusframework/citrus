@@ -25,8 +25,6 @@ import org.citrusframework.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.container.Assert.Builder.assertException;
-import static org.citrusframework.container.FinallySequence.Builder.doFinally;
 import static org.citrusframework.knative.actions.KnativeActionBuilder.knative;
 
 public class VerifyKnativeBrokerIT extends AbstractKnativeIT {

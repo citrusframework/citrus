@@ -16,10 +16,14 @@
 
 package org.citrusframework.http.actions;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.http.HttpReceiveRequestMessageBuilderFactory;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpMessageUtils;
@@ -33,7 +37,9 @@ import org.springframework.util.MultiValueMap;
 /**
  * @since 2.4
  */
-public class HttpServerRequestActionBuilder extends ReceiveMessageAction.ReceiveMessageActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport, HttpServerRequestActionBuilder> {
+public class HttpServerRequestActionBuilder extends
+        ReceiveMessageAction.ReceiveMessageActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport, HttpServerRequestActionBuilder>
+        implements org.citrusframework.actions.http.HttpServerRequestActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport> {
 
     /** Http message to send or receive */
     private final HttpMessage httpMessage;
@@ -68,9 +74,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
         return new HttpMessageBuilderSupport(httpMessage, this);
     }
 
-    /**
-     * Sets the request path.
-     */
+    @Override
     public HttpServerRequestActionBuilder path(String path) {
         httpMessage.path(path);
         return this;
@@ -84,23 +88,26 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
         return this;
     }
 
-    /**
-     * Adds a query param to the request uri.
-     */
+    @Override
+    public HttpServerRequestActionBuilder method(String method) {
+        return method(HttpMethod.valueOf(method));
+    }
+
+    @Override
     public HttpServerRequestActionBuilder queryParam(String name) {
         httpMessage.queryParam(name, null);
         return this;
     }
 
-    /**
-     * Adds a query param to the request uri.
-     */
+    @Override
     public HttpServerRequestActionBuilder queryParam(String name, String value) {
         httpMessage.queryParam(name, value);
         return this;
     }
 
-    public static class HttpMessageBuilderSupport extends ReceiveMessageBuilderSupport<ReceiveMessageAction, HttpServerRequestActionBuilder, HttpMessageBuilderSupport> {
+    public static class HttpMessageBuilderSupport extends
+            ReceiveMessageBuilderSupport<ReceiveMessageAction, HttpServerRequestActionBuilder, HttpMessageBuilderSupport>
+            implements HttpReceiveRequestMessageBuilderFactory<ReceiveMessageAction, HttpMessageBuilderSupport> {
 
         private final HttpMessage httpMessage;
 
@@ -125,6 +132,12 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
         }
 
         @Override
+        public HttpMessageBuilderSupport body(Map<String, List<Object>> payload) {
+            body(MultiValueMap.fromMultiValue(payload));
+            return this;
+        }
+
+        @Override
         public HttpMessageBuilderSupport name(String name) {
             httpMessage.setName(name);
             return super.name(name);
@@ -144,41 +157,37 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
             return this;
         }
 
-        /**
-         * Adds a query param to the request uri.
-         */
+        @Override
+        public HttpMessageBuilderSupport method(String method) {
+            method(HttpMethod.valueOf(method));
+            return this;
+        }
+
+        @Override
         public HttpMessageBuilderSupport queryParam(String name) {
             delegate.queryParam(name, null);
             return this;
         }
 
-        /**
-         * Adds a query param to the request uri.
-         */
+        @Override
         public HttpMessageBuilderSupport queryParam(String name, String value) {
             delegate.queryParam(name, value);
             return this;
         }
 
-        /**
-         * Sets the http version.
-         */
+        @Override
         public HttpMessageBuilderSupport version(String version) {
             httpMessage.version(version);
             return this;
         }
 
-        /**
-         * Sets the request content type header.
-         */
+        @Override
         public HttpMessageBuilderSupport contentType(String contentType) {
             httpMessage.contentType(contentType);
             return this;
         }
 
-        /**
-         * Sets the request accept header.
-         */
+        @Override
         public HttpMessageBuilderSupport accept(String accept) {
             httpMessage.accept(accept);
             return this;
@@ -189,6 +198,21 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
          */
         public HttpMessageBuilderSupport cookie(Cookie cookie) {
             httpMessage.cookie(cookie);
+            return this;
+        }
+
+        @Override
+        public HttpMessageBuilderSupport cookie(Object o) {
+            if (o == null) {
+                return this;
+            }
+
+            if (o instanceof Cookie cookie) {
+                httpMessage.cookie(cookie);
+            } else {
+                throw new CitrusRuntimeException("Invalid cookie type: " + o.getClass());
+            }
+
             return this;
         }
     }

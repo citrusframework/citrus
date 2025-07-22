@@ -20,8 +20,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
 public class EchoActionJUnit4JavaIT extends JUnit4CitrusSpringSupport {
 
     @Test

@@ -20,8 +20,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.LoadPropertiesAction.Builder.load;
 import static org.citrusframework.script.GroovyAction.Builder.groovy;
 
 @Test

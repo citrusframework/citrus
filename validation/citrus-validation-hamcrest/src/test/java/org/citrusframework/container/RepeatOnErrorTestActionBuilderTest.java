@@ -17,20 +17,18 @@
 package org.citrusframework.container;
 
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.EchoAction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.SleepAction.Builder.sleep;
 import static org.citrusframework.container.HamcrestConditionExpression.assertThat;
-import static org.citrusframework.container.RepeatOnErrorUntilTrue.Builder.repeatOnError;
 import static org.hamcrest.Matchers.is;
 import static org.testng.Assert.assertEquals;
 
-public class RepeatOnErrorTestActionBuilderTest extends UnitTestSupport {
+public class RepeatOnErrorTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
     @Test
     public void testRepeatOnErrorBuilderWithHamcrestConditionExpression() {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);

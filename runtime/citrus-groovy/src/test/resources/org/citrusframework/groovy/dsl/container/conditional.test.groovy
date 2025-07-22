@@ -16,10 +16,6 @@
 
 package org.citrusframework.groovy.dsl.container
 
-import static org.citrusframework.actions.EchoAction.Builder.echo
-import static org.citrusframework.actions.FailAction.Builder.fail
-import static org.citrusframework.container.Conditional.Builder.conditional
-
 name "ConditionalTest"
 author "Christoph"
 status "FINAL"

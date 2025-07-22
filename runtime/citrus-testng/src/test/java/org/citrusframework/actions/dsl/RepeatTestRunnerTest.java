@@ -24,9 +24,6 @@ import org.citrusframework.container.RepeatUntilTrue;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.SleepAction.Builder.sleep;
-import static org.citrusframework.container.RepeatUntilTrue.Builder.repeat;
 import static org.testng.Assert.assertEquals;
 
 public class RepeatTestRunnerTest extends UnitTestSupport {

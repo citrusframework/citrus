@@ -122,7 +122,12 @@ public class DefaultTestCaseRunner implements TestCaseRunner {
     }
 
     @Override
-    public <T extends TestAction> T run(TestActionBuilder<T> builder) {
+    public TestActions actions() {
+        return new DefaultTestActions();
+    }
+
+    @Override
+    public <T extends TestAction> TestActionRunner run(TestActionBuilder<T> builder) {
         if (builder instanceof ReferenceResolverAware) {
             ((ReferenceResolverAware) builder).setReferenceResolver(context.getReferenceResolver());
         }
@@ -135,12 +140,13 @@ public class DefaultTestCaseRunner implements TestCaseRunner {
 
         if (builder instanceof FinallySequence.Builder) {
             ((FinallySequence.Builder) builder).getActions().forEach(testCase::addFinalAction);
-            return action;
+            return this;
         }
 
         testCase.addTestAction(action);
         testCase.executeAction(action, context);
-        return action;
+
+        return this;
     }
 
     @Override

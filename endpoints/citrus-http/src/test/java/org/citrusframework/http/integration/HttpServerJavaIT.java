@@ -21,11 +21,7 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.container.Parallel.Builder.parallel;
-import static org.citrusframework.container.Sequence.Builder.sequential;
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
 
 @Test
 public class HttpServerJavaIT extends TestNGCitrusSpringSupport {
@@ -65,7 +61,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport {
 
                http().server("httpServerResponseEndpoint")
                    .send()
-                   .response(HttpStatus.OK)
+                   .response(HttpStatus.OK.value())
                    .message()
                    .body("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
@@ -79,7 +75,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport {
 
         then(http().client("httpClient")
             .receive()
-            .response(HttpStatus.OK)
+            .response(HttpStatus.OK.value())
             .message()
             .body("<testResponseMessage>" +
                     "<text>Hello Citrus</text>" +
@@ -121,7 +117,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport {
                    .send()
                    .response()
                    .message()
-                   .status(HttpStatus.NOT_FOUND)
+                   .status(HttpStatus.NOT_FOUND.value())
                    .body("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
                             "</testResponseMessage>")
@@ -136,7 +132,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport {
             .receive()
             .response()
             .message()
-            .status(HttpStatus.NOT_FOUND)
+            .status(HttpStatus.NOT_FOUND.value())
             .body("<testResponseMessage>" +
                         "<text>Hello Citrus</text>" +
                     "</testResponseMessage>")
@@ -158,7 +154,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport {
 
         then(http().client("httpClient")
             .receive()
-            .response(HttpStatus.OK)
+            .response(HttpStatus.OK.value())
             .message()
             .version("HTTP/1.1")
             .timeout(2000L));

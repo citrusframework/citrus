@@ -102,7 +102,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveMessageWithValidationScript() {
-        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+        ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
                 .script("assert root.Message.name() == 'Message'\n" +
                         "assert root.Message.text() == 'Hello World!'")
@@ -129,7 +129,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveMessageWithValidationScriptResource() {
-        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+        ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
                 .scriptResource("classpath:org/citrusframework/actions/test-validation-script.groovy")
                 .build();
@@ -196,7 +196,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         messageValidatorRegistry.setMessageValidators(validators);
         context.setMessageValidatorRegistry(messageValidatorRegistry);
 
-        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
+        ScriptValidationContext scriptValidationContext = new DefaultScriptValidationContext(ScriptTypes.GROOVY);
 
         receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)

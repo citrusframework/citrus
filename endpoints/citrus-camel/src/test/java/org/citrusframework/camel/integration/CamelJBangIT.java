@@ -24,8 +24,6 @@ import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.camel.dsl.CamelSupport.camel;
-import static org.citrusframework.container.Catch.Builder.catchException;
-import static org.citrusframework.container.FinallySequence.Builder.doFinally;
 
 public class CamelJBangIT extends TestNGCitrusSupport {
 

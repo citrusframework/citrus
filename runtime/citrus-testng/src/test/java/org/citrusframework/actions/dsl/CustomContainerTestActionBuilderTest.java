@@ -26,7 +26,6 @@ import org.citrusframework.context.TestContext;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.AbstractTestContainerBuilder.container;
-import static org.citrusframework.actions.EchoAction.Builder.echo;
 import static org.testng.Assert.assertEquals;
 
 /**
