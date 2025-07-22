@@ -25,9 +25,11 @@ import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestActorAware;
+import org.citrusframework.actions.sql.DatabaseConnectingActionBuilder;
 import org.citrusframework.common.Described;
 import org.citrusframework.common.Named;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.Resource;
@@ -213,7 +215,8 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     /**
      * Action builder.
      */
-    public static abstract class Builder<T extends AbstractDatabaseConnectingTestAction, S extends Builder<T, S>> extends AbstractTestActionBuilder<T, S> implements ReferenceResolverAware {
+    public static abstract class Builder<T extends AbstractDatabaseConnectingTestAction, S extends Builder<T, S>> extends AbstractTestActionBuilder<T, S>
+            implements ReferenceResolverAware, DatabaseConnectingActionBuilder<T, S> {
 
         protected JdbcTemplate jdbcTemplate;
         protected DataSource dataSource;
@@ -228,108 +231,83 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
 
         private ReferenceResolver referenceResolver;
 
-        /**
-         * Sets the Spring JDBC template to use.
-         * @param jdbcTemplate
-         * @return
-         */
-        public S jdbcTemplate(JdbcTemplate jdbcTemplate) {
-            this.jdbcTemplate = jdbcTemplate;
+        @Override
+        public S jdbcTemplate(Object o) {
+            if (o == null) {
+                return self;
+            }
+
+            if (o instanceof JdbcTemplate template) {
+                this.jdbcTemplate = template;
+            } else {
+                throw new CitrusRuntimeException("JdbcTemplate type '%s' is not supported".formatted(o.getClass().getName()));
+            }
             return self;
         }
 
-        /**
-         * Sets the transaction manager to use.
-         * @param transactionManager
-         * @return
-         */
-        public S transactionManager(PlatformTransactionManager transactionManager) {
-            this.transactionManager = transactionManager;
+        @Override
+        public S transactionManager(Object o) {
+            if (o == null) {
+                return self;
+            }
+
+            if (o instanceof PlatformTransactionManager manager) {
+                this.transactionManager = manager;
+            } else {
+                throw new CitrusRuntimeException("Transaction manager type '%s' is not supported".formatted(o.getClass().getName()));
+            }
             return self;
         }
 
-        /**
-         * Sets the transaction timeout to use.
-         * @param transactionTimeout
-         * @return
-         */
+        @Override
         public S transactionTimeout(int transactionTimeout) {
             this.transactionTimeout = String.valueOf(transactionTimeout);
             return self;
         }
 
-        /**
-         * Sets the transaction timeout to use.
-         * @param transactionTimeout
-         * @return
-         */
+        @Override
         public S transactionTimeout(String transactionTimeout) {
             this.transactionTimeout = transactionTimeout;
             return self;
         }
 
-        /**
-         * Sets the transaction isolation level to use.
-         * @param isolationLevel
-         * @return
-         */
+        @Override
         public S transactionIsolationLevel(String isolationLevel) {
             this.transactionIsolationLevel = isolationLevel;
             return self;
         }
 
-        /**
-         * Sets the SQL data source.
-         * @param dataSource
-         * @return
-         */
+        @Override
         public S dataSource(DataSource dataSource) {
             this.dataSource = dataSource;
             return self;
         }
 
-        /**
-         * Sets the name of the SQL data source.
-         * @param dataSourceName
-         * @return
-         */
+        @Override
         public S dataSource(String dataSourceName) {
             this.dataSourceName = dataSourceName;
             return self;
         }
 
-        /**
-         * List of statements to execute. Declared inline in the test case.
-         * @param statements
-         */
+        @Override
         public S statements(List<String> statements) {
             this.statements.addAll(statements);
             return self;
         }
 
-        /**
-         * Adds a new statement to the list of SQL executions.
-         * @param sql
-         * @return
-         */
+        @Override
         public S statement(String sql) {
             this.statements.add(sql);
             return self;
         }
 
-        /**
-         * Setter for external file resource containing the SQL statements to execute.
-         * @param sqlResource
-         */
+        @Override
         public S sqlResource(Resource sqlResource) {
             statements(SqlUtils.createStatementsFromFileResource(sqlResource));
             return self;
         }
 
-        /**
-         * Setter for external file resource containing the SQL statements to execute.
-         * @param filePath
-         */
+        @Override
         public S sqlResource(String filePath) {
             this.sqlResourcePath = filePath;
             return self;
@@ -350,6 +328,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
 
         protected abstract T doBuild();
 
+        @Override
         public S withReferenceResolver(ReferenceResolver referenceResolver) {
             this.referenceResolver = referenceResolver;
             return self;

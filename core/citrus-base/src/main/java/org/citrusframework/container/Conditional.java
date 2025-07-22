@@ -112,32 +112,23 @@ public class Conditional extends AbstractActionContainer {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractTestContainerBuilder<Conditional, Builder> {
+    public static class Builder extends AbstractTestContainerBuilder<Conditional, Builder>
+            implements ConditionalContainerBuilder<Conditional, Builder> {
 
         protected String condition;
         private ConditionExpression conditionExpression;
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder conditional() {
             return new Builder();
         }
 
-        /**
-         * Condition which allows execution if true.
-         * @param expression
-         */
+        @Override
         public Builder when(String expression) {
             this.condition = expression;
             return this;
         }
 
-        /**
-         * Condition which allows execution if evaluates to true.
-         * @param expression
-         */
+        @Override
         public Builder when(ConditionExpression expression) {
             this.conditionExpression = expression;
             return this;

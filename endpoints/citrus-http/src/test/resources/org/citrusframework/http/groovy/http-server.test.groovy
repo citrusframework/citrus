@@ -18,7 +18,6 @@ package org.citrusframework.http.groovy
 
 
 import static org.citrusframework.dsl.PathExpressionSupport.path
-import static org.citrusframework.http.actions.HttpActionBuilder.http
 
 name "HttpServerTest"
 author "Christoph"

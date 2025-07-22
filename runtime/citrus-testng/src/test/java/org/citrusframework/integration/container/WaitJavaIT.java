@@ -22,23 +22,16 @@ import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.concurrent.Executors;
 
+import com.sun.net.httpserver.HttpServer;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.integration.common.FileHelper;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.SocketUtils;
-import com.sun.net.httpserver.HttpServer;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
-import static org.citrusframework.actions.SleepAction.Builder.sleep;
-import static org.citrusframework.container.Parallel.Builder.parallel;
-import static org.citrusframework.container.Sequence.Builder.sequential;
-import static org.citrusframework.container.Wait.Builder.waitFor;
 
 @Test
 public class WaitJavaIT extends TestNGCitrusSpringSupport {
@@ -47,7 +40,7 @@ public class WaitJavaIT extends TestNGCitrusSpringSupport {
     private HttpServer server;
 
     @BeforeClass
-    public void startServer() throws IOException {
+    public void startHttpServer() throws IOException {
         server = HttpServer.create(new InetSocketAddress("localhost", serverPort), 0);
         server.createContext("/test", httpExchange -> httpExchange.sendResponseHeaders(200, 0));
         server.setExecutor(Executors.newSingleThreadExecutor());
@@ -55,7 +48,7 @@ public class WaitJavaIT extends TestNGCitrusSpringSupport {
     }
 
     @AfterClass(alwaysRun = true)
-    public void stopServer() {
+    public void stopHttpServer() {
         if (server != null) {
             server.stop(0);
         }

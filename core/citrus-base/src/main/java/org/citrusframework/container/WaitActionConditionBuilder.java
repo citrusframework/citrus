@@ -23,7 +23,8 @@ import org.citrusframework.condition.ActionCondition;
 /**
  * @since 2.4
  */
-public class WaitActionConditionBuilder extends WaitConditionBuilder<ActionCondition, WaitActionConditionBuilder> {
+public class WaitActionConditionBuilder extends WaitConditionBuilder<ActionCondition, WaitActionConditionBuilder>
+        implements WaitContainerBuilder.ActionConditionBuilder<Wait, ActionCondition, WaitActionConditionBuilder> {
 
     /**
      * Default constructor using fields.
@@ -33,21 +34,13 @@ public class WaitActionConditionBuilder extends WaitConditionBuilder<ActionCondi
         super(builder);
     }
 
-    /**
-     * Sets the test action to execute and wait for.
-     * @param action
-     * @return
-     */
+    @Override
     public WaitActionConditionBuilder action(TestAction action) {
         getCondition().setAction(action);
         return this;
     }
 
-    /**
-     * Sets the test action to execute and wait for.
-     * @param action
-     * @return
-     */
+    @Override
     public WaitActionConditionBuilder action(TestActionBuilder<?> action) {
         getCondition().setAction(action.build());
         return this;

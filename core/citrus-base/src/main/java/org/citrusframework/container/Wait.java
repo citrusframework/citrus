@@ -60,7 +60,7 @@ public class Wait extends AbstractTestAction {
     /**
      * Default constructor.
      */
-    public Wait(Builder builder) {
+    public Wait(Builder<?> builder) {
         super("wait", builder);
 
         this.condition = builder.condition;
@@ -147,7 +147,8 @@ public class Wait extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static class Builder<C extends Condition> extends AbstractTestActionBuilder<Wait, Builder<C>> implements TestActionBuilder.DelegatingTestActionBuilder<Wait> {
+    public static class Builder<C extends Condition> extends AbstractTestActionBuilder<Wait, Builder<C>>
+            implements TestActionBuilder.DelegatingTestActionBuilder<Wait>, WaitContainerBuilder<Wait, Builder<C>, C> {
 
         protected C condition;
         protected String time = "5000";
@@ -155,32 +156,19 @@ public class Wait extends AbstractTestAction {
 
         protected TestActionBuilder<?> delegate;
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder<Condition> waitFor() {
             return new Builder<>();
         }
 
-        /**
-         * Condition to wait for during execution.
-         * @param condition The condition to add to the wait action
-         * @return The wait action
-         */
+        @Override
         public Builder<C> condition(C condition) {
             this.condition = condition;
             this.delegate = this;
             return this;
         }
 
-        /**
-         * Sets custom condition builder.
-         * @param conditionBuilder
-         * @param <T>
-         * @return
-         */
-        public <T extends WaitConditionBuilder<C, T>> T condition(T conditionBuilder) {
+        @Override
+        public ConditionBuilder<Wait, C, ?> condition(ConditionBuilder<Wait, C, ?> conditionBuilder) {
             this.condition = conditionBuilder.getCondition();
             this.delegate = conditionBuilder;
             return conditionBuilder;
@@ -190,6 +178,7 @@ public class Wait extends AbstractTestAction {
          * The message condition to wait for during execution.
          * @return A WaitMessageConditionBuilder for further configuration
          */
+        @Override
         public WaitMessageConditionBuilder message() {
             this.condition = (C) new MessageCondition();
             WaitMessageConditionBuilder builder = new WaitMessageConditionBuilder((Builder<MessageCondition>) this);
@@ -201,6 +190,7 @@ public class Wait extends AbstractTestAction {
          * The test action condition to wait for during execution.
          * @return A WaitActionConditionBuilder for further configuration
          */
+        @Override
         public WaitActionConditionBuilder execution() {
             this.condition = (C) new ActionCondition();
             WaitActionConditionBuilder builder = new WaitActionConditionBuilder((Builder<ActionCondition>) this);
@@ -212,6 +202,7 @@ public class Wait extends AbstractTestAction {
          * The HTTP condition to wait for during execution.
          * @return A WaitHttpConditionBuilder for further configuration
          */
+        @Override
         public WaitHttpConditionBuilder http() {
             this.condition = (C) new HttpCondition();
             WaitHttpConditionBuilder builder = new WaitHttpConditionBuilder((Builder<HttpCondition>) this);
@@ -223,6 +214,7 @@ public class Wait extends AbstractTestAction {
          * The file condition to wait for during execution.
          * @return A WaitFileConditionBuilder for further configuration
          */
+        @Override
         public WaitFileConditionBuilder file() {
             this.condition = (C) new FileCondition();
             WaitFileConditionBuilder builder = new WaitFileConditionBuilder((Builder<FileCondition>) this);
@@ -235,6 +227,7 @@ public class Wait extends AbstractTestAction {
          * @param interval The interval to use
          * @return The altered WaitBuilder
          */
+        @Override
         public Builder<C> interval(Long interval) {
             return interval(String.valueOf(interval));
         }
@@ -244,25 +237,30 @@ public class Wait extends AbstractTestAction {
          * @param interval The interval to use
          * @return The altered WaitBuilder
          */
+        @Override
         public Builder<C> interval(String interval) {
             this.interval = interval;
             return this;
         }
 
+        @Override
         public Builder<C> milliseconds(long milliseconds) {
             return milliseconds(String.valueOf(milliseconds));
         }
 
+        @Override
         public Builder<C> milliseconds(String milliseconds) {
             this.time = milliseconds;
             return this;
         }
 
+        @Override
         public Builder<C> seconds(double seconds) {
             milliseconds(Math.round(seconds * 1000));
             return this;
         }
 
+        @Override
         public Builder<C> time(Duration duration) {
             milliseconds(duration.toMillis());
             return this;

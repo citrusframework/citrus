@@ -16,6 +16,9 @@
 
 package org.citrusframework.http.integration;
 
+import java.util.List;
+import java.util.Map;
+
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
@@ -23,18 +26,15 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.testng.annotations.Test;
-
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
 
 @Test
 public class HttpMultipartFileUploadJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void httpMultipartFileUpload() {
-        MultiValueMap<String, Object> files = new LinkedMultiValueMap<>();
-        files.add("file", new ClassPathResource("org/citrusframework/ws/soapAttachment.txt"));
+        Map<String, List<Object>> files = new LinkedMultiValueMap<>();
+        files.put("file", List.of(new ClassPathResource("org/citrusframework/ws/soapAttachment.txt")));
 
         given(http().client("echoHttpClient")
             .send()
@@ -54,10 +54,10 @@ public class HttpMultipartFileUploadJavaIT extends TestNGCitrusSpringSupport {
 
        then(http().server("echoHttpServer")
            .send()
-           .response(HttpStatus.OK));
+           .response(HttpStatus.OK.value()));
 
        then(http().client("echoHttpClient")
             .receive()
-            .response(HttpStatus.OK));
+            .response(HttpStatus.OK.value()));
     }
 }

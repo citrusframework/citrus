@@ -1,9 +1,8 @@
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
-public class EchoTest implements Runnable {
+public class EchoTest implements Runnable, TestActionSupport {
 
     @CitrusResource
     TestActionRunner t;

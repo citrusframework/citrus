@@ -21,9 +21,6 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.container.Assert.Builder.assertException;
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
 import static org.citrusframework.http.message.HttpMessageHeaders.HTTP_STATUS_CODE;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.oneOf;
@@ -50,7 +47,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport {
 
         when(http().client("httpStandaloneClient")
             .receive()
-            .response(OK)
+            .response(OK.value())
             .message()
             .body("<testResponseMessage>" +
                         "<text>Hello TestFramework</text>" +
@@ -70,7 +67,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport {
             .receive()
             .response()
             .message()
-            .status(OK)
+            .status(OK.value())
             .body("<testResponseMessage>" +
                         "<text>Hello TestFramework</text>" +
                     "</testResponseMessage>")
@@ -89,7 +86,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport {
 
         then(http().client("httpStandaloneClient")
             .receive()
-            .response(OK));
+            .response(OK.value()));
 
         run(echo("Test Http status code matcher validation"));
 
@@ -125,7 +122,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport {
         then(assertException().exception(ValidationException.class).when(
             http().client("httpStandaloneClient")
                 .receive()
-                .response(NOT_FOUND)
+                .response(NOT_FOUND.value())
         ));
     }
 }

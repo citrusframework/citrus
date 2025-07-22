@@ -16,9 +16,6 @@
 
 package org.citrusframework.groovy.dsl.container
 
-import static org.citrusframework.actions.EchoAction.Builder.echo
-import static org.citrusframework.container.Sequence.Builder.sequential
-
 name "SequentialTest"
 author "Christoph"
 status "FINAL"

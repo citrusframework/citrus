@@ -25,10 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ExecuteSQLAction.Builder.sql;
-import static org.citrusframework.actions.ExecuteSQLQueryAction.Builder.query;
-import static org.citrusframework.container.FinallySequence.Builder.doFinally;
-
 @Test
 public class ValidateSqlResultSetJavaIT extends TestNGCitrusSpringSupport {
 
@@ -43,13 +39,13 @@ public class ValidateSqlResultSetJavaIT extends TestNGCitrusSpringSupport {
         variable("desc", "Migrate");
 
         run(doFinally()
-                .actions(sql(dataSource).statement("DELETE FROM ORDERS")));
+                .actions(sql().dataSource(dataSource).statement("DELETE FROM ORDERS")));
 
-        run(sql(dataSource)
+        run(sql().dataSource(dataSource)
             .statement("INSERT INTO ORDERS VALUES(1, 'requestTag', 'conversationId', 'creation_date', 'Migrate')")
             .statement("INSERT INTO ORDERS VALUES(2, 'requestTag', 'conversationId', 'creation_date', NULL)"));
 
-        run(query(dataSource)
+        run(query().dataSource(dataSource)
             .statement("SELECT REQUEST_TAG AS RTAG, DESCRIPTION AS DESC FROM ORDERS")
             .validateScript("""
                     assert rows.size() == ${rowsCount}

@@ -25,8 +25,6 @@ import org.citrusframework.actions.SleepAction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.SleepAction.Builder.sleep;
-
 public class SleepTestActionBuilderTest extends UnitTestSupport {
 
     @Test

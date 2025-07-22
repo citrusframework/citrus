@@ -16,8 +16,6 @@
 
 package org.citrusframework.groovy.dsl
 
-import static org.citrusframework.actions.SleepAction.Builder.delay
-
 name "DelayTest"
 author "Christoph"
 status "FINAL"

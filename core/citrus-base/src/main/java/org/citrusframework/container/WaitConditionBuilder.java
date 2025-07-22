@@ -24,7 +24,8 @@ import org.citrusframework.condition.Condition;
 /**
  * @since 2.4
  */
-public abstract class WaitConditionBuilder<T extends Condition, S extends WaitConditionBuilder<T, S>> implements TestActionBuilder<Wait> {
+public abstract class WaitConditionBuilder<T extends Condition, S extends WaitConditionBuilder<T, S>>
+        implements TestActionBuilder<Wait>, WaitContainerBuilder.ConditionBuilder<Wait, T, S> {
 
     /** Parent wait action builder */
     private final Wait.Builder<T> builder;
@@ -46,41 +47,37 @@ public abstract class WaitConditionBuilder<T extends Condition, S extends WaitCo
         return builder.build();
     }
 
-    /**
-     * The interval in milliseconds to use between each test of the condition
-     * @param interval The interval to use
-     * @return The altered WaitBuilder
-     */
+    @Override
     public S interval(Long interval) {
         builder.interval(interval);
         return self;
     }
 
-    /**
-     * The interval in milliseconds to use between each test of the condition
-     * @param interval The interval to use
-     * @return The altered WaitBuilder
-     */
+    @Override
     public S interval(String interval) {
         builder.interval(interval);
         return self;
     }
 
+    @Override
     public S milliseconds(long milliseconds) {
         builder.milliseconds(milliseconds);
         return self;
     }
 
+    @Override
     public S milliseconds(String milliseconds) {
         builder.milliseconds(milliseconds);
         return self;
     }
 
+    @Override
     public S seconds(double seconds) {
         builder.seconds(seconds);
         return self;
     }
 
+    @Override
     public S time(Duration duration) {
         builder.time(duration);
         return self;

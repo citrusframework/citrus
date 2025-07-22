@@ -22,6 +22,7 @@ import org.citrusframework.DefaultTestCase;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestBehavior;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
@@ -31,12 +32,6 @@ import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.Sequence;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static org.citrusframework.actions.ApplyTestBehaviorAction.Builder.apply;
-import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariables;
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.container.FinallySequence.Builder.doFinally;
-import static org.citrusframework.container.Sequence.Builder.sequential;
 
 /**
  * @since 2.3
@@ -276,7 +271,7 @@ public class ApplyTestBehaviorTest extends UnitTestSupport {
         Assert.assertEquals(((EchoAction)test.getActions().get(4)).getMessage(), "fooBehavior");
     }
 
-    private static class FooBehavior implements TestBehavior {
+    private static class FooBehavior implements TestBehavior, TestActionSupport {
         public void apply(TestActionRunner runner) {
             runner.run(createVariables().variable("foo", "test"));
 
@@ -284,7 +279,7 @@ public class ApplyTestBehaviorTest extends UnitTestSupport {
         }
     }
 
-    private static class BarBehavior implements TestBehavior {
+    private static class BarBehavior implements TestBehavior, TestActionSupport {
         public void apply(TestActionRunner runner) {
             runner.run(createVariables().variable("bar", "test"));
 

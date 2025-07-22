@@ -20,8 +20,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
 @Test
 public class EchoActionJavaIT extends TestNGCitrusSpringSupport {
 

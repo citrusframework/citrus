@@ -23,10 +23,6 @@ import org.citrusframework.container.Conditional;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariable;
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.container.Conditional.Builder.conditional;
-
 public class ConditionalTestActionBuilderTest extends UnitTestSupport {
     @Test
     public void testConditionalBuilder() {

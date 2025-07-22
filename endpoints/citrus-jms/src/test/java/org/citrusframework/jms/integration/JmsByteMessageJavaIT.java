@@ -25,8 +25,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.FileUtils;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.citrusframework.validation.interceptor.BinaryMessageProcessor.Builder.toBinary;
 
 @Test

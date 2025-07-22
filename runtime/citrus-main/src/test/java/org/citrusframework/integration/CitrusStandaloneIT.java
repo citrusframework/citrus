@@ -19,6 +19,7 @@ package org.citrusframework.integration;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusSpringContextProvider;
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.config.CitrusSpringConfig;
@@ -42,15 +43,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
-
 /**
  * @since 2.2
  */
 @ContextConfiguration(classes = { CitrusSpringConfig.class, CitrusStandaloneIT.Config.class } )
-public class CitrusStandaloneIT extends AbstractTestNGSpringContextTests {
+public class CitrusStandaloneIT extends AbstractTestNGSpringContextTests implements TestActionSupport {
 
     private Citrus citrus;
 

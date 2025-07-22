@@ -44,6 +44,7 @@ public class ActionsConfiguration implements ActionsBuilder {
     public void $actions(@DelegatesTo(ActionsConfiguration.class) Closure<?> callable) {
         this.actions(callable);
     }
+
     public void $finally(@DelegatesTo(FinallyActionsBuilder.class) Closure<?> callable) {
         this.doFinally(callable);
     }
@@ -68,7 +69,7 @@ public class ActionsConfiguration implements ActionsBuilder {
     }
 
     @Override
-    public <T extends TestAction> T $(TestActionBuilder<T> builder) {
-        return runner.run(builder);
+    public <T extends TestAction> void $(TestActionBuilder<T> builder) {
+        runner.run(builder);
     }
 }

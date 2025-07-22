@@ -28,7 +28,7 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.script.ScriptValidationContext;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -259,7 +259,7 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(validator.findValidationContext(validationContexts));
 
         validationContexts.clear();
-        validationContexts.add(new ScriptValidationContext(MessageType.PLAINTEXT.name()));
+        validationContexts.add(new DefaultScriptValidationContext(MessageType.PLAINTEXT.name()));
 
         Assert.assertNotNull(validator.findValidationContext(validationContexts));
     }

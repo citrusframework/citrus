@@ -161,42 +161,38 @@ public class Template extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractTemplateBuilder<Template, Builder> implements ReferenceResolverAware {
+    public static class Builder extends AbstractTemplateBuilder<Template, Builder>
+            implements ReferenceResolverAware, ApplyTemplateBuilder<Template, Builder> {
 
         private String filePath;
 
-        private TemplateLoader loader;
+        private TemplateLoader<?> loader;
 
         public static Builder applyTemplate() {
             return new Builder();
         }
 
+        public static Builder applyTemplate(String name) {
+            return applyTemplate().templateName(name);
+        }
+
+        @Override
         public Builder file(String filePath) {
             this.filePath = filePath;
             return this;
         }
 
-        public Builder loader(TemplateLoader loader) {
+        @Override
+        public Builder loader(TemplateLoader<Template> loader) {
             this.loader = loader;
             return this;
-        }
-
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param name
-         * @return
-         */
-        public static Builder applyTemplate(String name) {
-            Builder builder = new Builder();
-            builder.templateName(name);
-            return builder;
         }
 
         @Override
         public Template build() {
             if (filePath != null) {
                 if (loader == null) {
-                    Optional<TemplateLoader> resolved = TemplateLoader.lookup(FileUtils.getFileExtension(filePath));
+                    Optional<TemplateLoader<?>> resolved = TemplateLoader.lookup(FileUtils.getFileExtension(filePath));
                     if (resolved.isPresent()) {
                         loader = resolved.get();
                     } else {
@@ -205,7 +201,7 @@ public class Template extends AbstractTestAction {
                 }
 
                 loader.setReferenceResolver(referenceResolver);
-                Template local = loader.load(filePath);
+                Template local = (Template) loader.load(filePath);
 
                 SimpleReferenceResolver temporaryReferenceResolver = new SimpleReferenceResolver();
                 temporaryReferenceResolver.bind(local.getTemplateName(), local);

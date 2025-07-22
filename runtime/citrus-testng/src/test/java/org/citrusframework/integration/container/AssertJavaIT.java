@@ -25,9 +25,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.DefaultTestActionBuilder.action;
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.FailAction.Builder.fail;
-import static org.citrusframework.container.Assert.Builder.assertException;
 
 @Test
 public class AssertJavaIT extends TestNGCitrusSpringSupport {

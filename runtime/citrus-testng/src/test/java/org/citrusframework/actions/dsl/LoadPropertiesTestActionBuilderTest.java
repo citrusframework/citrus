@@ -23,8 +23,6 @@ import org.citrusframework.actions.LoadPropertiesAction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.LoadPropertiesAction.Builder.load;
-
 /**
  * @since 2.3
  */

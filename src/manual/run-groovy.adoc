@@ -30,8 +30,6 @@ The test logic itself is coded in a Groovy file like this:
 .my-test.groovy
 [source,groovy]
 ----
-import static org.citrusframework.actions.EchoAction.Builder.echo
-
 name "MyFirstGroovyTest"
 author "Christoph"
 status "FINAL"
@@ -298,8 +296,6 @@ Have a look at a first example:
 .echo-template.groovy
 [source,groovy]
 ----
-import static org.citrusframework.actions.EchoAction.Builder.echo
-
 name "echo"
 description "Sample template in Groovy"
 
@@ -321,8 +317,6 @@ The template is available for multiple tests that may apply the template as part
 .Apply templates
 [source,groovy]
 ----
-import static org.citrusframework.container.Template.Builder.applyTemplate
-
 name "ApplyTemplateTest"
 author "Christoph"
 status "FINAL"
@@ -345,8 +339,6 @@ If this is not the case you may also reference the file resource path when apply
 .Apply templates
 [source,groovy]
 ----
-import static org.citrusframework.container.Template.Builder.applyTemplate
-
 actions {
     $(applyTemplate().file("classpath:templates/groovy/echo-template.groovy"))
 }
@@ -365,8 +357,6 @@ Assume you have the following template:
 .sayHello template
 [source,groovy]
 ----
-import static org.citrusframework.actions.EchoAction.Builder.echo
-
 name "sayHello"
 description "Sample template in Groovy"
 
@@ -386,8 +376,6 @@ In case the test case already uses the template parameter as a value you do not 
 .Implicit template parameter
 [source,groovy]
 ----
-import static org.citrusframework.container.Template.Builder.applyTemplate
-
 name "SayHelloTemplateTest"
 description "Sample test in Groovy"
 
@@ -413,8 +401,6 @@ The test case may also explicitly set the template parameter when applying the t
 .Explicit template parameter
 [source,groovy]
 ----
-import static org.citrusframework.container.Template.Builder.applyTemplate
-
 name "SayHelloTemplateTest"
 description "Sample test in Groovy"
 
@@ -458,8 +444,6 @@ several times in a test, especially in combination with parallel containers (see
 .print template
 [source,groovy]
 ----
-import static org.citrusframework.actions.EchoAction.Builder.echo
-
 name "print"
 description "Sample template in Groovy"
 
@@ -513,8 +497,6 @@ See the *globalContext()* method that is set to *false* in this example:
 .print template
 [source,groovy]
 ----
-import static org.citrusframework.actions.EchoAction.Builder.echo
-
 name "print"
 description "Sample template in Groovy"
 

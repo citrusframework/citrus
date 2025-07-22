@@ -207,7 +207,8 @@ public class PurgeEndpointAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<PurgeEndpointAction, Builder> implements ReferenceResolverAware {
+    public static final class Builder extends AbstractTestActionBuilder<PurgeEndpointAction, Builder>
+            implements ReferenceResolverAware, PurgeEndpointActionBuilder<PurgeEndpointAction> {
 
         private final List<String> endpointNames = new ArrayList<>();
         private final List<Endpoint> endpoints = new ArrayList<>();
@@ -217,118 +218,73 @@ public class PurgeEndpointAction extends AbstractTestAction {
         private long receiveTimeout = 100;
         private long sleepTime = 350;
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder purge() {
             return new Builder();
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder purgeEndpoints() {
             return new Builder();
         }
 
-        /**
-         * Sets the messageSelector.
-         * @param messageSelector the messageSelector to set
-         */
+        @Override
         public Builder selector(String messageSelector) {
             this.messageSelector = messageSelector;
             return this;
         }
 
-        /**
-         * Sets the messageSelector.
-         * @param messageSelector the messageSelector to set
-         */
+        @Override
         public Builder selector(Map<String, Object> messageSelector) {
             this.messageSelectorMap = messageSelector;
             return this;
         }
 
-        /**
-         * Adds list of endpoint names to purge in this action.
-         * @param endpointNames the endpointNames to set
-         */
+        @Override
         public Builder endpointNames(List<String> endpointNames) {
             this.endpointNames.addAll(endpointNames);
             return this;
         }
 
-        /**
-         * Adds several endpoint names to the list of endpoints to purge in this action.
-         * @param endpointNames
-         * @return
-         */
+        @Override
         public Builder endpointNames(String... endpointNames) {
             return endpointNames(Arrays.asList(endpointNames));
         }
 
-        /**
-         * Adds a endpoint name to the list of endpoints to purge in this action.
-         * @param name
-         * @return
-         */
+        @Override
         public Builder endpoint(String name) {
             this.endpointNames.add(name);
             return this;
         }
 
-        /**
-         * Adds list of endpoints to purge in this action.
-         * @param endpoints the endpoints to set
-         */
+        @Override
         public Builder endpoints(List<Endpoint> endpoints) {
             this.endpoints.addAll(endpoints);
             return this;
         }
 
-        /**
-         * Sets several endpoints to purge in this action.
-         * @param endpoints
-         * @return
-         */
+        @Override
         public Builder endpoints(Endpoint... endpoints) {
             return endpoints(Arrays.asList(endpoints));
         }
 
-        /**
-         * Adds a endpoint to the list of endpoints to purge in this action.
-         * @param endpoint
-         * @return
-         */
+        @Override
         public Builder endpoint(Endpoint endpoint) {
             this.endpoints.add(endpoint);
             return this;
         }
 
-        /**
-         * Receive timeout for reading message from a destination.
-         * @param receiveTimeout the receiveTimeout to set
-         */
+        @Override
         public Builder timeout(long receiveTimeout) {
             this.receiveTimeout = receiveTimeout;
             return this;
         }
 
-        /**
-         * Sets the sleepTime.
-         * @param millis the sleepTime to set
-         */
+        @Override
         public Builder sleep(long millis) {
             this.sleepTime = millis;
             return this;
         }
 
-        /**
-         * Sets the bean reference resolver for using endpoint names.
-         * @param referenceResolver
-         */
+        @Override
         public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
             this.referenceResolver = referenceResolver;
             return this;

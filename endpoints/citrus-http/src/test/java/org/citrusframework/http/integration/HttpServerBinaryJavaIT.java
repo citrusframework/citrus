@@ -33,11 +33,6 @@ import org.apache.hc.core5.http.ContentType;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.StartServerAction.Builder.start;
-import static org.citrusframework.actions.StopServerAction.Builder.stop;
-import static org.citrusframework.container.FinallySequence.Builder.doFinally;
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
-
 @Test
 public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport {
 
@@ -84,14 +79,14 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
                 .send()
-                .response(HttpStatus.OK)
+                .response(HttpStatus.OK.value())
                 .message(new DefaultMessage(binaryDataLatin1))
                 .type(MessageType.BINARY)
                 .contentType(MEDIA_TYPE_APPLICATION_CUSTOM));
 
         then(http().client(httpClient)
                 .receive()
-                .response(HttpStatus.OK)
+                .response(HttpStatus.OK.value())
                 .message(new DefaultMessage(binaryDataLatin1))
                 .type(MessageType.BINARY)
                 .contentType(MEDIA_TYPE_APPLICATION_CUSTOM));
@@ -120,14 +115,14 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport {
 
         then(http().server("echoHttpServer")
                 .send()
-                .response(HttpStatus.OK)
+                .response(HttpStatus.OK.value())
                 .message(new DefaultMessage(binaryData))
                 .type(MessageType.BINARY)
                 .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType()));
 
         then(http().client("echoHttpClient")
                 .receive()
-                .response(HttpStatus.OK)
+                .response(HttpStatus.OK.value())
                 .message(new DefaultMessage(binaryData))
                 .type(MessageType.BINARY)
                 .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType()));

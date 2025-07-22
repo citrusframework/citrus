@@ -23,9 +23,6 @@ import org.citrusframework.container.Timer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.container.Timer.Builder.timer;
-
 /**
  * @since 2.5
  */

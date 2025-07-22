@@ -169,7 +169,8 @@ public class TransformAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<TransformAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<TransformAction, Builder>
+            implements TransformActionBuilder<TransformAction> {
 
         private String xmlData;
         private String xmlResourcePath;
@@ -187,66 +188,43 @@ public class TransformAction extends AbstractTestAction {
             return new Builder();
         }
 
-        /**
-         * Set the target variable for the result
-         * @param variable
-         */
+        @Override
         public Builder result(String variable) {
             this.targetVariable = variable;
             return this;
         }
 
-        /**
-         * Set the target variable for the result
-         * @param variable
-         */
+        @Override
         public Builder variable(String variable) {
             this.targetVariable = variable;
             return this;
         }
 
-        /**
-         * Set the XML document
-         * @param xmlData the xmlData to set
-         */
+        @Override
         public Builder source(String xmlData) {
             this.xmlData = xmlData;
             return this;
         }
 
-        /**
-         * Set the XML document as resource
-         * @param xmlResource the xmlResource to set
-         */
+        @Override
         public Builder source(Resource xmlResource) {
             return source(xmlResource, FileUtils.getDefaultCharset());
         }
 
-        /**
-         * Set the XML document as resource file path
-         * @param xmlResourcePath the xmlResource to set
-         */
+        @Override
         public Builder sourceFile(String xmlResourcePath) {
             this.xmlResourcePath = xmlResourcePath;
             return this;
         }
 
-        /**
-         * Set the XML document as resource file path
-         * @param xmlResourcePath the xmlResource to set
-         * @param charset
-         */
+        @Override
         public Builder sourceFile(String xmlResourcePath, String charset) {
             this.xmlResourcePath = xmlResourcePath;
             this.xmlResourceCharset = charset;
             return this;
         }
 
-        /**
-         * Set the XML document as resource
-         * @param xmlResource the xmlResource to set
-         * @param charset
-         */
+        @Override
         public Builder source(Resource xmlResource, Charset charset) {
             try {
                 this.xmlData = FileUtils.readToString(xmlResource, charset);
@@ -256,48 +234,31 @@ public class TransformAction extends AbstractTestAction {
             return this;
         }
 
-        /**
-         * Set the XSLT document
-         * @param xsltData the xsltData to set
-         */
+        @Override
         public Builder xslt(String xsltData) {
             this.xsltData = xsltData;
             return this;
         }
 
-        /**
-         * Set the XSLT document as resource
-         * @param xsltResource the xsltResource to set
-         */
+        @Override
         public Builder xslt(Resource xsltResource) {
             return xslt(xsltResource, FileUtils.getDefaultCharset());
         }
 
-        /**
-         * Set the XML document as resource file path
-         * @param xsltResourcePath the xmlResource to set
-         */
+        @Override
         public Builder xsltFile(String xsltResourcePath) {
             this.xsltResourcePath = xsltResourcePath;
             return this;
         }
 
-        /**
-         * Set the XML document as resource file path
-         * @param xsltResourcePath the xmlResource to set
-         * @param charset
-         */
+        @Override
         public Builder xsltFile(String xsltResourcePath, String charset) {
             this.xsltResourcePath = xsltResourcePath;
             this.xsltResourceCharset = charset;
             return this;
         }
 
-        /**
-         * Set the XSLT document as resource
-         * @param xsltResource the xsltResource to set
-         * @param charset
-         */
+        @Override
         public Builder xslt(Resource xsltResource, Charset charset) {
             try {
                 this.xsltData = FileUtils.readToString(xsltResource, charset);

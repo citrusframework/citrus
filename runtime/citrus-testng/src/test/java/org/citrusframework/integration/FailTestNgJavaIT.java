@@ -21,8 +21,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testng.TestNGCitrusSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
 public class FailTestNgJavaIT extends TestNGCitrusSupport {
 
     @Test(groups = "org.citrusframework.ShouldFailGroup", expectedExceptions = CitrusRuntimeException.class)

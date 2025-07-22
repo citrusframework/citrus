@@ -29,7 +29,6 @@ import org.citrusframework.testcontainers.integration.AbstractTestcontainersIT;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.container.FinallySequence.Builder.doFinally;
 import static org.citrusframework.testcontainers.actions.TestcontainersActionBuilder.testcontainers;
 
 public class StartLocalStackContainerIT extends AbstractTestcontainersIT {

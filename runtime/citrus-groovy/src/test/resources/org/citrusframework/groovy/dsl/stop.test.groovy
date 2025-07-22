@@ -16,8 +16,6 @@
 
 package org.citrusframework.groovy.dsl
 
-import static org.citrusframework.actions.StopServerAction.Builder.stop
-
 name "StopTest"
 author "Christoph"
 status "FINAL"

@@ -16,8 +16,6 @@
 
 package org.citrusframework.groovy.dsl
 
-import static org.citrusframework.actions.EchoAction.Builder.print
-
 name "PrintTest"
 author "Christoph"
 status "FINAL"

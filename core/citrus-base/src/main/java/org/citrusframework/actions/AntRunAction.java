@@ -234,7 +234,8 @@ public class AntRunAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<AntRunAction, Builder> implements ReferenceResolverAware {
+    public static final class Builder extends AbstractTestActionBuilder<AntRunAction, Builder>
+            implements ReferenceResolverAware, AntRunActionBuilder<AntRunAction> {
 
         private String buildFilePath;
         private String target;
@@ -256,77 +257,62 @@ public class AntRunAction extends AbstractTestAction {
             return builder;
         }
 
-        /**
-         * Sets the build file path.
-         * @param buildFilePath
-         * @return
-         */
+        @Override
         public Builder buildFilePath(String buildFilePath) {
             this.buildFilePath = buildFilePath;
             return this;
         }
 
-        /**
-         * Build target name to call.
-         * @param target
-         */
+        @Override
         public Builder target(String target) {
             this.target = target;
             return this;
         }
 
-        /**
-         * Multiple build target names to call.
-         * @param targets
-         */
-        public Builder targets(String ... targets) {
+        @Override
+        public Builder targets(String... targets) {
             this.targets = String.join(",", targets);
             return this;
         }
 
-        /**
-         * Adds a build property by name and value.
-         * @param name
-         * @param value
-         */
+        @Override
         public Builder property(String name, Object value) {
             this.properties.put(name, value);
             return this;
         }
 
-        /**
-         * Adds build properties.
-         * @param properties
-         */
+        @Override
         public Builder properties(Properties properties) {
             this.properties.putAll(properties);
             return this;
         }
 
-        /**
-         * Adds a build property file reference by file path.
-         * @param filePath
-         */
+        @Override
         public Builder propertyFile(String filePath) {
             this.propertyFilePath = filePath;
             return this;
         }
 
-        /**
-         * Adds custom build listener implementation.
-         * @param buildListener
-         */
-        public Builder listener(BuildListener buildListener) {
-            this.buildListener = buildListener;
+        @Override
+        public Builder listener(Object buildListener) {
+            if (buildListener instanceof BuildListener listener) {
+                this.buildListener = listener;
+            } else {
+                throw new CitrusRuntimeException("Invalid build listener type: " + buildListener.getClass().getName());
+            }
+
             return this;
         }
 
-        /**
-         * Adds custom build listener implementation.
-         * @param buildListener
-         */
+        @Override
         public Builder listenerName(String buildListener) {
             this.buildListenerName = buildListener;
+            return this;
+        }
+
+        @Override
+        public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
             return this;
         }
 

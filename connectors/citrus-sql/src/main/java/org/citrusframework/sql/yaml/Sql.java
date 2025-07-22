@@ -170,11 +170,18 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         AbstractDatabaseConnectingTestAction base = builder.build();
         sqlQueryBuilder.description(base.getDescription());
         sqlQueryBuilder.dataSource(base.getDataSource());
-        sqlQueryBuilder.jdbcTemplate(base.getJdbcTemplate());
+
+        if (base.getJdbcTemplate() != null) {
+            sqlQueryBuilder.jdbcTemplate(base.getJdbcTemplate());
+        }
+
         sqlQueryBuilder.sqlResource(base.getSqlResourcePath());
         sqlQueryBuilder.statements(base.getStatements());
 
-        sqlQueryBuilder.transactionManager(base.getTransactionManager());
+        if (base.getTransactionManager() != null) {
+            sqlQueryBuilder.transactionManager(base.getTransactionManager());
+        }
+
         sqlQueryBuilder.transactionTimeout(base.getTransactionTimeout());
         sqlQueryBuilder.transactionIsolationLevel(base.getTransactionIsolationLevel());
 

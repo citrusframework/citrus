@@ -23,18 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.citrusframework.Citrus;
-import org.citrusframework.CitrusContext;
-import org.citrusframework.CitrusSpringContext;
-import org.citrusframework.CitrusSpringContextProvider;
-import org.citrusframework.GherkinTestActionRunner;
-import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
-import org.citrusframework.TestBehavior;
-import org.citrusframework.TestCase;
-import org.citrusframework.TestCaseMetaInfo;
-import org.citrusframework.TestCaseRunner;
-import org.citrusframework.TestGroupAware;
+import org.citrusframework.*;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
@@ -68,7 +57,7 @@ import org.testng.annotations.Listeners;
 @Listeners( { TestNGCitrusSpringMethodInterceptor.class } )
 @ContextConfiguration(classes =  {CitrusSpringConfig.class})
 public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
-        implements GherkinTestActionRunner {
+        implements GherkinTestActionRunner, TestActionSupport {
 
     /** Citrus instance */
     protected Citrus citrus;
@@ -295,7 +284,12 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
     }
 
     @Override
-    public <T extends TestAction> T run(TestActionBuilder<T> builder) {
+    public TestActions actions() {
+        return new DefaultTestActions();
+    }
+
+    @Override
+    public <T extends TestAction> TestActionRunner run(TestActionBuilder<T> builder) {
         return delegate.run(builder);
     }
 

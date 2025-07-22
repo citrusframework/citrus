@@ -28,9 +28,8 @@ public class FinallyActionsBuilder extends GroovyObjectSupport implements Action
     private final FinallySequence.Builder builder = new FinallySequence.Builder();
 
     @Override
-    public <T extends TestAction> T $(TestActionBuilder<T> nested) {
+    public <T extends TestAction> void $(TestActionBuilder<T> nested) {
         builder.actions(nested);
-        return nested.build();
     }
 
     @Override

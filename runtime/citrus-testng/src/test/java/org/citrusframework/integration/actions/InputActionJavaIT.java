@@ -20,9 +20,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.actions.InputAction.Builder.input;
-
 @Test
 public class InputActionJavaIT extends TestNGCitrusSpringSupport {
 

@@ -23,7 +23,8 @@ import org.citrusframework.condition.FileCondition;
 /**
  * @since 2.4
  */
-public class WaitFileConditionBuilder extends WaitConditionBuilder<FileCondition, WaitFileConditionBuilder> {
+public class WaitFileConditionBuilder extends WaitConditionBuilder<FileCondition, WaitFileConditionBuilder>
+        implements WaitContainerBuilder.FileConditionBuilder<Wait, FileCondition, WaitFileConditionBuilder> {
 
     /**
      * Default constructor using fields.
@@ -33,21 +34,13 @@ public class WaitFileConditionBuilder extends WaitConditionBuilder<FileCondition
         super(builder);
     }
 
-    /**
-     * Wait for given file path.
-     * @param filePath
-     * @return
-     */
+    @Override
     public WaitFileConditionBuilder path(String filePath) {
         getCondition().setFilePath(filePath);
         return self;
     }
 
-    /**
-     * Wait for given file resource.
-     * @param file
-     * @return
-     */
+    @Override
     public WaitFileConditionBuilder resource(File file) {
         getCondition().setFile(file);
         return self;

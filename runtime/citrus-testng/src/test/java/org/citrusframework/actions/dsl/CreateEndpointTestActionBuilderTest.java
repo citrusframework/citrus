@@ -23,8 +23,6 @@ import org.citrusframework.actions.CreateEndpointAction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.CreateEndpointAction.Builder.createEndpoint;
-
 public class CreateEndpointTestActionBuilderTest extends UnitTestSupport {
 
     @Test

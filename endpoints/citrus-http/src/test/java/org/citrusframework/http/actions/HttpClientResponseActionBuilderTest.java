@@ -36,7 +36,7 @@ public class HttpClientResponseActionBuilderTest {
 
         new HttpClientResponseActionBuilder(messageBuilderMock, httpMessageMock)
                 .message()
-                .status(httpStatusCode); // Method under test
+                .status(httpStatusCode.value()); // Method under test
 
         verify(httpMessageMock).status(httpStatusCode);
     }

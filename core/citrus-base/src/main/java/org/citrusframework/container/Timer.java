@@ -190,7 +190,8 @@ public class Timer extends AbstractActionContainer implements StopTimer {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractTestContainerBuilder<Timer, Builder> {
+    public static class Builder extends AbstractTestContainerBuilder<Timer, Builder>
+            implements TimerContainerBuilder<Timer, Builder> {
 
         private long interval = 1000L;
         private long delay = 0L;
@@ -199,80 +200,47 @@ public class Timer extends AbstractActionContainer implements StopTimer {
         private boolean autoStop = true;
         private String timerId;
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder timer() {
             return new Builder();
         }
 
-        /**
-         * Initial delay in milliseconds before first timer event should fire.
-         *
-         * @param delay
-         */
+        @Override
         public Builder delay(long delay) {
             this.delay = delay;
             return this;
         }
 
-        /**
-         * Interval in milliseconds between each timer. As soon as the interval has elapsed the next timer event is fired.
-         *
-         * @param interval
-         */
+        @Override
         public Builder interval(long interval) {
             this.interval = interval;
             return this;
         }
 
-        /**
-         * The maximum number of times the timer event is fired. Once this maximum number has been reached the timer is
-         * stopped
-         *
-         * @param repeatCount
-         */
+        @Override
         public Builder repeatCount(int repeatCount) {
             this.repeatCount = repeatCount;
             return this;
         }
 
-        /**
-         * Fork the timer so that other actions can run in parallel to the nested timer actions
-         *
-         * @param fork
-         */
+        @Override
         public Builder fork(boolean fork) {
             this.fork = fork;
             return this;
         }
 
-        /**
-         * Automatically stop the timer when test is finished.
-         *
-         * @param autoStop
-         */
+        @Override
         public Builder autoStop(boolean autoStop) {
             this.autoStop = autoStop;
             return this;
         }
 
-        /**
-         * Set the timer's id. This is useful when referencing the timer from other test actions like stop-timer
-         *
-         * @param timerId a unique timer id within the test context
-         */
+        @Override
         public Builder id(String timerId) {
             this.timerId = timerId;
             return this;
         }
 
-        /**
-         * Set the timer's id. This is useful when referencing the timer from other test actions like stop-timer
-         *
-         * @param timerId a unique timer id within the test context
-         */
+        @Override
         public Builder timerId(String timerId) {
             this.timerId = timerId;
             return this;

@@ -16,8 +16,6 @@
 
 package org.citrusframework.groovy.dsl
 
-import static org.citrusframework.actions.CreateEndpointAction.Builder.createEndpoint
-
 name "CreateEndpointTest"
 author "Christoph"
 status "FINAL"

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import javax.sql.DataSource;
 
+import org.citrusframework.actions.sql.ExecutePlsqlActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
@@ -170,7 +171,8 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractDatabaseConnectingTestAction.Builder<ExecutePLSQLAction, Builder> {
+    public static final class Builder extends AbstractDatabaseConnectingTestAction.Builder<ExecutePLSQLAction, Builder>
+            implements ExecutePlsqlActionBuilder<ExecutePLSQLAction, Builder> {
 
         private boolean ignoreErrors = false;
         private String script;
@@ -185,28 +187,18 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
             return builder;
         }
 
-        /**
-         * Setter for inline script.
-         * @param script
-         */
+        @Override
         public Builder sqlScript(String script) {
             this.script = script;
             return this;
         }
 
-        /**
-         * Setter for external file resource containing the SQL statements to execute.
-         * @param sqlResource
-         */
+        @Override
         public Builder sqlResource(Resource sqlResource) {
             return sqlResource(sqlResource, FileUtils.getDefaultCharset());
         }
 
-        /**
-         * Setter for external file resource containing the SQL statements to execute.
-         * @param sqlResource
-         * @param charset
-         */
+        @Override
         public Builder sqlResource(Resource sqlResource, Charset charset) {
             try {
                 sqlScript(FileUtils.readToString(sqlResource, charset));
@@ -216,10 +208,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
             return this;
         }
 
-        /**
-         * Ignore errors during execution.
-         * @param ignoreErrors boolean flag to set
-         */
+        @Override
         public Builder ignoreErrors(boolean ignoreErrors) {
             this.ignoreErrors = ignoreErrors;
             return this;

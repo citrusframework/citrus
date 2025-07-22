@@ -56,7 +56,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
                 assert root.BookingId.text() == 'Bx1G987654321'\s
                 assert root.Text.text() == 'Hello TestFramework'""";
 
-        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+        ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
                 .script(validationScript)
                 .build();
@@ -75,7 +75,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
                 assert root.BookingId.text() == 'Bx1G987654321'\s
                 assert root.Text.text() == 'Hello ' + context.getVariable("user")""";
 
-        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+        ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
                 .script(validationScript)
                 .build();
@@ -91,7 +91,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
                 assert root.BookingId.text() == 'Bx1G987654321'\s
                 assert root.Text == 'Hello Citrus'"""; //should fail
 
-        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+        ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
                 .script(validationScript)
                 .build();
@@ -111,7 +111,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     @Test
     public void testEmptyValidationScript() {
         String validationScript = "";
-        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+        ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
                 .script(validationScript)
                 .build();
@@ -125,11 +125,11 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
         validationContexts.add(new XpathMessageValidationContext());
-        validationContexts.add(new ScriptValidationContext("scala"));
+        validationContexts.add(new DefaultScriptValidationContext("scala"));
 
         Assert.assertNull(validator.findValidationContext(validationContexts));
 
-        validationContexts.add(new ScriptValidationContext(ScriptTypes.GROOVY));
+        validationContexts.add(new DefaultScriptValidationContext(ScriptTypes.GROOVY));
 
         Assert.assertNotNull(validator.findValidationContext(validationContexts));
     }

@@ -30,8 +30,6 @@ import org.citrusframework.util.SocketUtils;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
-
 @Test
 public class HttpSecureConnectionJavaIT extends TestNGCitrusSpringSupport {
 
@@ -72,14 +70,14 @@ public class HttpSecureConnectionJavaIT extends TestNGCitrusSpringSupport {
 
         then(http().server(secureHttpServer)
                 .send()
-                .response(HttpStatus.OK)
+                .response(HttpStatus.OK.value())
                 .message()
                 .body("Hi from secured Http server")
                 .contentType("text/plain"));
 
         then(http().client(secureHttpClient)
                 .receive()
-                .response(HttpStatus.OK)
+                .response(HttpStatus.OK.value())
                 .message()
                 .body("Hi from secured Http server")
                 .contentType("text/plain"));

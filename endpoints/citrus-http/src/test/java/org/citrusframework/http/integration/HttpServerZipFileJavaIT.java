@@ -24,8 +24,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
-
 @Test
 public class HttpServerZipFileJavaIT extends TestNGCitrusSpringSupport {
 
@@ -54,14 +52,14 @@ public class HttpServerZipFileJavaIT extends TestNGCitrusSpringSupport {
 
         then(http().server("echoHttpServer")
                 .send()
-                .response(HttpStatus.OK)
+                .response(HttpStatus.OK.value())
                 .message(zipMessage)
                 .type(MessageType.BINARY)
                 .contentType(APPLICATION_ZIP_VALUE));
 
         then(http().client("echoHttpClient")
                 .receive()
-                .response(HttpStatus.OK)
+                .response(HttpStatus.OK.value())
                 .message(zipMessage)
                 .type(MessageType.BINARY)
                 .contentType(APPLICATION_ZIP_VALUE));

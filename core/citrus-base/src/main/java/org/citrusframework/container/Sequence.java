@@ -51,12 +51,9 @@ public class Sequence extends AbstractActionContainer {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractTestContainerBuilder<Sequence, Builder> {
+    public static class Builder extends AbstractTestContainerBuilder<Sequence, Builder>
+            implements SequentialContainerBuilder<Sequence, Builder> {
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder sequential() {
             return new Builder();
         }

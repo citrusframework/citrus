@@ -24,8 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ExecutePLSQLAction.Builder.plsql;
-
 @Test
 public class ExecutePLSQLJavaIT extends TestNGCitrusSpringSupport {
 
@@ -35,11 +33,11 @@ public class ExecutePLSQLJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void executePLSQLAction() {
-        run(plsql(dataSource)
+        run(plsql().dataSource(dataSource)
             .sqlResource("classpath:org/citrusframework/integration/actions/plsql.sql")
             .ignoreErrors(true));
 
-        run(plsql(dataSource)
+        run(plsql().dataSource(dataSource)
             .sqlScript("""
                     BEGIN
                     EXECUTE IMMEDIATE 'create or replace function test(v_id in number)

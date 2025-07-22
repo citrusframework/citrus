@@ -26,6 +26,7 @@ import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.actions.MessageBuilderFactory;
 import org.citrusframework.common.Named;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -52,7 +53,7 @@ import static org.citrusframework.util.FileUtils.getDefaultCharset;
 import static org.citrusframework.util.FileUtils.readToString;
 
 public abstract class MessageBuilderSupport<T extends TestAction, B extends MessageBuilderSupport.MessageActionBuilder<T, S, B>, S extends MessageBuilderSupport<T, B, S>>
-        implements TestActionBuilder<T>, ReferenceResolverAware {
+        implements TestActionBuilder<T>, ReferenceResolverAware, MessageBuilderFactory<T, S> {
     protected final S self;
 
     protected MessageBuilder messageBuilder = new DefaultMessageBuilder();
@@ -64,7 +65,7 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
     /**
      * Set to true, if explicitly set. Can be used to distinguish from CitrusSettings.DEFAULT_MESSAGE_TYPE
      */
-    private boolean isExplictMessageType = false;
+    private boolean isExplicitMessageType = false;
 
     protected DataDictionary<?> dataDictionary;
     protected String dataDictionaryName;
@@ -74,63 +75,39 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
         this.delegate = delegate;
     }
 
-    /**
-     * Build message from given message builder.
-     * @param messageBuilder
-     * @return The modified message action builder
-     */
+    @Override
     public S from(final MessageBuilder messageBuilder) {
         this.messageBuilder = messageBuilder;
         return self;
     }
 
-    /**
-     * Build message from given message template.
-     * @param controlMessage
-     * @return The modified message action builder
-     */
+    @Override
     public S from(final Message controlMessage) {
         this.messageBuilder = StaticMessageBuilder.withMessage(controlMessage);
         type(controlMessage.getType());
         return self;
     }
 
-    /**
-     * Sets a explicit message type for this message.
-     * @param messageType
-     * @return The modified message action builder
-     */
+    @Override
     public S type(final MessageType messageType) {
         type(messageType.name());
         return self;
     }
 
-    /**
-     * Sets an explicit message type for this message.
-     * @param messageType the type of the message indicates the content type (e.g. Xml, Json, binary).
-     * @return The modified message action builder
-     */
+    @Override
     public S type(final String messageType) {
         this.messageType = messageType;
-        isExplictMessageType = true;
+        isExplicitMessageType = true;
         return self;
     }
 
-    /**
-     * Sets the payload data on the message builder implementation.
-     * @param payloadBuilder
-     * @return The modified message action builder
-     */
+    @Override
     public S body(final MessagePayloadBuilder.Builder<?, ?> payloadBuilder) {
         body(payloadBuilder.build());
         return self;
     }
 
-    /**
-     * Sets the payload data on the message builder implementation.
-     * @param payloadBuilder
-     * @return The modified message action builder
-     */
+    @Override
     public S body(final MessagePayloadBuilder payloadBuilder) {
         if (messageBuilder instanceof WithPayloadBuilder withPayloadBuilder) {
             withPayloadBuilder.setPayloadBuilder(payloadBuilder);
@@ -140,31 +117,18 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
         return self;
     }
 
-    /**
-     * Adds message payload data to this builder.
-     * @param payload
-     * @return The modified message action builder
-     */
+    @Override
     public S body(final String payload) {
         body(new DefaultPayloadBuilder(payload));
         return self;
     }
 
-    /**
-     * Adds message payload resource to this builder.
-     * @param payloadResource
-     * @return The modified message action builder
-     */
+    @Override
     public S body(final Resource payloadResource) {
         return body(payloadResource, getDefaultCharset());
     }
 
-    /**
-     * Adds message payload resource to this builder.
-     * @param payloadResource
-     * @param charset
-     * @return The modified message action builder
-     */
+    @Override
     public S body(final Resource payloadResource, final Charset charset) {
         try {
             body(readToString(payloadResource, charset));
@@ -174,12 +138,7 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
         return self;
     }
 
-    /**
-     * Adds message header name value pair to this builder's message.
-     * @param name
-     * @param value
-     * @return The modified message action builder
-     */
+    @Override
     public S header(final String name, final Object value) {
         if (messageBuilder instanceof WithHeaderBuilder withHeaderBuilder) {
             withHeaderBuilder.addHeaderBuilder(new DefaultHeaderBuilder(singletonMap(name, value)));
@@ -189,11 +148,7 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
         return self;
     }
 
-    /**
-     * Adds message headers to this builder's message.
-     * @param headers
-     * @return The modified message action builder
-     */
+    @Override
     public S headers(final Map<String, Object> headers) {
         if (messageBuilder instanceof WithHeaderBuilder withHeaderBuilder) {
             withHeaderBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
@@ -203,24 +158,13 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
         return self;
     }
 
-    /**
-     * Adds message header data to this builder's message. Message header data is used in SOAP
-     * messages for instance as header XML fragment.
-     * @param data
-     * @return The modified message action builder
-     */
+    @Override
     public S header(final String data) {
         header(new DefaultHeaderDataBuilder(data));
         return self;
     }
 
-    /**
-     * Adds message header data builder to this builder's message. Message header data is used in
-     * SOAP messages as XML fragment for instance.
-     *
-     * @param headerDataBuilder
-     * @return The modified message action builder
-     */
+    @Override
     public S header(final MessageHeaderDataBuilder headerDataBuilder) {
         if (messageBuilder instanceof WithHeaderBuilder withHeaderBuilder) {
             withHeaderBuilder.addHeaderBuilder(headerDataBuilder);
@@ -230,23 +174,12 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
         return self;
     }
 
-    /**
-     * Adds message header data as file resource to this builder's message. Message header data is used in SOAP
-     * messages for instance as header XML fragment.
-     * @param resource
-     * @return The modified message action builder
-     */
+    @Override
     public S header(final Resource resource) {
         return header(resource, getDefaultCharset());
     }
 
-    /**
-     * Adds message header data as file resource to this builder's message. Message header data is used in SOAP
-     * messages for instance as header XML fragment.
-     * @param resource
-     * @param charset
-     * @return The modified message action builder
-     */
+    @Override
     public S header(final Resource resource, final Charset charset) {
         try {
             if (messageBuilder instanceof WithHeaderBuilder withHeaderBuilder) {
@@ -260,11 +193,7 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
         return self;
     }
 
-    /**
-     * Sets the message name.
-     * @param name
-     * @return The modified message action builder
-     */
+    @Override
     public S name(final String name) {
         if (messageBuilder instanceof Named named) {
             named.setName(name);
@@ -274,86 +203,50 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
         return self;
     }
 
-    /**
-     * Adds message processor on the message.
-     * @param processor
-     * @return The modified message action builder
-     */
+    @Override
     public S process(MessageProcessor processor) {
         delegate.process(processor);
         return self;
     }
 
-    /**
-     * Adds message processor on the message as fluent builder.
-     * @param builder
-     * @return The modified message action builder
-     */
+    @Override
     public S process(MessageProcessor.Builder<?, ?> builder) {
         return process(builder.build());
     }
 
-    /**
-     * Adds message processor on the message as fluent builder.
-     * @param adapter
-     * @return The modified message action builder
-     */
+    @Override
     public S process(MessageProcessorAdapter adapter) {
         return process(adapter.asProcessor());
     }
 
-    /**
-     * Adds variable extractor on the message.
-     * @param extractor
-     * @return
-     */
+    @Override
     public S extract(VariableExtractor extractor) {
         return process(extractor);
     }
 
-    /**
-     * Adds message processor on the message.
-     * @param adapter
-     * @return
-     */
+    @Override
     public S extract(VariableExtractorAdapter adapter) {
         return extract(adapter.asExtractor());
     }
 
-    /**
-     * Adds message processor on the message as fluent builder.
-     * @param builder
-     * @return
-     */
+    @Override
     public S extract(VariableExtractor.Builder<?, ?> builder) {
         return extract(builder.build());
     }
 
-    /**
-     * Sets explicit data dictionary for this action.
-     * @param dictionary
-     * @return The modified message action builder
-     */
+    @Override
     public S dictionary(final DataDictionary<?> dictionary) {
         this.dataDictionary = dictionary;
         return self;
     }
 
-    /**
-     * Sets explicit data dictionary by name.
-     * @param dictionaryName
-     * @return The modified message action builder
-     */
+    @Override
     public S dictionary(final String dictionaryName) {
         this.dataDictionaryName = dictionaryName;
         return self;
     }
 
-    /**
-     * Sets the bean reference resolver.
-     *
-     * @param referenceResolver
-     */
+    @Override
     public S withReferenceResolver(final ReferenceResolver referenceResolver) {
         delegate.withReferenceResolver(referenceResolver);
         return self;
@@ -388,8 +281,8 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
     /**
      * @return true if the messageType has been explicitly set (to distinguish from default)
      */
-    public boolean isExplictMessageType() {
-        return isExplictMessageType;
+    public boolean isExplicitMessageType() {
+        return isExplicitMessageType;
     }
 
     /**

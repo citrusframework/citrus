@@ -65,7 +65,8 @@ public class EchoAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<EchoAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<EchoAction, Builder>
+            implements EchoActionBuilder<EchoAction> {
 
         private String message;
 
@@ -96,11 +97,10 @@ public class EchoAction extends AbstractTestAction {
          * Fluent API action building entry method used in Java DSL.
          */
         public static Builder print(String message) {
-            Builder builder = new Builder();
-            builder.message(message);
-            return builder;
+            return echo(message);
         }
 
+        @Override
         public Builder message(String message) {
             this.message = message;
             return this;

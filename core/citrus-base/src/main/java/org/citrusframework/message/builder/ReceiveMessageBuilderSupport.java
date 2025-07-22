@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.ReceiveMessageBuilderFactory;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.validation.HeaderValidator;
 import org.citrusframework.validation.MessageValidator;
@@ -31,7 +32,7 @@ import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 
 public class ReceiveMessageBuilderSupport<T extends ReceiveMessageAction, B extends ReceiveMessageAction.ReceiveMessageActionBuilder<T, S, B>, S extends ReceiveMessageBuilderSupport<T, B, S>>
-        extends MessageBuilderSupport<T, B, S> {
+        extends MessageBuilderSupport<T, B, S> implements ReceiveMessageBuilderFactory<T, S> {
 
     private final List<MessageProcessor> controlMessageProcessors = new ArrayList<>();
 
@@ -41,183 +42,103 @@ public class ReceiveMessageBuilderSupport<T extends ReceiveMessageAction, B exte
         super(delegate);
     }
 
-    /**
-     * Adds a custom timeout to this message receiving action.
-     *
-     * @param receiveTimeout
-     * @return The modified receive message action builder
-     */
+    @Override
     public S timeout(final long receiveTimeout) {
         delegate.timeout(receiveTimeout);
         return self;
     }
 
-    /**
-     * Validate header names with case insensitive keys.
-     *
-     * @param value
-     * @return The modified receive message action builder
-     */
+    @Override
     public S headerNameIgnoreCase(final boolean value) {
         this.headerNameIgnoreCase = value;
         return self;
     }
 
-    /**
-     * Adds a validation context.
-     * @param validationContext
-     * @return The modified receive message action builder
-     */
+    @Override
     public S validate(final ValidationContext.Builder<?, ?> validationContext) {
         delegate.validate(validationContext);
         return self;
     }
 
-    /**
-     * Adds a validation context.
-     * @param validationContext
-     * @return The modified receive message action builder
-     */
+    @Override
     public S validate(final ValidationContext validationContext) {
         return validate((ValidationContext.Builder) () -> validationContext);
     }
 
-    /**
-     * Adds a validation context.
-     * @param adapter
-     * @return The modified receive message action builder
-     */
+    @Override
     public S validate(final ValidationContextAdapter adapter) {
         return validate(adapter.asValidationContext());
     }
 
-    /**
-     * Sets validation contexts.
-     * @param validationContexts
-     * @return The modified receive message action builder
-     */
+    @Override
     public S validate(final List<ValidationContext.Builder<?, ?>> validationContexts) {
         delegate.validate(validationContexts);
         return self;
     }
 
-    /**
-     * Sets validation contexts.
-     * @param validationContexts
-     * @return The modified receive message action builder
-     */
-    public S validate(ValidationContext.Builder<?, ?> ... validationContexts) {
+    @Override
+    public S validate(ValidationContext.Builder<?, ?>... validationContexts) {
         return validate(Arrays.asList(validationContexts));
     }
 
-    /**
-     * Sets message selector string.
-     *
-     * @param messageSelector
-     * @return The modified receive message action builder
-     */
+    @Override
     public S selector(final String messageSelector) {
         delegate.selector(messageSelector);
         return self;
     }
 
-    /**
-     * Sets message selector elements.
-     *
-     * @param messageSelector
-     * @return The modified receive message action builder
-     */
+    @Override
     public S selector(final Map<String, String> messageSelector) {
         delegate.selector(messageSelector);
         return self;
     }
 
-    /**
-     * Sets explicit message validators for this receive action.
-     *
-     * @param validator
-     * @return The modified receive message action builder
-     */
+    @Override
     public S validator(final MessageValidator<? extends ValidationContext> validator) {
         delegate.validator(validator);
         return self;
     }
 
-    /**
-     * Sets explicit message validators for this receive action.
-     *
-     * @param validators
-     * @return The modified receive message action builder
-     */
+    @Override
     @SafeVarargs
     public final S validators(final MessageValidator<? extends ValidationContext>... validators) {
         return validators(Arrays.asList(validators));
     }
 
-    /**
-     * Sets explicit message validator names for this receive action.
-     *
-     * @param validators
-     * @return The modified receive message action builder
-     */
+    @Override
     public final S validators(final String... validators) {
         delegate.validators(validators);
         return self;
     }
 
-    /**
-     * Sets explicit header validators for this receive action.
-     *
-     * @param validators
-     * @return The modified receive message action builder
-     */
+    @Override
     public final S validators(final HeaderValidator... validators) {
         delegate.validators(validators);
         return self;
     }
 
-    /**
-     * Sets explicit message validators for this receive action.
-     *
-     * @param validators
-     * @return The modified receive message action builder
-     */
+    @Override
     public S validators(final List<MessageValidator<? extends ValidationContext>> validators) {
         delegate.validators(validators);
         return self;
     }
 
-    /**
-     * Sets explicit message validator by name.
-     *
-     * @param validatorName
-     * @return The modified receive message action builder
-     */
+    @Override
     public S validator(final String validatorName) {
         delegate.validator(validatorName);
         return self;
     }
 
-    /**
-     * Sets explicit header validator for this receive action.
-     *
-     * @param validator
-     * @return The modified receive message action builder
-     */
+    @Override
     public S validator(final HeaderValidator validator) {
         delegate.validator(validator);
         return self;
     }
 
-    /**
-     * Adds validation processor to the receive action for validating
-     * the received message with Java code.
-     *
-     * @param processor
-     * @return The modified receive message action builder
-     */
-    public B validate(final ValidationProcessor processor) {
-        return delegate.validate(processor);
+    @Override
+    public S validate(final ValidationProcessor processor) {
+        delegate.validate(processor);
+        return self;
     }
 
     @Override

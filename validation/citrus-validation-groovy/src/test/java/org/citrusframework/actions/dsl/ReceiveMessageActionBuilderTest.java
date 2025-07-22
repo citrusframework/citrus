@@ -37,14 +37,14 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.GroovyJsonMessageValidator;
-import org.citrusframework.validation.script.ScriptValidationContext;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.validation.script.ScriptValidationContext.Builder.groovy;
+import static org.citrusframework.validation.script.DefaultScriptValidationContext.Builder.groovy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
@@ -96,11 +96,11 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getValidationContexts().size(), 2L);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(ScriptValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultScriptValidationContext.class::isInstance));
 
-        ScriptValidationContext validationContext = action.getValidationContexts().stream()
-                .filter(ScriptValidationContext.class::isInstance).findFirst()
-                .map(ScriptValidationContext.class::cast)
+        DefaultScriptValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(DefaultScriptValidationContext.class::isInstance).findFirst()
+                .map(DefaultScriptValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
@@ -148,11 +148,11 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getValidationContexts().size(), 2L);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(ScriptValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultScriptValidationContext.class::isInstance));
 
-        ScriptValidationContext validationContext = action.getValidationContexts().stream()
-                .filter(ScriptValidationContext.class::isInstance).findFirst()
-                .map(ScriptValidationContext.class::cast)
+        DefaultScriptValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(DefaultScriptValidationContext.class::isInstance).findFirst()
+                .map(DefaultScriptValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
@@ -199,11 +199,11 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getValidationContexts().size(), 2L);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(ScriptValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultScriptValidationContext.class::isInstance));
 
-        ScriptValidationContext validationContext = action.getValidationContexts().stream()
-                .filter(ScriptValidationContext.class::isInstance).findFirst()
-                .map(ScriptValidationContext.class::cast)
+        DefaultScriptValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(DefaultScriptValidationContext.class::isInstance).findFirst()
+                .map(DefaultScriptValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
@@ -251,11 +251,11 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getValidationContexts().size(), 2L);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(ScriptValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultScriptValidationContext.class::isInstance));
 
-        ScriptValidationContext validationContext = action.getValidationContexts().stream()
-                .filter(ScriptValidationContext.class::isInstance).findFirst()
-                .map(ScriptValidationContext.class::cast)
+        DefaultScriptValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(DefaultScriptValidationContext.class::isInstance).findFirst()
+                .map(DefaultScriptValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);

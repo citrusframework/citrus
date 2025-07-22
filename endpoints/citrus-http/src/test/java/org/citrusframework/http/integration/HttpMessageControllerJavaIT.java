@@ -23,11 +23,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.container.Parallel.Builder.parallel;
-import static org.citrusframework.container.Sequence.Builder.sequential;
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
-
 @Test
 public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport {
 
@@ -61,7 +56,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport {
 
         then(http().client("httpClient")
             .receive()
-            .response(HttpStatus.OK)
+            .response(HttpStatus.OK.value())
             .timeout(2000L)
             .message()
             .version("HTTP/1.1"));
@@ -92,7 +87,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport {
 
         then(http().client("httpClient")
             .receive()
-            .response(HttpStatus.OK)
+            .response(HttpStatus.OK.value())
             .timeout(2000L)
             .message()
             .version("HTTP/1.1"));
@@ -130,7 +125,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport {
 
         then(http().client("httpClient")
             .receive()
-            .response(HttpStatus.OK)
+            .response(HttpStatus.OK.value())
             .timeout(2000L)
             .message()
             .version("HTTP/1.1"));
@@ -159,7 +154,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport {
 
         then(http().client("httpClient")
                 .receive()
-                .response(HttpStatus.OK)
+                .response(HttpStatus.OK.value())
                 .timeout(2000L)
                 .message()
                 .version("HTTP/1.1"));

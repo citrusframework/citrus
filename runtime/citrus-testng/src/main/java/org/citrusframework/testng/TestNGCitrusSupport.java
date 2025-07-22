@@ -24,9 +24,13 @@ import java.util.stream.Collectors;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
+import org.citrusframework.DefaultTestActions;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.TestActions;
 import org.citrusframework.TestBehavior;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.TestCaseRunner;
@@ -57,7 +61,7 @@ import org.testng.annotations.Listeners;
  *
  */
 @Listeners( { TestNGCitrusMethodInterceptor.class } )
-public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
+public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner, TestActionSupport {
 
     /** Citrus instance */
     protected Citrus citrus;
@@ -257,7 +261,12 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
     }
 
     @Override
-    public <T extends TestAction> T run(TestActionBuilder<T> builder) {
+    public TestActions actions() {
+        return new DefaultTestActions();
+    }
+
+    @Override
+    public <T extends TestAction> TestActionRunner run(TestActionBuilder<T> builder) {
         return delegate.run(builder);
     }
 

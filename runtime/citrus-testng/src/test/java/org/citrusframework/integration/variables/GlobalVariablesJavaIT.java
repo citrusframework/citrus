@@ -24,9 +24,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariable;
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
 /**
  * Tests the loading and usage of global variables in citrus
  */

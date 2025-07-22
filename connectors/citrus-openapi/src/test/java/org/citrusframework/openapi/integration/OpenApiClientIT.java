@@ -42,7 +42,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static java.util.Collections.singletonList;
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
 import static org.citrusframework.message.MessageType.JSON;
 import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi;
 import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
@@ -50,7 +49,6 @@ import static org.citrusframework.validation.json.JsonPathMessageValidationConte
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.fail;
 
 @Test
 @ContextConfiguration(classes = {Config.class})
@@ -86,7 +84,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
             .send()
-            .response(OK)
+            .response(OK.value())
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -117,7 +115,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
             .send()
-            .response(OK)
+            .response(OK.value())
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -165,7 +163,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
             .send()
-            .response(OK)
+            .response(OK.value())
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -200,7 +198,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
             .send()
-            .response(OK)
+            .response(OK.value())
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -237,7 +235,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
             .send()
-            .response(OK)
+            .response(OK.value())
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -287,7 +285,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
             .send()
-            .response(OK)
+            .response(OK.value())
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -326,7 +324,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
             .send()
-            .response(OK)
+            .response(OK.value())
             .message()
             .body(Resources.create(INVALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -359,7 +357,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
             .send()
-            .response(OK)
+            .response(OK.value())
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -400,7 +398,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
             .send()
-            .response(OK)
+            .response(OK.value())
             .message()
             .body(Resources.create(INVALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -408,18 +406,15 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
         // We can validate an OpenAPI response against a specific schema,
         // even without explicitly specifying the spec in the context.
         // By default, the OpenApiSpecification will be resolved by the schemaRepository name.
-        HttpClientResponseActionBuilder.HttpMessageBuilderSupport receiveGetPetById = http().client(
-                httpClient)
-            .receive()
-            .response(OK)
-            .message()
-            .type(JSON)
-            .validate(openApi()
-                .schemaValidation(true)
-                .schemaRepository("petstore-v3.json")
-                .schema("getPetById"));
-
-        assertThrows(TestCaseFailedException.class, () -> then(receiveGetPetById));
+        assertThrows(TestCaseFailedException.class, () -> then(http().client(httpClient)
+                .receive()
+                .response(OK.value())
+                .message()
+                .type(JSON)
+                .validate(openApi()
+                        .schemaValidation(true)
+                        .schemaRepository("petstore-v3.json")
+                        .schema("getPetById"))));
 
     }
 
@@ -444,7 +439,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
             .send()
-            .response(OK)
+            .response(OK.value())
             .message()
             .body(Resources.create(INVALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -487,7 +482,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
             .send()
-            .response(HttpStatus.CREATED)
+            .response(HttpStatus.CREATED.value())
             .message());
 
         then(openapi("petstore-v3")
@@ -571,7 +566,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
             .send()
-            .response(OK)
+            .response(OK.value())
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));

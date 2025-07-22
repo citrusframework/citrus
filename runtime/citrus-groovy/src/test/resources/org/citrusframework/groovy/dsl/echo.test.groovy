@@ -16,8 +16,6 @@
 
 package org.citrusframework.groovy.dsl
 
-import static org.citrusframework.actions.EchoAction.Builder.echo
-
 name "EchoTest"
 author "Christoph"
 status "FINAL"

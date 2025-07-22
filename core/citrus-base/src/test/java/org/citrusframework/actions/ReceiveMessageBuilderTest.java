@@ -45,6 +45,7 @@ import org.citrusframework.validation.builder.StaticMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.xml.XpathMessageValidationContext;
@@ -357,15 +358,16 @@ public class ReceiveMessageBuilderTest {
 		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		builder.validate(new ScriptValidationContext.Builder()
+		builder.validate(new DefaultScriptValidationContext.Builder()
 				.script(validationScript)
 				.build());
 
 		//THEN
-		final ScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
+		final DefaultScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
 				.filter(ScriptValidationContext.class::isInstance)
 				.map(ScriptValidationContext.class::cast)
 				.findFirst()
+				.map(it -> (DefaultScriptValidationContext) it)
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals(scriptValidationContext.getValidationScript(), "validation.txt");
 	}
@@ -382,15 +384,16 @@ public class ReceiveMessageBuilderTest {
 		when(resource.getLocation()).thenReturn("dummy.groovy");
 		when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("assert message == 'Hello'".getBytes(StandardCharsets.UTF_8)));
 
-		builder.validate(new ScriptValidationContext.Builder()
+		builder.validate(new DefaultScriptValidationContext.Builder()
 				.script(resource)
 				.build());
 
 		//THEN
-		final ScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
+		final DefaultScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
 				.filter(ScriptValidationContext.class::isInstance)
 				.map(ScriptValidationContext.class::cast)
 				.findFirst()
+				.map(it -> (DefaultScriptValidationContext) it)
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals(scriptValidationContext.getValidationScript(), "assert message == 'Hello'");
 	}
@@ -407,15 +410,16 @@ public class ReceiveMessageBuilderTest {
 		when(resource.getLocation()).thenReturn("dummy.groovy");
 		when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("assert message == 'Hello'".getBytes(StandardCharsets.UTF_8)));
 
-		builder.validate(new ScriptValidationContext.Builder()
+		builder.validate(new DefaultScriptValidationContext.Builder()
 				.script(resource, Charset.defaultCharset())
 				.build());
 
 		//THEN
-		final ScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
+		final DefaultScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
 				.filter(ScriptValidationContext.class::isInstance)
 				.map(ScriptValidationContext.class::cast)
 				.findFirst()
+				.map(it -> (DefaultScriptValidationContext) it)
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals(scriptValidationContext.getValidationScript(), "assert message == 'Hello'");
 	}
@@ -429,15 +433,16 @@ public class ReceiveMessageBuilderTest {
 		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		builder.validate(new ScriptValidationContext.Builder()
+		builder.validate(new DefaultScriptValidationContext.Builder()
 				.scriptResource(validationScript)
 				.build());
 
 		//THEN
-		final ScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
+		final DefaultScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
 				.filter(ScriptValidationContext.class::isInstance)
 				.map(ScriptValidationContext.class::cast)
 				.findFirst()
+				.map(it -> (DefaultScriptValidationContext) it)
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals(scriptValidationContext.getValidationScriptResourcePath(), "validation.txt");
 	}
@@ -451,15 +456,16 @@ public class ReceiveMessageBuilderTest {
 		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		builder.validate(new ScriptValidationContext.Builder()
+		builder.validate(new DefaultScriptValidationContext.Builder()
 				.scriptType(scriptType)
 				.build());
 
 		//THEN
-		final ScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
+		final DefaultScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
 				.filter(ScriptValidationContext.class::isInstance)
 				.map(ScriptValidationContext.class::cast)
 				.findFirst()
+				.map(it -> (DefaultScriptValidationContext) it)
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals(scriptValidationContext.getScriptType(), "bash");
 	}

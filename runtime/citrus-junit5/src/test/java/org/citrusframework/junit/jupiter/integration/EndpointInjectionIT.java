@@ -19,6 +19,7 @@ package org.citrusframework.junit.jupiter.integration;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
@@ -36,11 +37,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
-
 @CitrusSupport
-public class EndpointInjectionIT implements CitrusExtension.TestListener {
+public class EndpointInjectionIT implements CitrusExtension.TestListener, TestActionSupport {
 
     @CitrusFramework
     private Citrus citrus;

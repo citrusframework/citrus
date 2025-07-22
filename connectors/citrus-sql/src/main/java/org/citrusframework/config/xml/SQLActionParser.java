@@ -16,7 +16,6 @@
 
 package org.citrusframework.config.xml;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +26,7 @@ import org.citrusframework.actions.ExecuteSQLAction;
 import org.citrusframework.actions.ExecuteSQLQueryAction;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.util.StringUtils;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -159,7 +159,7 @@ public class SQLActionParser implements BeanDefinitionParser {
     private ScriptValidationContext getScriptValidationContext(Element scriptElement) {
         String type = scriptElement.getAttribute("type");
 
-        ScriptValidationContext.Builder validationContext = new ScriptValidationContext.Builder()
+        ScriptValidationContext.Builder<?, ?> validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(type);
         String filePath = scriptElement.getAttribute("file");
         if (StringUtils.hasText(filePath)) {
@@ -241,15 +241,7 @@ public class SQLActionParser implements BeanDefinitionParser {
          * @param scriptValidationContext the scriptValidationContext to set
          */
         public void setScriptValidationContext(ScriptValidationContext scriptValidationContext) {
-            if (scriptValidationContext.getValidationScript() != null) {
-                builder.validateScript(scriptValidationContext.getValidationScript(), scriptValidationContext.getScriptType());
-            }
-
-            if (scriptValidationContext.getValidationScriptResourcePath() != null) {
-                builder.validateScriptResource(scriptValidationContext.getValidationScriptResourcePath(),
-                        scriptValidationContext.getScriptType(),
-                        Charset.forName(scriptValidationContext.getValidationScriptResourceCharset()));
-            }
+            builder.validate(scriptValidationContext);
         }
 
         @Override

@@ -16,8 +16,6 @@
 
 package org.citrusframework.groovy.dsl
 
-import static org.citrusframework.actions.StartServerAction.Builder.start
-
 name "StartTest"
 author "Christoph"
 status "FINAL"

@@ -28,6 +28,7 @@ import org.citrusframework.container.SequenceBeforeTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.springintegration.SpringIntegrationSupport;
 import org.mockito.Mockito;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
@@ -36,7 +37,6 @@ import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.PurgeMessageChannelAction.Builder.purgeChannels;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 /**
  * @since 2.3
  */
-public class PurgeMessageChannelTestActionBuilderTest extends UnitTestSupport {
+public class PurgeMessageChannelTestActionBuilderTest extends UnitTestSupport implements SpringIntegrationSupport {
 
     private final MessageSelector messageSelector = Mockito.mock(MessageSelector.class);
     private final DestinationResolver channelResolver = Mockito.mock(DestinationResolver.class);

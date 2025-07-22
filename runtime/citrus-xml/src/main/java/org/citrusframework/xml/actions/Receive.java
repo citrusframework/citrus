@@ -37,6 +37,7 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.xml.actions.script.ScriptDefinitionType;
@@ -142,7 +143,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     }
 
     private void addScriptValidationContext() {
-        ScriptValidationContext.Builder context = null;
+        ScriptValidationContext.Builder<?, ?> context = null;
 
         for (Validate validateElement : getValidates()) {
             ScriptDefinitionType scriptElement = validateElement.getScript();
@@ -155,7 +156,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
                 }
 
                 String type = scriptElement.getType();
-                context = new ScriptValidationContext.Builder().scriptType(type);
+                context = new DefaultScriptValidationContext.Builder().scriptType(type);
 
                 String filePath = scriptElement.getFile();
                 if (StringUtils.hasText(filePath)) {

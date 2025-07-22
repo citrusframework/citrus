@@ -32,7 +32,7 @@ import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.json.report.GraciousProcessingReport;
 import org.citrusframework.validation.json.schema.JsonSchemaValidation;
-import org.citrusframework.validation.script.ScriptValidationContext;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -333,8 +333,8 @@ public class JsonTextMessageValidatorTest extends UnitTestSupport {
     public void shouldFindProperValidationContext() {
         List<ValidationContext> validationContexts = new ArrayList<>();
         validationContexts.add(new HeaderValidationContext());
-        validationContexts.add(new ScriptValidationContext(ScriptTypes.GROOVY));
-        validationContexts.add(new ScriptValidationContext("something"));
+        validationContexts.add(new DefaultScriptValidationContext(ScriptTypes.GROOVY));
+        validationContexts.add(new DefaultScriptValidationContext("something"));
         validationContexts.add(new JsonPathMessageValidationContext());
 
         assertThat(fixture.findValidationContext(validationContexts)).isNull();

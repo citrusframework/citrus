@@ -299,13 +299,13 @@ public class HelloServiceIT extends TestNGCitrusSpringSupport {
 
         then(http().server(httpServer)
                 .send()
-                .response(HttpStatus.OK)
+                .response(HttpStatus.OK.value())
                 .message()
                 .body("Hello from Citrus!"));
 
         then(http().client(httpClient)
                 .receive()
-                .response(HttpStatus.OK)
+                .response(HttpStatus.OK.value())
                 .message()
                 .body("Hello from Citrus!"));
 

@@ -23,8 +23,6 @@ import org.citrusframework.actions.EchoAction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
 /**
  * @since 2.3
  */

@@ -50,7 +50,7 @@ public class GroovyJsonMessageValidatorTest extends AbstractTestNGUnitTest {
                 assert json.person.pets[1] == 'cat'\s
                 """;
 
-        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+        ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
                 .script(validationScript)
                 .build();
@@ -58,7 +58,7 @@ public class GroovyJsonMessageValidatorTest extends AbstractTestNGUnitTest {
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
 
         validationScript += "assert json.person.age == 32";
-        validationContext = new ScriptValidationContext.Builder()
+        validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
                 .script(validationScript)
                 .build();
@@ -79,11 +79,11 @@ public class GroovyJsonMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContexts.add(new XmlMessageValidationContext());
         validationContexts.add(new XpathMessageValidationContext());
         validationContexts.add(new JsonMessageValidationContext());
-        validationContexts.add(new ScriptValidationContext("scala"));
+        validationContexts.add(new DefaultScriptValidationContext("scala"));
 
         Assert.assertNull(validator.findValidationContext(validationContexts));
 
-        validationContexts.add(new ScriptValidationContext(ScriptTypes.GROOVY));
+        validationContexts.add(new DefaultScriptValidationContext(ScriptTypes.GROOVY));
 
         Assert.assertNotNull(validator.findValidationContext(validationContexts));
     }

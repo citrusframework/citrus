@@ -26,7 +26,6 @@ import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.container.Assert.Builder.assertException;
 import static org.citrusframework.kubernetes.actions.KubernetesActionBuilder.kubernetes;
 
 public class KubernetesVerifyPodsIT extends AbstractKubernetesIT {

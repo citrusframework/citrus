@@ -38,7 +38,7 @@ import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.SchemaValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
-import org.citrusframework.validation.script.ScriptValidationContext;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.xml.schema.XmlSchemaValidation;
 import org.citrusframework.xml.XsdSchemaRepository;
 import org.citrusframework.xml.schema.XsdSchemaCollection;
@@ -1076,7 +1076,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
 
         validationContexts.clear();
         validationContexts.add(new JsonMessageValidationContext());
-        validationContexts.add(new ScriptValidationContext(MessageType.PLAINTEXT.name()));
+        validationContexts.add(new DefaultScriptValidationContext(MessageType.PLAINTEXT.name()));
 
         Assert.assertNull(validator.findValidationContext(validationContexts));
     }

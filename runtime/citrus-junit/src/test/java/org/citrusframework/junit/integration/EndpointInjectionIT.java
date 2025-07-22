@@ -32,9 +32,6 @@ import org.citrusframework.spi.BindToRegistry;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
-
 public class EndpointInjectionIT extends JUnit4CitrusSpringSupport {
 
     @CitrusFramework

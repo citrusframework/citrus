@@ -23,8 +23,6 @@ import org.citrusframework.actions.CreateVariablesAction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariable;
-
 public class CreateVariablesTestActionBuilderTest extends UnitTestSupport {
 
     @Test

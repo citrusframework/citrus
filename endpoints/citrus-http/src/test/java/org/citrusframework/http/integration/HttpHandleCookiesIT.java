@@ -28,8 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
-
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class HttpHandleCookiesIT extends TestNGCitrusSpringSupport {
 

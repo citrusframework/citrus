@@ -16,9 +16,6 @@
 
 package org.citrusframework.http.groovy
 
-import static org.citrusframework.actions.SleepAction.Builder.delay
-import static org.citrusframework.http.actions.HttpActionBuilder.http
-
 import static org.citrusframework.dsl.PathExpressionSupport.path
 
 name "HttpClientTest"

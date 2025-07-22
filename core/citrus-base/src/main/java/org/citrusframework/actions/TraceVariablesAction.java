@@ -78,53 +78,38 @@ public class TraceVariablesAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<TraceVariablesAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<TraceVariablesAction, Builder>
+            implements TraceVariablesActionBuilder<TraceVariablesAction> {
 
         private final List<String> variableNames = new ArrayList<>();
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder trace() {
             return new Builder();
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder traceVariables() {
             return new Builder();
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param variableNames
-         * @return
-         */
         public static Builder traceVariables(String... variableNames) {
             Builder builder = new Builder();
             builder.variables(variableNames);
             return builder;
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param variable
-         * @return
-         */
         public static Builder traceVariables(String variable) {
             Builder builder = new Builder();
             builder.variable(variable);
             return builder;
         }
 
+        @Override
         public Builder variable(String variable) {
             this.variableNames.add(variable);
             return this;
         }
 
+        @Override
         public Builder variables(String... variables) {
             Stream.of(variables).forEach(this::variable);
             return this;

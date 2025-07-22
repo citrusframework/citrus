@@ -92,29 +92,22 @@ public class LoadPropertiesAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<LoadPropertiesAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<LoadPropertiesAction, Builder>
+            implements LoadPropertiesActionBuilder<LoadPropertiesAction> {
 
         private String filePath;
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder load() {
             return new Builder();
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param filePath
-         * @return
-         */
         public static Builder load(String filePath) {
             Builder builder = new Builder();
             builder.filePath(filePath);
             return builder;
         }
 
+        @Override
         public Builder filePath(String filePath) {
             this.filePath = filePath;
             return this;

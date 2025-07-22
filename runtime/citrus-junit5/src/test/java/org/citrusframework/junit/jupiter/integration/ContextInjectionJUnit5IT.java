@@ -17,16 +17,15 @@
 package org.citrusframework.junit.jupiter.integration;
 
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
 @CitrusSupport
-public class ContextInjectionJUnit5IT {
+public class ContextInjectionJUnit5IT implements TestActionSupport {
 
     @CitrusResource
     private TestActionRunner runner;

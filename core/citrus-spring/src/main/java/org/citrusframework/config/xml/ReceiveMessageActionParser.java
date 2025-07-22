@@ -34,6 +34,7 @@ import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.variable.VariableExtractor;
@@ -296,7 +297,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
     private void addScriptValidationContext(Element messageElement, List<ValidationContext.Builder<?, ?>> validationContexts) {
         List<Element> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
         if (!validateElements.isEmpty()) {
-            ScriptValidationContext.Builder context = null;
+            ScriptValidationContext.Builder<?, ?> context = null;
 
             for (Element validateElement : validateElements) {
                 Element scriptElement = DomUtils.getChildElementByTagName(validateElement, "script");
@@ -309,7 +310,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                     }
 
                     String type = scriptElement.getAttribute("type");
-                    context = new ScriptValidationContext.Builder().scriptType(type);
+                    context = new DefaultScriptValidationContext.Builder().scriptType(type);
 
                     String filePath = scriptElement.getAttribute("file");
                     if (hasText(filePath)) {

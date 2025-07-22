@@ -1,9 +1,8 @@
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 
-import static org.citrusframework.actions.SleepAction.Builder.delay;
-
-public class DelayTest implements Runnable {
+public class DelayTest implements Runnable, TestActionSupport {
 
     @CitrusResource
     TestActionRunner t;

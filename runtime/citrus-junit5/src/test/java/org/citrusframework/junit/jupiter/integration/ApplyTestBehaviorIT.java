@@ -17,6 +17,7 @@
 package org.citrusframework.junit.jupiter.integration;
 
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestBehavior;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -24,12 +25,8 @@ import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.citrusframework.actions.ApplyTestBehaviorAction.Builder.apply;
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-import static org.citrusframework.container.Sequence.Builder.sequential;
-
 @ExtendWith(CitrusExtension.class)
-public class ApplyTestBehaviorIT {
+public class ApplyTestBehaviorIT implements TestActionSupport {
 
     @Test
     @CitrusTest
@@ -51,7 +48,7 @@ public class ApplyTestBehaviorIT {
                 ));
     }
 
-    private static class SayHelloBehavior implements TestBehavior {
+    private static class SayHelloBehavior implements TestBehavior, TestActionSupport {
         private final String greeting;
 
         public SayHelloBehavior() {

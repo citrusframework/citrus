@@ -33,7 +33,7 @@ public class StopTimeAction extends AbstractTestAction {
     public static final String DEFAULT_TIMELINE_ID = "CITRUS_TIMELINE";
     public static final String DEFAULT_TIMELINE_VALUE_SUFFIX = "_VALUE";
 
-    /** Current time line id */
+    /** Current timeline id */
     private final String id;
     private final String suffix;
 
@@ -94,36 +94,22 @@ public class StopTimeAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<StopTimeAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<StopTimeAction, Builder>
+            implements StopTimeActionBuilder<StopTimeAction> {
 
         private String id = DEFAULT_TIMELINE_ID;
         private String suffix = DEFAULT_TIMELINE_VALUE_SUFFIX;
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder stopTime() {
             return new Builder();
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param id
-         * @return
-         */
         public static Builder stopTime(String id) {
             Builder builder = new Builder();
             builder.id(id);
             return builder;
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param id
-         * @param suffix
-         * @return
-         */
         public static Builder stopTime(String id, String suffix) {
             Builder builder = new Builder();
             builder.id(id);
@@ -131,11 +117,13 @@ public class StopTimeAction extends AbstractTestAction {
             return builder;
         }
 
+        @Override
         public Builder id(String id) {
             this.id = id;
             return this;
         }
 
+        @Override
         public Builder suffix(String suffix) {
             this.suffix = suffix;
             return this;

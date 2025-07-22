@@ -21,10 +21,6 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.TestNGCitrusSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.actions.ReceiveTimeoutAction.Builder.receiveTimeout;
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
-
 /**
  * @since 2.3
  */

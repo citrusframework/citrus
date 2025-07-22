@@ -16,23 +16,23 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import jakarta.annotation.Nullable;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.citrusframework.actions.ReceiveMessageAction;
-import org.citrusframework.common.ShutdownPhase;
-import org.citrusframework.endpoint.AbstractEndpoint;
-import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelector;
-import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory;
-
 import java.time.Duration;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import jakarta.annotation.Nullable;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.citrusframework.DefaultTestActions;
+import org.citrusframework.actions.ReceiveMessageBuilderFactory;
+import org.citrusframework.common.ShutdownPhase;
+import org.citrusframework.endpoint.AbstractEndpoint;
+import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelector;
+import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory;
+
 import static java.lang.Boolean.TRUE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderEquals;
 import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
 import static org.citrusframework.util.StringUtils.hasText;
@@ -173,15 +173,15 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
         }
     }
 
-    public ReceiveMessageAction.ReceiveMessageActionBuilderSupport findKafkaEventHeaderEquals(Duration lookbackWindow, String key, String value) {
-        return receive(this)
+    public ReceiveMessageBuilderFactory<?, ?> findKafkaEventHeaderEquals(Duration lookbackWindow, String key, String value) {
+        return new DefaultTestActions().receive(this)
                 .selector(
                         KafkaMessageFilter.kafkaMessageFilter()
                                 .eventLookbackWindow(lookbackWindow)
                                 .kafkaMessageSelector(kafkaHeaderEquals(key, value))
                                 .build()
                 )
-                .getMessageBuilderSupport();
+                .message();
     }
 
     public static class SimpleKafkaEndpointBuilder {

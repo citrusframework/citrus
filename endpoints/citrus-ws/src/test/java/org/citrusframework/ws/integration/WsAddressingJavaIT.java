@@ -20,7 +20,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.citrusframework.ws.actions.AssertSoapFault.Builder.assertSoapFault;
 
 @Test

@@ -162,7 +162,7 @@ public void paralletTest() {
 
                     http().client(httpClient)
                             .receive()
-                            .response(HttpStatus.OK)
+                            .response(HttpStatus.OK.value())
                             .payload("{ \"info\": \"foo\"}")
                             .selector(
                                 Collections.singletonMap(
@@ -181,7 +181,7 @@ public void paralletTest() {
 
                     http().client(httpClient)
                          .receive()
-                         .response(HttpStatus.OK)
+                         .response(HttpStatus.OK.value())
                          .payload("{ \"info\": \"boo\"}")
                          .selector(
                             Collections.singletonMap(

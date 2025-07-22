@@ -28,16 +28,11 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.script.ScriptValidationContext;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 
 /**
  * @since 2.3
@@ -283,7 +278,7 @@ public class XpathMessageValidatorTest extends UnitTestSupport {
         List<ValidationContext> validationContexts = new ArrayList<>();
         validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
-        validationContexts.add(new ScriptValidationContext(MessageType.PLAINTEXT.name()));
+        validationContexts.add(new DefaultScriptValidationContext(MessageType.PLAINTEXT.name()));
 
         Assert.assertNull(validator.findValidationContext(validationContexts));
 

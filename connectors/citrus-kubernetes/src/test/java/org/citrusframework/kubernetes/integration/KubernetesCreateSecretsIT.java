@@ -30,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.container.FinallySequence.Builder.doFinally;
 import static org.citrusframework.kubernetes.actions.KubernetesActionBuilder.kubernetes;
 
 public class KubernetesCreateSecretsIT extends AbstractKubernetesIT {

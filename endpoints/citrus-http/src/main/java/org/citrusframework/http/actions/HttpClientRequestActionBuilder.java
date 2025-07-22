@@ -16,8 +16,13 @@
 
 package org.citrusframework.http.actions;
 
+import java.util.List;
+import java.util.Map;
+
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.actions.SendMessageAction;
+import org.citrusframework.actions.http.HttpSendRequestMessageBuilderFactory;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpMessageUtils;
@@ -31,7 +36,8 @@ import org.springframework.util.MultiValueMap;
  * @since 2.4
  */
 public class HttpClientRequestActionBuilder extends
-    SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {
+        SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder>
+        implements org.citrusframework.actions.http.HttpClientRequestActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport> {
 
     /**
      * Http message to send or receive
@@ -50,7 +56,7 @@ public class HttpClientRequestActionBuilder extends
      * Subclasses may use custom message builder and Http message.
      */
     protected HttpClientRequestActionBuilder(MessageBuilder messageBuilder,
-        HttpMessage httpMessage) {
+                                             HttpMessage httpMessage) {
         this.httpMessage = httpMessage;
         message(messageBuilder);
     }
@@ -67,9 +73,7 @@ public class HttpClientRequestActionBuilder extends
         return new HttpMessageBuilderSupport(httpMessage, this);
     }
 
-    /**
-     * Sets the request path.
-     */
+    @Override
     public HttpClientRequestActionBuilder path(String path) {
         httpMessage.path(path);
         return this;
@@ -83,41 +87,38 @@ public class HttpClientRequestActionBuilder extends
         return this;
     }
 
-    /**
-     * Set the endpoint URI for the request. This works only if the HTTP endpoint used doesn't
-     * provide an own endpoint URI resolver.
-     *
-     * @param uri absolute URI to use for the endpoint
-     * @return self
-     */
+    @Override
+    public HttpClientRequestActionBuilder method(String method) {
+        method(HttpMethod.valueOf(method));
+        return this;
+    }
+
+    @Override
     public HttpClientRequestActionBuilder uri(String uri) {
         httpMessage.uri(uri);
         return this;
     }
 
-    /**
-     * Adds a query param to the request uri.
-     */
+    @Override
     public HttpClientRequestActionBuilder queryParam(String name) {
         httpMessage.queryParam(name, null);
         return this;
     }
 
-    /**
-     * Adds a query param to the request uri.
-     */
+    @Override
     public HttpClientRequestActionBuilder queryParam(String name, String value) {
         httpMessage.queryParam(name, value);
         return this;
     }
 
     public static class HttpMessageBuilderSupport extends
-        SendMessageBuilderSupport<SendMessageAction, HttpClientRequestActionBuilder, HttpMessageBuilderSupport> {
+            SendMessageBuilderSupport<SendMessageAction, HttpClientRequestActionBuilder, HttpMessageBuilderSupport>
+            implements HttpSendRequestMessageBuilderFactory<SendMessageAction, HttpMessageBuilderSupport> {
 
         private final HttpMessage httpMessage;
 
         protected HttpMessageBuilderSupport(HttpMessage httpMessage,
-            HttpClientRequestActionBuilder delegate) {
+                                            HttpClientRequestActionBuilder delegate) {
             super(delegate);
             this.httpMessage = httpMessage;
         }
@@ -138,6 +139,12 @@ public class HttpClientRequestActionBuilder extends
         }
 
         @Override
+        public HttpMessageBuilderSupport body(Map<String, List<Object>> payload) {
+            body(MultiValueMap.fromMultiValue(payload));
+            return this;
+        }
+
+        @Override
         public HttpMessageBuilderSupport name(String name) {
             httpMessage.setName(name);
             return super.name(name);
@@ -153,59 +160,64 @@ public class HttpClientRequestActionBuilder extends
          * Sets the request method.
          */
         public HttpMessageBuilderSupport method(HttpMethod method) {
+            delegate.method(method.name());
+            return this;
+        }
+
+        @Override
+        public HttpMessageBuilderSupport method(String method) {
             delegate.method(method);
             return this;
         }
 
-        /**
-         * Set the endpoint URI for the request. This works only if the HTTP endpoint used doesn't
-         * provide an own endpoint URI resolver.
-         *
-         * @param uri absolute URI to use for the endpoint
-         * @return self
-         */
+        @Override
         public HttpMessageBuilderSupport uri(String uri) {
             delegate.uri(uri);
             return this;
         }
 
-        /**
-         * Adds a query param to the request uri.
-         */
+        @Override
         public HttpMessageBuilderSupport queryParam(String name) {
             delegate.queryParam(name, null);
             return this;
         }
 
-        /**
-         * Adds a query param to the request uri.
-         */
+        @Override
         public HttpMessageBuilderSupport queryParam(String name, String value) {
             delegate.queryParam(name, value);
             return this;
         }
 
-        /**
-         * Sets the http version.
-         */
+        @Override
         public HttpMessageBuilderSupport version(String version) {
             httpMessage.version(version);
             return this;
         }
 
-        /**
-         * Sets the request content type header.
-         */
+        @Override
         public HttpMessageBuilderSupport contentType(String contentType) {
             httpMessage.contentType(contentType);
             return this;
         }
 
-        /**
-         * Sets the request accept header.
-         */
+        @Override
         public HttpMessageBuilderSupport accept(String accept) {
             httpMessage.accept(accept);
+            return this;
+        }
+
+        @Override
+        public HttpMessageBuilderSupport cookie(Object o) {
+            if (o == null) {
+                return this;
+            }
+
+            if (o instanceof Cookie cookie) {
+                httpMessage.cookie(cookie);
+            } else {
+                throw new CitrusRuntimeException("Invalid cookie type: " + o.getClass());
+            }
+
             return this;
         }
 

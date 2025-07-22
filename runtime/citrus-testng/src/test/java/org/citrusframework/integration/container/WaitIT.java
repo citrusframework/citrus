@@ -36,7 +36,7 @@ public class WaitIT extends TestNGCitrusSpringSupport {
     private HttpServer server;
 
     @BeforeClass
-    public void startServer() throws IOException {
+    public void startHttpServer() throws IOException {
         server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
         server.createContext("/test", httpExchange -> httpExchange.sendResponseHeaders(200, 0));
         server.setExecutor(Executors.newSingleThreadExecutor());
@@ -44,7 +44,7 @@ public class WaitIT extends TestNGCitrusSpringSupport {
     }
 
     @AfterClass(alwaysRun = true)
-    public void stopServer() {
+    public void stopHttpServer() {
         if (server != null) {
             server.stop(0);
         }

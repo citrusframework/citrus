@@ -71,7 +71,8 @@ public class Catch extends AbstractActionContainer {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractExceptionContainerBuilder<Catch, Builder> {
+    public static class Builder extends AbstractExceptionContainerBuilder<Catch, Builder>
+            implements CatchContainerBuilder<Catch, Builder> {
 
         private String exception = CitrusRuntimeException.class.getName();
 
@@ -83,20 +84,13 @@ public class Catch extends AbstractActionContainer {
             return new Builder();
         }
 
-        /**
-         * Catch exception type during execution.
-         * @param exception
-         * @return
-         */
+        @Override
         public Builder exception(Class<? extends Throwable> exception) {
             this.exception = exception.getName();
             return this;
         }
 
-        /**
-         * Catch exception type during execution.
-         * @param type
-         */
+        @Override
         public Builder exception(String type) {
             this.exception = type;
             return this;

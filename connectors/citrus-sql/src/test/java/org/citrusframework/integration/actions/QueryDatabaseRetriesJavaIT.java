@@ -24,13 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ExecuteSQLAction.Builder.sql;
-import static org.citrusframework.actions.ExecuteSQLQueryAction.Builder.query;
-import static org.citrusframework.actions.SleepAction.Builder.sleep;
-import static org.citrusframework.container.Parallel.Builder.parallel;
-import static org.citrusframework.container.RepeatOnErrorUntilTrue.Builder.repeatOnError;
-import static org.citrusframework.container.Sequence.Builder.sequential;
-
 @Test
 public class QueryDatabaseRetriesJavaIT extends TestNGCitrusSpringSupport {
 
@@ -40,20 +33,20 @@ public class QueryDatabaseRetriesJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void sqlQueryRetries() {
-        run(sql(dataSource)
+        run(sql().dataSource(dataSource)
                 .sqlResource("classpath:org/citrusframework/integration/actions/script.sql"));
 
         run(parallel().actions(
             repeatOnError()
                 .autoSleep(500).index("i").until("i = 10")
-                .actions(query(dataSource)
+                .actions(query().dataSource(dataSource)
                     .statement("select COUNT(*) as customer_cnt from CUSTOMERS")
                     .validate("CUSTOMER_CNT", "0")
             ),
 
             sequential().actions(
                 sleep().milliseconds(2000),
-                sql(dataSource)
+                sql().dataSource(dataSource)
                     .statement("DELETE FROM CUSTOMERS")
             )
         ));

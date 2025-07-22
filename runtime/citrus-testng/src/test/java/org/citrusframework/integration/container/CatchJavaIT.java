@@ -21,9 +21,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.FailAction.Builder.fail;
-import static org.citrusframework.container.Catch.Builder.catchException;
-
 @Test
 public class CatchJavaIT extends TestNGCitrusSpringSupport {
 

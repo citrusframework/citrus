@@ -17,6 +17,7 @@
 package org.citrusframework.junit.jupiter.integration.spring;
 
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.config.CitrusSpringConfig;
@@ -39,12 +40,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.Assert;
 
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
-
 @CitrusSpringSupport
 @ContextConfiguration(classes = {CitrusSpringConfig.class, SpringBean_IT.EndpointConfig.class})
-class SpringBean_IT {
+class SpringBean_IT implements TestActionSupport {
 
     @Autowired
     private DirectEndpoint direct;

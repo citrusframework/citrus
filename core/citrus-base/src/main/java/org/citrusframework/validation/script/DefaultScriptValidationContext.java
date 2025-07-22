@@ -26,14 +26,12 @@ import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.context.DefaultValidationContext;
-import org.citrusframework.validation.context.ValidationContext;
 
 /**
  * Basic script validation context providing the validation code either from file resource or
  * from direct script string.
- *
  */
-public class ScriptValidationContext extends DefaultValidationContext {
+public class DefaultScriptValidationContext extends DefaultValidationContext implements ScriptValidationContext {
 
     /** Validation script as file resource path */
     private final String validationScriptResourcePath;
@@ -50,7 +48,7 @@ public class ScriptValidationContext extends DefaultValidationContext {
     /**
      * Default constructor.
      */
-    public ScriptValidationContext() {
+    public DefaultScriptValidationContext() {
         this(Builder.groovy());
     }
 
@@ -58,12 +56,12 @@ public class ScriptValidationContext extends DefaultValidationContext {
      * Constructor using type field.
      * @param scriptType
      */
-    public ScriptValidationContext(String scriptType) {
+    public DefaultScriptValidationContext(String scriptType) {
         this(new Builder()
                 .scriptType(scriptType));
     }
 
-    public ScriptValidationContext(Builder builder) {
+    public DefaultScriptValidationContext(Builder builder) {
         this.validationScript = builder.validationScript;
         this.validationScriptResourcePath = builder.validationScriptResourcePath;
         this.validationScriptResourceCharset = builder.validationScriptResourceCharset;
@@ -75,12 +73,7 @@ public class ScriptValidationContext extends DefaultValidationContext {
         return true;
     }
 
-    /**
-     * Constructs the actual validation script either from data or external resource.
-     * @param context the current TestContext.
-     * @return the validationScript
-     * @throws CitrusRuntimeException
-     */
+    @Override
     public String getValidationScript(TestContext context) {
         try {
             if (validationScriptResourcePath != null) {
@@ -99,7 +92,7 @@ public class ScriptValidationContext extends DefaultValidationContext {
     /**
      * Fluent builder
      */
-    public static final class Builder implements ValidationContext.Builder<ScriptValidationContext, Builder> {
+    public static final class Builder implements ScriptValidationContext.Builder<DefaultScriptValidationContext, Builder> {
 
         private String validationScriptResourcePath;
         private String validationScriptResourceCharset = CitrusSettings.CITRUS_FILE_ENCODING;
@@ -107,37 +100,21 @@ public class ScriptValidationContext extends DefaultValidationContext {
         private String scriptType = ScriptTypes.GROOVY;
 
         public static Builder groovy() {
-            return new Builder();
+            return new Builder().scriptType(ScriptTypes.GROOVY);
         }
 
-        /**
-         * Adds script validation.
-         *
-         * @param validationScript
-         * @return
-         */
+        @Override
         public Builder script(final String validationScript) {
             this.validationScript = validationScript;
             return this;
         }
 
-        /**
-         * Reads validation script file resource and sets content as validation script.
-         *
-         * @param scriptResource
-         * @return
-         */
+        @Override
         public Builder script(final Resource scriptResource) {
             return script(scriptResource, FileUtils.getDefaultCharset());
         }
 
-        /**
-         * Reads validation script file resource and sets content as validation script.
-         *
-         * @param scriptResource
-         * @param charset
-         * @return
-         */
+        @Override
         public Builder script(final Resource scriptResource, final Charset charset) {
             try {
                 script(FileUtils.readToString(scriptResource, charset));
@@ -148,49 +125,31 @@ public class ScriptValidationContext extends DefaultValidationContext {
             return this;
         }
 
-        /**
-         * Adds script validation file resource.
-         *
-         * @param fileResourcePath
-         * @return
-         */
+        @Override
         public Builder scriptResource(final String fileResourcePath) {
             this.validationScriptResourcePath = fileResourcePath;
             return this;
         }
 
-        /**
-         * Adds charset of script validation file resource.
-         *
-         * @param charsetName
-         * @return
-         */
+        @Override
         public Builder scriptResourceCharset(final String charsetName) {
             this.validationScriptResourceCharset = charsetName;
             return this;
         }
 
-        /**
-         * Adds custom validation script type.
-         *
-         * @param type
-         * @return
-         */
+        @Override
         public Builder scriptType(final String type) {
             this.scriptType = type;
             return this;
         }
 
         @Override
-        public ScriptValidationContext build() {
-            return new ScriptValidationContext(this);
+        public DefaultScriptValidationContext build() {
+            return new DefaultScriptValidationContext(this);
         }
     }
 
-    /**
-     * Gets the type of script used in this validation context.
-     * @return the scriptType
-     */
+    @Override
     public String getScriptType() {
         return scriptType;
     }

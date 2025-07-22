@@ -18,6 +18,7 @@ package org.citrusframework.message;
 
 import java.util.List;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestCaseRunnerFactory;
 import org.citrusframework.context.TestContext;
@@ -32,10 +33,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
-
-public class MessageStoreTest {
+public class MessageStoreTest implements TestActionSupport {
 
     private final DirectEndpoint directEndpoint = new DirectEndpointBuilder()
             .queue(new DefaultMessageQueue("foo"))

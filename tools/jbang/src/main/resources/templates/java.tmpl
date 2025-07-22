@@ -1,10 +1,9 @@
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 
-import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariables;
-import static org.citrusframework.actions.EchoAction.Builder.echo;
 
-public class {{ .Name }} implements Runnable {
+public class {{ .Name }} implements Runnable, TestActionSupport {
 
     @CitrusResource
     TestCaseRunner t;

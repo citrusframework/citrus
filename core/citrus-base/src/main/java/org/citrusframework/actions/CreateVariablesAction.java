@@ -83,7 +83,8 @@ public class CreateVariablesAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<CreateVariablesAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<CreateVariablesAction, Builder>
+            implements CreateVariablesActionBuilder<CreateVariablesAction> {
 
         private final Map<String, Object> variables = new LinkedHashMap<>();
 
@@ -97,6 +98,7 @@ public class CreateVariablesAction extends AbstractTestAction {
             return new Builder();
         }
 
+        @Override
         public Builder variable(String variableName, Object value) {
             this.variables.put(variableName, value);
             return this;

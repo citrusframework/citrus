@@ -18,16 +18,14 @@ package org.citrusframework.junit.jupiter.integration;
 
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Test;
 
-import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariable;
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
 @CitrusSupport
-public class EchoActionJUnit5JavaIT {
+public class EchoActionJUnit5JavaIT implements TestActionSupport {
 
     @Test
     @CitrusTest

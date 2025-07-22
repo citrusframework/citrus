@@ -21,7 +21,8 @@ import org.citrusframework.condition.MessageCondition;
 /**
  * @since 2.4
  */
-public class WaitMessageConditionBuilder extends WaitConditionBuilder<MessageCondition, WaitMessageConditionBuilder> {
+public class WaitMessageConditionBuilder extends WaitConditionBuilder<MessageCondition, WaitMessageConditionBuilder>
+        implements WaitContainerBuilder.MessageConditionBuilder<Wait, MessageCondition, WaitMessageConditionBuilder> {
 
     /**
      * Default constructor using fields.
@@ -31,6 +32,7 @@ public class WaitMessageConditionBuilder extends WaitConditionBuilder<MessageCon
         super(builder);
     }
 
+    @Override
     public WaitMessageConditionBuilder name(String messageName) {
         getCondition().setMessageName(messageName);
         return self;

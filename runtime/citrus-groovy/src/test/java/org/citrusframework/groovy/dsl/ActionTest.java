@@ -16,6 +16,7 @@
 
 package org.citrusframework.groovy.dsl;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.EchoAction;
@@ -23,9 +24,7 @@ import org.citrusframework.groovy.GroovyTestLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
-public class ActionTest extends AbstractGroovyActionDslTest {
+public class ActionTest extends AbstractGroovyActionDslTest implements TestActionSupport {
 
     @Test
     public void shouldLoadAction() {

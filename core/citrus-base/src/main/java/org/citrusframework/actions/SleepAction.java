@@ -96,7 +96,8 @@ public class SleepAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<SleepAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<SleepAction, Builder>
+            implements SleepActionBuilder<SleepAction> {
 
         private String time = "5000";
         private TimeUnit timeUnit = TimeUnit.MILLISECONDS;
@@ -109,37 +110,45 @@ public class SleepAction extends AbstractTestAction {
             return new Builder();
         }
 
+        @Override
         public Builder milliseconds(Integer milliseconds) {
             return time(String.valueOf(milliseconds), TimeUnit.MILLISECONDS);
         }
 
+        @Override
         public Builder milliseconds(Long milliseconds) {
             return time(String.valueOf(milliseconds), TimeUnit.MILLISECONDS);
         }
 
+        @Override
         public Builder milliseconds(String expression) {
             time(expression, TimeUnit.MILLISECONDS);
             return this;
         }
 
+        @Override
         public Builder seconds(Double seconds) {
             milliseconds(Math.round(seconds * 1000));
             return this;
         }
 
+        @Override
         public Builder seconds(Integer seconds) {
             return time(String.valueOf(seconds  * 1000L), TimeUnit.MILLISECONDS);
         }
 
+        @Override
         public Builder seconds(Long seconds) {
             return time(String.valueOf(seconds  * 1000L), TimeUnit.MILLISECONDS);
         }
 
+        @Override
         public Builder time(Duration duration) {
             milliseconds(duration.toMillis());
             return this;
         }
 
+        @Override
         public Builder time(String expression, TimeUnit timeUnit) {
             time = expression;
             this.timeUnit = timeUnit;

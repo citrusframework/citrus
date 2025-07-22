@@ -23,8 +23,6 @@ import org.citrusframework.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.citrusframework.actions.EchoAction.Builder.echo;
-
 /**
  * @since 2.5
  */

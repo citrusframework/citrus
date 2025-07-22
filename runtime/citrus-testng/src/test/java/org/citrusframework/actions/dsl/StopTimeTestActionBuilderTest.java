@@ -23,9 +23,6 @@ import org.citrusframework.actions.StopTimeAction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.SleepAction.Builder.sleep;
-import static org.citrusframework.actions.StopTimeAction.Builder.stopTime;
-
 public class StopTimeTestActionBuilderTest extends UnitTestSupport {
 
     @Test

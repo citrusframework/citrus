@@ -46,11 +46,9 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static java.util.Collections.singletonList;
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
 import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.fail;
 
 @Test
 @ContextConfiguration(classes = {Config.class})
@@ -95,7 +93,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         then(http()
             .client(httpClient)
             .receive()
-            .response(httpStatus)
+            .response(httpStatus.value())
             .message()
             .body("""
                         {
@@ -144,7 +142,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         then(http()
             .client(httpClient)
             .receive()
-            .response(httpStatus));
+            .response(httpStatus.value()));
     }
 
 
@@ -221,7 +219,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         then(http()
             .client(httpClient)
             .receive()
-            .response(HttpStatus.OK)
+            .response(HttpStatus.OK.value())
             .message()
             .body("""
                         {
@@ -387,7 +385,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         then(http()
             .client(httpClient)
             .receive()
-            .response(HttpStatus.CREATED));
+            .response(HttpStatus.CREATED.value()));
     }
 
     @CitrusTest
@@ -454,7 +452,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         then(http()
             .client(httpClient)
             .receive()
-            .response(HttpStatus.CREATED));
+            .response(HttpStatus.CREATED.value()));
     }
 
     @CitrusTest
@@ -508,7 +506,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
             then(http()
                 .client(httpClient)
                 .receive()
-                .response(HttpStatus.CREATED));
+                .response(HttpStatus.CREATED.value()));
 
         } else {
             assertThrows(() -> then(receiveActionBuilder));
@@ -555,7 +553,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         then(http()
             .client(httpClient)
             .receive()
-            .response(httpStatus)
+            .response(httpStatus.value())
             .message()
             .body("""
                         {

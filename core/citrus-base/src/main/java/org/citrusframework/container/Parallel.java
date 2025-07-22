@@ -117,12 +117,9 @@ public class Parallel extends AbstractActionContainer {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractTestContainerBuilder<Parallel, Builder> {
+    public static class Builder extends AbstractTestContainerBuilder<Parallel, Builder>
+            implements ParallelContainerBuilder<Parallel, Builder> {
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @return
-         */
         public static Builder parallel() {
             return new Builder();
         }

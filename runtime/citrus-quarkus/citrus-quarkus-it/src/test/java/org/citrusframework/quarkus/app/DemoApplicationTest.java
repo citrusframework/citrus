@@ -21,6 +21,7 @@ import java.util.Map;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.citrusframework.Citrus;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusFramework;
@@ -38,15 +39,12 @@ import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.junit.jupiter.api.Test;
 
-import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariables;
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
-import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
 @CitrusSupport(applicationPropertiesSupplier = DemoApplicationTest.class)
-public class DemoApplicationTest implements ApplicationPropertiesSupplier {
+public class DemoApplicationTest implements ApplicationPropertiesSupplier, TestActionSupport {
 
     @CitrusFramework
     private Citrus citrus;

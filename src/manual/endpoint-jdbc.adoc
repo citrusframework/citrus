@@ -137,7 +137,7 @@ public void testAddTodoEntry() {
     http()
         .client(todoClient)
         .receive()
-        .response(HttpStatus.FOUND);
+        .response(HttpStatus.FOUND.value());
 
     http()
         .client(todoClient)
@@ -161,7 +161,7 @@ public void testAddTodoEntry() {
     http()
         .client(todoClient)
         .receive()
-        .response(HttpStatus.OK)
+        .response(HttpStatus.OK.value())
         .messageType(MessageType.XHTML)
         .xpath("(//xh:li[@class='list-group-item']/xh:span)[last()]", "${todoName}");
 }

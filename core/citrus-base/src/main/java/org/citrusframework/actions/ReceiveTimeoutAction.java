@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Action expecting a timeout on a message destination, this means that no message
- * should arrive on the destination.
+ * should arrive at the destination.
  *
  * @since 2006
  */
@@ -156,7 +156,8 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<ReceiveTimeoutAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<ReceiveTimeoutAction, Builder>
+            implements ReceiveTimeoutActionBuilder<ReceiveTimeoutAction> {
 
         private long timeout = 1000L;
         private Endpoint endpoint;
@@ -168,88 +169,51 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
             return new Builder();
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param endpointUri
-         * @return
-         */
         public static Builder expectTimeout(String endpointUri) {
             return receiveTimeout(endpointUri);
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param endpoint
-         * @return
-         */
         public static Builder expectTimeout(Endpoint endpoint) {
             return receiveTimeout(endpoint);
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param endpointUri
-         * @return
-         */
         public static Builder receiveTimeout(String endpointUri) {
             Builder builder = new Builder();
             builder.endpoint(endpointUri);
             return builder;
         }
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         * @param endpoint
-         * @return
-         */
         public static Builder receiveTimeout(Endpoint endpoint) {
             Builder builder = new Builder();
             builder.endpoint(endpoint);
             return builder;
         }
 
-        /**
-         * Sets the message endpoint to receive a timeout with.
-         * @param messageEndpoint
-         * @return
-         */
+        @Override
         public Builder endpoint(Endpoint messageEndpoint) {
             this.endpoint = messageEndpoint;
             return this;
         }
 
-        /**
-         * Sets the message endpoint uri to receive a timeout with.
-         * @param messageEndpointUri
-         * @return
-         */
+        @Override
         public Builder endpoint(String messageEndpointUri) {
             this.endpointUri = messageEndpointUri;
             return this;
         }
 
-        /**
-         * Sets time to wait for messages on destination.
-         * @param timeout
-         */
+        @Override
         public Builder timeout(long timeout) {
             this.timeout = timeout;
             return this;
         }
 
-        /**
-         * Adds message selector string for selective consumer.
-         * @param messageSelector
-         */
+        @Override
         public Builder selector(String messageSelector) {
             this.messageSelector = messageSelector;
             return this;
         }
 
-        /**
-         * Sets the messageSelector.
-         * @param messageSelector the messageSelector to set
-         */
+        @Override
         public Builder selector(Map<String, Object> messageSelector) {
             this.messageSelectorMap = messageSelector;
             return this;

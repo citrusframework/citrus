@@ -428,7 +428,7 @@ public void connectServiceTest() {
     then(http()
         .client("my-service.client")
         .receive()
-        .response(HttpStatus.OK)
+        .response(HttpStatus.OK.value())
     );
 }
 ----

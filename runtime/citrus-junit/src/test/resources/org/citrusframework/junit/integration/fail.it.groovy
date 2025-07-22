@@ -16,6 +16,4 @@
 
 package org.citrusframework.junit.integration
 
-import static org.citrusframework.actions.FailAction.Builder.fail
-
 $(fail("Should fail"))

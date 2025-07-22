@@ -16,8 +16,6 @@
 
 package org.citrusframework.groovy.dsl
 
-import static org.citrusframework.actions.SleepAction.Builder.sleep
-
 name "SleepTest"
 author "Christoph"
 status "FINAL"

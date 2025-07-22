@@ -25,8 +25,6 @@ import org.citrusframework.actions.TraceVariablesAction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.TraceVariablesAction.Builder.traceVariables;
-
 public class TraceVariablesTestActionBuilderTest extends UnitTestSupport {
 
     @Test

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.context.TestContext;
@@ -39,7 +40,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.validation.json.JsonMessageValidationContext.Builder.json;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
@@ -49,7 +49,7 @@ import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport {
+public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
     private final Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
     private final Consumer messageConsumer = Mockito.mock(Consumer.class);

@@ -24,6 +24,7 @@ import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestActionRunner;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.context.StaticTestContextFactory;
@@ -89,8 +90,9 @@ public class AbstractYamlActionTest extends AbstractTestNGUnitTest {
         }
 
         @Override
-        public <T extends TestAction> T run(TestActionBuilder<T> builder) {
-            return builder.build();
+        public <T extends TestAction> TestActionRunner run(TestActionBuilder<T> builder) {
+            builder.build();
+            return this;
         }
     }
 

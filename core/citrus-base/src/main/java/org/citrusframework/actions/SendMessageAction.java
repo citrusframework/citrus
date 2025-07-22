@@ -404,17 +404,12 @@ public class SendMessageAction extends AbstractTestAction implements Completable
      * Base send message action builder also used by subclasses of base send message action.
      */
     public abstract static class SendMessageActionBuilder<T extends SendMessageAction, M extends SendMessageBuilderSupport<T, B, M>, B extends SendMessageActionBuilder<T, M, B>>
-        extends MessageBuilderSupport.MessageActionBuilder<T, M, B> {
+        extends MessageBuilderSupport.MessageActionBuilder<T, M, B> implements SendActionBuilder<T, M> {
 
         protected boolean forkMode = false;
         protected CompletableFuture<Void> finished;
 
-        /**
-         * Sets the fork mode for this send action builder.
-         *
-         * @param forkMode
-         * @return
-         */
+        @Override
         public B fork(boolean forkMode) {
             this.forkMode = forkMode;
             return self;

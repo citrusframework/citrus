@@ -33,16 +33,12 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.matcher.ValidationMatcher;
-import org.citrusframework.validation.script.ScriptValidationContext;
+import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.Matchers.*;
 
 /**
  * @since 2.3
@@ -307,9 +303,9 @@ public class JsonPathMessageValidatorTest extends UnitTestSupport {
         validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new JsonMessageValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
-        validationContexts.add(new ScriptValidationContext(MessageType.JSON.name()));
-        validationContexts.add(new ScriptValidationContext(MessageType.XML.name()));
-        validationContexts.add(new ScriptValidationContext(MessageType.PLAINTEXT.name()));
+        validationContexts.add(new DefaultScriptValidationContext(MessageType.JSON.name()));
+        validationContexts.add(new DefaultScriptValidationContext(MessageType.XML.name()));
+        validationContexts.add(new DefaultScriptValidationContext(MessageType.PLAINTEXT.name()));
 
         Assert.assertNull(validator.findValidationContext(validationContexts));
 

@@ -16,8 +16,6 @@
 
 package org.citrusframework.groovy.dsl
 
-import static org.citrusframework.actions.PurgeEndpointAction.Builder.purgeEndpoints
-
 name "PurgeEndpointTest"
 author "Christoph"
 status "FINAL"

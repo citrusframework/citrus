@@ -53,7 +53,8 @@ public class FailAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<FailAction, FailAction.Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<FailAction, FailAction.Builder>
+            implements FailActionBuilder<FailAction> {
 
         private String message = "Generated error to interrupt test execution";
 
@@ -76,6 +77,7 @@ public class FailAction extends AbstractTestAction {
             return builder;
         }
 
+        @Override
         public FailAction.Builder message(String message) {
             this.message = message;
             return this;
