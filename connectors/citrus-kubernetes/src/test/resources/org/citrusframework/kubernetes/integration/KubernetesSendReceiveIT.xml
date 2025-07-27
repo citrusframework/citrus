@@ -46,7 +46,7 @@
           <data>{
             "command": "info",
             "result": {
-                "clientVersion": "7.2.0",
+                "clientVersion": "7.3.1",
                 "apiVersion": "${apiVersion}",
                 "kind":"Info",
                 "masterUrl": "@matches('http://(kubernetes\\.docker\\.internal|localhost):[0-9]+/')@",

@@ -30,7 +30,12 @@ import org.citrusframework.mail.client.MailEndpointConfiguration;
 import org.citrusframework.mail.message.CitrusMailMessageHeaders;
 import org.citrusframework.mail.message.MailMessage;
 import org.citrusframework.mail.message.MailMessageConverter;
-import org.citrusframework.mail.model.*;
+import org.citrusframework.mail.model.AcceptResponse;
+import org.citrusframework.mail.model.AttachmentPart;
+import org.citrusframework.mail.model.BodyPart;
+import org.citrusframework.mail.model.MailMarshaller;
+import org.citrusframework.mail.model.MailRequest;
+import org.citrusframework.mail.model.MailResponse;
 import org.citrusframework.message.Message;
 import org.citrusframework.server.AbstractServer;
 import org.slf4j.Logger;
@@ -38,7 +43,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.MimeMailMessage;
 
 import javax.xml.transform.Source;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -172,7 +183,15 @@ public class MailServer extends AbstractServer {
         smtpServer.stop();
     }
 
+    /**
+     * @deprecated use {@link MailServer#accept(String, Set)} instead.
+     */
+    @Deprecated(forRemoval = true)
     public boolean accept(String from, List<MailAddress> recipients) {
+        return accept(from, new HashSet<>(recipients));
+    }
+
+    public boolean accept(String from, Set<MailAddress> recipients) {
         if (autoAccept) {
             return true;
         }
