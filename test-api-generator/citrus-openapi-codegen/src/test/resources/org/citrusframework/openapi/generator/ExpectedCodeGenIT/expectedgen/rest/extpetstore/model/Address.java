@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package org.citrusframework.openapi.generator.rest.petstore.model;
+package org.citrusframework.openapi.generator.rest.extpetstore.model;
 
 import java.util.Objects;
 import java.util.Arrays;
@@ -22,21 +22,15 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Address
+ * An address
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-07-25T13:14:37.509644+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-07-25T13:14:38.461661900+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class Address {
   @jakarta.annotation.Nullable
   private String street;
 
   @jakarta.annotation.Nullable
-  private String city;
-
-  @jakarta.annotation.Nullable
-  private String state;
-
-  @jakarta.annotation.Nullable
-  private String zip;
+  private String town;
 
   public Address() {
   }
@@ -62,67 +56,25 @@ public class Address {
     this.street = street;
   }
 
-  public Address city(@jakarta.annotation.Nullable String city) {
+  public Address town(@jakarta.annotation.Nullable String town) {
     
-    this.city = city;
+    this.town = town;
     return this;
   }
 
   /**
-   * Get city
-   * @return city
+   * Get town
+   * @return town
    */
   @jakarta.annotation.Nullable
 
-  public String getCity() {
-    return city;
+  public String getTown() {
+    return town;
   }
 
 
-  public void setCity(@jakarta.annotation.Nullable String city) {
-    this.city = city;
-  }
-
-  public Address state(@jakarta.annotation.Nullable String state) {
-    
-    this.state = state;
-    return this;
-  }
-
-  /**
-   * Get state
-   * @return state
-   */
-  @jakarta.annotation.Nullable
-
-  public String getState() {
-    return state;
-  }
-
-
-  public void setState(@jakarta.annotation.Nullable String state) {
-    this.state = state;
-  }
-
-  public Address zip(@jakarta.annotation.Nullable String zip) {
-    
-    this.zip = zip;
-    return this;
-  }
-
-  /**
-   * Get zip
-   * @return zip
-   */
-  @jakarta.annotation.Nullable
-
-  public String getZip() {
-    return zip;
-  }
-
-
-  public void setZip(@jakarta.annotation.Nullable String zip) {
-    this.zip = zip;
+  public void setTown(@jakarta.annotation.Nullable String town) {
+    this.town = town;
   }
 
   @Override
@@ -135,14 +87,12 @@ public class Address {
     }
     Address address = (Address) o;
     return Objects.equals(this.street, address.street) &&
-        Objects.equals(this.city, address.city) &&
-        Objects.equals(this.state, address.state) &&
-        Objects.equals(this.zip, address.zip);
+        Objects.equals(this.town, address.town);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(street, city, state, zip);
+    return Objects.hash(street, town);
   }
 
   @Override
@@ -150,9 +100,7 @@ public class Address {
     StringBuilder sb = new StringBuilder();
     sb.append("class Address {\n");
     sb.append("    street: ").append(toIndentedString(street)).append("\n");
-    sb.append("    city: ").append(toIndentedString(city)).append("\n");
-    sb.append("    state: ").append(toIndentedString(state)).append("\n");
-    sb.append("    zip: ").append(toIndentedString(zip)).append("\n");
+    sb.append("    town: ").append(toIndentedString(town)).append("\n");
     sb.append("}");
     return sb.toString();
   }

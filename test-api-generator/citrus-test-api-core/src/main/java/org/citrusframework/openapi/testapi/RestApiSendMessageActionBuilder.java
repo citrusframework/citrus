@@ -132,9 +132,14 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
             return;
         }
 
-        setParameter((paramName, paramValue) -> super.queryParam(
-            paramName.replace(" ", "%20"),
-            paramValue != null ? paramValue.toString() : null), name, value);
+        ((TestApiClientRequestMessageBuilder) getMessageBuilderSupport().getMessageBuilder()).queryParameter(name, (messageBuilder, context) -> {
+            Object valueToSet = replaceDynamicContentInValue(value, context);
+
+            setParameter((paramName, paramValue) -> super.queryParam(
+                paramName.replace(" ", "%20"),
+                paramValue != null ? paramValue.toString() : null), name, valueToSet);
+        });
+
     }
 
     protected void queryParameter(final String name, Object value, ParameterStyle parameterStyle, boolean explode, boolean isObject) {
@@ -142,12 +147,29 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
             return;
         }
 
-        String formatted = formatArray(name, value, parameterStyle, explode, isObject);
-        String[] queryParamValues = formatted.split("&");
-        for (String queryParamValue : queryParamValues) {
-            String[] keyValue = queryParamValue.split("=");
-            queryParameter(keyValue[0], keyValue[1]);
+        ((TestApiClientRequestMessageBuilder) getMessageBuilderSupport().getMessageBuilder()).queryParameter(name, (messageBuilder, context) -> {
+            Object valueToSet = replaceDynamicContentInValue(value, context);
+
+            String formatted = formatArray(name, valueToSet, parameterStyle, explode, isObject);
+            String[] queryParamValues = formatted.split("&");
+            for (String queryParamValue : queryParamValues) {
+                String[] keyValue = queryParamValue.split("=");
+                super.queryParam(
+                    keyValue[0].replace(" ", "%20"),
+                    keyValue[1] != null ? keyValue[1] : null);
+            }
+        });
+
+    }
+
+    private static Object replaceDynamicContentInValue(Object value, TestContext context) {
+        Object valueToSet = value;
+        if (value instanceof  String stringValue) {
+            valueToSet = context.replaceDynamicContentInString(stringValue);
+        } else if (value instanceof List<?> list) {
+            valueToSet = list.stream().map(element -> element instanceof String stringValue ? context.replaceDynamicContentInString(stringValue) : element).toList();
         }
+        return valueToSet;
     }
 
     protected void headerParameter(String name, Object value) {
@@ -263,6 +285,8 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
 
         private final Map<String, ParameterData> pathParameters = new HashMap<>();
 
+        private final Map<String, BiConsumer<TestApiClientRequestMessageBuilder, TestContext>> queryParameters = new HashMap<>();
+
         public TestApiClientRequestMessageBuilder(HttpMessage httpMessage,
                                                   OpenApiSpecificationSource openApiSpec,
                                                   String operationId) {
@@ -281,13 +305,17 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
             }
         }
 
-        public void pathParameter(String name, Object value, ParameterStyle parameterStyle, boolean explode, boolean isObject) {
+        private void pathParameter(String name, Object value, ParameterStyle parameterStyle, boolean explode, boolean isObject) {
             if (value == null) {
                 throw new CitrusRuntimeException(
                         "Mandatory path parameter '%s' must not be null".formatted(name));
             }
 
             pathParameters.put(name, new ParameterData(name, value, parameterStyle, explode, isObject));
+        }
+
+        private void queryParameter(String name, BiConsumer<TestApiClientRequestMessageBuilder, TestContext> parameterAppender) {
+            queryParameters.put(name, parameterAppender);
         }
 
         @Override
@@ -304,6 +332,9 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
 
         @Override
         public Message build(TestContext context, String messageType) {
+
+            queryParameters.forEach((name, appender) -> appender.accept(this, context));
+
             HttpMessage message = (HttpMessage) super.build(context, messageType);
             encodeArrayStyleCookies(message);
             return message;

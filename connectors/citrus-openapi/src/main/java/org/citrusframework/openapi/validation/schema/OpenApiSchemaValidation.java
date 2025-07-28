@@ -54,7 +54,7 @@ public class OpenApiSchemaValidation implements SchemaValidator<OpenApiMessageVa
     @Override
     public void validate(Message message, TestContext context,
         OpenApiMessageValidationContext validationContext) {
-        logger.debug("Starting OpenApi schema validation ...");
+         logger.debug("Starting OpenApi schema validation ...");
 
         // In case we have a redirect header, we cannot  validate the message, as we have to expect, that the message has no valid response.
         if (!(message instanceof HttpMessage httpMessage) || httpMessage.getHeader("Location") != null) {

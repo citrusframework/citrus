@@ -28,7 +28,7 @@ import org.citrusframework.openapi.generator.rest.petstore.model.Address;
 /**
  * Customer
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:42.828969400+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-07-25T13:14:37.509644+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class Customer {
   @jakarta.annotation.Nullable
   private Long id;

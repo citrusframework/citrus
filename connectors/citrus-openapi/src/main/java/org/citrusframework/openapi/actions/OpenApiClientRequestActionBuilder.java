@@ -57,7 +57,6 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
     private OpenApiOperationToMessageHeadersProcessor openApiOperationToMessageHeadersProcessor;
     private boolean schemaValidation = true;
 
-
     /**
      * Default constructor initializes http request message builder.
      */

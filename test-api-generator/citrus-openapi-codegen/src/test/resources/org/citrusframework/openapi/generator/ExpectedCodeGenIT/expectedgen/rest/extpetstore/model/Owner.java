@@ -20,22 +20,29 @@ import java.util.Objects;
 import java.util.Arrays;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.citrusframework.openapi.generator.rest.extpetstore.model.Address;
 
 /**
- * PetIdentifier
+ * Object containing Owner data
  */
 @jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-07-25T13:14:38.461661900+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
-public class PetIdentifier {
+public class Owner {
   @jakarta.annotation.Nullable
   private String _name;
 
   @jakarta.annotation.Nullable
-  private String alias;
+  private String email;
 
-  public PetIdentifier() {
+  @jakarta.annotation.Nullable
+  private String phone;
+
+  @jakarta.annotation.Nullable
+  private Address address;
+
+  public Owner() {
   }
 
-  public PetIdentifier _name(@jakarta.annotation.Nullable String _name) {
+  public Owner _name(@jakarta.annotation.Nullable String _name) {
     
     this._name = _name;
     return this;
@@ -56,25 +63,67 @@ public class PetIdentifier {
     this._name = _name;
   }
 
-  public PetIdentifier alias(@jakarta.annotation.Nullable String alias) {
+  public Owner email(@jakarta.annotation.Nullable String email) {
     
-    this.alias = alias;
+    this.email = email;
     return this;
   }
 
   /**
-   * Get alias
-   * @return alias
+   * Get email
+   * @return email
    */
   @jakarta.annotation.Nullable
 
-  public String getAlias() {
-    return alias;
+  public String getEmail() {
+    return email;
   }
 
 
-  public void setAlias(@jakarta.annotation.Nullable String alias) {
-    this.alias = alias;
+  public void setEmail(@jakarta.annotation.Nullable String email) {
+    this.email = email;
+  }
+
+  public Owner phone(@jakarta.annotation.Nullable String phone) {
+    
+    this.phone = phone;
+    return this;
+  }
+
+  /**
+   * Get phone
+   * @return phone
+   */
+  @jakarta.annotation.Nullable
+
+  public String getPhone() {
+    return phone;
+  }
+
+
+  public void setPhone(@jakarta.annotation.Nullable String phone) {
+    this.phone = phone;
+  }
+
+  public Owner address(@jakarta.annotation.Nullable Address address) {
+    
+    this.address = address;
+    return this;
+  }
+
+  /**
+   * Get address
+   * @return address
+   */
+  @jakarta.annotation.Nullable
+
+  public Address getAddress() {
+    return address;
+  }
+
+
+  public void setAddress(@jakarta.annotation.Nullable Address address) {
+    this.address = address;
   }
 
   @Override
@@ -85,22 +134,26 @@ public class PetIdentifier {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    PetIdentifier petIdentifier = (PetIdentifier) o;
-    return Objects.equals(this._name, petIdentifier._name) &&
-        Objects.equals(this.alias, petIdentifier.alias);
+    Owner owner = (Owner) o;
+    return Objects.equals(this._name, owner._name) &&
+        Objects.equals(this.email, owner.email) &&
+        Objects.equals(this.phone, owner.phone) &&
+        Objects.equals(this.address, owner.address);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(_name, alias);
+    return Objects.hash(_name, email, phone, address);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class PetIdentifier {\n");
+    sb.append("class Owner {\n");
     sb.append("    _name: ").append(toIndentedString(_name)).append("\n");
-    sb.append("    alias: ").append(toIndentedString(alias)).append("\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
+    sb.append("    phone: ").append(toIndentedString(phone)).append("\n");
+    sb.append("    address: ").append(toIndentedString(address)).append("\n");
     sb.append("}");
     return sb.toString();
   }
