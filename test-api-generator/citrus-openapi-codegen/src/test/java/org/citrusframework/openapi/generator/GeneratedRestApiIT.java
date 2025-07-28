@@ -1450,6 +1450,58 @@ class GeneratedRestApiIT {
         class QueryParameter {
 
             @Nested
+            class RefencedObjectQueryParameter {
+
+                // Asserts that a nested json can be sent as query parameter.
+                @Test
+                void java_non_url_encoded(@CitrusResource TestCaseRunner runner) {
+
+                    String owner = """
+                    {"name":"Max Mustermann","email":"maxmuster@muster.de","phone":"+491234567890","address":{"street":"Musterstreet","town":"Mustertown"}}""";
+
+                    runner.variable("owner", owner);
+                    runner.when(extPetApi.sendPostOwner$("${owner}")
+                        .fork(true));
+
+                    runner.then(http().server(httpServer)
+                        .receive()
+                        .post("/api/v3/ext/pet/owner")
+                        .message().queryParam("owner", "citrus:urlEncode('${owner}')"));
+
+                    runner.then(http().server(httpServer)
+                        .send()
+                        .response(OK));
+
+                    runner.when(extPetApi.receivePostOwner("200"));
+
+                }
+
+                // Asserts that a nested json can be sent as query parameter.
+                @Test
+                void java_url_encoded(@CitrusResource TestCaseRunner runner) {
+
+                    String owner = """
+                    {"name":"Max Mustermann","email":"maxmuster@muster.de","phone":"+491234567890","address":{"street":"Musterstreet","town":"Mustertown"}}""";
+
+                    runner.variable("owner", owner);
+                    runner.when(extPetApi.sendPostOwner$("citrus:urlEncode('${owner}')")
+                        .fork(true));
+
+                    runner.then(http().server(httpServer)
+                        .receive()
+                        .post("/api/v3/ext/pet/owner")
+                        .message().queryParam("owner", "citrus:urlEncode('${owner}')"));
+
+                    runner.then(http().server(httpServer)
+                        .send()
+                        .response(OK));
+
+                    runner.when(extPetApi.receivePostOwner("200"));
+
+                }
+            }
+
+            @Nested
             class FormStyle {
 
                 @Nested
@@ -1513,7 +1565,7 @@ class GeneratedRestApiIT {
                     }
 
                     @Test
-                    void java_arrya_value_non_type_safe_with_variables(
+                    void java_array_value_non_type_safe_with_variables(
                         @CitrusResource TestCaseRunner runner) {
                         runner.variable("one", "1");
                         runner.variable("two", "2");

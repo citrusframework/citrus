@@ -17,10 +17,25 @@
 package org.citrusframework.openapi.testapi;
 
 public enum ParameterStyle {
-    NONE,
-    SIMPLE,
-    LABEL,
-    MATRIX,
-    FORM,
-    DEEPOBJECT
+
+    NONE(io.swagger.v3.oas.annotations.enums.ParameterStyle.DEFAULT.toString()),
+    MATRIX(io.swagger.v3.oas.annotations.enums.ParameterStyle.MATRIX.toString()),
+    LABEL(io.swagger.v3.oas.annotations.enums.ParameterStyle.LABEL.toString()),
+    FORM(io.swagger.v3.oas.annotations.enums.ParameterStyle.FORM.toString()),
+    SPACEDELIMITED(io.swagger.v3.oas.annotations.enums.ParameterStyle.SPACEDELIMITED.toString()),
+    PIPEDELIMITED(io.swagger.v3.oas.annotations.enums.ParameterStyle.PIPEDELIMITED.toString()),
+    DEEPOBJECT(io.swagger.v3.oas.annotations.enums.ParameterStyle.DEEPOBJECT.toString()),
+    SIMPLE(io.swagger.v3.oas.annotations.enums.ParameterStyle.SIMPLE.toString()),
+    X_ENCODE_AS_JSON("x_encode_as_json");
+
+    private final String styleString;
+
+    ParameterStyle(String styleString) {
+        this.styleString = styleString;
+    }
+
+    @Override
+    public String toString() {
+        return this.styleString;
+    }
 }

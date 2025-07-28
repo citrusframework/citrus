@@ -14,7 +14,7 @@
     <artifactId>citrus-openapi-codegen</artifactId>
     <packaging>jar</packaging>
 
-    <name>Citrus :: Test API Generator :: Core</name>
+    <name>Citrus :: Test API Generator :: Codegen</name>
     <description>Generates a Citrus Test-API for OpenAPI and WSDL specifications.</description>
 
     <properties>

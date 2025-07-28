@@ -12,7 +12,7 @@ import org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStoreOpenApi
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:47.279105500+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-07-25T13:14:38.461661900+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class ExtPetStoreNamespaceHandler extends NamespaceHandlerSupport {
 
     @Override
@@ -208,6 +208,12 @@ public class ExtPetStoreNamespaceHandler extends NamespaceHandlerSupport {
                 ExtPetApi.PetWithoutOperationIdPetIdGetSendActionBuilder.class,
                 ExtPetApi.PetWithoutOperationIdPetIdGetReceiveActionBuilder.class,
                 new String[]{ "petId" },
+            new String[]{  });
+
+            registerOperationParsers(ExtPetApi.class,"post-owner", "postOwner", "/pet/owner",
+                ExtPetApi.PostOwnerSendActionBuilder.class,
+                ExtPetApi.PostOwnerReceiveActionBuilder.class,
+                new String[]{ "owner" },
             new String[]{  });
 
             registerOperationParsers(ExtPetApi.class,"post-vaccination-document", "postVaccinationDocument", "/pet/vaccination/{bucket}/{filename}",

@@ -145,20 +145,22 @@ public class CodeGenMojoWrapper extends CodeGenMojo {
             if (configProperties.containsKey(name)) {
                 String valueAsString = configProperties.get(name);
                 Object value;
-                if (valueAsString != null) {
-                    if (field.getType() == String.class) {
-                        value = valueAsString;
-                    } else if (field.getType() == Boolean.class || field.getType() == boolean.class) {
-                        value = Boolean.valueOf(valueAsString);
-                    } else if (field.getType() == File.class) {
-                        value = new File(valueAsString);
-                    } else {
-                        throw new IllegalArgumentException(
-                            format("Cannot convert '%s' to type '%s'", valueAsString,
-                                field.getType()));
-                    }
-                    setPrivateField(name, value);
+                if (valueAsString == null) {
+                    // Allow null values, e.g. to suppress generation of models
+                    // (generateModels=null -> <generateModels/>
+                    value = null;
+                } else if (field.getType() == String.class) {
+                    value = valueAsString;
+                } else if (field.getType() == Boolean.class || field.getType() == boolean.class) {
+                    value = Boolean.valueOf(valueAsString);
+                } else if (field.getType() == File.class) {
+                    value = new File(valueAsString);
+                } else {
+                    throw new IllegalArgumentException(
+                        format("Cannot convert '%s' to type '%s'", valueAsString,
+                            field.getType()));
                 }
+                setPrivateField(name, value);
             }
         }
     }

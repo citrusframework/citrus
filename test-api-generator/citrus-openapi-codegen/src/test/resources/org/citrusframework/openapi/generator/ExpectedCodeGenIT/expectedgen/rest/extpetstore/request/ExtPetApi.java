@@ -37,13 +37,14 @@ import org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStoreOpenApi
 import java.math.BigDecimal;
 import org.citrusframework.openapi.generator.rest.extpetstore.model.HistoricalData;
 import java.time.LocalDate;
+import org.citrusframework.openapi.generator.rest.extpetstore.model.Owner;
 import org.citrusframework.openapi.generator.rest.extpetstore.model.Pet;
 import org.citrusframework.openapi.generator.rest.extpetstore.model.PetIdentifier;
 import java.util.UUID;
 import org.citrusframework.openapi.generator.rest.extpetstore.model.VaccinationDocumentResult;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:47.279105500+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-07-25T13:14:38.461661900+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class ExtPetApi implements GeneratedApi
 {
 
@@ -835,6 +836,28 @@ public class ExtPetApi implements GeneratedApi
 
     public PetWithoutOperationIdPetIdGetReceiveActionBuilder receivePetWithoutOperationIdPetIdGet(@NotNull String statusCode)   {
         return new PetWithoutOperationIdPetIdGetReceiveActionBuilder(this,  statusCode);
+    }
+
+    /**
+     * Builder with type safe required parameters.
+     */
+    public PostOwnerSendActionBuilder sendPostOwner(Owner owner)   {
+            return new PostOwnerSendActionBuilder(this, owner);
+    }
+
+    /**
+     * Builder with required parameters as string, allowing dynamic content using citrus expressions.
+     */
+    public PostOwnerSendActionBuilder sendPostOwner$(String ownerExpression )   {
+            return new PostOwnerSendActionBuilder(ownerExpression, this);
+    }
+
+    public PostOwnerReceiveActionBuilder receivePostOwner(@NotNull HttpStatus statusCode)   {
+        return new PostOwnerReceiveActionBuilder(this, Integer.toString(statusCode.value()));
+    }
+
+    public PostOwnerReceiveActionBuilder receivePostOwner(@NotNull String statusCode)   {
+        return new PostOwnerReceiveActionBuilder(this,  statusCode);
     }
 
     /**
@@ -4856,6 +4879,119 @@ public class ExtPetApi implements GeneratedApi
         }
 
         public PetWithoutOperationIdPetIdGetReceiveActionBuilder(ExtPetApi extPetApi, OpenApiClientResponseMessageBuilder messageBuilder) {
+            super(extPetApi, extPetStoreSpecification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
+        }
+
+        @Override
+        public String getOperationName() {
+            return OPERATION_NAME;
+        }
+
+        @Override
+        public String getMethod() {
+            return METHOD;
+        }
+
+        @Override
+        public String getPath() {
+            return ENDPOINT;
+        }
+
+        @Override
+        public ReceiveMessageAction doBuild() {
+
+            if (getCustomizers() != null) {
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
+            }
+
+            return super.doBuild();
+        }
+
+    }
+
+    public static class PostOwnerSendActionBuilder extends
+                RestApiSendMessageActionBuilder implements GeneratedApiOperationInfo {
+
+        private static final String METHOD = "POST";
+
+        private static final String ENDPOINT = "/api/v3/ext/pet/owner";
+
+        private static final String OPERATION_NAME = "postOwner";
+
+        /**
+         * Constructor with type safe required parameters.
+         */
+        public PostOwnerSendActionBuilder(ExtPetApi extPetApi, Owner owner) {
+            super(extPetApi, extPetStoreSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+                queryParameter("owner", owner, ParameterStyle.X_ENCODE_AS_JSON, true, true);
+        }
+
+        /**
+         * Constructor with required parameters as string to allow for dynamic content.
+         */
+            public PostOwnerSendActionBuilder(String ownerExpression, ExtPetApi extPetApi) {
+            super(extPetApi, extPetStoreSpecification,  METHOD, ENDPOINT, OPERATION_NAME);
+            queryParameter("owner", ownerExpression, ParameterStyle.X_ENCODE_AS_JSON, true, true);
+        }
+
+        @Override
+        public String getOperationName() {
+            return OPERATION_NAME;
+        }
+
+        @Override
+        public String getMethod() {
+            return METHOD;
+        }
+
+        @Override
+        public String getPath() {
+            return ENDPOINT;
+        }
+
+        /**
+         * Constructor with required parameters as string to allow for dynamic content.
+         */
+        public PostOwnerSendActionBuilder(ExtPetApi extPetApi, TestApiClientRequestMessageBuilder messageBuilder, String ownerExpression) {
+            super(extPetApi, extPetStoreSpecification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
+            queryParameter("owner", ownerExpression, ParameterStyle.X_ENCODE_AS_JSON, true, true);
+        }
+
+        public PostOwnerSendActionBuilder owner(Owner owner) {
+            queryParameter("owner", owner, ParameterStyle.X_ENCODE_AS_JSON, true, true);
+            return this;
+        }
+
+        public PostOwnerSendActionBuilder owner(String ownerExpression) {
+            queryParameter("owner", ownerExpression, ParameterStyle.X_ENCODE_AS_JSON, true, true);
+                return this;
+        }
+
+        @Override
+        public SendMessageAction doBuild() {
+
+            if (getCustomizers() != null) {
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
+            }
+
+            return super.doBuild();
+        }
+    }
+
+    public static class PostOwnerReceiveActionBuilder extends
+                        RestApiReceiveMessageActionBuilder implements GeneratedApiOperationInfo {
+
+        private static final String METHOD = "POST";
+
+        private static final String ENDPOINT = "/api/v3/ext/pet/owner";
+
+        private static final String OPERATION_NAME = "postOwner";
+
+        public PostOwnerReceiveActionBuilder(ExtPetApi extPetApi,  String statusCode) {
+            super(extPetApi, extPetStoreSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
+        }
+
+        public PostOwnerReceiveActionBuilder(ExtPetApi extPetApi, OpenApiClientResponseMessageBuilder messageBuilder) {
             super(extPetApi, extPetStoreSpecification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
         }
 

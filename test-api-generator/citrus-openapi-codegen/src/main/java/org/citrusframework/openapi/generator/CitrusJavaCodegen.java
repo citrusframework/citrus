@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -35,10 +36,12 @@ import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.servers.Server;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.openapi.testapi.ParameterStyle;
 import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.testapi.RestApiSendMessageActionBuilder;
 import org.citrusframework.openapi.testapi.SoapApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.testapi.SoapApiSendMessageActionBuilder;
+import org.openapitools.codegen.CodegenConstants;
 import org.openapitools.codegen.CodegenOperation;
 import org.openapitools.codegen.CodegenParameter;
 import org.openapitools.codegen.CodegenSecurity;
@@ -456,6 +459,14 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
             codegenParameter.dataType = "Resource";
         }
 
+        // Extension to allow encoding a query parameter as plain json.
+        // This is not officially supported by the OpenAPI spec, but common
+        // practice.
+        if (parameter.getExtensions() != null && TRUE.equals(
+            parameter.getExtensions().get("x-encodeAsJson"))) {
+            codegenParameter.style = ParameterStyle.X_ENCODE_AS_JSON.toString();
+        }
+
         return convertToCustomCodegenParameter(codegenParameter);
     }
 
@@ -465,6 +476,13 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
      */
     private CustomCodegenParameter convertToCustomCodegenParameter(
         CodegenParameter codegenParameter) {
+
+        // In case we do not generate models, we expect the parameter to be set as string
+        if (!isModelGenerationEnabled() && codegenParameter.isModel) {
+            codegenParameter.dataType = "String";
+            codegenParameter.baseType = "String";
+        }
+
         CustomCodegenParameter customCodegenParameter = new CustomCodegenParameter();
         copyFields(CodegenParameter.class, codegenParameter, customCodegenParameter);
 
@@ -472,6 +490,10 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
             codegenParameter.isString || "String".equals(codegenParameter.baseType);
 
         return customCodegenParameter;
+    }
+
+    private boolean isModelGenerationEnabled() {
+        return Boolean.TRUE == additionalProperties.get(CodegenConstants.GENERATE_MODELS);
     }
 
     @Override
@@ -489,6 +511,7 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
      */
     private CustomCodegenOperation convertToCustomCodegenOperation(
         CodegenOperation codegenOperation) {
+
         CustomCodegenOperation customOperation = new CustomCodegenOperation();
 
         copyFields(CodegenOperation.class, codegenOperation, customOperation);
@@ -498,11 +521,15 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
             .filter(param -> !param.isBodyParam)
             .toList());
 
+        // If we do not generate models, we do not need a string parameter constructor, as we have
+        // already changed the specific model types to string, so this is already covered by the
+        // requiredNonBodyParams constructor.
         customOperation.needsConstructorWithAllStringParameter =
-            !customOperation.requiredParams.isEmpty() &&
-                customOperation.requiredParams
-                    .stream()
-                    .anyMatch(param -> !param.isBodyParam && !"String".equals(param.dataType));
+            isModelGenerationEnabled()
+                && !customOperation.requiredParams.isEmpty()
+                && customOperation.requiredParams
+                .stream()
+                .anyMatch(param -> !param.isBodyParam && !"String".equals(param.dataType));
 
         if (customOperation.optionalParams != null) {
             customOperation.optionalAndAuthParameterNames.addAll(
@@ -528,6 +555,20 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
                     postProcessSecurityParameters(customCodegenOperation);
                 }
             });
+        }
+
+        if (!isModelGenerationEnabled()) {
+            // Need to remove all model imports
+            List<Map<String, String>> imports = objs.getImports();
+
+            Iterator<Map<String, String>> iterator = imports.iterator();
+            while (iterator.hasNext()) {
+                Map<String, String> next = iterator.next();
+                String importValue = next.get("import");
+                if (importValue.startsWith(modelPackage)) {
+                    iterator.remove();
+                }
+            }
         }
 
         return operationsMap;

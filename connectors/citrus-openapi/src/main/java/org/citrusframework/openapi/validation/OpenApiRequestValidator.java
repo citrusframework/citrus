@@ -20,8 +20,8 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.atlassian.oai.validator.model.Request;
 import com.atlassian.oai.validator.model.SimpleRequest;
@@ -32,15 +32,15 @@ import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.http.message.HttpMessageUtils;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OperationPathAdapter;
+import org.citrusframework.util.StringUtils;
 import org.springframework.util.MultiValueMap;
 
 import static org.citrusframework.util.FileUtils.getDefaultCharset;
 
 /**
- * Specific validator that uses Atlassian's Swagger Request Validator
- * underneath. It is responsible for validating HTTP requests against
- * an OpenAPI specification using the
- * provided {@code OpenApiInteractionValidator}.
+ * Specific validator that uses Atlassian's Swagger Request Validator underneath. It is responsible
+ * for validating HTTP requests against an OpenAPI specification using the provided
+ * {@code OpenApiInteractionValidator}.
  */
 public class OpenApiRequestValidator extends OpenApiValidator {
 
@@ -53,29 +53,30 @@ public class OpenApiRequestValidator extends OpenApiValidator {
         return "request";
     }
 
-    public void validateRequest(OperationPathAdapter operationPathAdapter, HttpMessage requestMessage) {
+    public void validateRequest(OperationPathAdapter operationPathAdapter,
+        HttpMessage requestMessage) {
         if (openApiInteractionValidator != null) {
             ValidationReport validationReport = openApiInteractionValidator.validateRequest(
-                    createRequestFromMessage(operationPathAdapter, requestMessage));
+                createRequestFromMessage(operationPathAdapter, requestMessage));
             if (validationReport.hasErrors()) {
                 throw new ValidationException(
-                        constructErrorMessage(operationPathAdapter, validationReport));
+                    constructErrorMessage(operationPathAdapter, validationReport));
             }
         }
     }
 
     public ValidationReport validateRequestToReport(OperationPathAdapter operationPathAdapter,
-                                                    HttpMessage requestMessage) {
+        HttpMessage requestMessage) {
         if (openApiInteractionValidator != null) {
             return openApiInteractionValidator.validateRequest(
-                    createRequestFromMessage(operationPathAdapter, requestMessage));
+                createRequestFromMessage(operationPathAdapter, requestMessage));
         }
 
         return ValidationReport.empty();
     }
 
     Request createRequestFromMessage(OperationPathAdapter operationPathAdapter,
-                                     HttpMessage httpMessage) {
+        HttpMessage httpMessage) {
         var payload = httpMessage.getPayload();
 
         String contextPath = operationPathAdapter.contextPath();
@@ -85,7 +86,7 @@ public class OpenApiRequestValidator extends OpenApiValidator {
         }
 
         SimpleRequest.Builder requestBuilder = new SimpleRequest.Builder(
-                httpMessage.getRequestMethod().asHttpMethod().name(), requestUri
+            httpMessage.getRequestMethod().asHttpMethod().name(), requestUri
         );
 
         if (payload != null) {
@@ -96,20 +97,43 @@ public class OpenApiRequestValidator extends OpenApiValidator {
         finalRequestBuilder.withAccept(httpMessage.getAccept());
 
         HttpMessageUtils.getQueryParameterMap(httpMessage)
-                .forEach((key, value) -> finalRequestBuilder.withQueryParam(key, new ArrayList<>(value)));
+            .forEach((key, value) -> {
+                List<String> queryParamValues = value.stream()
+                    .map(this::urlDecodeIfNeccessary)
+                    .toList();
+                finalRequestBuilder.withQueryParam(key, queryParamValues);
+            });
 
         httpMessage.getHeaders().forEach((key, value) -> {
             if (value instanceof Collection<?> collection) {
-                collection.forEach(v -> finalRequestBuilder.withHeader(key, v != null ? v.toString() : null));
+                collection.forEach(
+                    v -> finalRequestBuilder.withHeader(key, v != null ? v.toString() : null));
             } else {
                 finalRequestBuilder.withHeader(key, value != null ? value.toString() : null);
             }
         });
 
-        httpMessage.getCookies().forEach(cookie -> finalRequestBuilder.withHeader("Cookie", URLDecoder.decode(cookie.getName() + "=" + cookie.getValue(),
+        httpMessage.getCookies().forEach(cookie -> finalRequestBuilder.withHeader("Cookie",
+            URLDecoder.decode(cookie.getName() + "=" + cookie.getValue(),
                 getDefaultCharset())));
 
         return requestBuilder.build();
+    }
+
+    private String urlDecodeIfNeccessary(String value) {
+
+        if (StringUtils.isEmpty(value)) {
+            return value;
+        }
+
+        // We only check for query parameters in json format, as we programmatically URL encode them
+        String valueToTest = value.trim();
+        if ((valueToTest.startsWith("%7B") && valueToTest.endsWith("%7D"))
+            || (valueToTest.startsWith("%5B") && valueToTest.endsWith("%5D"))) {
+            return URLDecoder.decode(value, getDefaultCharset());
+        }
+
+        return value;
     }
 
     private String convertPayload(Object payload) {
@@ -121,8 +145,8 @@ public class OpenApiRequestValidator extends OpenApiValidator {
     }
 
     /**
-     * We cannot validate a MultiValueMap. The map will later on be converted to a string representation
-     * by Spring. For validation, we need to mimic this transformation here.
+     * We cannot validate a MultiValueMap. The map will later on be converted to a string
+     * representation by Spring. For validation, we need to mimic this transformation here.
      *
      * @see org.springframework.http.converter.FormHttpMessageConverter
      */
