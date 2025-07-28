@@ -1262,6 +1262,25 @@ paths:
                     description: Bad Request - Invalid form data
                 '500':
                     description: Internal Server Error
+    /pet/owner:
+        post:
+            tags:
+                - extPet
+            operationId: postOwner
+            summary: Add pet owner
+            description: |
+                Example that uses a parameter reference to an object parameter that is deeply nested 
+                and uses x-extendAsJson style. This allows encoding of nested json objects as query
+                parameter. Not officially supported by OpenAPI but common practice.
+            parameters:
+                -   $ref: "#/components/parameters/OwnerParameter"
+            responses:
+                '201':
+                    description: Owner  successfully submitted
+                '400':
+                    description: Bad Request - Invalid form data
+                '500':
+                    description: Internal Server Error
 
 components:
     securitySchemes:
@@ -1315,3 +1334,34 @@ components:
                     type: string
                 alias:
                     type: string
+        Address:
+            description: An address
+            type: object
+            properties:
+                street:
+                    type: string
+                town:
+                    type: string
+        Owner:
+            description: Object containing Owner data
+            type: object
+            properties:
+                name:
+                    type: string
+                email:
+                    type: string
+                phone:
+                    type: string
+                address:
+                    $ref: "#/components/schemas/Address"
+
+    parameters:
+        OwnerParameter:
+            name: owner
+            in: query
+            required: true
+            x-encodeAsJson: true
+            schema:
+                $ref: "#/components/schemas/Owner"
+
+

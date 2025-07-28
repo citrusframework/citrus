@@ -19,6 +19,7 @@ package org.citrusframework.maven.plugin;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -333,7 +334,12 @@ public class TestApiGeneratorMojo extends AbstractMojo {
             if (resourceUrl == null) {
                 throw new MojoExecutionException("Resource not found in classpath: " + source);
             }
-            resourceFile = new File(resourceUrl.getFile());
+
+            try {
+                resourceFile = Paths.get(resourceUrl.toURI()).toFile();
+            } catch (URISyntaxException e) {
+                throw new MojoExecutionException("Invalid URI for resource: " + source, e);
+            }
         }
 
         File tmpDir = new File(mavenProject.getBuild().getDirectory() + "/wsdlToOpenApi");
@@ -345,7 +351,7 @@ public class TestApiGeneratorMojo extends AbstractMojo {
 
         try {
             WsdlToOpenApiTransformer transformer = new WsdlToOpenApiTransformer(
-                resourceFile.toURI());
+                Paths.get(resourceFile.toURI()).toUri());
 
             String openApiContent = transformer.transformToOpenApi();
 

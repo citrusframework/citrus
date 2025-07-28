@@ -7,6 +7,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -84,39 +86,46 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
             arguments("pom-missing-prefix",
                 new MojoExecutionException(
                     "Required parameter 'prefix' not set for api at index '0'!"),
-                emptyMap(), emptyMap(), emptyList()),
+                emptyMap(), emptyMap(), emptyList(), emptyList()),
             arguments("pom-missing-source",
                 new MojoExecutionException(
                     "Required parameter 'source' not set for api at index '0'!"),
-                emptyMap(), emptyMap(), emptyList()),
+                emptyMap(), emptyMap(), emptyList(), emptyList()),
             arguments("pom-minimal-config", null,
-                emptyMap(), emptyMap(), emptyList()),
+                emptyMap(), emptyMap(), emptyList(), emptyList()),
             arguments("pom-minimal-with-version-config", null,
-                emptyMap(), emptyMap(), emptyList()),
+                emptyMap(), emptyMap(), emptyList(), emptyList()),
             arguments("pom-multi-config", null,
-                emptyMap(), emptyMap(), emptyList()),
+                emptyMap(), emptyMap(), emptyList(), emptyList()),
             arguments("pom-full-config", null,
                 Map.of("debugOpenAPI", "true", "debugModels", "true"),
                 Map.of("a", "b", "other", "otherOption"),
-                List.of("a=b", "c=d", "rootContextPath=/a/b/c/d")),
+                List.of("a=b", "c=d", "rootContextPath=/a/b/c/d"), emptyList()),
             arguments("pom-full-with-version-config", null,
-                emptyMap(), emptyMap(), emptyList()),
+                emptyMap(), emptyMap(), emptyList(), emptyList()),
             arguments("pom-soap-config", null,
-                emptyMap(), emptyMap(), emptyList()),
+                emptyMap(), emptyMap(), emptyList(), emptyList()),
             arguments("pom-with-global-properties", null,
                 Map.of("debugOpenAPI", "true", "debugModels", "true"),
-                emptyMap(), emptyList()),
+                emptyMap(), emptyList(), emptyList()),
             arguments("pom-with-global-config", null,
                 emptyMap(),
-                Map.of("a", "b", "other", "otherOption"), emptyList()),
+                Map.of("a", "b", "other", "otherOption"), emptyList(), emptyList()),
             arguments("pom-with-overriding-config", null,
                 Map.of("debugOpenAPI", "true", "debugModels", "true"),
-                Map.of("a", "b", "c", "d", "other", "otherOption"), emptyList()),
+                Map.of("a", "b", "c", "d", "other", "otherOption"), emptyList(), emptyList()),
             arguments("pom-with-additional-properties", null,
                 emptyMap(), emptyMap(),
-                List.of("a=b", "c=d")),
+                List.of("a=b", "c=d"), emptyList()),
             arguments("pom-soap-from-wsdl-config", null,
-                emptyMap(), emptyMap(), emptyList())
+                emptyMap(), emptyMap(), emptyList(), emptyList()),
+            arguments("pom-no-model-config", null,
+                emptyMap(), emptyMap(), emptyList(), List.of(
+                    "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%MODEL_FOLDER%/PingReqType.java",
+                    "%TARGET_FOLDER%/%GENERATED_SOURCES_FOLDER%/%MODEL_FOLDER%/PingRespType.java"
+                    )),
+            arguments("pom-suppress-validation-error-config", null,
+                emptyMap(), emptyMap(), emptyList(), emptyList())
 
         );
     }
@@ -131,7 +140,7 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
     @MethodSource
     void executeMojoWithConfigurations(String configName, Exception expectedException,
         Map<?, ?> expectedGlobalProperties, Map<?, ?> expectedConfigOptions,
-        List<String> expectedAdditionalProperties) throws Exception {
+        List<String> expectedAdditionalProperties, List<String> unexpectedFiles) throws Exception {
         try {
             fixture = fixtureFromPom(configName);
         } catch (MojoExecutionException | MojoFailureException e) {
@@ -152,7 +161,7 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
 
             // Then
             for (ApiConfig apiConfig : apiConfigs) {
-                assertFilesGenerated(apiConfig);
+                assertFilesGenerated(apiConfig, unexpectedFiles);
                 assertSpecificFileContent(apiConfig);
             }
 
@@ -212,12 +221,20 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
         }
     }
 
-    private void assertFilesGenerated(ApiConfig apiConfig) {
+    private void assertFilesGenerated(ApiConfig apiConfig, List<String> unexpectedFiles) {
+
+        List<String> allExpected = new ArrayList<>(Arrays.asList(STANDARD_FILE_PATH_TEMPLATES));
+        allExpected.removeAll(unexpectedFiles);
 
         if (apiConfig.getSource().contains("test-api.yml")) {
-            for (String filePathTemplate : STANDARD_FILE_PATH_TEMPLATES) {
+            for (String filePathTemplate : allExpected) {
                 String filePath = resolveFilePath(apiConfig, filePathTemplate);
                 assertThat(new File(filePath)).isFile().exists();
+            }
+
+            for (String filePathTemplate : unexpectedFiles) {
+                String filePath = resolveFilePath(apiConfig, filePathTemplate);
+                assertThat(new File(filePath)).doesNotExist();
             }
 
             if (TRUE.equals(getField(fixture, "generateSpringIntegrationFiles"))) {
