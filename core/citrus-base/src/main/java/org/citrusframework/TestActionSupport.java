@@ -18,6 +18,7 @@ package org.citrusframework;
 
 import org.citrusframework.actions.*;
 import org.citrusframework.actions.http.HttpActionBuilder;
+import org.citrusframework.actions.openapi.OpenApiActionBuilder;
 import org.citrusframework.actions.sql.ExecutePlsqlActionBuilder;
 import org.citrusframework.actions.sql.ExecuteSqlActionBuilder;
 import org.citrusframework.actions.sql.ExecuteSqlQueryActionBuilder;
@@ -106,6 +107,11 @@ public interface TestActionSupport extends TestActions, TestContainers {
     @Override
     default LoadPropertiesActionBuilder<LoadPropertiesAction> load() {
         return new LoadPropertiesAction.Builder();
+    }
+
+    @Override
+    default OpenApiActionBuilder<?, ?, ?> openapi() {
+        return lookup("openapi");
     }
 
     @Override

@@ -19,7 +19,6 @@ package org.citrusframework.openapi.actions;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasResponse;
@@ -31,12 +30,12 @@ import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.message.Message;
 import org.citrusframework.openapi.OpenApiSpecification;
+import org.citrusframework.openapi.OpenApiSupport;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.openapi.validation.OpenApiOperationToMessageHeadersProcessor;
 import org.citrusframework.openapi.validation.OpenApiValidationContext;
-import org.springframework.http.HttpStatus;
 
 import static org.citrusframework.openapi.OpenApiMessageType.RESPONSE;
 import static org.citrusframework.openapi.util.OpenApiUtils.fillMessageTypeFromResponse;
@@ -45,7 +44,8 @@ import static org.citrusframework.openapi.validation.OpenApiMessageValidationCon
 /**
  * @since 4.1
  */
-public class OpenApiClientResponseActionBuilder extends HttpClientResponseActionBuilder implements OpenApiSpecificationSourceAwareBuilder<ReceiveMessageAction> {
+public class OpenApiClientResponseActionBuilder extends HttpClientResponseActionBuilder
+        implements OpenApiSpecificationSourceAwareBuilder<ReceiveMessageAction>, org.citrusframework.actions.openapi.OpenApiClientResponseActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
     private final String operationKey;
@@ -111,6 +111,7 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
         return super.doBuild();
     }
 
+    @Override
     public OpenApiClientResponseActionBuilder schemaValidation(boolean enabled) {
         schemaValidation = enabled;
         return this;
@@ -161,17 +162,14 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
 
             if (operation.responses != null) {
                 Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
-                        openApiSpecification.getOpenApiDoc(context), operation, statusCode, null);
+                        openApiSpecification.getOpenApiDoc(context), operation,
+                        String.valueOf(OpenApiSupport.getStatusCode(statusCode, context).value()), null);
 
                 responseForRandomGeneration.ifPresent(
                         oasResponse -> fillMessageTypeFromResponse(openApiSpecification, httpMessage, operation, oasResponse));
             }
 
-            if (Pattern.compile("\\d+").matcher(statusCode).matches()) {
-                httpMessage.status(HttpStatus.valueOf(Integer.parseInt(statusCode)));
-            } else {
-                httpMessage.status(HttpStatus.OK);
-            }
+            httpMessage.status(OpenApiSupport.getStatusCode(statusCode, context));
 
             httpMessage.getHeaders().putAll(currentHeaders);
         }

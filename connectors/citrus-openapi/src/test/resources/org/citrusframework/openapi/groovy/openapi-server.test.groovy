@@ -18,8 +18,6 @@ package org.citrusframework.openapi.groovy
 
 import org.springframework.http.HttpStatus
 
-import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi
-
 name "OpenApiServerTest"
 author "Christoph"
 status "FINAL"
@@ -35,7 +33,7 @@ actions {
             .receive("getPetById"))
     $(openapi().specification("classpath:org/citrusframework/openapi/petstore/petstore-v3.yaml")
             .server("httpServer")
-            .send("getPetById", HttpStatus.OK))
+            .send("getPetById", HttpStatus.OK.name()))
 
     $(openapi().specification("classpath:org/citrusframework/openapi/petstore/petstore-v3.yaml")
             .server(httpServer)
@@ -43,5 +41,5 @@ actions {
             .timeout(2000))
     $(openapi().specification("classpath:org/citrusframework/openapi/petstore/petstore-v3.yaml")
             .server("httpServer")
-            .send("addPet", HttpStatus.CREATED))
+            .send("addPet", HttpStatus.CREATED.name()))
 }

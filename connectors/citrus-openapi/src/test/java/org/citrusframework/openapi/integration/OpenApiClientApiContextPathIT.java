@@ -36,7 +36,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -123,7 +122,7 @@ public class OpenApiClientApiContextPathIT extends TestNGCitrusSpringSupport {
             .contentType(APPLICATION_JSON_VALUE));
 
         then(openapi(spec)
-            .client(httpClient).receive("getPetById", OK)
+            .client(httpClient).receive("getPetById", OK.name())
             .schemaValidation(true));
 
     }

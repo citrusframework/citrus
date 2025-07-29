@@ -50,13 +50,13 @@ import static org.citrusframework.util.StringUtils.isNotEmpty;
 /**
  * @since 4.1
  */
-public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBuilder implements OpenApiSpecificationSourceAwareBuilder<SendMessageAction> {
+public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBuilder
+        implements OpenApiSpecificationSourceAwareBuilder<SendMessageAction>, org.citrusframework.actions.openapi.OpenApiClientRequestActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
     private final String operationKey;
     private OpenApiOperationToMessageHeadersProcessor openApiOperationToMessageHeadersProcessor;
     private boolean schemaValidation = true;
-
 
     /**
      * Default constructor initializes http request message builder.
@@ -88,6 +88,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
         return openApiSpecificationSource;
     }
 
+    @Override
     public OpenApiClientRequestActionBuilder autoFill(AutoFillType autoFill) {
         ((OpenApiClientRequestMessageBuilder) this.messageBuilderSupport.getMessageBuilder()).autoFill(
             autoFill);
@@ -125,6 +126,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
         return httpMessageBuilderSupport;
     }
 
+    @Override
     public OpenApiClientRequestActionBuilder schemaValidation(boolean schemaValidation) {
         this.schemaValidation = schemaValidation;
         return this;

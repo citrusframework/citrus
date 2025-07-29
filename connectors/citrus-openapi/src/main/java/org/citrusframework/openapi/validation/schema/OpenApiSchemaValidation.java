@@ -19,6 +19,7 @@ package org.citrusframework.openapi.validation.schema;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.atlassian.oai.validator.report.ValidationReport;
 import jakarta.annotation.Nullable;
@@ -72,7 +73,7 @@ public class OpenApiSchemaValidation implements SchemaValidator<OpenApiMessageVa
             if (logger.isErrorEnabled()) {
                 logger.error(
                     "Failed to validate Json schema for message:\n{}\nand origin path:\n{}",
-                    httpMessage.getPayload(String.class), httpMessage.getPath());
+                    httpMessage.getPayload(String.class), Optional.ofNullable(httpMessage.getPath()).orElse("/"));
             }
             throw new ValidationException(constructErrorMessage(validationReportData));
         }

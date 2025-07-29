@@ -21,7 +21,6 @@ import java.net.URL;
 import org.citrusframework.TestAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
@@ -35,7 +34,8 @@ import static org.citrusframework.openapi.OpenApiSettings.getOpenApiValidationPo
  *
  * @since 4.1
  */
-public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> implements OpenApiSpecificationSourceAwareBuilder<TestAction> {
+public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
+        implements OpenApiSpecificationSourceAwareBuilder<TestAction>, org.citrusframework.actions.openapi.OpenApiActionBuilder<TestAction, OpenApiSpecification, OpenApiActionBuilder> {
 
     private OpenApiSpecificationSource openApiSpecificationSource;
 
@@ -67,22 +67,32 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
     }
 
     public static OpenApiActionBuilder openapi(String openApiAlias) {
-        return new OpenApiActionBuilder(openApiAlias);
+        return openapi().alias(openApiAlias);
     }
 
+    @Override
+    public OpenApiActionBuilder alias(String openApiAlias) {
+        this.openApiSpecificationSource = new OpenApiSpecificationSource(openApiAlias);
+        return this;
+    }
+
+    @Override
     public OpenApiActionBuilder specification(OpenApiSpecification specification) {
         this.openApiSpecificationSource = new OpenApiSpecificationSource(specification);
         return this;
     }
 
+    @Override
     public OpenApiActionBuilder specification(URL specUrl) {
         return specification(OpenApiSpecification.from(specUrl, getOpenApiValidationPolicy()));
     }
 
+    @Override
     public OpenApiActionBuilder specification(String specUrl) {
         return specification(OpenApiSpecification.from(specUrl, getOpenApiValidationPolicy()));
     }
 
+    @Override
     public OpenApiClientActionBuilder client() {
         assertSpecification();
         OpenApiClientActionBuilder clientActionBuilder = new OpenApiClientActionBuilder(openApiSpecificationSource)
@@ -91,15 +101,11 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
         return clientActionBuilder;
     }
 
-    /**
-     * Initiate http client action.
-     */
-    public OpenApiClientActionBuilder client(HttpClient httpClient) {
+    @Override
+    public OpenApiClientActionBuilder client(Endpoint httpClient) {
         assertSpecification();
 
-        if (httpClient.getEndpointConfiguration().getRequestUrl() != null) {
-            openApiSpecificationSource.setHttpClient(httpClient.getEndpointConfiguration().getRequestUrl());
-        }
+        openApiSpecificationSource.setHttpClient(httpClient);
 
         OpenApiClientActionBuilder clientActionBuilder = new OpenApiClientActionBuilder(httpClient, openApiSpecificationSource)
                 .withReferenceResolver(referenceResolver);
@@ -107,9 +113,7 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
         return clientActionBuilder;
     }
 
-    /**
-     * Initiate http client action.
-     */
+    @Override
     public OpenApiClientActionBuilder client(String httpClient) {
         assertSpecification();
 
@@ -121,9 +125,7 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
         return clientActionBuilder;
     }
 
-    /**
-     * Initiate http server action.
-     */
+    @Override
     public OpenApiServerActionBuilder server(Endpoint endpoint) {
         assertSpecification();
 
@@ -139,9 +141,7 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
         }
     }
 
-    /**
-     * Initiate http server action.
-     */
+    @Override
     public OpenApiServerActionBuilder server(String httpServer) {
         assertSpecification();
 
@@ -151,9 +151,7 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
         return serverActionBuilder;
     }
 
-    /**
-     * Sets the bean reference resolver.
-     */
+    @Override
     public OpenApiActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
         return this;
