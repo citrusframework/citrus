@@ -30,7 +30,8 @@ import static org.springframework.http.HttpStatus.OK;
  *
  * @since 4.1
  */
-public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> implements OpenApiSpecificationSourceAwareBuilder<TestAction> {
+public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
+        implements OpenApiSpecificationSourceAwareBuilder<TestAction>, org.citrusframework.actions.openapi.OpenApiClientActionBuilder<TestAction, OpenApiClientActionBuilder> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
 
@@ -65,9 +66,7 @@ public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTe
         return openApiSpecificationSource;
     }
 
-    /**
-     * Sends Http requests as client.
-     */
+    @Override
     public OpenApiClientRequestActionBuilder send(String operationKey) {
         OpenApiClientRequestActionBuilder builder = new OpenApiClientRequestActionBuilder(openApiSpecificationSource, operationKey);
         if (httpClient != null) {
@@ -83,24 +82,24 @@ public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTe
         return builder;
     }
 
-    /**
-     * Receives Http response messages as client.
-     * Uses default Http status 200 OK.
-     */
+    @Override
     public OpenApiClientResponseActionBuilder receive(String operationKey) {
         return receive(operationKey, OK);
     }
 
     /**
-     * Receives Http response messages as client.
+     * Receives Http response messages as client with given status.
      */
     public OpenApiClientResponseActionBuilder receive(String operationKey, HttpStatus status) {
-        return receive(operationKey, String.valueOf(status.value()));
+        return receive(operationKey, status.name());
     }
 
-    /**
-     * Receives Http response messages as client.
-     */
+    @Override
+    public OpenApiClientResponseActionBuilder receive(String operationKey, int statusCode) {
+        return receive(operationKey, String.valueOf(statusCode));
+    }
+
+    @Override
     public OpenApiClientResponseActionBuilder receive(String operationKey, String statusCode) {
         OpenApiClientResponseActionBuilder builder = new OpenApiClientResponseActionBuilder(openApiSpecificationSource, operationKey, statusCode);
         if (httpClient != null) {

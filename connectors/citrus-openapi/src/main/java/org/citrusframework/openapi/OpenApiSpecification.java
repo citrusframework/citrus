@@ -80,7 +80,7 @@ import static org.citrusframework.util.StringUtils.isEmpty;
  * aliases may be added manually or programmatically by
  * {@link OpenApiSpecification#addAlias(String)}.
  */
-public class OpenApiSpecification {
+public class OpenApiSpecification implements Specification {
 
     private static final Logger logger = LoggerFactory.getLogger(OpenApiSpecification.class);
 

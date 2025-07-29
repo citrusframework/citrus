@@ -33,7 +33,8 @@ import static org.citrusframework.openapi.validation.OpenApiMessageValidationCon
 /**
  * @since 4.1
  */
-public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBuilder implements OpenApiSpecificationSourceAwareBuilder<ReceiveMessageAction> {
+public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBuilder
+        implements OpenApiSpecificationSourceAwareBuilder<ReceiveMessageAction>, org.citrusframework.actions.openapi.OpenApiServerRequestActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
     private final String operationKey;
@@ -95,6 +96,7 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
         return super.doBuild();
     }
 
+    @Override
     public OpenApiServerRequestActionBuilder schemaValidation(boolean schemaValidation) {
         this.schemaValidation = schemaValidation;
         return this;

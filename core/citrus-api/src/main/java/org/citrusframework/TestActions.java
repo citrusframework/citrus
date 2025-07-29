@@ -18,6 +18,7 @@ package org.citrusframework;
 
 import org.citrusframework.actions.*;
 import org.citrusframework.actions.http.HttpActionBuilder;
+import org.citrusframework.actions.openapi.OpenApiActionBuilder;
 import org.citrusframework.actions.sql.ExecutePlsqlActionBuilder;
 import org.citrusframework.actions.sql.ExecuteSqlActionBuilder;
 import org.citrusframework.actions.sql.ExecuteSqlQueryActionBuilder;
@@ -38,6 +39,7 @@ public interface TestActions extends
         HttpActionBuilder.BuilderFactory,
         InputActionBuilder.BuilderFactory,
         LoadPropertiesActionBuilder.BuilderFactory,
+        OpenApiActionBuilder.BuilderFactory,
         PurgeEndpointActionBuilder.BuilderFactory,
         ReceiveActionBuilder.BuilderFactory,
         ReceiveTimeoutActionBuilder.BuilderFactory,

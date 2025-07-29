@@ -18,7 +18,9 @@ package org.citrusframework.openapi.actions;
 
 import java.util.Objects;
 
+import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.spi.ReferenceResolver;
@@ -53,9 +55,9 @@ public class OpenApiSpecificationSource {
             if (!isEmpty(openApiAlias)) {
                 openApiSpecification = resolver.resolveAll(OpenApiRepository.class).values()
                     .stream()
-                    .map(openApiRepository -> openApiRepository.openApi(openApiAlias)).
-                    filter(Objects::nonNull).
-                    findFirst()
+                    .map(openApiRepository -> openApiRepository.openApi(openApiAlias))
+                    .filter(Objects::nonNull)
+                    .findFirst()
                     .orElseGet(() -> resolver.resolveAll(OpenApiSpecification.class).values().stream()
                         .filter(specification -> specification.getAliases().contains(openApiAlias))
                         .findFirst()
@@ -79,5 +81,13 @@ public class OpenApiSpecificationSource {
 
     public void setHttpClient(String httpClient) {
         this.httpClient = httpClient;
+    }
+
+    public void setHttpClient(Endpoint endpoint) {
+        if (endpoint instanceof HttpClient client) {
+            if (client.getEndpointConfiguration().getRequestUrl() != null) {
+                this.httpClient = client.getEndpointConfiguration().getRequestUrl();
+            }
+        }
     }
 }

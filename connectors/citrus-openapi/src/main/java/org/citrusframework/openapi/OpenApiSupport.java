@@ -16,8 +16,10 @@
 
 package org.citrusframework.openapi;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
@@ -26,6 +28,9 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import org.citrusframework.context.TestContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.introspector.Property;
@@ -33,8 +38,12 @@ import org.yaml.snakeyaml.nodes.NodeTuple;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
 
+import static java.lang.Integer.parseInt;
+import static org.springframework.http.HttpStatus.OK;
+
 public class OpenApiSupport {
 
+    private static final Pattern STATUS_CODE_PATTERN = Pattern.compile("\\d+");
     private static final ObjectMapper OBJECT_MAPPER;
 
     static {
@@ -71,5 +80,18 @@ public class OpenApiSupport {
         };
         representer.getPropertyUtils().setSkipMissingProperties(true);
         return new Yaml(representer);
+    }
+
+    public static HttpStatusCode getStatusCode(String statusCode, TestContext context) {
+        String resolvedStatusCode = context.replaceDynamicContentInString(statusCode);
+
+        if (STATUS_CODE_PATTERN.matcher(resolvedStatusCode).matches()) {
+            return HttpStatusCode.valueOf(parseInt(resolvedStatusCode));
+        } else {
+            return Arrays.stream(HttpStatus.values())
+                    .filter(status -> status.name().equalsIgnoreCase(resolvedStatusCode))
+                    .findFirst()
+                    .orElse(OK);
+        }
     }
 }

@@ -16,6 +16,15 @@
 
 package org.citrusframework.openapi.actions;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
+
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
@@ -32,24 +41,13 @@ import org.citrusframework.message.MessageHeaderBuilder;
 import org.citrusframework.message.builder.DefaultHeaderBuilder;
 import org.citrusframework.openapi.AutoFillType;
 import org.citrusframework.openapi.OpenApiSpecification;
+import org.citrusframework.openapi.OpenApiSupport;
 import org.citrusframework.openapi.model.OasAdapter;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.citrusframework.openapi.validation.OpenApiOperationToMessageHeadersProcessor;
 import org.citrusframework.openapi.validation.OpenApiValidationContext;
-import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
-
-import static java.lang.Integer.parseInt;
 import static java.util.Collections.singletonMap;
 import static org.citrusframework.openapi.AutoFillType.NONE;
 import static org.citrusframework.openapi.AutoFillType.REQUIRED;
@@ -57,7 +55,6 @@ import static org.citrusframework.openapi.OpenApiMessageType.RESPONSE;
 import static org.citrusframework.openapi.OpenApiSettings.getResponseAutoFillRandomValues;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
-import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
@@ -65,7 +62,8 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 /**
  * @since 4.1
  */
-public class OpenApiServerResponseActionBuilder extends HttpServerResponseActionBuilder implements OpenApiSpecificationSourceAwareBuilder<SendMessageAction> {
+public class OpenApiServerResponseActionBuilder extends HttpServerResponseActionBuilder
+        implements OpenApiSpecificationSourceAwareBuilder<SendMessageAction>, org.citrusframework.actions.openapi.OpenApiServerResponseActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
     private final String operationKey;
@@ -98,6 +96,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
         return openApiSpecificationSource;
     }
 
+    @Override
     public OpenApiServerResponseActionBuilder autoFill(AutoFillType autoFill) {
         ((OpenApiServerResponseMessageBuilder)this.messageBuilderSupport.getMessageBuilder()).autoFill(autoFill);
         return this;
@@ -124,6 +123,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
         return super.doBuild();
     }
 
+    @Override
     public OpenApiServerResponseActionBuilder schemaValidation(boolean schemaValidation) {
         this.schemaValidation = schemaValidation;
         return this;
@@ -139,6 +139,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
         return messageBuilderSupport;
     }
 
+    @Override
     public OpenApiServerResponseActionBuilder enableRandomGeneration(AutoFillType autoFillType) {
         ((OpenApiServerResponseMessageBuilder) getMessageBuilderSupport().getMessageBuilder()).autoFill(
             autoFillType);
@@ -146,8 +147,6 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
     }
 
     private static class OpenApiServerResponseMessageBuilder extends HttpMessageBuilder {
-
-        private static final Pattern STATUS_CODE_PATTERN = Pattern.compile("\\d+");
 
         private final OpenApiSpecificationSource openApiSpecificationSource;
         private final String operationKey;
@@ -182,11 +181,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
                  autoFill = getResponseAutoFillRandomValues();
             }
 
-            if (STATUS_CODE_PATTERN.matcher(statusCode).matches()) {
-                getMessage().status(HttpStatus.valueOf(parseInt(statusCode)));
-            } else {
-                getMessage().status(OK);
-            }
+            getMessage().status(OpenApiSupport.getStatusCode(statusCode, context));
 
             List<MessageHeaderBuilder> initialHeaderBuilders = new ArrayList<>(getHeaderBuilders());
             getHeaderBuilders().clear();
@@ -206,7 +201,6 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
         }
 
         private void fillRandomData(OpenApiSpecification openApiSpecification, OperationPathAdapter operationPathAdapter, TestContext context) {
-
             if (operationPathAdapter.operation().responses != null) {
                 buildResponse(context, openApiSpecification, operationPathAdapter.operation());
             }
@@ -214,7 +208,8 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
 
         private void buildResponse(TestContext context, OpenApiSpecification openApiSpecification, OasOperation operation) {
             var oasDocument = openApiSpecification.getOpenApiDoc(context);
-            Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(oasDocument, operation, statusCode, null);
+            Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(oasDocument,
+                    operation, String.valueOf(OpenApiSupport.getStatusCode(statusCode, context).value()), null);
 
             if (responseForRandomGeneration.isPresent()) {
                 OasResponse oasResponse = responseForRandomGeneration.get();

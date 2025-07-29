@@ -30,7 +30,7 @@ import org.springframework.http.HttpStatus;
  */
 public class OpenApiServerActionBuilder extends
     AbstractReferenceResolverAwareTestActionBuilder<TestAction> implements
-    OpenApiSpecificationSourceAwareBuilder<TestAction> {
+    OpenApiSpecificationSourceAwareBuilder<TestAction>, org.citrusframework.actions.openapi.OpenApiServerActionBuilder<TestAction, OpenApiServerActionBuilder> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
 
@@ -63,9 +63,7 @@ public class OpenApiServerActionBuilder extends
         return openApiSpecificationSource;
     }
 
-    /**
-     * Receive Http requests as server.
-     */
+    @Override
     public OpenApiServerRequestActionBuilder receive(String operationKey) {
         OpenApiServerRequestActionBuilder builder = new OpenApiServerRequestActionBuilder(
             openApiSpecificationSource, operationKey);
@@ -82,9 +80,7 @@ public class OpenApiServerActionBuilder extends
         return builder;
     }
 
-    /**
-     * Sends Http response messages as server. Uses default Http status 200 OK.
-     */
+    @Override
     public OpenApiServerResponseActionBuilder send(String operationKey) {
         return send(operationKey, HttpStatus.OK);
     }
@@ -93,29 +89,28 @@ public class OpenApiServerActionBuilder extends
      * Send Http response messages as server to client.
      */
     public OpenApiServerResponseActionBuilder send(String operationKey, HttpStatus status) {
-        return send(operationKey, String.valueOf(status.value()));
+        return send(operationKey, status.name());
     }
 
     /**
      * Send Http response messages as server to client.
      */
-    public OpenApiServerResponseActionBuilder send(String operationKey, HttpStatus status,
-        String accept) {
-        return send(operationKey, String.valueOf(status.value()), accept);
+    public OpenApiServerResponseActionBuilder send(String operationKey, HttpStatus status, String accept) {
+        return send(operationKey, status.name(), accept);
     }
 
-    /**
-     * Send Http response messages as server to client.
-     */
+    @Override
+    public OpenApiServerResponseActionBuilder send(String operationKey, int statusCode) {
+        return send(operationKey, String.valueOf(statusCode));
+    }
+
+    @Override
     public OpenApiServerResponseActionBuilder send(String operationKey, String statusCode) {
         return send(operationKey, statusCode, null);
     }
 
-    /**
-     * Send Http response messages as server to client.
-     */
-    public OpenApiServerResponseActionBuilder send(String operationKey, String statusCode,
-        String accept) {
+    @Override
+    public OpenApiServerResponseActionBuilder send(String operationKey, String statusCode, String accept) {
         OpenApiServerResponseActionBuilder builder = new OpenApiServerResponseActionBuilder(
             openApiSpecificationSource, operationKey, statusCode, accept);
         if (httpServer != null) {
@@ -131,9 +126,7 @@ public class OpenApiServerActionBuilder extends
         return builder;
     }
 
-    /**
-     * Sets the Spring bean application context.
-     */
+    @Override
     public OpenApiServerActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
         return this;
