@@ -25,8 +25,6 @@ import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.kubernetes.actions.KubernetesActionBuilder.kubernetes;
-
 public class KubernetesVerifyCustomResourcesIT extends AbstractKubernetesIT {
 
     @Autowired
@@ -66,9 +64,9 @@ public class KubernetesVerifyCustomResourcesIT extends AbstractKubernetesIT {
                 .customResources()
                 .verify("my-foo")
                 .type(Foo.class)
-                .inNamespace(namespace)
                 .isReady()
-                .maxAttempts(2));
+                .maxAttempts(2)
+                .inNamespace(namespace));
     }
 
     @Test

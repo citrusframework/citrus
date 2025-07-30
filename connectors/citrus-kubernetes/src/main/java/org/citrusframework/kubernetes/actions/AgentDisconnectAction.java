@@ -24,6 +24,7 @@ import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.ServiceBuilder;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import org.citrusframework.actions.kubernetes.KubernetesAgentDisconnectActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSettings;
 
@@ -75,20 +76,24 @@ public class AgentDisconnectAction extends ServiceDisconnectAction {
     /**
      * Action builder.
      */
-    public static class Builder extends ServiceDisconnectAction.Builder {
+    public static class Builder extends ServiceDisconnectAction.AbstractServiceDisconnectActionBuilder<AgentDisconnectAction, Builder>
+            implements KubernetesAgentDisconnectActionBuilder<AgentDisconnectAction, Builder> {
 
         private String agentName = KubernetesSettings.getServiceName();
 
+        @Override
         public Builder client(KubernetesClient kubernetesClient) {
             super.client(kubernetesClient);
             return this;
         }
 
+        @Override
         public Builder service(String name) {
             agent(name);
             return this;
         }
 
+        @Override
         public Builder agent(String agentName) {
             this.agentName = agentName;
             return this;

@@ -22,6 +22,7 @@ import io.fabric8.kubernetes.client.server.mock.KubernetesCrudDispatcher;
 import io.fabric8.kubernetes.client.server.mock.KubernetesMockServer;
 import io.fabric8.mockwebserver.Context;
 import io.fabric8.mockwebserver.MockWebServer;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.container.SequenceAfterTest;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.client.KubernetesClientBuilder;
@@ -29,10 +30,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
-import static org.citrusframework.kubernetes.actions.KubernetesExecuteAction.Builder.kubernetes;
-
 @Configuration
-public class KubernetesServiceConfiguration {
+public class KubernetesServiceConfiguration implements TestActionSupport {
 
     private final KubernetesMockServer k8sServer = new KubernetesMockServer(new Context(), new MockWebServer(),
             new HashMap<>(), new KubernetesCrudDispatcher(), false);
@@ -63,10 +62,12 @@ public class KubernetesServiceConfiguration {
                     kubernetes().client(k8sClient())
                         .pods()
                         .delete()
+                        .inNamespace("test")
                     .build(),
                     kubernetes().client(k8sClient())
                         .services()
                         .delete()
+                        .inNamespace("test")
                     .build()
                 ).build();
     }

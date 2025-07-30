@@ -27,7 +27,9 @@ import java.util.Map;
 
 import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.SecretBuilder;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.Updatable;
+import org.citrusframework.actions.kubernetes.KubernetesSecretCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
@@ -92,22 +94,26 @@ public class CreateSecretAction extends AbstractKubernetesAction implements Kube
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKubernetesAction.Builder<CreateSecretAction, Builder> {
+    public static class Builder extends AbstractKubernetesAction.Builder<CreateSecretAction, Builder>
+            implements KubernetesSecretCreateActionBuilder<CreateSecretAction, Builder> {
 
         private String secretName;
         private final List<String> filePaths = new ArrayList<>();
         private final Map<String, String> properties = new HashMap<>();
 
+        @Override
         public Builder secret(String secretName) {
             this.secretName = secretName;
             return this;
         }
 
+        @Override
         public Builder fromFile(String filePath) {
             this.filePaths.add(filePath);
             return this;
         }
 
+        @Override
         public Builder properties(Map<String, String> properties) {
             this.properties.putAll(properties);
             return this;

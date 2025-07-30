@@ -23,10 +23,10 @@ import java.util.Locale;
 
 import io.fabric8.kubernetes.api.model.GenericKubernetesResource;
 import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.client.CustomResource;
 import io.fabric8.kubernetes.client.dsl.Updatable;
 import io.fabric8.kubernetes.model.annotation.Group;
 import io.fabric8.kubernetes.model.annotation.Version;
+import org.citrusframework.actions.kubernetes.KubernetesCustomResourceCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.KubernetesSupport;
@@ -114,7 +114,8 @@ public class CreateCustomResourceAction extends AbstractKubernetesAction impleme
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKubernetesAction.Builder<CreateCustomResourceAction, Builder> {
+    public static class Builder extends AbstractKubernetesAction.Builder<CreateCustomResourceAction, Builder>
+            implements KubernetesCustomResourceCreateActionBuilder<CreateCustomResourceAction, Builder> {
 
         private String type;
         private Class<? extends HasMetadata> resourceType;
@@ -124,31 +125,37 @@ public class CreateCustomResourceAction extends AbstractKubernetesAction impleme
         private String content;
         private String filePath;
 
+        @Override
         public Builder type(String resourceType) {
             this.type = resourceType;
             return this;
         }
 
+        @Override
         public Builder content(String content) {
             this.content = content;
             return this;
         }
 
+        @Override
         public Builder kind(String kind) {
             this.kind = kind;
             return this;
         }
 
+        @Override
         public Builder group(String group) {
             this.group = group;
             return this;
         }
 
+        @Override
         public Builder version(String version) {
             this.version = version;
             return this;
         }
 
+        @Override
         public Builder apiVersion(String apiVersion) {
             String[] groupAndVersion = apiVersion.split("/");
 
@@ -157,39 +164,52 @@ public class CreateCustomResourceAction extends AbstractKubernetesAction impleme
             return this;
         }
 
-        public Builder resourceType(Class<CustomResource<?, ?>> resourceType) {
-            this.resourceType = resourceType;
+        @Override
+        public Builder resourceType(Class<?> resourceType) {
+            if (HasMetadata.class.isAssignableFrom(resourceType)) {
+                this.resourceType = (Class<? extends HasMetadata>) resourceType;
+            } else {
+                throw new ClassCastException("Resource type '%s' is not supported".formatted(resourceType.getName()));
+            }
+
             return this;
         }
 
+        @Override
         public Builder file(String filePath) {
             this.filePath = filePath;
             return this;
         }
 
-        public Builder resource(CustomResource<?, ?> resource) {
-            if (resource.getApiVersion() != null) {
-                apiVersion(resource.getApiVersion());
+        @Override
+        public Builder resource(Object o) {
+            if (o instanceof HasMetadata resource) {
+
+                if (resource.getApiVersion() != null) {
+                    apiVersion(resource.getApiVersion());
+                } else {
+                    version(resource.getClass().getAnnotation(Version.class).value());
+                }
+
+                if (resource.getKind() != null) {
+                    kind(resource.getKind());
+                } else {
+                    kind(resource.getClass().getSimpleName());
+                }
+
+                if (HasMetadata.getGroup(resource.getClass()) != null) {
+                    group(HasMetadata.getGroup(resource.getClass()));
+                } else {
+                    group(resource.getClass().getAnnotation(Group.class).value());
+                }
+
+                type(String.format("%ss.%s/%s", kind.toLowerCase(Locale.ENGLISH), group, version));
+                content(KubernetesSupport.dumpYaml(resource));
+
+                this.resourceType = resource.getClass();
             } else {
-                version(resource.getClass().getAnnotation(Version.class).value());
+                throw new CitrusRuntimeException("Invalid resource type %s".formatted(o.getClass().getName()));
             }
-
-            if (resource.getKind() != null) {
-                kind(resource.getKind());
-            } else {
-                kind(resource.getClass().getSimpleName());
-            }
-
-            if (resource.getGroup() != null) {
-                group(resource.getGroup());
-            } else {
-                group(resource.getClass().getAnnotation(Group.class).value());
-            }
-
-            type(String.format("%ss.%s/%s", kind.toLowerCase(Locale.ENGLISH), group, version));
-            content(KubernetesSupport.dumpYaml(resource));
-
-            this.resourceType = resource.getClass();
 
             return this;
         }

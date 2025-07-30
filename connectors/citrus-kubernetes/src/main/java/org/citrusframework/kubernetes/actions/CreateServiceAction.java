@@ -30,7 +30,9 @@ import io.fabric8.kubernetes.api.model.ServicePort;
 import io.fabric8.kubernetes.api.model.ServicePortBuilder;
 import io.fabric8.kubernetes.client.dsl.Updatable;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.actions.kubernetes.KubernetesServiceCreateActionBuilder;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
 import org.citrusframework.kubernetes.KubernetesSettings;
@@ -110,7 +112,8 @@ public class CreateServiceAction extends AbstractKubernetesAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKubernetesAction.Builder<CreateServiceAction, Builder> implements ReferenceResolverAware {
+    public static class Builder extends AbstractKubernetesAction.Builder<CreateServiceAction, Builder>
+            implements ReferenceResolverAware, KubernetesServiceCreateActionBuilder<CreateServiceAction, Builder> {
 
         private String serviceName = KubernetesSettings.getServiceName();
         private final List<String> ports = new ArrayList<>();
@@ -122,31 +125,37 @@ public class CreateServiceAction extends AbstractKubernetesAction {
         private boolean autoCreateServerBinding = KubernetesSettings.isAutoCreateServerBinding();
         private ReferenceResolver referenceResolver;
 
+        @Override
         public Builder service(String serviceName) {
             this.serviceName = serviceName;
             return this;
         }
 
+        @Override
         public Builder ports(String... ports) {
             Arrays.stream(ports).forEach(this::port);
             return this;
         }
 
+        @Override
         public Builder ports(int... ports) {
             Arrays.stream(ports).forEach(this::port);
             return this;
         }
 
+        @Override
         public Builder port(String port) {
             this.ports.add(port);
             return this;
         }
 
+        @Override
         public Builder port(int port) {
             this.ports.add(String.valueOf(port));
             return this;
         }
 
+        @Override
         public Builder portMapping(String port, String targetPort) {
             if (port != null) {
                 port(port);
@@ -158,62 +167,77 @@ public class CreateServiceAction extends AbstractKubernetesAction {
             return this;
         }
 
+        @Override
         public Builder portMapping(int port, int targetPort) {
             port(port);
             targetPort(targetPort);
             return this;
         }
 
+        @Override
         public Builder targetPorts(String... targetPorts) {
             Arrays.stream(targetPorts).forEach(this::targetPort);
             return this;
         }
 
+        @Override
         public Builder targetPorts(int... targetPorts) {
             Arrays.stream(targetPorts).forEach(this::targetPort);
             return this;
         }
 
+        @Override
         public Builder targetPort(String targetPort) {
             this.targetPorts.add(targetPort);
             return this;
         }
 
+        @Override
         public Builder targetPort(int targetPort) {
             this.targetPorts.add(String.valueOf(targetPort));
             return this;
         }
 
+        @Override
         public Builder protocol(String protocol) {
             this.protocol = protocol;
             return this;
         }
 
+        @Override
         public Builder label(String label, String value) {
             this.podSelector.put(label, value);
             return this;
         }
 
+        @Override
         public Builder withPodSelector(Map<String, String> selector) {
             this.podSelector.putAll(selector);
             return this;
         }
 
-        public Builder server(HttpServer httpServer) {
-            this.httpServer = httpServer;
+        @Override
+        public Builder server(Endpoint endpoint) {
+            if (endpoint instanceof HttpServer server) {
+                this.httpServer = server;
+            }
+
             return this;
         }
 
+        @Override
         public Builder server(String httpServerName) {
             this.httpServerName = httpServerName;
             return this;
         }
 
+        @Override
         public Builder autoCreateServerBinding(boolean enabled) {
             this.autoCreateServerBinding = enabled;
             return this;
         }
 
+        @Override
         public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
             this.referenceResolver = referenceResolver;
             return this;

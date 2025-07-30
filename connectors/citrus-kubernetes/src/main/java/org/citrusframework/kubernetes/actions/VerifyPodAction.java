@@ -19,6 +19,7 @@ package org.citrusframework.kubernetes.actions;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.dsl.PodResource;
+import org.citrusframework.actions.kubernetes.KubernetesPodVerifyActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -263,7 +264,8 @@ public class VerifyPodAction extends AbstractKubernetesAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractKubernetesAction.Builder<VerifyPodAction, Builder> {
+    public static final class Builder extends AbstractKubernetesAction.Builder<VerifyPodAction, Builder>
+            implements KubernetesPodVerifyActionBuilder<VerifyPodAction, Builder> {
 
         private String podName;
         private String labelExpression;
@@ -275,46 +277,55 @@ public class VerifyPodAction extends AbstractKubernetesAction {
         private String phase = "Running";
         private boolean printLogs = true;
 
+        @Override
         public Builder phase(String phase) {
             this.phase = phase;
             return this;
         }
 
+        @Override
         public Builder isRunning() {
             this.phase = "Running";
             return this;
         }
 
+        @Override
         public Builder isStopped() {
             this.phase = "Stopped";
             return this;
         }
 
+        @Override
         public Builder printLogs(boolean printLogs) {
             this.printLogs = printLogs;
             return this;
         }
 
+        @Override
         public Builder podName(String podName) {
             this.podName = podName;
             return this;
         }
 
+        @Override
         public Builder label(String name, String value) {
             this.labelExpression = String.format("%s=%s", name, value);
             return this;
         }
 
+        @Override
         public Builder waitForLogMessage(String logMessage) {
             this.logMessage = logMessage;
             return this;
         }
 
+        @Override
         public Builder maxAttempts(int maxAttempts) {
             this.maxAttempts = maxAttempts;
             return this;
         }
 
+        @Override
         public Builder delayBetweenAttempts(long delayBetweenAttempts) {
             this.delayBetweenAttempts = delayBetweenAttempts;
             return this;

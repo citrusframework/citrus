@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import org.citrusframework.actions.kubernetes.KubernetesResourceDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
@@ -61,22 +62,26 @@ public class DeleteResourceAction extends AbstractKubernetesAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKubernetesAction.Builder<DeleteResourceAction, Builder> {
+    public static class Builder extends AbstractKubernetesAction.Builder<DeleteResourceAction, Builder>
+            implements KubernetesResourceDeleteActionBuilder<DeleteResourceAction, Builder> {
 
         private String content;
         private Resource resource;
         private String resourcePath;
 
+        @Override
         public Builder content(String content) {
             this.content = content;
             return this;
         }
 
+        @Override
         public Builder resource(Resource resource) {
             this.resource = resource;
             return this;
         }
 
+        @Override
         public Builder resource(String path) {
             this.resourcePath = path;
             return this;
