@@ -28,6 +28,7 @@ import java.util.Map;
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.ConfigMapBuilder;
 import io.fabric8.kubernetes.client.dsl.Updatable;
+import org.citrusframework.actions.kubernetes.KubernetesConfigMapCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
@@ -91,22 +92,26 @@ public class CreateConfigMapAction extends AbstractKubernetesAction implements K
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKubernetesAction.Builder<CreateConfigMapAction, Builder> {
+    public static class Builder extends AbstractKubernetesAction.Builder<CreateConfigMapAction, Builder>
+            implements KubernetesConfigMapCreateActionBuilder<CreateConfigMapAction, Builder> {
 
         private String configMapName;
         private final List<String> filePaths = new ArrayList<>();
         private final Map<String, String> properties = new HashMap<>();
 
+        @Override
         public Builder configMap(String configMapName) {
             this.configMapName = configMapName;
             return this;
         }
 
+        @Override
         public Builder fromFile(String filePath) {
             this.filePaths.add(filePath);
             return this;
         }
 
+        @Override
         public Builder properties(Map<String, String> properties) {
             this.properties.putAll(properties);
             return this;

@@ -16,12 +16,21 @@
 
 package org.citrusframework.kubernetes.actions;
 
-import io.fabric8.kubernetes.client.CustomResource;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.actions.kubernetes.KubernetesAgentActionBuilder;
+import org.citrusframework.actions.kubernetes.KubernetesConfigMapActionBuilder;
+import org.citrusframework.actions.kubernetes.KubernetesCustomResourceActionBuilder;
+import org.citrusframework.actions.kubernetes.KubernetesDeploymentActionBuilder;
+import org.citrusframework.actions.kubernetes.KubernetesPodActionBuilder;
+import org.citrusframework.actions.kubernetes.KubernetesResourceActionBuilder;
+import org.citrusframework.actions.kubernetes.KubernetesSecretActionBuilder;
+import org.citrusframework.actions.kubernetes.KubernetesServiceActionBuilder;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.springframework.util.Assert;
 
-public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<KubernetesAction> {
+public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<KubernetesAction>,
+        org.citrusframework.actions.kubernetes.KubernetesActionBuilder<KubernetesAction, KubernetesActionBuilder> {
 
     /** Kubernetes client */
     private KubernetesClient kubernetesClient;
@@ -30,7 +39,6 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
 
     /**
      * Fluent API action building entry method used in Java DSL.
-     * @return
      */
     public static KubernetesActionBuilder k8s() {
         return kubernetes();
@@ -38,7 +46,6 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
 
     /**
      * Fluent API action building entry method used in Java DSL.
-     * @return
      */
     public static KubernetesActionBuilder kubernetes() {
         return new KubernetesActionBuilder();
@@ -53,66 +60,53 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
         return this;
     }
 
-    /**
-     * Performs actions on Kubernetes agent.
-     * @return
-     */
+    @Override
+    public KubernetesActionBuilder client(Object client) {
+        if (client instanceof KubernetesClient k8sClient) {
+            return client(k8sClient);
+        } else if (client instanceof org.citrusframework.kubernetes.client.KubernetesClient k8sClient) {
+            return client(k8sClient.getClient());
+        } else {
+            throw new CitrusRuntimeException("Kubernetes client must be of type %s".formatted(KubernetesClient.class.getName()));
+        }
+    }
+
+    @Override
     public AgentActionBuilder agent() {
         return new AgentActionBuilder();
     }
 
-    /**
-     * Performs actions on Kubernetes services.
-     * @return
-     */
+    @Override
     public ServiceActionBuilder services() {
         return new ServiceActionBuilder();
     }
 
-    /**
-     * Performs actions on Kubernetes resources.
-     * @return
-     */
+    @Override
     public ResourceActionBuilder resources() {
         return new ResourceActionBuilder();
     }
 
-    /**
-     * Performs actions on Kubernetes pods.
-     * @return
-     */
+    @Override
     public DeploymentActionBuilder deployments() {
         return new DeploymentActionBuilder();
     }
 
-    /**
-     * Performs actions on Kubernetes pods.
-     * @return
-     */
+    @Override
     public PodActionBuilder pods() {
         return new PodActionBuilder();
     }
 
-    /**
-     * Performs actions on Kubernetes custom resources.
-     * @return
-     */
+    @Override
     public CustomResourceActionBuilder customResources() {
         return new CustomResourceActionBuilder();
     }
 
-    /**
-     * Performs actions on Kubernetes secrets.
-     * @return
-     */
+    @Override
     public SecretActionBuilder secrets() {
         return new SecretActionBuilder();
     }
 
-    /**
-     * Performs actions on Kubernetes config maps.
-     * @return
-     */
+    @Override
     public ConfigMapActionBuilder configMaps() {
         return new ConfigMapActionBuilder();
     }
@@ -131,11 +125,9 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
         return delegate;
     }
 
-    public class SecretActionBuilder {
-        /**
-         * Create secret instance.
-         * @param secretName the name of the Kubernetes secret.
-         */
+    public class SecretActionBuilder implements KubernetesSecretActionBuilder<KubernetesAction> {
+
+        @Override
         public CreateSecretAction.Builder create(String secretName) {
             CreateSecretAction.Builder builder = new CreateSecretAction.Builder()
                     .client(kubernetesClient)
@@ -144,10 +136,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Add annotation on secret instance.
-         * @param secretName the name of the Kubernetes secret.
-         */
+        @Override
         public CreateAnnotationsAction.Builder addAnnotation(String secretName) {
             CreateAnnotationsAction.Builder builder = new CreateAnnotationsAction.Builder()
                     .client(kubernetesClient)
@@ -156,10 +145,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Add label on secret instance.
-         * @param secretName the name of the Kubernetes secret.
-         */
+        @Override
         public CreateLabelsAction.Builder addLabel(String secretName) {
             CreateLabelsAction.Builder builder = new CreateLabelsAction.Builder()
                     .client(kubernetesClient)
@@ -168,10 +154,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Delete secret instance.
-         * @param secretName the name of the Kubernetes secret.
-         */
+        @Override
         public DeleteSecretAction.Builder delete(String secretName) {
             DeleteSecretAction.Builder builder = new DeleteSecretAction.Builder()
                     .client(kubernetesClient)
@@ -181,11 +164,9 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
         }
     }
 
-    public class ConfigMapActionBuilder {
-        /**
-         * Create configMap instance.
-         * @param configMapName the name of the Kubernetes configMap.
-         */
+    public class ConfigMapActionBuilder implements KubernetesConfigMapActionBuilder<KubernetesAction> {
+
+        @Override
         public CreateConfigMapAction.Builder create(String configMapName) {
             CreateConfigMapAction.Builder builder = new CreateConfigMapAction.Builder()
                     .client(kubernetesClient)
@@ -194,10 +175,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Add annotation on configMap instance.
-         * @param configMapName the name of the Kubernetes configMap.
-         */
+        @Override
         public CreateAnnotationsAction.Builder addAnnotation(String configMapName) {
             CreateAnnotationsAction.Builder builder = new CreateAnnotationsAction.Builder()
                     .client(kubernetesClient)
@@ -206,10 +184,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Add label on configMap instance.
-         * @param configMapName the name of the Kubernetes configMap.
-         */
+        @Override
         public CreateLabelsAction.Builder addLabel(String configMapName) {
             CreateLabelsAction.Builder builder = new CreateLabelsAction.Builder()
                     .client(kubernetesClient)
@@ -218,10 +193,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Delete configMap instance.
-         * @param configMapName the name of the Kubernetes configMap.
-         */
+        @Override
         public DeleteConfigMapAction.Builder delete(String configMapName) {
             DeleteConfigMapAction.Builder builder = new DeleteConfigMapAction.Builder()
                     .client(kubernetesClient)
@@ -231,10 +203,9 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
         }
     }
 
-    public class CustomResourceActionBuilder {
-        /**
-         * Create custom resource instance.
-         */
+    public class CustomResourceActionBuilder implements KubernetesCustomResourceActionBuilder<KubernetesAction> {
+
+        @Override
         public CreateCustomResourceAction.Builder create() {
             CreateCustomResourceAction.Builder builder = new CreateCustomResourceAction.Builder()
                     .client(kubernetesClient);
@@ -242,10 +213,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Delete custom resource instance.
-         * @param name the name of the Kubernetes custom resource.
-         */
+        @Override
         public DeleteCustomResourceAction.Builder delete(String name) {
             DeleteCustomResourceAction.Builder builder = new DeleteCustomResourceAction.Builder()
                     .client(kubernetesClient)
@@ -254,73 +222,18 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Verify that given custom resource matches a condition.
-         */
+        @Override
         public VerifyCustomResourceAction.Builder verify() {
             VerifyCustomResourceAction.Builder builder = new VerifyCustomResourceAction.Builder()
                     .client(kubernetesClient);
             delegate = builder;
             return builder;
         }
-
-        /**
-         * Verify that given custom resource matches a condition.
-         * @param resourceType the type of the customer resource.
-         */
-        public VerifyCustomResourceAction.Builder verify(Class<? extends CustomResource<?, ?>> resourceType) {
-            VerifyCustomResourceAction.Builder builder = new VerifyCustomResourceAction.Builder()
-                    .client(kubernetesClient)
-                    .type(resourceType);
-            delegate = builder;
-            return builder;
-        }
-
-        /**
-         * Verify that given custom resource matches a condition.
-         * @param name the name of the custom resource.
-         * @param resourceType the type of the customer resource.
-         */
-        public VerifyCustomResourceAction.Builder verify(String name, Class<? extends CustomResource<?, ?>> resourceType) {
-            VerifyCustomResourceAction.Builder builder = new VerifyCustomResourceAction.Builder()
-                    .client(kubernetesClient)
-                    .type(resourceType)
-                    .resourceName(name);
-            delegate = builder;
-            return builder;
-        }
-
-        /**
-         * Verify that given custom resource matches a condition.
-         * @param name the name of the custom resource.
-         */
-        public VerifyCustomResourceAction.Builder verify(String name) {
-            VerifyCustomResourceAction.Builder builder = new VerifyCustomResourceAction.Builder()
-                    .client(kubernetesClient)
-                    .resourceName(name);
-            delegate = builder;
-            return builder;
-        }
-
-        /**
-         * Verify that given custom resource matches a condition.
-         * @param label the label to filter results.
-         * @param value the value of the label.
-         */
-        public VerifyCustomResourceAction.Builder verify(String label, String value) {
-            VerifyCustomResourceAction.Builder builder = new VerifyCustomResourceAction.Builder()
-                    .client(kubernetesClient)
-                    .label(label, value);
-            delegate = builder;
-            return builder;
-        }
     }
 
-    public class DeploymentActionBuilder {
-        /**
-         * Add annotation on deployment instance.
-         * @param deploymentName the name of the Kubernetes deployment.
-         */
+    public class DeploymentActionBuilder implements KubernetesDeploymentActionBuilder<KubernetesAction> {
+
+        @Override
         public CreateAnnotationsAction.Builder addAnnotation(String deploymentName) {
             CreateAnnotationsAction.Builder builder = new CreateAnnotationsAction.Builder()
                     .client(kubernetesClient)
@@ -329,10 +242,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Add label on deployment instance.
-         * @param deploymentName the name of the Kubernetes deployment.
-         */
+        @Override
         public CreateLabelsAction.Builder addLabel(String deploymentName) {
             CreateLabelsAction.Builder builder = new CreateLabelsAction.Builder()
                     .client(kubernetesClient)
@@ -343,11 +253,35 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
 
     }
 
-    public class PodActionBuilder {
-        /**
-         * Verify that given pod is running.
-         * @param podName the name of the Camel K pod.
-         */
+    public class PodActionBuilder implements KubernetesPodActionBuilder<KubernetesAction> {
+
+        @Override
+        public DeletePodAction.Builder delete() {
+            DeletePodAction.Builder builder = new DeletePodAction.Builder()
+                    .client(kubernetesClient);
+            delegate = builder;
+            return builder;
+        }
+
+        @Override
+        public DeletePodAction.Builder delete(String podName) {
+            DeletePodAction.Builder builder = new DeletePodAction.Builder()
+                    .client(kubernetesClient)
+                    .podName(podName);
+            delegate = builder;
+            return builder;
+        }
+
+        @Override
+        public DeletePodAction.Builder delete(String label, String value) {
+            DeletePodAction.Builder builder = new DeletePodAction.Builder()
+                    .client(kubernetesClient)
+                    .label(label, value);
+            delegate = builder;
+            return builder;
+        }
+
+        @Override
         public VerifyPodAction.Builder verify(String podName) {
             VerifyPodAction.Builder builder = new VerifyPodAction.Builder()
                     .client(kubernetesClient)
@@ -356,10 +290,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Watch pod logs for given pod identified by its name.
-         * @param podName the name of the Camel K pod.
-         */
+        @Override
         public WatchPodLogsAction.Builder watchLogs(String podName) {
             WatchPodLogsAction.Builder builder = new WatchPodLogsAction.Builder()
                     .client(kubernetesClient)
@@ -368,11 +299,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Watch pod logs for given pod identified by label selector.
-         * @param label the name of the pod label to filter on.
-         * @param value the value of the pod label to match.
-         */
+        @Override
         public WatchPodLogsAction.Builder watchLogs(String label, String value) {
             WatchPodLogsAction.Builder builder = new WatchPodLogsAction.Builder()
                     .client(kubernetesClient)
@@ -381,10 +308,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Add annotation on pod instance.
-         * @param podName the name of the Kubernetes pod.
-         */
+        @Override
         public CreateAnnotationsAction.Builder addAnnotation(String podName) {
             CreateAnnotationsAction.Builder builder = new CreateAnnotationsAction.Builder()
                     .client(kubernetesClient)
@@ -393,10 +317,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Add label on pod instance.
-         * @param podName the name of the Kubernetes pod.
-         */
+        @Override
         public CreateLabelsAction.Builder addLabel(String podName) {
             CreateLabelsAction.Builder builder = new CreateLabelsAction.Builder()
                     .client(kubernetesClient)
@@ -405,11 +326,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Verify that given pod is running.
-         * @param label the name of the pod label to filter on.
-         * @param value the value of the pod label to match.
-         */
+        @Override
         public VerifyPodAction.Builder verify(String label, String value) {
             VerifyPodAction.Builder builder = new VerifyPodAction.Builder()
                     .client(kubernetesClient)
@@ -419,10 +336,9 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
         }
     }
 
-    public class ResourceActionBuilder {
-        /**
-         * Create any Kubernetes resource instance from yaml.
-         */
+    public class ResourceActionBuilder implements KubernetesResourceActionBuilder<KubernetesAction> {
+
+        @Override
         public CreateResourceAction.Builder create() {
             CreateResourceAction.Builder builder = new CreateResourceAction.Builder()
                     .client(kubernetesClient);
@@ -430,11 +346,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Add annotation on resource instance.
-         * @param resourceName the name of the Kubernetes resource.
-         * @param resourceType the type of the Kubernetes resource.
-         */
+        @Override
         public CreateAnnotationsAction.Builder addAnnotation(String resourceName, String resourceType) {
             CreateAnnotationsAction.Builder builder = new CreateAnnotationsAction.Builder()
                     .client(kubernetesClient)
@@ -444,11 +356,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Add label on resource instance.
-         * @param resourceName the name of the Kubernetes resource.
-         * @param resourceType the type of the Kubernetes resource.
-         */
+        @Override
         public CreateLabelsAction.Builder addLabel(String resourceName, String resourceType) {
             CreateLabelsAction.Builder builder = new CreateLabelsAction.Builder()
                     .client(kubernetesClient)
@@ -458,10 +366,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Delete any Kubernetes resource instance.
-         * @param content the Kubernetes resource as YAML content.
-         */
+        @Override
         public DeleteResourceAction.Builder delete(String content) {
             DeleteResourceAction.Builder builder = new DeleteResourceAction.Builder()
                     .client(kubernetesClient)
@@ -471,20 +376,17 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
         }
     }
 
-    public class AgentActionBuilder {
+    public class AgentActionBuilder implements KubernetesAgentActionBuilder<KubernetesAction> {
 
-        /**
-         * Create new agent deployment and connect to given Kubernetes service via local port forward.
-         */
+        @Override
         public AgentConnectAction.Builder connect() {
             AgentConnectAction.Builder builder = new AgentConnectAction.Builder()
                     .client(kubernetesClient);
             delegate = builder;
             return builder;
         }
-        /**
-         * Create new agent deployment and connect to given Kubernetes service via local port forward.
-         */
+
+        @Override
         public AgentConnectAction.Builder connect(String agentName) {
             AgentConnectAction.Builder builder = new AgentConnectAction.Builder()
                     .client(kubernetesClient)
@@ -493,9 +395,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Disconnect from given Kubernetes agent.
-         */
+        @Override
         public AgentDisconnectAction.Builder disconnect() {
             AgentDisconnectAction.Builder builder = new AgentDisconnectAction.Builder()
                     .client(kubernetesClient);
@@ -503,9 +403,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Disconnect from given Kubernetes agent.
-         */
+        @Override
         public AgentDisconnectAction.Builder disconnect(String agentName) {
             AgentDisconnectAction.Builder builder = new AgentDisconnectAction.Builder()
                     .client(kubernetesClient)
@@ -515,11 +413,9 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
         }
     }
 
-    public class ServiceActionBuilder {
+    public class ServiceActionBuilder implements KubernetesServiceActionBuilder<KubernetesAction> {
 
-        /**
-         * Connect to given Kubernetes service via local port forward.
-         */
+        @Override
         public ServiceConnectAction.Builder connect() {
             ServiceConnectAction.Builder builder = new ServiceConnectAction.Builder()
                     .client(kubernetesClient);
@@ -527,10 +423,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Connect to given Kubernetes service via local port forward.
-         * @param serviceName the name of the Kubernetes service.
-         */
+        @Override
         public ServiceConnectAction.Builder connect(String serviceName) {
             ServiceConnectAction.Builder builder = new ServiceConnectAction.Builder()
                     .client(kubernetesClient)
@@ -539,9 +432,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Connect to given Kubernetes service via local port forward.
-         */
+        @Override
         public ServiceDisconnectAction.Builder disconnect() {
             ServiceDisconnectAction.Builder builder = new ServiceDisconnectAction.Builder()
                     .client(kubernetesClient);
@@ -549,10 +440,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Connect to given Kubernetes service via local port forward.
-         * @param serviceName the name of the Kubernetes service.
-         */
+        @Override
         public ServiceDisconnectAction.Builder disconnect(String serviceName) {
             ServiceDisconnectAction.Builder builder = new ServiceDisconnectAction.Builder()
                     .client(kubernetesClient)
@@ -561,10 +449,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Create service instance.
-         * @param serviceName the name of the Kubernetes service.
-         */
+        @Override
         public CreateServiceAction.Builder create(String serviceName) {
             CreateServiceAction.Builder builder = new CreateServiceAction.Builder()
                     .client(kubernetesClient)
@@ -573,10 +458,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Add annotation on service instance.
-         * @param serviceName the name of the Kubernetes service.
-         */
+        @Override
         public CreateAnnotationsAction.Builder addAnnotation(String serviceName) {
             CreateAnnotationsAction.Builder builder = new CreateAnnotationsAction.Builder()
                     .client(kubernetesClient)
@@ -585,10 +467,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Add label on service instance.
-         * @param serviceName the name of the Kubernetes service.
-         */
+        @Override
         public CreateLabelsAction.Builder addLabel(String serviceName) {
             CreateLabelsAction.Builder builder = new CreateLabelsAction.Builder()
                     .client(kubernetesClient)
@@ -597,10 +476,15 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
             return builder;
         }
 
-        /**
-         * Delete service instance.
-         * @param serviceName the name of the Kubernetes service.
-         */
+        @Override
+        public DeleteServiceAction.Builder delete() {
+            DeleteServiceAction.Builder builder = new DeleteServiceAction.Builder()
+                    .client(kubernetesClient);
+            delegate = builder;
+            return builder;
+        }
+
+        @Override
         public DeleteServiceAction.Builder delete(String serviceName) {
             DeleteServiceAction.Builder builder = new DeleteServiceAction.Builder()
                     .client(kubernetesClient)

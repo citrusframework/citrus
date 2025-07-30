@@ -31,6 +31,7 @@ import io.fabric8.kubernetes.client.CustomResource;
 import io.fabric8.kubernetes.client.dsl.base.ResourceDefinitionContext;
 import io.fabric8.kubernetes.model.annotation.Group;
 import io.fabric8.kubernetes.model.annotation.Version;
+import org.citrusframework.actions.kubernetes.KubernetesCustomResourceVerifyActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -265,7 +266,8 @@ public class VerifyCustomResourceAction extends AbstractKubernetesAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractKubernetesAction.Builder<VerifyCustomResourceAction, Builder> {
+    public static final class Builder extends AbstractKubernetesAction.Builder<VerifyCustomResourceAction, Builder>
+            implements KubernetesCustomResourceVerifyActionBuilder<VerifyCustomResourceAction, Builder> {
 
         private String resourceName;
         private String labelExpression;
@@ -282,6 +284,7 @@ public class VerifyCustomResourceAction extends AbstractKubernetesAction {
         private String kind;
         private String group;
 
+        @Override
         public Builder resourceName(String name) {
             if (name.contains("/")) {
                 String[] tokens = name.split("/");
@@ -297,20 +300,33 @@ public class VerifyCustomResourceAction extends AbstractKubernetesAction {
             return this;
         }
 
-        public Builder resourceType(Class<CustomResource<?, ?>> resourceType) {
-            this.resourceType = resourceType;
+        @Override
+        public Builder resourceType(Class<?> resourceType) {
+            if (CustomResource.class.isAssignableFrom(resourceType)) {
+                this.resourceType = (Class<? extends CustomResource<?, ?>>) resourceType;
+            } else {
+                throw new ClassCastException("Resource type '%s' is not supported".formatted(resourceType.getName()));
+            }
+
             return this;
         }
 
-        public Builder type(Class<? extends CustomResource<?, ?>> resourceType) {
-            version(resourceType.getAnnotation(Version.class).value());
-            group(resourceType.getAnnotation(Group.class).value());
-            kind(resourceType.getSimpleName());
-            type(String.format("%ss.%s/%s", kind.toLowerCase(Locale.ENGLISH), group, version));
-            this.resourceType = resourceType;
+        @Override
+        public Builder type(Class<?> resourceType) {
+            if (CustomResource.class.isAssignableFrom(resourceType)) {
+                version(resourceType.getAnnotation(Version.class).value());
+                group(resourceType.getAnnotation(Group.class).value());
+                kind(resourceType.getSimpleName());
+                type(String.format("%ss.%s/%s", kind.toLowerCase(Locale.ENGLISH), group, version));
+                this.resourceType = (Class<? extends CustomResource<?, ?>>) resourceType;
+            } else {
+                throw new ClassCastException("Resource type '%s' is not supported".formatted(resourceType.getName()));
+            }
+
             return this;
         }
 
+        @Override
         public Builder type(String resourceType) {
             if (resourceType.contains("/")) {
                 String[] tokens = resourceType.split("/");
@@ -330,21 +346,25 @@ public class VerifyCustomResourceAction extends AbstractKubernetesAction {
             return this;
         }
 
+        @Override
         public Builder kind(String kind) {
             this.kind = kind;
             return this;
         }
 
+        @Override
         public Builder group(String group) {
             this.group = group;
             return this;
         }
 
+        @Override
         public Builder version(String version) {
             this.version = version;
             return this;
         }
 
+        @Override
         public Builder apiVersion(String apiVersion) {
             String[] groupAndVersion = apiVersion.split("/");
 
@@ -353,31 +373,37 @@ public class VerifyCustomResourceAction extends AbstractKubernetesAction {
             return this;
         }
 
+        @Override
         public Builder condition(String value) {
             this.condition = value;
             return this;
         }
 
+        @Override
         public Builder isAvailable() {
             condition("Available");
             return this;
         }
 
+        @Override
         public Builder isReady() {
             condition("Ready");
             return this;
         }
 
+        @Override
         public Builder label(String name, String value) {
             this.labelExpression = String.format("%s=%s", name, value);
             return this;
         }
 
+        @Override
         public Builder maxAttempts(int maxAttempts) {
             this.maxAttempts = maxAttempts;
             return this;
         }
 
+        @Override
         public Builder delayBetweenAttempts(long delayBetweenAttempts) {
             this.delayBetweenAttempts = delayBetweenAttempts;
             return this;

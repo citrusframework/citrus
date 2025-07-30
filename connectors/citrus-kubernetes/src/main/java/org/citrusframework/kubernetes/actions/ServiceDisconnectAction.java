@@ -19,6 +19,7 @@ package org.citrusframework.kubernetes.actions;
 import java.io.IOException;
 
 import io.fabric8.kubernetes.client.LocalPortForward;
+import org.citrusframework.actions.kubernetes.KubernetesServiceDisconnectActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSettings;
 
@@ -30,7 +31,7 @@ public class ServiceDisconnectAction extends AbstractKubernetesAction {
 
     private final String serviceName;
 
-    protected ServiceDisconnectAction(String name, Builder builder) {
+    protected ServiceDisconnectAction(String name, AbstractServiceDisconnectActionBuilder<?, ?> builder) {
         super(name, builder);
 
         this.serviceName = builder.serviceName;
@@ -66,18 +67,25 @@ public class ServiceDisconnectAction extends AbstractKubernetesAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKubernetesAction.Builder<ServiceDisconnectAction, Builder> {
-
-        private String serviceName = KubernetesSettings.getServiceName();
-
-        public Builder service(String serviceName) {
-            this.serviceName = serviceName;
-            return this;
-        }
-
+    public static class Builder extends AbstractServiceDisconnectActionBuilder<ServiceDisconnectAction, Builder> {
         @Override
         public ServiceDisconnectAction doBuild() {
             return new ServiceDisconnectAction(this);
+        }
+    }
+
+    /**
+     * Action builder.
+     */
+    public static abstract class AbstractServiceDisconnectActionBuilder<T extends ServiceDisconnectAction, B extends AbstractServiceDisconnectActionBuilder<T, B>>
+            extends AbstractKubernetesAction.Builder<T, B>
+            implements KubernetesServiceDisconnectActionBuilder<T, B> {
+
+        private String serviceName = KubernetesSettings.getServiceName();
+
+        public B service(String serviceName) {
+            this.serviceName = serviceName;
+            return self;
         }
     }
 }

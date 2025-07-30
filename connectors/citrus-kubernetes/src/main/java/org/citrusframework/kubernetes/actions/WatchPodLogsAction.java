@@ -26,6 +26,7 @@ import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import io.fabric8.kubernetes.client.dsl.PodResource;
+import org.citrusframework.actions.kubernetes.KubernetesPodWatchLogsActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
@@ -166,7 +167,8 @@ public class WatchPodLogsAction extends AbstractKubernetesAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractKubernetesAction.Builder<WatchPodLogsAction, Builder> {
+    public static final class Builder extends AbstractKubernetesAction.Builder<WatchPodLogsAction, Builder>
+            implements KubernetesPodWatchLogsActionBuilder<WatchPodLogsAction, Builder> {
 
         private String podName;
         private String labelExpression;
@@ -174,34 +176,40 @@ public class WatchPodLogsAction extends AbstractKubernetesAction {
 
         private TimeUnit timeUnit = TimeUnit.MILLISECONDS;
 
+        @Override
         public Builder podName(String podName) {
             this.podName = podName;
             return this;
         }
 
+        @Override
         public Builder label(String name, String value) {
             this.labelExpression = String.format("%s=%s", name, value);
             return this;
         }
 
+        @Override
         public Builder milliseconds(String time) {
             this.timeout = time;
             this.timeUnit = TimeUnit.MILLISECONDS;
             return this;
         }
 
+        @Override
         public Builder seconds(String time) {
             this.timeout = time;
             this.timeUnit = TimeUnit.SECONDS;
             return this;
         }
 
+        @Override
         public Builder minutes(String time) {
             this.timeout = time;
             this.timeUnit = TimeUnit.SECONDS;
             return this;
         }
 
+        @Override
         public Builder timeout(Duration duration) {
             this.timeout = String.valueOf(duration.toMillis());
             this.timeUnit = TimeUnit.MILLISECONDS;

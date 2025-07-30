@@ -20,6 +20,8 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientBuilder;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.actions.kubernetes.KubernetesActionBuilderBase;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.KubernetesActor;
 import org.citrusframework.kubernetes.KubernetesSettings;
 import org.citrusframework.spi.ReferenceResolver;
@@ -68,7 +70,8 @@ public abstract class AbstractKubernetesAction extends AbstractTestAction implem
     /**
      * Action builder.
      */
-    public static abstract class Builder<T extends KubernetesAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
+    public static abstract class Builder<T extends KubernetesAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B>
+            implements ReferenceResolverAware, KubernetesActionBuilderBase<T, B> {
 
         private KubernetesClient kubernetesClient;
         private String namespace;
@@ -83,19 +86,30 @@ public abstract class AbstractKubernetesAction extends AbstractTestAction implem
             return self;
         }
 
-        /**
-         * Use an explicit namespace.
-         */
+        @Override
+        public B client(Object client) {
+            if (client instanceof KubernetesClient k8sClient) {
+                return client(k8sClient);
+            } else if (client instanceof org.citrusframework.kubernetes.client.KubernetesClient k8sClient) {
+                return client(k8sClient.getClient());
+            } else {
+                throw new CitrusRuntimeException("Kubernetes client must be of type %s".formatted(KubernetesClient.class.getName()));
+            }
+        }
+
+        @Override
         public B inNamespace(String namespace) {
             this.namespace = namespace;
             return self;
         }
 
+        @Override
         public B autoRemoveResources(boolean enabled) {
             this.autoRemoveResources = enabled;
             return self;
         }
 
+        @Override
         public B withReferenceResolver(ReferenceResolver referenceResolver) {
             this.referenceResolver = referenceResolver;
             return self;

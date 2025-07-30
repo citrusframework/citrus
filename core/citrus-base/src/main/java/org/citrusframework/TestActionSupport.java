@@ -18,6 +18,7 @@ package org.citrusframework;
 
 import org.citrusframework.actions.*;
 import org.citrusframework.actions.http.HttpActionBuilder;
+import org.citrusframework.actions.kubernetes.KubernetesActionBuilder;
 import org.citrusframework.actions.openapi.OpenApiActionBuilder;
 import org.citrusframework.actions.sql.ExecutePlsqlActionBuilder;
 import org.citrusframework.actions.sql.ExecuteSqlActionBuilder;
@@ -102,6 +103,11 @@ public interface TestActionSupport extends TestActions, TestContainers {
     @Override
     default InputActionBuilder<InputAction> input() {
         return new InputAction.Builder();
+    }
+
+    @Override
+    default KubernetesActionBuilder<?, ?> kubernetes() {
+        return lookup("kubernetes");
     }
 
     @Override

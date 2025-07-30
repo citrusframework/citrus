@@ -16,6 +16,7 @@
 
 package org.citrusframework.kubernetes.actions;
 
+import org.citrusframework.actions.kubernetes.KubernetesSecretDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 
 public class DeleteSecretAction extends AbstractKubernetesAction {
@@ -38,10 +39,12 @@ public class DeleteSecretAction extends AbstractKubernetesAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKubernetesAction.Builder<DeleteSecretAction, Builder> {
+    public static class Builder extends AbstractKubernetesAction.Builder<DeleteSecretAction, Builder>
+            implements KubernetesSecretDeleteActionBuilder<DeleteSecretAction, Builder> {
 
         private String secretName;
 
+        @Override
         public Builder secret(String secretName) {
             this.secretName = secretName;
             return this;

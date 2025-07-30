@@ -16,6 +16,10 @@
 
 package org.citrusframework.kubernetes.actions;
 
+import java.util.List;
+
+import io.fabric8.kubernetes.api.model.Service;
+import org.citrusframework.actions.kubernetes.KubernetesServiceDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 
 public class DeleteServiceAction extends AbstractKubernetesAction {
@@ -30,18 +34,32 @@ public class DeleteServiceAction extends AbstractKubernetesAction {
 
     @Override
     public void doExecute(TestContext context) {
-        getKubernetesClient().services().inNamespace(namespace(context))
-                .withName(context.replaceDynamicContentInString(serviceName))
-                .delete();
+        if (serviceName != null) {
+            getKubernetesClient().services()
+                    .inNamespace(namespace(context))
+                    .withName(context.replaceDynamicContentInString(serviceName))
+                    .delete();
+        } else {
+            // delete all services in current namespace
+            List<Service> services = getKubernetesClient().services()
+                    .list()
+                    .getItems();
+
+            getKubernetesClient().resourceList(services)
+                    .inNamespace(namespace(context))
+                    .delete();
+        }
     }
 
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKubernetesAction.Builder<DeleteServiceAction, Builder> {
+    public static class Builder extends AbstractKubernetesAction.Builder<DeleteServiceAction, Builder>
+            implements KubernetesServiceDeleteActionBuilder<DeleteServiceAction, Builder> {
 
         private String serviceName;
 
+        @Override
         public Builder service(String serviceName) {
             this.serviceName = serviceName;
             return this;

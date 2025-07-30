@@ -19,9 +19,9 @@ package org.citrusframework.kubernetes.actions;
 import java.util.Locale;
 
 import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.client.CustomResource;
 import io.fabric8.kubernetes.model.annotation.Group;
 import io.fabric8.kubernetes.model.annotation.Version;
+import org.citrusframework.actions.kubernetes.KubernetesCustomResourceDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSupport;
 
@@ -69,7 +69,8 @@ public class DeleteCustomResourceAction extends AbstractKubernetesAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKubernetesAction.Builder<DeleteCustomResourceAction, Builder> {
+    public static class Builder extends AbstractKubernetesAction.Builder<DeleteCustomResourceAction, Builder>
+            implements KubernetesCustomResourceDeleteActionBuilder<DeleteCustomResourceAction, Builder> {
 
         private String resourceName;
         private Class<? extends HasMetadata> resourceType;
@@ -78,45 +79,63 @@ public class DeleteCustomResourceAction extends AbstractKubernetesAction {
         private String kind;
         private String group;
 
+        @Override
         public Builder resourceName(String name) {
             this.resourceName = name;
             return this;
         }
 
-        public Builder resourceType(Class<? extends HasMetadata> resourceType) {
-            this.resourceType = resourceType;
+        @Override
+        public Builder resourceType(Class<?> resourceType) {
+            if (HasMetadata.class.isAssignableFrom(resourceType)) {
+                this.resourceType = (Class<? extends HasMetadata>) resourceType;
+            } else {
+                throw new ClassCastException("Resource type '%s' is not supported".formatted(resourceType.getName()));
+            }
+
             return this;
         }
 
-        public Builder type(Class<? extends CustomResource<?, ?>> resourceType) {
-            version(resourceType.getAnnotation(Version.class).value());
-            group(resourceType.getAnnotation(Group.class).value());
-            kind(resourceType.getSimpleName());
-            type(String.format("%ss.%s/%s", kind.toLowerCase(Locale.ENGLISH), group, version));
-            this.resourceType = resourceType;
+        @Override
+        public Builder type(Class<?> resourceType) {
+            if (HasMetadata.class.isAssignableFrom(resourceType)) {
+                version(resourceType.getAnnotation(Version.class).value());
+                group(resourceType.getAnnotation(Group.class).value());
+                kind(resourceType.getSimpleName());
+                type(String.format("%ss.%s/%s", kind.toLowerCase(Locale.ENGLISH), group, version));
+                this.resourceType = (Class<? extends HasMetadata>) resourceType;
+            } else {
+                throw new ClassCastException("Resource type '%s' is not supported".formatted(resourceType.getName()));
+            }
+
             return this;
         }
 
+        @Override
         public Builder type(String resourceType) {
             this.type = resourceType;
             return this;
         }
 
+        @Override
         public Builder kind(String kind) {
             this.kind = kind;
             return this;
         }
 
+        @Override
         public Builder group(String group) {
             this.group = group;
             return this;
         }
 
+        @Override
         public Builder version(String version) {
             this.version = version;
             return this;
         }
 
+        @Override
         public Builder apiVersion(String apiVersion) {
             String[] groupAndVersion = apiVersion.split("/");
 

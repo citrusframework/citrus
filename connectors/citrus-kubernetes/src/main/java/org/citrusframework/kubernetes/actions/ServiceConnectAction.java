@@ -17,6 +17,7 @@
 package org.citrusframework.kubernetes.actions;
 
 import io.fabric8.kubernetes.client.LocalPortForward;
+import org.citrusframework.actions.kubernetes.KubernetesServiceConnectActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpClient;
@@ -41,7 +42,7 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
     protected final String port;
     protected final String localPort;
 
-    protected ServiceConnectAction(String name, Builder builder) {
+    protected ServiceConnectAction(String name, AbstractServiceConnectActionBuilder<?, ?> builder) {
         super(name, builder);
 
         this.serviceName = builder.serviceName;
@@ -115,60 +116,7 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKubernetesAction.Builder<ServiceConnectAction, Builder> {
-
-        private String clientName;
-        protected String localPort;
-        private String serviceName = KubernetesSettings.getServiceName();
-        private String port = "8080";
-
-        public Builder service(String serviceName) {
-            this.serviceName = serviceName;
-            return this;
-        }
-
-        public Builder client(String clientName) {
-            this.clientName = clientName;
-            return this;
-        }
-
-        public Builder port(String port) {
-            this.port = port;
-            return this;
-        }
-
-        public Builder port(int port) {
-            this.port = String.valueOf(port);
-            return this;
-        }
-
-        public Builder portMapping(String port, String localPort) {
-            if (port != null) {
-                port(port);
-            }
-
-            if (localPort != null) {
-                localPort(localPort);
-            }
-            return this;
-        }
-
-        public Builder portMapping(int port, int localPort) {
-            port(port);
-            localPort(localPort);
-            return this;
-        }
-
-        public Builder localPort(String localPort) {
-            this.localPort = localPort;
-            return this;
-        }
-
-        public Builder localPort(int localPort) {
-            this.localPort = String.valueOf(localPort);
-            return this;
-        }
-
+    public static class Builder extends AbstractServiceConnectActionBuilder<ServiceConnectAction, Builder> {
         @Override
         public ServiceConnectAction doBuild() {
             if (clientName == null) {
@@ -176,6 +124,74 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
             }
 
             return new ServiceConnectAction(this);
+        }
+    }
+
+    /**
+     * Action builder.
+     */
+    public static abstract class AbstractServiceConnectActionBuilder<T extends ServiceConnectAction, B extends AbstractServiceConnectActionBuilder<T, B>>
+            extends AbstractKubernetesAction.Builder<T, B>
+            implements KubernetesServiceConnectActionBuilder<T, B> {
+
+        protected String clientName;
+        protected String localPort;
+        protected String serviceName = KubernetesSettings.getServiceName();
+        private String port = "8080";
+
+        @Override
+        public B service(String serviceName) {
+            this.serviceName = serviceName;
+            return self;
+        }
+
+        @Override
+        public B client(String clientName) {
+            this.clientName = clientName;
+            return self;
+        }
+
+        @Override
+        public B port(String port) {
+            this.port = port;
+            return self;
+        }
+
+        @Override
+        public B port(int port) {
+            this.port = String.valueOf(port);
+            return self;
+        }
+
+        @Override
+        public B portMapping(String port, String localPort) {
+            if (port != null) {
+                port(port);
+            }
+
+            if (localPort != null) {
+                localPort(localPort);
+            }
+            return self;
+        }
+
+        @Override
+        public B portMapping(int port, int localPort) {
+            port(port);
+            localPort(localPort);
+            return self;
+        }
+
+        @Override
+        public B localPort(String localPort) {
+            this.localPort = localPort;
+            return self;
+        }
+
+        @Override
+        public B localPort(int localPort) {
+            this.localPort = String.valueOf(localPort);
+            return self;
         }
     }
 }

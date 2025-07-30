@@ -44,6 +44,7 @@ import io.fabric8.kubernetes.api.model.VolumeMountBuilder;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.Updatable;
+import org.citrusframework.actions.kubernetes.KubernetesAgentConnectActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.CitrusJBang;
@@ -252,7 +253,8 @@ public class AgentConnectAction extends ServiceConnectAction {
     /**
      * Action builder.
      */
-    public static class Builder extends ServiceConnectAction.Builder {
+    public static class Builder extends ServiceConnectAction.AbstractServiceConnectActionBuilder<AgentConnectAction, Builder>
+            implements KubernetesAgentConnectActionBuilder<AgentConnectAction, Builder> {
 
         private String agentName = CitrusAgentSettings.getAgentName();
         private String imageName = CitrusAgentSettings.getImage();
@@ -260,21 +262,25 @@ public class AgentConnectAction extends ServiceConnectAction {
         private String imageTag = CitrusAgentSettings.getVersion();
         private String testJar;
 
+        @Override
         public Builder client(KubernetesClient kubernetesClient) {
             super.client(kubernetesClient);
             return this;
         }
 
+        @Override
         public Builder service(String name) {
             agent(name);
             return this;
         }
 
+        @Override
         public Builder agent(String agentName) {
             this.agentName = agentName;
             return this;
         }
 
+        @Override
         public Builder image(String imageName) {
             if (imageName.contains(":")) {
                 String[] tokens = imageName.split(":");
@@ -285,17 +291,20 @@ public class AgentConnectAction extends ServiceConnectAction {
             return this;
         }
 
+        @Override
         public Builder image(String imageName, String version) {
             this.imageName = imageName;
             this.imageTag = version;
             return this;
         }
 
+        @Override
         public Builder registry(String imageRegistry) {
             this.imageRegistry = imageRegistry;
             return this;
         }
 
+        @Override
         public Builder testJar(String testJar) {
             this.testJar = testJar;
             return this;
@@ -308,7 +317,10 @@ public class AgentConnectAction extends ServiceConnectAction {
             }
 
             super.service(agentName);
-            super.doBuild();
+
+            if (clientName == null) {
+                client(serviceName + ".client");
+            }
 
             return new AgentConnectAction(this);
         }

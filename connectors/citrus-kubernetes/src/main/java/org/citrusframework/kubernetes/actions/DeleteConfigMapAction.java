@@ -16,6 +16,7 @@
 
 package org.citrusframework.kubernetes.actions;
 
+import org.citrusframework.actions.kubernetes.KubernetesConfigMapDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 
 public class DeleteConfigMapAction extends AbstractKubernetesAction {
@@ -38,10 +39,12 @@ public class DeleteConfigMapAction extends AbstractKubernetesAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKubernetesAction.Builder<DeleteConfigMapAction, Builder> {
+    public static class Builder extends AbstractKubernetesAction.Builder<DeleteConfigMapAction, Builder>
+            implements KubernetesConfigMapDeleteActionBuilder<DeleteConfigMapAction, Builder> {
 
         private String configMapName;
 
+        @Override
         public Builder configMap(String configMapName) {
             this.configMapName = configMapName;
             return this;
