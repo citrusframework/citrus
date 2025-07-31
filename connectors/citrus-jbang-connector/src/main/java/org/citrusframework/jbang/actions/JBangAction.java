@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.actions.jbang.JBangActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.jbang.JBangSupport;
@@ -122,7 +123,8 @@ public class JBangAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<JBangAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<JBangAction, Builder>
+            implements JBangActionBuilder<JBangAction, Builder> {
 
         private String app;
         private String scriptOrFile;
@@ -143,81 +145,97 @@ public class JBangAction extends AbstractTestAction {
             return new Builder();
         }
 
+        @Override
         public Builder app(String name) {
             this.app = name;
             return this;
         }
 
+        @Override
         public Builder command(String command) {
             this.scriptOrFile = command;
             return this;
         }
 
+        @Override
         public Builder script(String script) {
             this.scriptOrFile = script;
             return this;
         }
 
+        @Override
         public Builder file(String path) {
             this.scriptOrFile = Resources.create(path).getFile().getAbsolutePath();
             return this;
         }
 
+        @Override
         public Builder file(Resource resource) {
             this.scriptOrFile = resource.getFile().getAbsolutePath();
             return this;
         }
 
+        @Override
         public Builder arg(String name, String value) {
             this.args.add("%s=%s".formatted(name, value));
             return this;
         }
 
+        @Override
         public Builder arg(String value) {
             this.args.add(value);
             return this;
         }
 
+        @Override
         public Builder args(String... args) {
             this.args.addAll(List.of(args));
             return this;
         }
 
+        @Override
         public Builder systemProperty(String name, String value) {
             this.systemProperties.put(name, value);
             return this;
         }
 
+        @Override
         public Builder exitCode(int code) {
             this.exitCodes = new int[] {code};
             return this;
         }
 
+        @Override
         public Builder exitCodes(int... codes) {
             this.exitCodes = codes;
             return this;
         }
 
+        @Override
         public Builder printOutput(boolean enabled) {
             this.printOutput = enabled;
             return this;
         }
 
+        @Override
         public Builder verifyOutput(String expected) {
             this.verifyOutput = expected;
             return this;
         }
 
+        @Override
         public Builder verifyOutput(ValidationProcessor validationProcessor) {
             this.validationProcessor = validationProcessor;
             return this;
         }
 
+        @Override
         public Builder savePid(String variable) {
             this.pidVar = variable;
             return this;
         }
 
+        @Override
         public Builder saveOutput(String variable) {
             this.outputVar = variable;
             return this;
