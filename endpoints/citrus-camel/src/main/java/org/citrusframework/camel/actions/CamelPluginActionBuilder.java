@@ -16,26 +16,22 @@
 
 package org.citrusframework.camel.actions;
 
+import org.citrusframework.actions.camel.CamelJBangPluginActionBuilder;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;
 
-public class CamelPluginActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelJBangAction> {
+public class CamelPluginActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelJBangAction>
+        implements CamelJBangPluginActionBuilder<AbstractCamelJBangAction, CamelPluginActionBuilder> {
 
-    /**
-     * Processor calling given Camel route as part of the message processing.
-     * @return
-     */
+    @Override
     public AddCamelPluginAction.Builder add() {
         AddCamelPluginAction.Builder builder = new AddCamelPluginAction.Builder();
         this.delegate = builder;
         return builder;
     }
 
-    /**
-     * Sets the bean reference resolver.
-     * @param referenceResolver
-     */
+    @Override
     public CamelPluginActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
         return this;

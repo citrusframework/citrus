@@ -16,6 +16,7 @@
 
 package org.citrusframework.camel.actions;
 
+import org.citrusframework.actions.camel.CamelRemoveRouteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.apache.camel.impl.engine.AbstractCamelContext;
@@ -64,7 +65,9 @@ public class RemoveCamelRouteAction extends AbstractCamelRouteAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelRouteAction.Builder<RemoveCamelRouteAction, Builder> {
+    public static final class Builder extends AbstractCamelRouteAction.Builder<RemoveCamelRouteAction, Builder>
+            implements CamelRemoveRouteActionBuilder<RemoveCamelRouteAction, Builder> {
+
         @Override
         public RemoveCamelRouteAction doBuild() {
             return new RemoveCamelRouteAction(this);

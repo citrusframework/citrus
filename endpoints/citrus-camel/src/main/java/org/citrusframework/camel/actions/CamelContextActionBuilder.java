@@ -23,8 +23,10 @@ import org.citrusframework.util.ObjectHelper;
 /**
  * Action builder.
  */
-public class CamelContextActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelAction> {
+public class CamelContextActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelAction>
+        implements org.citrusframework.actions.camel.CamelContextActionBuilder<AbstractCamelAction, CamelContextActionBuilder> {
 
+    @Override
     public CreateCamelContextAction.Builder create() {
         CreateCamelContextAction.Builder builder = new CreateCamelContextAction.Builder();
         builder.setReferenceResolver(referenceResolver);
@@ -33,6 +35,7 @@ public class CamelContextActionBuilder extends AbstractReferenceResolverAwareTes
         return builder;
     }
 
+    @Override
     public CreateCamelContextAction.Builder create(String contextName) {
         CreateCamelContextAction.Builder builder = new CreateCamelContextAction.Builder()
                 .contextName(contextName);
@@ -43,6 +46,7 @@ public class CamelContextActionBuilder extends AbstractReferenceResolverAwareTes
         return builder;
     }
 
+    @Override
     public StartCamelContextAction.Builder start() {
         StartCamelContextAction.Builder builder = new StartCamelContextAction.Builder();
         builder.setReferenceResolver(referenceResolver);
@@ -51,6 +55,7 @@ public class CamelContextActionBuilder extends AbstractReferenceResolverAwareTes
         return builder;
     }
 
+    @Override
     public StartCamelContextAction.Builder start(String contextName) {
         StartCamelContextAction.Builder builder = new StartCamelContextAction.Builder()
                 .contextName(contextName);
@@ -61,6 +66,7 @@ public class CamelContextActionBuilder extends AbstractReferenceResolverAwareTes
         return builder;
     }
 
+    @Override
     public StopCamelContextAction.Builder stop() {
         StopCamelContextAction.Builder builder = new StopCamelContextAction.Builder();
         builder.setReferenceResolver(referenceResolver);
@@ -69,6 +75,7 @@ public class CamelContextActionBuilder extends AbstractReferenceResolverAwareTes
         return builder;
     }
 
+    @Override
     public StopCamelContextAction.Builder stop(String contextName) {
         StopCamelContextAction.Builder builder = new StopCamelContextAction.Builder()
                 .contextName(contextName);
@@ -79,10 +86,7 @@ public class CamelContextActionBuilder extends AbstractReferenceResolverAwareTes
         return builder;
     }
 
-    /**
-     * Sets the bean reference resolver.
-     * @param referenceResolver
-     */
+    @Override
     public CamelContextActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
         return this;

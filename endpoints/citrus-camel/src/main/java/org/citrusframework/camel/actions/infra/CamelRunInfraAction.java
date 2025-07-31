@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import org.apache.camel.catalog.CamelCatalog;
 import org.apache.camel.catalog.DefaultCamelCatalog;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.citrusframework.actions.camel.CamelInfraRunActionBuilder;
 import org.citrusframework.camel.actions.AbstractCamelAction;
 import org.citrusframework.camel.jbang.CamelJBangSettings;
 import org.citrusframework.context.TestContext;
@@ -213,7 +214,8 @@ public class CamelRunInfraAction extends AbstractCamelAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractCamelAction.Builder<CamelRunInfraAction, Builder> {
+    public static class Builder extends AbstractCamelAction.Builder<CamelRunInfraAction, Builder>
+            implements CamelInfraRunActionBuilder<CamelRunInfraAction, Builder> {
 
         private String serviceName;
         private String implementation;
@@ -229,34 +231,51 @@ public class CamelRunInfraAction extends AbstractCamelAction {
             camelContext = new DefaultCamelContext();
         }
 
+        @Override
         public Builder service(String serviceName, String implementation) {
             this.serviceName = serviceName;
             this.implementation = implementation;
             return this;
         }
 
+        @Override
         public Builder service(String serviceName) {
             this.serviceName = serviceName;
             return this;
         }
 
+        @Override
         public Builder implementation(String implementation) {
             this.implementation = implementation;
             return this;
         }
 
+        @Override
         public Builder autoRemove(boolean autoRemove) {
             this.autoRemove = autoRemove;
             return this;
         }
 
+        @Override
         public Builder dumpServiceOutput(boolean dumpServiceOutput) {
             this.dumpServiceOutput = dumpServiceOutput;
             return this;
         }
 
+        @Override
         public Builder catalog(String name) {
             this.catalogName = name;
+            return this;
+        }
+
+        @Override
+        public Builder catalog(Object o) {
+            if (o instanceof CamelCatalog catalog) {
+                this.catalog = catalog;
+            } else {
+                throw new CitrusRuntimeException("Invalid catalog object, expected CamelCatalog, but got %s".formatted(o.getClass().getName()));
+            }
+
             return this;
         }
 

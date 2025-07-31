@@ -19,6 +19,7 @@ package org.citrusframework.camel.actions;
 import java.util.List;
 import java.util.Map;
 
+import org.citrusframework.actions.camel.CamelIntegrationVerifyActionBuilder;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ActionTimeoutException;
@@ -195,7 +196,8 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelVerifyIntegrationAction, Builder> {
+    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelVerifyIntegrationAction, Builder>
+            implements CamelIntegrationVerifyActionBuilder<CamelVerifyIntegrationAction, Builder> {
 
         private String integrationName = "route";
 
@@ -209,61 +211,61 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
 
         private boolean stopOnErrorStatus = true;
 
-        /**
-         * Identify Camel JBang process for this route.
-         * @param name
-         * @return
-         */
+        @Override
         public Builder integration(String name) {
             this.integrationName = name;
             return this;
         }
 
-        /**
-         * Sets the integration name.
-         * @param name
-         * @return
-         */
+        @Override
         public Builder integrationName(String name) {
             this.integrationName = name;
             return this;
         }
 
+        @Override
         public Builder isRunning() {
             this.phase = "Running";
             return this;
         }
 
+        @Override
         public Builder isStopped() {
             this.phase = "Stopped";
             return this;
         }
 
+        @Override
         public Builder isInPhase(String phase) {
             this.phase = phase;
             return this;
         }
 
+        @Override
         public Builder printLogs(boolean printLogs) {
             this.printLogs = printLogs;
             return this;
         }
 
+        @Override
         public Builder waitForLogMessage(String logMessage) {
             this.logMessage = logMessage;
             return this;
         }
 
+        @Override
         public Builder maxAttempts(int maxAttempts) {
             this.maxAttempts = maxAttempts;
             return this;
         }
 
+        @Override
         public Builder delayBetweenAttempts(long delayBetweenAttempts) {
             this.delayBetweenAttempts = delayBetweenAttempts;
             return this;
         }
 
+        @Override
         public Builder stopOnErrorStatus(boolean stopOnErrorStatus) {
             this.stopOnErrorStatus = stopOnErrorStatus;
             return this;

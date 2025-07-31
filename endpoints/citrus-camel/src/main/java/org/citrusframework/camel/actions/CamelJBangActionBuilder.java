@@ -24,48 +24,39 @@ import org.citrusframework.util.ObjectHelper;
 /**
  * Action builder.
  */
-public class CamelJBangActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelJBangAction> {
+public class CamelJBangActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelJBangAction>
+        implements org.citrusframework.actions.camel.CamelJBangActionBuilder<AbstractCamelJBangAction, CamelJBangActionBuilder> {
 
     private String camelVersion;
     private String kameletsVersion;
 
+    @Override
     public CamelJBangActionBuilder camelVersion(String camelVersion) {
         this.camelVersion = camelVersion;
         return this;
     }
 
+    @Override
     public CamelJBangActionBuilder kameletsVersion(String kameletsVersion) {
         this.kameletsVersion = kameletsVersion;
         return this;
     }
 
-    /**
-     * Runs Camel integration.
-     * @return
-     */
+    @Override
     public CamelRunIntegrationAction.Builder run() {
         CamelRunIntegrationAction.Builder builder = new CamelRunIntegrationAction.Builder();
         this.delegate = builder;
         return builder;
     }
 
-    /**
-     * Verify that given Camel integration is running.
-     * @param name
-     */
-    public CamelVerifyIntegrationAction.Builder verify(String name) {
-        CamelVerifyIntegrationAction.Builder builder = new CamelVerifyIntegrationAction.Builder()
-                .integration(name);
+    @Override
+    public CamelVerifyIntegrationAction.Builder verify() {
+        CamelVerifyIntegrationAction.Builder builder = new CamelVerifyIntegrationAction.Builder();
         this.delegate = builder;
         return builder;
     }
 
-    /**
-     * Runs Camel integration from given source code.
-     * @param name
-     * @param sourceCode
-     * @return
-     */
+    @Override
     public CamelRunIntegrationAction.Builder run(String name, String sourceCode) {
         CamelRunIntegrationAction.Builder builder = new CamelRunIntegrationAction.Builder()
                 .integrationName(name)
@@ -75,21 +66,15 @@ public class CamelJBangActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
-    /**
-     * Stop the Camel integration JBang process identified by th given integration name.
-     */
-    public CamelStopIntegrationAction.Builder stop(String name) {
-        CamelStopIntegrationAction.Builder builder = new CamelStopIntegrationAction.Builder()
-                .integration(name);
+    @Override
+    public CamelStopIntegrationAction.Builder stop() {
+        CamelStopIntegrationAction.Builder builder = new CamelStopIntegrationAction.Builder();
 
         this.delegate = builder;
         return builder;
     }
 
-    /**
-     * Perform actions related to Camel JBang plugins.
-     * @return
-     */
+    @Override
     public CamelPluginActionBuilder plugin() {
         CamelPluginActionBuilder builder = new CamelPluginActionBuilder();
         this.delegate = builder;

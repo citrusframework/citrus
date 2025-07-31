@@ -18,6 +18,7 @@ package org.citrusframework.camel.integration;
 
 import org.apache.camel.CamelContext;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.camel.dsl.CamelSupport;
 import org.citrusframework.camel.message.CamelRouteProcessor;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
@@ -28,17 +29,18 @@ import static org.apache.camel.builder.Builder.constant;
 import static org.apache.camel.builder.Builder.jsonpath;
 import static org.apache.camel.builder.Builder.simple;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
-import static org.citrusframework.camel.dsl.CamelSupport.camel;
 
 public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport {
 
     @Autowired
     private CamelContext camelContext;
 
+    private final CamelSupport camel = new CamelSupport();
+
     @Test
     @CitrusTest
     public void shouldProcessRouteOnSend() {
-        CamelRouteProcessor.Builder beforeSend = camel(camelContext).route()
+        CamelRouteProcessor.Builder beforeSend = camel.camelContext(camelContext).route()
                 .processor()
                 .setBody(simple("{" +
                         "\"greeting\": {" +
@@ -46,13 +48,13 @@ public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport {
                         "}" +
                     "}"));
 
-        when(send(camel().endpoint(seda("greetings")::getUri))
+        when(send(camel.endpoint(seda("greetings")::getUri))
                 .process(beforeSend)
                 .message()
                 .body("EN")
         );
 
-        then(receive("camel:" + camel().endpoints().seda("greetings").getUri())
+        then(receive("camel:" + camel.endpoints().seda("greetings").getUri())
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("{" +
@@ -65,7 +67,7 @@ public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusTest
     public void shouldProcessRouteOnReceive() {
-        CamelRouteProcessor.Builder beforeReceive = camel(camelContext).route(route ->
+        CamelRouteProcessor.Builder beforeReceive = camel.camelContext(camelContext).route(route ->
                 route.choice()
                     .when(jsonpath("$.greeting[?(@.language == 'EN')]"))
                         .setBody(constant("Hello!"))
@@ -76,7 +78,7 @@ public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport {
 
         given(createVariable("lang", "EN"));
 
-        when(send(camel().endpoint(seda("greetings")::getUri))
+        when(send(camel.endpoint(seda("greetings")::getUri))
                 .message()
                 .body("{" +
                         "\"greeting\": {" +
@@ -85,7 +87,7 @@ public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport {
                       "}")
         );
 
-        then(receive("camel:" + camel().endpoints().seda("greetings").getUri())
+        then(receive("camel:" + camel.endpoints().seda("greetings").getUri())
                 .process(beforeReceive)
                 .message()
                 .type(MessageType.PLAINTEXT)
@@ -93,7 +95,7 @@ public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport {
 
         given(createVariable("lang", "DE"));
 
-        when(send(camel().endpoint(seda("greetings")::getUri))
+        when(send(camel.endpoint(seda("greetings")::getUri))
                 .message()
                 .body("{" +
                         "\"greeting\": {" +
@@ -102,7 +104,7 @@ public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport {
                     "}")
         );
 
-        then(receive("camel:" + camel().endpoints().seda("greetings").getUri())
+        then(receive("camel:" + camel.endpoints().seda("greetings").getUri())
                 .process(beforeReceive)
                 .message()
                 .type(MessageType.PLAINTEXT)

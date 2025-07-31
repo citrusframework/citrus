@@ -18,6 +18,7 @@ package org.citrusframework.camel.actions;
 
 import java.io.IOException;
 
+import org.citrusframework.actions.camel.CamelCreateComponentActionBuilder;
 import org.citrusframework.camel.context.CamelReferenceResolver;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
@@ -86,7 +87,8 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelAction.Builder<CreateCamelComponentAction, Builder> {
+    public static final class Builder extends AbstractCamelAction.Builder<CreateCamelComponentAction, Builder>
+            implements CamelCreateComponentActionBuilder<CreateCamelComponentAction, Builder> {
 
         private String name;
         private Object component;
@@ -94,17 +96,18 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
 
         /**
          * Static entry method for the fluent API.
-         * @return
          */
         public static Builder bind() {
             return new Builder();
         }
 
+        @Override
         public Builder componentName(String componentName) {
             this.name = componentName;
             return this;
         }
 
+        @Override
         public Builder component(String name, Object component) {
             if (component instanceof String) {
                 return component(name, component.toString());
@@ -115,6 +118,7 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
             return this;
         }
 
+        @Override
         public Builder component(Resource resource) {
             if (StringUtils.hasText(this.name)) {
                 return component(this.name, resource);
@@ -124,6 +128,7 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
             }
         }
 
+        @Override
         public Builder component(String name, Resource resource) {
             try {
                 return component(name, FileUtils.readToString(resource));
@@ -132,12 +137,14 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
             }
         }
 
+        @Override
         public Builder component(String name, String script) {
             this.name = name;
             this.script = script;
             return this;
         }
 
+        @Override
         public Builder component(String script) {
             this.script = script;
             return this;

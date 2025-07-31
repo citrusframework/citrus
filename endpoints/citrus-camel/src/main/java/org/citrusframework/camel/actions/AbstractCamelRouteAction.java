@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.camel.CamelContext;
+import org.citrusframework.actions.camel.CamelRouteActionBuilderBase;
 
 /**
  * @since 2.4
@@ -55,24 +56,17 @@ public abstract class AbstractCamelRouteAction extends AbstractCamelAction {
     /**
      * Action builder.
      */
-    public static abstract class Builder<T extends AbstractCamelRouteAction, B extends Builder<T, B>> extends AbstractCamelAction.Builder<T, B> {
+    public static abstract class Builder<T extends AbstractCamelRouteAction, B extends Builder<T, B>> extends AbstractCamelAction.Builder<T, B>
+            implements CamelRouteActionBuilderBase<T, B> {
 
         protected List<String> routeIds = new ArrayList<>();
 
-        /**
-         * Adds route ids.
-         * @param routeIds
-         * @return
-         */
+        @Override
         public B routes(String... routeIds) {
             return routeIds(Arrays.asList(routeIds));
         }
 
-        /**
-         * Add list of route ids.
-         * @param routeIds
-         * @return
-         */
+        @Override
         public B routeIds(List<String> routeIds) {
             this.routeIds.addAll(routeIds);
             return self;

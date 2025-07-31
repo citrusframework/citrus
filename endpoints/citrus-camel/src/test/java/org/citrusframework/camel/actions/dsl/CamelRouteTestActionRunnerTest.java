@@ -20,6 +20,7 @@ import org.apache.camel.ServiceStatus;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.camel.UnitTestSupport;
 import org.citrusframework.camel.actions.CamelControlBusAction;
@@ -31,12 +32,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.camel.dsl.CamelSupport.camel;
-
 /**
  * @since 2.4
  */
-public class CamelRouteTestActionRunnerTest extends UnitTestSupport {
+public class CamelRouteTestActionRunnerTest extends UnitTestSupport implements TestActionSupport {
 
     private DefaultCamelContext camelContext;
 

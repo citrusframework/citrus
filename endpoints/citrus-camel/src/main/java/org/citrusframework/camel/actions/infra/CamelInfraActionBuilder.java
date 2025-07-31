@@ -22,30 +22,24 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
 
-public class CamelInfraActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelAction> {
+public class CamelInfraActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelAction>
+        implements org.citrusframework.actions.camel.CamelInfraActionBuilder<AbstractCamelAction, CamelInfraActionBuilder> {
 
-    /**
-     * Runs an available Camel infra service.
-     */
+    @Override
     public CamelRunInfraAction.Builder run() {
         CamelRunInfraAction.Builder builder = new CamelRunInfraAction.Builder();
         this.delegate = builder;
         return builder;
     }
 
-    /**
-     * Stops a running Camel infra instance.
-     */
+    @Override
     public CamelStopInfraAction.Builder stop() {
         CamelStopInfraAction.Builder builder = new CamelStopInfraAction.Builder();
         this.delegate = builder;
         return builder;
     }
 
-    /**
-     * Sets the bean reference resolver.
-     * @param referenceResolver
-     */
+    @Override
     public CamelInfraActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
         return this;

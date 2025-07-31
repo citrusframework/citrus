@@ -18,6 +18,7 @@ package org.citrusframework.camel.actions;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.citrusframework.actions.camel.CamelCreateContextActionBuilder;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.context.CamelReferenceResolver;
 import org.citrusframework.context.TestContext;
@@ -64,7 +65,8 @@ public class CreateCamelContextAction  extends AbstractCamelAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelAction.Builder<CreateCamelContextAction, Builder> {
+    public static final class Builder extends AbstractCamelAction.Builder<CreateCamelContextAction, Builder>
+            implements CamelCreateContextActionBuilder<CreateCamelContextAction, Builder> {
 
         private String contextName = CamelSettings.getContextName();
         private boolean autoStart = true;
@@ -77,11 +79,13 @@ public class CreateCamelContextAction  extends AbstractCamelAction {
             return new Builder();
         }
 
+        @Override
         public Builder contextName(String name) {
             this.contextName = name;
             return this;
         }
 
+        @Override
         public Builder autoStart(boolean autoStart) {
             this.autoStart = autoStart;
             return this;

@@ -18,6 +18,7 @@ package org.citrusframework.camel.actions;
 
 import java.util.List;
 
+import org.citrusframework.actions.camel.CamelIntegrationStopActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
@@ -93,25 +94,18 @@ public class CamelStopIntegrationAction extends AbstractCamelJBangAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelStopIntegrationAction, Builder> {
+    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelStopIntegrationAction, Builder>
+            implements CamelIntegrationStopActionBuilder<CamelStopIntegrationAction, Builder> {
 
         private String integrationName = "*";
 
-        /**
-         * Stop Camel JBang process for this integration.
-         * @param name
-         * @return
-         */
+        @Override
         public Builder integration(String name) {
             this.integrationName = name;
             return this;
         }
 
-        /**
-         * Sets the integration name.
-         * @param name
-         * @return
-         */
+        @Override
         public Builder integrationName(String name) {
             this.integrationName = name;
             return this;

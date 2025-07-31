@@ -20,6 +20,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ServiceStatus;
 import org.apache.camel.builder.RouteBuilder;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.camel.dsl.CamelSupport;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,13 @@ import org.testng.annotations.Test;
 
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
-import static org.citrusframework.camel.dsl.CamelSupport.camel;
 
 public class CamelRouteActionIT extends TestNGCitrusSpringSupport {
 
     @Autowired
     private CamelContext camelContext;
+
+    private final CamelSupport camel = new CamelSupport();
 
     @Test
     @CitrusTest
@@ -48,17 +50,17 @@ public class CamelRouteActionIT extends TestNGCitrusSpringSupport {
                 }
             }));
 
-        when(send(camel().endpoint(direct("messages")::getUri))
+        when(send(camel.endpoint(direct("messages")::getUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("Citrus rocks!"));
 
-        then(receive(camel().endpoint(seda("words")::getUri))
+        then(receive(camel.endpoint(seda("words")::getUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("Citrus"));
 
-        then(receive(camel().endpoint(seda("words")::getUri))
+        then(receive(camel.endpoint(seda("words")::getUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("rocks!"));

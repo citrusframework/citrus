@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 import org.apache.camel.impl.DefaultCamelContext;
+import org.citrusframework.actions.camel.CamelInfraStopActionBuilder;
 import org.citrusframework.camel.actions.AbstractCamelAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -75,7 +76,8 @@ public class CamelStopInfraAction extends AbstractCamelAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractCamelAction.Builder<CamelStopInfraAction, Builder> {
+    public static class Builder extends AbstractCamelAction.Builder<CamelStopInfraAction, Builder>
+            implements CamelInfraStopActionBuilder<CamelStopInfraAction, Builder> {
 
         private Object instance;
         private InfraService meta;
@@ -87,24 +89,39 @@ public class CamelStopInfraAction extends AbstractCamelAction {
             camelContext = new DefaultCamelContext();
         }
 
+        @Override
         public Builder service(String serviceName, String implementation) {
             this.serviceName = serviceName;
             this.implementation = implementation;
             return this;
         }
 
+        @Override
         public Builder service(String serviceName) {
             this.serviceName = serviceName;
             return this;
         }
 
+        @Override
         public Builder implementation(String implementation) {
             this.implementation = implementation;
             return this;
         }
 
+        @Override
         public Builder instance(Object instance) {
             this.instance = instance;
+            return this;
+        }
+
+        @Override
+        public Builder meta(Object o) {
+            if (o instanceof InfraService infraService) {
+                this.meta = infraService;
+            } else {
+                throw new CitrusRuntimeException("Invalid infra service meta object, expected InfraService but got %s".formatted(o.getClass().getName()));
+            }
+
             return this;
         }
 

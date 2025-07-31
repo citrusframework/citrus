@@ -19,9 +19,11 @@ package org.citrusframework.camel.actions;
 import org.apache.camel.CamelContext;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.actions.camel.CamelActionBuilderBase;
 import org.citrusframework.camel.CamelTestActor;
 import org.citrusframework.camel.context.CamelReferenceResolver;
 import org.citrusframework.camel.util.CamelUtils;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
@@ -61,10 +63,12 @@ public abstract class AbstractCamelAction extends AbstractTestAction implements 
     /**
      * Action builder.
      */
-    public static abstract class Builder<T extends AbstractCamelAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
+    public static abstract class Builder<T extends AbstractCamelAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B>
+            implements ReferenceResolverAware, CamelActionBuilderBase<T, B> {
 
         protected ReferenceResolver referenceResolver;
         protected CamelContext camelContext;
+        protected String camelContextName;
 
         public Builder() {
             actor(new CamelTestActor());
@@ -72,11 +76,32 @@ public abstract class AbstractCamelAction extends AbstractTestAction implements 
 
         /**
          * Sets the Camel context.
-         * @param camelContext
-         * @return
          */
         public B context(CamelContext camelContext) {
             this.camelContext = camelContext;
+            return self;
+        }
+
+        @Override
+        public B context(String context) {
+            this.camelContextName = context;
+            return self;
+        }
+
+        @Override
+        public B context(Object o) {
+            if (o instanceof CamelContext context) {
+                this.camelContext = context;
+            } else {
+                throw new CitrusRuntimeException("Expected a CamelContext, but got %s".formatted(o.getClass().getName()));
+            }
+
+            return self;
+        }
+
+        @Override
+        public B withReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
             return self;
         }
 
@@ -85,7 +110,12 @@ public abstract class AbstractCamelAction extends AbstractTestAction implements 
             if (camelContext == null) {
                 ObjectHelper.assertNotNull(referenceResolver, "Insufficient Camel action configuration - " +
                         "either set Camel context or proper reference resolver!");
-                camelContext = CamelUtils.resolveCamelContext(referenceResolver, null);
+
+                if (camelContextName != null) {
+                    camelContext = referenceResolver.resolve(camelContextName, CamelContext.class);
+                } else {
+                    camelContext = CamelUtils.resolveCamelContext(referenceResolver, null);
+                }
             }
 
             if (referenceResolver == null) {

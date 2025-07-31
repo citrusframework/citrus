@@ -23,8 +23,6 @@ import org.citrusframework.util.TestUtils;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.camel.dsl.CamelSupport.camel;
-
 public class CamelJBangIT extends TestNGCitrusSupport {
 
     @Test
@@ -36,7 +34,7 @@ public class CamelJBangIT extends TestNGCitrusSupport {
         }
 
         given(doFinally().actions(
-                catchException().actions(camel().jbang().stop("hello"))
+                catchException().actions(camel().jbang().stop().integration("hello"))
         ));
 
         when(camel().jbang()
@@ -56,7 +54,8 @@ public class CamelJBangIT extends TestNGCitrusSupport {
                 .withSystemProperty("greeting", "Hello Camel"));
 
         then(camel().jbang()
-                .verify("hello")
+                .verify()
+                .integration("hello")
                 .waitForLogMessage("HELLO CAMEL #10"));
     }
 
@@ -69,7 +68,7 @@ public class CamelJBangIT extends TestNGCitrusSupport {
         }
 
         given(doFinally().actions(
-            catchException().actions(camel().jbang().stop("route"))
+            catchException().actions(camel().jbang().stop().integration("route"))
         ));
 
         when(camel().jbang()
@@ -78,7 +77,8 @@ public class CamelJBangIT extends TestNGCitrusSupport {
                 .withEnv("GREETING", "Hello Camel"));
 
         then(camel().jbang()
-                .verify("route")
+                .verify()
+                .integration("route")
                 .waitForLogMessage("HELLO CAMEL #10"));
     }
 }

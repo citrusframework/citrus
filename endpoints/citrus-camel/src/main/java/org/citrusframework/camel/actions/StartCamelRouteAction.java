@@ -16,9 +16,10 @@
 
 package org.citrusframework.camel.actions;
 
+import org.apache.camel.impl.engine.AbstractCamelContext;
+import org.citrusframework.actions.camel.CamelStartRouteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,9 @@ public class StartCamelRouteAction extends AbstractCamelRouteAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelRouteAction.Builder<StartCamelRouteAction, Builder> {
+    public static final class Builder extends AbstractCamelRouteAction.Builder<StartCamelRouteAction, Builder>
+            implements CamelStartRouteActionBuilder<StartCamelRouteAction, Builder> {
+
         @Override
         public StartCamelRouteAction doBuild() {
             return new StartCamelRouteAction(this);
