@@ -18,8 +18,9 @@ package org.citrusframework.camel.actions;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.ModelCamelContext;
 import org.citrusframework.camel.message.CamelRouteProcessor;
+import org.citrusframework.camel.util.CamelUtils;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;
@@ -27,44 +28,47 @@ import org.citrusframework.util.ObjectHelper;
 /**
  * Action builder.
  */
-public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelRouteAction> {
+public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelRouteAction>
+        implements org.citrusframework.actions.camel.CamelRouteActionBuilder<AbstractCamelRouteAction, CamelRouteActionBuilder> {
 
     private CamelContext camelContext;
+    private String camelContextName;
 
     /**
      * Processor calling given Camel route as part of the message processing.
-     * @return
      */
     public CamelRouteProcessor.Builder processor() {
         return CamelRouteProcessor.Builder.route()
-                .camelContext(camelContext);
+                .camelContext(resolveCamelContext());
     }
 
     /**
      * Sets the Camel context to use.
-     * @param camelContext
-     * @return
-     */
-    public CamelRouteActionBuilder context(String camelContext) {
-        ObjectHelper.assertNotNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
-        this.camelContext = referenceResolver.resolve(camelContext, ModelCamelContext.class);
-        return this;
-    }
-
-    /**
-     * Sets the Camel context to use.
-     * @param camelContext
-     * @return
      */
     public CamelRouteActionBuilder context(CamelContext camelContext) {
         this.camelContext = camelContext;
         return this;
     }
 
+    @Override
+    public CamelRouteActionBuilder context(String camelContext) {
+        this.camelContextName = camelContext;
+        return this;
+    }
+
+    @Override
+    public CamelRouteActionBuilder context(Object o) {
+        if (o instanceof CamelContext context) {
+            this.camelContext = context;
+        } else {
+            throw new CitrusRuntimeException("Expected a CamelContext, but got %s".formatted(o.getClass().getName()));
+        }
+
+        return this;
+    }
+
     /**
      * Creates new Camel routes in route builder.
-     * @param routeBuilder
-     * @return
      */
     public CreateCamelRouteAction.Builder create(RouteBuilder routeBuilder) {
         if (camelContext == null) {
@@ -79,11 +83,25 @@ public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
-    /**
-     * Creates new Camel routes from route specification using one of the supported languages.
-     * @param routeSpec
-     * @return
-     */
+    @Override
+    public CreateCamelRouteAction.Builder create() {
+        CreateCamelRouteAction.Builder builder = new CreateCamelRouteAction.Builder()
+                .context(camelContext);
+
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
+    public CreateCamelRouteAction.Builder create(Object o) {
+        if (o instanceof RouteBuilder routeBuilder) {
+            return create(routeBuilder);
+        } else {
+            throw new CitrusRuntimeException("Expected a RouteBuilder, but got %s".formatted(o.getClass().getName()));
+        }
+    }
+
+    @Override
     public CreateCamelRouteAction.Builder create(String routeSpec) {
         CreateCamelRouteAction.Builder builder = new CreateCamelRouteAction.Builder()
                 .context(camelContext)
@@ -93,10 +111,7 @@ public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
-    /**
-     * Execute control bus Camel operations.
-     * @return
-     */
+    @Override
     public CamelControlBusAction.Builder controlBus() {
         CamelControlBusAction.Builder builder = new CamelControlBusAction.Builder()
                 .context(camelContext);
@@ -105,10 +120,8 @@ public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
-    /**
-     * Start these Camel routes.
-     */
-    public StartCamelRouteAction.Builder start(String ... routes) {
+    @Override
+    public StartCamelRouteAction.Builder start(String... routes) {
         StartCamelRouteAction.Builder builder = new StartCamelRouteAction.Builder()
                 .context(camelContext)
                 .routes(routes);
@@ -117,10 +130,8 @@ public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
-    /**
-     * Stop these Camel routes.
-     */
-    public StopCamelRouteAction.Builder stop(String ... routes) {
+    @Override
+    public StopCamelRouteAction.Builder stop(String... routes) {
         StopCamelRouteAction.Builder builder = new StopCamelRouteAction.Builder()
                 .context(camelContext)
                 .routes(routes);
@@ -129,10 +140,8 @@ public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
-    /**
-     * Remove these Camel routes.
-     */
-    public RemoveCamelRouteAction.Builder remove(String ... routes) {
+    @Override
+    public RemoveCamelRouteAction.Builder remove(String... routes) {
         RemoveCamelRouteAction.Builder builder = new RemoveCamelRouteAction.Builder()
                 .context(camelContext)
                 .routes(routes);
@@ -141,10 +150,7 @@ public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
-    /**
-     * Sets the bean reference resolver.
-     * @param referenceResolver
-     */
+    @Override
     public CamelRouteActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
         return this;
@@ -153,6 +159,27 @@ public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestA
     @Override
     public AbstractCamelRouteAction build() {
         ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
+        resolveCamelContext();
+
+        if (delegate instanceof AbstractCamelAction.Builder<?,?> contextAware) {
+            contextAware.context(camelContext);
+        }
+
         return delegate.build();
+    }
+
+    private CamelContext resolveCamelContext() {
+        if (camelContext == null) {
+            ObjectHelper.assertNotNull(referenceResolver, "Insufficient Camel action configuration - " +
+                    "either set Camel context or proper reference resolver!");
+
+            if (camelContextName != null) {
+                camelContext = referenceResolver.resolve(camelContextName, CamelContext.class);
+            } else {
+                camelContext = CamelUtils.resolveCamelContext(referenceResolver, null);
+            }
+        }
+
+        return camelContext;
     }
 }

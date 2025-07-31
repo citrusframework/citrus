@@ -18,33 +18,35 @@ package org.citrusframework.camel.integration;
 
 import org.apache.camel.CamelContext;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.camel.dsl.CamelSupport;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
-import static org.citrusframework.camel.dsl.CamelSupport.camel;
 
 public class CamelTransformIT extends TestNGCitrusSpringSupport {
 
     @Autowired
     private CamelContext camelContext;
 
+    private final CamelSupport camel = new CamelSupport();
+
     @Test
     @CitrusTest
     public void shouldTransformMessageSent() {
-        when(send(camel().endpoint(seda("hello")::getUri))
+        when(send(camel.endpoint(seda("hello")::getUri))
                 .message()
                 .body("{\"message\": \"Citrus rocks!\"}")
                 .transform(
-                    camel()
+                    camel
                         .camelContext(camelContext)
                         .transform()
                         .jsonpath("$.message"))
         );
 
-        then(receive(camel().endpoint(seda("hello")::getUri))
+        then(receive(camel.endpoint(seda("hello")::getUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("Citrus rocks!"));
@@ -53,14 +55,14 @@ public class CamelTransformIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusTest
     public void shouldTransformMessageReceived() {
-        when(send(camel().endpoint(seda("hello")::getUri))
+        when(send(camel.endpoint(seda("hello")::getUri))
                 .message()
                 .body("{\"message\": \"Citrus rocks!\"}")
         );
 
-        then(receive(camel().endpoint(seda("hello")::getUri))
+        then(receive(camel.endpoint(seda("hello")::getUri))
                 .transform(
-                    camel()
+                    camel
                         .camelContext(camelContext)
                         .transform()
                         .jsonpath("$.message"))

@@ -17,6 +17,7 @@
 package org.citrusframework;
 
 import org.citrusframework.actions.*;
+import org.citrusframework.actions.camel.CamelActionBuilder;
 import org.citrusframework.actions.http.HttpActionBuilder;
 import org.citrusframework.actions.kubernetes.KubernetesActionBuilder;
 import org.citrusframework.actions.openapi.OpenApiActionBuilder;
@@ -30,6 +31,7 @@ import org.citrusframework.actions.sql.ExecuteSqlQueryActionBuilder;
 public interface TestActions extends
         AntRunActionBuilder.BuilderFactory,
         ApplyTestBehaviorActionBuilder.BuilderFactory,
+        CamelActionBuilder.BuilderFactory,
         CreateEndpointActionBuilder.BuilderFactory,
         CreateVariablesActionBuilder.BuilderFactory,
         EchoActionBuilder.BuilderFactory,

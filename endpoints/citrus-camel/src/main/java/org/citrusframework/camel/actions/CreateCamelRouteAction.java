@@ -27,6 +27,7 @@ import org.apache.camel.dsl.yaml.YamlRoutesBuilderLoader;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.xml.CamelRouteContextFactoryBean;
 import org.apache.camel.support.ResourceHelper;
+import org.citrusframework.actions.camel.CamelCreateRouteActionBuilder;
 import org.citrusframework.camel.util.CamelUtils;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -187,7 +188,8 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelRouteAction.Builder<CreateCamelRouteAction, Builder> {
+    public static final class Builder extends AbstractCamelRouteAction.Builder<CreateCamelRouteAction, Builder>
+            implements CamelCreateRouteActionBuilder<CreateCamelRouteAction, Builder> {
 
         private final List<RouteDefinition> routes = new ArrayList<>();
         private String routeId;
@@ -210,33 +212,33 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
             return this;
         }
 
-        /**
-         * Adds route using one of the supported languages XML or Groovy.
-         * @param routeSpec
-         * @return
-         */
+        @Override
+        public Builder route(Object o) {
+            if (o instanceof RouteBuilder routeBuilder) {
+                route(routeBuilder);
+            } else if (o instanceof RouteDefinition routeDefinition) {
+                route(routeDefinition);
+            } else {
+                throw new CitrusRuntimeException("Invalid route definition, expected RoutBuilder or RouteDefinition, but got: %s".formatted(o.getClass().getName()));
+            }
+
+            return this;
+        }
+
         @Deprecated
+        @Override
         public Builder routeContext(String routeSpec) {
             this.routeSpec = routeSpec;
             return this;
         }
 
-        /**
-         * Adds route using one of the supported languages XML or Groovy.
-         * @param routeSpec
-         * @return
-         */
+        @Override
         public Builder route(String routeSpec) {
             this.routeSpec = routeSpec;
             return this;
         }
 
-        /**
-         * Adds route using the content of the given resource.
-         * The file name is used as a route id.
-         * @param routeResource
-         * @return
-         */
+        @Override
         public Builder route(Resource routeResource) {
             try {
                 this.routeSpec = FileUtils.readToString(routeResource);
@@ -253,43 +255,31 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
 
         /**
          * Adds route definition.
-         * @param route
-         * @return
          */
         public Builder route(RouteDefinition route) {
             this.routes.add(route);
             return this;
         }
 
-        /**
-         * Adds route using one of the supported languages XML or Groovy.
-         * @param routeId
-         * @param routeSpec
-         * @return
-         */
+        @Override
         public Builder route(String routeId, String routeSpec) {
             this.routeId = routeId;
             this.routeSpec = routeSpec;
             return this;
         }
 
-        /**
-         * Sets the route id.
-         * @param id
-         * @return
-         */
+        @Override
         public Builder routeId(String id) {
             this.routeId = id;
             return this;
         }
 
-        /**
-         * Adds route definitions.
-         * @param routes
-         * @return
-         */
-        public Builder routes(List<RouteDefinition> routes) {
-            this.routes.addAll(routes);
+        @Override
+        public Builder routes(List<?> routes) {
+            for (Object route : routes) {
+                route(route);
+            }
+
             return this;
         }
 

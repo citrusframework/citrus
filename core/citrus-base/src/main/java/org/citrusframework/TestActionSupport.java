@@ -17,6 +17,7 @@
 package org.citrusframework;
 
 import org.citrusframework.actions.*;
+import org.citrusframework.actions.camel.CamelActionBuilder;
 import org.citrusframework.actions.http.HttpActionBuilder;
 import org.citrusframework.actions.kubernetes.KubernetesActionBuilder;
 import org.citrusframework.actions.openapi.OpenApiActionBuilder;
@@ -88,6 +89,11 @@ public interface TestActionSupport extends TestActions, TestContainers {
     @Override
     default HttpActionBuilder<?, ?> http() {
         return lookup("http");
+    }
+
+    @Override
+    default CamelActionBuilder<?, ?> camel() {
+        return lookup("camel");
     }
 
     @Override

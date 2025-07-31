@@ -34,7 +34,7 @@ import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 
 public interface ReceiveActionBuilder<T extends TestAction, M extends ReceiveMessageBuilderFactory<T, M>>
-        extends ActionBuilder<T, ReceiveActionBuilder<T, M>>, TestActionBuilder<T> {
+        extends ActionBuilder<T, ReceiveActionBuilder<T, M>>, TestActionBuilder<T>, MessageActionBuilder {
 
     ReceiveActionBuilder<T, M> endpoint(Endpoint endpoint);
 

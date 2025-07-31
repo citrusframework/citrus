@@ -17,6 +17,7 @@
 package org.citrusframework.camel.actions;
 
 import org.apache.camel.CamelContext;
+import org.citrusframework.actions.camel.CamelStartContextActionBuilder;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -62,10 +63,12 @@ public class StartCamelContextAction extends AbstractCamelAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelAction.Builder<StartCamelContextAction, Builder> {
+    public static final class Builder extends AbstractCamelAction.Builder<StartCamelContextAction, Builder>
+            implements CamelStartContextActionBuilder<StartCamelContextAction, Builder> {
 
         private String contextName = CamelSettings.getContextName();
 
+        @Override
         public Builder contextName(String name) {
             this.contextName = name;
             return this;

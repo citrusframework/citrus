@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.citrusframework.actions.camel.CamelJBangPluginAddActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,49 +65,32 @@ public class AddCamelPluginAction extends AbstractCamelJBangAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<AddCamelPluginAction, AddCamelPluginAction.Builder> {
+    public static final class Builder extends AbstractCamelJBangAction.Builder<AddCamelPluginAction, AddCamelPluginAction.Builder>
+            implements CamelJBangPluginAddActionBuilder<AddCamelPluginAction, Builder> {
+
         private String name;
         private final List<String> args = new ArrayList<>();
 
-
-        /**
-         * Sets the plugin name.
-         * @param name
-         * @return
-         */
+        @Override
         public Builder pluginName(String name) {
             this.name = name;
             return this;
         }
 
-
-        /**
-         * Adds a command argument.
-         * @param arg
-         * @return
-         */
+        @Override
         public Builder withArg(String arg) {
             this.args.add(arg);
             return this;
         }
 
-        /**
-         * Adds a command argument with name and value.
-         * @param name
-         * @param value
-         * @return
-         */
+        @Override
         public Builder withArg(String name, String value) {
             this.args.add(name);
             this.args.add(value);
             return this;
         }
 
-        /**
-         * Adds command arguments.
-         * @param args
-         * @return
-         */
+        @Override
         public Builder withArgs(String... args) {
             this.args.addAll(Arrays.asList(args));
             return this;

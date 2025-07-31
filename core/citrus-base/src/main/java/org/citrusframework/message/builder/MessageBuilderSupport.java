@@ -293,7 +293,7 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
      * @param <B>
      */
     public abstract static class MessageActionBuilder<T extends TestAction, M extends MessageBuilderSupport<T, B, M>, B extends MessageActionBuilder<T, M, B>> extends AbstractTestActionBuilder<T, B>
-            implements ReferenceResolverAware {
+            implements ReferenceResolverAware, org.citrusframework.actions.MessageActionBuilder {
 
         protected Endpoint endpoint;
         protected String endpointUri;

@@ -16,8 +16,6 @@
 
 package org.citrusframework.camel.groovy
 
-import static org.citrusframework.camel.dsl.CamelSupport.camel
-
 name "CamelRemoveRouteTest"
 author "Christoph"
 status "FINAL"

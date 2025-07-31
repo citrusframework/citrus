@@ -26,7 +26,7 @@ import org.citrusframework.message.MessageProcessorAdapter;
 import org.citrusframework.variable.VariableExtractor;
 
 public interface SendActionBuilder<T extends TestAction, M extends SendMessageBuilderFactory<T, M>>
-        extends ActionBuilder<T, SendActionBuilder<T, M>>, TestActionBuilder<T> {
+        extends ActionBuilder<T, SendActionBuilder<T, M>>, TestActionBuilder<T>, MessageActionBuilder {
 
     SendActionBuilder<T, M> endpoint(Endpoint endpoint);
 

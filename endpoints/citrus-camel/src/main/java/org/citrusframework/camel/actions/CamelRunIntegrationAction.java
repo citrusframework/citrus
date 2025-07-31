@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.citrusframework.actions.camel.CamelIntegrationRunActionBuilder;
 import org.citrusframework.camel.jbang.CamelJBangSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -136,7 +137,8 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
             if (autoRemoveResources) {
                 context.doFinally(camel()
                         .jbang()
-                        .stop(name));
+                        .stop()
+                        .integration(name));
             }
 
             logger.info("Waiting for the Camel integration '%s' (%s) to be running ...".formatted(name, pid));
@@ -189,7 +191,8 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelRunIntegrationAction, Builder> {
+    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelRunIntegrationAction, Builder>
+            implements CamelIntegrationRunActionBuilder<CamelRunIntegrationAction, Builder> {
 
         private String sourceCode;
         private String integrationName = "route";
@@ -206,21 +209,13 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
         private boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
         private boolean dumpIntegrationOutput = CamelJBangSettings.isDumpIntegrationOutput();
 
-        /**
-         * Runs Camel integration from given source code.
-         * @param sourceCode
-         * @return
-         */
+        @Override
         public Builder integration(String sourceCode) {
             this.sourceCode = sourceCode;
             return this;
         }
 
-        /**
-         * Runs given Camel integration resource.
-         * @param resource
-         * @return
-         */
+        @Override
         public Builder integration(Resource resource) {
             this.integrationResource = resource;
             if (integrationName == null) {
@@ -229,152 +224,99 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
             return this;
         }
 
-        /**
-         * Add resource file to the integration run.
-         * @param resource
-         * @return
-         */
+        @Override
         public Builder addResource(Resource resource) {
             this.resourceFiles.add(resource.getFile().getAbsolutePath());
             return this;
         }
 
-        /**
-         * Construct resource from given path and add file as resource to the integration run.
-         * @param resourcePath
-         * @return
-         */
+        @Override
         public Builder addResource(String resourcePath) {
             this.resourceFiles.add(resourcePath);
             return this;
         }
 
-        /**
-         * Adds route using one of the supported languages XML or Groovy.
-         * @param name
-         * @param sourceCode
-         * @return
-         */
+        @Override
         public Builder integration(String name, String sourceCode) {
             this.integrationName = name;
             this.sourceCode = sourceCode;
             return this;
         }
 
-        /**
-         * Sets the integration name.
-         * @param name
-         * @return
-         */
+        @Override
         public Builder integrationName(String name) {
             this.integrationName = name;
             return this;
         }
 
-        /**
-         * Adds a command argument.
-         * @param arg
-         * @return
-         */
+        @Override
         public Builder withArg(String arg) {
             this.args.add(arg);
             return this;
         }
 
-        /**
-         * Adds a command argument with name and value.
-         * @param name
-         * @param value
-         * @return
-         */
+        @Override
         public Builder withArg(String name, String value) {
             this.args.add(name);
             this.args.add(value);
             return this;
         }
 
-        /**
-         * Adds command arguments.
-         * @param args
-         * @return
-         */
+        @Override
         public Builder withArgs(String... args) {
             this.args.addAll(Arrays.asList(args));
             return this;
         }
 
-        /**
-         * Adds an environment variable.
-         * @param key
-         * @param value
-         * @return
-         */
+        @Override
         public Builder withEnv(String key, String value) {
             this.envVars.put(key, value);
             return this;
         }
 
-        /**
-         * Adds environment variables.
-         * @param envVars
-         * @return
-         */
+        @Override
         public Builder withEnvs(Map<String, String> envVars) {
             this.envVars.putAll(envVars);
             return this;
         }
 
-        /**
-         * Adds environment variables from given file resource.
-         * @param envVarsFile
-         * @return
-         */
+        @Override
         public Builder withEnvs(Resource envVarsFile) {
             this.envVarsFile = envVarsFile;
             return this;
         }
 
-        /**
-         * Adds a system properties.
-         * @param key
-         * @param value
-         * @return
-         */
+        @Override
         public Builder withSystemProperty(String key, String value) {
             this.systemProperties.put(key, value);
             return this;
         }
 
-        /**
-         * Adds system properties.
-         * @param systemProperties
-         * @return
-         */
+        @Override
         public Builder withSystemProperties(Map<String, String> systemProperties) {
             this.systemProperties.putAll(systemProperties);
             return this;
         }
 
-        /**
-         * Adds system properties from given file resource.
-         * @param systemPropertiesFile
-         * @return
-         */
+        @Override
         public Builder withSystemProperties(Resource systemPropertiesFile) {
             this.systemPropertiesFile = systemPropertiesFile;
             return this;
         }
 
+        @Override
         public Builder dumpIntegrationOutput(boolean enabled) {
             this.dumpIntegrationOutput = enabled;
             return this;
         }
 
+        @Override
         public Builder autoRemove(boolean enabled) {
             this.autoRemoveResources = enabled;
             return this;
         }
 
+        @Override
         public Builder waitForRunningState(boolean enabled) {
             this.waitForRunningState = enabled;
             return this;

@@ -20,7 +20,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
-import org.citrusframework.camel.endpoint.CamelEndpoint;
+import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointUriBuilder;
 import org.citrusframework.message.builder.MessageBuilderSupport;
 import org.citrusframework.spi.ReferenceResolver;
@@ -30,7 +30,9 @@ import org.citrusframework.util.ObjectHelper;
 /**
  * Action builder.
  */
-public class CamelExchangeActionBuilder<T extends MessageBuilderSupport.MessageActionBuilder<?, ?, ?>> implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware {
+public class CamelExchangeActionBuilder<T extends MessageBuilderSupport.MessageActionBuilder<?, ?, ?>>
+        implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware,
+        org.citrusframework.actions.camel.CamelExchangeActionBuilder<TestAction, T, CamelExchangeActionBuilder<T>> {
 
     private T delegate;
 
@@ -48,19 +50,23 @@ public class CamelExchangeActionBuilder<T extends MessageBuilderSupport.MessageA
         return instance;
     }
 
-    public T endpoint(CamelEndpoint endpoint) {
+    @Override
+    public T endpoint(Endpoint endpoint) {
         delegate.endpoint(endpoint);
         return delegate;
     }
 
+    @Override
     public T endpoint(EndpointUriBuilder builder) {
         return endpoint(builder.getUri());
     }
 
+    @Override
     public T endpoint(String endpointUri) {
         return endpoint(endpointUri, false);
     }
 
+    @Override
     public T endpoint(String endpointUri, boolean inOut) {
         String prefix;
         if (inOut) {
@@ -77,10 +83,7 @@ public class CamelExchangeActionBuilder<T extends MessageBuilderSupport.MessageA
         return delegate;
     }
 
-    /**
-     * Sets the bean reference resolver.
-     * @param referenceResolver
-     */
+    @Override
     public CamelExchangeActionBuilder<T> withReferenceResolver(ReferenceResolver referenceResolver) {
         setReferenceResolver(referenceResolver);
         return this;

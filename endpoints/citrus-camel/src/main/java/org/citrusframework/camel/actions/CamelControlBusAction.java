@@ -18,6 +18,7 @@ package org.citrusframework.camel.actions;
 
 import org.apache.camel.ServiceStatus;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.actions.camel.CamelControlBusActionBuilder;
 import org.citrusframework.camel.endpoint.CamelSyncEndpoint;
 import org.citrusframework.camel.endpoint.CamelSyncEndpointConfiguration;
 import org.citrusframework.context.TestContext;
@@ -140,7 +141,8 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelRouteAction.Builder<CamelControlBusAction, CamelControlBusAction.Builder> {
+    public static final class Builder extends AbstractCamelRouteAction.Builder<CamelControlBusAction, CamelControlBusAction.Builder>
+            implements CamelControlBusActionBuilder<CamelControlBusAction, Builder> {
 
         private String action;
         private String routeId;
@@ -150,48 +152,31 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
 
         /**
          * Static entry method for the fluent API.
-         * @return
          */
         public static Builder controlBus() {
             return new Builder();
         }
 
-        /**
-         * Sets route action to execute.
-         * @param id
-         */
+        @Override
         public ControlBusRouteActionBuilder route(String id) {
             this.routeId = id;
             return new ControlBusRouteActionBuilder(this);
         }
 
-        /**
-         * Sets route action to execute.
-         * @param id
-         * @param action
-         */
+        @Override
         public Builder route(String id, String action) {
             this.routeId = id;
             this.action = action;
             return this;
         }
 
-        /**
-         * Sets a simple language expression to execute.
-         * @param expression
-         * @return
-         */
+        @Override
         public Builder simple(String expression) {
             language("simple", expression);
             return this;
         }
 
-        /**
-         * Sets a language expression to execute.
-         * @param language
-         * @param expression
-         * @return
-         */
+        @Override
         public Builder language(String language, String expression) {
             this.languageType = language;
             this.languageExpression = expression;
@@ -201,19 +186,22 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
 
         /**
          * Sets the expected result.
-         * @param status
-         * @return
          */
         public Builder result(ServiceStatus status) {
-            this.result = status.name();
+            result = status.name();
             return this;
         }
 
-        /**
-         * Sets the expected result.
-         * @param result
-         * @return
-         */
+        @Override
+        public Builder result(Enum<?> o) {
+            if (o instanceof ServiceStatus status) {
+                this.result = status.name();
+            }
+
+            return this;
+        }
+
+        @Override
         public Builder result(String result) {
             this.result = result;
             return this;
@@ -227,7 +215,8 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
         /**
          * Route action builder
          */
-        public static class ControlBusRouteActionBuilder {
+        public static class ControlBusRouteActionBuilder
+                implements CamelControlBusRouteActionBuilder<CamelControlBusAction, Builder> {
 
             private final Builder parent;
 
@@ -235,38 +224,25 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
                 this.parent = builder;
             }
 
-            /**
-             * Performs generic action on the given route.
-             * @param action
-             * @return
-             */
+            @Override
             public Builder action(String action) {
                 parent.action = action;
                 return parent;
             }
 
-            /**
-             * Start given route.
-             * @return
-             */
+            @Override
             public Builder start() {
                 parent.action = "start";
                 return parent;
             }
 
-            /**
-             * Stop given route.
-             * @return
-             */
+            @Override
             public Builder stop() {
                 parent.action = "stop";
                 return parent;
             }
 
-            /**
-             * Retrieve status of given route.
-             * @return
-             */
+            @Override
             public Builder status() {
                 parent.action = "status";
                 return parent;

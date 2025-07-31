@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import static org.citrusframework.camel.dsl.CamelSupport.camel;
 import static org.citrusframework.jbang.JBangSupport.OK_EXIT_CODE;
 
-
 /**
  * Run a Camel integration in kubernetes with Camel JBang tooling.
  */

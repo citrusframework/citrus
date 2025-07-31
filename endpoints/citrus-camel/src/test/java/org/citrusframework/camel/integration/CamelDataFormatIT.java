@@ -18,35 +18,37 @@ package org.citrusframework.camel.integration;
 
 import org.apache.camel.CamelContext;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.camel.dsl.CamelSupport;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
-import static org.citrusframework.camel.dsl.CamelSupport.camel;
 
 public class CamelDataFormatIT extends TestNGCitrusSpringSupport {
 
     @Autowired
     private CamelContext camelContext;
 
+    private final CamelSupport camel = new CamelSupport();
+
     @Test
     @CitrusTest
     public void shouldApplyDataFormat() {
-        when(send(camel().endpoint(seda("data")::getUri))
+        when(send(camel.endpoint(seda("data")::getUri))
                 .message()
                 .body("Citrus rocks!")
-                .transform(camel(camelContext)
+                .transform(camel.camelContext(camelContext)
                         .marshal()
                         .base64())
         );
 
-        then(receive("camel:" + camel().endpoints().seda("data").getUri())
-                .transform(camel(camelContext)
+        then(receive("camel:" + camel.endpoints().seda("data").getUri())
+                .transform(camel.camelContext(camelContext)
                         .unmarshal()
                         .base64())
-                .transform(camel(camelContext)
+                .transform(camel.camelContext(camelContext)
                         .convertBodyTo(String.class))
                 .message()
                 .type(MessageType.PLAINTEXT)
