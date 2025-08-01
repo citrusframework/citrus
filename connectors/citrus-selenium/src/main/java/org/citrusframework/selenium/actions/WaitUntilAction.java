@@ -18,6 +18,7 @@ package org.citrusframework.selenium.actions;
 
 import java.time.Duration;
 
+import org.citrusframework.actions.selenium.SeleniumWaitUntilActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
@@ -86,42 +87,31 @@ public class WaitUntilAction extends FindElementAction {
     /**
      * Action builder.
      */
-    public static class Builder extends ElementActionBuilder<WaitUntilAction, Builder> {
+    public static class Builder extends ElementActionBuilder<WaitUntilAction, Builder>
+            implements SeleniumWaitUntilActionBuilder<WaitUntilAction, Builder> {
 
         private Long timeout = 5000L;
         private String condition;
 
-        /**
-         * Add visible condition.
-         * @return
-         */
+        @Override
         public Builder visible() {
             condition("visible");
             return this;
         }
 
-        /**
-         * Add hidden condition.
-         * @return
-         */
+        @Override
         public Builder hidden() {
             condition("hidden");
             return this;
         }
 
-        /**
-         * Add hidden condition.
-         * @return
-         */
+        @Override
         public Builder condition(String condition) {
             this.condition = condition;
             return this;
         }
 
-        /**
-         * Add timeout condition.
-         * @return
-         */
+        @Override
         public Builder timeout(Long timeout) {
             this.timeout = timeout;
             return this;

@@ -16,6 +16,7 @@
 
 package org.citrusframework.selenium.actions;
 
+import org.citrusframework.actions.selenium.SeleniumStartBrowserActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
@@ -80,10 +81,12 @@ public class StartBrowserAction extends AbstractSeleniumAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractSeleniumAction.Builder<StartBrowserAction, StartBrowserAction.Builder> {
+    public static class Builder extends AbstractSeleniumAction.Builder<StartBrowserAction, StartBrowserAction.Builder>
+            implements SeleniumStartBrowserActionBuilder<StartBrowserAction, Builder> {
 
         private boolean allowAlreadyStarted = true;
 
+        @Override
         public Builder allowAlreadyStarted(boolean permisson) {
             this.allowAlreadyStarted = permisson;
             return this;

@@ -16,6 +16,7 @@
 
 package org.citrusframework.selenium.actions;
 
+import org.citrusframework.actions.selenium.SeleniumStoreFileActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 
@@ -52,10 +53,12 @@ public class StoreFileAction extends AbstractSeleniumAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractSeleniumAction.Builder<StoreFileAction, Builder> {
+    public static class Builder extends AbstractSeleniumAction.Builder<StoreFileAction, Builder>
+            implements SeleniumStoreFileActionBuilder<StoreFileAction, Builder> {
 
         private String filePath;
 
+        @Override
         public Builder filePath(String filePath) {
             this.filePath = filePath;
             return this;

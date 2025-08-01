@@ -16,6 +16,7 @@
 
 package org.citrusframework.selenium.actions;
 
+import org.citrusframework.actions.selenium.SeleniumAlertActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
@@ -108,34 +109,25 @@ public class AlertAction extends AbstractSeleniumAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractSeleniumAction.Builder<AlertAction, Builder> {
+    public static class Builder extends AbstractSeleniumAction.Builder<AlertAction, Builder>
+            implements SeleniumAlertActionBuilder<AlertAction, Builder> {
 
         private boolean accept = true;
         private String text;
 
-        /**
-         * Add alert text validation.
-         * @param text
-         * @return
-         */
+        @Override
         public Builder text(String text) {
             this.text = text;
             return this;
         }
 
-        /**
-         * Accept alert dialog.
-         * @return
-         */
+        @Override
         public Builder accept() {
             this.accept = true;
             return this;
         }
 
-        /**
-         * Dismiss alert dialog.
-         * @return
-         */
+        @Override
         public Builder dismiss() {
             this.accept = false;
             return this;

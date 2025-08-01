@@ -16,6 +16,7 @@
 
 package org.citrusframework.selenium.actions;
 
+import org.citrusframework.actions.selenium.SeleniumStopBrowserActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
@@ -48,7 +49,8 @@ public class StopBrowserAction extends AbstractSeleniumAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractSeleniumAction.Builder<StopBrowserAction, StopBrowserAction.Builder> {
+    public static class Builder extends AbstractSeleniumAction.Builder<StopBrowserAction, StopBrowserAction.Builder>
+            implements SeleniumStopBrowserActionBuilder<StopBrowserAction, Builder> {
 
         @Override
         public StopBrowserAction build() {

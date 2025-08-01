@@ -16,6 +16,7 @@
 
 package org.citrusframework.selenium.actions;
 
+import org.citrusframework.actions.selenium.SeleniumSetInputActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.openqa.selenium.WebElement;
@@ -64,10 +65,12 @@ public class SetInputAction extends FindElementAction {
     /**
      * Action builder.
      */
-    public static class Builder extends ElementActionBuilder<SetInputAction, SetInputAction.Builder> {
+    public static class Builder extends ElementActionBuilder<SetInputAction, Builder>
+            implements SeleniumSetInputActionBuilder<SetInputAction, Builder> {
 
         private String value;
 
+        @Override
         public Builder value(String value) {
             this.value = value;
             return this;

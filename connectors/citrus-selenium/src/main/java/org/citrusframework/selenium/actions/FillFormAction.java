@@ -19,7 +19,9 @@ package org.citrusframework.selenium.actions;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.citrusframework.actions.selenium.SeleniumFillFormActionBuilder;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.json.Json;
@@ -75,7 +77,8 @@ public class FillFormAction extends AbstractSeleniumAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractSeleniumAction.Builder<FillFormAction, FillFormAction.Builder> {
+    public static class Builder extends AbstractSeleniumAction.Builder<FillFormAction, Builder>
+            implements SeleniumFillFormActionBuilder<FillFormAction, Builder> {
 
         private final Map<By, String> formFields = new LinkedHashMap<>();
 
@@ -86,19 +89,34 @@ public class FillFormAction extends AbstractSeleniumAction {
             return this;
         }
 
+        @Override
+        public Builder field(Object o, String value) {
+            if (o instanceof By by) {
+                this.formFields.put(by, value);
+            } else {
+                throw new CitrusRuntimeException("Invalid field object, expected to be a By object, but got %s".formatted(o.getClass().getName()));
+            }
+
+            return this;
+        }
+
+        @Override
         public Builder field(String id, String value) {
             return field(By.id(id), value);
         }
 
+        @Override
         public Builder fromJson(String formFieldsJson) {
             return fields(new Json().toType(formFieldsJson, Map.class));
         }
 
+        @Override
         public Builder submit() {
             this.submitButton = By.xpath("//input[@type='submit']");
             return this;
         }
 
+        @Override
         public Builder submit(String id) {
             return submit(By.id(id));
         }
@@ -108,6 +126,18 @@ public class FillFormAction extends AbstractSeleniumAction {
             return this;
         }
 
+        @Override
+        public Builder submit(Object o) {
+            if (o instanceof By button) {
+                this.submitButton = button;
+            } else {
+                throw new CitrusRuntimeException("Invalid button object, expected to be a By object, but got %s".formatted(o.getClass().getName()));
+            }
+
+            return this;
+        }
+
+        @Override
         public Builder fields(Map<String, String> fields) {
             fields.forEach(this::field);
             return this;

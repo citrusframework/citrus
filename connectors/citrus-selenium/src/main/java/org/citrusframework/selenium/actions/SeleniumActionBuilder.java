@@ -16,15 +16,10 @@
 
 package org.citrusframework.selenium.actions;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.selenium.model.WebPage;
-import org.citrusframework.spi.Resource;
-import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.ObjectHelper;
 
 /**
@@ -32,7 +27,8 @@ import org.citrusframework.util.ObjectHelper;
  *
  * @since 2.7
  */
-public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<SeleniumAction> {
+public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<SeleniumAction>,
+        org.citrusframework.actions.selenium.SeleniumActionBuilder<SeleniumAction, SeleniumActionBuilder> {
 
     /** Selenium browser */
     private SeleniumBrowser seleniumBrowser;
@@ -55,9 +51,17 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
 		return this;
 	}
 
-    /**
-     * Start browser instance.
-     */
+    @Override
+    public SeleniumActionBuilder browser(Endpoint endpoint) {
+        if (endpoint instanceof SeleniumBrowser browser) {
+            return browser(browser);
+        } else {
+            throw new CitrusRuntimeException(("Invalid browser object, expected a SeleniumBrowser, " +
+                    "but got %s").formatted(endpoint.getClass().getName()));
+        }
+    }
+
+    @Override
     public StartBrowserAction.Builder start() {
         StartBrowserAction.Builder builder = new StartBrowserAction.Builder()
                 .browser(seleniumBrowser);
@@ -76,9 +80,17 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Stop browser instance.
-     */
+    @Override
+    public StartBrowserAction.Builder start(Endpoint endpoint) {
+        if (endpoint instanceof SeleniumBrowser browser) {
+            return start(browser);
+        } else {
+            throw new CitrusRuntimeException(("Invalid browser object, expected a SeleniumBrowser, " +
+                    "but got %s").formatted(endpoint.getClass().getName()));
+        }
+    }
+
+    @Override
     public StopBrowserAction.Builder stop() {
         StopBrowserAction.Builder builder = new StopBrowserAction.Builder()
                 .browser(seleniumBrowser);
@@ -97,9 +109,17 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Alert element.
-     */
+    @Override
+    public StopBrowserAction.Builder stop(Endpoint endpoint) {
+        if (endpoint instanceof SeleniumBrowser browser) {
+            return stop(browser);
+        } else {
+            throw new CitrusRuntimeException(("Invalid browser object, expected a SeleniumBrowser, " +
+                    "but got %s").formatted(endpoint.getClass().getName()));
+        }
+    }
+
+    @Override
     public AlertAction.Builder alert() {
         AlertAction.Builder builder = new AlertAction.Builder()
                 .browser(seleniumBrowser);
@@ -107,9 +127,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Navigate action.
-     */
+    @Override
     public NavigateAction.Builder navigate() {
         NavigateAction.Builder builder = new NavigateAction.Builder()
                 .browser(seleniumBrowser);
@@ -117,42 +135,15 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Navigate action.
-     */
-    public NavigateAction.Builder navigate(String page) {
-        NavigateAction.Builder builder = new NavigateAction.Builder()
-                .page(page)
-                .browser(seleniumBrowser);
-        this.delegate = builder;
-        return builder;
-    }
-
-    /**
-     * Page action.
-     */
-    public PageAction.Builder page(WebPage page) {
+    @Override
+    public PageAction.Builder page() {
         PageAction.Builder builder = new PageAction.Builder()
-                .page(page)
                 .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
 
-    /**
-     * Page action.
-     */
-    public PageAction.Builder page(Class<? extends WebPage> pageType) {
-        PageAction.Builder builder = new PageAction.Builder()
-                .type(pageType)
-                .browser(seleniumBrowser);
-        this.delegate = builder;
-        return builder;
-    }
-
-	/**
-     * Finds element.
-     */
+	@Override
     public FindElementAction.Builder find() {
 		FindElementAction.Builder builder = new FindElementAction.Builder()
                 .browser(seleniumBrowser);
@@ -160,42 +151,15 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Dropdown select single option action.
-     */
-    public DropDownSelectAction.Builder select(String option) {
+    @Override
+    public DropDownSelectAction.Builder select() {
         DropDownSelectAction.Builder builder = new DropDownSelectAction.Builder()
-                .option(option)
                 .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
 
-    /**
-     * Dropdown select multiple options action.
-     */
-    public DropDownSelectAction.Builder select(String ... options) {
-        DropDownSelectAction.Builder builder = new DropDownSelectAction.Builder()
-                .options(options)
-                .browser(seleniumBrowser);
-        this.delegate = builder;
-        return builder;
-    }
-
-    /**
-     * Set input action.
-     */
-    public SetInputAction.Builder setInput(String value) {
-		SetInputAction.Builder builder = new SetInputAction.Builder()
-                .value(value)
-                .browser(seleniumBrowser);
-        this.delegate = builder;
-        return builder;
-    }
-
-    /**
-     * Set input action.
-     */
+    @Override
     public SetInputAction.Builder setInput() {
 		SetInputAction.Builder builder = new SetInputAction.Builder()
                 .browser(seleniumBrowser);
@@ -203,9 +167,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Fill form action.
-     */
+    @Override
     public FillFormAction.Builder fillForm() {
 		FillFormAction.Builder builder = new FillFormAction.Builder()
                 .browser(seleniumBrowser);
@@ -213,9 +175,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Check input action.
-     */
+    @Override
     public CheckInputAction.Builder checkInput() {
 		CheckInputAction.Builder builder = new CheckInputAction.Builder()
                 .browser(seleniumBrowser);
@@ -223,20 +183,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Check input action.
-     */
-    public CheckInputAction.Builder checkInput(boolean checked) {
-		CheckInputAction.Builder builder = new CheckInputAction.Builder()
-                .checked(checked)
-                .browser(seleniumBrowser);
-        this.delegate = builder;
-        return builder;
-    }
-
-    /**
-     * Clicks element.
-     */
+    @Override
     public ClickAction.Builder click() {
 		ClickAction.Builder builder = new ClickAction.Builder()
                 .browser(seleniumBrowser);
@@ -244,9 +191,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Hover element.
-     */
+    @Override
     public HoverAction.Builder hover() {
         HoverAction.Builder builder = new HoverAction.Builder()
                 .browser(seleniumBrowser);
@@ -254,9 +199,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Clear browser cache.
-     */
+    @Override
     public ClearBrowserCacheAction.Builder clearCache() {
         ClearBrowserCacheAction.Builder builder = new ClearBrowserCacheAction.Builder()
                 .browser(seleniumBrowser);
@@ -264,9 +207,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Make screenshot.
-     */
+    @Override
     public MakeScreenshotAction.Builder screenshot() {
         MakeScreenshotAction.Builder builder = new MakeScreenshotAction.Builder()
                 .browser(seleniumBrowser);
@@ -274,20 +215,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Make screenshot with custom output directory.
-     */
-    public MakeScreenshotAction.Builder screenshot(String outputDir) {
-        MakeScreenshotAction.Builder builder = new MakeScreenshotAction.Builder()
-                .outputDir(outputDir)
-                .browser(seleniumBrowser);
-        this.delegate = builder;
-        return builder;
-    }
-
-    /**
-     * Store file.
-     */
+    @Override
     public StoreFileAction.Builder store() {
         StoreFileAction.Builder builder = new StoreFileAction.Builder()
                 .browser(seleniumBrowser);
@@ -295,21 +223,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Store file.
-     * @param filePath
-     */
-    public StoreFileAction.Builder store(String filePath) {
-        StoreFileAction.Builder builder = new StoreFileAction.Builder()
-                .filePath(filePath)
-                .browser(seleniumBrowser);
-        this.delegate = builder;
-        return builder;
-    }
-
-    /**
-     * Get stored file.
-     */
+    @Override
     public GetStoredFileAction.Builder getStored() {
         GetStoredFileAction.Builder builder = new GetStoredFileAction.Builder()
                 .browser(seleniumBrowser);
@@ -317,21 +231,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Get stored file.
-     * @param fileName
-     */
-    public GetStoredFileAction.Builder getStored(String fileName) {
-        GetStoredFileAction.Builder builder = new GetStoredFileAction.Builder()
-                .fileName(fileName)
-                .browser(seleniumBrowser);
-        this.delegate = builder;
-        return builder;
-    }
-
-    /**
-     * Wait until element meets condition.
-     */
+    @Override
     public WaitUntilAction.Builder waitUntil() {
         WaitUntilAction.Builder builder = new WaitUntilAction.Builder()
                 .browser(seleniumBrowser);
@@ -339,9 +239,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Execute JavaScript.
-     */
+    @Override
     public JavaScriptAction.Builder javascript() {
         JavaScriptAction.Builder builder = new JavaScriptAction.Builder()
                 .browser(seleniumBrowser);
@@ -349,42 +247,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Execute JavaScript.
-     */
-    public JavaScriptAction.Builder javascript(String script) {
-        JavaScriptAction.Builder builder = new JavaScriptAction.Builder()
-                .script(script)
-                .browser(seleniumBrowser);
-        this.delegate = builder;
-        return builder;
-    }
-
-    /**
-     * Execute JavaScript.
-     */
-    public JavaScriptAction.Builder javascript(Resource script) {
-        return javascript(script, FileUtils.getDefaultCharset());
-    }
-
-    /**
-     * Execute JavaScript.
-     */
-    public JavaScriptAction.Builder javascript(Resource scriptResource, Charset charset) {
-        try {
-            JavaScriptAction.Builder builder = new JavaScriptAction.Builder()
-                    .script(FileUtils.readToString(scriptResource, charset))
-                    .browser(seleniumBrowser);
-            this.delegate = builder;
-            return builder;
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to read script resource", e);
-        }
-    }
-
-    /**
-     * Open window.
-     */
+    @Override
     public OpenWindowAction.Builder open() {
         OpenWindowAction.Builder builder = new OpenWindowAction.Builder()
                 .browser(seleniumBrowser);
@@ -392,9 +255,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Close window.
-     */
+    @Override
     public CloseWindowAction.Builder close() {
         CloseWindowAction.Builder builder = new CloseWindowAction.Builder()
                 .browser(seleniumBrowser);
@@ -402,9 +263,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Switch window.
-     */
+    @Override
     public SwitchWindowAction.Builder focus() {
         SwitchWindowAction.Builder builder = new SwitchWindowAction.Builder()
                 .browser(seleniumBrowser);
@@ -412,9 +271,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
         return builder;
     }
 
-    /**
-     * Switch window.
-     */
+    @Override
     public SwitchWindowAction.Builder switchWindow() {
         SwitchWindowAction.Builder builder = new SwitchWindowAction.Builder()
                 .browser(seleniumBrowser);

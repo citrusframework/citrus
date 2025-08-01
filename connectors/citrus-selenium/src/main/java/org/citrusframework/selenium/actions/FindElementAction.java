@@ -16,6 +16,12 @@
 
 package org.citrusframework.selenium.actions;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.citrusframework.actions.selenium.SeleniumElementActionBuilderBase;
+import org.citrusframework.actions.selenium.SeleniumFindElementActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
@@ -24,10 +30,6 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Finds element in DOM tree on current page and validates its properties and settings.
@@ -177,8 +179,6 @@ public class FindElementAction extends AbstractSeleniumAction {
 
     /**
      * Gets the property.
-     *
-     * @return
      */
     public String getProperty() {
         return property;
@@ -186,8 +186,6 @@ public class FindElementAction extends AbstractSeleniumAction {
 
     /**
      * Gets the propertyValue.
-     *
-     * @return
      */
     public String getPropertyValue() {
         return propertyValue;
@@ -195,8 +193,6 @@ public class FindElementAction extends AbstractSeleniumAction {
 
     /**
      * Gets the tagName.
-     *
-     * @return
      */
     public String getTagName() {
         return tagName;
@@ -204,8 +200,6 @@ public class FindElementAction extends AbstractSeleniumAction {
 
     /**
      * Gets the attributes.
-     *
-     * @return
      */
     public Map<String, String> getAttributes() {
         return attributes;
@@ -213,8 +207,6 @@ public class FindElementAction extends AbstractSeleniumAction {
 
     /**
      * Gets the styles.
-     *
-     * @return
      */
     public Map<String, String> getStyles() {
         return styles;
@@ -222,8 +214,6 @@ public class FindElementAction extends AbstractSeleniumAction {
 
     /**
      * Gets the displayed.
-     *
-     * @return
      */
     public boolean isDisplayed() {
         return displayed;
@@ -231,8 +221,6 @@ public class FindElementAction extends AbstractSeleniumAction {
 
     /**
      * Gets the enabled.
-     *
-     * @return
      */
     public boolean isEnabled() {
         return enabled;
@@ -240,8 +228,6 @@ public class FindElementAction extends AbstractSeleniumAction {
 
     /**
      * Gets the text.
-     *
-     * @return
      */
     public String getText() {
         return text;
@@ -249,8 +235,6 @@ public class FindElementAction extends AbstractSeleniumAction {
 
     /**
      * Gets the by.
-     *
-     * @return
      */
     public By getBy() {
         return by;
@@ -259,7 +243,8 @@ public class FindElementAction extends AbstractSeleniumAction {
     /**
      * Action builder.
      */
-    public static class Builder extends ElementActionBuilder<FindElementAction, Builder> {
+    public static class Builder extends ElementActionBuilder<FindElementAction, Builder>
+            implements SeleniumFindElementActionBuilder<FindElementAction, Builder> {
 
         private final Map<String, String> attributes = new HashMap<>();
         private final Map<String, String> styles = new HashMap<>();
@@ -268,63 +253,37 @@ public class FindElementAction extends AbstractSeleniumAction {
         private String text;
         private String tagName;
 
-        /**
-         * Add text validation.
-         * @param text
-         * @return
-         */
+        @Override
         public Builder text(String text) {
             this.text = text;
             return this;
         }
 
-        /**
-         * Add tag name validation.
-         * @param tagName
-         * @return
-         */
+        @Override
         public Builder tagName(String tagName) {
             this.tagName = tagName;
             return this;
         }
 
-        /**
-         * Add attribute validation.
-         * @param name
-         * @param value
-         * @return
-         */
+        @Override
         public Builder attribute(String name, String value) {
             this.attributes.put(name, value);
             return this;
         }
 
-        /**
-         * Add css style validation.
-         * @param name
-         * @param value
-         * @return
-         */
+        @Override
         public Builder style(String name, String value) {
             this.styles.put(name, value);
             return this;
         }
 
-        /**
-         * Add enabled validation.
-         * @param enabled
-         * @return
-         */
+        @Override
         public Builder enabled(boolean enabled) {
             this.enabled = enabled;
             return this;
         }
 
-        /**
-         * Add displayed validation.
-         * @param displayed
-         * @return
-         */
+        @Override
         public Builder displayed(boolean displayed) {
             this.displayed = displayed;
             return this;
@@ -341,7 +300,8 @@ public class FindElementAction extends AbstractSeleniumAction {
      * @param <T>
      * @param <B>
      */
-    public static abstract class ElementActionBuilder<T extends FindElementAction, B extends ElementActionBuilder<T, B>> extends AbstractSeleniumAction.Builder<T, B> {
+    public static abstract class ElementActionBuilder<T extends FindElementAction, B extends ElementActionBuilder<T, B>>
+            extends AbstractSeleniumAction.Builder<T, B> implements SeleniumElementActionBuilderBase<T, B> {
 
         protected By by;
         protected String property;
@@ -352,6 +312,19 @@ public class FindElementAction extends AbstractSeleniumAction {
             return self;
         }
 
+        @Override
+        public B element(Object o) {
+            if (o instanceof By byElement) {
+                this.by = byElement;
+            } else {
+                throw new CitrusRuntimeException(("Invalid element identifier object, " +
+                        "expected By object but got %s").formatted(o.getClass().getName()));
+            }
+
+            return self;
+        }
+
+        @Override
         public B element(String property, String propertyValue) {
             this.property = property;
             this.propertyValue = propertyValue;

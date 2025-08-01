@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.citrusframework.actions.selenium.SeleniumDropDownSelectActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.util.StringUtils;
@@ -115,20 +116,24 @@ public class DropDownSelectAction extends FindElementAction {
     /**
      * Action builder.
      */
-    public static class Builder extends ElementActionBuilder<DropDownSelectAction, Builder> {
+    public static class Builder extends ElementActionBuilder<DropDownSelectAction, Builder>
+            implements SeleniumDropDownSelectActionBuilder<DropDownSelectAction, Builder> {
 
         private String option;
         private final List<String> options = new ArrayList<>();
 
+        @Override
         public Builder option(String option) {
             this.option = option;
             return this;
         }
 
+        @Override
         public Builder options(String... options) {
             return options(Arrays.asList(options));
         }
 
+        @Override
         public Builder options(List<String> options) {
             this.options.addAll(options);
             return this;

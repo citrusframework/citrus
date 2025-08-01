@@ -19,8 +19,8 @@ package org.citrusframework.selenium.pages;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.selenium.model.PageValidator;
-import org.citrusframework.selenium.model.WebPage;
+import org.citrusframework.actions.selenium.PageValidator;
+import org.citrusframework.actions.selenium.WebPage;
 import org.citrusframework.util.StringUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -28,7 +28,7 @@ import org.openqa.selenium.support.FindBy;
 /**
  * @since 2.7
  */
-public class UserFormPage implements WebPage, PageValidator<UserFormPage> {
+public class UserFormPage implements WebPage, PageValidator<UserFormPage, SeleniumBrowser> {
 
     @FindBy(id = "userForm")
     private WebElement form;
