@@ -24,11 +24,11 @@ public interface KubernetesDeploymentActionBuilder<T extends TestAction> {
      * Add annotation on deployment instance.
      * @param deploymentName the name of the Kubernetes deployment.
      */
-    <B extends KubernetesCreateAnnotationsActionBuilder<T, B>> B addAnnotation(String deploymentName);
+    KubernetesCreateAnnotationsActionBuilder<?, ?> addAnnotation(String deploymentName);
 
     /**
      * Add label on deployment instance.
      * @param deploymentName the name of the Kubernetes deployment.
      */
-    <B extends KubernetesCreateLabelsActionBuilder<T, B>> B addLabel(String deploymentName);
+    KubernetesCreateLabelsActionBuilder<?, ?> addLabel(String deploymentName);
 }

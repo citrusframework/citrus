@@ -16,8 +16,6 @@
 
 package org.citrusframework.actions.kubernetes;
 
-import java.io.Closeable;
-
 import org.citrusframework.TestAction;
 
 public interface KubernetesAgentActionBuilder<T extends TestAction> {
@@ -25,21 +23,21 @@ public interface KubernetesAgentActionBuilder<T extends TestAction> {
     /**
      * Create new agent deployment and connect to given Kubernetes service via local port forward.
      */
-    <B extends KubernetesAgentConnectActionBuilder<T, B>> B connect();
+    KubernetesAgentConnectActionBuilder<?, ?> connect();
 
     /**
      * Create new agent deployment and connect to given Kubernetes service via local port forward.
      */
-    <B extends KubernetesAgentConnectActionBuilder<T, B>> B connect(String agentName);
+    KubernetesAgentConnectActionBuilder<?, ?> connect(String agentName);
 
     /**
      * Disconnect from given Kubernetes agent.
      */
-    <B extends KubernetesAgentDisconnectActionBuilder<T, B>> B disconnect();
+    KubernetesAgentDisconnectActionBuilder<?, ?> disconnect();
 
     /**
      * Disconnect from given Kubernetes agent.
      */
-    <B extends KubernetesAgentDisconnectActionBuilder<T, B>> B disconnect(String agentName);
+    KubernetesAgentDisconnectActionBuilder<?, ?> disconnect(String agentName);
 
 }

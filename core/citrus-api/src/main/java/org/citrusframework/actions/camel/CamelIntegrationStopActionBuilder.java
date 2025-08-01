@@ -21,7 +21,7 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ActionBuilder;
 import org.citrusframework.actions.ReferenceResolverAwareBuilder;
 
-public interface CamelIntegrationStopActionBuilder<T extends TestAction, B extends TestActionBuilder<T>>
+public interface CamelIntegrationStopActionBuilder<T extends TestAction, B extends CamelIntegrationStopActionBuilder<T, B>>
         extends ActionBuilder<T, B>, TestActionBuilder<T>, ReferenceResolverAwareBuilder<T, B> {
 
     /**

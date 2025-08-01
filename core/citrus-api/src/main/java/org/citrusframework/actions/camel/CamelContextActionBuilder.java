@@ -20,18 +20,18 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReferenceResolverAwareBuilder;
 
-public interface CamelContextActionBuilder<T extends TestAction, B extends TestActionBuilder<T>>
+public interface CamelContextActionBuilder<T extends TestAction, B extends CamelContextActionBuilder<T, B>>
         extends ReferenceResolverAwareBuilder<T, B>, TestActionBuilder<T> {
 
-    <S extends CamelCreateContextActionBuilder<T, S>> S create();
+    CamelCreateContextActionBuilder<?, ?> create();
 
-    <S extends CamelCreateContextActionBuilder<T, S>> S create(String contextName);
+    CamelCreateContextActionBuilder<?, ?> create(String contextName);
 
-    <S extends CamelStartContextActionBuilder<T, S>> S start();
+    CamelStartContextActionBuilder<?, ?> start();
 
-    <S extends CamelStartContextActionBuilder<T, S>> S start(String contextName);
+    CamelStartContextActionBuilder<?, ?> start(String contextName);
 
-    <S extends CamelStopContextActionBuilder<T, S>> S stop();
+    CamelStopContextActionBuilder<?, ?> stop();
 
-    <S extends CamelStopContextActionBuilder<T, S>> S stop(String contextName);
+    CamelStopContextActionBuilder<?, ?> stop(String contextName);
 }

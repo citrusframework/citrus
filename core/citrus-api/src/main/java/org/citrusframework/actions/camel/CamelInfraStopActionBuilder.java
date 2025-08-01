@@ -17,9 +17,8 @@
 package org.citrusframework.actions.camel;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
 
-public interface CamelInfraStopActionBuilder<T extends TestAction, B extends TestActionBuilder<T>>
+public interface CamelInfraStopActionBuilder<T extends TestAction, B extends CamelInfraStopActionBuilder<T, B>>
         extends CamelActionBuilderBase<T, B> {
 
     B service(String serviceName, String implementation);

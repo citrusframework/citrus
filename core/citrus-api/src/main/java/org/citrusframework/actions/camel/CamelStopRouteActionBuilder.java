@@ -17,9 +17,8 @@
 package org.citrusframework.actions.camel;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
 
-public interface CamelStopRouteActionBuilder<T extends TestAction, B extends TestActionBuilder<T>>
+public interface CamelStopRouteActionBuilder<T extends TestAction, B extends CamelStopRouteActionBuilder<T, B>>
         extends CamelRouteActionBuilderBase<T, B> {
 
 }

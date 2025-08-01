@@ -20,7 +20,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReferenceResolverAwareBuilder;
 
-public interface CamelJBangActionBuilder<T extends TestAction, B extends TestActionBuilder<T>>
+public interface CamelJBangActionBuilder<T extends TestAction, B extends CamelJBangActionBuilder<T, B>>
         extends ReferenceResolverAwareBuilder<T, B>, TestActionBuilder<T> {
 
     CamelJBangActionBuilder<T, B> camelVersion(String camelVersion);
@@ -30,25 +30,25 @@ public interface CamelJBangActionBuilder<T extends TestAction, B extends TestAct
     /**
      * Runs Camel integration.
      */
-    <S extends CamelIntegrationRunActionBuilder<T, S>> S run();
+    CamelIntegrationRunActionBuilder<?, ?> run();
 
     /**
      * Runs Camel integration from given source code.
      */
-    <S extends CamelIntegrationRunActionBuilder<T, S>> S run(String name, String sourceCode);
+    CamelIntegrationRunActionBuilder<?, ?> run(String name, String sourceCode);
 
     /**
      * Verify that given Camel integration is running.
      */
-    <S extends CamelIntegrationVerifyActionBuilder<T, S>> S verify();
+    CamelIntegrationVerifyActionBuilder<?, ?> verify();
 
     /**
      * Stop the Camel integration JBang process identified by th given integration name.
      */
-    <S extends CamelIntegrationStopActionBuilder<T, S>> S stop();
+    CamelIntegrationStopActionBuilder<?, ?> stop();
 
     /**
      * Perform actions related to Camel JBang plugins.
      */
-    <S extends CamelJBangPluginActionBuilder<T, S>> S plugin();
+    CamelJBangPluginActionBuilder<?, ?> plugin();
 }

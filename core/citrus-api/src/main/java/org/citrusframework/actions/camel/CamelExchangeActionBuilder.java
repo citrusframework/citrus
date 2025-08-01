@@ -23,7 +23,7 @@ import org.citrusframework.actions.ReferenceResolverAwareBuilder;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointUriBuilder;
 
-public interface CamelExchangeActionBuilder<T extends TestAction, M extends MessageActionBuilder, B extends TestActionBuilder<T>>
+public interface CamelExchangeActionBuilder<T extends TestAction, M extends MessageActionBuilder, B extends CamelExchangeActionBuilder<T, M, B>>
         extends ReferenceResolverAwareBuilder<T, B>, TestActionBuilder<T> {
 
     M endpoint(Endpoint endpoint);

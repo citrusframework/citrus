@@ -19,10 +19,9 @@ package org.citrusframework.actions.camel;
 import java.util.List;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.Resource;
 
-public interface CamelCreateRouteActionBuilder<T extends TestAction, B extends TestActionBuilder<T>>
+public interface CamelCreateRouteActionBuilder<T extends TestAction, B extends CamelCreateRouteActionBuilder<T, B>>
         extends CamelRouteActionBuilderBase<T, B> {
 
     /**

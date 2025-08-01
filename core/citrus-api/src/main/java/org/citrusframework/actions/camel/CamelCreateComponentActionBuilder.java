@@ -17,10 +17,9 @@
 package org.citrusframework.actions.camel;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.Resource;
 
-public interface CamelCreateComponentActionBuilder<T extends TestAction, B extends TestActionBuilder<T>>
+public interface CamelCreateComponentActionBuilder<T extends TestAction, B extends CamelCreateComponentActionBuilder<T, B>>
         extends CamelActionBuilderBase<T, B> {
 
     B componentName(String componentName);

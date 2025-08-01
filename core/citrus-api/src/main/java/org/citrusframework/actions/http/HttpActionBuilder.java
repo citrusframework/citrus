@@ -27,22 +27,22 @@ public interface HttpActionBuilder<T extends TestAction, B extends TestActionBui
     /**
      * Initiate http client action.
      */
-    HttpClientActionBuilder<T, ? extends TestActionBuilder.DelegatingTestActionBuilder<T>> client(Endpoint endpoint);
+    HttpClientActionBuilder<?, ?> client(Endpoint endpoint);
 
     /**
      * Initiate http client action.
      */
-    HttpClientActionBuilder<T, ? extends TestActionBuilder.DelegatingTestActionBuilder<T>> client(String endpoint);
+    HttpClientActionBuilder<?, ?> client(String endpoint);
 
     /**
      * Initiate http server action.
      */
-    HttpServerActionBuilder<T, ? extends TestActionBuilder.DelegatingTestActionBuilder<T>> server(Endpoint endpoint);
+    HttpServerActionBuilder<?, ?> server(Endpoint endpoint);
 
     /**
      * Initiate http server action.
      */
-    HttpServerActionBuilder<T, ? extends TestActionBuilder.DelegatingTestActionBuilder<T>> server(String endpoint);
+    HttpServerActionBuilder<?, ?> server(String endpoint);
 
     interface BuilderFactory {
 

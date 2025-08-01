@@ -24,23 +24,23 @@ public interface KubernetesConfigMapActionBuilder<T extends TestAction> {
      * Create configMap instance.
      * @param configMapName the name of the Kubernetes configMap.
      */
-    <B extends KubernetesConfigMapCreateActionBuilder<T, B>> B create(String configMapName);
+    KubernetesConfigMapCreateActionBuilder<?, ?> create(String configMapName);
 
     /**
      * Add annotation on configMap instance.
      * @param configMapName the name of the Kubernetes configMap.
      */
-    <B extends KubernetesCreateAnnotationsActionBuilder<T, B>> B addAnnotation(String configMapName);
+    KubernetesCreateAnnotationsActionBuilder<?, ?> addAnnotation(String configMapName);
 
     /**
      * Add label on configMap instance.
      * @param configMapName the name of the Kubernetes configMap.
      */
-    <B extends KubernetesCreateLabelsActionBuilder<T, B>> B addLabel(String configMapName);
+    KubernetesCreateLabelsActionBuilder<?, ?> addLabel(String configMapName);
 
     /**
      * Delete configMap instance.
      * @param configMapName the name of the Kubernetes configMap.
      */
-    <B extends KubernetesConfigMapDeleteActionBuilder<T, B>> B delete(String configMapName);
+    KubernetesConfigMapDeleteActionBuilder<?, ?> delete(String configMapName);
 }

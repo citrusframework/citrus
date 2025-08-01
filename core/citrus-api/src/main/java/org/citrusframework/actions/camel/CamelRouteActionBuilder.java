@@ -20,7 +20,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReferenceResolverAwareBuilder;
 
-public interface CamelRouteActionBuilder<T extends TestAction, B extends TestActionBuilder<T>>
+public interface CamelRouteActionBuilder<T extends TestAction, B extends CamelRouteActionBuilder<T, B>>
         extends ReferenceResolverAwareBuilder<T, B>, TestActionBuilder<T> {
 
     CamelRouteActionBuilder<T, B> context(String camelContext);
@@ -30,7 +30,7 @@ public interface CamelRouteActionBuilder<T extends TestAction, B extends TestAct
     /**
      * Creates new Camel routes.
      */
-    <S extends CamelCreateRouteActionBuilder<T, S>> S create();
+    CamelCreateRouteActionBuilder<?, ?> create();
 
     /**
      * Creates new Camel routes in route builder.

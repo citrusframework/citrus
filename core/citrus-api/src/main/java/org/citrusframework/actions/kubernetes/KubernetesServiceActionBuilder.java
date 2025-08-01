@@ -23,51 +23,51 @@ public interface KubernetesServiceActionBuilder<T extends TestAction> {
     /**
      * Connect to given Kubernetes service via local port forward.
      */
-    <B extends KubernetesServiceConnectActionBuilder<T,B>> B connect();
+    KubernetesServiceConnectActionBuilder<?, ?> connect();
 
     /**
      * Connect to given Kubernetes service via local port forward.
      * @param serviceName the name of the Kubernetes service.
      */
-    <B extends KubernetesServiceConnectActionBuilder<T,B>> B connect(String serviceName);
+    KubernetesServiceConnectActionBuilder<?, ?> connect(String serviceName);
 
     /**
      * Connect to given Kubernetes service via local port forward.
      */
-    <B extends KubernetesServiceDisconnectActionBuilder<T,B>> B disconnect();
+    KubernetesServiceDisconnectActionBuilder<?, ?> disconnect();
 
     /**
      * Connect to given Kubernetes service via local port forward.
      * @param serviceName the name of the Kubernetes service.
      */
-    <B extends KubernetesServiceDisconnectActionBuilder<T,B>> B disconnect(String serviceName);
+    KubernetesServiceDisconnectActionBuilder<?, ?> disconnect(String serviceName);
 
     /**
      * Create service instance.
      * @param serviceName the name of the Kubernetes service.
      */
-    <B extends KubernetesServiceCreateActionBuilder<T,B>> B create(String serviceName);
+    KubernetesServiceCreateActionBuilder<?, ?> create(String serviceName);
 
     /**
      * Add annotation on service instance.
      * @param serviceName the name of the Kubernetes service.
      */
-    <B extends KubernetesCreateAnnotationsActionBuilder<T,B>> B addAnnotation(String serviceName);
+    KubernetesCreateAnnotationsActionBuilder<?, ?> addAnnotation(String serviceName);
 
     /**
      * Add label on service instance.
      * @param serviceName the name of the Kubernetes service.
      */
-    <B extends KubernetesCreateLabelsActionBuilder<T,B>> B addLabel(String serviceName);
+    KubernetesCreateLabelsActionBuilder<?, ?> addLabel(String serviceName);
 
     /**
      * Delete all service instance in current namespace.
      */
-    <B extends KubernetesServiceDeleteActionBuilder<T,B>> B delete();
+    KubernetesServiceDeleteActionBuilder<?, ?> delete();
 
     /**
      * Delete service instance.
      * @param serviceName the name of the Kubernetes service.
      */
-    <B extends KubernetesServiceDeleteActionBuilder<T,B>> B delete(String serviceName);
+    KubernetesServiceDeleteActionBuilder<?, ?> delete(String serviceName);
 }

@@ -16,8 +16,6 @@
 
 package org.citrusframework.actions.kubernetes;
 
-import java.io.Closeable;
-
 import org.citrusframework.TestAction;
 
 public interface KubernetesResourceActionBuilder<T extends TestAction> {
@@ -25,25 +23,25 @@ public interface KubernetesResourceActionBuilder<T extends TestAction> {
     /**
      * Create any Kubernetes resource instance from yaml.
      */
-    <B extends KubernetesResourceCreateActionBuilder<T, B>> B create();
+    KubernetesResourceCreateActionBuilder<?, ?> create();
 
     /**
      * Add annotation on resource instance.
      * @param resourceName the name of the Kubernetes resource.
      * @param resourceType the type of the Kubernetes resource.
      */
-    <B extends KubernetesCreateAnnotationsActionBuilder<T, B>> B addAnnotation(String resourceName, String resourceType);
+    KubernetesCreateAnnotationsActionBuilder<?, ?> addAnnotation(String resourceName, String resourceType);
 
     /**
      * Add label on resource instance.
      * @param resourceName the name of the Kubernetes resource.
      * @param resourceType the type of the Kubernetes resource.
      */
-    <B extends KubernetesCreateLabelsActionBuilder<T, B>> B addLabel(String resourceName, String resourceType);
+    KubernetesCreateLabelsActionBuilder<?, ?> addLabel(String resourceName, String resourceType);
 
     /**
      * Delete any Kubernetes resource instance.
      * @param content the Kubernetes resource as YAML content.
      */
-    <B extends KubernetesResourceDeleteActionBuilder<T, B>> B delete(String content);
+    KubernetesResourceDeleteActionBuilder<?, ?> delete(String content);
 }
