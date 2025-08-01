@@ -17,6 +17,7 @@
 package org.citrusframework;
 
 import org.citrusframework.actions.*;
+import org.citrusframework.actions.agent.AgentActionBuilder;
 import org.citrusframework.actions.camel.CamelActionBuilder;
 import org.citrusframework.actions.http.HttpActionBuilder;
 import org.citrusframework.actions.jbang.JBangActionBuilder;
@@ -31,6 +32,7 @@ import org.citrusframework.actions.sql.ExecuteSqlQueryActionBuilder;
  * Interface combines domain specific language methods for all test actions available in Citrus.
  */
 public interface TestActions extends
+        AgentActionBuilder.BuilderFactory,
         AntRunActionBuilder.BuilderFactory,
         ApplyTestBehaviorActionBuilder.BuilderFactory,
         CamelActionBuilder.BuilderFactory,

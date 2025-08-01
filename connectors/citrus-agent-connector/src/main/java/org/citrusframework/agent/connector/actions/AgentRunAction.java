@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.actions.agent.AgentRunActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpClient;
@@ -155,7 +156,8 @@ public class AgentRunAction extends AbstractAgentAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractAgentAction.Builder<AgentRunAction, Builder> {
+    public static final class Builder extends AbstractAgentAction.Builder<AgentRunAction, Builder>
+            implements AgentRunActionBuilder<AgentRunAction, Builder> {
 
         private String type;
         private String sourceCode;
@@ -163,26 +165,31 @@ public class AgentRunAction extends AbstractAgentAction {
         private String sourceFilePath;
         private boolean autoConnect = true;
 
+        @Override
         public Builder type(String type) {
             this.type = type;
             return this;
         }
 
+        @Override
         public Builder sourceCode(String sourceCode) {
             this.sourceCode = sourceCode;
             return this;
         }
 
+        @Override
         public Builder sourceFile(Resource sourceFile) {
             this.sourceFile = sourceFile;
             return this;
         }
 
+        @Override
         public Builder sourceFile(String sourceFilePath) {
             this.sourceFilePath = sourceFilePath;
             return this;
         }
 
+        @Override
         public Builder autoConnect(boolean autoConnect) {
             this.autoConnect = autoConnect;
             return this;

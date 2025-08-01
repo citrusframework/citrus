@@ -20,7 +20,8 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.agent.connector.CitrusAgentSettings;
 import org.springframework.util.Assert;
 
-public class AgentActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<AgentAction> {
+public class AgentActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<AgentAction>,
+        org.citrusframework.actions.agent.AgentActionBuilder<AgentAction, AgentActionBuilder> {
 
     private AbstractAgentAction.Builder<? extends AgentAction, ?> delegate;
 
@@ -34,17 +35,20 @@ public class AgentActionBuilder implements TestActionBuilder.DelegatingTestActio
         return new AgentActionBuilder();
     }
 
+    @Override
     public AgentActionBuilder name(String agentName) {
         this.agentName = agentName;
         return this;
     }
 
+    @Override
     public AgentConnectAction.Builder connect() {
         AgentConnectAction.Builder builder = new AgentConnectAction.Builder();
         this.delegate = builder;
         return builder;
     }
 
+    @Override
     public AgentRunAction.Builder run() {
         AgentRunAction.Builder builder = new AgentRunAction.Builder();
         this.delegate = builder;

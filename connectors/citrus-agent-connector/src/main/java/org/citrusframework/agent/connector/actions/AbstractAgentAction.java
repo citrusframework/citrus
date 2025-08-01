@@ -18,6 +18,7 @@ package org.citrusframework.agent.connector.actions;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.actions.agent.AgentActionBuilderBase;
 import org.citrusframework.agent.connector.CitrusAgentSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +39,12 @@ public abstract class AbstractAgentAction extends AbstractTestAction implements 
     /**
      * Action builder.
      */
-    public static abstract class Builder<T extends AbstractAgentAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B> {
+    public static abstract class Builder<T extends AbstractAgentAction, B extends Builder<T, B>>
+            extends AbstractTestActionBuilder<T, B> implements AgentActionBuilderBase<T, B> {
 
         private String agentName = CitrusAgentSettings.getAgentName();
 
+        @Override
         public B agent(String agentName) {
             this.agentName = agentName;
             return self;
