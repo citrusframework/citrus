@@ -30,12 +30,12 @@ public interface CamelActionBuilder<T extends TestAction, B extends TestActionBu
     /**
      * Entrance for all Camel related Java DSL functionalities.
      */
-    <S extends CamelContextActionBuilder<T, S>> S camelContext();
+    CamelActionBuilder<T, B> camelContext(Object camelContext);
 
     /**
      * Entrance for all Camel related Java DSL functionalities.
      */
-    CamelActionBuilder<T, B> camelContext(Object camelContext);
+    CamelContextActionBuilder<?, ?> camelContext();
 
     /**
      * Sends message using Camel endpointUri and components.
@@ -50,32 +50,32 @@ public interface CamelActionBuilder<T extends TestAction, B extends TestActionBu
     /**
      * Binds given component to the Camel context.
      */
-    <S extends CamelCreateComponentActionBuilder<T, S>> S bind(String name, Object component);
+    CamelCreateComponentActionBuilder<?, ?> bind(String name, Object component);
 
     /**
      * Binds a component to the Camel context.
      */
-    <S extends CamelCreateComponentActionBuilder<T, S>> S bind();
+    CamelCreateComponentActionBuilder<?, ?> bind();
 
     /**
      * Creates new control bus test action builder and sets the Camel context.
      */
-    <S extends CamelControlBusActionBuilder<T, S>> S controlBus();
+    CamelControlBusActionBuilder<?, ?> controlBus();
 
     /**
      * Perform actions on a Camel route such as start/stop/create and process.
      */
-    <S extends CamelRouteActionBuilder<T, S>> S route();
+    CamelRouteActionBuilder<?, ?> route();
 
     /**
      * Perform actions with Camel infra.
      */
-    <S extends CamelInfraActionBuilder<T, S>> S infra();
+    CamelInfraActionBuilder<?, ?> infra();
 
     /**
      * Perform actions with Camel JBang.
      */
-    <S extends CamelJBangActionBuilder<T, S>> S jbang();
+    CamelJBangActionBuilder<?, ?> jbang();
 
     interface BuilderFactory {
 

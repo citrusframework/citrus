@@ -24,23 +24,23 @@ public interface KubernetesSecretActionBuilder<T extends TestAction> {
      * Create secret instance.
      * @param secretName the name of the Kubernetes secret.
      */
-    <B extends KubernetesSecretCreateActionBuilder<T, B>> B create(String secretName);
+    KubernetesSecretCreateActionBuilder<?, ?> create(String secretName);
 
     /**
      * Add annotation on secret instance.
      * @param secretName the name of the Kubernetes secret.
      */
-    <B extends KubernetesCreateAnnotationsActionBuilder<T, B>> B addAnnotation(String secretName);
+    KubernetesCreateAnnotationsActionBuilder<?, ?> addAnnotation(String secretName);
 
     /**
      * Add label on secret instance.
      * @param secretName the name of the Kubernetes secret.
      */
-    <B extends KubernetesCreateLabelsActionBuilder<T, B>> B addLabel(String secretName);
+    KubernetesCreateLabelsActionBuilder<?, ?> addLabel(String secretName);
 
     /**
      * Delete secret instance.
      * @param secretName the name of the Kubernetes secret.
      */
-    <B extends KubernetesSecretDeleteActionBuilder<T, B>> B delete(String secretName);
+    KubernetesSecretDeleteActionBuilder<?, ?> delete(String secretName);
 }

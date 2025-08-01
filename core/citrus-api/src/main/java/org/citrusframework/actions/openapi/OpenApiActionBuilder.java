@@ -24,7 +24,7 @@ import org.citrusframework.actions.ReferenceResolverAwareBuilder;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.openapi.Specification;
 
-public interface OpenApiActionBuilder<T extends TestAction, S extends Specification, B extends TestActionBuilder.DelegatingTestActionBuilder<T>>
+public interface OpenApiActionBuilder<T extends TestAction, S extends Specification, B extends TestActionBuilder<T>>
         extends ReferenceResolverAwareBuilder<T, B> {
 
     OpenApiActionBuilder<T, S, B> alias(String openApiAlias);
@@ -50,27 +50,27 @@ public interface OpenApiActionBuilder<T extends TestAction, S extends Specificat
     /**
      * Initiate http client action.
      */
-    OpenApiClientActionBuilder<T, ? extends TestActionBuilder.DelegatingTestActionBuilder<T>> client();
+    OpenApiClientActionBuilder<?, ?> client();
 
     /**
      * Initiate http client action.
      */
-    OpenApiClientActionBuilder<T, ? extends TestActionBuilder.DelegatingTestActionBuilder<T>> client(Endpoint endpoint);
+    OpenApiClientActionBuilder<?, ?> client(Endpoint endpoint);
 
     /**
      * Initiate http client action.
      */
-    OpenApiClientActionBuilder<T, ? extends TestActionBuilder.DelegatingTestActionBuilder<T>> client(String endpoint);
+    OpenApiClientActionBuilder<?, ?> client(String endpoint);
 
     /**
      * Initiate http server action.
      */
-    OpenApiServerActionBuilder<T, ? extends TestActionBuilder.DelegatingTestActionBuilder<T>> server(Endpoint endpoint);
+    OpenApiServerActionBuilder<?, ?> server(Endpoint endpoint);
 
     /**
      * Initiate http server action.
      */
-    OpenApiServerActionBuilder<T, ? extends TestActionBuilder.DelegatingTestActionBuilder<T>> server(String endpoint);
+    OpenApiServerActionBuilder<?, ?> server(String endpoint);
 
     interface BuilderFactory {
 

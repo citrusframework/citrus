@@ -24,52 +24,52 @@ public interface KubernetesPodActionBuilder<T extends TestAction> {
      * Verify that given pod is running.
      * @param podName the name of the Camel K pod.
      */
-    <B extends KubernetesPodVerifyActionBuilder<T, B>> B verify(String podName);
+    KubernetesPodVerifyActionBuilder<?, ?> verify(String podName);
 
     /**
      * Watch pod logs for given pod identified by its name.
      * @param podName the name of the Camel K pod.
      */
-    <B extends KubernetesPodWatchLogsActionBuilder<T, B>> B watchLogs(String podName);
+    KubernetesPodWatchLogsActionBuilder<?, ?> watchLogs(String podName);
 
     /**
      * Watch pod logs for given pod identified by label selector.
      * @param label the name of the pod label to filter on.
      * @param value the value of the pod label to match.
      */
-    <B extends KubernetesPodWatchLogsActionBuilder<T, B>> B watchLogs(String label, String value);
+    KubernetesPodWatchLogsActionBuilder<?, ?> watchLogs(String label, String value);
 
     /**
      * Add annotation on pod instance.
      * @param podName the name of the Kubernetes pod.
      */
-    <B extends KubernetesCreateAnnotationsActionBuilder<T, B>> B addAnnotation(String podName);
+    KubernetesCreateAnnotationsActionBuilder<?, ?> addAnnotation(String podName);
 
     /**
      * Add label on pod instance.
      * @param podName the name of the Kubernetes pod.
      */
-    <B extends KubernetesCreateLabelsActionBuilder<T, B>> B addLabel(String podName);
+    KubernetesCreateLabelsActionBuilder<?, ?> addLabel(String podName);
 
     /**
      * Verify that given pod is running.
      * @param label the name of the pod label to filter on.
      * @param value the value of the pod label to match.
      */
-    <B extends KubernetesPodVerifyActionBuilder<T, B>> B verify(String label, String value);
+    KubernetesPodVerifyActionBuilder<?, ?> verify(String label, String value);
 
     /**
      * Delete all pods in current namespace.
      */
-    <B extends KubernetesPodDeleteActionBuilder<T, B>> B delete();
+    KubernetesPodDeleteActionBuilder<?, ?> delete();
 
     /**
      * Delete given pod by its name in current namespace.
      */
-    <B extends KubernetesPodDeleteActionBuilder<T, B>> B delete(String podName);
+    KubernetesPodDeleteActionBuilder<?, ?> delete(String podName);
 
     /**
      * Delete given pod identified by the label value expression.
      */
-    <B extends KubernetesPodDeleteActionBuilder<T, B>> B delete(String label, String value);
+    KubernetesPodDeleteActionBuilder<?, ?> delete(String label, String value);
 }

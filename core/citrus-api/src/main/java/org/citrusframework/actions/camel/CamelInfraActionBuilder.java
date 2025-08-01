@@ -20,16 +20,16 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReferenceResolverAwareBuilder;
 
-public interface CamelInfraActionBuilder<T extends TestAction, B extends TestActionBuilder<T>>
+public interface CamelInfraActionBuilder<T extends TestAction, B extends CamelInfraActionBuilder<T, B>>
         extends ReferenceResolverAwareBuilder<T, B>, TestActionBuilder<T> {
 
     /**
      * Runs an available Camel infra service.
      */
-    <S extends CamelInfraRunActionBuilder<T, S>> S run();
+    CamelInfraRunActionBuilder<?, ?> run();
 
     /**
      * Stops a running Camel infra instance.
      */
-    <S extends CamelInfraStopActionBuilder<T, S>> S stop();
+    CamelInfraStopActionBuilder<?, ?> stop();
 }

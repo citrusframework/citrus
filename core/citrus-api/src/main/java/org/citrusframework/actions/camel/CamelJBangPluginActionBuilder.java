@@ -20,11 +20,11 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReferenceResolverAwareBuilder;
 
-public interface CamelJBangPluginActionBuilder<T extends TestAction, B extends TestActionBuilder<T>>
+public interface CamelJBangPluginActionBuilder<T extends TestAction, B extends CamelJBangPluginActionBuilder<T, B>>
         extends ReferenceResolverAwareBuilder<T, B>, TestActionBuilder<T> {
 
     /**
      * Processor calling given Camel route as part of the message processing.
      */
-    <S extends CamelJBangPluginAddActionBuilder<T, S>> S add();
+    CamelJBangPluginAddActionBuilder<?, ?> add();
 }

@@ -23,25 +23,25 @@ public interface KubernetesCustomResourceActionBuilder<T extends TestAction> {
     /**
      * Create custom resource instance.
      */
-    <B extends KubernetesCustomResourceCreateActionBuilder<T, B>> B create();
+    KubernetesCustomResourceCreateActionBuilder<?, ?> create();
 
     /**
      * Delete custom resource instance.
      * @param name the name of the Kubernetes custom resource.
      */
-    <B extends KubernetesCustomResourceDeleteActionBuilder<T, B>> B delete(String name);
+    KubernetesCustomResourceDeleteActionBuilder<?, ?> delete(String name);
 
     /**
      * Verify that given custom resource matches a condition.
      */
-    <B extends KubernetesCustomResourceVerifyActionBuilder<T, B>> B verify();
+    KubernetesCustomResourceVerifyActionBuilder<?, ?> verify();
 
     /**
      * Verify that given custom resource matches a condition.
      * @param resourceType the type of the customer resource.
      */
-    default <B extends KubernetesCustomResourceVerifyActionBuilder<T, B>> B verify(Class<?> resourceType) {
-        return (B) verify().resourceType(resourceType);
+    default KubernetesCustomResourceVerifyActionBuilder<?, ?> verify(Class<?> resourceType) {
+        return verify().resourceType(resourceType);
     }
 
     /**
@@ -49,16 +49,16 @@ public interface KubernetesCustomResourceActionBuilder<T extends TestAction> {
      * @param name the name of the custom resource.
      * @param resourceType the type of the customer resource.
      */
-    default <B extends KubernetesCustomResourceVerifyActionBuilder<T, B>> B verify(String name, Class<?> resourceType) {
-        return (B) verify().resourceType(resourceType).resourceName(name);
+    default KubernetesCustomResourceVerifyActionBuilder<?, ?> verify(String name, Class<?> resourceType) {
+        return verify().resourceType(resourceType).resourceName(name);
     }
 
     /**
      * Verify that given custom resource matches a condition.
      * @param name the name of the custom resource.
      */
-    default <B extends KubernetesCustomResourceVerifyActionBuilder<T, B>> B verify(String name) {
-        return (B) verify().resourceName(name);
+    default KubernetesCustomResourceVerifyActionBuilder<?, ?> verify(String name) {
+        return verify().resourceName(name);
     }
 
     /**
@@ -66,7 +66,7 @@ public interface KubernetesCustomResourceActionBuilder<T extends TestAction> {
      * @param label the label to filter results.
      * @param value the value of the label.
      */
-    default <B extends KubernetesCustomResourceVerifyActionBuilder<T, B>> B verify(String label, String value) {
-        return (B) verify().label(label, value);
+    default KubernetesCustomResourceVerifyActionBuilder<?, ?> verify(String label, String value) {
+        return verify().label(label, value);
     }
 }
