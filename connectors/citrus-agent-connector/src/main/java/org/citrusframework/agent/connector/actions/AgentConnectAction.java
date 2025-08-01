@@ -16,6 +16,7 @@
 
 package org.citrusframework.agent.connector.actions;
 
+import org.citrusframework.actions.agent.AgentConnectActionBuilder;
 import org.citrusframework.agent.connector.CitrusAgentSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -89,16 +90,19 @@ public class AgentConnectAction extends AbstractAgentAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractAgentAction.Builder<AgentConnectAction, Builder> {
+    public static final class Builder extends AbstractAgentAction.Builder<AgentConnectAction, Builder>
+            implements AgentConnectActionBuilder<AgentConnectAction, Builder> {
 
         private int port = CitrusAgentSettings.getAgentServerPort();
         private String url;
 
+        @Override
         public Builder url(String url) {
             this.url = url;
             return this;
         }
 
+        @Override
         public Builder port(int port) {
             this.port = port;
             return this;

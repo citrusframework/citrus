@@ -17,6 +17,7 @@
 package org.citrusframework;
 
 import org.citrusframework.actions.*;
+import org.citrusframework.actions.agent.AgentActionBuilder;
 import org.citrusframework.actions.camel.CamelActionBuilder;
 import org.citrusframework.actions.http.HttpActionBuilder;
 import org.citrusframework.actions.jbang.JBangActionBuilder;
@@ -36,6 +37,11 @@ public interface TestActionSupport extends TestActions, TestContainers {
     default <T extends TestActionBuilder<?>> T lookup(String type) {
         return (T) TestActionBuilder.lookup(type)
                 .orElseThrow(() -> new CitrusRuntimeException("No %s action found - please add the required module to your project".formatted(type)));
+    }
+
+    @Override
+    default AgentActionBuilder<?, ?> agent() {
+        return lookup("agent");
     }
 
     @Override
