@@ -16,6 +16,7 @@
 
 package org.citrusframework.selenium.actions;
 
+import org.citrusframework.actions.selenium.SeleniumClearBrowserCacheActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 
@@ -39,7 +40,8 @@ public class ClearBrowserCacheAction extends AbstractSeleniumAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractSeleniumAction.Builder<ClearBrowserCacheAction, Builder> {
+    public static class Builder extends AbstractSeleniumAction.Builder<ClearBrowserCacheAction, Builder>
+            implements SeleniumClearBrowserCacheActionBuilder<ClearBrowserCacheAction, Builder> {
 
         @Override
         public ClearBrowserCacheAction build() {

@@ -16,6 +16,7 @@
 
 package org.citrusframework.selenium.actions;
 
+import org.citrusframework.actions.selenium.SeleniumGetStoredFileActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
@@ -54,10 +55,12 @@ public class GetStoredFileAction extends AbstractSeleniumAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractSeleniumAction.Builder<GetStoredFileAction, Builder> {
+    public static class Builder extends AbstractSeleniumAction.Builder<GetStoredFileAction, Builder>
+            implements SeleniumGetStoredFileActionBuilder<GetStoredFileAction, Builder> {
 
         private String fileName;
 
+        @Override
         public Builder fileName(String fileName) {
             this.fileName = fileName;
             return this;

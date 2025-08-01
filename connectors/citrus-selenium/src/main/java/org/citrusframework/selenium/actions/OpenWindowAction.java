@@ -18,6 +18,7 @@ package org.citrusframework.selenium.actions;
 
 import java.util.Set;
 
+import org.citrusframework.actions.selenium.SeleniumOpenWindowActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
@@ -88,15 +89,12 @@ public class OpenWindowAction extends AbstractSeleniumAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractSeleniumAction.Builder<OpenWindowAction, Builder> {
+    public static class Builder extends AbstractSeleniumAction.Builder<OpenWindowAction, Builder>
+            implements SeleniumOpenWindowActionBuilder<OpenWindowAction, Builder> {
 
         private String windowName = SeleniumHeaders.SELENIUM_ACTIVE_WINDOW;
 
-        /**
-         * Set window name.
-         * @param name
-         * @return
-         */
+        @Override
         public Builder window(String name) {
             this.windowName = name;
             return this;

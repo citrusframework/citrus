@@ -20,11 +20,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.citrusframework.actions.selenium.PageValidator;
+import org.citrusframework.actions.selenium.SeleniumPageActionBuilder;
+import org.citrusframework.actions.selenium.WebPage;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.selenium.model.PageValidator;
-import org.citrusframework.selenium.model.WebPage;
 import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.util.StringUtils;
 import org.openqa.selenium.support.PageFactory;
@@ -49,7 +50,7 @@ public class PageAction extends AbstractSeleniumAction {
     private final List<String> arguments;
 
     /** Web page validator */
-    private final PageValidator validator;
+    private final PageValidator<?, ?> validator;
 
     /**
      * Default constructor.
@@ -81,13 +82,17 @@ public class PageAction extends AbstractSeleniumAction {
         PageFactory.initElements(browser.getWebDriver(), pageToUse);
 
         if (StringUtils.hasText(action)) {
-            if (action.equals("validate") && (validator != null || pageToUse instanceof PageValidator)) {
+            if (action.equals("validate")) {
+                if (validator == null && !(pageToUse instanceof PageValidator)) {
+                    throw new CitrusRuntimeException(String.format("Missing page validator for action '%s'", action));
+                }
+
                 if (validator != null) {
-                    validator.validate(pageToUse, browser, context);
+                    validator.adaptAndValidate(pageToUse, browser, context);
                 }
 
                 if (pageToUse instanceof PageValidator) {
-                    ((PageValidator) pageToUse).validate(pageToUse, browser, context);
+                    ((PageValidator<?, ?>) pageToUse).adaptAndValidate(pageToUse, browser, context);
                 }
             } else {
                 ReflectionHelper.doWithMethods(pageToUse.getClass(), method -> {
@@ -113,8 +118,6 @@ public class PageAction extends AbstractSeleniumAction {
 
     /**
      * Gets the page.
-     *
-     * @return
      */
     public WebPage getPage() {
         return page;
@@ -122,8 +125,6 @@ public class PageAction extends AbstractSeleniumAction {
 
     /**
      * Gets the action.
-     *
-     * @return
      */
     public String getAction() {
         return action;
@@ -131,17 +132,13 @@ public class PageAction extends AbstractSeleniumAction {
 
     /**
      * Gets the validator.
-     *
-     * @return
      */
-    public PageValidator getValidator() {
+    public PageValidator<?, ?> getValidator() {
         return validator;
     }
 
     /**
      * Gets the type.
-     *
-     * @return
      */
     public String getType() {
         return type;
@@ -149,8 +146,6 @@ public class PageAction extends AbstractSeleniumAction {
 
     /**
      * Gets the arguments.
-     *
-     * @return
      */
     public List<String> getArguments() {
         return arguments;
@@ -159,107 +154,73 @@ public class PageAction extends AbstractSeleniumAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractSeleniumAction.Builder<PageAction, Builder> {
+    public static class Builder extends AbstractSeleniumAction.Builder<PageAction, Builder>
+            implements SeleniumPageActionBuilder<PageAction, Builder> {
 
         private WebPage page;
         private String type;
         private String action;
         private final List<String> arguments = new ArrayList<>();
-        private PageValidator validator;
+        private PageValidator<?, ?> validator;
 
-        /**
-         * Sets the web page.
-         * @param page
-         * @return
-         */
         public Builder page(WebPage page) {
             this.page = page;
             return this;
         }
 
-        /**
-         * Sets the web page type.
-         * @param pageType
-         * @return
-         */
+        @Override
         public Builder type(String pageType) {
             this.type = pageType;
             return this;
         }
 
-        /**
-         * Sets the web page type.
-         * @param pageType
-         * @return
-         */
+        @Override
         public Builder type(Class<? extends WebPage> pageType) {
-            this.type = pageType.getName();
+            if (WebPage.class.isAssignableFrom(pageType)) {
+                this.type = pageType.getName();
+            } else {
+                throw new CitrusRuntimeException("Page type must be WebPage, but got %s".formatted(pageType.getName()));
+            }
+
             return this;
         }
 
-        /**
-         * Sets the web page action.
-         * @param action
-         * @return
-         */
+        @Override
         public Builder action(String action) {
             this.action = action;
             return this;
         }
 
-        /**
-         * Perform page validation.
-         * @return
-         */
+        @Override
         public Builder validate() {
             this.action = "validate";
             return this;
         }
 
-        /**
-         * Set page validator.
-         * @param validator
-         * @return
-         */
-        public Builder validator(PageValidator validator) {
+        @Override
+        public Builder validator(PageValidator<?, ?> validator) {
             this.validator = validator;
             return this;
         }
 
-        /**
-         * Set page action method to execute.
-         * @param method
-         * @return
-         */
+        @Override
         public Builder execute(String method) {
             this.action = method;
             return this;
         }
 
-        /**
-         * Set page action argument.
-         * @param arg
-         * @return
-         */
+        @Override
         public Builder argument(String arg) {
             this.arguments.add(arg);
             return this;
         }
 
-        /**
-         * Set page action arguments.
-         * @param args
-         * @return
-         */
-        public Builder arguments(String ... args) {
+        @Override
+        public Builder arguments(String... args) {
             return arguments(Arrays.asList(args));
         }
 
-        /**
-         * Set page action arguments.
-         * @param args
-         * @return
-         */
+        @Override
         public Builder arguments(List<String> args) {
             this.arguments.addAll(args);
             return this;

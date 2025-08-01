@@ -22,6 +22,7 @@ import org.citrusframework.actions.http.HttpActionBuilder;
 import org.citrusframework.actions.jbang.JBangActionBuilder;
 import org.citrusframework.actions.kubernetes.KubernetesActionBuilder;
 import org.citrusframework.actions.openapi.OpenApiActionBuilder;
+import org.citrusframework.actions.selenium.SeleniumActionBuilder;
 import org.citrusframework.actions.sql.ExecutePlsqlActionBuilder;
 import org.citrusframework.actions.sql.ExecuteSqlActionBuilder;
 import org.citrusframework.actions.sql.ExecuteSqlQueryActionBuilder;
@@ -49,6 +50,7 @@ public interface TestActions extends
         PurgeEndpointActionBuilder.BuilderFactory,
         ReceiveActionBuilder.BuilderFactory,
         ReceiveTimeoutActionBuilder.BuilderFactory,
+        SeleniumActionBuilder.BuilderFactory,
         SendActionBuilder.BuilderFactory,
         SleepActionBuilder.BuilderFactory,
         StartServerActionBuilder.BuilderFactory,

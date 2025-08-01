@@ -16,6 +16,7 @@
 
 package org.citrusframework.selenium.actions;
 
+import org.citrusframework.actions.selenium.SeleniumClickActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.openqa.selenium.WebElement;
@@ -44,7 +45,8 @@ public class ClickAction extends FindElementAction {
     /**
      * Action builder.
      */
-    public static class Builder extends ElementActionBuilder<ClickAction, Builder> {
+    public static class Builder extends ElementActionBuilder<ClickAction, Builder>
+            implements SeleniumClickActionBuilder<ClickAction, Builder> {
 
         @Override
         public ClickAction build() {

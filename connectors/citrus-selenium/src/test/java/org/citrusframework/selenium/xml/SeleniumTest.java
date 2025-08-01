@@ -26,8 +26,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.selenium.actions.*;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumBrowserConfiguration;
-import org.citrusframework.selenium.model.PageValidator;
-import org.citrusframework.selenium.model.WebPage;
+import org.citrusframework.actions.selenium.PageValidator;
+import org.citrusframework.actions.selenium.WebPage;
 import org.citrusframework.selenium.pages.UserFormPage;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.xml.actions.XmlTestActionBuilder;
@@ -68,7 +68,7 @@ public class SeleniumTest extends AbstractXmlActionTest {
     private WebPage webPage;
 
     @Mock
-    private PageValidator<?> pageValidator;
+    private PageValidator<?, ?> pageValidator;
 
     @Mock
     private WebDriver.Navigation navigation;

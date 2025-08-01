@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
+import org.citrusframework.actions.selenium.SeleniumNavigateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
@@ -94,10 +95,12 @@ public class NavigateAction extends AbstractSeleniumAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractSeleniumAction.Builder<NavigateAction, NavigateAction.Builder> {
+    public static class Builder extends AbstractSeleniumAction.Builder<NavigateAction, NavigateAction.Builder>
+            implements SeleniumNavigateActionBuilder<NavigateAction, Builder> {
 
         private String page;
 
+        @Override
         public Builder page(String page) {
             this.page = page;
             return this;

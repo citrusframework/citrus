@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package org.citrusframework.selenium.model;
+package org.citrusframework.actions.selenium;
 
-/**
- * @since 2.7
- */
-public interface WebPage {
+import org.citrusframework.TestAction;
+
+public interface SeleniumSetInputActionBuilder<T extends TestAction, B extends SeleniumSetInputActionBuilder<T, B>>
+        extends SeleniumElementActionBuilderBase<T, B> {
+
+    B value(String value);
 }

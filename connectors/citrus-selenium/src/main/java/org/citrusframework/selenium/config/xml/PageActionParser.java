@@ -21,8 +21,8 @@ import java.util.List;
 
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.selenium.actions.PageAction;
-import org.citrusframework.selenium.model.PageValidator;
-import org.citrusframework.selenium.model.WebPage;
+import org.citrusframework.actions.selenium.PageValidator;
+import org.citrusframework.actions.selenium.WebPage;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
@@ -66,7 +66,6 @@ public class PageActionParser extends AbstractBrowserActionParser {
 
         /**
          * Sets the page.
-         *
          * @param page
          */
         public void setPage(WebPage page) {
@@ -75,7 +74,6 @@ public class PageActionParser extends AbstractBrowserActionParser {
 
         /**
          * Sets the action.
-         *
          * @param action
          */
         public void setAction(String action) {
@@ -84,16 +82,14 @@ public class PageActionParser extends AbstractBrowserActionParser {
 
         /**
          * Sets the validator.
-         *
          * @param validator
          */
-        public void setValidator(PageValidator validator) {
+        public void setValidator(PageValidator<?, ?> validator) {
             builder.validator(validator);
         }
 
         /**
          * Sets the type.
-         *
          * @param type
          */
         public void setType(String type) {
@@ -102,7 +98,6 @@ public class PageActionParser extends AbstractBrowserActionParser {
 
         /**
          * Sets the arguments.
-         *
          * @param arguments
          */
         public void setArguments(List<String> arguments) {

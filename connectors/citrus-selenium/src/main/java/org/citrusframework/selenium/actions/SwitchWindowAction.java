@@ -18,6 +18,7 @@ package org.citrusframework.selenium.actions;
 
 import java.util.Set;
 
+import org.citrusframework.actions.selenium.SeleniumSwitchWindowActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
@@ -82,15 +83,12 @@ public class SwitchWindowAction extends AbstractSeleniumAction implements Seleni
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractSeleniumAction.Builder<SwitchWindowAction, Builder> {
+    public static class Builder extends AbstractSeleniumAction.Builder<SwitchWindowAction, Builder>
+            implements SeleniumSwitchWindowActionBuilder<SwitchWindowAction, Builder> {
 
         private String windowName = SeleniumHeaders.SELENIUM_ACTIVE_WINDOW;
 
-        /**
-         * Set window name.
-         * @param name
-         * @return
-         */
+        @Override
         public Builder window(String name) {
             this.windowName = name;
             return this;

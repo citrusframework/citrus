@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-package org.citrusframework.selenium.model;
+package org.citrusframework.actions.selenium;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.TestAction;
 
-/**
- * @since 2.7
- */
-public interface PageValidator<T extends WebPage> {
+public interface SeleniumNavigateActionBuilder<T extends TestAction, B extends SeleniumNavigateActionBuilder<T, B>>
+        extends SeleniumActionBuilderBase<T, B> {
 
-    /**
-     * Validate page contents.
-     * @param webPage
-     * @param browser
-     * @param context
-     */
-    void validate(T webPage, SeleniumBrowser browser, TestContext context);
+    B page(String page);
 }

@@ -22,6 +22,7 @@ import org.citrusframework.actions.http.HttpActionBuilder;
 import org.citrusframework.actions.jbang.JBangActionBuilder;
 import org.citrusframework.actions.kubernetes.KubernetesActionBuilder;
 import org.citrusframework.actions.openapi.OpenApiActionBuilder;
+import org.citrusframework.actions.selenium.SeleniumActionBuilder;
 import org.citrusframework.actions.sql.ExecutePlsqlActionBuilder;
 import org.citrusframework.actions.sql.ExecuteSqlActionBuilder;
 import org.citrusframework.actions.sql.ExecuteSqlQueryActionBuilder;
@@ -140,6 +141,11 @@ public interface TestActionSupport extends TestActions, TestContainers {
     @Override
     default ReceiveTimeoutActionBuilder<ReceiveTimeoutAction> expectTimeout() {
         return new ReceiveTimeoutAction.Builder();
+    }
+
+    @Override
+    default SeleniumActionBuilder<?, ?> selenium() {
+        return lookup("selenium");
     }
 
     @Override

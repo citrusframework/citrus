@@ -18,6 +18,7 @@ package org.citrusframework.selenium.actions;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.actions.selenium.SeleniumActionBuilderBase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
@@ -76,7 +77,8 @@ public abstract class AbstractSeleniumAction extends AbstractTestAction implemen
     /**
      * Action builder.
      */
-    public static abstract class Builder<T extends SeleniumAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B> {
+    public static abstract class Builder<T extends SeleniumAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B>
+            implements SeleniumActionBuilderBase<T, B> {
 
         private SeleniumBrowser browser;
 
@@ -85,6 +87,17 @@ public abstract class AbstractSeleniumAction extends AbstractTestAction implemen
          */
         public B browser(SeleniumBrowser seleniumBrowser) {
             this.browser = seleniumBrowser;
+            return self;
+        }
+
+        @Override
+        public B browser(Object o) {
+            if (o instanceof SeleniumBrowser seleniumBrowser) {
+                this.browser = seleniumBrowser;
+            } else {
+                throw new CitrusRuntimeException("Invalid browser object, expected be a SeleniumBrowser, but got %s".formatted(o.getClass().getName()));
+            }
+
             return self;
         }
 

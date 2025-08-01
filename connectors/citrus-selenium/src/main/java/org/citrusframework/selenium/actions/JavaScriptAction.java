@@ -16,15 +16,20 @@
 
 package org.citrusframework.selenium.actions;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.citrusframework.actions.selenium.SeleniumJavaScriptActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.util.FileUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
@@ -119,75 +124,62 @@ public class JavaScriptAction extends AbstractSeleniumAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractSeleniumAction.Builder<JavaScriptAction, Builder> {
+    public static class Builder extends AbstractSeleniumAction.Builder<JavaScriptAction, Builder>
+            implements SeleniumJavaScriptActionBuilder<JavaScriptAction, Builder> {
 
         private String script;
         private final List<Object> arguments = new ArrayList<>();
         private final List<String> expectedErrors = new ArrayList<>();
 
-        /**
-         * Add script.
-         * @param script
-         * @return
-         */
+        @Override
         public Builder script(String script) {
             this.script = script;
             return this;
         }
 
-        /**
-         * Add script arguments.
-         * @param args
-         * @return
-         */
+        @Override
+        public Builder script(Resource resource) {
+            return script(resource, FileUtils.getDefaultCharset());
+        }
+
+        @Override
+        public Builder script(Resource resource, Charset charset) {
+            try {
+                return script(FileUtils.readToString(resource, charset));
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read script resource", e);
+            }
+        }
+
+        @Override
         public Builder arguments(Object... args) {
             return arguments(Arrays.asList(args));
         }
 
-        /**
-         * Add script arguments.
-         * @param args
-         * @return
-         */
+        @Override
         public Builder arguments(List<Object> args) {
             this.arguments.addAll(args);
             return this;
         }
 
-        /**
-         * Add script argument.
-         * @param arg
-         * @return
-         */
+        @Override
         public Builder argument(Object arg) {
             this.arguments.add(arg);
             return this;
         }
 
-        /**
-         * Add expected error.
-         * @param errors
-         * @return
-         */
+        @Override
         public Builder errors(String... errors) {
             return errors(Arrays.asList(errors));
         }
 
-        /**
-         * Add expected error.
-         * @param errors
-         * @return
-         */
+        @Override
         public Builder errors(List<String> errors) {
             this.expectedErrors.addAll(errors);
             return this;
         }
 
-        /**
-         * Add expected error.
-         * @param error
-         * @return
-         */
+        @Override
         public Builder error(String error) {
             this.expectedErrors.add(error);
             return this;

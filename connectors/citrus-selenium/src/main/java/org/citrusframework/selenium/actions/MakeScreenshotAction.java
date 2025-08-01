@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.actions.selenium.SeleniumMakeScreenshotActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
@@ -99,10 +100,12 @@ public class MakeScreenshotAction extends AbstractSeleniumAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractSeleniumAction.Builder<MakeScreenshotAction, Builder> {
+    public static class Builder extends AbstractSeleniumAction.Builder<MakeScreenshotAction, Builder>
+            implements SeleniumMakeScreenshotActionBuilder<MakeScreenshotAction, Builder> {
 
         private String outputDir;
 
+        @Override
         public Builder outputDir(String outputDir) {
             this.outputDir = outputDir;
             return this;

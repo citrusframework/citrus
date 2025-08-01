@@ -16,15 +16,16 @@
 
 package org.citrusframework.selenium.actions;
 
+import org.citrusframework.actions.selenium.PageValidator;
+import org.citrusframework.actions.selenium.WebPage;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.selenium.model.PageValidator;
-import org.citrusframework.selenium.model.WebPage;
 import org.citrusframework.selenium.pages.UserFormPage;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -44,12 +45,20 @@ import static org.mockito.Mockito.when;
 public class PageActionTest extends AbstractTestNGUnitTest {
 
     private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
-    private final WebDriver webDriver = Mockito.mock(WebDriver.class);
-    private final WebElement formElement = Mockito.mock(WebElement.class);
-    private final WebElement inputElement = Mockito.mock(WebElement.class);
+
+    @Mock
+    private WebDriver webDriver;
+    @Mock
+    private WebElement formElement;
+    @Mock
+    private WebElement inputElement;
+    @Mock
+    private PageValidator<WebPage, SeleniumBrowser> validator;
 
     @BeforeMethod
     public void setup() {
+        MockitoAnnotations.openMocks(this);
+
         reset(webDriver, formElement, inputElement);
 
         seleniumBrowser.setWebDriver(webDriver);
@@ -91,8 +100,6 @@ public class PageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecutePageValidator() throws Exception {
-        PageValidator validator = Mockito.mock(PageValidator.class);
-
         when(inputElement.getAttribute("value")).thenReturn("TestUser");
 
         UserFormPage userForm = new UserFormPage();
@@ -105,7 +112,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        verify(validator).validate(userForm, seleniumBrowser, context);
+        verify(validator).adaptAndValidate(userForm, seleniumBrowser, context);
     }
 
     @Test

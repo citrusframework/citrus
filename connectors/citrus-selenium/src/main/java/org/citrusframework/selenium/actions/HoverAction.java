@@ -16,6 +16,7 @@
 
 package org.citrusframework.selenium.actions;
 
+import org.citrusframework.actions.selenium.SeleniumHoverActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.openqa.selenium.WebElement;
@@ -44,7 +45,8 @@ public class HoverAction extends FindElementAction {
     /**
      * Action builder.
      */
-    public static class Builder extends ElementActionBuilder<HoverAction, Builder> {
+    public static class Builder extends ElementActionBuilder<HoverAction, Builder>
+            implements SeleniumHoverActionBuilder<HoverAction, Builder> {
 
         @Override
         public HoverAction build() {

@@ -97,7 +97,7 @@
     <spring:bean id="userForm" class="org.citrusframework.selenium.pages.UserFormPage"/>
 
     <spring:bean id="pageValidator" class="org.mockito.Mockito" factory-method="mock">
-        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.selenium.model.PageValidator</spring:value></spring:constructor-arg>
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.actions.selenium.PageValidator</spring:value></spring:constructor-arg>
         <spring:constructor-arg value="pageValidator"/>
     </spring:bean>
 

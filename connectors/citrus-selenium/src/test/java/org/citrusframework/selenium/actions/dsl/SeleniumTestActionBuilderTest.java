@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.container.SequenceAfterTest;
 import org.citrusframework.container.SequenceBeforeTest;
@@ -45,7 +46,6 @@ import org.openqa.selenium.remote.RemoteWebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.selenium.actions.SeleniumActionBuilder.selenium;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -53,7 +53,7 @@ import static org.mockito.Mockito.when;
 /**
  * @since 2.7
  */
-public class SeleniumTestActionBuilderTest extends UnitTestSupport {
+public class SeleniumTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
     private final SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
     private final SeleniumBrowserConfiguration seleniumBrowserConfiguration = Mockito.mock(SeleniumBrowserConfiguration.class);

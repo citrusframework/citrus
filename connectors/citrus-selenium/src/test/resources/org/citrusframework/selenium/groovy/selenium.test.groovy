@@ -18,8 +18,6 @@ package org.citrusframework.selenium.groovy
 
 import org.openqa.selenium.By
 
-import static org.citrusframework.selenium.actions.SeleniumActionBuilder.selenium
-
 name "SeleniumTest"
 author "Christoph"
 status "FINAL"

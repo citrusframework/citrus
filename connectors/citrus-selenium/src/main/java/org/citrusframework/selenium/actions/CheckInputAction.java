@@ -16,6 +16,7 @@
 
 package org.citrusframework.selenium.actions;
 
+import org.citrusframework.actions.selenium.SeleniumCheckInputActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.openqa.selenium.WebElement;
@@ -61,11 +62,13 @@ public class CheckInputAction extends FindElementAction {
     /**
      * Action builder.
      */
-    public static class Builder extends ElementActionBuilder<CheckInputAction, CheckInputAction.Builder> {
+    public static class Builder extends ElementActionBuilder<CheckInputAction, Builder>
+            implements SeleniumCheckInputActionBuilder<CheckInputAction, Builder> {
 
         private boolean checked;
 
-        public CheckInputAction.Builder checked(boolean checked) {
+        @Override
+        public Builder checked(boolean checked) {
             this.checked = checked;
             return this;
         }

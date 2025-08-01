@@ -18,6 +18,7 @@ package org.citrusframework.selenium.actions;
 
 import java.util.Set;
 
+import org.citrusframework.actions.selenium.SeleniumCloseWindowActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
@@ -98,15 +99,12 @@ public class CloseWindowAction extends AbstractSeleniumAction implements Seleniu
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractSeleniumAction.Builder<CloseWindowAction, Builder> {
+    public static class Builder extends AbstractSeleniumAction.Builder<CloseWindowAction, Builder>
+            implements SeleniumCloseWindowActionBuilder<CloseWindowAction, Builder> {
 
         private String windowName = SeleniumHeaders.SELENIUM_ACTIVE_WINDOW;
 
-        /**
-         * Set window name.
-         * @param name
-         * @return
-         */
+        @Override
         public Builder window(String name) {
             this.windowName = name;
             return this;
