@@ -16,6 +16,11 @@
 
 package org.citrusframework.docker.command;
 
-@Deprecated
-public interface CommandResultCallback<R> extends org.citrusframework.actions.docker.command.CommandResultCallback<R> {
+import org.citrusframework.docker.actions.DockerExecuteAction;
+
+public class StaticDockerCommandBuilder<R> extends AbstractDockerCommandBuilder<R, AbstractDockerCommand<R>, StaticDockerCommandBuilder<R>> {
+
+    public StaticDockerCommandBuilder(DockerExecuteAction.Builder delegate, DockerCommand<R> command) {
+        super(delegate, (AbstractDockerCommand<R>) command);
+    }
 }

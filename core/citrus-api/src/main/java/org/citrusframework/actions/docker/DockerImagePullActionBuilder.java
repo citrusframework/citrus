@@ -14,8 +14,30 @@
  * limitations under the License.
  */
 
-package org.citrusframework.docker.command;
+package org.citrusframework.actions.docker;
 
-@Deprecated
-public interface CommandResultCallback<R> extends org.citrusframework.actions.docker.command.CommandResultCallback<R> {
+import org.citrusframework.TestAction;
+
+public interface DockerImagePullActionBuilder<R, T extends TestAction, B extends DockerImagePullActionBuilder<R, T, B>>
+        extends DockerActionBuilderBase<R, T, B> {
+
+    /**
+     * Sets the image id parameter.
+     */
+    B image(String id);
+
+    /**
+     * Sets the tag parameter.
+     */
+    B tag(String tag);
+
+    /**
+     * Sets the repository command parameter.
+     */
+    B repository(String repository);
+
+    /**
+     * Sets the registry command parameter.
+     */
+    B registry(String registry);
 }

@@ -17,7 +17,9 @@
 package org.citrusframework.docker.command;
 
 import com.github.dockerjava.api.model.ResponseItem;
+import org.citrusframework.actions.docker.DockerContainerRemoveActionBuilder;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
 
 /**
@@ -29,7 +31,7 @@ public class ContainerRemove extends AbstractDockerCommand<ResponseItem> {
      * Default constructor initializing the command name.
      */
     public ContainerRemove() {
-        super("docker:container:remove");
+        super("docker:remove");
         setCommandResult(new ResponseItem());
     }
 
@@ -48,8 +50,6 @@ public class ContainerRemove extends AbstractDockerCommand<ResponseItem> {
 
     /**
      * Sets the container id parameter.
-     * @param id
-     * @return
      */
     public ContainerRemove container(String id) {
         getParameters().put(CONTAINER_ID, id);
@@ -58,11 +58,32 @@ public class ContainerRemove extends AbstractDockerCommand<ResponseItem> {
 
     /**
      * Sets the force parameter.
-     * @param force
-     * @return
      */
     public ContainerRemove force(Boolean force) {
         getParameters().put("force", force);
         return this;
+    }
+
+    /**
+     * Command builder.
+     */
+    public static final class Builder extends AbstractDockerCommandBuilder<ResponseItem, ContainerRemove, Builder>
+            implements DockerContainerRemoveActionBuilder<ResponseItem, DockerExecuteAction, Builder> {
+
+        public Builder(DockerExecuteAction.Builder parent) {
+            super(parent, new ContainerRemove());
+        }
+
+        @Override
+        public Builder container(String id) {
+            command.container(id);
+            return this;
+        }
+
+        @Override
+        public Builder force(Boolean force) {
+            command.force(force);
+            return this;
+        }
     }
 }

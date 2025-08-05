@@ -16,6 +16,7 @@
 
 package org.citrusframework.docker.command;
 
+import org.citrusframework.actions.docker.DockerVersionActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
@@ -49,7 +50,8 @@ public class Version extends AbstractDockerCommand<com.github.dockerjava.api.mod
     /**
      * Command builder.
      */
-    public static final class Builder extends AbstractDockerCommandBuilder<com.github.dockerjava.api.model.Version, Version, Builder> {
+    public static final class Builder extends AbstractDockerCommandBuilder<com.github.dockerjava.api.model.Version, Version, Builder>
+            implements DockerVersionActionBuilder<com.github.dockerjava.api.model.Version, DockerExecuteAction, Builder> {
 
         public Builder(DockerExecuteAction.Builder parent) {
             super(parent, new Version());

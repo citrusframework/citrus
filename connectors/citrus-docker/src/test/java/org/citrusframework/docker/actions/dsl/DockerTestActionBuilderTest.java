@@ -28,6 +28,7 @@ import com.github.dockerjava.api.command.VersionCmd;
 import com.github.dockerjava.api.model.Info;
 import com.github.dockerjava.api.model.Version;
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.docker.UnitTestSupport;
 import org.citrusframework.docker.actions.DockerExecuteAction;
@@ -36,7 +37,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.docker.actions.DockerExecuteAction.Builder.docker;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -44,9 +44,9 @@ import static org.mockito.Mockito.when;
 /**
  * @since 2.4
  */
-public class DockerTestActionBuilderTest extends UnitTestSupport {
+public class DockerTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
-    private com.github.dockerjava.api.DockerClient dockerClient = Mockito.mock(com.github.dockerjava.api.DockerClient.class);
+    private final com.github.dockerjava.api.DockerClient dockerClient = Mockito.mock(com.github.dockerjava.api.DockerClient.class);
 
     @Test
     public void testDockerBuilder() {
@@ -96,7 +96,7 @@ public class DockerTestActionBuilderTest extends UnitTestSupport {
                         .name("my_container"));
 
         builder.$(docker().client(client)
-                    .inspectContainer("my_container"));
+                    .inspect("my_container"));
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 5);

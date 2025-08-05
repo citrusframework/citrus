@@ -20,69 +20,59 @@ import java.io.File;
 import java.util.Collections;
 import java.util.UUID;
 
-import org.citrusframework.docker.client.DockerClient;
-import org.citrusframework.docker.command.ContainerCreate;
-import org.citrusframework.docker.command.ContainerInspect;
-import org.citrusframework.docker.command.ContainerRemove;
-import org.citrusframework.docker.command.ContainerStart;
-import org.citrusframework.docker.command.ContainerStop;
-import org.citrusframework.docker.command.ContainerWait;
-import org.citrusframework.docker.command.ImageBuild;
-import org.citrusframework.docker.command.ImageInspect;
-import org.citrusframework.docker.command.ImagePull;
-import org.citrusframework.docker.command.ImageRemove;
-import org.citrusframework.docker.command.Info;
-import org.citrusframework.docker.command.Ping;
-import org.citrusframework.docker.command.Version;
-import org.citrusframework.docker.message.DockerMessageHeaders;
-import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import com.github.dockerjava.api.command.BuildImageCmd;
-import com.github.dockerjava.api.command.BuildImageResultCallback;
-import com.github.dockerjava.api.command.CreateContainerCmd;
-import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.InfoCmd;
-import com.github.dockerjava.api.command.InspectContainerCmd;
-import com.github.dockerjava.api.command.InspectContainerResponse;
-import com.github.dockerjava.api.command.InspectImageCmd;
-import com.github.dockerjava.api.command.InspectImageResponse;
-import com.github.dockerjava.api.command.PingCmd;
-import com.github.dockerjava.api.command.PullImageCmd;
-import com.github.dockerjava.api.command.PullImageResultCallback;
-import com.github.dockerjava.api.command.RemoveContainerCmd;
-import com.github.dockerjava.api.command.RemoveImageCmd;
-import com.github.dockerjava.api.command.StartContainerCmd;
-import com.github.dockerjava.api.command.StopContainerCmd;
-import com.github.dockerjava.api.command.VersionCmd;
-import com.github.dockerjava.api.command.WaitContainerCmd;
-import com.github.dockerjava.api.command.WaitContainerResultCallback;
+import com.github.dockerjava.api.command.*;
 import com.github.dockerjava.api.model.BuildResponseItem;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.api.model.ResponseItem;
 import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.api.model.WaitResponse;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.docker.client.DockerClient;
+import org.citrusframework.docker.command.Info;
+import org.citrusframework.docker.message.DockerMessageHeaders;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.mockito.ArgumentCaptor;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
 
-public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements TestActionSupport {
 
     private final com.github.dockerjava.api.DockerClient dockerClient = Mockito.mock(com.github.dockerjava.api.DockerClient.class);
 
     private final DockerClient client = new DockerClient();
 
+    private final DockerExecuteAction.Builder docker = new DockerExecuteAction.Builder();
+
     @BeforeClass
     public void setup() {
         client.getEndpointConfiguration().setDockerClient(dockerClient);
+    }
+
+    @Test
+    public void testCustomCommand() throws Exception {
+        InfoCmd command = Mockito.mock(InfoCmd.class);
+        com.github.dockerjava.api.model.Info result = new com.github.dockerjava.api.model.Info();
+
+        reset(dockerClient, command);
+
+        when(dockerClient.infoCmd()).thenReturn(command);
+        when(command.exec()).thenReturn(result);
+
+        DockerExecuteAction action = docker
+                .client(client)
+                .command(new Info())
+                .build();
+        action.execute(context);
+
+        Assert.assertEquals(action.getCommand().getCommandResult(), result);
+
     }
 
     @Test
@@ -95,9 +85,9 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         when(dockerClient.infoCmd()).thenReturn(command);
         when(command.exec()).thenReturn(result);
 
-        DockerExecuteAction action = new DockerExecuteAction.Builder()
+        DockerExecuteAction action = docker
                 .client(client)
-                .command(new Info())
+                .info()
                 .build();
         action.execute(context);
 
@@ -113,9 +103,9 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         when(dockerClient.pingCmd()).thenReturn(command);
 
-        DockerExecuteAction action = new DockerExecuteAction.Builder()
+        DockerExecuteAction action = docker
                 .client(client)
-                .command(new Ping())
+                .ping()
                 .build();
         action.execute(context);
 
@@ -133,9 +123,9 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         when(dockerClient.versionCmd()).thenReturn(command);
         when(command.exec()).thenReturn(result);
 
-        DockerExecuteAction action = new DockerExecuteAction.Builder()
+        DockerExecuteAction action = docker
                 .client(client)
-                .command(new Version())
+                .version()
                 .build();
         action.execute(context);
 
@@ -155,11 +145,11 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         when(command.withName("my_container")).thenReturn(command);
         when(command.exec()).thenReturn(response);
 
-        DockerExecuteAction action = new DockerExecuteAction.Builder()
+        DockerExecuteAction action = docker
                 .client(client)
-                .command(new ContainerCreate()
-                        .image("image_create")
-                        .name("myContainer"))
+                .create()
+                    .image("image_create")
+                    .name("myContainer")
                 .build();
         action.execute(context);
 
@@ -185,9 +175,10 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         when(inspectCommand.exec()).thenReturn(inspectResponse);
         when(inspectResponse.getName()).thenReturn("/my_container");
 
-        DockerExecuteAction action = new DockerExecuteAction.Builder()
+        DockerExecuteAction action = docker
                 .client(client)
-                .command(new ContainerCreate().image("image_create"))
+                .create()
+                    .image("image_create")
                 .build();
         action.execute(context);
 
@@ -213,10 +204,10 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
     	DockerExecuteAction containerCreateAction = new DockerExecuteAction.Builder()
     		.client(client)
-    		.command(new ContainerCreate()
-    			.image("image_create")
-    			.name("myContainer")
-    			.env("VAR_1=value_1","VAR_2=value_2","VAR_3=value_3"))
+    		.create()
+                .image("image_create")
+                .name("myContainer")
+                .env("VAR_1=value_1","VAR_2=value_2","VAR_3=value_3")
     		.build();
     	containerCreateAction.execute(context);
 
@@ -250,14 +241,14 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
     	DockerExecuteAction containerCreateAction = new DockerExecuteAction.Builder()
     		.client(client)
-    		.command(new ContainerCreate()
+    		.create()
     			.image("image_create")
     			.name("myContainer")
     			.volumes(
     				new Volume("/source/dir/one:/destination/dir/one"),
 		    		new Volume("/source/dir/two:/destination/dir/two"),
 		    		new Volume("/source/dir/three:/destination/dir/three")
-		    		))
+		    		)
     		.build();
     	containerCreateAction.execute(context);
 
@@ -282,9 +273,10 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         when(dockerClient.inspectContainerCmd("container_inspect")).thenReturn(command);
         when(command.exec()).thenReturn(response);
 
-        DockerExecuteAction action = new DockerExecuteAction.Builder()
+        DockerExecuteAction action = docker
                 .client(client)
-                .command(new ContainerInspect().container("container_inspect"))
+                .inspect()
+                    .container("container_inspect")
                 .build();
         action.execute(context);
 
@@ -302,9 +294,10 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         when(dockerClient.inspectImageCmd("image_inspect")).thenReturn(command);
         when(command.exec()).thenReturn(response);
 
-        DockerExecuteAction action = new DockerExecuteAction.Builder()
+        DockerExecuteAction action = docker
                 .client(client)
-                .command(new ImageInspect().image("image_inspect"))
+                .inspectImage()
+                .image("image_inspect")
                 .build();
         action.execute(context);
 
@@ -320,9 +313,10 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         when(dockerClient.removeContainerCmd("container_inspect")).thenReturn(command);
 
-        DockerExecuteAction action = new DockerExecuteAction.Builder()
+        DockerExecuteAction action = docker
                 .client(client)
-                .command(new ContainerRemove().container("container_inspect"))
+                .remove()
+                    .container("container_inspect")
                 .build();
         action.execute(context);
 
@@ -338,9 +332,10 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         when(dockerClient.removeImageCmd("image_remove")).thenReturn(command);
 
-        DockerExecuteAction action = new DockerExecuteAction.Builder()
+        DockerExecuteAction action = docker
                 .client(client)
-                .command(new ImageRemove().image("image_remove"))
+                .removeImage()
+                    .image("image_remove")
                 .build();
         action.execute(context);
 
@@ -356,9 +351,10 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         when(dockerClient.startContainerCmd("container_start")).thenReturn(command);
 
-        DockerExecuteAction action = new DockerExecuteAction.Builder()
+        DockerExecuteAction action = docker
                 .client(client)
-                .command(new ContainerStart().container("container_start"))
+                .start()
+                    .container("container_start")
                 .build();
         action.execute(context);
 
@@ -374,9 +370,10 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         when(dockerClient.stopContainerCmd("container_stop")).thenReturn(command);
 
-        DockerExecuteAction action = new DockerExecuteAction.Builder()
+        DockerExecuteAction action = docker
                 .client(client)
-                .command(new ContainerStop().container("container_stop"))
+                .stop()
+                    .container("container_stop")
                 .build();
         action.execute(context);
 
@@ -401,13 +398,14 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
             return resultCallback;
         }).when(command).exec(any(WaitContainerResultCallback.class));
 
-        DockerExecuteAction action = new DockerExecuteAction.Builder()
+        DockerExecuteAction action = docker
                 .client(client)
-                .command(new ContainerWait().container("container_wait"))
+                .waitFor()
+                    .container("container_wait")
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(((WaitResponse)action.getCommand().getCommandResult()).getStatusCode(), new Integer(0));
+        Assert.assertEquals(((WaitResponse)action.getCommand().getCommandResult()).getStatusCode(), 0);
 
     }
 
@@ -431,9 +429,10 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
             return resultCallback;
         }).when(command).exec(any(PullImageResultCallback.class));
 
-        DockerExecuteAction action = new DockerExecuteAction.Builder()
+        DockerExecuteAction action = docker
                 .client(client)
-                .command(new ImagePull().image("image_pull").tag("image_tag"))
+                .pullImage()
+                    .image("image_pull").tag("image_tag")
                 .build();
         action.execute(context);
 
@@ -462,11 +461,11 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
             return resultCallback;
         }).when(command).exec(any(BuildImageResultCallback.class));
 
-        DockerExecuteAction action = new DockerExecuteAction.Builder()
+        DockerExecuteAction action = docker
                 .client(client)
-                .command(new ImageBuild()
-                        .dockerFile(Resources.fromClasspath("org/citrusframework/docker/Dockerfile"))
-                        .tag("new_image:latest"))
+                .buildImage()
+                    .dockerFile(Resources.fromClasspath("org/citrusframework/docker/Dockerfile"))
+                    .tag("new_image:latest")
                 .build();
         action.execute(context);
 

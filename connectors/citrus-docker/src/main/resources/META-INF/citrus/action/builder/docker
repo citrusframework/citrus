@@ -1,0 +1,1 @@
+type=org.citrusframework.docker.actions.DockerExecuteAction$Builder

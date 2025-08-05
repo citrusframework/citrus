@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-package org.citrusframework.docker.command;
+package org.citrusframework.actions.docker.command;
 
-@Deprecated
-public interface CommandResultCallback<R> extends org.citrusframework.actions.docker.command.CommandResultCallback<R> {
+import org.citrusframework.context.TestContext;
+
+/**
+ * @since 2.4
+ */
+public interface CommandResultCallback<R> {
+
+    /**
+     * Callback method called with command result.
+     */
+    void doWithCommandResult(R result, TestContext context);
 }

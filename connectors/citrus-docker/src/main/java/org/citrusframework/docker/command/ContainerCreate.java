@@ -16,6 +16,8 @@
 
 package org.citrusframework.docker.command;
 
+import java.util.stream.Stream;
+
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
@@ -24,12 +26,11 @@ import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.api.model.Volume;
+import org.citrusframework.actions.docker.DockerContainerCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.docker.message.DockerMessageHeaders;
-
-import java.util.stream.Stream;
 
 import static com.github.dockerjava.api.model.ExposedPort.tcp;
 import static com.github.dockerjava.api.model.ExposedPort.udp;
@@ -176,8 +177,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
     }
 
     /**
-     * Gets the volume specs from comma delimited string.
-     * @return
+     * Gets the volume specs from comma-delimited string.
      */
     private Volume[] getVolumes(TestContext context) {
         String[] volumes = getParameter("volumes", context).split(",");
@@ -192,7 +192,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Gets the capabilities added.
-     * @return
      */
     private Capability[] getCapabilities(String addDrop, TestContext context) {
         String[] capabilities = getParameter(addDrop, context).split(",");
@@ -206,10 +205,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
     }
 
     /**
-     * Construct set of exposed ports from comma delimited list of ports.
-     * @param portSpecs
-     * @param context
-     * @return
+     * Construct set of exposed ports from comma-delimited list of ports.
      */
     private ExposedPort[] getExposedPorts(String portSpecs, TestContext context) {
         String[] ports = portSpecs.split(",");
@@ -231,11 +227,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
     }
 
     /**
-     * Construct set of port bindings from comma delimited list of ports.
-     * @param portSpecs
-     * @param exposedPorts
-     * @param context
-     * @return
+     * Construct set of port bindings from comma-delimited list of ports.
      */
     private Ports getPortBindings(String portSpecs, ExposedPort[] exposedPorts, TestContext context) {
         String[] ports = portSpecs.split(",");
@@ -258,8 +250,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Sets the image id parameter.
-     * @param id
-     * @return
      */
     public ContainerCreate image(String id) {
         getParameters().put(IMAGE_ID, id);
@@ -268,8 +258,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Sets the image name parameter.
-     * @param name
-     * @return
      */
     public ContainerCreate name(String name) {
         getParameters().put("name", name);
@@ -278,8 +266,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Sets the attach-stderr parameter.
-     * @param attachStderr
-     * @return
      */
     public ContainerCreate attachStdErr(Boolean attachStderr) {
         getParameters().put("attach-stderr", attachStderr);
@@ -288,8 +274,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Sets the attach-stdin parameter.
-     * @param attachStdin
-     * @return
      */
     public ContainerCreate attachStdIn(Boolean attachStdin) {
         getParameters().put("attach-stdin", attachStdin);
@@ -298,8 +282,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Sets the attach-stdout parameter.
-     * @param attachStdout
-     * @return
      */
     public ContainerCreate attachStdOut(Boolean attachStdout) {
         getParameters().put("attach-stdout", attachStdout);
@@ -308,8 +290,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Adds capabilities as command parameter.
-     * @param capabilities
-     * @return
      */
     public ContainerCreate addCapability(Capability ... capabilities) {
         getParameters().put("capability-add", capabilities);
@@ -318,8 +298,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Drops capabilities as command parameter.
-     * @param capabilities
-     * @return
      */
     public ContainerCreate dropCapability(Capability ... capabilities) {
         getParameters().put("capability-drop", capabilities);
@@ -328,8 +306,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Sets the domain-name parameter.
-     * @param domainName
-     * @return
      */
     public ContainerCreate domainName(String domainName) {
         getParameters().put("domain-name", domainName);
@@ -338,8 +314,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Adds commands as command parameter.
-     * @param commands
-     * @return
      */
     public ContainerCreate cmd(String ... commands) {
         getParameters().put("cmd", commands);
@@ -348,8 +322,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Adds environment variables as command parameter.
-     * @param envVars
-     * @return
      */
     public ContainerCreate env(String ... envVars) {
         getParameters().put("env", envVars);
@@ -358,8 +330,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Sets the entrypoint parameter.
-     * @param entrypoint
-     * @return
      */
     public ContainerCreate entryPoint(String entrypoint) {
         getParameters().put("entrypoint", entrypoint);
@@ -368,8 +338,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Sets the hostname parameter.
-     * @param hostname
-     * @return
      */
     public ContainerCreate hostName(String hostname) {
         getParameters().put("hostname", hostname);
@@ -378,8 +346,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Adds port-specs variables as command parameter.
-     * @param portSpecs
-     * @return
      */
     public ContainerCreate portSpecs(String ... portSpecs) {
         getParameters().put("port-specs", portSpecs);
@@ -388,8 +354,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Adds exposed-ports variables as command parameter.
-     * @param exposedPorts
-     * @return
      */
     public ContainerCreate exposedPorts(ExposedPort ... exposedPorts) {
         getParameters().put("exposed-ports", exposedPorts);
@@ -398,8 +362,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Adds explicit port bindings as command parameter.
-     * @param portBindings
-     * @return
      */
     public ContainerCreate portBindings(Ports ... portBindings) {
         getParameters().put("port-bindings", portBindings);
@@ -408,8 +370,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Adds explicit port bindings as command parameter.
-     * @param portBindings
-     * @return
      */
     public ContainerCreate portBindings(PortBinding ... portBindings) {
         getParameters().put("port-bindings", portBindings);
@@ -418,8 +378,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Adds volumes variables as command parameter.
-     * @param volumes
-     * @return
      */
     public ContainerCreate volumes(Volume ... volumes) {
         getParameters().put("volumes", volumes);
@@ -428,8 +386,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Sets the working-dir parameter.
-     * @param workingDir
-     * @return
      */
     public ContainerCreate workingDir(String workingDir) {
         getParameters().put("working-dir", workingDir);
@@ -439,156 +395,142 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
     /**
      * Command builder.
      */
-    public static final class Builder extends AbstractDockerCommandBuilder<CreateContainerResponse, ContainerCreate, Builder> {
+    public static final class Builder extends AbstractDockerCommandBuilder<CreateContainerResponse, ContainerCreate, Builder>
+            implements DockerContainerCreateActionBuilder<CreateContainerResponse, DockerExecuteAction, Builder> {
 
         public Builder(DockerExecuteAction.Builder parent) {
             super(parent, new ContainerCreate());
         }
 
-        /**
-         * Sets the image id parameter.
-         * @param id
-         * @return
-         */
+        @Override
         public Builder image(String id) {
             command.image(id);
             return this;
         }
 
-        /**
-         * Sets the image name parameter.
-         * @param name
-         * @return
-         */
+        @Override
         public Builder name(String name) {
             command.name(name);
             return this;
         }
 
-        /**
-         * Sets the attach-stderr parameter.
-         * @param attachStderr
-         * @return
-         */
+        @Override
         public Builder attachStdErr(Boolean attachStderr) {
             command.attachStdErr(attachStderr);
             return this;
         }
 
-        /**
-         * Sets the attach-stdin parameter.
-         * @param attachStdin
-         * @return
-         */
+        @Override
         public Builder attachStdIn(Boolean attachStdin) {
             command.attachStdIn(attachStdin);
             return this;
         }
 
-        /**
-         * Sets the attach-stdout parameter.
-         * @param attachStdout
-         * @return
-         */
+        @Override
         public Builder attachStdOut(Boolean attachStdout) {
             command.attachStdOut(attachStdout);
             return this;
         }
 
-        /**
-         * Adds capabilities as command parameter.
-         * @param capabilities
-         * @return
-         */
-        public Builder addCapability(Capability ... capabilities) {
+        @Override
+        public Builder addCapability(Object... capabilities) {
+            for (Object item : capabilities) {
+                if (item instanceof Capability capability) {
+                    addCapability(capability);
+                }
+            }
+
+            return this;
+        }
+
+        public Builder addCapability(Capability... capabilities) {
             command.addCapability(capabilities);
             return this;
         }
 
-        /**
-         * Drops capabilities as command parameter.
-         * @param capabilities
-         * @return
-         */
-        public Builder dropCapability(Capability ... capabilities) {
+        @Override
+        public Builder dropCapability(Object... capabilities) {
+            for (Object item : capabilities) {
+                if (item instanceof Capability capability) {
+                    dropCapability(capability);
+                }
+            }
+
+            return this;
+        }
+
+        public Builder dropCapability(Capability... capabilities) {
             command.dropCapability(capabilities);
             return this;
         }
 
-        /**
-         * Sets the domain-name parameter.
-         * @param domainName
-         * @return
-         */
+        @Override
         public Builder domainName(String domainName) {
             command.domainName(domainName);
             return this;
         }
 
-        /**
-         * Adds commands as command parameter.
-         * @param commands
-         * @return
-         */
-        public Builder cmd(String ... commands) {
+        @Override
+        public Builder cmd(String... commands) {
             command.cmd(commands);
             return this;
         }
 
-        /**
-         * Adds environment variables as command parameter.
-         * @param envVars
-         * @return
-         */
-        public Builder env(String ... envVars) {
+        @Override
+        public Builder env(String... envVars) {
             command.env(envVars);
             return this;
         }
 
-        /**
-         * Sets the entrypoint parameter.
-         * @param entrypoint
-         * @return
-         */
+        @Override
         public Builder entryPoint(String entrypoint) {
             command.entryPoint(entrypoint);
             return this;
         }
 
-        /**
-         * Sets the hostname parameter.
-         * @param hostname
-         * @return
-         */
+        @Override
         public Builder hostName(String hostname) {
             command.hostName(hostname);
             return this;
         }
 
-        /**
-         * Adds port-specs variables as command parameter.
-         * @param portSpecs
-         * @return
-         */
-        public Builder portSpecs(String ... portSpecs) {
+        @Override
+        public Builder portSpecs(String... portSpecs) {
             command.portSpecs(portSpecs);
             return this;
         }
 
-        /**
-         * Adds exposed-ports variables as command parameter.
-         * @param exposedPorts
-         * @return
-         */
+        @Override
+        public Builder exposedPorts(Object... exposedPorts) {
+            for (Object item : exposedPorts) {
+                if (item instanceof ExposedPort exposedPort) {
+                    exposedPorts(exposedPort);
+                }
+            }
+
+            return this;
+        }
+
         public Builder exposedPorts(ExposedPort ... exposedPorts) {
             command.exposedPorts(exposedPorts);
             return this;
         }
 
+        @Override
+        public Builder portBindings(Object... portBindings) {
+            for (Object item : portBindings) {
+                if (item instanceof Ports ports) {
+                    portBindings(ports);
+                } else if (item instanceof PortBinding portBinding) {
+                    portBindings(portBinding);
+                }
+            }
+
+            return this;
+        }
+
         /**
-         * Adds explicit port bindings as command parameter.
-         * @param portBindings
-         * @return
+         * Adds explicit ports as command parameter.
          */
         public Builder portBindings(Ports ... portBindings) {
             command.portBindings(portBindings);
@@ -597,29 +539,29 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
         /**
          * Adds explicit port bindings as command parameter.
-         * @param portBindings
-         * @return
          */
         public Builder portBindings(PortBinding ... portBindings) {
             command.portBindings(portBindings);
             return this;
         }
 
-        /**
-         * Adds volumes variables as command parameter.
-         * @param volumes
-         * @return
-         */
-        public Builder volumes(Volume ... volumes) {
+        @Override
+        public Builder volumes(Object... volumes) {
+            for (Object item : volumes) {
+                if (item instanceof Volume volume) {
+                    volumes(volume);
+                }
+            }
+
+            return this;
+        }
+
+        public Builder volumes(Volume... volumes) {
             command.volumes(volumes);
             return this;
         }
 
-        /**
-         * Sets the working-dir parameter.
-         * @param workingDir
-         * @return
-         */
+        @Override
         public Builder workingDir(String workingDir) {
             command.workingDir(workingDir);
             return this;
