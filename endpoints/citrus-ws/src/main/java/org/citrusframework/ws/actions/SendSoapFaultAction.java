@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.citrusframework.actions.ws.SoapSendFaultActionBuilder;
+import org.citrusframework.actions.ws.SoapSendFaultMessageBuilderFactory;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.MessageHeaders;
@@ -126,8 +128,6 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
 
     /**
      * Gets the faultActor.
-     *
-     * @return the faultActor the faultActor to get.
      */
     public String getFaultActor() {
         return faultActor;
@@ -153,8 +153,6 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
 
     /**
      * Gets the faultDetails.
-     *
-     * @return the faultDetails the faultDetails to get.
      */
     public List<String> getFaultDetails() {
         return faultDetails;
@@ -162,8 +160,6 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
 
     /**
      * Gets the fault detail resource paths.
-     *
-     * @return
      */
     public List<String> getFaultDetailResourcePaths() {
         return faultDetailResourcePaths;
@@ -172,7 +168,8 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends SendSoapMessageBuilder<SendSoapFaultAction, Builder.SoapFaultMessageBuilderSupport, Builder> {
+    public static final class Builder extends SendSoapMessageBuilder<SendSoapFaultAction, Builder.SoapFaultMessageBuilderSupport, Builder>
+            implements SoapSendFaultActionBuilder<SendSoapFaultAction, Builder.SoapFaultMessageBuilderSupport, Builder> {
 
         private String faultCode;
         private String faultString;
@@ -192,73 +189,43 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
             return super.getMessageBuilderSupport();
         }
 
-        public static class SoapFaultMessageBuilderSupport extends SoapMessageBuilderSupport<SendSoapFaultAction, Builder, SoapFaultMessageBuilderSupport> {
+        public static class SoapFaultMessageBuilderSupport extends SoapMessageBuilderSupport<SendSoapFaultAction, Builder, SoapFaultMessageBuilderSupport>
+                implements SoapSendFaultMessageBuilderFactory<SendSoapFaultAction, Builder.SoapFaultMessageBuilderSupport> {
 
             protected SoapFaultMessageBuilderSupport(SoapMessage soapMessage, Builder delegate) {
                 super(soapMessage, delegate);
             }
 
-            /**
-             * Adds custom SOAP fault code.
-             *
-             * @param code
-             * @return
-             */
+            @Override
             public SoapFaultMessageBuilderSupport faultCode(String code) {
                 delegate.faultCode = code;
                 return this;
             }
 
-            /**
-             * Add custom fault string to SOAP fault message.
-             *
-             * @param faultString
-             * @return
-             */
+            @Override
             public SoapFaultMessageBuilderSupport faultString(String faultString) {
                 delegate.faultString = faultString;
                 return this;
             }
 
-            /**
-             * Add custom fault string to SOAP fault message.
-             *
-             * @param faultActor
-             * @return
-             */
+            @Override
             public SoapFaultMessageBuilderSupport faultActor(String faultActor) {
                 delegate.faultActor = faultActor;
                 return this;
             }
 
-            /**
-             * Adds a fault detail to SOAP fault message.
-             *
-             * @param faultDetail
-             * @return
-             */
+            @Override
             public SoapFaultMessageBuilderSupport faultDetail(String faultDetail) {
                 delegate.faultDetails.add(faultDetail);
                 return this;
             }
 
-            /**
-             * Adds a fault detail from file resource.
-             *
-             * @param resource
-             * @return
-             */
+            @Override
             public SoapFaultMessageBuilderSupport faultDetailResource(Resource resource) {
                 return faultDetailResource(resource, FileUtils.getDefaultCharset());
             }
 
-            /**
-             * Adds a fault detail from file resource.
-             *
-             * @param resource
-             * @param charset
-             * @return
-             */
+            @Override
             public SoapFaultMessageBuilderSupport faultDetailResource(Resource resource, Charset charset) {
                 try {
                     delegate.faultDetails.add(FileUtils.readToString(resource, charset));
@@ -268,44 +235,36 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
                 return this;
             }
 
-            /**
-             * Adds a fault detail from file resource path.
-             *
-             * @param filePath
-             * @return
-             */
+            @Override
             public SoapFaultMessageBuilderSupport faultDetailResource(String filePath) {
                 delegate.faultDetailResourcePaths.add(filePath);
                 return this;
             }
 
+            @Override
+            public SoapFaultMessageBuilderSupport status(Object status) {
+                if (status instanceof HttpStatus httpStatus) {
+                    return status(httpStatus);
+                } else {
+                    throw new CitrusRuntimeException("Invalid Http status type: %s".formatted(status.getClass().getName()));
+                }
+            }
+
             /**
              * Sets the response status.
-             *
-             * @param status
-             * @return
              */
             public SoapFaultMessageBuilderSupport status(HttpStatus status) {
                 soapMessage.status(status);
                 return this;
             }
 
-            /**
-             * Sets the response status code.
-             *
-             * @param statusCode
-             * @return
-             */
+            @Override
             public SoapFaultMessageBuilderSupport statusCode(Integer statusCode) {
                 soapMessage.statusCode(statusCode);
                 return this;
             }
 
-            /**
-             * Sets the response status reason phrase.
-             * @param reasonPhrase
-             * @return
-             */
+            @Override
             public SoapFaultMessageBuilderSupport reasonPhrase(String reasonPhrase) {
                 soapMessage.reasonPhrase(reasonPhrase);
                 return this;

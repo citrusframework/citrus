@@ -16,9 +16,6 @@
 
 package org.citrusframework.ws.groovy
 
-
-import static org.citrusframework.ws.actions.SoapActionBuilder.soap
-
 name "SendSoapFaultTest"
 author "Christoph"
 status "FINAL"

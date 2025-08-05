@@ -23,6 +23,8 @@ import java.util.List;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.ws.SoapClientReceiveMessageBuilderFactory;
+import org.citrusframework.actions.ws.SoapReceiveActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
@@ -98,7 +100,8 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
     /**
      * Action builder.
      */
-    public static class Builder extends ReceiveMessageActionBuilder<ReceiveSoapMessageAction, SoapMessageBuilderSupport, Builder> {
+    public static class Builder extends ReceiveMessageActionBuilder<ReceiveSoapMessageAction, SoapMessageBuilderSupport, Builder>
+            implements SoapReceiveActionBuilder<ReceiveSoapMessageAction, SoapMessageBuilderSupport> {
 
         /** Soap message to receive */
         private final SoapMessage soapMessage = new SoapMessage();
@@ -134,7 +137,8 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
         }
     }
 
-    public static class SoapMessageBuilderSupport extends ReceiveMessageBuilderSupport<ReceiveSoapMessageAction, Builder, SoapMessageBuilderSupport> {
+    public static class SoapMessageBuilderSupport extends ReceiveMessageBuilderSupport<ReceiveSoapMessageAction, Builder, SoapMessageBuilderSupport>
+            implements SoapClientReceiveMessageBuilderFactory<ReceiveSoapMessageAction, SoapMessageBuilderSupport> {
 
         private final SoapMessage soapMessage;
 
@@ -162,17 +166,13 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
             return this;
         }
 
-        /**
-         * Sets special SOAP action message header.
-         */
+        @Override
         public SoapMessageBuilderSupport soapAction(String soapAction) {
             soapMessage.header(SoapMessageHeaders.SOAP_ACTION, soapAction);
             return this;
         }
 
-        /**
-         * Sets the control attachment with string content.
-         */
+        @Override
         public SoapMessageBuilderSupport attachment(String contentId, String contentType, String content) {
             SoapAttachment attachment = new SoapAttachment();
             attachment.setContentId(contentId);
@@ -184,16 +184,12 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
             return this;
         }
 
-        /**
-         * Sets the control attachment with content resource.
-         */
+        @Override
         public SoapMessageBuilderSupport attachment(String contentId, String contentType, Resource contentResource) {
             return attachment(contentId, contentType, contentResource, FileUtils.getDefaultCharset());
         }
 
-        /**
-         * Sets the control attachment with content resource.
-         */
+        @Override
         public SoapMessageBuilderSupport attachment(String contentId, String contentType, Resource contentResource, Charset charset) {
             SoapAttachment attachment = new SoapAttachment();
             attachment.setContentId(contentId);
@@ -211,14 +207,22 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
             return this;
         }
 
-        /**
-         * Sets the charset name for this send action builder's control attachment.
-         */
+        @Override
         public SoapMessageBuilderSupport charset(String charsetName) {
             if (!delegate.attachments.isEmpty()) {
                 delegate.attachments.get(delegate.attachments.size() - 1).setCharsetName(charsetName);
             }
             return this;
+        }
+
+        @Override
+        public SoapMessageBuilderSupport attachment(Object attachment) {
+            if (attachment instanceof SoapAttachment soapAttachment) {
+                return attachment(soapAttachment);
+            } else {
+                throw new CitrusRuntimeException(("Invalid attachment type, must be a SoapAttachment, " +
+                        "but got: %s").formatted(attachment.getClass().getName()));
+            }
         }
 
         /**
@@ -229,12 +233,20 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
             return this;
         }
 
-        /**
-         * Set explicit SOAP attachment validator name.
-         */
+        @Override
         public SoapMessageBuilderSupport attachmentValidatorName(String validator) {
             delegate.attachmentValidatorName = validator;
             return this;
+        }
+
+        @Override
+        public SoapMessageBuilderSupport attachmentValidator(Object validator) {
+            if (validator instanceof SoapAttachmentValidator soapAttachmentValidator) {
+                return attachmentValidator(soapAttachmentValidator);
+            } else {
+                throw new CitrusRuntimeException(("Invalid SOAP attachment validator type, must be a SoapAttachmentValidator, " +
+                        "but got: %s").formatted(validator.getClass().getName()));
+            }
         }
 
         /**
@@ -245,28 +257,31 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
             return this;
         }
 
-        /**
-         * Sets the request content type header.
-         */
+        @Override
         public SoapMessageBuilderSupport contentType(String contentType) {
             soapMessage.contentType(contentType);
             return this;
         }
 
-        /**
-         * Sets the request accept header.
-         */
+        @Override
         public SoapMessageBuilderSupport accept(String accept) {
             soapMessage.accept(accept);
             return this;
         }
 
-        /**
-         * Sets the response status reason phrase.
-         */
+        @Override
         public SoapMessageBuilderSupport reasonPhrase(String reasonPhrase) {
             soapMessage.reasonPhrase(reasonPhrase);
             return this;
+        }
+
+        @Override
+        public SoapMessageBuilderSupport status(Object status) {
+            if (status instanceof HttpStatus httpStatus) {
+                return status(httpStatus);
+            } else {
+                throw new CitrusRuntimeException("Invalid Http status type: %s".formatted(status.getClass().getName()));
+            }
         }
 
         /**
@@ -277,17 +292,13 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
             return this;
         }
 
-        /**
-         * Sets the response status code.
-         */
+        @Override
         public SoapMessageBuilderSupport statusCode(Integer statusCode) {
             soapMessage.statusCode(statusCode);
             return this;
         }
 
-        /**
-         * Sets the context path.
-         */
+        @Override
         public SoapMessageBuilderSupport contextPath(String contextPath) {
             soapMessage.header(SoapMessageHeaders.HTTP_CONTEXT_PATH, contextPath);
             return this;

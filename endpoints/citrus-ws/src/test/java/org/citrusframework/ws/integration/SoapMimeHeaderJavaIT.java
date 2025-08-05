@@ -22,7 +22,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
 import static org.citrusframework.dsl.XmlSupport.xml;
-import static org.citrusframework.ws.actions.SoapActionBuilder.soap;
 
 @Test
 public class SoapMimeHeaderJavaIT extends TestNGCitrusSpringSupport {

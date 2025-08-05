@@ -19,7 +19,8 @@ package org.citrusframework.actions;
 import org.citrusframework.TestAction;
 import org.citrusframework.message.MessageProcessor;
 
-public interface SendMessageBuilderFactory<T extends TestAction, M extends SendMessageBuilderFactory<T, M>> extends MessageBuilderFactory<T, M> {
+public interface SendMessageBuilderFactory<T extends TestAction, M extends SendMessageBuilderFactory<T, M>>
+        extends MessageBuilderFactory<T, M> {
 
     /**
      * Sets the fork mode for this send action builder.

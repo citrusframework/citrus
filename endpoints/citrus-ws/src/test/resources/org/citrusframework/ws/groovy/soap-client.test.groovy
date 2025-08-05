@@ -20,8 +20,6 @@ import org.citrusframework.util.FileUtils
 
 import java.nio.charset.StandardCharsets
 
-import static org.citrusframework.ws.actions.SoapActionBuilder.soap
-
 name "SoapClientTest"
 author "Christoph"
 status "FINAL"

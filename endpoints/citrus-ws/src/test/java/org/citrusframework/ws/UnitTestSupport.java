@@ -16,12 +16,13 @@
 
 package org.citrusframework.ws;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.xml.DomXmlMessageValidator;
 
-public abstract class UnitTestSupport extends AbstractTestNGUnitTest {
+public abstract class UnitTestSupport extends AbstractTestNGUnitTest implements TestActionSupport {
 
     @Override
     protected TestContextFactory createTestContextFactory() {
