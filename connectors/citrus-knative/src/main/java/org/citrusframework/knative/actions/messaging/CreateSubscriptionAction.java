@@ -20,19 +20,21 @@ import io.fabric8.knative.duck.v1.KReferenceBuilder;
 import io.fabric8.knative.messaging.v1.Subscription;
 import io.fabric8.knative.messaging.v1.SubscriptionBuilder;
 import io.fabric8.kubernetes.client.dsl.Updatable;
+import org.citrusframework.actions.knative.KnativeSubscriptionCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.knative.KnativeSupport;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
+import org.citrusframework.knative.actions.KnativeActionBuilder;
 import org.citrusframework.kubernetes.KubernetesSettings;
-
-import static org.citrusframework.knative.actions.KnativeActionBuilder.knative;
 
 public class CreateSubscriptionAction extends AbstractKnativeAction {
 
     private final String subscriptionName;
     private final String channelName;
     private final String serviceName;
+
+    private final KnativeActionBuilder knative = new KnativeActionBuilder();
 
     public CreateSubscriptionAction(Builder builder) {
         super("create-subscription", builder);
@@ -73,7 +75,7 @@ public class CreateSubscriptionAction extends AbstractKnativeAction {
                 .createOr(Updatable::update);
 
         if (isAutoRemoveResources()) {
-            context.doFinally(knative().client(getKubernetesClient()).client(getKnativeClient())
+            context.doFinally(knative.client(getKubernetesClient()).client(getKnativeClient())
                     .subscriptions()
                     .delete(subscriptionName)
                     .inNamespace(getNamespace()));
@@ -88,22 +90,26 @@ public class CreateSubscriptionAction extends AbstractKnativeAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKnativeAction.Builder<CreateSubscriptionAction, Builder> {
+    public static class Builder extends AbstractKnativeAction.Builder<CreateSubscriptionAction, Builder>
+            implements KnativeSubscriptionCreateActionBuilder<CreateSubscriptionAction, Builder> {
 
         private String subscriptionName;
         private String channelName;
         private String serviceName;
 
+        @Override
         public Builder subscription(String subscriptionName) {
             this.subscriptionName = subscriptionName;
             return this;
         }
 
+        @Override
         public Builder channel(String channelName) {
             this.channelName = channelName;
             return this;
         }
 
+        @Override
         public Builder service(String serviceName) {
             this.serviceName = serviceName;
             return this;

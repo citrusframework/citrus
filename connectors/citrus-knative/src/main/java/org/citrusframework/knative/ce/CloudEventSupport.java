@@ -43,7 +43,7 @@ public final class CloudEventSupport {
      * @param attributes
      * @return
      */
-    public static CloudEventMessage createEventMessage(String eventData, Map<String, String> attributes) {
+    public static CloudEventMessage createEventMessage(String eventData, Map<String, Object> attributes) {
         CloudEventMessage request = CloudEventMessage.fromEvent(CloudEvent.v1_0());
         request.setType(MessageType.JSON);
         request.method(HttpMethod.POST);

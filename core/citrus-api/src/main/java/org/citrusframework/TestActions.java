@@ -21,6 +21,7 @@ import org.citrusframework.actions.agent.AgentActionBuilder;
 import org.citrusframework.actions.camel.CamelActionBuilder;
 import org.citrusframework.actions.http.HttpActionBuilder;
 import org.citrusframework.actions.jbang.JBangActionBuilder;
+import org.citrusframework.actions.knative.KnativeActionBuilder;
 import org.citrusframework.actions.kubernetes.KubernetesActionBuilder;
 import org.citrusframework.actions.openapi.OpenApiActionBuilder;
 import org.citrusframework.actions.selenium.SeleniumActionBuilder;
@@ -46,6 +47,7 @@ public interface TestActions extends
         HttpActionBuilder.BuilderFactory,
         InputActionBuilder.BuilderFactory,
         JBangActionBuilder.BuilderFactory,
+        KnativeActionBuilder.BuilderFactory,
         KubernetesActionBuilder.BuilderFactory,
         LoadPropertiesActionBuilder.BuilderFactory,
         OpenApiActionBuilder.BuilderFactory,

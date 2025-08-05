@@ -16,6 +16,7 @@
 
 package org.citrusframework.knative.actions;
 
+import org.citrusframework.actions.knative.KnativeResourceDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.knative.KnativeSupport;
 import org.citrusframework.kubernetes.KubernetesSupport;
@@ -43,22 +44,26 @@ public class DeleteKnativeResourceAction extends AbstractKnativeAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKnativeAction.Builder<DeleteKnativeResourceAction, Builder> {
+    public static class Builder extends AbstractKnativeAction.Builder<DeleteKnativeResourceAction, Builder>
+            implements KnativeResourceDeleteActionBuilder<DeleteKnativeResourceAction, Builder> {
 
         private String component = "eventing";
         private String kind;
         private String resourceName;
 
+        @Override
         public Builder component(String component) {
             this.component = component;
             return this;
         }
 
+        @Override
         public Builder kind(String kind) {
             this.kind = kind;
             return this;
         }
 
+        @Override
         public Builder resource(String resourceName) {
             this.resourceName = resourceName;
             return this;

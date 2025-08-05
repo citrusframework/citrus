@@ -16,6 +16,7 @@
 
 package org.citrusframework.knative.actions.eventing;
 
+import org.citrusframework.actions.knative.KnativeBrokerDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
@@ -66,10 +67,12 @@ public class DeleteBrokerAction extends AbstractKnativeAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKnativeAction.Builder<DeleteBrokerAction, Builder> {
+    public static class Builder extends AbstractKnativeAction.Builder<DeleteBrokerAction, Builder>
+            implements KnativeBrokerDeleteActionBuilder<DeleteBrokerAction, Builder> {
 
         private String brokerName;
 
+        @Override
         public Builder broker(String brokerName) {
             this.brokerName = brokerName;
             return this;

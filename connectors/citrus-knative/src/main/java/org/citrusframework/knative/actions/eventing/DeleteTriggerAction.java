@@ -16,6 +16,7 @@
 
 package org.citrusframework.knative.actions.eventing;
 
+import org.citrusframework.actions.knative.KnativeTriggerDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.kubernetes.KubernetesSettings;
@@ -46,10 +47,12 @@ public class DeleteTriggerAction extends AbstractKnativeAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKnativeAction.Builder<DeleteTriggerAction, Builder> {
+    public static class Builder extends AbstractKnativeAction.Builder<DeleteTriggerAction, Builder>
+            implements KnativeTriggerDeleteActionBuilder<DeleteTriggerAction, Builder> {
 
         private String triggerName;
 
+        @Override
         public Builder trigger(String triggerName) {
             this.triggerName = triggerName;
             return this;

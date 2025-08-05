@@ -20,7 +20,9 @@ import io.fabric8.knative.client.KnativeClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.actions.knative.KnativeActionBuilderBase;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
@@ -83,7 +85,8 @@ public abstract class AbstractKnativeAction extends AbstractTestAction implement
     /**
      * Action builder.
      */
-    public static abstract class Builder<T extends KnativeAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
+    public static abstract class Builder<T extends KnativeAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B>
+            implements ReferenceResolverAware, KnativeActionBuilderBase<T, B> {
 
         private KnativeClient knativeClient;
         private KubernetesClient kubernetesClient;
@@ -111,27 +114,39 @@ public abstract class AbstractKnativeAction extends AbstractTestAction implement
             return self;
         }
 
-        /**
-         * Use an explicit namespace.
-         */
+        @Override
+        public B client(Object o) {
+            if (o instanceof KnativeClient client) {
+                this.knativeClient = client;
+            } else if (o instanceof KubernetesClient client) {
+                this.kubernetesClient = client;
+            } else {
+                throw new CitrusRuntimeException(("Unsupported client type, expected " +
+                        "KnativeClient or KubernetesClient, but got: %s").formatted(o.getClass().getName()));
+            }
+
+            return self;
+        }
+
+        @Override
         public B inNamespace(String namespace) {
             this.namespace = namespace;
             return self;
         }
 
-        /**
-         * Explicitly set cluster type for this action.
-         */
+        @Override
         public B clusterType(ClusterType clusterType) {
             this.clusterType = clusterType;
             return self;
         }
 
+        @Override
         public B autoRemoveResources(boolean enabled) {
             this.autoRemoveResources = enabled;
             return self;
         }
 
+        @Override
         public B withReferenceResolver(ReferenceResolver referenceResolver) {
             this.referenceResolver = referenceResolver;
             return self;

@@ -19,6 +19,7 @@ package org.citrusframework.knative.actions.eventing;
 import io.fabric8.knative.eventing.v1.Broker;
 import io.fabric8.knative.eventing.v1.BrokerBuilder;
 import io.fabric8.kubernetes.client.dsl.Updatable;
+import org.citrusframework.actions.knative.KnativeBrokerCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
@@ -26,14 +27,15 @@ import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.knative.KnativeSupport;
 import org.citrusframework.knative.KnativeVariableNames;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
+import org.citrusframework.knative.actions.KnativeActionBuilder;
 import org.citrusframework.kubernetes.KubernetesSettings;
 import org.citrusframework.util.PropertyUtils;
-
-import static org.citrusframework.knative.actions.KnativeActionBuilder.knative;
 
 public class CreateBrokerAction extends AbstractKnativeAction {
 
     private final String brokerName;
+
+    private final KnativeActionBuilder knative = new KnativeActionBuilder();
 
     public CreateBrokerAction(Builder builder) {
         super("create-broker", builder);
@@ -104,7 +106,7 @@ public class CreateBrokerAction extends AbstractKnativeAction {
                 .createOr(Updatable::update);
 
         if (isAutoRemoveResources()) {
-            context.doFinally(knative().client(getKubernetesClient()).client(getKnativeClient())
+            context.doFinally(knative.client(getKubernetesClient()).client(getKnativeClient())
                     .brokers()
                     .delete(resolvedBrokerName)
                     .inNamespace(getNamespace()));
@@ -116,10 +118,12 @@ public class CreateBrokerAction extends AbstractKnativeAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKnativeAction.Builder<CreateBrokerAction, Builder> {
+    public static class Builder extends AbstractKnativeAction.Builder<CreateBrokerAction, Builder>
+            implements KnativeBrokerCreateActionBuilder<CreateBrokerAction, Builder> {
 
         private String brokerName;
 
+        @Override
         public Builder broker(String brokerName) {
             this.brokerName = brokerName;
             return this;

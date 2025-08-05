@@ -19,17 +19,19 @@ package org.citrusframework.knative.actions.messaging;
 import io.fabric8.knative.messaging.v1.Channel;
 import io.fabric8.knative.messaging.v1.ChannelBuilder;
 import io.fabric8.kubernetes.client.dsl.Updatable;
+import org.citrusframework.actions.knative.KnativeChannelCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.knative.KnativeSupport;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
+import org.citrusframework.knative.actions.KnativeActionBuilder;
 import org.citrusframework.kubernetes.KubernetesSettings;
-
-import static org.citrusframework.knative.actions.KnativeActionBuilder.knative;
 
 public class CreateChannelAction extends AbstractKnativeAction {
 
     private final String channelName;
+
+    private final KnativeActionBuilder knative = new KnativeActionBuilder();
 
     public CreateChannelAction(Builder builder) {
         super("create-channel", builder);
@@ -55,7 +57,7 @@ public class CreateChannelAction extends AbstractKnativeAction {
                 .createOr(Updatable::update);
 
         if (isAutoRemoveResources()) {
-            context.doFinally(knative().client(getKubernetesClient()).client(getKnativeClient())
+            context.doFinally(knative.client(getKubernetesClient()).client(getKnativeClient())
                     .channels()
                     .delete(resolvedChannelName)
                     .inNamespace(getNamespace()));
@@ -70,10 +72,12 @@ public class CreateChannelAction extends AbstractKnativeAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKnativeAction.Builder<CreateChannelAction, Builder> {
+    public static class Builder extends AbstractKnativeAction.Builder<CreateChannelAction, Builder>
+            implements KnativeChannelCreateActionBuilder<CreateChannelAction, Builder> {
 
         private String channelName;
 
+        @Override
         public Builder channel(String channelName) {
             this.channelName = channelName;
             return this;

@@ -19,7 +19,10 @@ package org.citrusframework.knative.actions.eventing;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.citrusframework.actions.knative.KnativeEventReceiveActionBuilder;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.actions.HttpActionBuilder;
 import org.citrusframework.http.actions.HttpServerActionBuilder;
 import org.citrusframework.http.actions.HttpServerRequestActionBuilder;
@@ -31,6 +34,7 @@ import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.ce.CloudEvent;
 import org.citrusframework.knative.ce.CloudEventMessage;
 import org.citrusframework.knative.ce.CloudEventSupport;
+import org.citrusframework.message.Message;
 import org.citrusframework.util.PropertyUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,7 +45,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 public class ReceiveEventAction extends AbstractKnativeAction {
 
-    private final CloudEventMessage message;
+    private final Message message;
     private final HttpServer httpServer;
 
     private final HttpActionBuilder http = new HttpActionBuilder();
@@ -55,7 +59,11 @@ public class ReceiveEventAction extends AbstractKnativeAction {
 
     @Override
     public void doExecute(TestContext context) {
-        receiveEvent(message, context);
+        if (message instanceof CloudEventMessage ceMessage) {
+            receiveEvent(ceMessage, context);
+        } else {
+            receiveEvent(CloudEventSupport.createEventMessage(message.getPayload(String.class), message.getHeaders()), context);
+        }
     }
 
     /**
@@ -105,38 +113,44 @@ public class ReceiveEventAction extends AbstractKnativeAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKnativeAction.Builder<ReceiveEventAction, Builder> {
+    public static class Builder extends AbstractKnativeAction.Builder<ReceiveEventAction, Builder>
+            implements KnativeEventReceiveActionBuilder<ReceiveEventAction, Builder> {
 
         private String serviceName = KnativeSettings.getServiceName();
         private int servicePort = KnativeSettings.getServicePort();
         private HttpServer httpServer;
-        private CloudEventMessage message;
+        private Message message;
         private String eventData;
-        private final Map<String, String> ceAttributes = new HashMap<>();
+        private final Map<String, Object> ceAttributes = new HashMap<>();
         private long timeout = KnativeSettings.getEventProducerTimeout();
 
+        @Override
         public Builder service(String serviceName, int servicePort) {
             this.serviceName = serviceName;
             this.servicePort = servicePort;
             return this;
         }
 
+        @Override
         public Builder serviceName(String serviceName) {
             this.serviceName = serviceName;
             return this;
         }
 
+        @Override
         public Builder servicePort(int servicePort) {
             this.servicePort = servicePort;
             return this;
         }
 
+        @Override
         public Builder timeout(long timeout) {
             this.timeout = timeout;
             return this;
         }
 
-        public Builder event(CloudEventMessage message) {
+        @Override
+        public Builder event(Message message) {
             this.message = message;
             return this;
         }
@@ -145,19 +159,42 @@ public class ReceiveEventAction extends AbstractKnativeAction {
             return event(CloudEventMessage.fromEvent(event));
         }
 
+        @Override
+        public Builder event(Object event) {
+            if (event instanceof CloudEventMessage cloudEventMessage) {
+                return event(cloudEventMessage);
+            } else if (event instanceof CloudEvent cloudEvent) {
+                return event(CloudEventMessage.fromEvent(cloudEvent));
+            } else {
+                throw new CitrusRuntimeException("Unsupported event type: " + event.getClass().getName());
+            }
+        }
+
+        @Override
         public Builder eventData(String eventData) {
             this.eventData = eventData;
             return this;
         }
 
-        public Builder attributes(Map<String, String> ceAttributes) {
+        @Override
+        public Builder attributes(Map<String, Object> ceAttributes) {
             this.ceAttributes.putAll(ceAttributes);
             return this;
         }
 
-        public Builder attribute(String name, String value) {
+        @Override
+        public Builder attribute(String name, Object value) {
             this.ceAttributes.put(name, value);
             return this;
+        }
+
+        @Override
+        public Builder server(Endpoint endpoint) {
+            if (endpoint instanceof HttpServer server) {
+                return server(server);
+            } else {
+                throw new CitrusRuntimeException("Unsupported server endpoint type: " + endpoint.getClass().getName());
+            }
         }
 
         public Builder server(HttpServer httpServer) {

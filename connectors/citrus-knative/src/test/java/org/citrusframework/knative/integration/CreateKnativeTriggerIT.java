@@ -23,8 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.knative.actions.KnativeActionBuilder.knative;
-
 public class CreateKnativeTriggerIT extends AbstractKnativeIT {
 
     @Autowired

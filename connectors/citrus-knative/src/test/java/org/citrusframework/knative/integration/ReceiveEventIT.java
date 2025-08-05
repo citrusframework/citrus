@@ -26,8 +26,6 @@ import org.springframework.http.MediaType;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.knative.actions.KnativeActionBuilder.knative;
-
 public class ReceiveEventIT extends AbstractKnativeIT {
 
     private final int port = SocketUtils.findAvailableTcpPort(8081);
