@@ -30,6 +30,7 @@ import org.citrusframework.actions.sql.ExecutePlsqlActionBuilder;
 import org.citrusframework.actions.sql.ExecuteSqlActionBuilder;
 import org.citrusframework.actions.sql.ExecuteSqlQueryActionBuilder;
 import org.citrusframework.actions.testcontainers.TestcontainersActionBuilder;
+import org.citrusframework.actions.ws.SoapActionBuilder;
 import org.citrusframework.condition.Condition;
 import org.citrusframework.container.*;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -165,6 +166,11 @@ public interface TestActionSupport extends TestActions, TestContainers {
     @Override
     default SeleniumActionBuilder<?, ?> selenium() {
         return lookup("selenium");
+    }
+
+    @Override
+    default SoapActionBuilder<?, ?> soap() {
+        return lookup("soap");
     }
 
     @Override

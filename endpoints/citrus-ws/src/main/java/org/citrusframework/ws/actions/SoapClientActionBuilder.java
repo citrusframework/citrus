@@ -28,7 +28,8 @@ import org.citrusframework.util.ObjectHelper;
  *
  * @since 2.6
  */
-public class SoapClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
+public class SoapClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
+        implements org.citrusframework.actions.ws.SoapClientActionBuilder<TestAction, SoapClientActionBuilder> {
 
     /** Bean reference resolver */
     private ReferenceResolver referenceResolver;
@@ -38,6 +39,12 @@ public class SoapClientActionBuilder extends AbstractReferenceResolverAwareTestA
     private String soapClientUri;
 
     private TestActionBuilder<?> delegate;
+
+    /**
+     * Default constructor.
+     */
+    public SoapClientActionBuilder() {
+    }
 
     /**
      * Default constructor.
@@ -53,10 +60,7 @@ public class SoapClientActionBuilder extends AbstractReferenceResolverAwareTestA
         this.soapClientUri = soapClientUri;
     }
 
-    /**
-     * Generic response builder for expecting response messages on client.
-     * @return
-     */
+    @Override
     public ReceiveSoapMessageAction.Builder receive() {
         ReceiveSoapMessageAction.Builder builder = new ReceiveSoapMessageAction.Builder();
         if (soapClient != null) {
@@ -71,10 +75,7 @@ public class SoapClientActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
-        /**
-     * Generic response builder for expecting response messages on client.
-     * @return
-     */
+    @Override
     public AssertSoapFault.Builder assertFault() {
         AssertSoapFault.Builder builder = new AssertSoapFault.Builder();
         if (soapClient != null) {
@@ -89,10 +90,7 @@ public class SoapClientActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
-    /**
-     * Generic request builder with request method and path.
-     * @return
-     */
+    @Override
     public SendSoapMessageAction.Builder send() {
         SendSoapMessageAction.Builder builder = new SendSoapMessageAction.Builder();
         if (soapClient != null) {
@@ -107,10 +105,7 @@ public class SoapClientActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
-    /**
-     * Sets the bean reference resolver.
-     * @param referenceResolver
-     */
+    @Override
     public SoapClientActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
         return this;

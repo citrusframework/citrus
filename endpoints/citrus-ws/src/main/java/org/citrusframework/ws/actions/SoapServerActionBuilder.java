@@ -27,11 +27,18 @@ import org.citrusframework.util.ObjectHelper;
  *
  * @since 2.6
  */
-public class SoapServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
+public class SoapServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
+        implements org.citrusframework.actions.ws.SoapServerActionBuilder<TestAction, SoapServerActionBuilder> {
 
     /** Target soap client instance */
     private Endpoint soapServer;
     private String soapServerUri;
+
+    /**
+     * Default constructor.
+     */
+    public SoapServerActionBuilder() {
+    }
 
     /**
      * Default constructor.
@@ -47,10 +54,7 @@ public class SoapServerActionBuilder extends AbstractReferenceResolverAwareTestA
         this.soapServerUri = soapServerUri;
     }
 
-    /**
-     * Generic request builder for receiving SOAP messages on server.
-     * @return
-     */
+    @Override
     public ReceiveSoapMessageAction.Builder receive() {
         ReceiveSoapMessageAction.Builder builder = new ReceiveSoapMessageAction.Builder();
         if (soapServer != null) {
@@ -65,10 +69,7 @@ public class SoapServerActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
-    /**
-     * Generic response builder for sending SOAP response messages to client.
-     * @return
-     */
+    @Override
     public SendSoapMessageAction.Builder send() {
         SendSoapMessageAction.Builder builder = new SendSoapMessageAction.Builder();
         if (soapServer != null) {
@@ -83,10 +84,7 @@ public class SoapServerActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
-    /**
-     * Generic response builder for sending SOAP fault messages to client.
-     * @return
-     */
+    @Override
     public SendSoapFaultAction.Builder sendFault() {
         SendSoapFaultAction.Builder builder = new SendSoapFaultAction.Builder();
         if (soapServer != null) {
@@ -101,10 +99,7 @@ public class SoapServerActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
-    /**
-     * Sets the Spring bean application context.
-     * @param referenceResolver
-     */
+    @Override
     public SoapServerActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
         return this;

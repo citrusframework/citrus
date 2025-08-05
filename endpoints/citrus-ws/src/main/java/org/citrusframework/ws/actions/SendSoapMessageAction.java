@@ -26,6 +26,9 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.citrusframework.TestAction;
 import org.citrusframework.actions.SendMessageAction;
+import org.citrusframework.actions.ws.SoapSendActionBuilder;
+import org.citrusframework.actions.ws.SoapSendActionBuilderBase;
+import org.citrusframework.actions.ws.SoapSendMessageBuilderFactory;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -43,7 +46,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Message send action able to add SOAP attachment support to normal message sending action.
- *
  */
 public class SendSoapMessageAction extends SendMessageAction implements TestAction {
 
@@ -137,7 +139,8 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
     /**
      * Action builder.
      */
-    public static class Builder extends SendSoapMessageBuilder<SendSoapMessageAction, Builder.SendSoapMessageBuilderSupport, Builder> {
+    public static class Builder extends SendSoapMessageBuilder<SendSoapMessageAction, Builder.SendSoapMessageBuilderSupport, Builder>
+            implements SoapSendActionBuilder<SendSoapMessageAction, Builder.SendSoapMessageBuilderSupport, Builder> {
 
         public Builder() {
             message(new StaticMessageBuilder(soapMessage));
@@ -151,7 +154,8 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
             return super.getMessageBuilderSupport();
         }
 
-        public static class SendSoapMessageBuilderSupport extends SoapMessageBuilderSupport<SendSoapMessageAction, Builder, SendSoapMessageBuilderSupport> {
+        public static class SendSoapMessageBuilderSupport extends SoapMessageBuilderSupport<SendSoapMessageAction, Builder, SendSoapMessageBuilderSupport>
+            implements SoapSendMessageBuilderFactory<SendSoapMessageAction, SendSoapMessageBuilderSupport> {
 
             protected SendSoapMessageBuilderSupport(SoapMessage soapMessage, Builder delegate) {
                 super(soapMessage, delegate);
@@ -167,11 +171,13 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
     /**
      * Action builder.
      */
-    public abstract static class SendSoapMessageBuilder<T extends SendSoapMessageAction, M extends SoapMessageBuilderSupport<T, B, M>, B extends SendSoapMessageBuilder<T, M, B>> extends SendMessageActionBuilder<T, M, B> {
+    public abstract static class SendSoapMessageBuilder<T extends SendSoapMessageAction, M extends SoapMessageBuilderSupport<T, B, M>, B extends SendSoapMessageBuilder<T, M, B>>
+            extends SendMessageActionBuilder<T, M, B> implements SoapSendActionBuilderBase<T, M, B> {
 
         /** Soap message to send */
         protected SoapMessage soapMessage = new SoapMessage();
 
+        @Override
         public B mtomEnabled(boolean mtomEnabled) {
             getMessageBuilderSupport().mtomEnabled(mtomEnabled);
             return self;
@@ -179,7 +185,8 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
 
     }
 
-    public static class SoapMessageBuilderSupport<T extends SendSoapMessageAction, B extends SendSoapMessageBuilder<T, M, B>, M extends SoapMessageBuilderSupport<T, B, M>> extends SendMessageBuilderSupport<T, B, M> {
+    public static class SoapMessageBuilderSupport<T extends SendSoapMessageAction, B extends SendSoapMessageBuilder<T, M, B>, M extends SoapMessageBuilderSupport<T, B, M>>
+            extends SendMessageBuilderSupport<T, B, M> implements SoapSendMessageBuilderFactory<T, M> {
 
         protected final SoapMessage soapMessage;
 
@@ -210,17 +217,13 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
             return self;
         }
 
-        /**
-         * Sets special SOAP action message header.
-         */
+        @Override
         public M soapAction(String soapAction) {
             soapMessage.header(SoapMessageHeaders.SOAP_ACTION, soapAction);
             return self;
         }
 
-        /**
-         * Sets the attachment with string content.
-         */
+        @Override
         public M attachment(String contentId, String contentType, String content) {
             SoapAttachment attachment = new SoapAttachment();
             attachment.setContentId(contentId);
@@ -231,16 +234,12 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
             return self;
         }
 
-        /**
-         * Sets the attachment with content resource.
-         */
+        @Override
         public M attachment(String contentId, String contentType, Resource contentResource) {
             return attachment(contentId, contentType, contentResource, FileUtils.getDefaultCharset());
         }
 
-        /**
-         * Sets the attachment with content resource.
-         */
+        @Override
         public M attachment(String contentId, String contentType, Resource contentResource, Charset charset) {
             SoapAttachment attachment = new SoapAttachment();
             attachment.setContentId(contentId);
@@ -257,14 +256,22 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
             return self;
         }
 
-        /**
-         * Sets the charset name for this send action builder's most recent attachment.
-         */
+        @Override
         public M charset(String charsetName) {
             if (!this.attachments.isEmpty()) {
                 this.attachments.get(this.attachments.size() - 1).setCharsetName(charsetName);
             }
             return self;
+        }
+
+        @Override
+        public M attachment(Object attachment) {
+            if (attachment instanceof SoapAttachment soapAttachment) {
+                return attachment(soapAttachment);
+            } else {
+                throw new CitrusRuntimeException(("Invalid SOAP attachment type, must be a SoapAttachment, " +
+                        "but got: %s").formatted(attachment.getClass().getName()));
+            }
         }
 
         /**
@@ -275,34 +282,25 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
             return self;
         }
 
-        /**
-         * Set the endpoint URI for the request. This works only if the HTTP endpoint used
-         * doesn't provide an own endpoint URI resolver.
-         *
-         * @param uri absolute URI to use for the endpoint
-         * @return self
-         */
+        @Override
         public M uri(String uri) {
             soapMessage.header(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME, uri);
             return self;
         }
 
-        /**
-         * Sets the request content type header.
-         */
+        @Override
         public M contentType(String contentType) {
             soapMessage.contentType(contentType);
             return self;
         }
 
-        /**
-         * Sets the request accept header.
-         */
+        @Override
         public M accept(String accept) {
             soapMessage.accept(accept);
             return self;
         }
 
+        @Override
         public M mtomEnabled(boolean mtomEnabled) {
             soapMessage.mtomEnabled(mtomEnabled);
             this.mtomEnabled = mtomEnabled;

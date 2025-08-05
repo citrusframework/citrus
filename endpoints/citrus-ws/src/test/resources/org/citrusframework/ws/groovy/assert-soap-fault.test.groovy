@@ -16,9 +16,6 @@
 
 package org.citrusframework.ws.groovy
 
-
-import static org.citrusframework.ws.actions.SoapActionBuilder.soap
-
 name "AssertSoapFaultTest"
 author "Christoph"
 status "FINAL"
@@ -26,7 +23,7 @@ description "Sample test in Groovy"
 
 actions {
     $(soap()
-        .client("soapClient")
+        .client()
         .assertFault()
             .faultCode("{http://citrusframework.org/faults}FAULT-1001")
             .when(
@@ -39,7 +36,7 @@ actions {
     )
 
     $(soap()
-        .client("soapClient")
+        .client()
         .assertFault()
             .faultCode("{http://citrusframework.org/faults}FAULT-1002")
             .faultString("FaultString")
@@ -53,7 +50,7 @@ actions {
     )
 
     $(soap()
-        .client("soapClient")
+        .client()
         .assertFault()
             .faultCode("{http://citrusframework.org/faults}FAULT-1003")
             .faultString("FaultString")
@@ -69,7 +66,7 @@ actions {
     )
 
     $(soap()
-        .client("soapClient")
+        .client()
         .assertFault()
             .validator("customSoapFaultValidator")
             .faultCode("{http://citrusframework.org/faults}FAULT-1004")

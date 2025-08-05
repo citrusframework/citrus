@@ -20,9 +20,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.ws.actions.AssertSoapFault.Builder.assertSoapFault;
-import static org.citrusframework.ws.actions.SoapActionBuilder.soap;
-
 @Test
 public class AssertSoapFaultJavaIT extends TestNGCitrusSpringSupport {
 
@@ -31,7 +28,8 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusSpringSupport {
         variable("soapFaultCode", "TEC-1001");
         variable("soapFaultString", "Invalid request");
 
-        run(assertSoapFault()
+        run(soap().client()
+            .assertFault()
             .faultString("Invalid request")
             .faultCode("{http://citrusframework.org/faults}TEC-1001")
             .when(soap().client("helloSoapClient")
@@ -42,7 +40,8 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusSpringSupport {
                         "</ns0:SoapFaultForcingRequest>")
         ));
 
-        run(assertSoapFault()
+        run(soap().client()
+            .assertFault()
             .faultString("@ignore@")
             .faultCode("{http://citrusframework.org/faults}TEC-1001")
             .when(soap().client("helloSoapClient")
@@ -53,7 +52,8 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusSpringSupport {
                         "</ns0:SoapFaultForcingRequest>")
         ));
 
-        run(assertSoapFault()
+        run(soap().client()
+            .assertFault()
             .faultString("${soapFaultString}")
             .faultCode("{http://citrusframework.org/faults}${soapFaultCode}")
             .when(soap().client("helloSoapClient")

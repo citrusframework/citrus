@@ -4,7 +4,8 @@ import jakarta.annotation.Nullable;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 
-public abstract class AbstractReferenceResolverAwareTestActionBuilder<T extends TestAction> implements TestActionBuilder.DelegatingTestActionBuilder<T>, ReferenceResolverAware {
+public abstract class AbstractReferenceResolverAwareTestActionBuilder<T extends TestAction>
+        implements TestActionBuilder.DelegatingTestActionBuilder<T>, ReferenceResolverAware {
 
     /** Bean reference resolver */
     protected ReferenceResolver referenceResolver;

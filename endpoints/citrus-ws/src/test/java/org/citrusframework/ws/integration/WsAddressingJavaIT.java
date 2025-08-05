@@ -20,8 +20,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.ws.actions.AssertSoapFault.Builder.assertSoapFault;
-
 @Test
 public class WsAddressingJavaIT extends TestNGCitrusSpringSupport {
 
@@ -30,7 +28,9 @@ public class WsAddressingJavaIT extends TestNGCitrusSpringSupport {
         variable("messageId", "123456789");
         variable("correlationId", "CORR123456789");
 
-        run(assertSoapFault().faultString("One or more mandatory SOAP header blocks not understood")
+        run(soap().client()
+            .assertFault()
+            .faultString("One or more mandatory SOAP header blocks not understood")
             .faultCode("{http://schemas.xmlsoap.org/soap/envelope/}SOAP-ENV:MustUnderstand")
             .when(send("helloWsAddressingSoapClient")
                 .message()

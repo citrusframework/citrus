@@ -26,7 +26,8 @@ import org.citrusframework.validation.ValidationContextAdapter;
 import org.citrusframework.validation.ValidationProcessor;
 import org.citrusframework.validation.context.ValidationContext;
 
-public interface ReceiveMessageBuilderFactory<T extends TestAction, M extends ReceiveMessageBuilderFactory<T, M>> extends MessageBuilderFactory<T, M> {
+public interface ReceiveMessageBuilderFactory<T extends TestAction, M extends ReceiveMessageBuilderFactory<T, M>>
+        extends MessageBuilderFactory<T, M> {
 
     /**
      * Adds a custom timeout to this message receiving action.

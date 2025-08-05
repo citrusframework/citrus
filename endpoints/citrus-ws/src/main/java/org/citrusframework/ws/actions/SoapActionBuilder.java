@@ -17,79 +17,83 @@
 package org.citrusframework.ws.actions;
 
 import org.citrusframework.TestAction;
+import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;
-import org.citrusframework.ws.client.WebServiceClient;
-import org.citrusframework.ws.server.WebServiceServer;
 
 /**
  * Action executes soap client and server operations.
  *
  * @since 2.6
  */
-public class SoapActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
+public class SoapActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
+        implements org.citrusframework.actions.ws.SoapActionBuilder<TestAction, SoapActionBuilder> {
 
-	/**
-	 * Static entrance method for the SOAP fluent action builder.
-	 * @return
-	 */
-	public static SoapActionBuilder soap() {
-		return new SoapActionBuilder();
-	}
-
-	/**
-	 * Initiate soap client action.
-	 */
-	public SoapClientActionBuilder client(WebServiceClient soapClient) {
-		SoapClientActionBuilder clientActionBuilder = new SoapClientActionBuilder(soapClient)
-				.withReferenceResolver(referenceResolver);
-		this.delegate = clientActionBuilder;
-		return clientActionBuilder;
-	}
-
-	/**
-	 * Initiate soap client action.
-	 */
-	public SoapClientActionBuilder client(String soapClient) {
-		SoapClientActionBuilder clientActionBuilder = new SoapClientActionBuilder(soapClient)
-				.withReferenceResolver(referenceResolver);
-		this.delegate = clientActionBuilder;
-		return clientActionBuilder;
-	}
-
-	/**
-	 * Initiate soap server action.
-	 */
-	public SoapServerActionBuilder server(WebServiceServer soapServer) {
-		SoapServerActionBuilder serverActionBuilder = new SoapServerActionBuilder(soapServer)
-				.withReferenceResolver(referenceResolver);
-		this.delegate = serverActionBuilder;
-		return serverActionBuilder;
-	}
-
-	/**
-	 * Initiate soap server action.
-	 */
-	public SoapServerActionBuilder server(String soapServer) {
-		SoapServerActionBuilder serverActionBuilder = new SoapServerActionBuilder(soapServer)
-				.withReferenceResolver(referenceResolver);
-		this.delegate = serverActionBuilder;
-		return serverActionBuilder;
-	}
-
-	/**
-	 * Sets the bean reference resolver.
-	 * @param referenceResolver
-	 */
-	public SoapActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
-		this.referenceResolver = referenceResolver;
-		return this;
-	}
+    /**
+     * Static entrance method for the SOAP fluent action builder.
+     */
+    public static SoapActionBuilder soap() {
+        return new SoapActionBuilder();
+    }
 
 	@Override
-	public TestAction build() {
-		ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
-		return delegate.build();
-	}
+    public SoapClientActionBuilder client() {
+        SoapClientActionBuilder clientActionBuilder = new SoapClientActionBuilder()
+                .withReferenceResolver(referenceResolver);
+        this.delegate = clientActionBuilder;
+        return clientActionBuilder;
+    }
+
+    @Override
+    public SoapClientActionBuilder client(Endpoint soapClient) {
+        SoapClientActionBuilder clientActionBuilder = new SoapClientActionBuilder(soapClient)
+                .withReferenceResolver(referenceResolver);
+        this.delegate = clientActionBuilder;
+        return clientActionBuilder;
+    }
+
+    @Override
+	public SoapClientActionBuilder client(String soapClient) {
+        SoapClientActionBuilder clientActionBuilder = new SoapClientActionBuilder(soapClient)
+                .withReferenceResolver(referenceResolver);
+        this.delegate = clientActionBuilder;
+        return clientActionBuilder;
+    }
+
+    @Override
+    public SoapServerActionBuilder server() {
+        SoapServerActionBuilder serverActionBuilder = new SoapServerActionBuilder()
+                .withReferenceResolver(referenceResolver);
+        this.delegate = serverActionBuilder;
+        return serverActionBuilder;
+    }
+
+    @Override
+    public SoapServerActionBuilder server(Endpoint soapServer) {
+        SoapServerActionBuilder serverActionBuilder = new SoapServerActionBuilder(soapServer)
+                .withReferenceResolver(referenceResolver);
+        this.delegate = serverActionBuilder;
+        return serverActionBuilder;
+    }
+
+    @Override
+    public SoapServerActionBuilder server(String soapServer) {
+        SoapServerActionBuilder serverActionBuilder = new SoapServerActionBuilder(soapServer)
+                .withReferenceResolver(referenceResolver);
+        this.delegate = serverActionBuilder;
+        return serverActionBuilder;
+    }
+
+    @Override
+    public SoapActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
+        return this;
+    }
+
+    @Override
+    public TestAction build() {
+        ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
+        return delegate.build();
+    }
 }

@@ -25,6 +25,7 @@ import java.util.List;
 import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.actions.ws.SoapAssertFaultActionBuilder;
 import org.citrusframework.container.AbstractActionContainer;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
@@ -36,6 +37,7 @@ import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
+import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.ws.message.SoapFault;
 import org.citrusframework.ws.validation.SimpleSoapFaultValidator;
 import org.citrusframework.ws.validation.SoapFaultDetailValidationContext;
@@ -232,7 +234,8 @@ public class AssertSoapFault extends AbstractActionContainer {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractTestContainerBuilder<AssertSoapFault, Builder> implements ReferenceResolverAware {
+    public static class Builder extends AbstractTestContainerBuilder<AssertSoapFault, Builder>
+            implements ReferenceResolverAware, SoapAssertFaultActionBuilder<AssertSoapFault, Builder> {
 
         private TestActionBuilder<?> action;
 
@@ -252,26 +255,17 @@ public class AssertSoapFault extends AbstractActionContainer {
 
         /**
          * Fluent API action building entry method used in Java DSL.
-         * @return
          */
         public static Builder assertSoapFault() {
             return new Builder();
         }
 
-        /**
-         * Action producing the SOAP fault.
-         * @param action
-         * @return
-         */
+        @Override
         public Builder when(TestAction action) {
             return when(() -> action);
         }
 
-        /**
-         * Action producing the SOAP fault.
-         * @param action
-         * @return
-         */
+        @Override
         public Builder when(TestActionBuilder<?> action) {
             return actions(action);
         }
@@ -292,81 +286,48 @@ public class AssertSoapFault extends AbstractActionContainer {
             return super.actions(actions[0]);
         }
 
-        /**
-         * Sets the message endpoint to send messages to.
-         * @param messageEndpoint
-         * @return
-         */
+        @Override
         public Builder endpoint(Endpoint messageEndpoint) {
             this.endpoint = messageEndpoint;
             return this;
         }
 
-        /**
-         * Sets the message endpoint uri to send messages to.
-         * @param messageEndpointUri
-         * @return
-         */
+        @Override
         public Builder endpoint(String messageEndpointUri) {
             this.endpointUri = messageEndpointUri;
             return this;
         }
 
-        /**
-         * Expect fault code in SOAP fault message.
-         * @param code
-         * @return
-         */
+        @Override
         public Builder faultCode(String code) {
             this.faultCode = code;
             return this;
         }
 
-        /**
-         * Expect fault string in SOAP fault message.
-         * @param faultString
-         * @return
-         */
+        @Override
         public Builder faultString(String faultString) {
             this.faultString = faultString;
             return this;
         }
 
-        /**
-         * Expect fault actor in SOAP fault message.
-         * @param faultActor
-         * @return
-         */
+        @Override
         public Builder faultActor(String faultActor) {
             this.faultActor = faultActor;
             return this;
         }
 
-        /**
-         * Expect fault detail in SOAP fault message.
-         * @param faultDetail
-         * @return
-         */
+        @Override
         public Builder faultDetail(String faultDetail) {
             this.faultDetails.add(faultDetail);
             return this;
         }
 
-        /**
-         * Expect fault detail from file resource.
-         * @param resource
-         * @return
-         */
+        @Override
         public Builder faultDetailResource(Resource resource) {
             return faultDetailResource(resource, FileUtils.getDefaultCharset());
         }
 
-        /**
-         * Expect fault detail from file resource.
-         * @param resource
-         * @param charset
-         * @return
-         */
+        @Override
         public Builder faultDetailResource(Resource resource, Charset charset) {
             try {
                 this.faultDetails.add(FileUtils.readToString(resource, charset));
@@ -376,48 +337,64 @@ public class AssertSoapFault extends AbstractActionContainer {
             return this;
         }
 
-        /**
-         * Expect fault detail from file resource.
-         * @param filePath
-         * @return
-         */
+        @Override
         public Builder faultDetailResource(String filePath) {
             this.faultDetailResourcePaths.add(filePath);
             return this;
         }
 
+        @Override
+        public Builder validator(Object validator) {
+            if (validator instanceof SoapFaultValidator soapFaultValidator) {
+                return validator(soapFaultValidator);
+            } else {
+                throw new CitrusRuntimeException("Invalid SOAP fault validator type: %s".formatted(validator.getClass().getName()));
+            }
+        }
+
         /**
          * Set explicit SOAP fault validator implementation.
-         * @param validator
-         * @return
          */
         public Builder validator(SoapFaultValidator validator) {
             this.validator = validator;
             return this;
         }
 
-        /**
-         * Set explicit SOAP fault validator implementation by bean name.
-         * @param validatorName
-         * @return
-         */
+        @Override
         public Builder validator(String validatorName) {
             this.validatorName = validatorName;
             return this;
         }
 
+        @Override
+        public Builder validate(ValidationContext.Builder<?, ?> validationContext) {
+            if (validationContext instanceof SoapFaultValidationContext.Builder builder) {
+                return validate(builder);
+            } else if (validationContext instanceof SoapFaultDetailValidationContext.Builder builder) {
+                return validateDetail(builder);
+            }
+
+            return this;
+        }
+
         /**
          * Specifies the validationContext.
-         * @param validationContext
          */
         public Builder validate(SoapFaultValidationContext.Builder validationContext) {
             this.validationContext = validationContext;
             return this;
         }
 
+        @Override
+        public Builder validateDetail(ValidationContext.Builder<?, ?> validationContext) {
+            if (validationContext instanceof SoapFaultValidationContext.Builder builder) {
+                return validateDetail(builder);
+            }
+            return this;
+        }
+
         /**
          * Specifies the validationContext.
-         * @param validationContext
          */
         public Builder validateDetail(SoapFaultDetailValidationContext.Builder validationContext) {
             if (this.validationContext == null) {
@@ -428,10 +405,7 @@ public class AssertSoapFault extends AbstractActionContainer {
             return this;
         }
 
-        /**
-         * Sets the Spring bean application context.
-         * @param referenceResolver
-         */
+        @Override
         public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
             this.referenceResolver = referenceResolver;
             return this;
