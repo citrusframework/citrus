@@ -21,12 +21,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.citrusframework.actions.testcontainers.TestcontainersComposeUpActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.AbstractTestcontainersAction;
+import org.citrusframework.testcontainers.actions.TestcontainersActionBuilder;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +39,6 @@ import org.testcontainers.containers.wait.strategy.WaitStrategy;
 import org.testcontainers.utility.Base58;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
-import static org.citrusframework.testcontainers.actions.TestcontainersActionBuilder.testcontainers;
 
 public class ComposeUpAction extends AbstractTestcontainersAction {
 
@@ -47,6 +48,8 @@ public class ComposeUpAction extends AbstractTestcontainersAction {
     private final boolean autoRemoveResources;
 
     private final Map<String, Integer> exposedServices;
+
+    private final TestcontainersActionBuilder testcontainers = new TestcontainersActionBuilder();
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(ComposeUpAction.class);
@@ -71,7 +74,7 @@ public class ComposeUpAction extends AbstractTestcontainersAction {
         exposeConnectionSettings(container, context);
 
         if (autoRemoveResources) {
-            context.doFinally(testcontainers()
+            context.doFinally(testcontainers
                     .compose()
                     .down()
                     .container(container));
@@ -117,7 +120,8 @@ public class ComposeUpAction extends AbstractTestcontainersAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractTestcontainersAction.Builder<ComposeUpAction, Builder> {
+    public static class Builder extends AbstractTestcontainersAction.Builder<ComposeUpAction, Builder>
+            implements TestcontainersComposeUpActionBuilder<ComposeContainer, ComposeUpAction, Builder> {
 
         private ComposeContainer container;
 
@@ -141,54 +145,76 @@ public class ComposeUpAction extends AbstractTestcontainersAction {
             withStartupTimeout(ComposeContainerSettings.getStartupTimeout());
         }
 
+        @Override
         public Builder containerName(String name) {
             this.containerName = name;
             return self;
         }
 
+        @Override
         public Builder container(ComposeContainer container) {
             this.container = container;
             return self;
         }
 
+        @Override
         public Builder container(String name, ComposeContainer container) {
             this.containerName = name;
             this.container = container;
             return self;
         }
 
+        @Override
         public Builder file(String filePath) {
             this.filePath = filePath;
             return this;
         }
 
+        @Override
         public Builder file(Resource fileResource) {
             this.fileResource = fileResource;
             return this;
         }
 
+        @Override
         public Builder withStartupTimeout(int timeout) {
             this.startupTimeout = Duration.ofSeconds(timeout);
             return this;
         }
 
+        @Override
         public Builder withStartupTimeout(Duration timeout) {
             this.startupTimeout = timeout;
             return this;
         }
 
+        @Override
         public Builder autoRemove(boolean enabled) {
             this.autoRemoveResources = enabled;
             return self;
         }
 
+        @Override
         public Builder useComposeBinary(boolean enabled) {
             this.useComposeBinary = enabled;
             return self;
         }
 
+        @Override
         public Builder withExposedService(String serviceName, int port) {
             this.exposedServices.put(serviceName, port);
+            return self;
+        }
+
+        @Override
+        public Builder withExposedService(String serviceName, int port, Object o) {
+            if (o instanceof WaitStrategy strategy) {
+                this.exposedServices.put(serviceName, port);
+                this.waitStrategies.put(serviceName, strategy);
+            } else {
+                throw new CitrusRuntimeException("Unsupported wait strategy type, expected WaitStrategy, but got: %s".formatted(o.getClass().getName()));
+            }
+
             return self;
         }
 
@@ -198,8 +224,20 @@ public class ComposeUpAction extends AbstractTestcontainersAction {
             return self;
         }
 
+        @Override
         public Builder withExposedServices(Map<String, Integer> services) {
             exposedServices.putAll(services);
+            return self;
+        }
+
+        @Override
+        public Builder withWaitStrategy(String serviceName, Object o) {
+            if (o instanceof WaitStrategy strategy) {
+                this.waitStrategies.put(serviceName, strategy);
+            } else {
+                throw new CitrusRuntimeException("Unsupported wait strategy type, expected WaitStrategy, but got: %s".formatted(o.getClass().getName()));
+            }
+
             return self;
         }
 
@@ -208,8 +246,9 @@ public class ComposeUpAction extends AbstractTestcontainersAction {
             return self;
         }
 
-        public Builder withWaitStrategies(Map<String, WaitStrategy> strategies) {
-            waitStrategies.putAll(strategies);
+        @Override
+        public Builder withWaitStrategies(Map<String, Object> strategies) {
+            strategies.forEach(this::withWaitStrategy);
             return self;
         }
 

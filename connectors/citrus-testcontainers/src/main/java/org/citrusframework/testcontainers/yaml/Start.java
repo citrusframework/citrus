@@ -30,7 +30,7 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.AbstractTestcontainersAction;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
-import org.citrusframework.testcontainers.aws2.LocalStackContainer;
+import org.citrusframework.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.testcontainers.aws2.LocalStackSettings;
 import org.citrusframework.testcontainers.aws2.StartLocalStackAction;
 import org.citrusframework.testcontainers.kafka.StartKafkaAction;
@@ -65,7 +65,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         configureStartActionBuilder(builder, container);
 
         if (container.getServices() != null) {
-            container.getServices().forEach(service -> builder.withService(LocalStackContainer.Service.valueOf(service)));
+            container.getServices().forEach(service -> builder.withService(AwsService.valueOf(service)));
         }
 
         delegate = builder;

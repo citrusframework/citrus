@@ -18,6 +18,7 @@ package org.citrusframework.testcontainers.actions;
 
 import java.util.Optional;
 
+import org.citrusframework.actions.testcontainers.TestcontainersStopActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testcontainers.containers.GenericContainer;
@@ -66,13 +67,26 @@ public class StopTestcontainersAction extends AbstractTestcontainersAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractTestcontainersAction.Builder<StopTestcontainersAction, Builder> {
+    public static class Builder extends AbstractTestcontainersAction.Builder<StopTestcontainersAction, Builder>
+            implements TestcontainersStopActionBuilder<StopTestcontainersAction, Builder> {
 
         protected String containerName;
         private GenericContainer<?> container;
 
+        @Override
         public Builder containerName(String name) {
             this.containerName = name;
+            return this;
+        }
+
+        @Override
+        public Builder container(Object o) {
+            if (o instanceof GenericContainer<?> genericContainer) {
+                this.container = genericContainer;
+            } else {
+                throw new CitrusRuntimeException("");
+            }
+
             return this;
         }
 

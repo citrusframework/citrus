@@ -18,6 +18,7 @@ package org.citrusframework.testcontainers.aws2.client;
 
 import java.util.Map;
 
+import org.citrusframework.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.testcontainers.aws2.ClientFactory;
 import org.citrusframework.testcontainers.aws2.LocalStackContainer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -51,7 +52,7 @@ public class S3ClientFactory implements ClientFactory<S3Client> {
     }
 
     @Override
-    public boolean supports(LocalStackContainer.Service service) {
-        return LocalStackContainer.Service.S3 == service;
+    public boolean supports(AwsService service) {
+        return AwsService.S3 == service;
     }
 }

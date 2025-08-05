@@ -16,6 +16,7 @@
 
 package org.citrusframework.testcontainers.compose;
 
+import org.citrusframework.actions.testcontainers.TestcontainersComposeDownActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.actions.AbstractTestcontainersAction;
 import org.testcontainers.containers.ComposeContainer;
@@ -47,16 +48,19 @@ public class ComposeDownAction extends AbstractTestcontainersAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractTestcontainersAction.Builder<ComposeDownAction, Builder> {
+    public static class Builder extends AbstractTestcontainersAction.Builder<ComposeDownAction, Builder>
+            implements TestcontainersComposeDownActionBuilder<ComposeContainer, ComposeDownAction, Builder> {
 
         protected String containerName;
         private ComposeContainer container;
 
+        @Override
         public Builder containerName(String name) {
             this.containerName = name;
             return this;
         }
 
+        @Override
         public Builder container(ComposeContainer container) {
             this.container = container;
             return this;

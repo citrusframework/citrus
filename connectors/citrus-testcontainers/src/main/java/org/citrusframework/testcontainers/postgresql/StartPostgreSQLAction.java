@@ -20,6 +20,7 @@ import java.io.IOException;
 import javax.script.ScriptException;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.citrusframework.actions.testcontainers.TestcontainersPostgreSQLStartActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
@@ -89,7 +90,8 @@ public class StartPostgreSQLAction extends StartTestcontainersAction<PostgreSQLC
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractBuilder<PostgreSQLContainer<?>, StartPostgreSQLAction, Builder> {
+    public static class Builder extends AbstractBuilder<PostgreSQLContainer<?>, StartPostgreSQLAction, Builder>
+            implements TestcontainersPostgreSQLStartActionBuilder<PostgreSQLContainer<?>, StartPostgreSQLAction, Builder> {
 
         private String postgreSQLVersion = PostgreSQLSettings.getPostgreSQLVersion();
 
@@ -105,41 +107,49 @@ public class StartPostgreSQLAction extends StartTestcontainersAction<PostgreSQLC
             withStartupTimeout(PostgreSQLSettings.getStartupTimeout());
         }
 
+        @Override
         public Builder version(String postgreSQLVersion) {
            this.postgreSQLVersion = postgreSQLVersion;
            return this;
         }
 
+        @Override
         public Builder databaseName(String databaseName) {
            this.databaseName = databaseName;
            return this;
         }
 
+        @Override
         public Builder dataSourceName(String dataSourceName) {
            this.dataSourceName = dataSourceName;
            return this;
         }
 
+        @Override
         public Builder username(String username) {
            this.username = username;
            return this;
         }
 
+        @Override
         public Builder password(String password) {
            this.password = password;
            return this;
         }
 
+        @Override
         public Builder initScript(String initScript) {
            this.initScript = initScript;
            return this;
         }
 
+        @Override
         public Builder initScript(Resource resource) {
            this.initScriptResource = resource;
            return this;
         }
 
+        @Override
         public Builder loadInitScript(String resource) {
            this.initScriptResource = Resources.create(resource);
            return this;

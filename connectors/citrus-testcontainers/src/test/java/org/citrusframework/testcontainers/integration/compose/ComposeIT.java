@@ -32,8 +32,6 @@ import org.citrusframework.util.FileUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.testcontainers.actions.TestcontainersActionBuilder.testcontainers;
-
 public class ComposeIT extends AbstractTestcontainersIT {
 
     @Test

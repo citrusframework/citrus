@@ -18,12 +18,12 @@ package org.citrusframework.testcontainers.aws2.client;
 
 import java.util.Optional;
 
+import org.citrusframework.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.testcontainers.aws2.ClientFactory;
-import org.citrusframework.testcontainers.aws2.LocalStackContainer;
 
 public class DefaultClientFactoryFinder {
 
-    public Optional<ClientFactory<?>> find(LocalStackContainer.Service service) {
+    public Optional<ClientFactory<?>> find(AwsService service) {
         return switch (service) {
             case S3 -> Optional.of(new S3ClientFactory());
             case SQS -> Optional.of(new SqsClientFactory());

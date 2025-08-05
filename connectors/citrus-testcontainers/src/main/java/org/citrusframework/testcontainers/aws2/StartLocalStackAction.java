@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.citrusframework.actions.testcontainers.TestcontainersLocalStackStartActionBuilder;
+import org.citrusframework.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
@@ -51,7 +53,7 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
         LocalStackSettings.exposeConnectionSettings(container, serviceName, context);
 
         if (autoCreateClients) {
-            for (LocalStackContainer.Service service : container.getServices()) {
+            for (AwsService service : container.getServices()) {
                 String clientName = "%sClient".formatted(service.getServiceName());
                 clientName = options.getOrDefault(clientName + "Name", clientName);
 
@@ -78,11 +80,12 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractBuilder<LocalStackContainer, StartLocalStackAction, Builder> {
+    public static class Builder extends AbstractBuilder<LocalStackContainer, StartLocalStackAction, Builder>
+            implements TestcontainersLocalStackStartActionBuilder<LocalStackContainer, StartLocalStackAction, Builder> {
 
         private String localStackVersion = LocalStackSettings.getVersion();
 
-        private final Set<LocalStackContainer.Service> services = new HashSet<>();
+        private final Set<AwsService> services = new HashSet<>();
 
         private boolean autoCreateClients = LocalStackSettings.isAutoCreateClients();
 
@@ -92,36 +95,43 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
             withStartupTimeout(LocalStackSettings.getStartupTimeout());
         }
 
+        @Override
         public Builder version(String localStackVersion) {
            this.localStackVersion = localStackVersion;
            return this;
         }
 
-        public Builder withService(LocalStackContainer.Service service) {
+        @Override
+        public Builder withService(AwsService service) {
            this.services.add(service);
            return this;
         }
 
-        public Builder withServices(LocalStackContainer.Service[] services) {
+        @Override
+        public Builder withServices(AwsService[] services) {
             this.services.addAll(Arrays.asList(services));
            return this;
         }
 
-        public Builder withServices(Set<LocalStackContainer.Service> services) {
+        @Override
+        public Builder withServices(Set<AwsService> services) {
             this.services.addAll(services);
            return this;
         }
 
+        @Override
         public Builder withOptions(Map<String, String> options) {
             this.options.putAll(options);
             return this;
         }
 
+        @Override
         public Builder withOption(String key, String value) {
             this.options.put(key, value);
             return this;
         }
 
+        @Override
         public Builder autoCreateClients(boolean enabled) {
             this.autoCreateClients = enabled;
             return this;
@@ -152,7 +162,7 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
                 localStack = referenceResolver.resolve(containerName, LocalStackContainer.class);
             } else {
                 localStack = new LocalStackContainer(image, localStackVersion)
-                        .withServices(services.toArray(LocalStackContainer.Service[]::new))
+                        .withServices(services.toArray(AwsService[]::new))
                         .withNetwork(network)
                         .withNetworkAliases(serviceName)
                         .waitingFor(Wait.forListeningPort()

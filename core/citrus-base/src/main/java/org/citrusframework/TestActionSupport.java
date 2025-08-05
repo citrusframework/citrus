@@ -28,6 +28,7 @@ import org.citrusframework.actions.selenium.SeleniumActionBuilder;
 import org.citrusframework.actions.sql.ExecutePlsqlActionBuilder;
 import org.citrusframework.actions.sql.ExecuteSqlActionBuilder;
 import org.citrusframework.actions.sql.ExecuteSqlQueryActionBuilder;
+import org.citrusframework.actions.testcontainers.TestcontainersActionBuilder;
 import org.citrusframework.condition.Condition;
 import org.citrusframework.container.*;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -183,6 +184,11 @@ public interface TestActionSupport extends TestActions, TestContainers {
     @Override
     default TraceVariablesActionBuilder<TraceVariablesAction> trace() {
         return new TraceVariablesAction.Builder();
+    }
+
+    @Override
+    default TestcontainersActionBuilder<?, ?> testcontainers() {
+        return lookup("testcontainers");
     }
 
     @Override

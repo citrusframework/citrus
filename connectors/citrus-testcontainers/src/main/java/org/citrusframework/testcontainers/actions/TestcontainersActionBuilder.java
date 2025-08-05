@@ -17,7 +17,13 @@
 package org.citrusframework.testcontainers.actions;
 
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.spi.Resource;
+import org.citrusframework.actions.testcontainers.TestcontainersComposeActionBuilder;
+import org.citrusframework.actions.testcontainers.TestcontainersGenericContainerActionBuilder;
+import org.citrusframework.actions.testcontainers.TestcontainersKafkaActionBuilder;
+import org.citrusframework.actions.testcontainers.TestcontainersLocalStackActionBuilder;
+import org.citrusframework.actions.testcontainers.TestcontainersMongoDBActionBuilder;
+import org.citrusframework.actions.testcontainers.TestcontainersPostgreSQLActionBuilder;
+import org.citrusframework.actions.testcontainers.TestcontainersRedpandaActionBuilder;
 import org.citrusframework.testcontainers.aws2.StartLocalStackAction;
 import org.citrusframework.testcontainers.compose.ComposeDownAction;
 import org.citrusframework.testcontainers.compose.ComposeUpAction;
@@ -28,7 +34,8 @@ import org.citrusframework.testcontainers.redpanda.StartRedpandaAction;
 import org.citrusframework.util.ObjectHelper;
 import org.testcontainers.containers.GenericContainer;
 
-public class TestcontainersActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestcontainersAction> {
+public class TestcontainersActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestcontainersAction>,
+        org.citrusframework.actions.testcontainers.TestcontainersActionBuilder<TestcontainersAction, TestcontainersActionBuilder> {
 
     private AbstractTestcontainersAction.Builder<? extends TestcontainersAction, ?> delegate;
 
@@ -40,59 +47,37 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
         return new TestcontainersActionBuilder();
     }
 
-    /**
-     * Manage generic testcontainers.
-     * @return
-     */
+    @Override
     public GenericContainerActionBuilder container() {
         return new GenericContainerActionBuilder();
     }
 
-    /**
-     * Manage LocalStack testcontainers.
-     * @return
-     */
+    @Override
     public LocalStackActionBuilder localstack() {
         return new LocalStackActionBuilder();
     }
 
-    /**
-     * Manage PostgreSQL testcontainers.
-     * @return
-     */
+    @Override
     public PostgreSQLActionBuilder postgreSQL() {
         return new PostgreSQLActionBuilder();
     }
 
-    /**
-     * Manage MongoDB testcontainers.
-     * @return
-     */
+    @Override
     public MongoDBActionBuilder mongoDB() {
         return new MongoDBActionBuilder();
     }
 
-    /**
-     * Manage Redpanda testcontainers.
-     * @return
-     */
+    @Override
     public RedpandaActionBuilder redpanda() {
         return new RedpandaActionBuilder();
     }
 
-    /**
-     * Manage Redpanda testcontainers.
-     * @return
-     */
+    @Override
     public KafkaActionBuilder kafka() {
         return new KafkaActionBuilder();
     }
 
-
-    /**
-     * Manage Docker compose.
-     * @return
-     */
+    @Override
     public ComposeActionBuilder compose() {
         return new ComposeActionBuilder();
     }
@@ -108,31 +93,30 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
         return delegate;
     }
 
+    @Override
     public StartTestcontainersAction.Builder<GenericContainer<?>> start() {
         StartTestcontainersAction.Builder<GenericContainer<?>> builder = new StartTestcontainersAction.Builder<>();
         delegate = builder;
         return builder;
     }
 
+    @Override
     public StopTestcontainersAction.Builder stop() {
         StopTestcontainersAction.Builder builder = new StopTestcontainersAction.Builder();
         delegate = builder;
         return builder;
     }
 
-    public class GenericContainerActionBuilder {
-        /**
-         * Start generic testcontainers instance.
-         */
+    public class GenericContainerActionBuilder implements TestcontainersGenericContainerActionBuilder {
+
+        @Override
         public StartTestcontainersAction.Builder<?> start() {
             StartTestcontainersAction.Builder<?> builder = new StartTestcontainersAction.Builder<>();
             delegate = builder;
             return builder;
         }
 
-        /**
-         * Stop generic testcontainers instance.
-         */
+        @Override
         public StopTestcontainersAction.Builder stop() {
             StopTestcontainersAction.Builder builder = new StopTestcontainersAction.Builder();
             delegate = builder;
@@ -140,41 +124,16 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
         }
     }
 
-    public class ComposeActionBuilder {
-        /**
-         * Start compose testcontainers instance.
-         */
+    public class ComposeActionBuilder implements TestcontainersComposeActionBuilder {
+
+        @Override
         public ComposeUpAction.Builder up() {
             ComposeUpAction.Builder builder = new ComposeUpAction.Builder();
             delegate = builder;
             return builder;
         }
 
-        /**
-         * Start compose testcontainers instance.
-         */
-        public ComposeUpAction.Builder up(String filePath) {
-            ComposeUpAction.Builder builder = new ComposeUpAction.Builder()
-                    .file(filePath);
-            delegate = builder;
-            return builder;
-        }
-
-
-
-        /**
-         * Start compose testcontainers instance.
-         */
-        public ComposeUpAction.Builder up(Resource fileResource) {
-            ComposeUpAction.Builder builder = new ComposeUpAction.Builder()
-                    .file(fileResource);
-            delegate = builder;
-            return builder;
-        }
-
-        /**
-         * Stop compose testcontainers instance.
-         */
+        @Override
         public ComposeDownAction.Builder down() {
             ComposeDownAction.Builder builder = new ComposeDownAction.Builder();
             delegate = builder;
@@ -182,19 +141,16 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
         }
     }
 
-    public class LocalStackActionBuilder {
-        /**
-         * Start LocalStack testcontainers instance.
-         */
+    public class LocalStackActionBuilder implements TestcontainersLocalStackActionBuilder {
+
+        @Override
         public StartLocalStackAction.Builder start() {
             StartLocalStackAction.Builder builder = new StartLocalStackAction.Builder();
             delegate = builder;
             return builder;
         }
 
-        /**
-         * Stop LocalStack testcontainers instance.
-         */
+        @Override
         public StopTestcontainersAction.Builder stop() {
             StopTestcontainersAction.Builder builder = new StopTestcontainersAction.Builder();
             delegate = builder;
@@ -202,19 +158,16 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
         }
     }
 
-    public class PostgreSQLActionBuilder {
-        /**
-         * Start PostgreSQL testcontainers instance.
-         */
+    public class PostgreSQLActionBuilder implements TestcontainersPostgreSQLActionBuilder {
+
+        @Override
         public StartPostgreSQLAction.Builder start() {
             StartPostgreSQLAction.Builder builder = new StartPostgreSQLAction.Builder();
             delegate = builder;
             return builder;
         }
 
-        /**
-         * Stop PostgreSQL testcontainers instance.
-         */
+        @Override
         public StopTestcontainersAction.Builder stop() {
             StopTestcontainersAction.Builder builder = new StopTestcontainersAction.Builder();
             delegate = builder;
@@ -222,19 +175,16 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
         }
     }
 
-    public class MongoDBActionBuilder {
-        /**
-         * Start MongoDB testcontainers instance.
-         */
+    public class MongoDBActionBuilder implements TestcontainersMongoDBActionBuilder {
+
+        @Override
         public StartMongoDBAction.Builder start() {
             StartMongoDBAction.Builder builder = new StartMongoDBAction.Builder();
             delegate = builder;
             return builder;
         }
 
-        /**
-         * Stop MongoDB testcontainers instance.
-         */
+        @Override
         public StopTestcontainersAction.Builder stop() {
             StopTestcontainersAction.Builder builder = new StopTestcontainersAction.Builder();
             delegate = builder;
@@ -242,19 +192,16 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
         }
     }
 
-    public class RedpandaActionBuilder {
-        /**
-         * Start Redpanda testcontainers instance.
-         */
+    public class RedpandaActionBuilder implements TestcontainersRedpandaActionBuilder {
+
+        @Override
         public StartRedpandaAction.Builder start() {
             StartRedpandaAction.Builder builder = new StartRedpandaAction.Builder();
             delegate = builder;
             return builder;
         }
 
-        /**
-         * Stop Redpanda testcontainers instance.
-         */
+        @Override
         public StopTestcontainersAction.Builder stop() {
             StopTestcontainersAction.Builder builder = new StopTestcontainersAction.Builder();
             delegate = builder;
@@ -262,19 +209,16 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
         }
     }
 
-    public class KafkaActionBuilder {
-        /**
-         * Start Kafka testcontainers instance.
-         */
+    public class KafkaActionBuilder implements TestcontainersKafkaActionBuilder {
+
+        @Override
         public StartKafkaAction.Builder start() {
             StartKafkaAction.Builder builder = new StartKafkaAction.Builder();
             delegate = builder;
             return builder;
         }
 
-        /**
-         * Stop Kafka testcontainers instance.
-         */
+        @Override
         public StopTestcontainersAction.Builder stop() {
             StopTestcontainersAction.Builder builder = new StopTestcontainersAction.Builder();
             delegate = builder;

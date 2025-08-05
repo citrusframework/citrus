@@ -28,8 +28,6 @@ import org.citrusframework.testcontainers.kafka.KafkaSettings;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.testcontainers.actions.TestcontainersActionBuilder.testcontainers;
-
 @Test(singleThreaded = true)
 public class StartKafkaContainerIT extends AbstractTestcontainersIT {
 

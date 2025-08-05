@@ -16,6 +16,7 @@
 
 package org.citrusframework.testcontainers.redpanda;
 
+import org.citrusframework.actions.testcontainers.TestcontainersRedpandaStartActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
@@ -38,7 +39,8 @@ public class StartRedpandaAction extends StartTestcontainersAction<RedpandaConta
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractBuilder<RedpandaContainer, StartRedpandaAction, Builder> {
+    public static class Builder extends AbstractBuilder<RedpandaContainer, StartRedpandaAction, Builder>
+            implements TestcontainersRedpandaStartActionBuilder<RedpandaContainer, StartRedpandaAction, Builder> {
 
         private String redpandaVersion = RedpandaSettings.getRedpandaVersion();
 
@@ -46,6 +48,7 @@ public class StartRedpandaAction extends StartTestcontainersAction<RedpandaConta
             withStartupTimeout(PostgreSQLSettings.getStartupTimeout());
         }
 
+        @Override
         public Builder version(String redpandaVersion) {
            this.redpandaVersion = redpandaVersion;
            return this;

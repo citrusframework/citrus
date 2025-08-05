@@ -16,6 +16,7 @@
 
 package org.citrusframework.testcontainers.mongodb;
 
+import org.citrusframework.actions.testcontainers.TestcontainersMongoDBStartActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
@@ -38,7 +39,8 @@ public class StartMongoDBAction extends StartTestcontainersAction<MongoDBContain
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractBuilder<MongoDBContainer, StartMongoDBAction, Builder> {
+    public static class Builder extends AbstractBuilder<MongoDBContainer, StartMongoDBAction, Builder>
+            implements TestcontainersMongoDBStartActionBuilder<MongoDBContainer, StartMongoDBAction, Builder> {
 
         private String mongoDBVersion = MongoDBSettings.getMongoDBVersion();
 
@@ -46,6 +48,7 @@ public class StartMongoDBAction extends StartTestcontainersAction<MongoDBContain
             withStartupTimeout(PostgreSQLSettings.getStartupTimeout());
         }
 
+        @Override
         public Builder version(String mongoDBVersion) {
            this.mongoDBVersion = mongoDBVersion;
            return this;

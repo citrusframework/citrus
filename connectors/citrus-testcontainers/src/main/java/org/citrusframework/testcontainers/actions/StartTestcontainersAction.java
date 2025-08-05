@@ -25,7 +25,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.citrusframework.actions.testcontainers.TestcontainersStartActionBuilder;
+import org.citrusframework.actions.testcontainers.TestcontainersStartActionBuilderBase;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testcontainers.TestContainersSettings;
@@ -38,7 +41,6 @@ import org.testcontainers.containers.wait.strategy.WaitStrategy;
 import org.testcontainers.utility.MountableFile;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
-import static org.citrusframework.testcontainers.actions.TestcontainersActionBuilder.testcontainers;
 
 public class StartTestcontainersAction<C extends GenericContainer<?>> extends AbstractTestcontainersAction {
 
@@ -46,6 +48,8 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
     protected final String containerName;
     private final C container;
     private final boolean autoRemoveResources;
+
+    private final TestcontainersActionBuilder testcontainers = new TestcontainersActionBuilder();
 
     public StartTestcontainersAction(AbstractBuilder<C, ? extends StartTestcontainersAction<C>, ?> builder) {
         super("start", builder);
@@ -74,7 +78,7 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
                         "- container will be stopped automatically after the test", getContainerName(container, containerName));
             }
 
-            context.doFinally(testcontainers()
+            context.doFinally(testcontainers
                     .stop()
                     .container(container));
         }
@@ -114,7 +118,8 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
         return container;
     }
 
-    public static class Builder<C extends GenericContainer<?>> extends AbstractBuilder<C, StartTestcontainersAction<C>, Builder<C>> {
+    public static class Builder<C extends GenericContainer<?>> extends AbstractBuilder<C, StartTestcontainersAction<C>, Builder<C>>
+            implements TestcontainersStartActionBuilder<C, StartTestcontainersAction<C>, Builder<C>> {
         @Override
         protected StartTestcontainersAction<C> doBuild() {
             return new StartTestcontainersAction<>(this);
@@ -124,7 +129,9 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
     /**
      * Abstract start action builder.
      */
-    public static abstract class AbstractBuilder<C extends GenericContainer<?>, T extends StartTestcontainersAction<C>, B extends AbstractBuilder<C, T, B>> extends AbstractTestcontainersAction.Builder<T, B> {
+    public static abstract class AbstractBuilder<C extends GenericContainer<?>, T extends StartTestcontainersAction<C>, B extends AbstractBuilder<C, T, B>>
+            extends AbstractTestcontainersAction.Builder<T, B>
+            implements TestcontainersStartActionBuilderBase<C, T, B> {
 
         protected String image;
         protected String containerName;
@@ -145,44 +152,63 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
 
         private boolean autoRemoveResources = TestContainersSettings.isAutoRemoveResources();
 
+        @Override
         public B containerName(String name) {
             this.containerName = name;
             return self;
         }
 
+        @Override
         public B serviceName(String name) {
             this.serviceName = name;
             return self;
         }
 
+        @Override
         public B image(String image) {
             this.image = image;
             return self;
         }
 
+        @Override
         public B container(C container) {
             this.container = container;
             return self;
         }
 
+        @Override
         public B container(String name, C container) {
             this.containerName = name;
             this.container = container;
             return self;
         }
 
+        @Override
         public B withStartupTimeout(int timeout) {
             this.startupTimeout = Duration.ofSeconds(timeout);
             return self;
         }
 
+        @Override
         public B withStartupTimeout(Duration timeout) {
             this.startupTimeout = timeout;
             return self;
         }
 
+        @Override
         public B withNetwork() {
             network = Network.newNetwork();
+            return self;
+        }
+
+        @Override
+        public B withNetwork(Object o) {
+            if (o instanceof Network n) {
+                this.network = n;
+            } else {
+                throw new CitrusRuntimeException("Invalid network object, expected a Network but got: %s".formatted(o.getClass().getName()));
+            }
+
             return self;
         }
 
@@ -191,46 +217,55 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
             return self;
         }
 
+        @Override
         public B withoutNetwork() {
             network = null;
             return self;
         }
 
+        @Override
         public B withEnv(String key, String value) {
             this.env.put(key, value);
             return self;
         }
 
+        @Override
         public B withEnv(Map<String, String> env) {
             this.env.putAll(env);
             return self;
         }
 
+        @Override
         public B withLabel(String label, String value) {
             this.labels.put(label, value);
             return self;
         }
 
+        @Override
         public B withLabels(Map<String, String> labels) {
             this.labels.putAll(labels);
             return self;
         }
 
+        @Override
         public B withCommand(String... command) {
             this.commandLine.addAll(List.of(command));
             return self;
         }
 
+        @Override
         public B autoRemove(boolean enabled) {
             this.autoRemoveResources = enabled;
             return self;
         }
 
+        @Override
         public B addExposedPort(int port) {
             this.exposedPorts.add(port);
             return self;
         }
 
+        @Override
         public B addExposedPorts(int... ports) {
             for (int port : ports) {
                 addExposedPort(port);
@@ -238,16 +273,19 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
             return self;
         }
 
+        @Override
         public B addExposedPorts(List<Integer> ports) {
             exposedPorts.addAll(ports);
             return self;
         }
 
+        @Override
         public B addPortBinding(String binding) {
             this.portBindings.add(binding);
             return self;
         }
 
+        @Override
         public B addPortBindings(String... bindings) {
             for (String binding : bindings) {
                 addPortBinding(binding);
@@ -255,8 +293,20 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
             return self;
         }
 
+        @Override
         public B addPortBindings(List<String> bindings) {
             portBindings.addAll(bindings);
+            return self;
+        }
+
+        @Override
+        public B waitFor(Object o) {
+            if (o instanceof WaitStrategy strategy) {
+                this.waitStrategy = strategy;
+            } else {
+                throw new CitrusRuntimeException("Invalid wait strategy, expected a WaitStrategy but got: %s".formatted(o.getClass().getName()));
+            }
+
             return self;
         }
 
@@ -265,23 +315,36 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
             return self;
         }
 
+        @Override
         public B waitFor(URL url) {
             this.waitStrategy = WaitStrategyHelper.waitFor(url);
             return self;
         }
 
+        @Override
         public B waitFor(String logMessage) {
             return waitFor(logMessage, 1);
         }
 
+        @Override
         public B waitFor(String logMessage, int times) {
             this.waitStrategy = Wait.forLogMessage(logMessage, times);
             return self;
         }
 
+        @Override
         public B waitStrategyDisabled() {
             this.waitStrategy = WaitStrategyHelper.getNoopStrategy();
             return self;
+        }
+
+        @Override
+        public B withVolumeMount(Object o, String containerPath) {
+            if (o instanceof MountableFile mountable) {
+                return withVolumeMount(mountable, containerPath);
+            } else {
+                throw new CitrusRuntimeException("Invalid mountable file, expected a MountableFile but got: %s".formatted(o.getClass().getName()));
+            }
         }
 
         public B withVolumeMount(MountableFile mountableFile, String containerPath) {
@@ -289,10 +352,12 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
             return self;
         }
 
+        @Override
         public B withVolumeMount(String mountableFile, String mountPath) {
             return withVolumeMount(Resources.create(mountableFile), mountPath);
         }
 
+        @Override
         public B withVolumeMount(Resource mountableFile, String mountPath) {
             if (mountableFile instanceof Resources.ClasspathResource) {
                 this.volumeMounts.put(MountableFile.forClasspathResource(mountableFile.getLocation()), mountPath);

@@ -30,6 +30,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.citrusframework.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -48,8 +49,8 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
     private static final String DOCKER_IMAGE_NAME = LocalStackSettings.getImageName();
     private static final String DOCKER_IMAGE_TAG = LocalStackSettings.getVersion();
 
-    private final Set<Service> services = new HashSet<>();
-    private final Map<Service, Object> clients = new HashMap<>();
+    private final Set<AwsService> services = new HashSet<>();
+    private final Map<AwsService, Object> clients = new HashMap<>();
 
     private String secretKey = "secretkey";
     private String accessKey = "accesskey";
@@ -59,11 +60,11 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
         this(DOCKER_IMAGE_TAG);
     }
 
-    public LocalStackContainer(String version, Service... services) {
+    public LocalStackContainer(String version, AwsService... services) {
         this(DOCKER_IMAGE_NAME, version, services);
     }
 
-    public LocalStackContainer(String image, String version, Service... services) {
+    public LocalStackContainer(String image, String version, AwsService... services) {
         super(DockerImageName.parse(image).withTag(version));
 
         withServices(services);
@@ -71,7 +72,7 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
         waitingFor(Wait.forLogMessage(".*Ready\\.\n", 1));
     }
 
-    public LocalStackContainer withServices(Service... services) {
+    public LocalStackContainer withServices(AwsService... services) {
         this.services.addAll(Arrays.asList(services));
         return self();
     }
@@ -84,7 +85,7 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
             throw new CitrusRuntimeException("Must provide at least one service");
         }
 
-        withEnv("SERVICE", services.stream().map(Service::serviceName).collect(Collectors.joining(",")));
+        withEnv("SERVICE", services.stream().map(AwsService::serviceName).collect(Collectors.joining(",")));
 
         String hostnameExternalReason;
         if (getEnvMap().containsKey(HOSTNAME_EXTERNAL_ENV)) {
@@ -185,15 +186,15 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
         }
     }
 
-    public Service[] getServices() {
-        return services.toArray(Service[]::new);
+    public AwsService[] getServices() {
+        return services.toArray(AwsService[]::new);
     }
 
-    public void addClient(Service service, Object client) {
+    public void addClient(AwsService service, Object client) {
         this.clients.put(service, client);
     }
 
-    public <T> T getClient(Service service) {
+    public <T> T getClient(AwsService service) {
         if (!services.contains(service)) {
             throw new CitrusRuntimeException("Unable to create client for disabled service: %s".formatted(service));
         }
@@ -217,40 +218,4 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
         throw new CitrusRuntimeException("Missing client for service %s".formatted(service));
     }
 
-    public enum Service {
-        CLOUD_WATCH("cloudwatch"),
-        DYNAMODB("dynamodb"),
-        EC2("ec2"),
-        EVENT_BRIDGE("eventbridge"),
-        IAM("iam"),
-        KINESIS("kinesis"),
-        KMS("kms"),
-        LAMBDA("lambda"),
-        S3("s3"),
-        SECRETS_MANAGER("secretsmanager"),
-        SNS("sns"),
-        SQS("sqs"),
-        STS("sts");
-
-        private final String serviceName;
-
-        Service(String serviceName) {
-            this.serviceName = serviceName;
-        }
-
-        public String getServiceName() {
-            return serviceName;
-        }
-
-        public static String serviceName(Service service) {
-            return service.serviceName;
-        }
-
-        public static Service fromServiceName(String serviceName) {
-            return Arrays.stream(Service.values())
-                    .filter(service -> service.serviceName.equals(serviceName))
-                    .findFirst()
-                    .orElseThrow(() -> new CitrusRuntimeException("Unknown AWS LocalStack service name: %s".formatted(serviceName)));
-        }
-    }
 }

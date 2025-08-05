@@ -22,6 +22,7 @@ import java.util.Map;
 
 import io.quarkus.test.common.QuarkusTestResourceConfigurableLifecycleManager;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.testcontainers.aws2.LocalStackContainer;
 import org.citrusframework.testcontainers.aws2.StartLocalStackAction;
 import org.citrusframework.testcontainers.quarkus.ContainerLifecycleListener;
@@ -59,8 +60,8 @@ public class LocalStackContainerResource extends TestcontainersResource<LocalSta
         container = new StartLocalStackAction.Builder()
                 .withServices(Arrays.stream(serviceNames)
                         .map(String::trim)
-                        .map(LocalStackContainer.Service::fromServiceName)
-                        .toArray(LocalStackContainer.Service[]::new))
+                        .map(AwsService::fromServiceName)
+                        .toArray(AwsService[]::new))
                 .build().getContainer();
     }
 }

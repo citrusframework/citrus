@@ -33,8 +33,6 @@ import org.testcontainers.containers.GenericContainer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.testcontainers.actions.TestcontainersActionBuilder.testcontainers;
-
 public class StartGenericTestcontainersIT extends AbstractTestcontainersIT {
 
     @Test

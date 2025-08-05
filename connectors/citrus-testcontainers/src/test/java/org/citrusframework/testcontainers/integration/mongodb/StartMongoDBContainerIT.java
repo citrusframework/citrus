@@ -28,8 +28,6 @@ import org.citrusframework.testcontainers.mongodb.MongoDBSettings;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.testcontainers.actions.TestcontainersActionBuilder.testcontainers;
-
 public class StartMongoDBContainerIT extends AbstractTestcontainersIT {
 
     @Test
