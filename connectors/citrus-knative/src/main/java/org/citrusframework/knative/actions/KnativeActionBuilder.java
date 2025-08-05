@@ -19,6 +19,12 @@ package org.citrusframework.knative.actions;
 import io.fabric8.knative.client.KnativeClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.actions.knative.KnativeBrokerActionBuilder;
+import org.citrusframework.actions.knative.KnativeChannelActionBuilder;
+import org.citrusframework.actions.knative.KnativeEventActionBuilder;
+import org.citrusframework.actions.knative.KnativeSubscriptionActionBuilder;
+import org.citrusframework.actions.knative.KnativeTriggerActionBuilder;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.knative.actions.eventing.CreateBrokerAction;
 import org.citrusframework.knative.actions.eventing.CreateTriggerAction;
 import org.citrusframework.knative.actions.eventing.DeleteBrokerAction;
@@ -30,7 +36,8 @@ import org.citrusframework.knative.actions.messaging.CreateChannelAction;
 import org.citrusframework.knative.actions.messaging.CreateSubscriptionAction;
 import org.springframework.util.Assert;
 
-public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<KnativeAction> {
+public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<KnativeAction>,
+        org.citrusframework.actions.knative.KnativeActionBuilder<KnativeAction, KnativeActionBuilder> {
 
     /** Kubernetes client */
     private KubernetesClient kubernetesClient;
@@ -48,7 +55,6 @@ public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestAct
 
     /**
      * Use a custom Kubernetes client.
-     * @param kubernetesClient
      */
     public KnativeActionBuilder client(KubernetesClient kubernetesClient) {
         this.kubernetesClient = kubernetesClient;
@@ -57,49 +63,47 @@ public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestAct
 
     /**
      * Use a custom Knative client.
-     * @param knativeClient
      */
     public KnativeActionBuilder client(KnativeClient knativeClient) {
         this.knativeClient = knativeClient;
         return this;
     }
 
-    /**
-     * Produce and consume events for the Knative broker.
-     * @return
-     */
+    @Override
+    public KnativeActionBuilder client(Object o) {
+        if (o instanceof KnativeClient client) {
+            this.knativeClient = client;
+        } else if (o instanceof KubernetesClient client) {
+            this.kubernetesClient = client;
+        } else {
+            throw new CitrusRuntimeException(("Unsupported client type, expected " +
+                    "KnativeClient or KubernetesClient, but got: %s").formatted(o.getClass().getName()));
+        }
+
+        return this;
+    }
+
+    @Override
     public EventsActionBuilder event() {
         return new EventsActionBuilder();
     }
 
-    /**
-     * Performs action on Knative channels.
-     * @return
-     */
+    @Override
     public ChannelActionBuilder channels() {
         return new ChannelActionBuilder();
     }
 
-    /**
-     * Performs action on Knative subscriptions.
-     * @return
-     */
+    @Override
     public SubscriptionActionBuilder subscriptions() {
         return new SubscriptionActionBuilder();
     }
 
-    /**
-     * Performs action on Knative trigger.
-     * @return
-     */
+    @Override
     public TriggerActionBuilder trigger() {
         return new TriggerActionBuilder();
     }
 
-    /**
-     * Performs action on Knative brokers.
-     * @return
-     */
+    @Override
     public BrokerActionBuilder brokers() {
         return new BrokerActionBuilder();
     }
@@ -122,21 +126,16 @@ public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestAct
         return delegate;
     }
 
-    public class EventsActionBuilder {
-        /**
-         * Produce event for the Knative broker.
-         * @return
-         */
+    public class EventsActionBuilder implements KnativeEventActionBuilder {
+
+        @Override
         public SendEventAction.Builder send() {
             SendEventAction.Builder builder = new SendEventAction.Builder();
             delegate = builder;
             return builder;
         }
 
-        /**
-         * Receive event from the Knative broker.
-         * @return
-         */
+        @Override
         public ReceiveEventAction.Builder receive() {
             ReceiveEventAction.Builder builder = new ReceiveEventAction.Builder();
             delegate = builder;
@@ -144,11 +143,9 @@ public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestAct
         }
     }
 
-    public class ChannelActionBuilder {
-        /**
-         * Create channel instance.
-         * @param channelName the name of the Knative channel.
-         */
+    public class ChannelActionBuilder implements KnativeChannelActionBuilder {
+
+        @Override
         public CreateChannelAction.Builder create(String channelName) {
             CreateChannelAction.Builder builder = new CreateChannelAction.Builder()
                     .client(kubernetesClient)
@@ -158,10 +155,7 @@ public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestAct
             return builder;
         }
 
-        /**
-         * Delete channel instance.
-         * @param channelName the name of the Knative channel.
-         */
+        @Override
         public DeleteKnativeResourceAction.Builder delete(String channelName) {
             DeleteKnativeResourceAction.Builder builder = new DeleteKnativeResourceAction.Builder()
                     .client(kubernetesClient)
@@ -174,11 +168,9 @@ public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestAct
         }
     }
 
-    public class SubscriptionActionBuilder {
-        /**
-         * Create subscription instance.
-         * @param subscriptionName the name of the Knative subscription.
-         */
+    public class SubscriptionActionBuilder implements KnativeSubscriptionActionBuilder {
+
+        @Override
         public CreateSubscriptionAction.Builder create(String subscriptionName) {
             CreateSubscriptionAction.Builder builder = new CreateSubscriptionAction.Builder()
                     .client(kubernetesClient)
@@ -188,10 +180,7 @@ public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestAct
             return builder;
         }
 
-        /**
-         * Delete subscription instance.
-         * @param subscriptionName the name of the Knative subscription.
-         */
+        @Override
         public DeleteKnativeResourceAction.Builder delete(String subscriptionName) {
             DeleteKnativeResourceAction.Builder builder = new DeleteKnativeResourceAction.Builder()
                     .client(kubernetesClient)
@@ -204,11 +193,9 @@ public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestAct
         }
     }
 
-    public class TriggerActionBuilder {
-        /**
-         * Create trigger instance.
-         * @param triggerName the name of the Knative trigger.
-         */
+    public class TriggerActionBuilder implements KnativeTriggerActionBuilder {
+
+        @Override
         public CreateTriggerAction.Builder create(String triggerName) {
             CreateTriggerAction.Builder builder = new CreateTriggerAction.Builder()
                     .client(kubernetesClient)
@@ -218,10 +205,7 @@ public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestAct
             return builder;
         }
 
-        /**
-         * Delete trigger instance.
-         * @param triggerName the name of the Knative trigger.
-         */
+        @Override
         public DeleteTriggerAction.Builder delete(String triggerName) {
             DeleteTriggerAction.Builder builder = new DeleteTriggerAction.Builder()
                     .client(kubernetesClient)
@@ -232,11 +216,9 @@ public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestAct
         }
     }
 
-    public class BrokerActionBuilder {
-        /**
-         * Create broker instance.
-         * @param brokerName the name of the Knative broker.
-         */
+    public class BrokerActionBuilder implements KnativeBrokerActionBuilder {
+
+        @Override
         public CreateBrokerAction.Builder create(String brokerName) {
             CreateBrokerAction.Builder builder = new CreateBrokerAction.Builder()
                     .client(kubernetesClient)
@@ -246,10 +228,7 @@ public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestAct
             return builder;
         }
 
-        /**
-         * Delete broker instance.
-         * @param brokerName the name of the Knative broker.
-         */
+        @Override
         public DeleteBrokerAction.Builder delete(String brokerName) {
             DeleteBrokerAction.Builder builder = new DeleteBrokerAction.Builder()
                     .client(kubernetesClient)
@@ -259,10 +238,7 @@ public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestAct
             return builder;
         }
 
-        /**
-         * Verify given broker instance is running.
-         * @param brokerName the name of the Knative broker.
-         */
+        @Override
         public VerifyBrokerAction.Builder verify(String brokerName) {
             VerifyBrokerAction.Builder builder = new VerifyBrokerAction.Builder()
                     .client(kubernetesClient)

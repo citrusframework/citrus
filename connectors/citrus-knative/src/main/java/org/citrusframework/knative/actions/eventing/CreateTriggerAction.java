@@ -23,13 +23,13 @@ import io.fabric8.knative.eventing.v1.Trigger;
 import io.fabric8.knative.eventing.v1.TriggerBuilder;
 import io.fabric8.knative.eventing.v1.TriggerSpecBuilder;
 import io.fabric8.kubernetes.client.dsl.Updatable;
+import org.citrusframework.actions.knative.KnativeTriggerCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.knative.KnativeSupport;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
+import org.citrusframework.knative.actions.KnativeActionBuilder;
 import org.citrusframework.kubernetes.KubernetesSettings;
-
-import static org.citrusframework.knative.actions.KnativeActionBuilder.knative;
 
 public class CreateTriggerAction extends AbstractKnativeAction {
 
@@ -39,6 +39,8 @@ public class CreateTriggerAction extends AbstractKnativeAction {
     private final String channelName;
 
     private final Map<String, String> filterOnAttributes;
+
+    private final KnativeActionBuilder knative = new KnativeActionBuilder();
 
     public CreateTriggerAction(Builder builder) {
         super("create-trigger", builder);
@@ -76,7 +78,7 @@ public class CreateTriggerAction extends AbstractKnativeAction {
                 .createOr(Updatable::update);
 
         if (isAutoRemoveResources()) {
-            context.doFinally(knative().client(getKubernetesClient()).client(getKnativeClient())
+            context.doFinally(knative.client(getKubernetesClient()).client(getKnativeClient())
                     .trigger()
                     .delete(resolvedTriggerName)
                     .inNamespace(getNamespace()));
@@ -123,7 +125,8 @@ public class CreateTriggerAction extends AbstractKnativeAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKnativeAction.Builder<CreateTriggerAction, Builder> {
+    public static class Builder extends AbstractKnativeAction.Builder<CreateTriggerAction, Builder>
+            implements KnativeTriggerCreateActionBuilder<CreateTriggerAction, Builder> {
 
         private String triggerName;
         private String serviceName;
@@ -132,31 +135,37 @@ public class CreateTriggerAction extends AbstractKnativeAction {
 
         private final Map<String, String> filterOnAttributes = new HashMap<>();
 
+        @Override
         public Builder trigger(String triggerName) {
             this.triggerName = triggerName;
             return this;
         }
 
+        @Override
         public Builder broker(String brokerName) {
             this.brokerName = brokerName;
             return this;
         }
 
+        @Override
         public Builder channel(String channelName) {
             this.channelName = channelName;
             return this;
         }
 
+        @Override
         public Builder service(String serviceName) {
             this.serviceName = serviceName;
             return this;
         }
 
+        @Override
         public Builder filter(Map<String, String> filter) {
             this.filterOnAttributes.putAll(filter);
             return this;
         }
 
+        @Override
         public Builder filter(String attributeName, String value) {
             this.filterOnAttributes.put(attributeName, value);
             return this;

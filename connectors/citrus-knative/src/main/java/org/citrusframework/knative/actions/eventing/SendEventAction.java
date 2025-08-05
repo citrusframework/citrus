@@ -21,7 +21,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.citrusframework.actions.knative.KnativeEventSendActionBuilder;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.actions.HttpActionBuilder;
 import org.citrusframework.http.actions.HttpClientRequestActionBuilder;
 import org.citrusframework.http.client.HttpClient;
@@ -32,7 +35,7 @@ import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.ce.CloudEvent;
 import org.citrusframework.knative.ce.CloudEventMessage;
 import org.citrusframework.knative.ce.CloudEventSupport;
-import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.message.Message;
 import org.citrusframework.util.PropertyUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,7 +49,7 @@ public class SendEventAction extends AbstractKnativeAction {
     private final String brokerUrl;
     private final HttpClient httpClient;
     private final long timeout;
-    private final CloudEventMessage message;
+    private final Message message;
     private final boolean forkMode;
 
     private final HttpActionBuilder http = new HttpActionBuilder();
@@ -63,7 +66,11 @@ public class SendEventAction extends AbstractKnativeAction {
 
     @Override
     public void doExecute(TestContext context) {
-        sendEvent(message, context);
+        if (message instanceof CloudEventMessage ceMessage) {
+            sendEvent(ceMessage, context);
+        } else {
+            sendEvent(CloudEventSupport.createEventMessage(message.getPayload(String.class), message.getHeaders()), context);
+        }
     }
 
     /**
@@ -115,38 +122,44 @@ public class SendEventAction extends AbstractKnativeAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKnativeAction.Builder<SendEventAction, Builder> implements ReferenceResolverAware {
+    public static class Builder extends AbstractKnativeAction.Builder<SendEventAction, Builder>
+            implements KnativeEventSendActionBuilder<SendEventAction, Builder> {
 
         private String brokerUrl = KnativeSettings.getBrokerUrl();
         private String brokerName;
         private HttpClient httpClient;
-        private CloudEventMessage message;
+        private Message message;
         private String eventData;
-        private final Map<String, String> ceAttributes = new HashMap<>();
+        private final Map<String, Object> ceAttributes = new HashMap<>();
         private long timeout = KnativeSettings.getEventProducerTimeout();
         private boolean forkMode;
 
+        @Override
         public Builder broker(String brokerName) {
             this.brokerName = brokerName;
             return this;
         }
 
+        @Override
         public Builder brokerUrl(String brokerUrl) {
             this.brokerUrl = brokerUrl;
             return this;
         }
 
+        @Override
         public Builder timeout(long timeout) {
             this.timeout = timeout;
             return this;
         }
 
+        @Override
         public Builder fork(boolean enabled) {
             this.forkMode = enabled;
             return this;
         }
 
-        public Builder event(CloudEventMessage message) {
+        @Override
+        public Builder event(Message message) {
             this.message = message;
             return this;
         }
@@ -155,19 +168,42 @@ public class SendEventAction extends AbstractKnativeAction {
             return event(CloudEventMessage.fromEvent(event));
         }
 
+        @Override
+        public Builder event(Object event) {
+            if (event instanceof CloudEventMessage cloudEventMessage) {
+                return event(cloudEventMessage);
+            } else if (event instanceof CloudEvent cloudEvent) {
+                return event(CloudEventMessage.fromEvent(cloudEvent));
+            } else {
+                throw new CitrusRuntimeException("Unsupported event type: " + event.getClass().getName());
+            }
+        }
+
+        @Override
         public Builder eventData(String eventData) {
             this.eventData = eventData;
             return this;
         }
 
-        public Builder attributes(Map<String, String> ceAttributes) {
+        @Override
+        public Builder attributes(Map<String, Object> ceAttributes) {
             this.ceAttributes.putAll(ceAttributes);
             return this;
         }
 
-        public Builder attribute(String name, String value) {
+        @Override
+        public Builder attribute(String name, Object value) {
             this.ceAttributes.put(name, value);
             return this;
+        }
+
+        @Override
+        public Builder client(Endpoint endpoint) {
+            if (endpoint instanceof HttpClient client) {
+                return client(client);
+            } else {
+                throw new CitrusRuntimeException("Unsupported client endpoint type: " + endpoint.getClass().getName());
+            }
         }
 
         public Builder client(HttpClient httpClient) {
