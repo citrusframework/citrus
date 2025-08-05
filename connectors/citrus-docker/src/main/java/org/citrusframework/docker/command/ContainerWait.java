@@ -18,6 +18,7 @@ package org.citrusframework.docker.command;
 
 import com.github.dockerjava.api.command.WaitContainerResultCallback;
 import com.github.dockerjava.api.model.WaitResponse;
+import org.citrusframework.actions.docker.DockerContainerWaitActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
@@ -66,17 +67,14 @@ public class ContainerWait extends AbstractDockerCommand<WaitResponse> {
     /**
      * Command builder.
      */
-    public static final class Builder extends AbstractDockerCommandBuilder<WaitResponse, ContainerWait, Builder> {
+    public static final class Builder extends AbstractDockerCommandBuilder<WaitResponse, ContainerWait, Builder>
+            implements DockerContainerWaitActionBuilder<WaitResponse, DockerExecuteAction, Builder> {
 
         public Builder(DockerExecuteAction.Builder parent) {
             super(parent, new ContainerWait());
         }
 
-        /**
-         * Sets the container id parameter.
-         * @param id
-         * @return
-         */
+        @Override
         public Builder container(String id) {
             command.container(id);
             return this;

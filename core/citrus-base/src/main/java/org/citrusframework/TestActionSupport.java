@@ -19,6 +19,7 @@ package org.citrusframework;
 import org.citrusframework.actions.*;
 import org.citrusframework.actions.agent.AgentActionBuilder;
 import org.citrusframework.actions.camel.CamelActionBuilder;
+import org.citrusframework.actions.docker.DockerActionBuilder;
 import org.citrusframework.actions.http.HttpActionBuilder;
 import org.citrusframework.actions.jbang.JBangActionBuilder;
 import org.citrusframework.actions.knative.KnativeActionBuilder;
@@ -54,6 +55,11 @@ public interface TestActionSupport extends TestActions, TestContainers {
     @Override
     default ApplyTestBehaviorActionBuilder<ApplyTestBehaviorAction> apply() {
         return new ApplyTestBehaviorAction.Builder();
+    }
+
+    @Override
+    default DockerActionBuilder<?, ?> docker() {
+        return lookup("docker");
     }
 
     @Override

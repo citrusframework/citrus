@@ -17,6 +17,7 @@
 package org.citrusframework.docker.command;
 
 import com.github.dockerjava.api.model.ResponseItem;
+import org.citrusframework.actions.docker.DockerPingActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
@@ -47,7 +48,8 @@ public class Ping extends AbstractDockerCommand<ResponseItem> {
     /**
      * Command builder.
      */
-    public static final class Builder extends AbstractDockerCommandBuilder<ResponseItem, Ping, Builder> {
+    public static final class Builder extends AbstractDockerCommandBuilder<ResponseItem, Ping, Builder>
+            implements DockerPingActionBuilder<ResponseItem, DockerExecuteAction, Builder> {
 
         public Builder(DockerExecuteAction.Builder parent) {
             super(parent, new Ping());

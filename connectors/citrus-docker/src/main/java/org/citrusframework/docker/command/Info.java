@@ -16,6 +16,7 @@
 
 package org.citrusframework.docker.command;
 
+import org.citrusframework.actions.docker.DockerInfoActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
@@ -49,7 +50,8 @@ public class Info extends AbstractDockerCommand<com.github.dockerjava.api.model.
     /**
      * Command builder.
      */
-    public static final class Builder extends AbstractDockerCommandBuilder<com.github.dockerjava.api.model.Info, Info, Builder> {
+    public static final class Builder extends AbstractDockerCommandBuilder<com.github.dockerjava.api.model.Info, Info, Builder>
+            implements DockerInfoActionBuilder<com.github.dockerjava.api.model.Info, DockerExecuteAction, Builder> {
 
         public Builder(DockerExecuteAction.Builder parent) {
             super(parent, new Info());

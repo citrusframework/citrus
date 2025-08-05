@@ -16,17 +16,18 @@
 
 package org.citrusframework.docker.command;
 
+import java.util.Collections;
+
 import com.github.dockerjava.api.command.BuildImageCmd;
 import com.github.dockerjava.api.command.BuildImageResultCallback;
 import com.github.dockerjava.api.model.BuildResponseItem;
+import org.citrusframework.actions.docker.DockerImageBuildActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.docker.message.DockerMessageHeaders;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
-
-import java.util.Collections;
 
 /**
  * @since 2.4
@@ -163,77 +164,50 @@ public class ImageBuild extends AbstractDockerCommand<BuildResponseItem> {
     /**
      * Command builder.
      */
-    public static final class Builder extends AbstractDockerCommandBuilder<BuildResponseItem, ImageBuild, Builder> {
+    public static final class Builder extends AbstractDockerCommandBuilder<BuildResponseItem, ImageBuild, Builder>
+            implements DockerImageBuildActionBuilder<BuildResponseItem, DockerExecuteAction, Builder> {
 
         public Builder(DockerExecuteAction.Builder parent) {
             super(parent, new ImageBuild());
         }
 
-        /**
-         * Sets the noCache parameter.
-         * @param noCache
-         * @return
-         */
+        @Override
         public Builder noCache(Boolean noCache) {
             command.noCache(noCache);
             return this;
         }
 
-        /**
-         * Sets the basedir parameter.
-         * @param basedir
-         * @return
-         */
+        @Override
         public Builder basedir(String basedir) {
             command.basedir(basedir);
             return this;
         }
 
-        /**
-         * Sets the tag parameter.
-         * @param tag
-         * @return
-         */
+        @Override
         public Builder tag(String tag) {
             command.tag(tag);
             return this;
         }
 
-        /**
-         * Sets the remove parameter.
-         * @param remove
-         * @return
-         */
+        @Override
         public Builder remove(Boolean remove) {
             command.remove(remove);
             return this;
         }
 
-        /**
-         * Sets the quiet parameter.
-         * @param quiet
-         * @return
-         */
+        @Override
         public Builder quiet(Boolean quiet) {
             command.quiet(quiet);
             return this;
         }
 
-        /**
-         * Sets the docker file parameter.
-         * @param filePath
-         * @return
-         */
+        @Override
         public Builder dockerFile(String filePath) {
             command.dockerFile(filePath);
             return this;
         }
 
-        /**
-         * Sets the docker file parameter.
-         * @param fileResource
-         * @return
-         */
+        @Override
         public Builder dockerFile(Resource fileResource) {
             command.dockerFile(fileResource);
             return this;

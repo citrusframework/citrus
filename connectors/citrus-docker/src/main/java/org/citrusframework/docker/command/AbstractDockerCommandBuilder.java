@@ -17,13 +17,17 @@
 package org.citrusframework.docker.command;
 
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.actions.docker.DockerActionBuilderBase;
+import org.citrusframework.actions.docker.command.CommandResultCallback;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public abstract class AbstractDockerCommandBuilder<R, T extends AbstractDockerCommand<R>, S extends AbstractDockerCommandBuilder<R, T, S>> implements TestActionBuilder<DockerExecuteAction> {
+public abstract class AbstractDockerCommandBuilder<R, T extends AbstractDockerCommand<R>, S extends AbstractDockerCommandBuilder<R, T, S>>
+        implements TestActionBuilder<DockerExecuteAction>, DockerActionBuilderBase<R, DockerExecuteAction, S> {
 
     protected final S self;
     protected final T command;
@@ -36,9 +40,29 @@ public abstract class AbstractDockerCommandBuilder<R, T extends AbstractDockerCo
         this.self = (S) this;
     }
 
+    @Override
+    public S client(Object dockerClient) {
+        if (dockerClient instanceof DockerClient client) {
+            return client(client);
+        } else {
+            throw new CitrusRuntimeException(("Invalid Docker client type, expected DockerClient, " +
+                    "but got: %s").formatted(dockerClient.getClass().getName()));
+        }
+    }
+
     public S client(DockerClient dockerClient) {
         delegate.client(dockerClient);
         return self;
+    }
+
+    @Override
+    public S mapper(Object mapper) {
+        if (mapper instanceof ObjectMapper objectMapper) {
+            return mapper(objectMapper);
+        } else {
+            throw new CitrusRuntimeException(("Invalid object mapper type, expected ObjectMapper, " +
+                    "but got: %s").formatted(mapper.getClass().getName()));
+        }
     }
 
     public S mapper(ObjectMapper jsonMapper) {
@@ -46,32 +70,25 @@ public abstract class AbstractDockerCommandBuilder<R, T extends AbstractDockerCo
         return self;
     }
 
+    @Override
     public S validator(MessageValidator<? extends ValidationContext> validator) {
         delegate.validator(validator);
         return self;
     }
 
+    @Override
     public S result(String result) {
         delegate.result(result);
         return self;
     }
 
-    /**
-     * Adds command parameter to current command.
-     * @param name
-     * @param value
-     * @return
-     */
+    @Override
     public S withParam(String name, String value) {
         command.withParam(name, value);
         return self;
     }
 
-    /**
-     * Adds validation callback with command result.
-     * @param callback
-     * @return
-     */
+    @Override
     public S validateCommandResult(CommandResultCallback<R> callback) {
         command.validateCommandResult(callback);
         return self;
@@ -79,7 +96,6 @@ public abstract class AbstractDockerCommandBuilder<R, T extends AbstractDockerCo
 
     /**
      * Provide access to the command being built.
-     * @return
      */
     public T command() {
         return command;

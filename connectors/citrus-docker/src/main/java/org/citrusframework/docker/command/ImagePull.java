@@ -19,6 +19,7 @@ package org.citrusframework.docker.command;
 import com.github.dockerjava.api.command.PullImageCmd;
 import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.model.PullResponseItem;
+import org.citrusframework.actions.docker.DockerImagePullActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
@@ -110,47 +111,32 @@ public class ImagePull extends AbstractDockerCommand<PullResponseItem> {
     /**
      * Command builder.
      */
-    public static final class Builder extends AbstractDockerCommandBuilder<PullResponseItem, ImagePull, Builder> {
+    public static final class Builder extends AbstractDockerCommandBuilder<PullResponseItem, ImagePull, Builder>
+            implements DockerImagePullActionBuilder<PullResponseItem, DockerExecuteAction, Builder> {
 
         public Builder(DockerExecuteAction.Builder parent) {
             super(parent, new ImagePull());
         }
 
-        /**
-         * Sets the image id parameter.
-         * @param id
-         * @return
-         */
+        @Override
         public Builder image(String id) {
             command.image(id);
             return this;
         }
 
-        /**
-         * Sets the tag parameter.
-         * @param tag
-         * @return
-         */
+        @Override
         public Builder tag(String tag) {
             command.tag(tag);
             return this;
         }
 
-        /**
-         * Sets the repository command parameter.
-         * @param repository
-         * @return
-         */
+        @Override
         public Builder repository(String repository) {
             command.repository(repository);
             return this;
         }
 
-        /**
-         * Sets the registry command parameter.
-         * @param registry
-         * @return
-         */
+        @Override
         public Builder registry(String registry) {
             command.registry(registry);
             return this;

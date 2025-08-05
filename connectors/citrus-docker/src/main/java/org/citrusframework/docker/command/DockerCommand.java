@@ -16,10 +16,11 @@
 
 package org.citrusframework.docker.command;
 
+import java.util.Map;
+
+import org.citrusframework.actions.docker.command.CommandResultCallback;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.client.DockerClient;
-
-import java.util.Map;
 
 /**
  * @since 2.4

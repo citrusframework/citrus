@@ -142,8 +142,6 @@ public class DockerExecuteActionParser implements BeanDefinitionParser {
 
         /**
          * Sets docker command to execute.
-         * @param command
-         * @return
          */
         public void setCommand(DockerCommand<?> command) {
             builder.command(command);
@@ -151,7 +149,6 @@ public class DockerExecuteActionParser implements BeanDefinitionParser {
 
         /**
          * Sets the docker client.
-         * @param dockerClient
          */
         public void setDockerClient(DockerClient dockerClient) {
             this.dockerClient = dockerClient;
@@ -160,7 +157,6 @@ public class DockerExecuteActionParser implements BeanDefinitionParser {
 
         /**
          * Sets the expected command result data.
-         * @param expectedCommandResult
          */
         public void setExpectedCommandResult(String expectedCommandResult) {
             builder.result(expectedCommandResult);

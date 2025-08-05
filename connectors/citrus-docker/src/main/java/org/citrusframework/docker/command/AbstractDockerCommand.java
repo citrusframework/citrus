@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.citrusframework.actions.docker.command.CommandResultCallback;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import com.github.dockerjava.api.model.ResponseItem;

@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package org.citrusframework.docker.command;
+package org.citrusframework.actions.docker;
 
-@Deprecated
-public interface CommandResultCallback<R> extends org.citrusframework.actions.docker.command.CommandResultCallback<R> {
+import org.citrusframework.TestAction;
+
+public interface DockerPingActionBuilder<R, T extends TestAction, B extends DockerPingActionBuilder<R, T, B>>
+        extends DockerActionBuilderBase<R, T, B> {
 }

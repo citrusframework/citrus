@@ -23,6 +23,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.actions.docker.DockerActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.docker.command.*;
@@ -179,7 +180,8 @@ public class DockerExecuteAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractTestActionBuilder<DockerExecuteAction, Builder> {
+    public static class Builder extends AbstractTestActionBuilder<DockerExecuteAction, Builder>
+            implements DockerActionBuilder<DockerExecuteAction, Builder> {
 
         private DockerClient dockerClient = new DockerClient();
         private AbstractDockerCommandBuilder<?, ?, ?> commandBuilder;
@@ -195,12 +197,29 @@ public class DockerExecuteAction extends AbstractTestAction {
             return new Builder();
         }
 
-        /**
-         * Use a custom docker client.
-         */
+        @Override
+        public Builder client(Object dockerClient) {
+            if (dockerClient instanceof DockerClient client) {
+                return client(client);
+            } else {
+                throw new CitrusRuntimeException(("Invalid Docker client type, expected DockerClient, " +
+                        "but got: %s").formatted(dockerClient.getClass().getName()));
+            }
+        }
+
         public Builder client(DockerClient dockerClient) {
             this.dockerClient = dockerClient;
             return this;
+        }
+
+        @Override
+        public Builder mapper(Object mapper) {
+            if (mapper instanceof ObjectMapper objectMapper) {
+                return mapper(objectMapper);
+            } else {
+                throw new CitrusRuntimeException(("Invalid object mapper type, expected ObjectMapper, " +
+                        "but got: %s").formatted(mapper.getClass().getName()));
+            }
         }
 
         public Builder mapper(ObjectMapper jsonMapper) {
@@ -208,131 +227,115 @@ public class DockerExecuteAction extends AbstractTestAction {
             return this;
         }
 
+        @Override
         public Builder validator(MessageValidator<? extends ValidationContext> validator) {
             this.validator = validator;
             return this;
         }
 
+        @Override
+        public Builder command(Object command) {
+            if (command instanceof DockerCommand<?> dockerCommand) {
+                return command(dockerCommand);
+            } else {
+                throw new CitrusRuntimeException("Invalid Docker command type, expected DockerCommand, but got: %s".formatted(command.getClass().getName()));
+            }
+        }
+
         /**
          * Adds some command via abstract command builder.
          */
-        public <R, S extends AbstractDockerCommandBuilder<R, AbstractDockerCommand<R>, S>> Builder command(final DockerCommand<R> dockerCommand) {
-            this.commandBuilder = new AbstractDockerCommandBuilder<R, AbstractDockerCommand<R>, S>(this, null) {
-                public AbstractDockerCommand<R> command() {
-                    return (AbstractDockerCommand<R>) dockerCommand;
-                }
-            };
+        public Builder command(final DockerCommand<?> dockerCommand) {
+            this.commandBuilder = new StaticDockerCommandBuilder<>(this, dockerCommand);
             return this;
         }
 
         /**
          * Sets the command builder.
-         * @param builder
-         * @param <T>
-         * @return
          */
         private <T extends AbstractDockerCommandBuilder<?, ?, ?>> T commandBuilder(T builder) {
             this.commandBuilder = builder;
             return builder;
         }
 
-        /**
-         * Use a info command.
-         */
+        @Override
         public Info.Builder info() {
             return commandBuilder(new Info.Builder(this));
         }
 
-        /**
-         * Adds a ping command.
-         */
+        @Override
         public Ping.Builder ping() {
             return commandBuilder(new Ping.Builder(this));
         }
 
-        /**
-         * Adds a version command.
-         */
+        @Override
         public Version.Builder version() {
             return commandBuilder(new Version.Builder(this));
         }
 
-        /**
-         * Adds a create command.
-         */
-        public ContainerCreate.Builder create(String imageId) {
-            return commandBuilder(new ContainerCreate.Builder(this))
-                    .image(imageId);
+        @Override
+        public ContainerCreate.Builder create() {
+            return commandBuilder(new ContainerCreate.Builder(this));
         }
 
-        /**
-         * Adds a start command.
-         */
-        public ContainerStart.Builder start(String containerId) {
-            return commandBuilder(new ContainerStart.Builder(this))
-                    .container(containerId);
+        @Override
+        public ContainerStart.Builder start() {
+            return commandBuilder(new ContainerStart.Builder(this));
         }
 
-        /**
-         * Adds a stop command.
-         */
-        public ContainerStop.Builder stop(String containerId) {
-            return commandBuilder(new ContainerStop.Builder(this))
-                    .container(containerId);
+        @Override
+        public ContainerStop.Builder stop() {
+            return commandBuilder(new ContainerStop.Builder(this));
         }
 
-        /**
-         * Adds a wait command.
-         */
+        @Override
+        public ContainerRemove.Builder remove() {
+            return commandBuilder(new ContainerRemove.Builder(this));
+        }
+
+        @Override
+        public ContainerWait.Builder waitFor() {
+            return commandBuilder(new ContainerWait.Builder(this));
+        }
+
+        @Deprecated
         public ContainerWait.Builder wait(String containerId) {
             return commandBuilder(new ContainerWait.Builder(this))
                     .container(containerId);
         }
 
-        /**
-         * Adds a inspect container command.
-         */
+        @Override
+        public ContainerInspect.Builder inspect() {
+            return commandBuilder(new ContainerInspect.Builder(this));
+        }
+
+        @Deprecated
         public ContainerInspect.Builder inspectContainer(String containerId) {
             return commandBuilder(new ContainerInspect.Builder(this))
                     .container(containerId);
         }
 
-        /**
-         * Adds a inspect image command.
-         */
-        public ImageInspect.Builder inspectImage(String imageId) {
-            return commandBuilder(new ImageInspect.Builder(this))
-                    .image(imageId);
+        @Override
+        public ImageInspect.Builder inspectImage() {
+            return commandBuilder(new ImageInspect.Builder(this));
         }
 
-        /**
-         * Adds a build image command.
-         */
+        @Override
         public ImageBuild.Builder buildImage() {
             return commandBuilder(new ImageBuild.Builder(this));
         }
 
-        /**
-         * Adds a pull image command.
-         */
-        public ImagePull.Builder pullImage(String imageId) {
-            return commandBuilder(new ImagePull.Builder(this))
-                    .image(imageId);
+        @Override
+        public ImagePull.Builder pullImage() {
+            return commandBuilder(new ImagePull.Builder(this));
         }
 
-        /**
-         * Adds a remove image command.
-         */
-        public ImageRemove.Builder removeImage(String imageId) {
-            return commandBuilder(new ImageRemove.Builder(this))
-                    .image(imageId);
+        @Override
+        public ImageRemove.Builder removeImage() {
+            return commandBuilder(new ImageRemove.Builder(this));
         }
 
-        /**
-         * Adds expected command result.
-         * @param result
-         * @return
-         */
+        @Override
         public Builder result(String result) {
             this.expectedCommandResult = result;
             return this;
