@@ -28,6 +28,7 @@ import org.citrusframework.actions.selenium.SeleniumActionBuilder;
 import org.citrusframework.actions.sql.ExecutePlsqlActionBuilder;
 import org.citrusframework.actions.sql.ExecuteSqlActionBuilder;
 import org.citrusframework.actions.sql.ExecuteSqlQueryActionBuilder;
+import org.citrusframework.actions.testcontainers.TestcontainersActionBuilder;
 
 /**
  * Interface combines domain specific language methods for all test actions available in Citrus.
@@ -61,6 +62,7 @@ public interface TestActions extends
         StopServerActionBuilder.BuilderFactory,
         StopTimeActionBuilder.BuilderFactory,
         StopTimerActionBuilder.BuilderFactory,
+        TestcontainersActionBuilder.BuilderFactory,
         TraceVariablesActionBuilder.BuilderFactory,
         TransformActionBuilder.BuilderFactory {
 

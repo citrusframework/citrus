@@ -16,6 +16,7 @@
 
 package org.citrusframework.testcontainers.kafka;
 
+import org.citrusframework.actions.testcontainers.TestcontainersKafkaStartActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
@@ -37,7 +38,8 @@ public class StartKafkaAction extends StartTestcontainersAction<KafkaContainer> 
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractBuilder<KafkaContainer, StartKafkaAction, Builder> {
+    public static class Builder extends AbstractBuilder<KafkaContainer, StartKafkaAction, Builder>
+            implements TestcontainersKafkaStartActionBuilder<KafkaContainer, StartKafkaAction, Builder> {
 
         private String kafkaVersion = KafkaSettings.getKafkaVersion();
 
@@ -45,6 +47,7 @@ public class StartKafkaAction extends StartTestcontainersAction<KafkaContainer> 
             withStartupTimeout(PostgreSQLSettings.getStartupTimeout());
         }
 
+        @Override
         public Builder version(String kafkaVersion) {
            this.kafkaVersion = kafkaVersion;
            return this;

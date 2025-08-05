@@ -18,6 +18,7 @@ package org.citrusframework.testcontainers.aws2.client;
 
 import java.util.Map;
 
+import org.citrusframework.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.testcontainers.aws2.ClientFactory;
 import org.citrusframework.testcontainers.aws2.LocalStackContainer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -50,7 +51,7 @@ public class SqsClientFactory implements ClientFactory<SqsClient> {
     }
 
     @Override
-    public boolean supports(LocalStackContainer.Service service) {
-        return LocalStackContainer.Service.SQS == service;
+    public boolean supports(AwsService service) {
+        return AwsService.SQS == service;
     }
 }

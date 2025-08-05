@@ -19,6 +19,7 @@ package org.citrusframework.testcontainers.aws2;
 import java.util.Map;
 import java.util.Optional;
 
+import org.citrusframework.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.testcontainers.aws2.client.DefaultClientFactoryFinder;
 
@@ -38,11 +39,11 @@ public interface ClientFactory<T> {
      * @param service
      * @return
      */
-    default boolean supports(LocalStackContainer.Service service) {
+    default boolean supports(AwsService service) {
         return service != null;
     }
 
-    static Optional<ClientFactory<?>> lookup(ReferenceResolver referenceResolver, LocalStackContainer.Service service) {
+    static Optional<ClientFactory<?>> lookup(ReferenceResolver referenceResolver, AwsService service) {
         Optional<ClientFactory<?>> clientFactoryBean = referenceResolver.resolveAll(ClientFactory.class).values()
                 .stream()
                 .filter(factory -> factory.supports(service))
@@ -56,7 +57,7 @@ public interface ClientFactory<T> {
         return lookup(service);
     }
 
-    static Optional<ClientFactory<?>> lookup(LocalStackContainer.Service service) {
+    static Optional<ClientFactory<?>> lookup(AwsService service) {
         return new DefaultClientFactoryFinder().find(service);
     }
 }

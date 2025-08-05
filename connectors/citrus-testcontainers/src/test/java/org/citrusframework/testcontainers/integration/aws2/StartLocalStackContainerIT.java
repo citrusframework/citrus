@@ -23,13 +23,11 @@ import com.github.dockerjava.api.command.InspectContainerResponse;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.testcontainers.aws2.LocalStackContainer;
+import org.citrusframework.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.testcontainers.aws2.LocalStackSettings;
 import org.citrusframework.testcontainers.integration.AbstractTestcontainersIT;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static org.citrusframework.testcontainers.actions.TestcontainersActionBuilder.testcontainers;
 
 public class StartLocalStackContainerIT extends AbstractTestcontainersIT {
 
@@ -42,7 +40,7 @@ public class StartLocalStackContainerIT extends AbstractTestcontainersIT {
         when(testcontainers()
                 .localstack()
                 .start()
-                .withService(LocalStackContainer.Service.S3));
+                .withService(AwsService.S3));
 
         then(this::verifyContainer);
     }

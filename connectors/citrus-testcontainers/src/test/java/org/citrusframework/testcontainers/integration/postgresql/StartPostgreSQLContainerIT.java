@@ -28,8 +28,6 @@ import org.citrusframework.testcontainers.postgresql.PostgreSQLSettings;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.testcontainers.actions.TestcontainersActionBuilder.testcontainers;
-
 public class StartPostgreSQLContainerIT extends AbstractTestcontainersIT {
 
     @Test
