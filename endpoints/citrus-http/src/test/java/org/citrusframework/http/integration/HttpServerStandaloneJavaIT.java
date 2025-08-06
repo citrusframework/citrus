@@ -48,7 +48,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport implem
 
         when(http().client("httpStandaloneClient")
             .receive()
-            .response(OK.value())
+            .response(OK)
             .message()
             .body("<testResponseMessage>" +
                         "<text>Hello TestFramework</text>" +
@@ -68,7 +68,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport implem
             .receive()
             .response()
             .message()
-            .status(OK.value())
+            .status(OK)
             .body("<testResponseMessage>" +
                         "<text>Hello TestFramework</text>" +
                     "</testResponseMessage>")
@@ -87,7 +87,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport implem
 
         then(http().client("httpStandaloneClient")
             .receive()
-            .response(OK.value()));
+            .response(OK));
 
         run(echo("Test Http status code matcher validation"));
 
@@ -123,7 +123,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport implem
         then(assertException().exception(ValidationException.class).when(
             http().client("httpStandaloneClient")
                 .receive()
-                .response(NOT_FOUND.value())
+                .response(NOT_FOUND)
         ));
     }
 }

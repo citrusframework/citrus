@@ -78,7 +78,7 @@ public class HttpCookiesJavaIT extends TestNGCitrusSpringSupport implements Test
 
        then(http().client("echoHttpClient")
             .receive()
-            .response(HttpStatus.OK.value())
+            .response(HttpStatus.OK)
             .message()
             .body("<HelloResponse>" +
                         "<MessageId>${messageId}</MessageId>" +

@@ -22,13 +22,16 @@ public interface HttpServerSendActionBuilder<T extends TestAction, M extends Htt
 
     /**
      * Generic response builder for expecting response messages on client.
-     * @return
      */
     HttpServerResponseActionBuilder<T, M> response();
 
     /**
+     * Generic response builder for expecting response messages on client.
+     */
+    HttpServerResponseActionBuilder<T, M> response(Object status);
+
+    /**
      * Generic response builder for expecting response messages on client with response status code.
-     * @return
      */
     HttpServerResponseActionBuilder<T, M> response(int status);
 }

@@ -53,14 +53,14 @@ public class HttpServerZipFileJavaIT extends TestNGCitrusSpringSupport implement
 
         then(http().server("echoHttpServer")
                 .send()
-                .response(HttpStatus.OK.value())
+                .response(HttpStatus.OK)
                 .message(zipMessage)
                 .type(MessageType.BINARY)
                 .contentType(APPLICATION_ZIP_VALUE));
 
         then(http().client("echoHttpClient")
                 .receive()
-                .response(HttpStatus.OK.value())
+                .response(HttpStatus.OK)
                 .message(zipMessage)
                 .type(MessageType.BINARY)
                 .contentType(APPLICATION_ZIP_VALUE));

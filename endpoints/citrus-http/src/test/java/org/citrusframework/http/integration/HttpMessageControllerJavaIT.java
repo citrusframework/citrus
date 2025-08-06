@@ -57,7 +57,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport imple
 
         then(http().client("httpClient")
             .receive()
-            .response(HttpStatus.OK.value())
+            .response(HttpStatus.OK)
             .timeout(2000L)
             .message()
             .version("HTTP/1.1"));
@@ -88,7 +88,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport imple
 
         then(http().client("httpClient")
             .receive()
-            .response(HttpStatus.OK.value())
+            .response(HttpStatus.OK)
             .timeout(2000L)
             .message()
             .version("HTTP/1.1"));
@@ -126,7 +126,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport imple
 
         then(http().client("httpClient")
             .receive()
-            .response(HttpStatus.OK.value())
+            .response(HttpStatus.OK)
             .timeout(2000L)
             .message()
             .version("HTTP/1.1"));
@@ -155,7 +155,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport imple
 
         then(http().client("httpClient")
                 .receive()
-                .response(HttpStatus.OK.value())
+                .response(HttpStatus.OK)
                 .timeout(2000L)
                 .message()
                 .version("HTTP/1.1"));

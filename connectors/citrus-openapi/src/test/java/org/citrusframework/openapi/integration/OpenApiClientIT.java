@@ -82,7 +82,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
 
         then(http().server(httpServer)
             .send()
-            .response(OK.value())
+            .response(OK)
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -113,7 +113,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
 
         then(http().server(httpServer)
             .send()
-            .response(OK.value())
+            .response(OK)
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -161,7 +161,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
 
         then(http().server(httpServer)
             .send()
-            .response(OK.value())
+            .response(OK)
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -196,7 +196,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
 
         then(http().server(httpServer)
             .send()
-            .response(OK.value())
+            .response(OK)
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -232,7 +232,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
 
         then(http().server(httpServer)
             .send()
-            .response(OK.value())
+            .response(OK)
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -281,7 +281,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
 
         then(http().server(httpServer)
             .send()
-            .response(OK.value())
+            .response(OK)
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -319,7 +319,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
 
         then(http().server(httpServer)
             .send()
-            .response(OK.value())
+            .response(OK)
             .message()
             .body(Resources.create(INVALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -352,7 +352,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
 
         then(http().server(httpServer)
             .send()
-            .response(OK.value())
+            .response(OK)
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -392,7 +392,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
 
         then(http().server(httpServer)
             .send()
-            .response(OK.value())
+            .response(OK)
             .message()
             .body(Resources.create(INVALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -402,7 +402,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
         // By default, the OpenApiSpecification will be resolved by the schemaRepository name.
         assertThrows(TestCaseFailedException.class, () -> then(http().client(httpClient)
                 .receive()
-                .response(OK.value())
+                .response(OK)
                 .message()
                 .type(JSON)
                 .validate(openApi()
@@ -433,7 +433,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
 
         then(http().server(httpServer)
             .send()
-            .response(OK.value())
+            .response(OK)
             .message()
             .body(Resources.create(INVALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
@@ -476,7 +476,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
 
         then(http().server(httpServer)
             .send()
-            .response(HttpStatus.CREATED.value())
+            .response(HttpStatus.CREATED)
             .message());
 
         then(openapi().alias("petstore-v3")
@@ -556,7 +556,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
 
         then(http().server(httpServer)
             .send()
-            .response(OK.value())
+            .response(OK)
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));

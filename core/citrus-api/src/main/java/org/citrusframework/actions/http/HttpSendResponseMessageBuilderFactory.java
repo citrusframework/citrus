@@ -28,6 +28,11 @@ public interface HttpSendResponseMessageBuilderFactory<T extends TestAction, M e
     HttpSendResponseMessageBuilderFactory<T, M> status(int status);
 
     /**
+     * Sets the response status.
+     */
+    HttpSendResponseMessageBuilderFactory<T, M> status(Object status);
+
+    /**
      * Sets the response status code.
      */
     HttpSendResponseMessageBuilderFactory<T, M> statusCode(int statusCode);
