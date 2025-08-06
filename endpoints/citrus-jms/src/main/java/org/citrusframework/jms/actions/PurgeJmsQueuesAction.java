@@ -31,6 +31,7 @@ import jakarta.jms.QueueConnectionFactory;
 import jakarta.jms.Session;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.actions.jms.JmsPurgeQueuesActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
@@ -117,9 +118,6 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
 
     /**
      * Purges a queue destination identified by its name.
-     * @param queueName
-     * @param session
-     * @throws JMSException
      */
     private void purgeQueue(String queueName, Session session) throws JMSException {
         purgeDestination(getDestination(session, queueName), session, queueName);
@@ -127,9 +125,6 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
 
     /**
      * Purges a queue destination.
-     * @param queue
-     * @param session
-     * @throws JMSException
      */
     private void purgeQueue(Queue queue, Session session) throws JMSException {
         purgeDestination(queue, session, queue.getQueueName());
@@ -137,10 +132,6 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
 
     /**
      * Purge destination by receiving all available messages.
-     * @param destination
-     * @param session
-     * @param destinationName
-     * @throws JMSException
      */
     private void purgeDestination(Destination destination, Session session, String destinationName) throws JMSException {
         if (logger.isDebugEnabled()) {
@@ -176,10 +167,6 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
 
     /**
      * Resolves destination by given name.
-     * @param session
-     * @param queueName
-     * @return
-     * @throws JMSException
      */
     private Destination getDestination(Session session, String queueName) throws JMSException {
     	return new DynamicDestinationResolver().resolveDestinationName(session, queueName, false);
@@ -187,8 +174,6 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
 
 	/**
 	 * Create queue connection.
-     * @return
-     * @throws JMSException
      */
     protected Connection createConnection() throws JMSException {
         if (connectionFactory instanceof QueueConnectionFactory) {
@@ -199,9 +184,6 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
 
     /**
      * Create queue session.
-     * @param connection
-     * @return
-     * @throws JMSException
      */
     protected Session createSession(Connection connection) throws JMSException {
         if (connection instanceof QueueConnection) {
@@ -211,6 +193,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     }
 
     /**
+     * Gets the queue names.
      * @return the queueNames
      */
     public List<String> getQueueNames() {
@@ -243,7 +226,6 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
 
     /**
      * Gets the sleepTime.
-     * @return the sleepTime the sleepTime to get.
      */
     public long getSleepTime() {
         return sleepTime;
@@ -252,7 +234,8 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<PurgeJmsQueuesAction, Builder> implements ReferenceResolverAware {
+    public static final class Builder extends AbstractTestActionBuilder<PurgeJmsQueuesAction, Builder>
+            implements ReferenceResolverAware, JmsPurgeQueuesActionBuilder<PurgeJmsQueuesAction, Builder> {
 
         private final List<String> queueNames = new ArrayList<>();
         private final List<Queue> queues = new ArrayList<>();
@@ -264,10 +247,19 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
 
         /**
          * Fluent API action building entry method used in Java DSL.
-         * @return
          */
         public static Builder purgeQueues() {
             return new Builder();
+        }
+
+        @Override
+        public Builder connectionFactory(Object connectionFactory) {
+            if (connectionFactory instanceof ConnectionFactory factory) {
+                return connectionFactory(factory);
+            } else {
+                throw new CitrusRuntimeException(("Invalid connection factory type, must be a ConnectionFactory, " +
+                        "but got: %s").formatted(connectionFactory.getClass().getName()));
+            }
         }
 
         /**
@@ -279,84 +271,79 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
             return this;
         }
 
-        /**
-         * List of queues to purge in this action.
-         * @param queues The queues which are to be purged.
-         */
-        public Builder queues(List<Queue> queues) {
-            this.queues.addAll(queues);
+        @Override
+        public Builder queues(List<?> queues) {
+            for (Object queue : queues) {
+                if (queue instanceof Queue jmsQueue) {
+                    queue(jmsQueue);
+                } else if (queue instanceof String queueName) {
+                    queue(queueName);
+                }
+            }
+
             return this;
+        }
+
+        @Override
+        public Builder queues(Object... queues) {
+            return queues(Arrays.asList(queues));
         }
 
         /**
          * List of queues to purge in this action.
-         * @param queues
-         * @return
          */
         public Builder queues(Queue... queues) {
             return queues(Arrays.asList(queues));
         }
 
+        @Override
+        public Builder queue(Object queue) {
+            if (queue instanceof Queue jmsQueue) {
+                return queue(jmsQueue);
+            } else {
+                throw new CitrusRuntimeException(("Invalid Jms queue type, must be a Queue, " +
+                        "but got: %s").formatted(queue.getClass().getName()));
+            }
+        }
+
         /**
          * Adds a new queue to the list of queues to purge in this action.
-         * @param queue
-         * @return
          */
         public Builder queue(Queue queue) {
             this.queues.add(queue);
             return this;
         }
 
-        /**
-         * List of queue names to purge in this action.
-         * @param names the queueNames to set
-         */
+        @Override
         public Builder queueNames(List<String> names) {
             this.queueNames.addAll(names);
             return this;
         }
 
-        /**
-         * List of queue names to purge in this action.
-         * @param names
-         * @return
-         */
+        @Override
         public Builder queueNames(String... names) {
             return queueNames(Arrays.asList(names));
         }
 
-        /**
-         * Adds a queue name to the list of queues to purge in this action.
-         * @param name
-         * @return
-         */
+        @Override
         public Builder queue(String name) {
             this.queueNames.add(name);
             return this;
         }
 
-        /**
-         * Receive timeout for reading message from a destination.
-         * @param receiveTimeout the receiveTimeout to set
-         */
+        @Override
         public Builder timeout(long receiveTimeout) {
             this.receiveTimeout = receiveTimeout;
             return this;
         }
 
-        /**
-         * Sets the sleepTime.
-         * @param millis the sleepTime to set
-         */
+        @Override
         public Builder sleep(long millis) {
             this.sleepTime = millis;
             return this;
         }
 
-        /**
-         * Sets the bean reference resolver for using endpoint names.
-         * @param referenceResolver
-         */
+        @Override
         public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
             this.referenceResolver = referenceResolver;
             return this;

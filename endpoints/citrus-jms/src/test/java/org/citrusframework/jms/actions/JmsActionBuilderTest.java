@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package org.citrusframework.jms.groovy
+package org.citrusframework.jms.actions;
 
-name "PurgeQueuesTest"
-author "Christoph"
-status "FINAL"
-description "Sample test in Groovy"
+import java.util.Map;
 
-actions {
-    $(jms().purgeQueues()
-        .queue("JMS.Queue.1"))
+import org.citrusframework.TestActionBuilder;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
-    $(jms().purgeQueues()
-        .connectionFactory(connectionFactory)
-        .timeout(125L)
-        .sleep(250L)
-        .queue("JMS.Queue.2")
-        .queue("JMS.Queue.3"))
+public class JmsActionBuilderTest {
+
+    @Test
+    public void shouldLookupTestActionBuilder() {
+        Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("jms"));
+
+        Assert.assertTrue(TestActionBuilder.lookup("jms").isPresent());
+        Assert.assertEquals(TestActionBuilder.lookup("jms").get().getClass(), JmsActionBuilder.class);
+    }
 }

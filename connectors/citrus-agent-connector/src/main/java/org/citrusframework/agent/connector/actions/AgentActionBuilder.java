@@ -29,7 +29,6 @@ public class AgentActionBuilder implements TestActionBuilder.DelegatingTestActio
 
     /**
      * Fluent API action building entry method used in Java DSL.
-     * @return
      */
     public static AgentActionBuilder agent() {
         return new AgentActionBuilder();
