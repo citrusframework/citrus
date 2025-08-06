@@ -43,7 +43,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 @RunWith(CitrusSpringJUnit4Runner.class)
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
-        implements GherkinTestActionRunner, TestActionSupport, CitrusFrameworkMethod.Runner {
+        implements GherkinTestActionRunner, CitrusFrameworkMethod.Runner {
 
     /** Citrus instance */
     protected Citrus citrus;

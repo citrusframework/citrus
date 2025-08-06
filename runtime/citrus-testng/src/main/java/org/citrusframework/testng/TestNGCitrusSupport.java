@@ -29,7 +29,6 @@ import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActionRunner;
-import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestActions;
 import org.citrusframework.TestBehavior;
 import org.citrusframework.TestCaseMetaInfo;
@@ -61,7 +60,7 @@ import org.testng.annotations.Listeners;
  *
  */
 @Listeners( { TestNGCitrusMethodInterceptor.class } )
-public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner, TestActionSupport {
+public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
 
     /** Citrus instance */
     protected Citrus citrus;

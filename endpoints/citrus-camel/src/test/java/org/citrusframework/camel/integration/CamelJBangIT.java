@@ -16,6 +16,7 @@
 
 package org.citrusframework.camel.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.TestNGCitrusSupport;
@@ -23,7 +24,7 @@ import org.citrusframework.util.TestUtils;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
-public class CamelJBangIT extends TestNGCitrusSupport {
+public class CamelJBangIT extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest(name = "RunIntegration_SourceCode_IT")

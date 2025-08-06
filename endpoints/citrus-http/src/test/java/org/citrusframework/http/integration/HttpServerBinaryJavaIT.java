@@ -19,6 +19,7 @@ package org.citrusframework.http.integration;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.client.HttpClient;
@@ -34,7 +35,7 @@ import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
 @Test
-public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport {
+public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     /** Random http server port */
     private final static int serverPort = SocketUtils.findAvailableTcpPort();

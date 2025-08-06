@@ -16,6 +16,7 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.annotations.Test;
 
 @Test
-public class WaitJavaIT extends TestNGCitrusSpringSupport {
+public class WaitJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     private final int serverPort = SocketUtils.findAvailableTcpPort();
 

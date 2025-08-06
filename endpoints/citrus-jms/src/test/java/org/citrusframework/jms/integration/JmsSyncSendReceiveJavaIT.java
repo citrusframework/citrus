@@ -16,13 +16,14 @@
 
 package org.citrusframework.jms.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 @Test
-public class JmsSyncSendReceiveJavaIT extends TestNGCitrusSpringSupport {
+public class JmsSyncSendReceiveJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void JmsSyncSendReceiveJavaIT() {

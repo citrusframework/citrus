@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.concurrent.Executors;
 
 import com.sun.net.httpserver.HttpServer;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.integration.common.FileHelper;
 import org.citrusframework.message.MessageType;
@@ -34,7 +35,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @Test
-public class WaitJavaIT extends TestNGCitrusSpringSupport {
+public class WaitJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     private final int serverPort = SocketUtils.findAvailableTcpPort();
     private HttpServer server;

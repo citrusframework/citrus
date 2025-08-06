@@ -16,6 +16,7 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
@@ -30,7 +31,7 @@ import static org.citrusframework.http.security.HttpAuthentication.basic;
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
 @Test
-public class HttpBasicAuthJavaIT extends TestNGCitrusSpringSupport {
+public class HttpBasicAuthJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     private final int port = findAvailableTcpPort(8888);
 

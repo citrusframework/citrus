@@ -18,13 +18,14 @@ package org.citrusframework.kubernetes.integration;
 
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodBuilder;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class KubernetesCreateAnnotationsIT extends AbstractKubernetesIT {
+public class KubernetesCreateAnnotationsIT extends AbstractKubernetesIT implements TestActionSupport {
 
     @Autowired
     private KubernetesClient k8sClient;

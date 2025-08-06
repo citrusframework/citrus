@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerResponse;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -28,7 +29,7 @@ import org.citrusframework.testcontainers.redpanda.RedpandaSettings;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class StartRedpandaContainerIT extends AbstractTestcontainersIT {
+public class StartRedpandaContainerIT extends AbstractTestcontainersIT implements TestActionSupport {
 
     @Test
     @CitrusTest

@@ -18,12 +18,13 @@ package org.citrusframework.knative.integration;
 
 import io.fabric8.knative.client.KnativeClient;
 import io.fabric8.knative.eventing.v1.Broker;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class CreateKnativeBrokerIT extends AbstractKnativeIT {
+public class CreateKnativeBrokerIT extends AbstractKnativeIT implements TestActionSupport {
 
     @Autowired
     private KnativeClient knativeClient;

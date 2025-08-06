@@ -19,13 +19,14 @@ package org.citrusframework.kubernetes.integration;
 import java.util.Collections;
 
 import io.fabric8.kubernetes.api.model.ConditionBuilder;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
-public class KubernetesVerifyCustomResourcesIT extends AbstractKubernetesIT {
+public class KubernetesVerifyCustomResourcesIT extends AbstractKubernetesIT implements TestActionSupport {
 
     @Autowired
     private KubernetesClient k8sClient;

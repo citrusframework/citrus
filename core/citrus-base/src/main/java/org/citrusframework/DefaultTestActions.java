@@ -18,7 +18,7 @@ package org.citrusframework;
 
 /**
  * Default implementation of Citrus test action builder support.
- * Basically uses the default implementations of the support interface.
+ * Uses the default implementations of the support interface.
  */
 public class DefaultTestActions implements TestActionSupport {
 }

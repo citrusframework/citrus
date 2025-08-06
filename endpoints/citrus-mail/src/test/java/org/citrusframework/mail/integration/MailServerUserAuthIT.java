@@ -16,6 +16,7 @@
 
 package org.citrusframework.mail.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.mail.client.MailClient;
@@ -25,7 +26,7 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
-public class MailServerUserAuthIT extends TestNGCitrusSpringSupport {
+public class MailServerUserAuthIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Autowired
     private MailClient securedMailClient;

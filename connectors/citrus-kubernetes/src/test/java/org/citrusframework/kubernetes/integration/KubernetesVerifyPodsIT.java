@@ -20,13 +20,14 @@ import io.fabric8.kubernetes.api.model.ContainerStatusBuilder;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodBuilder;
 import io.fabric8.kubernetes.api.model.PodConditionBuilder;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
-public class KubernetesVerifyPodsIT extends AbstractKubernetesIT {
+public class KubernetesVerifyPodsIT extends AbstractKubernetesIT implements TestActionSupport {
 
     @Autowired
     private KubernetesClient k8sClient;

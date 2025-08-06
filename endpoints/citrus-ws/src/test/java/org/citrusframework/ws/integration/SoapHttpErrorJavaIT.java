@@ -16,6 +16,7 @@
 
 package org.citrusframework.ws.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
@@ -24,7 +25,7 @@ import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHe
 import static org.citrusframework.dsl.XmlSupport.xml;
 
 @Test
-public class SoapHttpErrorJavaIT extends TestNGCitrusSpringSupport {
+public class SoapHttpErrorJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void soapHttpError() {

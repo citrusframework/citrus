@@ -16,6 +16,7 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.server.HttpServer;
@@ -29,7 +30,7 @@ import org.springframework.http.MediaType;
 import org.testng.annotations.Test;
 
 @Test
-public class HttpClientSideGzipJavaIT extends TestNGCitrusSpringSupport {
+public class HttpClientSideGzipJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Autowired
     @Qualifier("echoHttpClient")

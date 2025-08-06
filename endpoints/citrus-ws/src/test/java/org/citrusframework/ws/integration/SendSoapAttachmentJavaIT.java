@@ -16,6 +16,7 @@
 
 package org.citrusframework.ws.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
@@ -25,7 +26,7 @@ import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHe
 import static org.citrusframework.dsl.XmlSupport.xml;
 
 @Test
-public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport {
+public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void sendSoapAttachment() {

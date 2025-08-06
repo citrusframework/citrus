@@ -17,6 +17,7 @@
 package org.citrusframework.junit.integration;
 
 import org.citrusframework.Citrus;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusTest;
@@ -32,7 +33,7 @@ import org.citrusframework.spi.BindToRegistry;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class EndpointInjectionIT extends JUnit4CitrusSpringSupport {
+public class EndpointInjectionIT extends JUnit4CitrusSpringSupport implements TestActionSupport {
 
     @CitrusFramework
     private Citrus citrus;

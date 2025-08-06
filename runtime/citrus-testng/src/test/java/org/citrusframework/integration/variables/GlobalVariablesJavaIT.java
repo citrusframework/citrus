@@ -16,6 +16,7 @@
 
 package org.citrusframework.integration.variables;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -28,7 +29,7 @@ import org.testng.annotations.Test;
  * Tests the loading and usage of global variables in citrus
  */
 @Test
-public class GlobalVariablesJavaIT extends TestNGCitrusSpringSupport {
+public class GlobalVariablesJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void globalProperties() {

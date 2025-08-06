@@ -19,6 +19,7 @@ package org.citrusframework.junit.integration;
 import org.citrusframework.Citrus;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
@@ -36,7 +37,7 @@ import static org.citrusframework.DefaultTestActionBuilder.action;
 /**
  * @since 2.5
  */
-public class ResourceInjectionJUnit4IT extends JUnit4CitrusSpringSupport {
+public class ResourceInjectionJUnit4IT extends JUnit4CitrusSpringSupport implements TestActionSupport {
 
     @CitrusFramework
     private Citrus citrus;

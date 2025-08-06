@@ -16,6 +16,7 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.ValidationException;
@@ -35,7 +36,7 @@ import static org.citrusframework.dsl.XpathSupport.xpath;
 /**
  * @since 2.7.5
  */
-public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport {
+public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusEndpoint
     @HttpClientConfig(requestUrl = "http://localhost:7177")

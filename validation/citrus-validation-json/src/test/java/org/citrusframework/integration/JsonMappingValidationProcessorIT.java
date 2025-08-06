@@ -17,6 +17,7 @@
 package org.citrusframework.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.JsonSupport;
@@ -34,7 +35,7 @@ import org.testng.annotations.Test;
 /**
  * @since 3.3.1
  */
-public class JsonMappingValidationProcessorIT extends TestNGCitrusSpringSupport {
+public class JsonMappingValidationProcessorIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @BindToRegistry
     public MessageQueue test = new DefaultMessageQueue("test");

@@ -18,6 +18,7 @@ package org.citrusframework.restdocs.integration;
 
 import java.util.Arrays;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
@@ -39,7 +40,7 @@ import static org.citrusframework.restdocs.http.CitrusRestDocsSupport.restDocsIn
 /**
  * @since 2.6
  */
-public class RestDocConfigurationIT extends TestNGCitrusSpringSupport {
+public class RestDocConfigurationIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Autowired
     private TestListeners testListeners;

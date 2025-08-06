@@ -17,6 +17,7 @@
 package org.citrusframework.openapi.integration;
 
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.http.client.HttpClient;
@@ -50,7 +51,7 @@ import static org.testng.Assert.assertThrows;
 @Test
 @ContextConfiguration(classes = {Config.class})
 @DirtiesContext
-public class OpenApiServerIT extends TestNGCitrusSpringSupport {
+public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     public static final String VALID_PET_PATH = "classpath:org/citrusframework/openapi/petstore/pet.json";
     public static final String INVALID_PET_PATH = "classpath:org/citrusframework/openapi/petstore/pet_invalid.json";

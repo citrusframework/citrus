@@ -57,7 +57,7 @@ import org.testng.annotations.Listeners;
 @Listeners( { TestNGCitrusSpringMethodInterceptor.class } )
 @ContextConfiguration(classes =  {CitrusSpringConfig.class})
 public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
-        implements GherkinTestActionRunner, TestActionSupport {
+        implements GherkinTestActionRunner {
 
     /** Citrus instance */
     protected Citrus citrus;

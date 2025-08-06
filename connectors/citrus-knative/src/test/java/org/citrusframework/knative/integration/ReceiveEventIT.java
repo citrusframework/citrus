@@ -16,6 +16,7 @@
 
 package org.citrusframework.knative.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.endpoint.builder.HttpEndpoints;
 import org.citrusframework.http.server.HttpServer;
@@ -26,7 +27,7 @@ import org.springframework.http.MediaType;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-public class ReceiveEventIT extends AbstractKnativeIT {
+public class ReceiveEventIT extends AbstractKnativeIT implements TestActionSupport {
 
     private final int port = SocketUtils.findAvailableTcpPort(8081);
 

@@ -16,6 +16,7 @@
 
 package org.citrusframework.integration.inject;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
@@ -29,7 +30,7 @@ import org.testng.annotations.Test;
 /**
  * @since 2.5
  */
-public class ContextInjectionJavaIT extends TestNGCitrusSpringSupport {
+public class ContextInjectionJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusResource
     private TestContext globalContext;

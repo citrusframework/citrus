@@ -19,6 +19,7 @@ package org.citrusframework.camel.integration;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ServiceStatus;
 import org.apache.camel.builder.RouteBuilder;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.camel.dsl.CamelSupport;
 import org.citrusframework.message.MessageType;
@@ -29,7 +30,7 @@ import org.testng.annotations.Test;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
 
-public class CamelRouteActionIT extends TestNGCitrusSpringSupport {
+public class CamelRouteActionIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Autowired
     private CamelContext camelContext;

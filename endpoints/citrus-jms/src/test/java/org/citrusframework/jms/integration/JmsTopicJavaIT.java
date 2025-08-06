@@ -16,12 +16,13 @@
 
 package org.citrusframework.jms.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 @Test
-public class JmsTopicJavaIT extends TestNGCitrusSpringSupport {
+public class JmsTopicJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void jmsTopics() {

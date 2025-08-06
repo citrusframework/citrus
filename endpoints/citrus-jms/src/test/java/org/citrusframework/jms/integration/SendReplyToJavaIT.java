@@ -16,6 +16,7 @@
 
 package org.citrusframework.jms.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
@@ -24,7 +25,7 @@ import org.testng.annotations.Test;
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
 
 @Test
-public class SendReplyToJavaIT extends TestNGCitrusSpringSupport {
+public class SendReplyToJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void jmsSyncQueues() {

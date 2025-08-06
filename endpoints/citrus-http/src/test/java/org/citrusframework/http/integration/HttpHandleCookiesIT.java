@@ -18,6 +18,7 @@ package org.citrusframework.http.integration;
 
 import jakarta.servlet.http.Cookie;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.common.TestLoader;
@@ -29,7 +30,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-public class HttpHandleCookiesIT extends TestNGCitrusSpringSupport {
+public class HttpHandleCookiesIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Autowired
     @Qualifier("echoHttpClient")

@@ -30,7 +30,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Test
-public class ApplyTestBehaviorIT extends TestNGCitrusSpringSupport {
+public class ApplyTestBehaviorIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void shouldApply() {

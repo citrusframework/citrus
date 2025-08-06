@@ -16,12 +16,13 @@
 
 package org.citrusframework.integration.actions;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 @Test
-public class CreateEndpointJavaIT extends TestNGCitrusSpringSupport {
+public class CreateEndpointJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void createEndpointsAction() {

@@ -17,6 +17,7 @@
 package org.citrusframework.junit.integration;
 
 import org.citrusframework.DefaultTestCase;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.annotations.CitrusTestSource;
@@ -37,7 +38,7 @@ import org.w3c.dom.Element;
                 @BeanDefinitionParserConfiguration(name = "testcase", parser = SpringXmlTestLoaderIT.CustomTestCaseParser.class),
                 @BeanDefinitionParserConfiguration(name = "meta-info", parser = SpringXmlTestLoaderIT.CustomTestCaseMetaInfoParser.class)
         })
-public class SpringXmlTestLoaderIT extends JUnit4CitrusSpringSupport {
+public class SpringXmlTestLoaderIT extends JUnit4CitrusSpringSupport implements TestActionSupport {
 
     @Test
     @CitrusTestSource(type = TestLoader.SPRING)

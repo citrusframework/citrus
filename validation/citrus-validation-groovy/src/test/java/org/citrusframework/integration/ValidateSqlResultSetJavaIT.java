@@ -18,6 +18,7 @@ package org.citrusframework.integration;
 
 import javax.sql.DataSource;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
@@ -26,7 +27,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 
 @Test
-public class ValidateSqlResultSetJavaIT extends TestNGCitrusSpringSupport {
+public class ValidateSqlResultSetJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Autowired
     @Qualifier("testDataSource")

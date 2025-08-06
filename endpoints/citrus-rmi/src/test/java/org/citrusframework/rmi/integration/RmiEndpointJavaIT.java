@@ -16,6 +16,7 @@
 
 package org.citrusframework.rmi.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.rmi.client.RmiClient;
 import org.citrusframework.rmi.message.RmiMessage;
@@ -31,7 +32,7 @@ import org.testng.annotations.Test;
  * @since 2.5
  */
 @Test(enabled = false) // unstable on local environment
-public class RmiEndpointJavaIT extends TestNGCitrusSpringSupport {
+public class RmiEndpointJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Autowired
     @Qualifier("rmiNewsClient")

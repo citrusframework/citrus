@@ -18,13 +18,14 @@ package org.citrusframework.http.integration;
 
 import jakarta.servlet.http.Cookie;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
 @Test
-public class HttpCookiesJavaIT extends TestNGCitrusSpringSupport {
+public class HttpCookiesJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void httpCookies() {

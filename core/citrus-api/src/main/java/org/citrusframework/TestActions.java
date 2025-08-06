@@ -16,60 +16,38 @@
 
 package org.citrusframework;
 
-import org.citrusframework.actions.*;
-import org.citrusframework.actions.agent.AgentActionBuilder;
-import org.citrusframework.actions.camel.CamelActionBuilder;
-import org.citrusframework.actions.docker.DockerActionBuilder;
-import org.citrusframework.actions.http.HttpActionBuilder;
-import org.citrusframework.actions.jbang.JBangActionBuilder;
-import org.citrusframework.actions.jms.JmsActionBuilder;
-import org.citrusframework.actions.knative.KnativeActionBuilder;
-import org.citrusframework.actions.kubernetes.KubernetesActionBuilder;
-import org.citrusframework.actions.openapi.OpenApiActionBuilder;
-import org.citrusframework.actions.selenium.SeleniumActionBuilder;
-import org.citrusframework.actions.sql.ExecutePlsqlActionBuilder;
-import org.citrusframework.actions.sql.ExecuteSqlActionBuilder;
-import org.citrusframework.actions.sql.ExecuteSqlQueryActionBuilder;
-import org.citrusframework.actions.testcontainers.TestcontainersActionBuilder;
-import org.citrusframework.actions.ws.SoapActionBuilder;
+import org.citrusframework.actions.BaseTestActions;
+import org.citrusframework.actions.agent.AgentTestActions;
+import org.citrusframework.actions.camel.CamelTestActions;
+import org.citrusframework.actions.docker.DockerTestActions;
+import org.citrusframework.actions.http.HttpTestActions;
+import org.citrusframework.actions.jbang.JBangTestActions;
+import org.citrusframework.actions.jms.JmsTestActions;
+import org.citrusframework.actions.knative.KnativeTestActions;
+import org.citrusframework.actions.kubernetes.KubernetesTestActions;
+import org.citrusframework.actions.openapi.OpenApiTestActions;
+import org.citrusframework.actions.selenium.SeleniumTestActions;
+import org.citrusframework.actions.sql.SqlTestActions;
+import org.citrusframework.actions.testcontainers.TestcontainersTestActions;
+import org.citrusframework.actions.ws.SoapTestActions;
 
 /**
  * Interface combines domain specific language methods for all test actions available in Citrus.
  */
 public interface TestActions extends
-        AgentActionBuilder.BuilderFactory,
-        AntRunActionBuilder.BuilderFactory,
-        ApplyTestBehaviorActionBuilder.BuilderFactory,
-        CamelActionBuilder.BuilderFactory,
-        CreateEndpointActionBuilder.BuilderFactory,
-        CreateVariablesActionBuilder.BuilderFactory,
-        DockerActionBuilder.BuilderFactory,
-        EchoActionBuilder.BuilderFactory,
-        ExecutePlsqlActionBuilder.BuilderFactory,
-        ExecuteSqlActionBuilder.BuilderFactory,
-        ExecuteSqlQueryActionBuilder.BuilderFactory,
-        FailActionBuilder.BuilderFactory,
-        HttpActionBuilder.BuilderFactory,
-        InputActionBuilder.BuilderFactory,
-        JBangActionBuilder.BuilderFactory,
-        JmsActionBuilder.BuilderFactory,
-        KnativeActionBuilder.BuilderFactory,
-        KubernetesActionBuilder.BuilderFactory,
-        LoadPropertiesActionBuilder.BuilderFactory,
-        OpenApiActionBuilder.BuilderFactory,
-        PurgeEndpointActionBuilder.BuilderFactory,
-        ReceiveActionBuilder.BuilderFactory,
-        ReceiveTimeoutActionBuilder.BuilderFactory,
-        SeleniumActionBuilder.BuilderFactory,
-        SendActionBuilder.BuilderFactory,
-        SleepActionBuilder.BuilderFactory,
-        SoapActionBuilder.BuilderFactory,
-        StartServerActionBuilder.BuilderFactory,
-        StopServerActionBuilder.BuilderFactory,
-        StopTimeActionBuilder.BuilderFactory,
-        StopTimerActionBuilder.BuilderFactory,
-        TestcontainersActionBuilder.BuilderFactory,
-        TraceVariablesActionBuilder.BuilderFactory,
-        TransformActionBuilder.BuilderFactory {
+        BaseTestActions,
+        AgentTestActions,
+        CamelTestActions,
+        DockerTestActions,
+        SqlTestActions,
+        HttpTestActions,
+        JBangTestActions,
+        JmsTestActions,
+        KnativeTestActions,
+        KubernetesTestActions,
+        OpenApiTestActions,
+        SeleniumTestActions,
+        SoapTestActions,
+        TestcontainersTestActions {
 
 }

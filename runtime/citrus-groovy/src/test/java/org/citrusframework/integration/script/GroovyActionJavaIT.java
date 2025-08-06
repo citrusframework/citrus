@@ -16,6 +16,7 @@
 
 package org.citrusframework.integration.script;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
@@ -24,7 +25,7 @@ import org.testng.annotations.Test;
 import static org.citrusframework.script.GroovyAction.Builder.groovy;
 
 @Test
-public class GroovyActionJavaIT extends TestNGCitrusSpringSupport {
+public class GroovyActionJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     /** OS new line */
     private static final String NEWLINE = System.getProperty("line.separator");

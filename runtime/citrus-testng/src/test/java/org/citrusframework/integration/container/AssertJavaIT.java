@@ -18,6 +18,7 @@ package org.citrusframework.integration.container;
 
 import java.io.IOException;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
@@ -27,7 +28,7 @@ import org.testng.annotations.Test;
 import static org.citrusframework.DefaultTestActionBuilder.action;
 
 @Test
-public class AssertJavaIT extends TestNGCitrusSpringSupport {
+public class AssertJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void assertAction() {
