@@ -23,52 +23,37 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
 
-public class GroovyActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware {
+public class GroovyActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>,
+        ReferenceResolverAware, org.citrusframework.actions.groovy.GroovyActionBuilder<TestAction, GroovyActionBuilder> {
 
     private TestActionBuilder<?> delegate;
-
-    private GroovyActionBuilder() {
-        // hide constructor of builder class - use static entrance method instead
-    }
 
     public static GroovyActionBuilder groovy() {
         return new GroovyActionBuilder();
     }
 
-    /**
-     * Run Groovy script.
-     * @return
-     */
+    @Override
     public GroovyAction.Builder run() {
         GroovyAction.Builder builder = new GroovyAction.Builder();
         this.delegate = builder;
         return builder;
     }
 
-    /**
-     * Create endpoints from Groovy script.
-     * @return
-     */
+    @Override
     public CreateEndpointsAction.Builder endpoints() {
         CreateEndpointsAction.Builder builder = new CreateEndpointsAction.Builder();
         this.delegate = builder;
         return builder;
     }
 
-    /**
-     * Create beans in registry from Groovy script.
-     * @return
-     */
+    @Override
     public CreateBeansAction.Builder beans() {
         CreateBeansAction.Builder builder = new CreateBeansAction.Builder();
         this.delegate = builder;
         return builder;
     }
 
-    /**
-     * Sets the bean reference resolver.
-     * @param referenceResolver
-     */
+    @Override
     public GroovyActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         setReferenceResolver(referenceResolver);
         return this;

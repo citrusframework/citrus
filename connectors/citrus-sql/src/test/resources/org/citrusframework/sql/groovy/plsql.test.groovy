@@ -16,8 +16,6 @@
 
 package org.citrusframework.sql.groovy
 
-import static org.citrusframework.actions.ExecutePLSQLAction.Builder.plsql
-
 name "PlsqlTest"
 author "Christoph"
 status "FINAL"

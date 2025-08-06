@@ -19,6 +19,7 @@ package org.citrusframework.actions.dsl;
 import java.io.IOException;
 
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.ExecuteSQLAction;
@@ -29,14 +30,13 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ExecuteSQLAction.Builder.sql;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
 /**
  * @since 2.3
  */
-public class ExecuteSQLTestActionBuilderTest extends UnitTestSupport {
+public class ExecuteSQLTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
     private final JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
     private final PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
 

@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.ExecuteSQLQueryAction;
@@ -33,7 +34,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ExecuteSQLQueryAction.Builder.query;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -41,7 +41,7 @@ import static org.mockito.Mockito.when;
 /**
  * @since 2.3
  */
-public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport {
+public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
     private final JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
     private final PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);

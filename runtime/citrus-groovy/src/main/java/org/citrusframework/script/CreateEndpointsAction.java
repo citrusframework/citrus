@@ -21,6 +21,7 @@ import java.nio.charset.Charset;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.actions.groovy.GroovyCreateEndpointsActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -85,36 +86,24 @@ public class CreateEndpointsAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<CreateEndpointsAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<CreateEndpointsAction, Builder>
+            implements GroovyCreateEndpointsActionBuilder<CreateEndpointsAction, Builder> {
 
         private String script;
         private String scriptResourcePath;
 
-        /**
-         * Sets the Groovy script to execute.
-         * @param script
-         * @return
-         */
+        @Override
         public Builder script(String script) {
             this.script = script;
             return this;
         }
 
-        /**
-         * Sets the Groovy script to execute.
-         * @param scriptResource
-         * @return
-         */
+        @Override
         public Builder script(Resource scriptResource) {
             return script(scriptResource, FileUtils.getDefaultCharset());
         }
 
-        /**
-         * Sets the Groovy script to execute.
-         * @param scriptResource
-         * @param charset
-         * @return
-         */
+        @Override
         public Builder script(Resource scriptResource, Charset charset) {
             try {
                 this.script = FileUtils.readToString(scriptResource, charset);
@@ -124,11 +113,7 @@ public class CreateEndpointsAction extends AbstractTestAction {
             return this;
         }
 
-        /**
-         * Sets the Groovy script to execute.
-         * @param scriptResourcePath
-         * @return
-         */
+        @Override
         public Builder scriptResourcePath(String scriptResourcePath) {
             this.scriptResourcePath = scriptResourcePath;
             return this;

@@ -16,8 +16,6 @@
 
 package org.citrusframework.sql.groovy
 
-import static org.citrusframework.actions.ExecuteSQLAction.Builder.sql
-
 name "SqlTest"
 author "Christoph"
 status "FINAL"

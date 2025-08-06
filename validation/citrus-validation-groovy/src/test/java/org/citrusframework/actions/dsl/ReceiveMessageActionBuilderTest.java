@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.container.SequenceAfterTest;
@@ -43,14 +44,13 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.validation.script.DefaultScriptValidationContext.Builder.groovy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
+public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest implements TestActionSupport {
 
     private final Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
     private final Consumer messageConsumer = Mockito.mock(Consumer.class);
