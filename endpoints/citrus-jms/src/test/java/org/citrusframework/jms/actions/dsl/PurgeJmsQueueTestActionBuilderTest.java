@@ -24,6 +24,7 @@ import jakarta.jms.MessageConsumer;
 import jakarta.jms.Queue;
 import jakarta.jms.Session;
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.jms.UnitTestSupport;
 import org.citrusframework.jms.actions.PurgeJmsQueuesAction;
@@ -31,7 +32,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.jms.actions.PurgeJmsQueuesAction.Builder.purgeQueues;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -40,7 +40,8 @@ import static org.mockito.Mockito.when;
 /**
  * @since 2.3
  */
-public class PurgeJmsQueueTestActionBuilderTest extends UnitTestSupport {
+public class PurgeJmsQueueTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
+
     private final ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
     private final Connection connection = Mockito.mock(Connection.class);
     private final Session session = Mockito.mock(Session.class);
@@ -65,7 +66,7 @@ public class PurgeJmsQueueTestActionBuilderTest extends UnitTestSupport {
         when(messageConsumer.receive(200L)).thenReturn(null);
 
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
-        builder.$(purgeQueues().connectionFactory(connectionFactory)
+        builder.$(jms().purgeQueues().connectionFactory(connectionFactory)
             .queueNames("q1", "q2", "q3")
             .queue("q4")
             .timeout(200L)

@@ -25,8 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.jms.actions.PurgeJmsQueuesAction.Builder.purgeQueues;
-
 @Test
 public class PurgeJmsQueuesJavaIT extends TestNGCitrusSpringSupport {
 
@@ -48,7 +46,7 @@ public class PurgeJmsQueuesJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void purgeJmsQueuesAction() {
-        run(purgeQueues()
+        run(jms().purgeQueues()
             .queue("Citrus.Queue.Dummy")
             .queue("Citrus.Queue.Dummy.One.In")
             .queue("Citrus.Queue.Dummy.One.Out")
@@ -57,7 +55,7 @@ public class PurgeJmsQueuesJavaIT extends TestNGCitrusSpringSupport {
             .queue("Citrus.Queue.Dummy.Three.In")
             .queue("Citrus.Queue.Dummy.Three.Out"));
 
-        run(purgeQueues()
+        run(jms().purgeQueues()
             .connectionFactory(connectionFactory)
             .timeout(150L)
             .queue("Citrus.Queue.Dummy")
@@ -68,7 +66,7 @@ public class PurgeJmsQueuesJavaIT extends TestNGCitrusSpringSupport {
             .queue("Citrus.Queue.Dummy.Three.In")
             .queue("Citrus.Queue.Dummy.Three.Out"));
 
-        run(purgeQueues()
+        run(jms().purgeQueues()
             .queue(queue1)
             .queue(queue2)
             .queue(queue3)

@@ -22,6 +22,7 @@ import org.citrusframework.actions.camel.CamelActionBuilder;
 import org.citrusframework.actions.docker.DockerActionBuilder;
 import org.citrusframework.actions.http.HttpActionBuilder;
 import org.citrusframework.actions.jbang.JBangActionBuilder;
+import org.citrusframework.actions.jms.JmsActionBuilder;
 import org.citrusframework.actions.knative.KnativeActionBuilder;
 import org.citrusframework.actions.kubernetes.KubernetesActionBuilder;
 import org.citrusframework.actions.openapi.OpenApiActionBuilder;
@@ -131,6 +132,11 @@ public interface TestActionSupport extends TestActions, TestContainers {
     @Override
     default JBangActionBuilder<?, ?> jbang() {
         return lookup("jbang");
+    }
+
+    @Override
+    default JmsActionBuilder<?, ?> jms() {
+        return lookup("jms");
     }
 
     @Override
