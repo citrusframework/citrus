@@ -18,6 +18,7 @@ package org.citrusframework.integration.actions;
 
 import javax.sql.DataSource;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 
 @Test
-public class QueryDatabaseRetriesJavaIT extends TestNGCitrusSpringSupport {
+public class QueryDatabaseRetriesJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Autowired
     @Qualifier("testDataSource")

@@ -19,6 +19,7 @@ package org.citrusframework.jms.integration;
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.Queue;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 
 @Test
-public class PurgeJmsQueuesJavaIT extends TestNGCitrusSpringSupport {
+public class PurgeJmsQueuesJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Autowired
     @Qualifier("connectionFactory")

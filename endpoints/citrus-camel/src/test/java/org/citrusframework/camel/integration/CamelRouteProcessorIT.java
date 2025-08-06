@@ -17,6 +17,7 @@
 package org.citrusframework.camel.integration;
 
 import org.apache.camel.CamelContext;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.camel.dsl.CamelSupport;
 import org.citrusframework.camel.message.CamelRouteProcessor;
@@ -30,7 +31,7 @@ import static org.apache.camel.builder.Builder.jsonpath;
 import static org.apache.camel.builder.Builder.simple;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
 
-public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport {
+public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Autowired
     private CamelContext camelContext;

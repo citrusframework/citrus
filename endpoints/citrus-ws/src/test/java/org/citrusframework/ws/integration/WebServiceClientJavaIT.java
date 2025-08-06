@@ -16,6 +16,7 @@
 
 package org.citrusframework.ws.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
@@ -23,7 +24,7 @@ import org.testng.annotations.Test;
 import static org.citrusframework.dsl.XmlSupport.xml;
 
 @Test
-public class WebServiceClientJavaIT extends TestNGCitrusSpringSupport {
+public class WebServiceClientJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void soapClient() {

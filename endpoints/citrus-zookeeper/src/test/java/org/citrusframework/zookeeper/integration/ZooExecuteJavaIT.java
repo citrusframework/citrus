@@ -16,6 +16,7 @@
 
 package org.citrusframework.zookeeper.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.zookeeper.client.ZooClient;
@@ -29,7 +30,7 @@ import static org.citrusframework.zookeeper.actions.ZooExecuteAction.Builder.zoo
 /**
  * @since 2.5
  */
-public class ZooExecuteJavaIT extends TestNGCitrusSpringSupport {
+public class ZooExecuteJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Autowired
     private ZooClient zooClient;

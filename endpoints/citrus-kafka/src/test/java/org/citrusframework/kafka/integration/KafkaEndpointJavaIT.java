@@ -22,6 +22,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.assertj.core.api.ThrowableAssert;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
@@ -45,7 +46,7 @@ import static org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFa
 import static org.citrusframework.kafka.integration.KafkaEndpointJavaIT.KafkaMessageByKeySelector.MESSAGE_KEY_FILTER_KEY;
 
 @Test(singleThreaded = true)
-public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport {
+public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @BindToRegistry
     private final KafkaEndpoint kafkaWithRandomConsumerGroupEndpoint = KafkaEndpoint.builder()

@@ -16,6 +16,7 @@
 
 package org.citrusframework.jmx.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.jmx.client.JmxClient;
 import org.citrusframework.jmx.message.JmxMessage;
@@ -29,7 +30,7 @@ import org.testng.annotations.Test;
  * @since 2.5
  */
 @Test
-public class JmxEndpointIT extends TestNGCitrusSpringSupport {
+public class JmxEndpointIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Autowired
     @Qualifier("jmxHelloClient")

@@ -19,6 +19,7 @@ package org.citrusframework.http.integration;
 import java.util.List;
 import java.util.Map;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
@@ -29,7 +30,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.testng.annotations.Test;
 
 @Test
-public class HttpMultipartFileUploadJavaIT extends TestNGCitrusSpringSupport {
+public class HttpMultipartFileUploadJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void httpMultipartFileUpload() {

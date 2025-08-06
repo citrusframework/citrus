@@ -17,6 +17,7 @@
 package org.citrusframework.camel.integration;
 
 import org.apache.camel.CamelContext;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.camel.dsl.CamelSupport;
 import org.citrusframework.message.MessageType;
@@ -26,7 +27,7 @@ import org.testng.annotations.Test;
 
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
 
-public class CamelProcessorIT extends TestNGCitrusSpringSupport {
+public class CamelProcessorIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Autowired
     private CamelContext camelContext;

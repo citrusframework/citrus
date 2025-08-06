@@ -17,13 +17,14 @@
 package org.citrusframework.junit.integration;
 
 import org.citrusframework.ShouldFailGroup;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-public class FailJUnit4JavaIT extends JUnit4CitrusSpringSupport {
+public class FailJUnit4JavaIT extends JUnit4CitrusSpringSupport implements TestActionSupport {
 
     @Test(expected = TestCaseFailedException.class)
     @Category( ShouldFailGroup.class )

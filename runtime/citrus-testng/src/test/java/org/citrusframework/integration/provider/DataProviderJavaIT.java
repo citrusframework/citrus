@@ -16,13 +16,14 @@
 
 package org.citrusframework.integration.provider;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.CitrusParameters;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class DataProviderJavaIT extends TestNGCitrusSpringSupport {
+public class DataProviderJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     @CitrusParameters( {"message", "delay"} )

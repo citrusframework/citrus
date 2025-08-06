@@ -81,6 +81,7 @@ public interface ActionsBuilder extends TestActionSupport {
     /**
      * Special send message action wrapper adding Groovy closure support when specifying the message to send.
      */
+    @Override
     default SendActionBuilder<? extends SendMessageAction, ? extends SendMessageBuilderFactory<?, ?>> send() {
         return new SendActionBuilderWrapper();
     }
@@ -88,6 +89,7 @@ public interface ActionsBuilder extends TestActionSupport {
     /**
      * Special receive message action wrapper adding Groovy closure support when specifying the message to receive.
      */
+    @Override
     default ReceiveActionBuilder<? extends ReceiveMessageAction, ? extends ReceiveMessageBuilderFactory<?, ?>> receive() {
         return new ReceiveActionBuilderWrapper();
     }

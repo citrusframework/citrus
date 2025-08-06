@@ -16,12 +16,13 @@
 
 package org.citrusframework.testcontainers.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.testcontainers.containers.GenericContainer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class StopGenericTestcontainersIT extends AbstractTestcontainersIT {
+public class StopGenericTestcontainersIT extends AbstractTestcontainersIT implements TestActionSupport {
 
     @Test
     @CitrusTest

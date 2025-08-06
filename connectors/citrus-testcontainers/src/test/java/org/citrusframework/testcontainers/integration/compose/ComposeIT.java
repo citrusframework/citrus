@@ -22,6 +22,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import org.citrusframework.TestAction;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
@@ -32,7 +33,7 @@ import org.citrusframework.util.FileUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class ComposeIT extends AbstractTestcontainersIT {
+public class ComposeIT extends AbstractTestcontainersIT implements TestActionSupport {
 
     @Test
     @CitrusTest

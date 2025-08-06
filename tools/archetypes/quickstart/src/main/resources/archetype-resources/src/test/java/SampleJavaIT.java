@@ -2,6 +2,7 @@ package ${package};
 
 import org.testng.annotations.Test;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 
@@ -10,7 +11,7 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
  *
  */
 @Test
-public class SampleJavaIT extends TestNGCitrusSpringSupport {
+public class SampleJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void echoToday() {

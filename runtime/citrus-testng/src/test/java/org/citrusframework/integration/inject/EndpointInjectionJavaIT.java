@@ -18,6 +18,7 @@ package org.citrusframework.integration.inject;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusTest;
@@ -35,7 +36,7 @@ import org.testng.annotations.Test;
 /**
  * @since 2.5
  */
-public class EndpointInjectionJavaIT extends TestNGCitrusSpringSupport {
+public class EndpointInjectionJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusFramework
     private Citrus citrus;

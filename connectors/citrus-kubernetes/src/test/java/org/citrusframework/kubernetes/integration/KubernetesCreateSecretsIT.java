@@ -22,6 +22,7 @@ import java.util.Collections;
 
 import io.fabric8.kubernetes.api.model.Secret;
 import org.apache.commons.codec.binary.Base64;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.spi.Resources;
@@ -30,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class KubernetesCreateSecretsIT extends AbstractKubernetesIT {
+public class KubernetesCreateSecretsIT extends AbstractKubernetesIT implements TestActionSupport {
 
     @Autowired
     private KubernetesClient k8sClient;

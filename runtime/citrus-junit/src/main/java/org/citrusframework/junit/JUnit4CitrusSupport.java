@@ -24,7 +24,6 @@ import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActionRunner;
-import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestActions;
 import org.citrusframework.TestBehavior;
 import org.citrusframework.TestCaseMetaInfo;
@@ -44,7 +43,7 @@ import org.junit.runner.RunWith;
  * @since 2.5
  */
 @RunWith(CitrusJUnit4Runner.class)
-public class JUnit4CitrusSupport implements GherkinTestActionRunner, TestActionSupport, CitrusFrameworkMethod.Runner {
+public class JUnit4CitrusSupport implements GherkinTestActionRunner, CitrusFrameworkMethod.Runner {
 
     /** Citrus instance */
     protected Citrus citrus;

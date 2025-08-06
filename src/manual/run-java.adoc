@@ -637,7 +637,7 @@ with given configuration.
 .Endpoint injection
 [source,java]
 ----
-public class EndpointInjectionJavaIT extends TestNGCitrusSpringSupport {
+public class EndpointInjectionJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusEndpoint
     @DirectEndpointConfig(queueName = "FOO.test.queue")

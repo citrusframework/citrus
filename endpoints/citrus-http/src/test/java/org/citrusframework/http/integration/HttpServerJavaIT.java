@@ -16,6 +16,7 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ import org.testng.annotations.Test;
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
 
 @Test
-public class HttpServerJavaIT extends TestNGCitrusSpringSupport {
+public class HttpServerJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void httpServer() {

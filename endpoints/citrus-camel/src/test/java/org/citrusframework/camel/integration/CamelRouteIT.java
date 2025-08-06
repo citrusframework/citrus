@@ -16,6 +16,7 @@
 
 package org.citrusframework.camel.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.TestNGCitrusSupport;
@@ -24,7 +25,7 @@ import org.testng.annotations.Test;
 /**
  * @since 2.3
  */
-public class CamelRouteIT extends TestNGCitrusSupport {
+public class CamelRouteIT extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest(name = "CamelRoute_01_IT")

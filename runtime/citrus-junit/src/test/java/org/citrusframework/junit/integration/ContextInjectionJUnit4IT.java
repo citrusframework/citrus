@@ -16,6 +16,7 @@
 
 package org.citrusframework.junit.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
@@ -26,7 +27,7 @@ import org.junit.Test;
 /**
  * @since 2.5
  */
-public class ContextInjectionJUnit4IT extends JUnit4CitrusSpringSupport {
+public class ContextInjectionJUnit4IT extends JUnit4CitrusSpringSupport implements TestActionSupport {
 
     @CitrusResource
     private TestContext globalContext;

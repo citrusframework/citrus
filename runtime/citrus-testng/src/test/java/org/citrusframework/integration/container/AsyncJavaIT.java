@@ -16,6 +16,7 @@
 
 package org.citrusframework.integration.container;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
@@ -26,7 +27,7 @@ import static org.citrusframework.DefaultTestActionBuilder.action;
 /**
  * @since 2.7.4
  */
-public class AsyncJavaIT extends TestNGCitrusSpringSupport {
+public class AsyncJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Test
     @CitrusTest

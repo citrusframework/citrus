@@ -16,6 +16,7 @@
 
 package org.citrusframework.integration.container;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
@@ -24,7 +25,7 @@ import org.testng.annotations.Test;
  * @since 2.5
  */
 @Test
-public class TimerJavaIT extends TestNGCitrusSpringSupport {
+public class TimerJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void timerTest() {

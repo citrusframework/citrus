@@ -23,7 +23,7 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Test;
 
-public class ApplyTestBehaviorIT extends JUnit4CitrusSpringSupport {
+public class ApplyTestBehaviorIT extends JUnit4CitrusSpringSupport implements TestActionSupport {
 
     @Test
     @CitrusTest

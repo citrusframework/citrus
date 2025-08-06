@@ -26,6 +26,7 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.async.ResultCallbackTemplate;
 import com.github.dockerjava.api.model.Frame;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -33,7 +34,7 @@ import org.testcontainers.containers.GenericContainer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class StartGenericTestcontainersIT extends AbstractTestcontainersIT {
+public class StartGenericTestcontainersIT extends AbstractTestcontainersIT implements TestActionSupport {
 
     @Test
     @CitrusTest

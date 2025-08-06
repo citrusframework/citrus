@@ -16,6 +16,7 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
@@ -31,7 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
 @Test
-public class HttpSecureConnectionJavaIT extends TestNGCitrusSpringSupport {
+public class HttpSecureConnectionJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     private final Resource keyStore = Resources.create("http-server.jks", HttpSecureConnectionJavaIT.class);
 

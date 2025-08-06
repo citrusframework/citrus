@@ -16,12 +16,13 @@
 
 package org.citrusframework.ws.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 @Test
-public class WsAddressingJavaIT extends TestNGCitrusSpringSupport {
+public class WsAddressingJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void wsAddressing() {

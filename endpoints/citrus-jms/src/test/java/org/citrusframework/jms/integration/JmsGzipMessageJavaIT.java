@@ -18,6 +18,7 @@ package org.citrusframework.jms.integration;
 
 import java.io.IOException;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.MessageType;
@@ -28,7 +29,7 @@ import org.testng.annotations.Test;
 import static org.citrusframework.validation.interceptor.GzipMessageProcessor.Builder.toGzip;
 
 @Test
-public class JmsGzipMessageJavaIT extends TestNGCitrusSpringSupport {
+public class JmsGzipMessageJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void jmsByteMessage() throws IOException {

@@ -16,12 +16,13 @@
 
 package org.citrusframework.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testng.TestNGCitrusSupport;
 import org.testng.annotations.Test;
 
-public class FailTestNgJavaIT extends TestNGCitrusSupport {
+public class FailTestNgJavaIT extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test(groups = "org.citrusframework.ShouldFailGroup", expectedExceptions = CitrusRuntimeException.class)
     @CitrusTest

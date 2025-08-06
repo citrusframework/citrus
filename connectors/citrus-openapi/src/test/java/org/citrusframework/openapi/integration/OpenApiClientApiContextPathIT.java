@@ -16,6 +16,7 @@
 
 package org.citrusframework.openapi.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
@@ -55,7 +56,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Test
 @ContextConfiguration(classes = {Config.class})
 @DirtiesContext
-public class OpenApiClientApiContextPathIT extends TestNGCitrusSpringSupport {
+public class OpenApiClientApiContextPathIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     public static final String VALID_PET_PATH = "classpath:org/citrusframework/openapi/petstore/pet.json";
 

@@ -17,6 +17,7 @@
 package org.citrusframework.integration.container;
 
 import org.citrusframework.TestActionContainerBuilder;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.container.AbstractActionContainer;
 import org.citrusframework.context.TestContext;
@@ -29,7 +30,7 @@ import static org.citrusframework.AbstractTestContainerBuilder.container;
  * @since 2.6
  */
 @Test
-public class CustomContainerJavaIT extends TestNGCitrusSpringSupport {
+public class CustomContainerJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void shouldExecuteReverseContainer() {

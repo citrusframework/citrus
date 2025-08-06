@@ -16,6 +16,7 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.message.ZipMessage;
@@ -25,7 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
 @Test
-public class HttpServerZipFileJavaIT extends TestNGCitrusSpringSupport {
+public class HttpServerZipFileJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     public static final String APPLICATION_ZIP_VALUE = "application/zip";
 

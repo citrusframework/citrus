@@ -22,12 +22,13 @@ import io.fabric8.knative.duck.v1.KReferenceBuilder;
 import io.fabric8.knative.messaging.v1.Subscription;
 import io.fabric8.knative.messaging.v1.SubscriptionBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class DeleteKnativeResourceIT extends AbstractKnativeIT {
+public class DeleteKnativeResourceIT extends AbstractKnativeIT implements TestActionSupport {
 
     @Autowired
     private KubernetesClient k8sClient;

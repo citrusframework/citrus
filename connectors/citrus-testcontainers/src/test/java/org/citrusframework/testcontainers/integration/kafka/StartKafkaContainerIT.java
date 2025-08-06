@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerResponse;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -29,7 +30,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Test(singleThreaded = true)
-public class StartKafkaContainerIT extends AbstractTestcontainersIT {
+public class StartKafkaContainerIT extends AbstractTestcontainersIT implements TestActionSupport {
 
     @CitrusTest
     public void shouldStartContainer() {

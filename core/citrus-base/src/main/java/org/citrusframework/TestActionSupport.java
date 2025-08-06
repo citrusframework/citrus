@@ -16,270 +16,38 @@
 
 package org.citrusframework;
 
-import org.citrusframework.actions.*;
-import org.citrusframework.actions.agent.AgentActionBuilder;
-import org.citrusframework.actions.camel.CamelActionBuilder;
-import org.citrusframework.actions.docker.DockerActionBuilder;
-import org.citrusframework.actions.http.HttpActionBuilder;
-import org.citrusframework.actions.jbang.JBangActionBuilder;
-import org.citrusframework.actions.jms.JmsActionBuilder;
-import org.citrusframework.actions.knative.KnativeActionBuilder;
-import org.citrusframework.actions.kubernetes.KubernetesActionBuilder;
-import org.citrusframework.actions.openapi.OpenApiActionBuilder;
-import org.citrusframework.actions.selenium.SeleniumActionBuilder;
-import org.citrusframework.actions.sql.ExecutePlsqlActionBuilder;
-import org.citrusframework.actions.sql.ExecuteSqlActionBuilder;
-import org.citrusframework.actions.sql.ExecuteSqlQueryActionBuilder;
-import org.citrusframework.actions.testcontainers.TestcontainersActionBuilder;
-import org.citrusframework.actions.ws.SoapActionBuilder;
-import org.citrusframework.condition.Condition;
-import org.citrusframework.container.*;
-import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.dsl.BaseTestActionSupport;
+import org.citrusframework.dsl.agent.AgentTestActionSupport;
+import org.citrusframework.dsl.camel.CamelTestActionSupport;
+import org.citrusframework.dsl.docker.DockerTestActionSupport;
+import org.citrusframework.dsl.http.HttpTestActionSupport;
+import org.citrusframework.dsl.jbang.JBangTestActionSupport;
+import org.citrusframework.dsl.jms.JmsTestActionSupport;
+import org.citrusframework.dsl.knative.KnativeTestActionSupport;
+import org.citrusframework.dsl.kubernetes.KubernetesTestActionSupport;
+import org.citrusframework.dsl.openapi.OpenApiTestActionSupport;
+import org.citrusframework.dsl.selenium.SeleniumTestActionSupport;
+import org.citrusframework.dsl.soap.SoapTestActionSupport;
+import org.citrusframework.dsl.sql.SqlTestActionSupport;
+import org.citrusframework.dsl.testcontainers.TestcontainersTestActionSupport;
 
-public interface TestActionSupport extends TestActions, TestContainers {
+/**
+ * Interface combines default implementations with domain specific language methods for all test actions available in Citrus.
+ */
+public interface TestActionSupport extends TestActions, TestContainers,
+        BaseTestActionSupport,
+        AgentTestActionSupport,
+        CamelTestActionSupport,
+        DockerTestActionSupport,
+        HttpTestActionSupport,
+        JBangTestActionSupport,
+        JmsTestActionSupport,
+        KnativeTestActionSupport,
+        KubernetesTestActionSupport,
+        OpenApiTestActionSupport,
+        SeleniumTestActionSupport,
+        SoapTestActionSupport,
+        SqlTestActionSupport,
+        TestcontainersTestActionSupport {
 
-    @SuppressWarnings("unchecked")
-    default <T extends TestActionBuilder<?>> T lookup(String type) {
-        return (T) TestActionBuilder.lookup(type)
-                .orElseThrow(() -> new CitrusRuntimeException("No %s action found - please add the required module to your project".formatted(type)));
-    }
-
-    @Override
-    default AgentActionBuilder<?, ?> agent() {
-        return lookup("agent");
-    }
-
-    @Override
-    default AntRunActionBuilder<AntRunAction> antrun() {
-        return new AntRunAction.Builder();
-    }
-
-    @Override
-    default ApplyTestBehaviorActionBuilder<ApplyTestBehaviorAction> apply() {
-        return new ApplyTestBehaviorAction.Builder();
-    }
-
-    @Override
-    default DockerActionBuilder<?, ?> docker() {
-        return lookup("docker");
-    }
-
-    @Override
-    default EchoActionBuilder<EchoAction> echo() {
-        return new EchoAction.Builder();
-    }
-
-    @Override
-    default ExecutePlsqlActionBuilder<?, ?> plsql() {
-        return lookup("plsql");
-    }
-
-    @Override
-    default ExecuteSqlActionBuilder<?, ?> sql() {
-        return lookup("sql");
-    }
-
-    @Override
-    default ExecuteSqlQueryActionBuilder<?, ?> query() {
-        return lookup("query");
-    }
-
-    @Override
-    default SendActionBuilder<? extends SendMessageAction, ? extends SendMessageBuilderFactory<?, ?>> send() {
-        return new SendMessageAction.Builder();
-    }
-
-    @Override
-    default ReceiveActionBuilder<? extends ReceiveMessageAction, ? extends ReceiveMessageBuilderFactory<?, ?>> receive() {
-        return new ReceiveMessageAction.Builder();
-    }
-
-    @Override
-    default SleepActionBuilder<SleepAction> sleep() {
-        return new SleepAction.Builder();
-    }
-
-    @Override
-    default FailActionBuilder<FailAction> fail() {
-        return new FailAction.Builder();
-    }
-
-    @Override
-    default HttpActionBuilder<?, ?> http() {
-        return lookup("http");
-    }
-
-    @Override
-    default CamelActionBuilder<?, ?> camel() {
-        return lookup("camel");
-    }
-
-    @Override
-    default CreateVariablesActionBuilder<CreateVariablesAction> createVariables() {
-        return new CreateVariablesAction.Builder();
-    }
-
-    @Override
-    default CreateEndpointActionBuilder<CreateEndpointAction> createEndpoint() {
-        return new CreateEndpointAction.Builder();
-    }
-
-    @Override
-    default InputActionBuilder<InputAction> input() {
-        return new InputAction.Builder();
-    }
-
-    @Override
-    default JBangActionBuilder<?, ?> jbang() {
-        return lookup("jbang");
-    }
-
-    @Override
-    default JmsActionBuilder<?, ?> jms() {
-        return lookup("jms");
-    }
-
-    @Override
-    default KnativeActionBuilder<?, ?> knative() {
-        return lookup("knative");
-    }
-
-    @Override
-    default KubernetesActionBuilder<?, ?> kubernetes() {
-        return lookup("kubernetes");
-    }
-
-    @Override
-    default LoadPropertiesActionBuilder<LoadPropertiesAction> load() {
-        return new LoadPropertiesAction.Builder();
-    }
-
-    @Override
-    default OpenApiActionBuilder<?, ?, ?> openapi() {
-        return lookup("openapi");
-    }
-
-    @Override
-    default PurgeEndpointActionBuilder<PurgeEndpointAction> purge() {
-        return new PurgeEndpointAction.Builder();
-    }
-
-    @Override
-    default ReceiveTimeoutActionBuilder<ReceiveTimeoutAction> expectTimeout() {
-        return new ReceiveTimeoutAction.Builder();
-    }
-
-    @Override
-    default SeleniumActionBuilder<?, ?> selenium() {
-        return lookup("selenium");
-    }
-
-    @Override
-    default SoapActionBuilder<?, ?> soap() {
-        return lookup("soap");
-    }
-
-    @Override
-    default StartServerActionBuilder<StartServerAction> startServer() {
-        return new StartServerAction.Builder();
-    }
-
-    @Override
-    default StopServerActionBuilder<StopServerAction> stopServer() {
-        return new StopServerAction.Builder();
-    }
-
-    @Override
-    default StopTimeActionBuilder<StopTimeAction> stopTime() {
-        return new StopTimeAction.Builder();
-    }
-
-    @Override
-    default StopTimerActionBuilder<StopTimerAction> stopTimer() {
-        return new StopTimerAction.Builder();
-    }
-
-    @Override
-    default TraceVariablesActionBuilder<TraceVariablesAction> trace() {
-        return new TraceVariablesAction.Builder();
-    }
-
-    @Override
-    default TestcontainersActionBuilder<?, ?> testcontainers() {
-        return lookup("testcontainers");
-    }
-
-    @Override
-    default TransformActionBuilder<TransformAction> transform() {
-        return new TransformAction.Builder();
-    }
-
-    /**
-     * Test action containers
-     */
-
-    @Override
-    default ApplyTemplateBuilder<Template, Template.Builder> applyTemplate() {
-        return new Template.Builder();
-    }
-
-    @Override
-    default AssertContainerBuilder<Assert, Assert.Builder> assertException() {
-        return new Assert.Builder();
-    }
-
-    @Override
-    default AsyncContainerBuilder<Async, Async.Builder> async() {
-        return new Async.Builder();
-    }
-
-    @Override
-    default CatchContainerBuilder<Catch, Catch.Builder> catchException() {
-        return new Catch.Builder();
-    }
-
-    @Override
-    default ConditionalContainerBuilder<Conditional, Conditional.Builder> conditional() {
-        return new Conditional.Builder();
-    }
-
-    @Override
-    default FinallyContainerBuilder<FinallySequence, FinallySequence.Builder> doFinally() {
-        return new FinallySequence.Builder();
-    }
-
-    @Override
-    default IterateContainerBuilder<Iterate, Iterate.Builder> iterate() {
-        return new Iterate.Builder();
-    }
-
-    @Override
-    default ParallelContainerBuilder<Parallel, Parallel.Builder> parallel() {
-        return new Parallel.Builder();
-    }
-
-    @Override
-    default RepeatOnErrorUntilTrueContainerBuilder<RepeatOnErrorUntilTrue, RepeatOnErrorUntilTrue.Builder> repeatOnError() {
-        return new RepeatOnErrorUntilTrue.Builder();
-    }
-
-    @Override
-    default RepeatUntilTrueContainerBuilder<RepeatUntilTrue, RepeatUntilTrue.Builder> repeat() {
-        return new RepeatUntilTrue.Builder();
-    }
-
-    @Override
-    default SequentialContainerBuilder<Sequence, Sequence.Builder> sequential() {
-        return new Sequence.Builder();
-    }
-
-    @Override
-    default TimerContainerBuilder<Timer, Timer.Builder> timer() {
-        return new Timer.Builder();
-    }
-
-    @Override
-    default WaitContainerBuilder<Wait, Wait.Builder<Condition>, Condition> waitFor() {
-        return new Wait.Builder<>();
-    }
 }

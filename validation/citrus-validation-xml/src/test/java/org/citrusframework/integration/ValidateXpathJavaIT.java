@@ -16,6 +16,7 @@
 
 package org.citrusframework.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
@@ -30,7 +31,7 @@ import static org.citrusframework.dsl.XmlSupport.xml;
 import static org.citrusframework.dsl.XpathSupport.xpath;
 
 @Test
-public class ValidateXpathJavaIT extends TestNGCitrusSpringSupport {
+public class ValidateXpathJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Autowired
     private NamespaceContextBuilder namespaceContextBuilder;

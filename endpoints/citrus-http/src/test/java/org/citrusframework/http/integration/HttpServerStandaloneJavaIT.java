@@ -16,6 +16,7 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
@@ -30,7 +31,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 @Test
-public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport {
+public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
     public void httpServerStandalone() {

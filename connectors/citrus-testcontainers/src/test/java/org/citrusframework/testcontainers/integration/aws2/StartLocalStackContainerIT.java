@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerResponse;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -29,7 +30,7 @@ import org.citrusframework.testcontainers.integration.AbstractTestcontainersIT;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class StartLocalStackContainerIT extends AbstractTestcontainersIT {
+public class StartLocalStackContainerIT extends AbstractTestcontainersIT implements TestActionSupport {
 
     @Test
     @CitrusTest

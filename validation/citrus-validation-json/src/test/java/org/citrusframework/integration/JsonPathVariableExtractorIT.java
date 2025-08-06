@@ -16,6 +16,7 @@
 
 package org.citrusframework.integration;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -36,7 +37,7 @@ import static org.citrusframework.dsl.JsonPathSupport.jsonPath;
 /**
  * @since 3.3.1
  */
-public class JsonPathVariableExtractorIT extends TestNGCitrusSpringSupport {
+public class JsonPathVariableExtractorIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @BindToRegistry
     public MessageQueue test = new DefaultMessageQueue("test");
