@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.ExecutePLSQLAction;
@@ -30,7 +31,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ExecutePLSQLAction.Builder.plsql;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 /**
  * @since 2.3
  */
-public class ExecutePLSQLTestActionBuilderTest extends UnitTestSupport {
+public class ExecutePLSQLTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
     private final JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
     private final PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
     private final Resource sqlResource = Mockito.mock(Resource.class);

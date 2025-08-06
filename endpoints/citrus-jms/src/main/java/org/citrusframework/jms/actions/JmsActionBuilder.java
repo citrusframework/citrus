@@ -16,6 +16,7 @@
 
 package org.citrusframework.jms.actions;
 
+import jakarta.annotation.Nullable;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
@@ -23,7 +24,7 @@ import org.citrusframework.spi.ReferenceResolverAware;
 import org.springframework.util.Assert;
 
 public class JmsActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>,
-        org.citrusframework.actions.jms.JmsActionBuilder<TestAction, JmsActionBuilder> {
+        ReferenceResolverAware, org.citrusframework.actions.jms.JmsActionBuilder<TestAction, JmsActionBuilder> {
 
     private TestActionBuilder<? extends TestAction> delegate;
 
@@ -57,12 +58,21 @@ public class JmsActionBuilder implements TestActionBuilder.DelegatingTestActionB
 
     @Override
     public JmsActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
-        this.referenceResolver = referenceResolver;
+        setReferenceResolver(referenceResolver);
         return this;
     }
 
     @Override
     public TestActionBuilder<?> getDelegate() {
         return delegate;
+    }
+
+    @Override
+    public void setReferenceResolver(@Nullable ReferenceResolver referenceResolver) {
+        if (referenceResolver != null &&
+                delegate instanceof ReferenceResolverAware referenceResolverAware) {
+            referenceResolverAware.setReferenceResolver(referenceResolver);
+            this.referenceResolver = referenceResolver;
+        }
     }
 }

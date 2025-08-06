@@ -16,10 +16,16 @@
 
 package org.citrusframework.script;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.actions.groovy.GroovyRunActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
@@ -28,11 +34,6 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 /**
  * Action executes groovy scripts either specified inline or from external file resource.
@@ -186,7 +187,8 @@ public class GroovyAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<GroovyAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<GroovyAction, Builder>
+            implements GroovyRunActionBuilder<GroovyAction, Builder> {
 
         private String script;
         private String scriptResourcePath;
@@ -200,8 +202,6 @@ public class GroovyAction extends AbstractTestAction {
 
         /**
          * Fluent API action building entry method used in Java DSL.
-         * @param script
-         * @return
          */
         public static Builder groovy(String script) {
             Builder builder = new Builder();
@@ -211,8 +211,6 @@ public class GroovyAction extends AbstractTestAction {
 
         /**
          * Fluent API action building entry method used in Java DSL.
-         * @param scriptResource
-         * @return
          */
         public static Builder groovy(Resource scriptResource) {
             Builder builder = new Builder();
@@ -220,31 +218,18 @@ public class GroovyAction extends AbstractTestAction {
             return builder;
         }
 
-        /**
-         * Sets the Groovy script to execute.
-         * @param script
-         * @return
-         */
+        @Override
         public Builder script(String script) {
             this.script = script;
             return this;
         }
 
-        /**
-         * Sets the Groovy script to execute.
-         * @param scriptResource
-         * @return
-         */
+        @Override
         public Builder script(Resource scriptResource) {
             return script(scriptResource, FileUtils.getDefaultCharset());
         }
 
-        /**
-         * Sets the Groovy script to execute.
-         * @param scriptResource
-         * @param charset
-         * @return
-         */
+        @Override
         public Builder script(Resource scriptResource, Charset charset) {
             try {
                 this.script = FileUtils.readToString(scriptResource, charset);
@@ -254,38 +239,24 @@ public class GroovyAction extends AbstractTestAction {
             return this;
         }
 
-        /**
-         * Sets the Groovy script to execute.
-         * @param scriptResourcePath
-         * @return
-         */
+        @Override
         public Builder scriptResourcePath(String scriptResourcePath) {
             this.scriptResourcePath = scriptResourcePath;
             return this;
         }
 
-        /**
-         * Use a script template from file path.
-         * @param scriptTemplatePath the scriptTemplate to set
-         */
+        @Override
         public Builder template(String scriptTemplatePath) {
             this.scriptTemplatePath = scriptTemplatePath;
             return this;
         }
 
-        /**
-         * Use a script template resource.
-         * @param scriptTemplate the scriptTemplate to set
-         */
+        @Override
         public Builder template(Resource scriptTemplate) {
             return template(scriptTemplate, FileUtils.getDefaultCharset());
         }
 
-        /**
-         * Use a script template resource.
-         * @param scriptTemplate the scriptTemplate to set
-         * @param charset
-         */
+        @Override
         public Builder template(Resource scriptTemplate, Charset charset) {
             try {
                 this.scriptTemplate = FileUtils.readToString(scriptTemplate, charset);
@@ -295,13 +266,12 @@ public class GroovyAction extends AbstractTestAction {
             return this;
         }
 
-        /**
-         * Prevent script template usage.
-         */
+        @Override
         public Builder skipTemplate() {
             return useScriptTemplate(false);
         }
 
+        @Override
         public Builder useScriptTemplate(boolean useScriptTemplate) {
             this.useScriptTemplate = useScriptTemplate;
             return this;

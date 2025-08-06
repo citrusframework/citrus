@@ -26,6 +26,7 @@ import org.citrusframework.dsl.jms.JmsTestActionSupport;
 import org.citrusframework.dsl.knative.KnativeTestActionSupport;
 import org.citrusframework.dsl.kubernetes.KubernetesTestActionSupport;
 import org.citrusframework.dsl.openapi.OpenApiTestActionSupport;
+import org.citrusframework.dsl.script.ScriptTestActionSupport;
 import org.citrusframework.dsl.selenium.SeleniumTestActionSupport;
 import org.citrusframework.dsl.soap.SoapTestActionSupport;
 import org.citrusframework.dsl.sql.SqlTestActionSupport;
@@ -45,6 +46,7 @@ public interface TestActionSupport extends TestActions, TestContainers,
         KnativeTestActionSupport,
         KubernetesTestActionSupport,
         OpenApiTestActionSupport,
+        ScriptTestActionSupport,
         SeleniumTestActionSupport,
         SoapTestActionSupport,
         SqlTestActionSupport,

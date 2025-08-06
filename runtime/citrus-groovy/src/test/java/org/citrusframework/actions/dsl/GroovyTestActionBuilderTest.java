@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.script.GroovyAction;
@@ -29,11 +30,10 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.script.GroovyAction.Builder.groovy;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class GroovyTestActionBuilderTest extends UnitTestSupport {
+public class GroovyTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
     private final Resource scriptResource = Mockito.mock(Resource.class);
 
     @Test
@@ -42,7 +42,7 @@ public class GroovyTestActionBuilderTest extends UnitTestSupport {
         when(scriptResource.exists()).thenReturn(true);
         when(scriptResource.getInputStream()).thenReturn(new ByteArrayInputStream("println 'Wow groovy!'".getBytes()));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
-        builder.$(groovy().script(scriptResource)
+        builder.$(script().groovy().script(scriptResource)
                         .skipTemplate());
 
         TestCase test = builder.getTestCase();
@@ -59,7 +59,7 @@ public class GroovyTestActionBuilderTest extends UnitTestSupport {
     @Test
     public void testGroovyBuilderWithScript() {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
-        builder.$(groovy().script("println 'Groovy!'")
+        builder.$(script().groovy().script("println 'Groovy!'")
                         .skipTemplate());
 
         TestCase test = builder.getTestCase();
@@ -74,7 +74,7 @@ public class GroovyTestActionBuilderTest extends UnitTestSupport {
     @Test
     public void testGroovyBuilderWithTemplate() throws IOException {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
-        builder.$(groovy().script("context.setVariable('message', 'Groovy!')")
+        builder.$(script().groovy().script("context.setVariable('message', 'Groovy!')")
                         .template(Resources.fromClasspath("org/citrusframework/script/script-template.groovy")));
 
         Assert.assertNotNull(context.getVariable("message"));
@@ -92,7 +92,7 @@ public class GroovyTestActionBuilderTest extends UnitTestSupport {
     @Test
     public void testGroovyBuilderWithTemplatePath() {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
-        builder.$(groovy().script("context.setVariable('message', 'Groovy!')")
+        builder.$(script().groovy().script("context.setVariable('message', 'Groovy!')")
                         .template("classpath:org/citrusframework/script/script-template.groovy"));
 
         Assert.assertNotNull(context.getVariable("message"));

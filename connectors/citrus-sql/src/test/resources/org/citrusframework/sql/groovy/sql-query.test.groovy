@@ -18,8 +18,6 @@ package org.citrusframework.sql.groovy
 
 import java.nio.charset.StandardCharsets
 
-import static org.citrusframework.actions.ExecuteSQLAction.Builder.sql
-
 name "SqlQueryTest"
 author "Christoph"
 status "FINAL"

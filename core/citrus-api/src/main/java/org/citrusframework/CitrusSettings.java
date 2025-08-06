@@ -16,16 +16,16 @@
 
 package org.citrusframework;
 
-import org.citrusframework.common.TestLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import org.citrusframework.common.TestLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.System.getProperty;
@@ -282,13 +282,19 @@ public final class CitrusSettings {
     public static final String PRETTY_PRINT_ENV = "CITRUS_MESSAGE_PRETTY_PRINT";
     public static final String PRETTY_PRINT_DEFAULT = Boolean.TRUE.toString();
 
-
     /**
      * File path charset parameter
      */
     public static final String FILE_PATH_CHARSET_PARAMETER_PROPERTY = "citrus.file.path.charset.parameter";
     public static final String FILE_PATH_CHARSET_PARAMETER_ENV = "CITRUS_FILE_PATH_CHARSET_PARAMETER";
     public static final String FILE_PATH_CHARSET_PARAMETER_DEFAULT = "; charset=";
+
+    /**
+     * List of static imports for Groovy test action scripts.
+     */
+    public static final String GROOVY_STATIC_IMPORTS_PROPERTY = "citrus.groovy.static.imports";
+    public static final String GROOVY_STATIC_IMPORTS_ENV = "CITRUS_GROOVY_STATIC_IMPORTS";
+    public static final String GROOVY_STATIC_IMPORTS_DEFAULT = "print,sleep";
 
     /**
      * Gets set of file name patterns for Groovy test files.
@@ -466,5 +472,15 @@ public final class CitrusSettings {
                 ENDPOINT_PROPERTY_BINDING_ENABLED_PROPERTY,
                 ENDPOINT_PROPERTY_BINDING_ENABLED_ENV,
                 ENDPOINT_PROPERTY_BINDING_ENABLED_DEFAULT));
+    }
+
+    /**
+     * Gets the static imports used in Groovy test action scripts.
+     */
+    public static String getGroovyStaticImports() {
+        return getPropertyEnvOrDefault(
+                GROOVY_STATIC_IMPORTS_PROPERTY,
+                GROOVY_STATIC_IMPORTS_ENV,
+                GROOVY_STATIC_IMPORTS_DEFAULT);
     }
 }

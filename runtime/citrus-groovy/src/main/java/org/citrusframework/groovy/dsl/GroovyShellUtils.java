@@ -16,15 +16,18 @@
 
 package org.citrusframework.groovy.dsl;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.citrusframework.Citrus;
-import org.citrusframework.TestActionBuilder;
-import org.citrusframework.context.TestContext;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
+import org.citrusframework.Citrus;
+import org.citrusframework.CitrusSettings;
+import org.citrusframework.TestActionBuilder;
+import org.citrusframework.context.TestContext;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
@@ -115,13 +118,14 @@ public class GroovyShellUtils {
      * @param ic the import customizer.
      */
     public static void autoAddImports(String source, ImportCustomizer ic) {
+        List<String> staticImports = Arrays.asList(CitrusSettings.getGroovyStaticImports().split(","));
         TestActionBuilder.lookup()
                 .entrySet()
                 .stream()
-                .filter(entry -> !entry.getKey().equals("send") && !entry.getKey().equals("receive") )
+                .filter(entry -> staticImports.contains(entry.getKey()) )
                 .filter(entry -> !source.contains("import static " + String.format("%s.%s", entry.getValue().getClass().getCanonicalName(), entry.getKey())))
                 .filter(entry -> source.contains(String.format("$(%s(", entry.getKey())) || source.contains(String.format("%s()", entry.getKey())))
-                .peek(entry -> System.out.println(entry.getKey()))
                 .forEach(entry -> ic.addStaticImport(entry.getValue().getClass().getCanonicalName(), entry.getKey()));
     }
+
 }
