@@ -76,7 +76,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport implements TestA
 
         then(http().client("httpClient")
             .receive()
-            .response(HttpStatus.OK.value())
+            .response(HttpStatus.OK)
             .message()
             .body("<testResponseMessage>" +
                     "<text>Hello Citrus</text>" +
@@ -118,7 +118,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport implements TestA
                    .send()
                    .response()
                    .message()
-                   .status(HttpStatus.NOT_FOUND.value())
+                   .status(HttpStatus.NOT_FOUND)
                    .body("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
                             "</testResponseMessage>")
@@ -133,7 +133,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport implements TestA
             .receive()
             .response()
             .message()
-            .status(HttpStatus.NOT_FOUND.value())
+            .status(HttpStatus.NOT_FOUND)
             .body("<testResponseMessage>" +
                         "<text>Hello Citrus</text>" +
                     "</testResponseMessage>")
@@ -155,7 +155,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport implements TestA
 
         then(http().client("httpClient")
             .receive()
-            .response(HttpStatus.OK.value())
+            .response(HttpStatus.OK)
             .message()
             .version("HTTP/1.1")
             .timeout(2000L));

@@ -68,14 +68,14 @@ public class HttpBasicAuthJavaIT extends TestNGCitrusSpringSupport implements Te
 
         then(http().server(basicAuthServer)
                 .send()
-                .response(HttpStatus.OK.value())
+                .response(HttpStatus.OK)
                 .message()
                 .body("Hi from secured Http server")
                 .contentType("text/plain"));
 
         then(http().client(basicAuthClient)
                 .receive()
-                .response(HttpStatus.OK.value())
+                .response(HttpStatus.OK)
                 .message()
                 .body("Hi from secured Http server")
                 .contentType("text/plain"));
@@ -89,7 +89,7 @@ public class HttpBasicAuthJavaIT extends TestNGCitrusSpringSupport implements Te
 
         then(http().client("http://localhost:%d".formatted(port))
                 .receive()
-                .response(HttpStatus.NO_CONTENT.value())
+                .response(HttpStatus.NO_CONTENT)
                 .message());
     }
 
@@ -103,7 +103,7 @@ public class HttpBasicAuthJavaIT extends TestNGCitrusSpringSupport implements Te
 
         then(http().client("http://localhost:%d".formatted(port))
                 .receive()
-                .response(HttpStatus.NO_CONTENT.value())
+                .response(HttpStatus.NO_CONTENT)
                 .message());
     }
 
@@ -115,7 +115,7 @@ public class HttpBasicAuthJavaIT extends TestNGCitrusSpringSupport implements Te
 
         then(http().client("http://localhost:%d".formatted(port))
                 .receive()
-                .response(HttpStatus.UNAUTHORIZED.value())
+                .response(HttpStatus.UNAUTHORIZED)
                 .message());
     }
 }

@@ -55,10 +55,10 @@ public class HttpMultipartFileUploadJavaIT extends TestNGCitrusSpringSupport imp
 
        then(http().server("echoHttpServer")
            .send()
-           .response(HttpStatus.OK.value()));
+           .response(HttpStatus.OK));
 
        then(http().client("echoHttpClient")
             .receive()
-            .response(HttpStatus.OK.value()));
+            .response(HttpStatus.OK));
     }
 }

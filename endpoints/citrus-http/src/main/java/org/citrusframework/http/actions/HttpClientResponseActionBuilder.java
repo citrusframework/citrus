@@ -114,6 +114,15 @@ public class HttpClientResponseActionBuilder extends
         }
 
         @Override
+        public HttpMessageBuilderSupport status(Object status) {
+            if (status instanceof HttpStatusCode statusCode) {
+                return status(statusCode);
+            } else {
+                throw new CitrusRuntimeException("Invalid status code type: " + status.getClass().getName());
+            }
+        }
+
+        @Override
         public HttpMessageBuilderSupport statusCode(int statusCode) {
             httpMessage.status(HttpStatusCode.valueOf(statusCode));
             return this;

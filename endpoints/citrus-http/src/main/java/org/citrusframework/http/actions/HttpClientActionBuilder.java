@@ -20,6 +20,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;
@@ -210,10 +211,18 @@ public class HttpClientActionBuilder extends AbstractReferenceResolverAwareTestA
 
         /**
          * Generic response builder for expecting response messages on client with response status code.
-         * @return
          */
         public HttpClientResponseActionBuilder response(HttpStatusCode status) {
             return response(status.value());
+        }
+
+        @Override
+        public HttpClientResponseActionBuilder response(Object status) {
+            if (status instanceof HttpStatusCode statusCode) {
+                return response(statusCode);
+            } else {
+                throw new CitrusRuntimeException("Invalid status code type: " + status.getClass().getName());
+            }
         }
 
         @Override

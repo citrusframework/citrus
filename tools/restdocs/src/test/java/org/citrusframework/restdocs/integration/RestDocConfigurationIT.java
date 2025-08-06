@@ -79,7 +79,7 @@ public class RestDocConfigurationIT extends TestNGCitrusSpringSupport implements
 
         then(http().client(httpClient)
                 .receive()
-                .response(HttpStatus.OK.value())
+                .response(HttpStatus.OK)
                 .message()
                 .body("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                     "<MessageId>1234567890</MessageId>" +

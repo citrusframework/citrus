@@ -29,6 +29,7 @@ import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.util.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 
 import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
@@ -68,7 +69,6 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
 
     /**
      * Generic response builder for sending response messages to client with response status code.
-     * @return
      */
     public HttpServerResponseActionBuilder respond(HttpStatus status) {
         return respond(status.value());
@@ -77,6 +77,15 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
     @Override
     public HttpServerResponseActionBuilder respond(int status) {
         return new HttpServerSendActionBuilder().response(status);
+    }
+
+    @Override
+    public HttpServerResponseActionBuilder respond(Object status) {
+        if (status instanceof HttpStatusCode statusCode) {
+            return new HttpServerSendActionBuilder().response(statusCode);
+        } else {
+            throw new CitrusRuntimeException("Invalid status code type: " + status.getClass().getName());
+        }
     }
 
     @Override
@@ -165,10 +174,18 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
 
         /**
          * Generic response builder for sending response messages to client with response status code.
-         * @return
          */
-        public HttpServerResponseActionBuilder response(HttpStatus status) {
+        public HttpServerResponseActionBuilder response(HttpStatusCode status) {
             return response(status.value());
+        }
+
+        @Override
+        public HttpServerResponseActionBuilder response(Object status) {
+            if (status instanceof HttpStatusCode statusCode) {
+                return response(statusCode);
+            } else {
+                throw new CitrusRuntimeException("Invalid status code type: " + status.getClass().getName());
+            }
         }
 
         @Override

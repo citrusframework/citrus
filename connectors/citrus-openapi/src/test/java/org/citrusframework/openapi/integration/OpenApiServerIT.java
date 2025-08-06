@@ -91,7 +91,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
         then(http()
             .client(httpClient)
             .receive()
-            .response(httpStatus.value())
+            .response(httpStatus)
             .message()
             .body("""
                         {
@@ -140,7 +140,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
         then(http()
             .client(httpClient)
             .receive()
-            .response(httpStatus.value()));
+            .response(httpStatus));
     }
 
 
@@ -217,7 +217,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
         then(http()
             .client(httpClient)
             .receive()
-            .response(HttpStatus.OK.value())
+            .response(HttpStatus.OK)
             .message()
             .body("""
                         {
@@ -378,7 +378,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
         then(http()
             .client(httpClient)
             .receive()
-            .response(HttpStatus.CREATED.value()));
+            .response(HttpStatus.CREATED));
     }
 
     @CitrusTest
@@ -444,7 +444,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
         then(http()
             .client(httpClient)
             .receive()
-            .response(HttpStatus.CREATED.value()));
+            .response(HttpStatus.CREATED));
     }
 
     @CitrusTest
@@ -497,7 +497,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
             then(http()
                 .client(httpClient)
                 .receive()
-                .response(HttpStatus.CREATED.value()));
+                .response(HttpStatus.CREATED));
 
         } else {
             assertThrows(() -> then(receiveActionBuilder));
@@ -544,7 +544,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
         then(http()
             .client(httpClient)
             .receive()
-            .response(httpStatus.value())
+            .response(httpStatus)
             .message()
             .body("""
                         {
