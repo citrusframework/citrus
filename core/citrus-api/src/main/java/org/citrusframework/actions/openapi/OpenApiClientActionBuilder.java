@@ -28,22 +28,22 @@ public interface OpenApiClientActionBuilder<T extends TestAction, B extends Test
     /**
      * Sends Http requests as client.
      */
-    <M extends HttpSendRequestMessageBuilderFactory<T, M>> OpenApiClientRequestActionBuilder<T, M> send(String operationKey);
+    <M extends HttpSendRequestMessageBuilderFactory<T, M>> OpenApiClientRequestActionBuilder<T, M, ?> send(String operationKey);
 
     /**
      * Receives Http response messages as client.
      * Uses default Http status 200 OK.
      */
-    <M extends HttpReceiveResponseMessageBuilderFactory<T, M>> OpenApiClientResponseActionBuilder<T, M> receive(String operationKey);
+    <M extends HttpReceiveResponseMessageBuilderFactory<T, M>> OpenApiClientResponseActionBuilder<T, M, ?> receive(String operationKey);
 
     /**
      * Receives Http response messages as client with given status code.
      */
-    <M extends HttpReceiveResponseMessageBuilderFactory<T, M>> OpenApiClientResponseActionBuilder<T, M> receive(String operationKey, int statusCode);
+    <M extends HttpReceiveResponseMessageBuilderFactory<T, M>> OpenApiClientResponseActionBuilder<T, M, ?> receive(String operationKey, int statusCode);
 
     /**
      * Receives Http response messages as client with given status.
      * Status may either refer to a status code number value or the status name (e.g. OK, NOT_FOUND)
      */
-    <M extends HttpReceiveResponseMessageBuilderFactory<T, M>> OpenApiClientResponseActionBuilder<T, M> receive(String operationKey, String statusCode);
+    <M extends HttpReceiveResponseMessageBuilderFactory<T, M>> OpenApiClientResponseActionBuilder<T, M, ?> receive(String operationKey, String statusCode);
 }

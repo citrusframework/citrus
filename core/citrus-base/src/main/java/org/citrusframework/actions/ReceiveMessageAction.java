@@ -520,7 +520,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     public abstract static class ReceiveMessageActionBuilder<T extends ReceiveMessageAction, M extends ReceiveMessageBuilderSupport<T, B, M>, B extends ReceiveMessageActionBuilder<T, M, B>>
-            extends MessageBuilderSupport.MessageActionBuilder<T, M, B> implements ReceiveActionBuilder<T, M> {
+            extends MessageBuilderSupport.MessageActionBuilder<T, M, B> implements ReceiveActionBuilder<T, M, B> {
 
         private long receiveTimeout = 0L;
 

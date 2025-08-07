@@ -33,12 +33,12 @@ import org.citrusframework.validation.ValidationProcessor;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 
-public interface ReceiveActionBuilder<T extends TestAction, M extends ReceiveMessageBuilderFactory<T, M>>
-        extends ActionBuilder<T, ReceiveActionBuilder<T, M>>, TestActionBuilder<T>, MessageActionBuilder {
+public interface ReceiveActionBuilder<T extends TestAction, M extends ReceiveMessageBuilderFactory<T, M>, B extends ReceiveActionBuilder<T, M, B>>
+        extends ActionBuilder<T, B>, TestActionBuilder<T>, MessageActionBuilder {
 
-    ReceiveActionBuilder<T, M> endpoint(Endpoint endpoint);
+    B endpoint(Endpoint endpoint);
 
-    ReceiveActionBuilder<T, M> endpoint(String endpointUri);
+    B endpoint(String endpointUri);
 
     M message();
 
@@ -56,79 +56,79 @@ public interface ReceiveActionBuilder<T extends TestAction, M extends ReceiveMes
     /**
      * Adds message processor on the message.
      */
-    ReceiveActionBuilder<T, M> transform(MessageProcessor processor);
+    B transform(MessageProcessor processor);
 
     /**
      * Adds message processor on the message.
      */
-    ReceiveActionBuilder<T, M> transform(MessageProcessorAdapter adapter);
+    B transform(MessageProcessorAdapter adapter);
 
     /**
      * Adds message processor on the message as fluent builder.
      */
-    ReceiveActionBuilder<T, M> transform(MessageProcessor.Builder<?, ?> builder);
+    B transform(MessageProcessor.Builder<?, ?> builder);
 
-    ReceiveActionBuilder<T, M> timeout(long receiveTimeout);
+    B timeout(long receiveTimeout);
 
-    ReceiveActionBuilder<T, M> validate(ValidationContext.Builder<?, ?> validationContext);
+    B validate(ValidationContext.Builder<?, ?> validationContext);
 
-    ReceiveActionBuilder<T, M> validate(ValidationContext validationContext);
+    B validate(ValidationContext validationContext);
 
-    ReceiveActionBuilder<T, M> validate(ValidationContextAdapter adapter);
+    B validate(ValidationContextAdapter adapter);
 
-    ReceiveActionBuilder<T, M> validate(List<ValidationContext.Builder<?, ?>> validationContexts);
+    B validate(List<ValidationContext.Builder<?, ?>> validationContexts);
 
-    ReceiveActionBuilder<T, M> validate(ValidationContext.Builder<?, ?>... validationContexts);
+    B validate(ValidationContext.Builder<?, ?>... validationContexts);
 
-    ReceiveActionBuilder<T, M> selector(String messageSelector);
+    B selector(String messageSelector);
 
-    ReceiveActionBuilder<T, M> selector(Map<String, String> messageSelector);
+    B selector(Map<String, String> messageSelector);
 
-    ReceiveActionBuilder<T, M> validator(MessageValidator<? extends ValidationContext> validator);
+    B validator(MessageValidator<? extends ValidationContext> validator);
 
-    ReceiveActionBuilder<T, M> validators(String... validators);
+    B validators(String... validators);
 
-    ReceiveActionBuilder<T, M> validators(MessageValidator<? extends ValidationContext>... validators);
+    B validators(MessageValidator<? extends ValidationContext>... validators);
 
-    ReceiveActionBuilder<T, M> validators(List<MessageValidator<? extends ValidationContext>> validators);
+    B validators(List<MessageValidator<? extends ValidationContext>> validators);
 
-    ReceiveActionBuilder<T, M> validators(HeaderValidator... validators);
+    B validators(HeaderValidator... validators);
 
-    ReceiveActionBuilder<T, M> validator(String validatorName);
+    B validator(String validatorName);
 
-    ReceiveActionBuilder<T, M> validator(HeaderValidator validators);
+    B validator(HeaderValidator validators);
 
     /**
      * Adds validation processor to the action for validating the received message with Java code.
      */
-    ReceiveActionBuilder<T, M> validate(ValidationProcessor processor);
+    B validate(ValidationProcessor processor);
 
     /**
      * Adds message processor on the message.
      * @param processor
      * @return
      */
-    ReceiveActionBuilder<T, M> process(MessageProcessor processor);
+    B process(MessageProcessor processor);
 
     /**
      * Adds message processor on the message as fluent builder.
      */
-    ReceiveActionBuilder<T, M> process(MessageProcessor.Builder<?, ?> builder);
+    B process(MessageProcessor.Builder<?, ?> builder);
 
     /**
      * Adds message processor on the message as fluent builder.
      */
-    ReceiveActionBuilder<T, M> process(MessageProcessorAdapter adapter);
+    B process(MessageProcessorAdapter adapter);
 
     interface BuilderFactory {
 
-        ReceiveActionBuilder<? extends TestAction, ? extends ReceiveMessageBuilderFactory<?, ?>> receive();
+        ReceiveActionBuilder<? extends TestAction, ? extends ReceiveMessageBuilderFactory<?, ?>, ? extends ReceiveActionBuilder<?, ?, ?>> receive();
 
-        default ReceiveActionBuilder<? extends TestAction, ? extends ReceiveMessageBuilderFactory<?, ?>> receive(String endpointUri) {
+        default ReceiveActionBuilder<? extends TestAction, ? extends ReceiveMessageBuilderFactory<?, ?>, ? extends ReceiveActionBuilder<?, ?, ?>> receive(String endpointUri) {
             return receive().endpoint(endpointUri);
         }
 
-        default ReceiveActionBuilder<? extends TestAction, ? extends ReceiveMessageBuilderFactory<?, ?>> receive(Endpoint endpoint) {
+        default ReceiveActionBuilder<? extends TestAction, ? extends ReceiveMessageBuilderFactory<?, ?>, ? extends ReceiveActionBuilder<?, ?, ?>> receive(Endpoint endpoint) {
             return receive().endpoint(endpoint);
         }
     }

@@ -26,16 +26,16 @@ public interface HttpClientActionBuilder<T extends TestAction, B extends TestAct
     /**
      * Sends Http requests as client.
      */
-    <M extends HttpSendRequestMessageBuilderFactory<T, M>> HttpClientSendActionBuilder<T, M> send();
+    <M extends HttpSendRequestMessageBuilderFactory<T, M>> HttpClientSendActionBuilder<T, M, ?> send();
 
     /**
      * Receives Http response messages as client.
      */
-    <M extends HttpReceiveResponseMessageBuilderFactory<T, M>> HttpClientReceiveActionBuilder<T, M> receive();
+    <M extends HttpReceiveResponseMessageBuilderFactory<T, M>> HttpClientReceiveActionBuilder<T, M, ?> receive();
 
     /**
      * Generic request builder with request method and path.
      */
-    <M extends HttpSendRequestMessageBuilderFactory<T, M>> HttpClientRequestActionBuilder<T, M> request(String method, String path);
+    <M extends HttpSendRequestMessageBuilderFactory<T, M>> HttpClientRequestActionBuilder<T, M, ?> request(String method, String path);
 
 }

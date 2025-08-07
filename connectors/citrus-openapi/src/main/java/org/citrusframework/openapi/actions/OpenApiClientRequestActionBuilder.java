@@ -51,7 +51,7 @@ import static org.citrusframework.util.StringUtils.isNotEmpty;
  * @since 4.1
  */
 public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBuilder
-        implements OpenApiSpecificationSourceAwareBuilder<SendMessageAction>, org.citrusframework.actions.openapi.OpenApiClientRequestActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport> {
+        implements OpenApiSpecificationSourceAwareBuilder<SendMessageAction>, org.citrusframework.actions.openapi.OpenApiClientRequestActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
     private final String operationKey;

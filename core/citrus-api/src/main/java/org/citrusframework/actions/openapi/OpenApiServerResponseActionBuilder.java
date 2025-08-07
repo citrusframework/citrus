@@ -17,16 +17,16 @@
 package org.citrusframework.actions.openapi;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.actions.SendActionBuilder;
 import org.citrusframework.actions.http.HttpSendResponseMessageBuilderFactory;
+import org.citrusframework.actions.http.HttpServerResponseActionBuilder;
 import org.citrusframework.openapi.AutoFillType;
 
-public interface OpenApiServerResponseActionBuilder<T extends TestAction, M extends HttpSendResponseMessageBuilderFactory<T, M>>
-        extends SendActionBuilder<T, M> {
+public interface OpenApiServerResponseActionBuilder<T extends TestAction, M extends HttpSendResponseMessageBuilderFactory<T, M>, B extends HttpServerResponseActionBuilder<T, M, B>>
+        extends HttpServerResponseActionBuilder<T, M, B> {
 
-    OpenApiServerResponseActionBuilder<T, M> autoFill(AutoFillType autoFill);
+    OpenApiServerResponseActionBuilder<T, M, B> autoFill(AutoFillType autoFill);
 
-    OpenApiServerResponseActionBuilder<T, M> schemaValidation(boolean schemaValidation);
+    OpenApiServerResponseActionBuilder<T, M, B> schemaValidation(boolean schemaValidation);
 
-    OpenApiServerResponseActionBuilder<T, M> enableRandomGeneration(AutoFillType autoFillType);
+    OpenApiServerResponseActionBuilder<T, M, B> enableRandomGeneration(AutoFillType autoFillType);
 }

@@ -40,12 +40,12 @@ public interface CamelActionBuilder<T extends TestAction, B extends TestActionBu
     /**
      * Sends message using Camel endpointUri and components.
      */
-    <S extends CamelExchangeActionBuilder<T, MB, S>, MB extends SendActionBuilder<T, M>, M extends SendMessageBuilderFactory<T, M>> S send();
+    <S extends CamelExchangeActionBuilder<T, MB, S>, MB extends SendActionBuilder<T, M, MB>, M extends SendMessageBuilderFactory<T, M>> S send();
 
     /**
      * Receive messages using Camel endpointUri and components.
      */
-    <S extends CamelExchangeActionBuilder<T, MB, S>, MB extends ReceiveActionBuilder<T, M>, M extends ReceiveMessageBuilderFactory<T, M>> S receive();
+    <S extends CamelExchangeActionBuilder<T, MB, S>, MB extends ReceiveActionBuilder<T, M, MB>, M extends ReceiveMessageBuilderFactory<T, M>> S receive();
 
     /**
      * Binds given component to the Camel context.

@@ -37,7 +37,7 @@ import org.springframework.util.MultiValueMap;
  */
 public class HttpClientRequestActionBuilder extends
         SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder>
-        implements org.citrusframework.actions.http.HttpClientRequestActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport> {
+        implements org.citrusframework.actions.http.HttpClientRequestActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {
 
     /**
      * Http message to send or receive

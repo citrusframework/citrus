@@ -17,11 +17,11 @@
 package org.citrusframework.actions.openapi;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.actions.ReceiveActionBuilder;
+import org.citrusframework.actions.http.HttpClientResponseActionBuilder;
 import org.citrusframework.actions.http.HttpReceiveResponseMessageBuilderFactory;
 
-public interface OpenApiClientResponseActionBuilder<T extends TestAction, M extends HttpReceiveResponseMessageBuilderFactory<T, M>>
-        extends ReceiveActionBuilder<T, M> {
+public interface OpenApiClientResponseActionBuilder<T extends TestAction, M extends HttpReceiveResponseMessageBuilderFactory<T, M>, B extends HttpClientResponseActionBuilder<T, M, B>>
+        extends HttpClientResponseActionBuilder<T, M, B> {
 
-    OpenApiClientResponseActionBuilder<T, M> schemaValidation(boolean enabled);
+    OpenApiClientResponseActionBuilder<T, M, B> schemaValidation(boolean enabled);
 }

@@ -26,7 +26,7 @@ public interface SoapServerActionBuilder<T extends TestAction, B extends SoapSer
     /**
      * Generic request builder for receiving SOAP messages on server.
      */
-    SoapReceiveActionBuilder<?, ?> receive();
+    SoapReceiveActionBuilder<?, ?, ?> receive();
 
     /**
      * Generic response builder for sending SOAP response messages to client.

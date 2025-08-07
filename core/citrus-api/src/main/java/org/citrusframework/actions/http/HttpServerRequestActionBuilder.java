@@ -19,26 +19,26 @@ package org.citrusframework.actions.http;
 import org.citrusframework.TestAction;
 import org.citrusframework.actions.ReceiveActionBuilder;
 
-public interface HttpServerRequestActionBuilder<T extends TestAction, M extends HttpReceiveRequestMessageBuilderFactory<T, M>>
-        extends ReceiveActionBuilder<T, M> {
+public interface HttpServerRequestActionBuilder<T extends TestAction, M extends HttpReceiveRequestMessageBuilderFactory<T, M>, B extends HttpServerRequestActionBuilder<T, M, B>>
+        extends ReceiveActionBuilder<T, M, B> {
 
     /**
      * Sets the request path.
      */
-    HttpServerRequestActionBuilder<T, M> path(String path);
+    B path(String path);
 
     /**
      * Sets the request method.
      */
-    HttpServerRequestActionBuilder<T, M> method(String method);
+    B method(String method);
 
     /**
      * Adds a query param to the request uri.
      */
-    HttpServerRequestActionBuilder<T, M> queryParam(String name);
+    B queryParam(String name);
 
     /**
      * Adds a query param to the request uri.
      */
-    HttpServerRequestActionBuilder<T, M> queryParam(String name, String value);
+    B queryParam(String name, String value);
 }

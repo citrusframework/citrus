@@ -33,7 +33,7 @@ import org.springframework.http.HttpStatusCode;
  */
 public class HttpServerResponseActionBuilder extends
         SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport, HttpServerResponseActionBuilder>
-        implements org.citrusframework.actions.http.HttpServerResponseActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport> {
+        implements org.citrusframework.actions.http.HttpServerResponseActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport, HttpServerResponseActionBuilder> {
 
     /** Http message to send or receive */
     private final HttpMessage httpMessage;

@@ -19,18 +19,18 @@ package org.citrusframework.actions.http;
 import org.citrusframework.TestAction;
 import org.citrusframework.actions.SendActionBuilder;
 
-public interface HttpClientRequestActionBuilder<T extends TestAction, M extends HttpSendRequestMessageBuilderFactory<T, M>>
-        extends SendActionBuilder<T, M> {
+public interface HttpClientRequestActionBuilder<T extends TestAction, M extends HttpSendRequestMessageBuilderFactory<T, M>, B extends HttpClientRequestActionBuilder<T, M, B>>
+        extends SendActionBuilder<T, M, B> {
 
     /**
      * Sets the request path.
      */
-    HttpClientRequestActionBuilder<T, M> path(String path);
+    B path(String path);
 
     /**
      * Sets the request method.
      */
-    HttpClientRequestActionBuilder<T, M> method(String method);
+    B method(String method);
 
     /**
      * Set the endpoint URI for the request. This works only if the HTTP endpoint used doesn't
@@ -39,15 +39,15 @@ public interface HttpClientRequestActionBuilder<T extends TestAction, M extends 
      * @param uri absolute URI to use for the endpoint
      * @return self
      */
-    HttpClientRequestActionBuilder<T, M> uri(String uri);
+    B uri(String uri);
 
     /**
      * Adds a query param to the request uri.
      */
-    HttpClientRequestActionBuilder<T, M> queryParam(String name);
+    B queryParam(String name);
 
     /**
      * Adds a query param to the request uri.
      */
-    HttpClientRequestActionBuilder<T, M> queryParam(String name, String value);
+    B queryParam(String name, String value);
 }

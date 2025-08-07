@@ -17,14 +17,14 @@
 package org.citrusframework.actions.openapi;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.actions.SendActionBuilder;
+import org.citrusframework.actions.http.HttpClientRequestActionBuilder;
 import org.citrusframework.actions.http.HttpSendRequestMessageBuilderFactory;
 import org.citrusframework.openapi.AutoFillType;
 
-public interface OpenApiClientRequestActionBuilder<T extends TestAction, M extends HttpSendRequestMessageBuilderFactory<T, M>>
-        extends SendActionBuilder<T, M> {
+public interface OpenApiClientRequestActionBuilder<T extends TestAction, M extends HttpSendRequestMessageBuilderFactory<T, M>, B extends HttpClientRequestActionBuilder<T, M, B>>
+        extends HttpClientRequestActionBuilder<T, M, B> {
 
-    OpenApiClientRequestActionBuilder<T, M> autoFill(AutoFillType autoFill);
+    OpenApiClientRequestActionBuilder<T, M, B> autoFill(AutoFillType autoFill);
 
-    OpenApiClientRequestActionBuilder<T, M> schemaValidation(boolean schemaValidation);
+    OpenApiClientRequestActionBuilder<T, M, B> schemaValidation(boolean schemaValidation);
 }

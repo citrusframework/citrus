@@ -35,7 +35,7 @@ import org.springframework.http.HttpStatusCode;
  */
 public class HttpClientResponseActionBuilder extends
         ReceiveMessageAction.ReceiveMessageActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport, HttpClientResponseActionBuilder>
-        implements org.citrusframework.actions.http.HttpClientResponseActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport> {
+        implements org.citrusframework.actions.http.HttpClientResponseActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport, HttpClientResponseActionBuilder> {
 
     /** Http message to send or receive */
     private final HttpMessage httpMessage;
