@@ -14,14 +14,39 @@
  * limitations under the License.
  */
 
-package org.citrusframework.kubernetes.command;
+package org.citrusframework.actions.kubernetes.command;
 
-import org.citrusframework.actions.kubernetes.command.KubernetesCommandResultCallback;
+import java.util.List;
 
-/**
- * @since 2.7
- */
-@Deprecated
-public interface CommandResultCallback<T> extends KubernetesCommandResultCallback<T> {
+public interface KubernetesListCommandResult<T> {
 
+    /**
+     * Gets the items.
+     */
+    List<T> getItems();
+
+    /**
+     * Sets the items.
+     */
+    void setItems(List<T> items);
+
+    /**
+     * Gets the api version.
+     */
+    String getApiVersion();
+
+    /**
+     * Sets the api version.
+     */
+    void setApiVersion(String apiVersion);
+
+    /**
+     * Gets the resource kind.
+     */
+    String getKind();
+
+    /**
+     * Sets the resource kind.
+     */
+    void setKind(String kind);
 }

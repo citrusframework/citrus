@@ -14,14 +14,32 @@
  * limitations under the License.
  */
 
-package org.citrusframework.kubernetes.command;
+package org.citrusframework.actions.kubernetes.command;
 
-import org.citrusframework.actions.kubernetes.command.KubernetesCommandResultCallback;
+public interface KubernetesCommandResult<T> {
 
-/**
- * @since 2.7
- */
-@Deprecated
-public interface CommandResultCallback<T> extends KubernetesCommandResultCallback<T> {
+    /**
+     * Checks for existing error on this result.
+     */
+    boolean hasError();
 
+    /**
+     * Gets the result model.
+     */
+    T getResult();
+
+    /**
+     * Sets the result model.
+     */
+    void setResult(T result);
+
+    /**
+     * Gets the error.
+     */
+    RuntimeException getError();
+
+    /**
+     * Sets the error.
+     */
+    void setError(RuntimeException error);
 }

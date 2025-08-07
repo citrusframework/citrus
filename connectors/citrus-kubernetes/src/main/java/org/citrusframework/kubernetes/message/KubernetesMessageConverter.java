@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.citrusframework.actions.kubernetes.command.KubernetesCommandResult;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.command.*;
@@ -59,7 +60,7 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
             message.setHeader(header.getKey(), header.getValue());
         }
 
-        CommandResult<?> commandResult = command.getCommandResult();
+        KubernetesCommandResult<?> commandResult = command.getCommandResult();
         if (commandResult != null) {
             if (commandResult.getResult() != null) {
                 response.setResult(commandResult.getResult());
@@ -70,8 +71,8 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
             }
 
             if (commandResult instanceof WatchEventResult) {
-                response.setAction(((WatchEventResult) commandResult).getAction().name());
-                message.setHeader(KubernetesMessageHeaders.ACTION, ((WatchEventResult) commandResult).getAction().name());
+                response.setAction(((WatchEventResult<?>) commandResult).getAction().name());
+                message.setHeader(KubernetesMessageHeaders.ACTION, ((WatchEventResult<?>) commandResult).getAction().name());
             }
         }
 

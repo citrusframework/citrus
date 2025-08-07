@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.*;
 import io.fabric8.kubernetes.api.model.*;
 
 import jakarta.validation.constraints.NotNull;
+import org.citrusframework.actions.kubernetes.command.KubernetesInfoCommandResult;
 
 /**
  * @since 2.7
@@ -32,7 +33,8 @@ import jakarta.validation.constraints.NotNull;
         "masterUrl",
         "namespace"
 })
-public class InfoResult implements HasMetadata {
+public class InfoResult implements HasMetadata, KubernetesInfoCommandResult {
+
     @NotNull
     @JsonProperty("kind")
     private String kind = "Info";
@@ -58,74 +60,42 @@ public class InfoResult implements HasMetadata {
         return kind;
     }
 
-    /**
-     * Gets the value of the apiVersion property.
-     *
-     * @return the apiVersion
-     */
+    @Override
     public String getApiVersion() {
         return apiVersion;
     }
 
-    /**
-     * Sets the apiVersion property.
-     *
-     * @param apiVersion
-     */
+    @Override
     public void setApiVersion(String apiVersion) {
         this.apiVersion = apiVersion;
     }
 
-    /**
-     * Gets the value of the clientVersion property.
-     *
-     * @return the clientVersion
-     */
+    @Override
     public String getClientVersion() {
         return clientVersion;
     }
 
-    /**
-     * Sets the clientVersion property.
-     *
-     * @param clientVersion
-     */
+    @Override
     public void setClientVersion(String clientVersion) {
         this.clientVersion = clientVersion;
     }
 
-    /**
-     * Gets the value of the masterUrl property.
-     *
-     * @return the masterUrl
-     */
+    @Override
     public String getMasterUrl() {
         return masterUrl;
     }
 
-    /**
-     * Sets the masterUrl property.
-     *
-     * @param masterUrl
-     */
+    @Override
     public void setMasterUrl(String masterUrl) {
         this.masterUrl = masterUrl;
     }
 
-    /**
-     * Gets the value of the namespace property.
-     *
-     * @return the namespace
-     */
+    @Override
     public String getNamespace() {
         return namespace;
     }
 
-    /**
-     * Sets the namespace property.
-     *
-     * @param namespace
-     */
+    @Override
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }

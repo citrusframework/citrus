@@ -16,9 +16,7 @@
 
 package org.citrusframework.actions.kubernetes;
 
-import org.citrusframework.TestAction;
-
-public interface KubernetesCustomResourceActionBuilder<T extends TestAction> {
+public interface KubernetesCustomResourceActionBuilder {
 
     /**
      * Create custom resource instance.

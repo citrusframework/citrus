@@ -19,12 +19,13 @@ package org.citrusframework.kubernetes.command;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.fabric8.kubernetes.client.KubernetesClientException;
+import org.citrusframework.actions.kubernetes.command.KubernetesCommandResult;
 
 /**
  * @since 2.7
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CommandResult<T> {
+public class CommandResult<T> implements KubernetesCommandResult<T> {
 
     /** The result model */
     @JsonProperty("result")
@@ -32,7 +33,7 @@ public class CommandResult<T> {
 
     /** Optional error on this result */
     @JsonProperty("error")
-    private KubernetesClientException error;
+    private RuntimeException error;
 
     /**
      * Default constructor.
@@ -43,7 +44,6 @@ public class CommandResult<T> {
 
     /**
      * Constructor using result model.
-     * @param result
      */
     public CommandResult(T result) {
         this.result = result;
@@ -51,49 +51,33 @@ public class CommandResult<T> {
 
     /**
      * Constructor using error.
-     * @param error
      */
     public CommandResult(KubernetesClientException error) {
         this.error = error;
     }
 
-    /**
-     * Checks for existing error on this result.
-     * @return
-     */
+    @Override
     public boolean hasError() {
         return error != null;
     }
 
-    /**
-     * Gets the result model.
-     * @return
-     */
+    @Override
     public T getResult() {
         return result;
     }
 
-    /**
-     * Sets the result model.
-     * @param result
-     */
+    @Override
     public void setResult(T result) {
         this.result = result;
     }
 
-    /**
-     * Gets the error.
-     * @return
-     */
-    public KubernetesClientException getError() {
+    @Override
+    public RuntimeException getError() {
         return error;
     }
 
-    /**
-     * Sets the error.
-     * @param error
-     */
-    public void setError(KubernetesClientException error) {
+    @Override
+    public void setError(RuntimeException error) {
         this.error = error;
     }
 }

@@ -14,14 +14,28 @@
  * limitations under the License.
  */
 
-package org.citrusframework.kubernetes.command;
+package org.citrusframework.actions.kubernetes.command;
 
-import org.citrusframework.actions.kubernetes.command.KubernetesCommandResultCallback;
+public interface KubernetesWatchCommandResult<R, A extends Enum<?>, E extends Exception>
+        extends KubernetesCommandResult<R> {
 
-/**
- * @since 2.7
- */
-@Deprecated
-public interface CommandResultCallback<T> extends KubernetesCommandResultCallback<T> {
+    /**
+     * Gets the observed watch action.
+     */
+    A getAction();
 
+    /**
+     * Sets the observed watch action.
+     */
+    void setAction(A action);
+
+    /**
+     * Gets the watch error if any.
+     */
+    E getWatcherError();
+
+    /**
+     * Sets the watch error.
+     */
+    void setWatcherError(E error);
 }

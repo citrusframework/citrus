@@ -16,9 +16,7 @@
 
 package org.citrusframework.actions.kubernetes;
 
-import org.citrusframework.TestAction;
-
-public interface KubernetesAgentActionBuilder<T extends TestAction> {
+public interface KubernetesAgentActionBuilder {
 
     /**
      * Create new agent deployment and connect to given Kubernetes service via local port forward.

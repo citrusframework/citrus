@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package org.citrusframework.kubernetes.command;
+package org.citrusframework.actions.kubernetes.command;
 
-import org.citrusframework.actions.kubernetes.command.KubernetesCommandResultCallback;
+import org.citrusframework.context.TestContext;
 
-/**
- * @since 2.7
- */
-@Deprecated
-public interface CommandResultCallback<T> extends KubernetesCommandResultCallback<T> {
+@FunctionalInterface
+public interface KubernetesCommandResultCallback<T> {
 
+    /**
+     * Callback method called with command result for validation.
+     */
+    void validateCommandResult(KubernetesCommandResult<T> result, TestContext context);
 }

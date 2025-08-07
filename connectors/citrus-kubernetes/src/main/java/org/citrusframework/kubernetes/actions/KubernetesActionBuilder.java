@@ -27,6 +27,7 @@ import org.citrusframework.actions.kubernetes.KubernetesResourceActionBuilder;
 import org.citrusframework.actions.kubernetes.KubernetesSecretActionBuilder;
 import org.citrusframework.actions.kubernetes.KubernetesServiceActionBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.kubernetes.endpoint.KubernetesEndpointConfiguration;
 import org.springframework.util.Assert;
 
 public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<KubernetesAction>,
@@ -112,6 +113,15 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
     }
 
     @Override
+    public KubernetesExecuteAction.Builder execute() {
+        KubernetesEndpointConfiguration endpointConfiguration = new KubernetesEndpointConfiguration();
+        endpointConfiguration.setKubernetesClient(kubernetesClient);
+
+        return new KubernetesExecuteAction.Builder()
+                .client(new org.citrusframework.kubernetes.client.KubernetesClient(endpointConfiguration));
+
+    }
+    @Override
     public KubernetesAction build() {
         Assert.notNull(delegate, "Missing delegate action to build");
         if (kubernetesClient != null) {
@@ -125,7 +135,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
         return delegate;
     }
 
-    public class SecretActionBuilder implements KubernetesSecretActionBuilder<KubernetesAction> {
+    public class SecretActionBuilder implements KubernetesSecretActionBuilder {
 
         @Override
         public CreateSecretAction.Builder create(String secretName) {
@@ -164,7 +174,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
         }
     }
 
-    public class ConfigMapActionBuilder implements KubernetesConfigMapActionBuilder<KubernetesAction> {
+    public class ConfigMapActionBuilder implements KubernetesConfigMapActionBuilder {
 
         @Override
         public CreateConfigMapAction.Builder create(String configMapName) {
@@ -203,7 +213,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
         }
     }
 
-    public class CustomResourceActionBuilder implements KubernetesCustomResourceActionBuilder<KubernetesAction> {
+    public class CustomResourceActionBuilder implements KubernetesCustomResourceActionBuilder {
 
         @Override
         public CreateCustomResourceAction.Builder create() {
@@ -231,7 +241,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
         }
     }
 
-    public class DeploymentActionBuilder implements KubernetesDeploymentActionBuilder<KubernetesAction> {
+    public class DeploymentActionBuilder implements KubernetesDeploymentActionBuilder {
 
         @Override
         public CreateAnnotationsAction.Builder addAnnotation(String deploymentName) {
@@ -253,7 +263,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
 
     }
 
-    public class PodActionBuilder implements KubernetesPodActionBuilder<KubernetesAction> {
+    public class PodActionBuilder implements KubernetesPodActionBuilder {
 
         @Override
         public DeletePodAction.Builder delete() {
@@ -336,7 +346,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
         }
     }
 
-    public class ResourceActionBuilder implements KubernetesResourceActionBuilder<KubernetesAction> {
+    public class ResourceActionBuilder implements KubernetesResourceActionBuilder {
 
         @Override
         public CreateResourceAction.Builder create() {
@@ -376,7 +386,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
         }
     }
 
-    public class AgentActionBuilder implements KubernetesAgentActionBuilder<KubernetesAction> {
+    public class AgentActionBuilder implements KubernetesAgentActionBuilder {
 
         @Override
         public AgentConnectAction.Builder connect() {
@@ -413,7 +423,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
         }
     }
 
-    public class ServiceActionBuilder implements KubernetesServiceActionBuilder<KubernetesAction> {
+    public class ServiceActionBuilder implements KubernetesServiceActionBuilder {
 
         @Override
         public ServiceConnectAction.Builder connect() {

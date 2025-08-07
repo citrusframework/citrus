@@ -16,10 +16,7 @@
 
 package org.citrusframework.kubernetes.command;
 
-import java.util.Map;
-
 import io.fabric8.kubernetes.api.model.HasMetadata;
-import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 
 /**
@@ -29,95 +26,6 @@ import org.citrusframework.kubernetes.client.KubernetesClient;
  * <O> the command output that may be validated (e.g. Pod, PodList, InfoResult, ...)
  * @since 2.7
  */
-public interface KubernetesCommand<T extends HasMetadata, O> {
+public interface KubernetesCommand<T extends HasMetadata, O> extends org.citrusframework.actions.kubernetes.command.KubernetesCommand<T, O, KubernetesClient> {
 
-    /**
-     * Executes command with given kubernetes client and test context.
-     * @param kubernetesClient
-     * @param context
-     */
-    void execute(KubernetesClient kubernetesClient, TestContext context);
-
-    /**
-     * Gets the Kubernetes command name.
-     * @return
-     */
-    String getName();
-
-    /**
-     * Gets the command parameters.
-     * @return
-     */
-    Map<String, Object> getParameters();
-
-    /**
-     * Adds validation callback with command result.
-     * @param callback
-     * @return
-     */
-    KubernetesCommand<T, O> validate(CommandResultCallback<O> callback);
-
-    /**
-     * Provides access to this command result if any.
-     * @return
-     */
-    CommandResult<O> getCommandResult();
-
-    /**
-     * Gets the command result callback.
-     * @return
-     */
-    CommandResultCallback<O> getResultCallback();
-
-    /**
-     * Sets the label parameter.
-     * @param key
-     * @param value
-     * @return
-     */
-    KubernetesCommand<T, O> label(String key, String value);
-
-    /**
-     * Sets the label parameter.
-     * @param key
-     * @return
-     */
-    KubernetesCommand<T, O> label(String key);
-
-    /**
-     * Sets the namespace parameter.
-     * @param key
-     * @return
-     */
-    KubernetesCommand<T, O> namespace(String key);
-
-    /**
-     * Sets the name parameter.
-     * @param key
-     * @return
-     */
-    KubernetesCommand<T, O> name(String key);
-
-    /**
-     * Sets the without label parameter.
-     * @param key
-     * @param value
-     * @return
-     */
-    KubernetesCommand<T, O> withoutLabel(String key, String value);
-
-    /**
-     * Sets the without label parameter.
-     * @param key
-     * @return
-     */
-    KubernetesCommand<T, O> withoutLabel(String key);
-
-    /**
-     * Validate command result using the specified command result callback.
-     * @param context
-     */
-    default void validateCommandResult(TestContext context) {
-        getResultCallback().validateCommandResult(getCommandResult(), context);
-    }
 }
