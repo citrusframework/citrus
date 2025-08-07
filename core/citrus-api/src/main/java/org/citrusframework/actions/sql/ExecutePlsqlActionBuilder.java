@@ -30,18 +30,18 @@ public interface ExecutePlsqlActionBuilder<T extends TestAction, B extends Execu
      * Setter for inline script.
      * @param script
      */
-    ExecutePlsqlActionBuilder<T, B> sqlScript(String script);
+    B sqlScript(String script);
 
     /**
      * Setter for external file resource containing the SQL statements to execute.
      */
-    ExecutePlsqlActionBuilder<T, B> sqlResource(Resource sqlResource, Charset charset);
+    B sqlResource(Resource sqlResource, Charset charset);
 
     /**
      * Ignore errors during execution.
      * @param ignoreErrors boolean flag to set
      */
-    ExecutePlsqlActionBuilder<T, B> ignoreErrors(boolean ignoreErrors);
+    B ignoreErrors(boolean ignoreErrors);
 
     interface BuilderFactory {
 

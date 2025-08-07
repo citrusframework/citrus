@@ -32,54 +32,54 @@ public interface ExecuteSqlQueryActionBuilder<T extends TestAction, B extends Ex
      * Set expected control result set. Keys represent the column names, values
      * the expected values.
      */
-    ExecuteSqlQueryActionBuilder<T, B> validate(String column, String... values);
+    B validate(String column, String... values);
 
     /**
      * Validate SQL result set via validation script, for instance Groovy.
      */
-    ExecuteSqlQueryActionBuilder<T, B> validateScript(String script, String type);
+    B validateScript(String script, String type);
 
     /**
      * Validate SQL result set via validation script, for instance Groovy.
      */
-    ExecuteSqlQueryActionBuilder<T, B> validateScript(Resource scriptResource, String type);
+    B validateScript(Resource scriptResource, String type);
 
     /**
      * Validate SQL result set via validation script, for instance Groovy.
      */
-    ExecuteSqlQueryActionBuilder<T, B> validateScript(Resource scriptResource, String type, Charset charset);
+    B validateScript(Resource scriptResource, String type, Charset charset);
 
     /**
      * Validate SQL result set via validation script resource.
      */
-    ExecuteSqlQueryActionBuilder<T, B> validateScriptResource(String scriptResourcePath, String type, Charset charset);
+    B validateScriptResource(String scriptResourcePath, String type, Charset charset);
 
     /**
      * Use this validation context.
      */
-    ExecuteSqlQueryActionBuilder<T, B> validate(ScriptValidationContext scriptValidationContext);
+    B validate(ScriptValidationContext scriptValidationContext);
 
     /**
      * Validate SQL result set via validation script, for instance Groovy.
      */
-    ExecuteSqlQueryActionBuilder<T, B> groovy(String script);
+    B groovy(String script);
 
     /**
      * Validate SQL result set via validation script, for instance Groovy.
      */
-    ExecuteSqlQueryActionBuilder<T, B> groovy(Resource scriptResource);
+    B groovy(Resource scriptResource);
 
     /**
      * User can extract column values to test variables. Map holds column names (keys) and
      * respective target variable names (values).
      */
-    ExecuteSqlQueryActionBuilder<T, B> extract(String columnName, String variableName);
+    B extract(String columnName, String variableName);
 
     /**
      * Sets an explicit validator implementation for this action.
      * @param validator the validator to set
      */
-    ExecuteSqlQueryActionBuilder<T, B> validator(SqlResultSetScriptValidator validator);
+    B validator(SqlResultSetScriptValidator validator);
 
     interface BuilderFactory {
 

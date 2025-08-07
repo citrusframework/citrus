@@ -27,7 +27,7 @@ public interface ExecuteSqlActionBuilder<T extends TestAction, B extends Execute
      * Ignore errors during execution.
      * @param ignoreErrors boolean flag to set
      */
-    ExecuteSqlActionBuilder<T, B> ignoreErrors(boolean ignoreErrors);
+    B ignoreErrors(boolean ignoreErrors);
 
     ExecuteSqlQueryActionBuilder<?, ?> query();
 
