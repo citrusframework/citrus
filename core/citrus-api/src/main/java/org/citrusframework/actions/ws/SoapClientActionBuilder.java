@@ -26,7 +26,7 @@ public interface SoapClientActionBuilder<T extends TestAction, B extends SoapCli
     /**
      * Generic response builder for expecting response messages on client.
      */
-    SoapReceiveActionBuilder<?, ?> receive();
+    SoapReceiveActionBuilder<?, ?, ?> receive();
 
     /**
      * Generic response builder for expecting response messages on client.

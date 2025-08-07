@@ -39,7 +39,7 @@ import org.springframework.util.MultiValueMap;
  */
 public class HttpServerRequestActionBuilder extends
         ReceiveMessageAction.ReceiveMessageActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport, HttpServerRequestActionBuilder>
-        implements org.citrusframework.actions.http.HttpServerRequestActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport> {
+        implements org.citrusframework.actions.http.HttpServerRequestActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport, HttpServerRequestActionBuilder> {
 
     /** Http message to send or receive */
     private final HttpMessage httpMessage;

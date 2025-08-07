@@ -25,12 +25,12 @@ import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageProcessorAdapter;
 import org.citrusframework.variable.VariableExtractor;
 
-public interface SendActionBuilder<T extends TestAction, M extends SendMessageBuilderFactory<T, M>>
-        extends ActionBuilder<T, SendActionBuilder<T, M>>, TestActionBuilder<T>, MessageActionBuilder {
+public interface SendActionBuilder<T extends TestAction, M extends SendMessageBuilderFactory<T, M>, B extends SendActionBuilder<T, M, B>>
+        extends ActionBuilder<T, B>, TestActionBuilder<T>, MessageActionBuilder {
 
-    SendActionBuilder<T, M> endpoint(Endpoint endpoint);
+    B endpoint(Endpoint endpoint);
 
-    SendActionBuilder<T, M> endpoint(String endpointUri);
+    B endpoint(String endpointUri);
 
     M message();
 
@@ -48,49 +48,49 @@ public interface SendActionBuilder<T extends TestAction, M extends SendMessageBu
     /**
      * Adds message processor on the message.
      */
-    SendActionBuilder<T, M> transform(MessageProcessor processor);
+    B transform(MessageProcessor processor);
 
     /**
      * Adds message processor on the message.
      */
-    SendActionBuilder<T, M> transform(MessageProcessorAdapter adapter);
+    B transform(MessageProcessorAdapter adapter);
 
     /**
      * Adds message processor on the message as fluent builder.
      */
-    SendActionBuilder<T, M> transform(MessageProcessor.Builder<?, ?> builder);
+    B transform(MessageProcessor.Builder<?, ?> builder);
 
     /**
      * Adds message processor on the message.
      * @param processor
      * @return
      */
-    SendActionBuilder<T, M> process(MessageProcessor processor);
+    B process(MessageProcessor processor);
 
     /**
      * Adds message processor on the message as fluent builder.
      */
-    SendActionBuilder<T, M> process(MessageProcessor.Builder<?, ?> builder);
+    B process(MessageProcessor.Builder<?, ?> builder);
 
     /**
      * Adds message processor on the message as fluent builder.
      */
-    SendActionBuilder<T, M> process(MessageProcessorAdapter adapter);
+    B process(MessageProcessorAdapter adapter);
 
     /**
      * Sets the fork mode for this send action builder.
      */
-    SendActionBuilder<T, M> fork(boolean forkMode);
+    B fork(boolean forkMode);
 
     interface BuilderFactory {
 
-        SendActionBuilder<? extends TestAction, ? extends SendMessageBuilderFactory<?, ?>> send();
+        SendActionBuilder<? extends TestAction, ? extends SendMessageBuilderFactory<?, ?>, ? extends SendActionBuilder<?, ?, ?>> send();
 
-        default SendActionBuilder<? extends TestAction, ? extends SendMessageBuilderFactory<?, ?>> send(String endpointUri) {
+        default SendActionBuilder<? extends TestAction, ? extends SendMessageBuilderFactory<?, ?>, ? extends SendActionBuilder<?, ?, ?>> send(String endpointUri) {
             return send().endpoint(endpointUri);
         }
 
-        default SendActionBuilder<? extends TestAction, ? extends SendMessageBuilderFactory<?, ?>> send(Endpoint endpoint) {
+        default SendActionBuilder<? extends TestAction, ? extends SendMessageBuilderFactory<?, ?>, ? extends SendActionBuilder<?, ?, ?>> send(Endpoint endpoint) {
             return send().endpoint(endpoint);
         }
     }

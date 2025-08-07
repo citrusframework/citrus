@@ -20,7 +20,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.actions.SendActionBuilder;
 
 public interface SoapSendActionBuilderBase<T extends TestAction, M extends SoapSendMessageBuilderFactory<T, M>, B extends SoapSendActionBuilderBase<T, M, B>>
-    extends SendActionBuilder<T, M> {
+    extends SendActionBuilder<T, M, B> {
 
     B mtomEnabled(boolean mtomEnabled);
 }

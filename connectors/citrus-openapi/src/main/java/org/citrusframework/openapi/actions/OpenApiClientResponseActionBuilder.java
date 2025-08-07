@@ -45,7 +45,7 @@ import static org.citrusframework.openapi.validation.OpenApiMessageValidationCon
  * @since 4.1
  */
 public class OpenApiClientResponseActionBuilder extends HttpClientResponseActionBuilder
-        implements OpenApiSpecificationSourceAwareBuilder<ReceiveMessageAction>, org.citrusframework.actions.openapi.OpenApiClientResponseActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport> {
+        implements OpenApiSpecificationSourceAwareBuilder<ReceiveMessageAction>, org.citrusframework.actions.openapi.OpenApiClientResponseActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport, HttpClientResponseActionBuilder> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
     private final String operationKey;

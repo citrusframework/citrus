@@ -18,20 +18,20 @@ package org.citrusframework.actions.http;
 
 import org.citrusframework.TestAction;
 
-public interface HttpServerSendActionBuilder<T extends TestAction, M extends HttpSendResponseMessageBuilderFactory<T, M>> {
+public interface HttpServerSendActionBuilder<T extends TestAction, M extends HttpSendResponseMessageBuilderFactory<T, M>, B extends HttpServerResponseActionBuilder<T, M, B>> {
 
     /**
      * Generic response builder for expecting response messages on client.
      */
-    HttpServerResponseActionBuilder<T, M> response();
+    B response();
 
     /**
      * Generic response builder for expecting response messages on client.
      */
-    HttpServerResponseActionBuilder<T, M> response(Object status);
+    B response(Object status);
 
     /**
      * Generic response builder for expecting response messages on client with response status code.
      */
-    HttpServerResponseActionBuilder<T, M> response(int status);
+    B response(int status);
 }

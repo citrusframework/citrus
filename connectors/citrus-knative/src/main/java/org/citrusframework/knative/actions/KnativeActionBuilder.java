@@ -47,7 +47,6 @@ public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestAct
 
     /**
      * Fluent API action building entry method used in Java DSL.
-     * @return
      */
     public static KnativeActionBuilder knative() {
         return new KnativeActionBuilder();

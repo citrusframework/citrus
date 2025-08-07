@@ -26,32 +26,32 @@ public interface HttpServerActionBuilder<T extends TestAction, B extends TestAct
     /**
      * Send Http response messages as server to client.
      */
-    <M extends HttpSendResponseMessageBuilderFactory<T, M>> HttpServerSendActionBuilder<T, M> send();
+    <M extends HttpSendResponseMessageBuilderFactory<T, M>> HttpServerSendActionBuilder<T, M, ?> send();
 
     /**
      * Receive Http requests as server.
      */
-    <M extends HttpReceiveRequestMessageBuilderFactory<T, M>> HttpServerReceiveActionBuilder<T, M> receive();
+    <M extends HttpReceiveRequestMessageBuilderFactory<T, M>> HttpServerReceiveActionBuilder<T, M, ?> receive();
 
     /**
      * Generic request builder with request method and path.
      */
-    <M extends HttpReceiveRequestMessageBuilderFactory<T, M>> HttpServerRequestActionBuilder<T, M> request(String method, String path);
+    <M extends HttpReceiveRequestMessageBuilderFactory<T, M>> HttpServerRequestActionBuilder<T, M, ?> request(String method, String path);
 
     /**
      * Generic response builder for sending response messages to client with response status code.
      */
-    <M extends HttpSendResponseMessageBuilderFactory<T, M>> HttpServerResponseActionBuilder<T, M> respond(int status);
+    <M extends HttpSendResponseMessageBuilderFactory<T, M>> HttpServerResponseActionBuilder<T, M, ?> respond(int status);
 
     /**
      * Generic response builder for sending response messages to client with response status code.
      */
-    <M extends HttpSendResponseMessageBuilderFactory<T, M>> HttpServerResponseActionBuilder<T, M> respond(Object status);
+    <M extends HttpSendResponseMessageBuilderFactory<T, M>> HttpServerResponseActionBuilder<T, M, ?> respond(Object status);
 
     /**
      * Generic response builder for sending response messages to client.
      */
-    <M extends HttpSendResponseMessageBuilderFactory<T, M>> HttpServerResponseActionBuilder<T, M> respond();
+    <M extends HttpSendResponseMessageBuilderFactory<T, M>> HttpServerResponseActionBuilder<T, M, ?> respond();
 
     /**
      * Generic response builder for sending JSON response messages to client with response status 200 (OK).

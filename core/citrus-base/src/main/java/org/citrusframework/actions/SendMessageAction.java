@@ -404,7 +404,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
      * Base send message action builder also used by subclasses of base send message action.
      */
     public abstract static class SendMessageActionBuilder<T extends SendMessageAction, M extends SendMessageBuilderSupport<T, B, M>, B extends SendMessageActionBuilder<T, M, B>>
-        extends MessageBuilderSupport.MessageActionBuilder<T, M, B> implements SendActionBuilder<T, M> {
+        extends MessageBuilderSupport.MessageActionBuilder<T, M, B> implements SendActionBuilder<T, M, B> {
 
         protected boolean forkMode = false;
         protected CompletableFuture<Void> finished;

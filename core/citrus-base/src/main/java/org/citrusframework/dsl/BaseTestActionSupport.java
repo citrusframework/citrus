@@ -74,7 +74,7 @@ public interface BaseTestActionSupport extends BaseTestActions, TestContainers {
     }
 
     @Override
-    default ReceiveActionBuilder<? extends ReceiveMessageAction, ? extends ReceiveMessageBuilderFactory<?, ?>> receive() {
+    default ReceiveActionBuilder<? extends ReceiveMessageAction, ? extends ReceiveMessageBuilderFactory<?, ?>, ? extends ReceiveActionBuilder<?, ?, ?>> receive() {
         return new ReceiveMessageAction.Builder();
     }
 
@@ -84,7 +84,7 @@ public interface BaseTestActionSupport extends BaseTestActions, TestContainers {
     }
 
     @Override
-    default SendActionBuilder<? extends SendMessageAction, ? extends SendMessageBuilderFactory<?, ?>> send() {
+    default SendActionBuilder<? extends SendMessageAction, ? extends SendMessageBuilderFactory<?, ?>, ? extends SendActionBuilder<?, ?, ?>> send() {
         return new SendMessageAction.Builder();
     }
 

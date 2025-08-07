@@ -18,85 +18,85 @@ package org.citrusframework.actions.http;
 
 import org.citrusframework.TestAction;
 
-public interface HttpServerReceiveActionBuilder<T extends TestAction, M extends HttpReceiveRequestMessageBuilderFactory<T, M>> {
+public interface HttpServerReceiveActionBuilder<T extends TestAction, M extends HttpReceiveRequestMessageBuilderFactory<T, M>, B extends HttpServerRequestActionBuilder<T, M, B>> {
 
     /**
      * Receives Http GET request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> get();
+    B get();
 
     /**
      * Receives Http GET request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> get(String path);
+    B get(String path);
 
     /**
      * Receives Http POST request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> post();
+    B post();
 
     /**
      * Receives Http POST request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> post(String path);
+    B post(String path);
 
     /**
      * Receives Http PUT request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> put();
+    B put();
 
     /**
      * Receives Http PUT request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> put(String path);
+    B put(String path);
 
     /**
      * Receives Http DELETE request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> delete();
+    B delete();
 
     /**
      * Receives Http DELETE request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> delete(String path);
+    B delete(String path);
 
     /**
      * Receives Http HEAD request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> head();
+    B head();
 
     /**
      * Receives Http HEAD request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> head(String path);
+    B head(String path);
 
     /**
      * Receives Http OPTIONS request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> options();
+    B options();
 
     /**
      * Receives Http OPTIONS request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> options(String path);
+    B options(String path);
 
     /**
      * Receives Http TRACE request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> trace();
+    B trace();
 
     /**
      * Receives Http TRACE request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> trace(String path);
+    B trace(String path);
 
     /**
      * Receives Http PATCH request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> patch();
+    B patch();
 
     /**
      * Receives Http PATCH request as client to server.
      */
-    HttpServerRequestActionBuilder<T, M> patch(String path);
+    B patch(String path);
 }

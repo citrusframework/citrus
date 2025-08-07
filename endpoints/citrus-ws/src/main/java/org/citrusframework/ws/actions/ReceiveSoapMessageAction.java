@@ -101,7 +101,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
      * Action builder.
      */
     public static class Builder extends ReceiveMessageActionBuilder<ReceiveSoapMessageAction, SoapMessageBuilderSupport, Builder>
-            implements SoapReceiveActionBuilder<ReceiveSoapMessageAction, SoapMessageBuilderSupport> {
+            implements SoapReceiveActionBuilder<ReceiveSoapMessageAction, SoapMessageBuilderSupport, Builder> {
 
         /** Soap message to receive */
         private final SoapMessage soapMessage = new SoapMessage();

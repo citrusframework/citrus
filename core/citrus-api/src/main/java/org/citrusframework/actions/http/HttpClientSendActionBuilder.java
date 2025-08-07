@@ -18,85 +18,85 @@ package org.citrusframework.actions.http;
 
 import org.citrusframework.TestAction;
 
-public interface HttpClientSendActionBuilder<T extends TestAction, M extends HttpSendRequestMessageBuilderFactory<T, M>> {
+public interface HttpClientSendActionBuilder<T extends TestAction, M extends HttpSendRequestMessageBuilderFactory<T, M>, B extends HttpClientRequestActionBuilder<T, M, B>> {
 
     /**
      * Sends Http GET request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> get();
+    B get();
 
     /**
      * Sends Http GET request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> get(String path);
+    B get(String path);
 
     /**
      * Sends Http POST request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> post();
+    B post();
 
     /**
      * Sends Http POST request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> post(String path);
+    B post(String path);
 
     /**
      * Sends Http PUT request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> put();
+    B put();
 
     /**
      * Sends Http PUT request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> put(String path);
+    B put(String path);
 
     /**
      * Sends Http DELETE request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> delete();
+    B delete();
 
     /**
      * Sends Http DELETE request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> delete(String path);
+    B delete(String path);
 
     /**
      * Sends Http HEAD request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> head();
+    B head();
 
     /**
      * Sends Http HEAD request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> head(String path);
+    B head(String path);
 
     /**
      * Sends Http OPTIONS request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> options();
+    B options();
 
     /**
      * Sends Http OPTIONS request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> options(String path);
+    B options(String path);
 
     /**
      * Sends Http TRACE request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> trace();
+    B trace();
 
     /**
      * Sends Http TRACE request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> trace(String path);
+    B trace(String path);
 
     /**
      * Sends Http PATCH request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> patch();
+    B patch();
 
     /**
      * Sends Http PATCH request as client to server.
      */
-    HttpClientRequestActionBuilder<T, M> patch(String path);
+    B patch(String path);
 }

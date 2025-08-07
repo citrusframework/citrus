@@ -28,25 +28,25 @@ public interface OpenApiServerActionBuilder<T extends TestAction, B extends Test
     /**
      * Sends Http response messages as server. Uses default Http status 200 OK.
      */
-    <M extends HttpSendResponseMessageBuilderFactory<T, M>> OpenApiServerResponseActionBuilder<T, M> send(String operationKey);
+    <M extends HttpSendResponseMessageBuilderFactory<T, M>> OpenApiServerResponseActionBuilder<T, M, ?> send(String operationKey);
 
     /**
      * Send Http response messages as server to client.
      */
-    <M extends HttpSendResponseMessageBuilderFactory<T, M>> OpenApiServerResponseActionBuilder<T, M> send(String operationKey, int statusCode);
+    <M extends HttpSendResponseMessageBuilderFactory<T, M>> OpenApiServerResponseActionBuilder<T, M, ?> send(String operationKey, int statusCode);
 
     /**
      * Send Http response messages as server to client.
      */
-    <M extends HttpSendResponseMessageBuilderFactory<T, M>> OpenApiServerResponseActionBuilder<T, M> send(String operationKey, String statusCode);
+    <M extends HttpSendResponseMessageBuilderFactory<T, M>> OpenApiServerResponseActionBuilder<T, M, ?> send(String operationKey, String statusCode);
 
     /**
      * Send Http response messages as server to client.
      */
-    <M extends HttpSendResponseMessageBuilderFactory<T, M>> OpenApiServerResponseActionBuilder<T, M> send(String operationKey, String statusCode, String accept);
+    <M extends HttpSendResponseMessageBuilderFactory<T, M>> OpenApiServerResponseActionBuilder<T, M, ?> send(String operationKey, String statusCode, String accept);
 
     /**
      * Receive Http requests as server.
      */
-    <M extends HttpReceiveRequestMessageBuilderFactory<T, M>> OpenApiServerRequestActionBuilder<T, M> receive(String operationKey);
+    <M extends HttpReceiveRequestMessageBuilderFactory<T, M>> OpenApiServerRequestActionBuilder<T, M, ?> receive(String operationKey);
 }

@@ -154,7 +154,7 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
      * Provides send response action methods.
      */
     public class HttpServerSendActionBuilder implements
-            org.citrusframework.actions.http.HttpServerSendActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport> {
+            org.citrusframework.actions.http.HttpServerSendActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport, HttpServerResponseActionBuilder> {
 
         @Override
         public HttpServerResponseActionBuilder response() {
@@ -210,7 +210,7 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
      * Provides receive request action methods.
      */
     public class HttpServerReceiveActionBuilder implements
-            org.citrusframework.actions.http.HttpServerReceiveActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport> {
+            org.citrusframework.actions.http.HttpServerReceiveActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport, HttpServerRequestActionBuilder> {
 
         /**
          * Receive Http GET request as server.
