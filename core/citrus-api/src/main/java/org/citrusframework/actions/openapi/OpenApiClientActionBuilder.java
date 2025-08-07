@@ -39,6 +39,11 @@ public interface OpenApiClientActionBuilder<T extends TestAction, B extends Test
     /**
      * Receives Http response messages as client with given status code.
      */
+    <M extends HttpReceiveResponseMessageBuilderFactory<T, M>> OpenApiClientResponseActionBuilder<T, M, ?> receive(String operationKey, Object statusCode);
+
+    /**
+     * Receives Http response messages as client with given status code.
+     */
     <M extends HttpReceiveResponseMessageBuilderFactory<T, M>> OpenApiClientResponseActionBuilder<T, M, ?> receive(String operationKey, int statusCode);
 
     /**

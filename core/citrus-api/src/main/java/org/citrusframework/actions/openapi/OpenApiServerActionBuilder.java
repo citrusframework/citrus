@@ -33,6 +33,11 @@ public interface OpenApiServerActionBuilder<T extends TestAction, B extends Test
     /**
      * Send Http response messages as server to client.
      */
+    <M extends HttpSendResponseMessageBuilderFactory<T, M>> OpenApiServerResponseActionBuilder<T, M, ?> send(String operationKey, Object statusCode);
+
+    /**
+     * Send Http response messages as server to client.
+     */
     <M extends HttpSendResponseMessageBuilderFactory<T, M>> OpenApiServerResponseActionBuilder<T, M, ?> send(String operationKey, int statusCode);
 
     /**

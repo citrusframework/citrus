@@ -18,6 +18,7 @@ package org.citrusframework.openapi.actions;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;
@@ -97,6 +98,15 @@ public class OpenApiServerActionBuilder extends
      */
     public OpenApiServerResponseActionBuilder send(String operationKey, HttpStatus status, String accept) {
         return send(operationKey, status.name(), accept);
+    }
+
+    @Override
+    public OpenApiServerResponseActionBuilder send(String operationKey, Object status) {
+        if (status instanceof HttpStatus statusCode) {
+            return send(operationKey, statusCode);
+        } else {
+            throw new CitrusRuntimeException("Invalid status code type: " + status.getClass().getName());
+        }
     }
 
     @Override
