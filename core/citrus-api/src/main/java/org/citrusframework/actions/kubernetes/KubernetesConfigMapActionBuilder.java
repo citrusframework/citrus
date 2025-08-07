@@ -16,9 +16,7 @@
 
 package org.citrusframework.actions.kubernetes;
 
-import org.citrusframework.TestAction;
-
-public interface KubernetesConfigMapActionBuilder<T extends TestAction> {
+public interface KubernetesConfigMapActionBuilder {
 
     /**
      * Create configMap instance.

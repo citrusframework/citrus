@@ -20,11 +20,13 @@ import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.client.Watch;
 import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.kubernetes.client.WatcherException;
+import org.citrusframework.actions.kubernetes.command.KubernetesWatchCommandResult;
 
 /**
  * @since 2.7
  */
-public class WatchEventResult<R extends HasMetadata> extends CommandResult<R> {
+public class WatchEventResult<R extends HasMetadata> extends CommandResult<R>
+        implements KubernetesWatchCommandResult<R, Watcher.Action, WatcherException> {
 
     private Watch watch;
 
@@ -41,8 +43,6 @@ public class WatchEventResult<R extends HasMetadata> extends CommandResult<R> {
 
     /**
      * Constructor using fields.
-     * @param result
-     * @param action
      */
     public WatchEventResult(R result, Watcher.Action action) {
         super(result);
@@ -51,17 +51,18 @@ public class WatchEventResult<R extends HasMetadata> extends CommandResult<R> {
 
     /**
      * Constructor using error.
-     * @param error
      */
     public WatchEventResult(WatcherException error) {
         super(error.asClientException());
         this.watcherError = error;
     }
 
+    @Override
     public Watcher.Action getAction() {
         return action;
     }
 
+    @Override
     public void setAction(Watcher.Action action) {
         this.action = action;
     }
@@ -74,10 +75,12 @@ public class WatchEventResult<R extends HasMetadata> extends CommandResult<R> {
         this.watch = watch;
     }
 
+    @Override
     public WatcherException getWatcherError() {
         return watcherError;
     }
 
+    @Override
     public void setWatcherError(WatcherException error) {
         this.watcherError = error;
     }

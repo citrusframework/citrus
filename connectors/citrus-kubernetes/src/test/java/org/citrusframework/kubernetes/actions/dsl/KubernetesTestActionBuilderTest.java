@@ -43,7 +43,6 @@ import org.citrusframework.kubernetes.command.Info;
 import org.citrusframework.kubernetes.command.ListNamespaces;
 import org.citrusframework.kubernetes.command.ListNodes;
 import org.citrusframework.kubernetes.command.ListPods;
-import org.citrusframework.kubernetes.command.WatchEventResult;
 import org.citrusframework.kubernetes.command.WatchNodes;
 import org.citrusframework.kubernetes.command.WatchServices;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
@@ -161,7 +160,7 @@ public class KubernetesTestActionBuilderTest extends UnitTestSupport {
             .validate((services, context) -> {
                 Assert.assertNotNull(services);
                 Assert.assertNotNull(services.getResult());
-                Assert.assertEquals(((WatchEventResult<Service>) services).getAction(), Watcher.Action.MODIFIED);
+                Assert.assertEquals(services.getResult().getAction(), Watcher.Action.MODIFIED);
             }));
 
         TestCase test = builder.getTestCase();

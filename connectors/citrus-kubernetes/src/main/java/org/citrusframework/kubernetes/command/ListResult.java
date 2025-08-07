@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import jakarta.validation.constraints.NotNull;
+import org.citrusframework.actions.kubernetes.command.KubernetesListCommandResult;
 
 /**
  * @since 2.7
@@ -34,7 +35,7 @@ import jakarta.validation.constraints.NotNull;
         "kind",
         "items"
 })
-public class ListResult<T> {
+public class ListResult<T> implements KubernetesListCommandResult<T> {
 
     @NotNull
     @JsonProperty("apiVersion")
@@ -57,7 +58,6 @@ public class ListResult<T> {
 
     /**
      * Constructor using result model.
-     * @param items
      */
     public ListResult(List<T> items) {
         if (items != null) {
@@ -73,10 +73,7 @@ public class ListResult<T> {
         this.items = items;
     }
 
-    /**
-     * Gets the items.
-     * @return
-     */
+    @Override
     public List<T> getItems() {
         if (items == null) {
             items = new ArrayList<>();
@@ -85,42 +82,27 @@ public class ListResult<T> {
         return items;
     }
 
-    /**
-     * Sets the items.
-     * @param items
-     */
+    @Override
     public void setItems(List<T> items) {
         this.items = items;
     }
 
-    /**
-     * Gets the api version.
-     * @return
-     */
+    @Override
     public String getApiVersion() {
         return apiVersion;
     }
 
-    /**
-     * Sets the api version.
-     * @param apiVersion
-     */
+    @Override
     public void setApiVersion(String apiVersion) {
         this.apiVersion = apiVersion;
     }
 
-    /**
-     * Gets the resource kind.
-     * @return
-     */
+    @Override
     public String getKind() {
         return kind;
     }
 
-    /**
-     * Sets the resource kind.
-     * @param kind
-     */
+    @Override
     public void setKind(String kind) {
         this.kind = kind;
     }

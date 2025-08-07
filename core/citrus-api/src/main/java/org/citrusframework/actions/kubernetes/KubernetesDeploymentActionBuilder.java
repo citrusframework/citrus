@@ -16,9 +16,7 @@
 
 package org.citrusframework.actions.kubernetes;
 
-import org.citrusframework.TestAction;
-
-public interface KubernetesDeploymentActionBuilder<T extends TestAction> {
+public interface KubernetesDeploymentActionBuilder {
 
     /**
      * Add annotation on deployment instance.

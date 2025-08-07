@@ -68,8 +68,8 @@ public abstract class AbstractDeleteCommand<T extends HasMetadata, L extends Kub
 
         DeleteResult result = new DeleteResult();
         if (resource != null) {
-            result.setApVersion(result.getApVersion());
-            result.setKind(result.getKind());
+            result.setApiVersion(resource.getApiVersion());
+            result.setKind(resource.getKind());
         } else {
             result.setKind(type.getSimpleName());
         }

@@ -29,42 +29,47 @@ public interface KubernetesActionBuilder<T extends TestAction, B extends TestAct
     /**
      * Performs actions on Kubernetes agent.
      */
-    KubernetesAgentActionBuilder<T> agent();
+    KubernetesAgentActionBuilder agent();
 
     /**
      * Performs actions on Kubernetes services.
      */
-    KubernetesServiceActionBuilder<T> services();
+    KubernetesServiceActionBuilder services();
 
     /**
      * Performs actions on Kubernetes resources.
      */
-    KubernetesResourceActionBuilder<T> resources();
+    KubernetesResourceActionBuilder resources();
 
     /**
      * Performs actions on Kubernetes pods.
      */
-    KubernetesDeploymentActionBuilder<T> deployments();
+    KubernetesDeploymentActionBuilder deployments();
 
     /**
      * Performs actions on Kubernetes pods.
      */
-    KubernetesPodActionBuilder<T> pods();
+    KubernetesPodActionBuilder pods();
 
     /**
      * Performs actions on Kubernetes custom resources.
      */
-    KubernetesCustomResourceActionBuilder<T> customResources();
+    KubernetesCustomResourceActionBuilder customResources();
 
     /**
      * Performs actions on Kubernetes secrets.
      */
-    KubernetesSecretActionBuilder<T> secrets();
+    KubernetesSecretActionBuilder secrets();
 
     /**
      * Performs actions on Kubernetes config maps.
      */
-    KubernetesConfigMapActionBuilder<T> configMaps();
+    KubernetesConfigMapActionBuilder configMaps();
+
+    /**
+     * Execute commands with the Kubernetes API.
+     */
+    KubernetesExecuteActionBuilder<?, ?> execute();
 
     interface BuilderFactory {
 

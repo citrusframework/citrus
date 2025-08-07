@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package org.citrusframework.kubernetes.command;
+package org.citrusframework.actions.kubernetes.command;
 
-import org.citrusframework.actions.kubernetes.command.KubernetesCommandResultCallback;
+public interface KubernetesReplicationControllerCommandActionBuilder<R> {
 
-/**
- * @since 2.7
- */
-@Deprecated
-public interface CommandResultCallback<T> extends KubernetesCommandResultCallback<T> {
+    /**
+     * List replication controllers.
+     */
+    KubernetesNamespacedCommandActionBuilder<?, R, ? extends KubernetesListCommandResult<R>, ?> list();
 
+    /**
+     * Watch replication controllers.
+     */
+    KubernetesNamespacedCommandActionBuilder<?, R, ? extends KubernetesWatchCommandResult<R, ?, ?>, ?> watch();
 }

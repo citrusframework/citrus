@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package org.citrusframework.kubernetes.command;
+package org.citrusframework.actions.kubernetes.command;
 
-import org.citrusframework.actions.kubernetes.command.KubernetesCommandResultCallback;
+public interface KubernetesNodeCommandActionBuilder<R> {
 
-/**
- * @since 2.7
- */
-@Deprecated
-public interface CommandResultCallback<T> extends KubernetesCommandResultCallback<T> {
+    /**
+     * List nodes.
+     */
+    KubernetesCommandActionBuilder<?, R, ? extends KubernetesListCommandResult<R>, ?> list();
 
+    /**
+     * Watch nodes.
+     */
+    KubernetesCommandActionBuilder<?, R, ? extends KubernetesWatchCommandResult<R, ?, ?>, ?> watch();
 }

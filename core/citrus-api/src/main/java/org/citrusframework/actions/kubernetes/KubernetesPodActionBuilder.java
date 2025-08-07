@@ -16,9 +16,7 @@
 
 package org.citrusframework.actions.kubernetes;
 
-import org.citrusframework.TestAction;
-
-public interface KubernetesPodActionBuilder<T extends TestAction> {
+public interface KubernetesPodActionBuilder {
 
     /**
      * Verify that given pod is running.

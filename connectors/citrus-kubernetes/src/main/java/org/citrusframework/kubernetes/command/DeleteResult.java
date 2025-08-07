@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.validation.constraints.NotNull;
+import org.citrusframework.actions.kubernetes.command.KubernetesDeleteCommandResult;
 
 /**
  * @since 2.7
@@ -30,11 +31,11 @@ import jakarta.validation.constraints.NotNull;
         "kind",
         "success"
 })
-public class DeleteResult {
+public class DeleteResult implements KubernetesDeleteCommandResult {
 
     @NotNull
     @JsonProperty("apiVersion")
-    private String apVersion;
+    private String apiVersion;
 
     @NotNull
     @JsonProperty("kind")
@@ -44,52 +45,32 @@ public class DeleteResult {
     @JsonProperty("success")
     private Boolean success;
 
-    /**
-     * Gets the success.
-     *
-     * @return
-     */
+    @Override
     public Boolean getSuccess() {
         return success;
     }
 
-    /**
-     * Sets the success.
-     *
-     * @param success
-     */
+    @Override
     public void setSuccess(Boolean success) {
         this.success = success;
     }
 
-    /**
-     * Gets the api version.
-     * @return
-     */
-    public String getApVersion() {
-        return apVersion;
+    @Override
+    public String getApiVersion() {
+        return apiVersion;
     }
 
-    /**
-     * Sets the api version.
-     * @param apVersion
-     */
-    public void setApVersion(String apVersion) {
-        this.apVersion = apVersion;
+    @Override
+    public void setApiVersion(String apiVersion) {
+        this.apiVersion = apiVersion;
     }
 
-    /**
-     * Gets the resource kind.
-     * @return
-     */
+    @Override
     public String getKind() {
         return kind;
     }
 
-    /**
-     * Sets the resource kind.
-     * @param kind
-     */
+    @Override
     public void setKind(String kind) {
         this.kind = kind;
     }

@@ -14,14 +14,37 @@
  * limitations under the License.
  */
 
-package org.citrusframework.kubernetes.command;
+package org.citrusframework.actions.kubernetes.command;
 
-import org.citrusframework.actions.kubernetes.command.KubernetesCommandResultCallback;
+public interface KubernetesDeleteCommandResult {
 
-/**
- * @since 2.7
- */
-@Deprecated
-public interface CommandResultCallback<T> extends KubernetesCommandResultCallback<T> {
+    /**
+     * Gets the success.
+     */
+    Boolean getSuccess();
 
+    /**
+     * Sets the success.
+     */
+    void setSuccess(Boolean success);
+
+    /**
+     * Gets the api version.
+     */
+    String getApiVersion();
+
+    /**
+     * Sets the api version.
+     */
+    void setApiVersion(String apiVersion);
+
+    /**
+     * Gets the resource kind.
+     */
+    String getKind();
+
+    /**
+     * Sets the resource kind.
+     */
+    void setKind(String kind);
 }

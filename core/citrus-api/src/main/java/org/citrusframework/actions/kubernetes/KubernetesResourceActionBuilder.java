@@ -16,9 +16,7 @@
 
 package org.citrusframework.actions.kubernetes;
 
-import org.citrusframework.TestAction;
-
-public interface KubernetesResourceActionBuilder<T extends TestAction> {
+public interface KubernetesResourceActionBuilder {
 
     /**
      * Create any Kubernetes resource instance from yaml.

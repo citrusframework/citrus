@@ -1640,11 +1640,11 @@ With that we can apply the full Citrus Json validation power to the Kubernetes r
 As usual, we can use test variables here and ignore some values explicitly such as the *metadata* value.
 Also, JsonPath expression validation and Json test message validation features in Citrus come in here to validate the results.
 
-The Java DSL Kubernetes commands provide an optional *CommandResultCallback* that is automatically called with the unmarshalled command result object.
+The Java DSL Kubernetes commands provide an optional *KubernetesCommandResultCallback* that is automatically called with the unmarshalled command result object.
 In the example above the _InfoResult_ model object is passed as argument to the callback.
 So the tester can access the command result and validate its properties with assertions.
 
-The option of Lamdba expressions allows us to use some syntactical sugar in Java when using the *CommandResultCallback*.
+The option of Lamdba expressions allows us to use some syntactical sugar in Java when using the *KubernetesCommandResultCallback*.
 
 .Java
 [source,java]

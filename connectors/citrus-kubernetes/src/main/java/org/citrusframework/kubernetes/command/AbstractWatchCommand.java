@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @since 2.7
  */
-public abstract class AbstractWatchCommand<T extends HasMetadata, L extends KubernetesResourceList<T>, R extends Resource<T>, C extends KubernetesCommand<T, T>> extends AbstractClientCommand<T, T, L, R, C> {
+public abstract class AbstractWatchCommand<T extends HasMetadata, L extends KubernetesResourceList<T>, R extends Resource<T>, C extends KubernetesCommand<T, WatchEventResult<T>>> extends AbstractClientCommand<T, WatchEventResult<T>, L, R, C> {
 
     /** Logger */
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -82,9 +82,13 @@ public abstract class AbstractWatchCommand<T extends HasMetadata, L extends Kube
     }
 
     @Override
-    public WatchEventResult<T> getCommandResult() {
+    public CommandResult<WatchEventResult<T>> getCommandResult() {
         if (cachedResult != null) {
-            return cachedResult;
+            CommandResult<WatchEventResult<T>> result = new CommandResult<>(cachedResult);
+            if (cachedResult.hasError()) {
+                result.setError(cachedResult.getError());
+            }
+            return result;
         }
 
         try {
@@ -101,7 +105,11 @@ public abstract class AbstractWatchCommand<T extends HasMetadata, L extends Kube
 
             watchEventResult.setWatch(watch);
             cachedResult = watchEventResult;
-            return watchEventResult;
+            CommandResult<WatchEventResult<T>> result = new CommandResult<>(watchEventResult);
+            if (watchEventResult.hasError()) {
+                result.setError(watchEventResult.getError());
+            }
+            return result;
         } catch (InterruptedException e) {
             throw new CitrusRuntimeException("Failed to wait for watch result", e);
         }
@@ -109,7 +117,6 @@ public abstract class AbstractWatchCommand<T extends HasMetadata, L extends Kube
 
     /**
      * Gets the watch handle.
-     * @return
      */
     public Watch getWatch() {
         return watch;
@@ -117,8 +124,6 @@ public abstract class AbstractWatchCommand<T extends HasMetadata, L extends Kube
 
     /**
      * Sets the timeout.
-     *
-     * @param timeout
      */
     public void setTimeout(long timeout) {
         this.timeout = timeout;
@@ -126,8 +131,6 @@ public abstract class AbstractWatchCommand<T extends HasMetadata, L extends Kube
 
     /**
      * Gets the timeout.
-     *
-     * @return
      */
     public long getTimeout() {
         return timeout;

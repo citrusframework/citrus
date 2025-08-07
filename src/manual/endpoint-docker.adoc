@@ -193,7 +193,7 @@ public void dockerTest() {
 }
 ----
 
-The Java DSL Docker commands provide an optional *CommandResultCallback* that is called with the unmarshalled command result object. In the example above the _Version_ model object is passed as argument to the callback. So the tester can access the command result and validate its properties with assertions.
+The Java DSL Docker commands provide an optional *KubernetesCommandResultCallback* that is called with the unmarshalled command result object. In the example above the _Version_ model object is passed as argument to the callback. So the tester can access the command result and validate its properties with assertions.
 
 By default Citrus tries to find a Docker client component within the Citrus Spring application context. If not present Citrus will instantiate a default docker client with all default settings. You can also explicitly set the docker client instance when using the Java DSL Docker command actions:
 

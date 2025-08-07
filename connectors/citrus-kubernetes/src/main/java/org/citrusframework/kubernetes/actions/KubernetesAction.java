@@ -30,7 +30,6 @@ public interface KubernetesAction extends TestAction {
 
     /**
      * Gets the Kubernetes client.
-     * @return
      */
     KubernetesClient getKubernetesClient();
 
@@ -41,16 +40,12 @@ public interface KubernetesAction extends TestAction {
 
     /**
      * Should remove Knative resources automatically after test.
-     * @return
      */
     boolean isAutoRemoveResources();
 
     /**
      * Resolves namespace name from given test context using the stored test variable.
      * Fallback to the namespace given in Kubernetes environment settings when no test variable is present.
-     *
-     * @param context
-     * @return
      */
     default String namespace(TestContext context) {
         if (getNamespace() != null) {

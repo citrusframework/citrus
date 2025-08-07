@@ -16,9 +16,7 @@
 
 package org.citrusframework.actions.kubernetes;
 
-import org.citrusframework.TestAction;
-
-public interface KubernetesSecretActionBuilder<T extends TestAction> {
+public interface KubernetesSecretActionBuilder {
 
     /**
      * Create secret instance.

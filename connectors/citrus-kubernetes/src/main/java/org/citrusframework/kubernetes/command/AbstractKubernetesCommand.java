@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.fabric8.kubernetes.api.model.HasMetadata;
+import org.citrusframework.actions.kubernetes.command.KubernetesCommandResultCallback;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
@@ -45,7 +46,7 @@ public abstract class AbstractKubernetesCommand<T extends HasMetadata, O, C exte
     private CommandResult<O> commandResult;
 
     /** Optional command result validation */
-    private CommandResultCallback<O> resultCallback;
+    private KubernetesCommandResultCallback<O> resultCallback;
 
     /**
      * Default constructor initializing the command name.
@@ -120,13 +121,13 @@ public abstract class AbstractKubernetesCommand<T extends HasMetadata, O, C exte
     }
 
     @Override
-    public C validate(CommandResultCallback<O> callback) {
+    public C validate(KubernetesCommandResultCallback<O> callback) {
         this.resultCallback = callback;
         return self;
     }
 
     @Override
-    public CommandResultCallback<O> getResultCallback() {
+    public KubernetesCommandResultCallback<O> getResultCallback() {
         return resultCallback;
     }
 

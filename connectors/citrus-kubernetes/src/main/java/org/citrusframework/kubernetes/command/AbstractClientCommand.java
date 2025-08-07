@@ -32,8 +32,6 @@ public abstract class AbstractClientCommand<T extends HasMetadata, O, L extends 
 
     /**
      * Default constructor initializing the command name.
-     *
-     * @param name
      */
     public AbstractClientCommand(String name) {
         super(name);
