@@ -29,8 +29,8 @@ You can use the Citrus JUnit5 extension on your test as follows:
 ----
 package org.citrusframework.samples;
 
-import org.citrusframework.TestActionSupport;
 import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Test;
@@ -69,6 +69,40 @@ You can choose from a wide range of actions.
 The provided test action API uses fluent style build pattern to define the test action and its properties.
 
 NOTE: The `TestActionSupport` interface brings quite a lot of methods. In case you are facing issues with one of these methods colliding with your own test methods you can choose from a modular interface hierarchy that builds the Citrus Java test actions API. Instead of implementing the whole `TestActionSupport` API you may just implement the `BaseTestActionSupport` API or the very specific `HttpTestActionSupport` interface in your test. Just look for the `*TestActionSupport` interfaces provided by Citrus and include what you need into your test class.
+
+NOTE: For those of you who are not able to use the `TestActionSupport` or other API interfaces the *DefaultTestActions* class also provides access to the test actions Java DSL API.
+
+.JUnit5 Citrus test
+[source,java]
+----
+package org.citrusframework.samples;
+
+import org.citrusframework.DefaultTestActions;
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
+@CitrusSupport
+public class Simple_IT {
+
+    private final DefaultTestActions actions = new DefaultTestActions();
+
+    @Test
+    @CitrusTest(name = "Simple_IT")
+    public void simpleTest(@CitrusResource GherkinTestActionRunner runner) {
+        runner.description("First example showing the basic Java DSL!");
+
+        runner.given(
+            variable("user", "Citrus")
+        );
+
+        runner.then(
+            actions.echo().message("Hello ${user}!"
+        ));
+    }
+}
+----
 
 You can also inject the current `TestContext` in order to get access to the current test variables used by Citrus.
 
