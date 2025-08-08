@@ -19,6 +19,7 @@ package org.citrusframework.http.actions.dsl;
 import jakarta.servlet.http.Cookie;
 import org.apache.hc.core5.http.ContentType;
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.context.TestContext;
@@ -38,13 +39,12 @@ import org.springframework.http.HttpMethod;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport {
+public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
     private final HttpClient httpClient = Mockito.mock(HttpClient.class);
     private final Producer messageProducer = Mockito.mock(Producer.class);

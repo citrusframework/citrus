@@ -21,8 +21,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.script.GroovyAction.Builder.groovy;
-
 @Test
 public class LoadPropertiesJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
@@ -38,7 +36,7 @@ public class LoadPropertiesJavaIT extends TestNGCitrusSpringSupport implements T
 
         run(echo("Verify variables support (replacement in properties)"));
 
-        run(groovy("""
+        run(script().groovy("""
                 import org.citrusframework.*
                 import org.citrusframework.variable.*
                 import org.citrusframework.context.TestContext
