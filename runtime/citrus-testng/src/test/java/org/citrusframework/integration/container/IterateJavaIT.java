@@ -22,8 +22,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.DefaultTestActionBuilder.action;
-
 @Test
 public class IterateJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 

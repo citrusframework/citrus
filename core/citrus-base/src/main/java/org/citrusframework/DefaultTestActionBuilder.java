@@ -24,17 +24,14 @@ public class DefaultTestActionBuilder extends AbstractTestActionBuilder<Abstract
     private final TestAction delegate;
 
     /**
-     * Private constructor.
-     * @param delegate
+     * Constructor with given test action.
      */
-    private DefaultTestActionBuilder(TestAction delegate) {
+    public DefaultTestActionBuilder(TestAction delegate) {
         this.delegate = delegate;
     }
 
     /**
      * Static fluent entry method for Java DSL
-     * @param action
-     * @return
      */
     public static DefaultTestActionBuilder action(TestAction action) {
         return new DefaultTestActionBuilder(action);

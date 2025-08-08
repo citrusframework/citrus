@@ -16,6 +16,9 @@
 
 package org.citrusframework.actions;
 
+import org.citrusframework.TestAction;
+import org.citrusframework.TestActionBuilder;
+
 /**
  * Interface combines domain specific language methods for basic test actions available in Citrus.
  */
@@ -39,4 +42,9 @@ public interface BaseTestActions extends
         StopTimerActionBuilder.BuilderFactory,
         TraceVariablesActionBuilder.BuilderFactory,
         TransformActionBuilder.BuilderFactory {
+
+    /**
+     * Generic test action builder.
+     */
+    TestActionBuilder<?> action(TestAction action);
 }

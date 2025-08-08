@@ -46,7 +46,6 @@ import org.springframework.ws.soap.server.endpoint.SoapFaultDefinition;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.DefaultTestActionBuilder.action;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;

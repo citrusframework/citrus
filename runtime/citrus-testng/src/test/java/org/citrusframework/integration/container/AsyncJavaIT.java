@@ -22,8 +22,6 @@ import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.DefaultTestActionBuilder.action;
-
 /**
  * @since 2.7.4
  */

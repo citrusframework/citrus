@@ -1,5 +1,14 @@
 package org.citrusframework;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+
 import org.citrusframework.TestCaseMetaInfo.Status;
 import org.citrusframework.actions.AbstractAsyncTestAction;
 import org.citrusframework.actions.EchoAction;
@@ -19,33 +28,18 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-
 import static java.lang.String.format;
 import static java.util.Collections.singletonMap;
-import static org.citrusframework.DefaultTestActionBuilder.action;
 import static org.citrusframework.TestResult.RESULT.FAILURE;
 import static org.citrusframework.TestResult.success;
 import static org.citrusframework.util.TestUtils.WAIT_THREAD_PREFIX;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.fail;
 
-public class DefaultTestCaseTest extends UnitTestSupport {
+public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSupport {
 
     private DefaultTestCase fixture;
 
