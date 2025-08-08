@@ -19,25 +19,25 @@ package org.citrusframework.generate;
 import java.util.Map; /**
  * @since 2.7.4
  */
-public interface XsdTestGenerator<T extends XsdTestGenerator> extends TestGenerator<T> {
+public interface XsdTestGenerator<T extends XsdTestGenerator<T>> extends TestGenerator<T> {
 
-    XsdTestGenerator withXsd(String xsd);
+    XsdTestGenerator<T> withXsd(String xsd);
 
-    XsdTestGenerator withRequestMessage(String requestMessage);
+    XsdTestGenerator<T> withRequestMessage(String requestMessage);
 
-    XsdTestGenerator withResponseMessage(String responseMessage);
+    XsdTestGenerator<T> withResponseMessage(String responseMessage);
 
-    XsdTestGenerator withInboundMappings(Map<String, String> inbound);
+    XsdTestGenerator<T> withInboundMappings(Map<String, String> inbound);
 
-    XsdTestGenerator withOutboundMappings(Map<String, String> outbound);
+    XsdTestGenerator<T> withOutboundMappings(Map<String, String> outbound);
 
-    XsdTestGenerator withInboundMappingFile(String inboundFile);
+    XsdTestGenerator<T> withInboundMappingFile(String inboundFile);
 
-    XsdTestGenerator withOutboundMappingFile(String outboundFile);
+    XsdTestGenerator<T> withOutboundMappingFile(String outboundFile);
 
-    XsdTestGenerator withEndpoint(String endpoint);
+    XsdTestGenerator<T> withEndpoint(String endpoint);
 
-    XsdTestGenerator withNameSuffix(String suffix);
+    XsdTestGenerator<T> withNameSuffix(String suffix);
 
     String getResponseMessageSuggestion();
 

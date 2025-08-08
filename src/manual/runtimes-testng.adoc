@@ -32,7 +32,7 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.TestNGCitrusSupport;
 
 @Test
-public class Simple_IT extends TestNGCitrusSupport {
+public class Simple_IT extends TestNGCitrusSupport implements TestActionSupport {
 
     @CitrusTest(name = "Simple_IT")
     public void simpleTest() {
@@ -105,7 +105,7 @@ parameter values as test variables in Citrus. See the next listing on how to use
 .TestNG Citrus data provider test
 [source,java]
 ----
-public class DataProviderIT extends TestNGCitrusSupport {
+public class DataProviderIT extends TestNGCitrusSupport implements TestActionSupport {
 
     @CitrusTest
     @CitrusParameters({"message", "delay"})
@@ -153,7 +153,7 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class DataProviderIT extends TestNGCitrusSupport {
+public class DataProviderIT extends TestNGCitrusSupport implements TestActionSupport {
 
     @CitrusParameters({"message", "delay"})
     @Test(dataProvider = "messageDataProvider")
@@ -193,7 +193,7 @@ You should be using the resource injection to make sure each test operates on it
 .Resource injection
 [source,java]
 ----
-public class ResourceInjection_IT extends TestNGCitrusSupport {
+public class ResourceInjection_IT extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest

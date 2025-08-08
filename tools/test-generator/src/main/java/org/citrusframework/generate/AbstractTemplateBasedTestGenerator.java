@@ -32,7 +32,7 @@ import org.citrusframework.util.PropertyUtils;
  *
  * @since 2.7.4
  */
-public abstract class AbstractTemplateBasedTestGenerator<T extends TestGenerator> extends AbstractTestGenerator<T> {
+public abstract class AbstractTemplateBasedTestGenerator<T extends TestGenerator<T>> extends AbstractTestGenerator<T> {
 
     /**
      * Create the test case.

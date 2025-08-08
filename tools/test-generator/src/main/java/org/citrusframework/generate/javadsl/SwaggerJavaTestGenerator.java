@@ -22,8 +22,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.TypeSpec;
 import io.swagger.models.ArrayModel;
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Model;
@@ -52,7 +50,6 @@ import io.swagger.models.properties.StringProperty;
 import io.swagger.parser.SwaggerParser;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.generate.SwaggerTestGenerator;
-import org.citrusframework.http.actions.HttpActionBuilder;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
@@ -81,12 +78,6 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     private final JsonPathMappingDataDictionary inboundDataDictionary = new JsonPathMappingDataDictionary();
     private final JsonPathMappingDataDictionary outboundDataDictionary = new JsonPathMappingDataDictionary();
-
-    @Override
-    protected JavaFile.Builder createJavaFileBuilder(TypeSpec.Builder testTypeBuilder) {
-        return super.createJavaFileBuilder(testTypeBuilder)
-                .addStaticImport(HttpActionBuilder.class, "http");
-    }
 
     @Override
     public void create() {

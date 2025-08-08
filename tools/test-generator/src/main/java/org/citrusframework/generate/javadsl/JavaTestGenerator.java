@@ -120,7 +120,7 @@ public class JavaTestGenerator<T extends JavaTestGenerator<T>> extends AbstractT
      * @return The AnnotationSpec of the Junit5 extension
      */
     protected AnnotationSpec getBaseExtension() {
-        ClassName extension = ClassName.get("org.citrusframework.junit.jupiter", "CitrusBaseExtension");
+        ClassName extension = ClassName.get("org.citrusframework.junit.jupiter", "CitrusExtension");
         return createAnnotationBuilder("org.junit.jupiter.api.extension", "ExtendWith")
                 .addMember("value", "$T.class", extension)
                 .build();

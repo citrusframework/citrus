@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * @since 2.7.4
  */
-
 public class ReceiveHttpRequestActionProvider implements MessageActionProvider<ReceiveRequestModel, HttpMessage> {
 
     @Override

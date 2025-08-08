@@ -932,7 +932,7 @@ The Citrus test is able to run this route with Camel JBang in a separate process
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport {
+public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
@@ -1006,7 +1006,7 @@ You can do this with the following action:
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport {
+public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
@@ -1066,7 +1066,7 @@ You can do all of this in the `verify` action.
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport {
+public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
@@ -1138,7 +1138,7 @@ Citrus provides a test action to call the Camel JBang Kubernetes plugin:
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport {
+public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
@@ -1233,7 +1233,7 @@ You can explicitly remove the Camel integration from Kubernetes.
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport {
+public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
@@ -1299,7 +1299,7 @@ Also, Citrus is able to scan the log output of a Camel integration that is runni
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport {
+public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest

@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.JUnit4CitrusSupport;
 
-public class Simple_IT extends JUnit4CitrusSupport {
+public class Simple_IT extends JUnit4CitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest(name = "Simple_IT")
@@ -78,7 +78,7 @@ You should be using the resource injection to make sure each test operates on it
 .Resource injection
 [source,java]
 ----
-public class ResourceInjection_IT extends JUnit4CitrusSupport {
+public class ResourceInjection_IT extends JUnit4CitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
