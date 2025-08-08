@@ -17,10 +17,20 @@
 package org.citrusframework.actions.script;
 
 import org.citrusframework.actions.groovy.GroovyActionBuilder;
+import org.citrusframework.actions.groovy.GroovyRunActionBuilder;
+import org.citrusframework.spi.Resource;
 
 public interface ScriptActionBuilder {
 
     GroovyActionBuilder<?, ?> groovy();
+
+    default GroovyRunActionBuilder<?, ?> groovy(String script) {
+        return groovy().script(script);
+    }
+
+    default GroovyRunActionBuilder<?, ?> groovy(Resource script) {
+        return groovy().script(script);
+    }
 
     interface BuilderFactory {
 

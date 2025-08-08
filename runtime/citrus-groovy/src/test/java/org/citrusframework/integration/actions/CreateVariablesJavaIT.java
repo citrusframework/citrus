@@ -21,8 +21,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.script.GroovyAction.Builder.groovy;
-
 @Test
 public class CreateVariablesJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
@@ -30,6 +28,6 @@ public class CreateVariablesJavaIT extends TestNGCitrusSpringSupport implements 
     public void createVariablesAction() {
         variable("myVariable", "12345");
 
-        run(groovy("assert ${myVariable} == 12345"));
+        run(script().groovy("assert ${myVariable} == 12345"));
     }
 }

@@ -22,8 +22,6 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.script.GroovyAction.Builder.groovy;
-
 @Test
 public class GroovyActionJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
@@ -37,11 +35,11 @@ public class GroovyActionJavaIT extends TestNGCitrusSpringSupport implements Tes
 
         description("This example executes groovy scripts using both inline script definition and external file resource.");
 
-        run(groovy("println 'Hello Citrus'"));
+        run(script().groovy("println 'Hello Citrus'"));
 
-        run(groovy("println 'Current date is ${date}!'"));
+        run(script().groovy("println 'Current date is ${date}!'"));
 
-        run(groovy("import org.citrusframework.*" + NEWLINE +
+        run(script().groovy("import org.citrusframework.*" + NEWLINE +
                 "import org.citrusframework.variable.*" + NEWLINE +
                 "import org.citrusframework.context.TestContext" + NEWLINE +
                 "import org.citrusframework.script.GroovyAction.ScriptExecutor" + NEWLINE +
@@ -53,28 +51,28 @@ public class GroovyActionJavaIT extends TestNGCitrusSpringSupport implements Tes
                     "}" + NEWLINE +
                 "}"));
 
-        run(groovy("println context.getVariable(\"date\")" + NEWLINE +
+        run(script().groovy("println context.getVariable(\"date\")" + NEWLINE +
                 "assert context.getVariable(\"greetingText\").equals(\"Hello Citrus!\")" + NEWLINE +
                 "assert context.getVariable(\"greetingText\").equals(\"${greetingText}\")"));
 
-        run(groovy("println 'Hello Citrus'").skipTemplate());
+        run(script().groovy("println 'Hello Citrus'").skipTemplate());
 
-        run(groovy("Assert.assertEquals(context.getVariable(\"scriptTemplateVar\"), \"It works!\")" + NEWLINE +
+        run(script().groovy("Assert.assertEquals(context.getVariable(\"scriptTemplateVar\"), \"It works!\")" + NEWLINE +
                 "Assert.assertEquals(context.getVariable(\"greetingText\"), \"Hello Citrus!\")" + NEWLINE +
                 "Assert.assertEquals(context.getVariable(\"greetingText\"), \"${greetingText}\")")
                 .template("classpath:org/citrusframework/integration/script/custom-script-template.groovy"));
 
-        run(groovy("import org.testng.Assert" + NEWLINE +
+        run(script().groovy("import org.testng.Assert" + NEWLINE +
                   "Assert.assertEquals(context.getVariable(\"scriptTemplateVar\"), \"It works!\")" + NEWLINE +
                   "Assert.assertEquals(context.getVariable(\"greetingText\"), \"Hello Citrus!\")" + NEWLINE +
                   "Assert.assertEquals(context.getVariable(\"greetingText\"), \"${greetingText}\")"));
 
-        run(groovy("public class MyCustomClass {" + NEWLINE +
+        run(script().groovy("public class MyCustomClass {" + NEWLINE +
                     "public void run() {" + NEWLINE +
                         "println 'Just executed a custom class with run method!'" + NEWLINE +
                     "}" + NEWLINE +
                   "}"));
 
-        run(groovy(Resources.fromClasspath("org/citrusframework/integration/script/example.groovy")));
+        run(script().groovy(Resources.fromClasspath("org/citrusframework/integration/script/example.groovy")));
     }
 }

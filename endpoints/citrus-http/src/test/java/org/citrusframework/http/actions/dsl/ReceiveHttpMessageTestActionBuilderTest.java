@@ -18,6 +18,7 @@ package org.citrusframework.http.actions.dsl;
 
 import org.apache.hc.core5.http.ContentType;
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.context.TestContext;
@@ -39,13 +40,12 @@ import org.springframework.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport {
+public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
     private final SelectiveConsumer messageConsumer = Mockito.mock(SelectiveConsumer.class);
     private final HttpEndpointConfiguration configuration = Mockito.mock(HttpEndpointConfiguration.class);
