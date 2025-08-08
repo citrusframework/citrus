@@ -61,7 +61,15 @@ you can execute this Citrus JUnit class like every other JUnit test, especially 
 NOTE: You can also combine Citrus with the Spring framework and its dependency injection and IoC capabilities. In order to
 enable Spring support in Citrus add the `citrus-spring` module to your project and extend `JUnit4CitrusSpringSupport` as a
 base class. With the Spring support in Citrus the test is able to use `@Autowired` annotations for injecting Spring beans into the
-test class and you can define the Spring application context with `@Configuration` annotations for instance.
+test class. You can define the Spring application context with `@Configuration` annotations as part of the Spring support.
+
+The test class implements the interface `TestActionSupport` which holds all available test actions in Citrus.
+You can choose from a wide range of actions.
+The provided test action API uses fluent style build pattern to define the test action and its properties.
+
+NOTE: The `TestActionSupport` interface brings quite a lot of methods. In case you are facing issues with one of these methods colliding with your own test methods you can choose from a modular interface hierarchy that builds the Citrus Java test actions API. Instead of implementing the whole `TestActionSupport` API you may just implement the `BaseTestActionSupport` API or the very specific `HttpTestActionSupport` interface in your test. Just look for the `*TestActionSupport` interfaces provided by Citrus and include what you need into your test class.
+
+NOTE: For those of you who are not able to use the `TestActionSupport` or other API interfaces the *TestNGCitrusSupport* and *JUnit4CitrusSupport* base classes also provide a method called `actions()` that provides access to the test actions Java DSL API.
 
 [[junit4-parallel]]
 === Run tests in parallel

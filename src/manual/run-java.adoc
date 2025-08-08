@@ -57,6 +57,27 @@ The provided test action API uses fluent style build pattern to define the test 
 
 NOTE: The `TestActionSupport` interface brings quite a lot of methods. In case you are facing issues with one of these methods colliding with your own test methods you can choose from a modular interface hierarchy that builds the Citrus Java test actions API. Instead of implementing the whole `TestActionSupport` API you may just implement the `BaseTestActionSupport` API or the very specific `HttpTestActionSupport` interface in your test. Just look for the `*TestActionSupport` interfaces provided by Citrus and include what you need into your test class.
 
+NOTE: For those of you who are not able to use the `TestActionSupport` or other API interfaces the *TestNGCitrusSupport* and *JUnit4CitrusSupport* base classes also provide a method called `actions()` that provides access to the test actions Java DSL API.
+
+.Test action runner
+[source,java]
+----
+import org.testng.annotations.Test;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.dsl.testng.TestNGCitrusSupport;
+
+@Test
+public class Service_IT extends TestNGCitrusSupport {
+
+    @CitrusTest(name = "Service_IT")
+    public void serviceTest() {
+        run(actions().echo("Before service call"));
+
+        run(actions().echo("After service call"));
+    }
+}
+----
+
 By default, all actions run sequentially in the same order as they are defined in the test case. In case one single action fails
 the whole test case is failing. Of course, you can leverage parallel action execution with the usage of link:#containers[test containers].
 
