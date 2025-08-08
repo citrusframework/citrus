@@ -38,7 +38,7 @@ import org.citrusframework.xml.StringResult;
 /**
  * @since 2.7.4
  */
-public class XmlTestGenerator<T extends XmlTestGenerator> extends AbstractTemplateBasedTestGenerator<T> {
+public class XmlTestGenerator<T extends XmlTestGenerator<T>> extends AbstractTemplateBasedTestGenerator<T> {
 
     /** Actor describing which part (client/server) to use */
     private GeneratorMode mode = GeneratorMode.CLIENT;

@@ -21,25 +21,25 @@ import java.util.Map;
 /**
  * @since 2.7.4
  */
-public interface SwaggerTestGenerator<T extends SwaggerTestGenerator> extends TestGenerator<T> {
+public interface SwaggerTestGenerator<T extends SwaggerTestGenerator<T>> extends TestGenerator<T> {
 
-    SwaggerTestGenerator withSpec(String swagger);
+    SwaggerTestGenerator<T> withSpec(String swagger);
 
-    SwaggerTestGenerator withOperation(String operation);
+    SwaggerTestGenerator<T> withOperation(String operation);
 
-    SwaggerTestGenerator withNamePrefix(String namePrefix);
+    SwaggerTestGenerator<T> withNamePrefix(String namePrefix);
 
-    SwaggerTestGenerator withNameSuffix(String nameSuffix);
+    SwaggerTestGenerator<T> withNameSuffix(String nameSuffix);
 
-    SwaggerTestGenerator withInboundMappings(Map<String, String> inbound);
+    SwaggerTestGenerator<T> withInboundMappings(Map<String, String> inbound);
 
-    SwaggerTestGenerator withOutboundMappings(Map<String, String> outbound);
+    SwaggerTestGenerator<T> withOutboundMappings(Map<String, String> outbound);
 
-    SwaggerTestGenerator withInboundMappingFile(String inboundFile);
+    SwaggerTestGenerator<T> withInboundMappingFile(String inboundFile);
 
-    SwaggerTestGenerator withOutboundMappingFile(String outboundFile);
+    SwaggerTestGenerator<T> withOutboundMappingFile(String outboundFile);
 
-    SwaggerTestGenerator withEndpoint(String endpoint);
+    SwaggerTestGenerator<T> withEndpoint(String endpoint);
 
     String getNameSuffix();
 

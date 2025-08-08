@@ -16,20 +16,28 @@
 
 package org.citrusframework.generate.xml;
 
-import org.citrusframework.generate.provider.*;
-import org.citrusframework.generate.provider.http.*;
-import org.citrusframework.generate.provider.soap.*;
+import java.util.List;
+import java.util.Optional;
+
+import org.citrusframework.generate.provider.MessageActionProvider;
+import org.citrusframework.generate.provider.ReceiveActionProvider;
+import org.citrusframework.generate.provider.SendActionProvider;
+import org.citrusframework.generate.provider.http.ReceiveHttpRequestActionProvider;
+import org.citrusframework.generate.provider.http.ReceiveHttpResponseActionProvider;
+import org.citrusframework.generate.provider.http.SendHttpRequestActionProvider;
+import org.citrusframework.generate.provider.http.SendHttpResponseActionProvider;
+import org.citrusframework.generate.provider.soap.ReceiveSoapRequestActionProvider;
+import org.citrusframework.generate.provider.soap.ReceiveSoapResponseActionProvider;
+import org.citrusframework.generate.provider.soap.SendSoapRequestActionProvider;
+import org.citrusframework.generate.provider.soap.SendSoapResponseActionProvider;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.ws.message.SoapMessage;
 
-import java.util.List;
-import java.util.Optional;
-
 /**
  * @since 2.7.4
  */
-public class MessagingXmlTestGenerator<T extends MessagingXmlTestGenerator> extends XmlTestGenerator<T> {
+public class MessagingXmlTestGenerator<T extends MessagingXmlTestGenerator<T>> extends XmlTestGenerator<T> {
 
     /** Endpoint name to use */
     private String endpoint;

@@ -25,7 +25,7 @@ import org.citrusframework.CitrusSettings;
 /**
  * @since 2.7.4
  */
-public abstract class AbstractTestGenerator<T extends TestGenerator> implements TestGenerator<T> {
+public abstract class AbstractTestGenerator<T extends TestGenerator<T>> implements TestGenerator<T> {
 
     /** Test name */
     private String name;

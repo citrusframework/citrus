@@ -31,11 +31,12 @@ See the following example to see the Java domain specific language in action.
 [source,java]
 ----
 import org.testng.annotations.Test;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.testng.TestNGCitrusSupport;
 
 @Test
-public class Service_IT extends TestNGCitrusSupport {
+public class Service_IT extends TestNGCitrusSupport implements TestActionSupport {
 
     @CitrusTest(name = "Service_IT")
     public void serviceTest() {
@@ -49,6 +50,12 @@ public class Service_IT extends TestNGCitrusSupport {
 The test action runner executes each test action immediately as you use the provided `run()` method. All actions provided in Citrus
 represent a certain functionality (e.g. send/receive messages, delay the test, access a database). Citrus ships with a wide range of
 link:#actions[test actions], but you are also able to write your own test actions and execute them during a test.
+
+The test class implements the interface `TestActionSupport` which holds all available test actions in Citrus.
+You can choose from a wide range of actions.
+The provided test action API uses fluent style build pattern to define the test action and its properties.
+
+NOTE: The `TestActionSupport` interface brings quite a lot of methods. In case you are facing issues with one of these methods colliding with your own test methods you can choose from a modular interface hierarchy that builds the Citrus Java test actions API. Instead of implementing the whole `TestActionSupport` API you may just implement the `BaseTestActionSupport` API or the very specific `HttpTestActionSupport` interface in your test. Just look for the `*TestActionSupport` interfaces provided by Citrus and include what you need into your test class.
 
 By default, all actions run sequentially in the same order as they are defined in the test case. In case one single action fails
 the whole test case is failing. Of course, you can leverage parallel action execution with the usage of link:#containers[test containers].
@@ -70,7 +77,7 @@ occurs, *then* an outcome should be verified.
 [source,java]
 ----
 @Test
-public class Service_IT extends TestNGCitrusSupport {
+public class Service_IT extends TestNGCitrusSupport implements TestActionSupport {
 
     @CitrusTest(name = "Service_IT")
     public void serviceTest() {
@@ -306,7 +313,7 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.testng.TestNGCitrusSupport;
 
 @Test
-public class Service_IT extends TestNGCitrusSupport {
+public class Service_IT extends TestNGCitrusSupport implements TestActionSupport {
 
     private MyService myService = new MyService();
 
@@ -333,7 +340,7 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.testng.TestNGCitrusSupport;
 
 @Test
-public class Service_IT extends TestNGCitrusSupport {
+public class Service_IT extends TestNGCitrusSupport implements TestActionSupport {
 
     private MyService myService = new MyService();
 
@@ -372,7 +379,7 @@ You can access the Citrus context within the provided before/after methods on th
 .Register endpoint in Citrus context
 [source,java]
 ----
-public class CitrusRegisterEndpoint_IT extends TestNGCitrusSupport {
+public class CitrusRegisterEndpoint_IT extends TestNGCitrusSupport implements TestActionSupport {
 
     @Override
     public void beforeSuite(CitrusContext context) {
@@ -387,7 +394,7 @@ reference for injection.
 .Inject endpoint in other tests
 [source,java]
 ----
-public class InjectEndpoint_IT extends TestNGCitrusSupport {
+public class InjectEndpoint_IT extends TestNGCitrusSupport implements TestActionSupport {
 
     @CitrusEndpoint
     private FooEndpoint foo;
@@ -418,7 +425,7 @@ Methods and fields annotated will automatically register in the CitrusContext re
 .@BindToRegistry annotation
 [source,java]
 ----
-public class CitrusRegisterEndpoint_IT extends TestNGCitrusSupport {
+public class CitrusRegisterEndpoint_IT extends TestNGCitrusSupport implements TestActionSupport {
 
     @CitrusFramework
     private Citrus citrus;
@@ -474,7 +481,7 @@ Each test is able to use the `@CitrusConfiguration` annotation to add registry b
 [source,java]
 ----
 @CitrusConfiguration(classes = MyConfig.class)
-public class CitrusRegisterEndpoint_IT extends TestNGCitrusSupport {
+public class CitrusRegisterEndpoint_IT extends TestNGCitrusSupport implements TestActionSupport {
 
     @CitrusEndpoint
     private FooEndpoint foo;
@@ -511,7 +518,7 @@ annotation in your test class.
 .Citrus framework injection
 [source,java]
 ----
-public class CitrusInjection_IT extends TestNGCitrusSupport {
+public class CitrusInjection_IT extends TestNGCitrusSupport implements TestActionSupport {
 
     @CitrusFramework
     private Citrus citrus;
@@ -538,7 +545,7 @@ The test action runner is the entry to the fluent Java API. You can inject the r
 .Test action runner injection
 [source,java]
 ----
-public class RunnerInjection_IT extends JUnit4CitrusSupport {
+public class RunnerInjection_IT extends JUnit4CitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
@@ -589,7 +596,7 @@ In addition Citrus provides a resource injection mechanism that allows to access
 .Inject as method parameter
 [source,java]
 ----
-public class TestContextInjection_IT extends JUnit4CitrusSupport {
+public class TestContextInjection_IT extends JUnit4CitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
@@ -610,7 +617,7 @@ the test context as a class member variable.
 .Inject as member
 [source,java]
 ----
-public class TestContextInjection_IT extends JUnit4CitrusSupport {
+public class TestContextInjection_IT extends JUnit4CitrusSupport implements TestActionSupport {
 
     @CitrusResource
     private TestContext context;

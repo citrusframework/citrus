@@ -19,13 +19,13 @@ package org.citrusframework.generate.javadsl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.citrusframework.actions.EchoAction;
-import org.citrusframework.annotations.CitrusTest;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import org.citrusframework.annotations.CitrusTest;
 
 /**
  * @since 2.7.4
@@ -39,16 +39,8 @@ public class JavaDslTestGenerator<T extends JavaDslTestGenerator<T>> extends Jav
 
     @Override
     protected JavaFile.Builder createJavaFileBuilder(TypeSpec.Builder testTypeBuilder) {
-        return super.createJavaFileBuilder(testTypeBuilder)
-                .addStaticImport(EchoAction.Builder.class, "echo");
-    }
-
-    @Override
-    protected AnnotationSpec getBaseExtension() {
-        ClassName extension = ClassName.get("org.citrusframework.junit.jupiter", "CitrusExtension");
-        return createAnnotationBuilder("org.junit.jupiter.api.extension","ExtendWith")
-                .addMember("value", "$T.class", extension)
-                .build();
+        testTypeBuilder.addSuperinterface(getTestActionSupportType());
+        return super.createJavaFileBuilder(testTypeBuilder);
     }
 
     @Override
@@ -56,5 +48,13 @@ public class JavaDslTestGenerator<T extends JavaDslTestGenerator<T>> extends Jav
         List<CodeBlock> codeBlocks = new ArrayList<>();
         codeBlocks.add(CodeBlock.builder().add("runner.run(echo(\"TODO: Code the test $L\"));", getName()).build());
         return codeBlocks;
+    }
+
+    /**
+     * Gets the test action support type to implement.
+     * @return TypeName of the support type
+     */
+    protected TypeName getTestActionSupportType() {
+        return ClassName.get("org.citrusframework", "TestActionSupport");
     }
 }

@@ -19,25 +19,25 @@ package org.citrusframework.generate;
 import java.util.Map; /**
  * @since 2.7.4
  */
-public interface WsdlTestGenerator<T extends WsdlTestGenerator> extends TestGenerator<T> {
+public interface WsdlTestGenerator<T extends WsdlTestGenerator<T>> extends TestGenerator<T> {
 
-    WsdlTestGenerator withWsdl(String wsdl);
+    WsdlTestGenerator<T> withWsdl(String wsdl);
 
-    WsdlTestGenerator withOperation(String operation);
+    WsdlTestGenerator<T> withOperation(String operation);
 
-    WsdlTestGenerator withNamePrefix(String namePrefix);
+    WsdlTestGenerator<T> withNamePrefix(String namePrefix);
 
-    WsdlTestGenerator withNameSuffix(String nameSuffix);
+    WsdlTestGenerator<T> withNameSuffix(String nameSuffix);
 
-    WsdlTestGenerator withInboundMappings(Map<String, String> inbound);
+    WsdlTestGenerator<T> withInboundMappings(Map<String, String> inbound);
 
-    WsdlTestGenerator withOutboundMappings(Map<String, String> outbound);
+    WsdlTestGenerator<T> withOutboundMappings(Map<String, String> outbound);
 
-    WsdlTestGenerator withInboundMappingFile(String inboundFile);
+    WsdlTestGenerator<T> withInboundMappingFile(String inboundFile);
 
-    WsdlTestGenerator withOutboundMappingFile(String outboundFile);
+    WsdlTestGenerator<T> withOutboundMappingFile(String outboundFile);
 
-    WsdlTestGenerator withEndpoint(String endpoint);
+    WsdlTestGenerator<T> withEndpoint(String endpoint);
 
     String getNameSuffix();
 

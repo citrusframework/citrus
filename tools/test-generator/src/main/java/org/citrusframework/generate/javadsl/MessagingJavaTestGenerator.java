@@ -19,8 +19,7 @@ package org.citrusframework.generate.javadsl;
 import java.util.List;
 import java.util.Optional;
 
-import org.citrusframework.actions.ReceiveMessageAction;
-import org.citrusframework.actions.SendMessageAction;
+import com.squareup.javapoet.CodeBlock;
 import org.citrusframework.generate.provider.CodeProvider;
 import org.citrusframework.generate.provider.ReceiveCodeProvider;
 import org.citrusframework.generate.provider.SendCodeProvider;
@@ -31,9 +30,6 @@ import org.citrusframework.generate.provider.http.SendHttpResponseCodeProvider;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.ws.message.SoapMessage;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.TypeSpec;
 
 /**
  * @since 2.7.4
@@ -48,13 +44,6 @@ public class MessagingJavaTestGenerator<T extends MessagingJavaTestGenerator<T>>
 
     /** Sample response */
     private Message response;
-
-    @Override
-    protected JavaFile.Builder createJavaFileBuilder(TypeSpec.Builder testTypeBuilder) {
-        return super.createJavaFileBuilder(testTypeBuilder)
-                .addStaticImport(SendMessageAction.Builder.class, "send")
-                .addStaticImport(ReceiveMessageAction.Builder.class, "receive");
-    }
 
     @Override
     protected List<CodeBlock> getActions() {

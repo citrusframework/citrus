@@ -78,8 +78,8 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
     private String namePrefix;
     private String nameSuffix = "_IT";
 
-    private JsonPathMappingDataDictionary inboundDataDictionary = new JsonPathMappingDataDictionary();
-    private JsonPathMappingDataDictionary outboundDataDictionary = new JsonPathMappingDataDictionary();
+    private final JsonPathMappingDataDictionary inboundDataDictionary = new JsonPathMappingDataDictionary();
+    private final JsonPathMappingDataDictionary outboundDataDictionary = new JsonPathMappingDataDictionary();
 
     @Override
     public void create() {

@@ -31,7 +31,7 @@ This way you are able to combine Citrus with `@QuarkusTest` annotated classes ve
 ----
 @QuarkusTest
 @CitrusSupport
-public class DemoApplicationTest {
+public class DemoApplicationTest implements TestActionSupport {
 
     @CitrusFramework
     private Citrus citrus;
@@ -66,6 +66,12 @@ First of all users may inject Citrus related resources such as `TestCaseRunner` 
 
 As usual the `TestCaseRunner` is the entrance to the Citrus domain specific language for running arbitrary Citrus actions as part of the test.
 
+The test class implements the interface `TestActionSupport` which holds all available test actions in Citrus.
+You can choose from a wide range of actions.
+The provided test action API uses fluent style build pattern to define the test action and its properties.
+
+NOTE: The `TestActionSupport` interface brings quite a lot of methods. In case you are facing issues with one of these methods colliding with your own test methods you can choose from a modular interface hierarchy that builds the Citrus Java test actions API. Instead of implementing the whole `TestActionSupport` API you may just implement the `BaseTestActionSupport` API or the very specific `HttpTestActionSupport` interface in your test. Just look for the `*TestActionSupport` interfaces provided by Citrus and include what you need into your test class.
+
 [[runtime-quarkus-endpoint-config]]
 === Endpoint configuration
 
@@ -76,7 +82,7 @@ The test is able to configure Message endpoints to connect to different messagin
 ----
 @QuarkusTest
 @CitrusSupport
-public class DemoApplicationTest {
+public class DemoApplicationTest implements TestActionSupport {
 
     @BindToRegistry
     private final KafkaEndpoint bookings = new KafkaEndpointBuilder()
@@ -134,7 +140,7 @@ The configuration class may be referenced by many tests then using the `@CitrusC
 @QuarkusTest
 @CitrusSupport
 @CitrusConfiguration(classes = EndpointConfig.class)
-public class DemoApplicationTest {
+public class DemoApplicationTest implements TestActionSupport {
 
     @CitrusResource
     private KafkaEndpoint bookings;
@@ -175,7 +181,7 @@ Users can load tests written in XML, YAML, Groovy and many more via dynamic test
 @QuarkusTest
 @CitrusSupport
 @CitrusConfiguration(classes = EndpointConfig.class)
-public class DemoApplicationTest {
+public class DemoApplicationTest implements TestActionSupport {
 
     @CitrusTestFactory
     public Stream<DynamicTest> loadYamlTests() {
@@ -223,7 +229,7 @@ The next example shows a Citrus enabled Quarkus test that supplies a set of appl
 @QuarkusTest
 @CitrusSupport(applicationPropertiesSupplier = DemoAppConfigurationSupplier.class)
 @CitrusConfiguration(classes = EndpointConfig.class)
-public class DemoApplicationTest {
+public class DemoApplicationTest implements TestActionSupport {
 
     // ...
 }
@@ -283,7 +289,7 @@ The Quarkus application under test should handle this S3 file then.
 @QuarkusTest
 @CitrusSupport
 @LocalStackContainerSupport(services = LocalStackContainer.Service.S3, containerLifecycleListener = AwsS3SourceTest.class)
-public class AwsS3SourceTest implements ContainerLifecycleListener<LocalStackContainer> {
+public class AwsS3SourceTest implements TestActionSupport, ContainerLifecycleListener<LocalStackContainer> {
 
     @CitrusResource
     private TestCaseRunner tc;
