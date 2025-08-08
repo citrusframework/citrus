@@ -53,12 +53,10 @@ import org.citrusframework.kubernetes.KubernetesSettings;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.StringUtils;
 
-import static org.citrusframework.kubernetes.actions.KubernetesActionBuilder.kubernetes;
-
 /**
  * Action connects the test to a Citrus agent running on the Kubernetes platform.
  * The test action deploys the agent to the given Kubernetes namespace and connects to the agent Pod via port forwarding.
- * The action then exposes a Http client to the Citrus context so other test actions can access the agent to run test actions within the Kubernetes cluster.
+ * The action then exposes the Http client to the Citrus context so other test actions can access the agent to run test actions within the Kubernetes cluster.
  */
 public class AgentConnectAction extends ServiceConnectAction {
 
@@ -118,7 +116,7 @@ public class AgentConnectAction extends ServiceConnectAction {
             }
 
             if (autoCreate && isAutoRemoveResources()) {
-                context.doFinally(kubernetes().client(getKubernetesClient())
+                context.doFinally(kubernetes()
                         .agent()
                         .disconnect(agent)
                         .inNamespace(getNamespace()));

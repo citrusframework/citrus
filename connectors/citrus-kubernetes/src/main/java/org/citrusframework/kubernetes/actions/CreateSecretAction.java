@@ -27,15 +27,12 @@ import java.util.Map;
 
 import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.SecretBuilder;
-import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.Updatable;
 import org.citrusframework.actions.kubernetes.KubernetesSecretCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
-
-import static org.citrusframework.kubernetes.actions.KubernetesActionBuilder.kubernetes;
 
 public class CreateSecretAction extends AbstractKubernetesAction implements KubernetesAction {
 
@@ -84,7 +81,7 @@ public class CreateSecretAction extends AbstractKubernetesAction implements Kube
                 .createOr(Updatable::update);
 
         if (isAutoRemoveResources()) {
-            context.doFinally(kubernetes().client(getKubernetesClient())
+            context.doFinally(kubernetes()
                     .secrets()
                     .delete(created.getMetadata().getName())
                     .inNamespace(getNamespace()));

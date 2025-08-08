@@ -35,13 +35,11 @@ public interface KnativeAction extends TestAction {
 
     /**
      * Gets the Kubernetes client.
-     * @return
      */
     KubernetesClient getKubernetesClient();
 
     /**
      * Gets the Knative client.
-     * @return
      */
     KnativeClient getKnativeClient();
 
@@ -52,16 +50,17 @@ public interface KnativeAction extends TestAction {
 
     /**
      * Should remove Knative resources automatically after test.
-     * @return
      */
     boolean isAutoRemoveResources();
 
     /**
+     * Provides access to the Knative test actions API.
+     */
+    KnativeActionBuilder knative();
+
+    /**
      * Resolves namespace name from given test context using the stored test variable.
      * Fallback to the namespace given in Knative environment settings when no test variable is present.
-     *
-     * @param context
-     * @return
      */
     default String namespace(TestContext context) {
         if (getNamespace() != null) {
@@ -74,10 +73,6 @@ public interface KnativeAction extends TestAction {
     /**
      * Resolves the current broker name that has been set in the test context as test variable.
      * Fallback to the broker given in Knative environment settings when no test variable is present.
-     *
-     * @param brokerName
-     * @param context
-     * @return
      */
     default String brokerName(String brokerName, TestContext context) {
         if (brokerName != null) {
@@ -94,9 +89,6 @@ public interface KnativeAction extends TestAction {
     /**
      * Resolves cluster type from given test context using the stored test variable.
      * Fallback to retrieving the cluster type from environment settings when no test variable is present.
-     *
-     * @param context
-     * @return
      */
     default ClusterType clusterType(TestContext context) {
         if (context.getVariables().containsKey(KnativeVariableNames.CLUSTER_TYPE.value())) {

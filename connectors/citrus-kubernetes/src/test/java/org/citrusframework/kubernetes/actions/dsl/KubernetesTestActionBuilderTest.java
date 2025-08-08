@@ -35,6 +35,7 @@ import io.fabric8.kubernetes.client.dsl.PodResource;
 import io.fabric8.kubernetes.client.dsl.Resource;
 import io.fabric8.kubernetes.client.dsl.ServiceResource;
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.kubernetes.UnitTestSupport;
 import org.citrusframework.kubernetes.actions.KubernetesExecuteAction;
@@ -53,7 +54,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.kubernetes.actions.KubernetesExecuteAction.Builder.kubernetes;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.reset;
@@ -63,7 +63,7 @@ import static org.mockito.Mockito.when;
 /**
  * @since 2.7
  */
-public class KubernetesTestActionBuilderTest extends UnitTestSupport {
+public class KubernetesTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
     @Mock
     private MixedOperation<Pod, PodList, PodResource> podsOperation;
@@ -124,6 +124,7 @@ public class KubernetesTestActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(kubernetes().client(client)
+            .execute()
             .info()
             .validate((commandResult, context) -> {
                 Assert.assertEquals(commandResult.getResult().getApiVersion(), "v1");
@@ -132,27 +133,32 @@ public class KubernetesTestActionBuilderTest extends UnitTestSupport {
             }));
 
         builder.$(kubernetes().client(client)
+            .execute()
             .pods()
             .list()
             .label("active")
             .namespace("myNamespace"));
 
         builder.$(kubernetes().client(client)
+            .execute()
             .nodes()
             .list()
             .validate((nodes, context) -> Assert.assertNotNull(nodes.getResult())));
 
         builder.$(kubernetes().client(client)
+            .execute()
             .namespaces()
             .list()
             .validate((namespaces, context) -> Assert.assertNotNull(namespaces.getResult())));
 
         builder.$(kubernetes().client(client)
+            .execute()
             .nodes()
             .watch()
             .label("new"));
 
         builder.$(kubernetes().client(client)
+            .execute()
             .services()
             .watch()
             .name("myService")

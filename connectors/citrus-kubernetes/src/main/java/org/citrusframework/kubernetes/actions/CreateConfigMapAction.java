@@ -34,8 +34,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 
-import static org.citrusframework.kubernetes.actions.KubernetesActionBuilder.kubernetes;
-
 public class CreateConfigMapAction extends AbstractKubernetesAction implements KubernetesAction {
 
     private final String configMapName;
@@ -82,7 +80,7 @@ public class CreateConfigMapAction extends AbstractKubernetesAction implements K
                 .createOr(Updatable::update);
 
         if (isAutoRemoveResources()) {
-            context.doFinally(kubernetes().client(getKubernetesClient())
+            context.doFinally(kubernetes()
                     .configMaps()
                     .delete(configMapName)
                     .inNamespace(getNamespace()));

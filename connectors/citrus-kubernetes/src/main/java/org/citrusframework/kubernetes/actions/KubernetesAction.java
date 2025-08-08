@@ -44,6 +44,11 @@ public interface KubernetesAction extends TestAction {
     boolean isAutoRemoveResources();
 
     /**
+     * Provides access to the Kubernetes test actions API.
+     */
+    KubernetesActionBuilder kubernetes();
+
+    /**
      * Resolves namespace name from given test context using the stored test variable.
      * Fallback to the namespace given in Kubernetes environment settings when no test variable is present.
      */
