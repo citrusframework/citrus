@@ -27,8 +27,6 @@ import org.citrusframework.kubernetes.KubernetesSettings;
 import org.citrusframework.util.PropertyUtils;
 import org.citrusframework.util.StringUtils;
 
-import static org.citrusframework.kubernetes.actions.KubernetesActionBuilder.kubernetes;
-
 /**
  * Action connects the test to a Kubernetes service so clients may invoke the service.
  * This is for services that are only accessible from within the cluster (e.g. service type is ClusterIP).
@@ -91,7 +89,7 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
         context.getReferenceResolver().bind(serviceName + ":port-forward", portForward);
 
         if (isAutoRemoveResources()) {
-            context.doFinally(kubernetes().client(getKubernetesClient())
+            context.doFinally(kubernetes()
                     .services()
                     .disconnect(serviceName)
                     .inNamespace(namespace(context)));

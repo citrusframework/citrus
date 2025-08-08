@@ -33,8 +33,6 @@ import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 
-import static org.citrusframework.kubernetes.actions.KubernetesActionBuilder.kubernetes;
-
 public class CreateCustomResourceAction extends AbstractKubernetesAction implements KubernetesAction {
 
     private final String type;
@@ -78,7 +76,7 @@ public class CreateCustomResourceAction extends AbstractKubernetesAction impleme
                     .createOr(Updatable::update);
 
             if (isAutoRemoveResources()) {
-                context.doFinally(kubernetes().client(getKubernetesClient())
+                context.doFinally(kubernetes()
                         .customResources()
                         .delete(resource.getMetadata().getName())
                         .inNamespace(getNamespace())
@@ -99,7 +97,7 @@ public class CreateCustomResourceAction extends AbstractKubernetesAction impleme
             }
 
             if (isAutoRemoveResources()) {
-                context.doFinally(kubernetes().client(getKubernetesClient())
+                context.doFinally(kubernetes()
                         .customResources()
                         .delete(resource.getMetadata().getName())
                         .inNamespace(getNamespace())

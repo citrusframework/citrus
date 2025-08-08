@@ -41,8 +41,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.PropertyUtils;
 
-import static org.citrusframework.kubernetes.actions.KubernetesActionBuilder.kubernetes;
-
 public class CreateServiceAction extends AbstractKubernetesAction {
 
     private final String serviceName;
@@ -102,7 +100,7 @@ public class CreateServiceAction extends AbstractKubernetesAction {
         }
 
         if (isAutoRemoveResources()) {
-            context.doFinally(kubernetes().client(getKubernetesClient())
+            context.doFinally(kubernetes()
                     .services()
                     .delete(created.getMetadata().getName())
                     .inNamespace(getNamespace()));

@@ -43,6 +43,8 @@ public abstract class AbstractKnativeAction extends AbstractTestAction implement
 
     private final boolean autoRemoveResources;
 
+    private final KnativeActionBuilder knative = new KnativeActionBuilder();
+
     public AbstractKnativeAction(String name, Builder<?, ?> builder) {
         super("knative:" + name, builder);
 
@@ -80,6 +82,12 @@ public abstract class AbstractKnativeAction extends AbstractTestAction implement
     @Override
     public String getNamespace() {
         return namespace;
+    }
+
+    @Override
+    public KnativeActionBuilder knative() {
+        return knative.client(kubernetesClient)
+                .client(knativeClient);
     }
 
     /**

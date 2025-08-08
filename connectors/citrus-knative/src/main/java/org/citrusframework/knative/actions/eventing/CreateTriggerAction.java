@@ -28,7 +28,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.knative.KnativeSupport;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
-import org.citrusframework.knative.actions.KnativeActionBuilder;
 import org.citrusframework.kubernetes.KubernetesSettings;
 
 public class CreateTriggerAction extends AbstractKnativeAction {
@@ -39,8 +38,6 @@ public class CreateTriggerAction extends AbstractKnativeAction {
     private final String channelName;
 
     private final Map<String, String> filterOnAttributes;
-
-    private final KnativeActionBuilder knative = new KnativeActionBuilder();
 
     public CreateTriggerAction(Builder builder) {
         super("create-trigger", builder);
@@ -78,7 +75,7 @@ public class CreateTriggerAction extends AbstractKnativeAction {
                 .createOr(Updatable::update);
 
         if (isAutoRemoveResources()) {
-            context.doFinally(knative.client(getKubernetesClient()).client(getKnativeClient())
+            context.doFinally(knative()
                     .trigger()
                     .delete(resolvedTriggerName)
                     .inNamespace(getNamespace()));

@@ -25,7 +25,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.knative.KnativeSupport;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
-import org.citrusframework.knative.actions.KnativeActionBuilder;
 import org.citrusframework.kubernetes.KubernetesSettings;
 
 public class CreateSubscriptionAction extends AbstractKnativeAction {
@@ -33,8 +32,6 @@ public class CreateSubscriptionAction extends AbstractKnativeAction {
     private final String subscriptionName;
     private final String channelName;
     private final String serviceName;
-
-    private final KnativeActionBuilder knative = new KnativeActionBuilder();
 
     public CreateSubscriptionAction(Builder builder) {
         super("create-subscription", builder);
@@ -75,7 +72,7 @@ public class CreateSubscriptionAction extends AbstractKnativeAction {
                 .createOr(Updatable::update);
 
         if (isAutoRemoveResources()) {
-            context.doFinally(knative.client(getKubernetesClient()).client(getKnativeClient())
+            context.doFinally(knative()
                     .subscriptions()
                     .delete(subscriptionName)
                     .inNamespace(getNamespace()));

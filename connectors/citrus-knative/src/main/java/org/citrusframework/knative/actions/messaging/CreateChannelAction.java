@@ -24,14 +24,11 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.knative.KnativeSupport;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
-import org.citrusframework.knative.actions.KnativeActionBuilder;
 import org.citrusframework.kubernetes.KubernetesSettings;
 
 public class CreateChannelAction extends AbstractKnativeAction {
 
     private final String channelName;
-
-    private final KnativeActionBuilder knative = new KnativeActionBuilder();
 
     public CreateChannelAction(Builder builder) {
         super("create-channel", builder);
@@ -57,7 +54,7 @@ public class CreateChannelAction extends AbstractKnativeAction {
                 .createOr(Updatable::update);
 
         if (isAutoRemoveResources()) {
-            context.doFinally(knative.client(getKubernetesClient()).client(getKnativeClient())
+            context.doFinally(knative()
                     .channels()
                     .delete(resolvedChannelName)
                     .inNamespace(getNamespace()));

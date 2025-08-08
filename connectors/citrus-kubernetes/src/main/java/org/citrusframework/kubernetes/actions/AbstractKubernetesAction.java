@@ -43,6 +43,8 @@ public abstract class AbstractKubernetesAction extends AbstractTestAction implem
 
     private final boolean autoRemoveResources;
 
+    private final KubernetesActionBuilder kubernetes = new KubernetesActionBuilder();
+
     public AbstractKubernetesAction(String name, Builder<?, ?> builder) {
         super("k8s:" + name, builder);
 
@@ -65,6 +67,11 @@ public abstract class AbstractKubernetesAction extends AbstractTestAction implem
     @Override
     public boolean isAutoRemoveResources() {
         return autoRemoveResources;
+    }
+
+    @Override
+    public KubernetesActionBuilder kubernetes() {
+        return kubernetes.client(kubernetesClient);
     }
 
     /**

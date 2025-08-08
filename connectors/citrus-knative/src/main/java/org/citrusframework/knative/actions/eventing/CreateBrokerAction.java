@@ -27,15 +27,12 @@ import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.knative.KnativeSupport;
 import org.citrusframework.knative.KnativeVariableNames;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
-import org.citrusframework.knative.actions.KnativeActionBuilder;
 import org.citrusframework.kubernetes.KubernetesSettings;
 import org.citrusframework.util.PropertyUtils;
 
 public class CreateBrokerAction extends AbstractKnativeAction {
 
     private final String brokerName;
-
-    private final KnativeActionBuilder knative = new KnativeActionBuilder();
 
     public CreateBrokerAction(Builder builder) {
         super("create-broker", builder);
@@ -106,7 +103,7 @@ public class CreateBrokerAction extends AbstractKnativeAction {
                 .createOr(Updatable::update);
 
         if (isAutoRemoveResources()) {
-            context.doFinally(knative.client(getKubernetesClient()).client(getKnativeClient())
+            context.doFinally(knative()
                     .brokers()
                     .delete(resolvedBrokerName)
                     .inNamespace(getNamespace()));
