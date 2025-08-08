@@ -27,6 +27,7 @@ import org.citrusframework.container.ParallelContainerBuilder;
 import org.citrusframework.container.RepeatOnErrorUntilTrueContainerBuilder;
 import org.citrusframework.container.RepeatUntilTrueContainerBuilder;
 import org.citrusframework.container.SequentialContainerBuilder;
+import org.citrusframework.container.TestActionContainer;
 import org.citrusframework.container.TimerContainerBuilder;
 import org.citrusframework.container.WaitContainerBuilder;
 
@@ -48,4 +49,8 @@ public interface TestContainers extends
         TimerContainerBuilder.BuilderFactory,
         WaitContainerBuilder.BuilderFactory {
 
+    /**
+     * Generic Java DSL container builder.
+     */
+    <T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container);
 }

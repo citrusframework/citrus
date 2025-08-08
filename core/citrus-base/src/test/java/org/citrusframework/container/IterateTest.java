@@ -16,7 +16,6 @@
 
 package org.citrusframework.container;
 
-import org.citrusframework.DefaultTestActionBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.UnitTestSupport;
 import org.mockito.Mockito;
@@ -112,10 +111,10 @@ public class IterateTest extends UnitTestSupport {
 
     @Test
     public void testIterationWithIndexManipulation() {
-        TestAction incrementTestAction = DefaultTestActionBuilder.action(context -> {
+        TestAction incrementTestAction = context -> {
             long end = Long.parseLong(context.getVariable("end"));
             context.setVariable("end", String.valueOf(end - 25));
-        }).build();
+        };
 
         reset(action);
 

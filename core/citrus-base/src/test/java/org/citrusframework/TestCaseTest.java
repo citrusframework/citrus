@@ -35,9 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.DefaultTestActionBuilder.action;
-
-public class TestCaseTest extends UnitTestSupport {
+public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
 
     @Test
     public void testExecution() {

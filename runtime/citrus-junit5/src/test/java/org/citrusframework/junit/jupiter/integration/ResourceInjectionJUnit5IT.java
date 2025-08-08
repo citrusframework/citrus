@@ -32,8 +32,6 @@ import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.citrusframework.DefaultTestActionBuilder.action;
-
 @CitrusSupport
 public class ResourceInjectionJUnit5IT implements TestActionSupport {
 

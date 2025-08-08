@@ -25,8 +25,6 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.DefaultTestActionBuilder.action;
-
 @Test
 public class AssertJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 

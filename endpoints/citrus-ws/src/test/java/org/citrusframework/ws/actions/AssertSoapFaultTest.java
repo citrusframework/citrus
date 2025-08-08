@@ -40,8 +40,6 @@ import org.springframework.xml.namespace.QNameUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.DefaultTestActionBuilder.action;
-
 public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Autowired

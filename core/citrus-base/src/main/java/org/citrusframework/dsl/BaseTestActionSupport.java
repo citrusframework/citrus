@@ -16,12 +16,47 @@
 
 package org.citrusframework.dsl;
 
+import java.util.stream.Collectors;
+
+import org.citrusframework.AbstractTestContainerBuilder;
+import org.citrusframework.DefaultTestActionBuilder;
+import org.citrusframework.TestAction;
+import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestActionContainerBuilder;
 import org.citrusframework.TestContainers;
 import org.citrusframework.actions.*;
 import org.citrusframework.condition.Condition;
 import org.citrusframework.container.*;
 
 public interface BaseTestActionSupport extends BaseTestActions, TestContainers {
+
+    @Override
+    default DefaultTestActionBuilder action(TestAction action) {
+        return new DefaultTestActionBuilder(action);
+    }
+
+    @Override
+    default <T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container) {
+        return new AbstractTestContainerBuilder<>() {
+            @Override
+            public T doBuild() {
+                container.setActions(actions.stream()
+                        .map(TestActionBuilder::build)
+                        .collect(Collectors.toList()));
+
+                return container;
+            }
+
+            @Override
+            public T build() {
+                if (!container.getActions().isEmpty()) {
+                    return container;
+                }
+
+                return super.build();
+            }
+        };
+    }
 
     @Override
     default AntRunActionBuilder<AntRunAction> antrun() {

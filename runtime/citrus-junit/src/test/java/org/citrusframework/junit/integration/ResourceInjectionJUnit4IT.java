@@ -32,8 +32,6 @@ import org.citrusframework.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.citrusframework.DefaultTestActionBuilder.action;
-
 /**
  * @since 2.5
  */

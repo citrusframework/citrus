@@ -24,8 +24,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.AbstractTestContainerBuilder.container;
-
 /**
  * @since 2.6
  */
