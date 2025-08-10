@@ -16,8 +16,6 @@
 
 package org.citrusframework.junit.jupiter;
 
-import java.lang.reflect.Method;
-
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusInstanceManager;
@@ -28,6 +26,7 @@ import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.TestCaseFailedException;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -40,6 +39,8 @@ import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.opentest4j.TestAbortedException;
+
+import java.lang.reflect.Method;
 
 import static org.citrusframework.annotations.CitrusAnnotations.injectCitrusFramework;
 import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getBaseKey;
@@ -182,7 +183,11 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
             }
         });
 
-        testLoader.load();
+        try {
+            testLoader.load();
+        } catch (TestCaseFailedException e) {
+            throw new CitrusJUnitException(e.getMessage());
+        }
     }
 
     @Override
