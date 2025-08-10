@@ -16,6 +16,10 @@
 
 package org.citrusframework;
 
+import org.citrusframework.common.TestLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
@@ -23,10 +27,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.citrusframework.common.TestLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.System.getProperty;
 import static java.lang.System.getenv;
@@ -43,9 +45,6 @@ import static org.citrusframework.message.MessageType.XML;
 
 public final class CitrusSettings {
 
-    /**
-     * Logger
-     */
     private static final Logger logger = LoggerFactory.getLogger(CitrusSettings.class);
 
     private CitrusSettings() {
@@ -218,14 +217,14 @@ public final class CitrusSettings {
      */
     public static final String HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED_PROPERTY = "citrus.http.message.builder.force.citrus.header.update.enabled";
     public static final String HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED_ENV = "CITRUS_HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED";
-    public static final String HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED_DEFAULT = Boolean.TRUE.toString();
+    public static final String HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED_DEFAULT = TRUE.toString();
 
     /**
      * Flag to enable/disable environment variable based endpoint and component configuration.
      */
     public static final String ENV_VAR_PROPERTY_BINDING_ENABLED_PROPERTY = "citrus.env.var.property.binding.enabled";
     public static final String ENV_VAR_PROPERTY_BINDING_ENABLED_ENV = "CITRUS_ENV_VAR_PROPERTY_BINDING_ENABLED";
-    public static final String ENV_VAR_PROPERTY_BINDING_ENABLED_DEFAULT = Boolean.TRUE.toString();
+    public static final String ENV_VAR_PROPERTY_BINDING_ENABLED_DEFAULT = TRUE.toString();
 
     /**
      * Flag to enable/disable environment variable based endpoint and component configuration.
@@ -235,7 +234,7 @@ public final class CitrusSettings {
     public static final String COMPONENT_PROPERTY_BINDING_ENABLED_DEFAULT = getPropertyEnvOrDefault(
             ENV_VAR_PROPERTY_BINDING_ENABLED_PROPERTY,
             ENV_VAR_PROPERTY_BINDING_ENABLED_ENV,
-            Boolean.TRUE.toString());
+            TRUE.toString());
 
     /**
      * Flag to enable/disable environment variable based endpoint and component configuration.
@@ -245,7 +244,7 @@ public final class CitrusSettings {
     public static final String ENDPOINT_PROPERTY_BINDING_ENABLED_DEFAULT = getPropertyEnvOrDefault(
             ENV_VAR_PROPERTY_BINDING_ENABLED_PROPERTY,
             ENV_VAR_PROPERTY_BINDING_ENABLED_ENV,
-            Boolean.TRUE.toString());;
+            TRUE.toString());
 
     /**
      * Default message trace output directory
@@ -273,14 +272,14 @@ public final class CitrusSettings {
      */
     public static final String CACHE_INPUT_STREAM_PROPERTY = "citrus.message.cache.input.stream";
     public static final String CACHE_INPUT_STREAM_ENV = "CITRUS_MESSAGE_CACHE_INPUT_STREAM";
-    public static final String CACHE_INPUT_STREAM_DEFAULT = Boolean.TRUE.toString();
+    public static final String CACHE_INPUT_STREAM_DEFAULT = TRUE.toString();
 
     /**
      * Flag to enable/disable message pretty print
      */
     public static final String PRETTY_PRINT_PROPERTY = "citrus.message.pretty.print";
     public static final String PRETTY_PRINT_ENV = "CITRUS_MESSAGE_PRETTY_PRINT";
-    public static final String PRETTY_PRINT_DEFAULT = Boolean.TRUE.toString();
+    public static final String PRETTY_PRINT_DEFAULT = TRUE.toString();
 
     /**
      * File path charset parameter
@@ -297,9 +296,14 @@ public final class CitrusSettings {
     public static final String GROOVY_STATIC_IMPORTS_DEFAULT = "print,sleep";
 
     /**
+     * Flag to enable/disable stack trace output in default logging reporter.
+     */
+    public static final String DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES_PROPERTY = "citrus.default.logging.reporter.print-stack-traces";
+    public static final String DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES_ENV = "CITRUS_DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES";
+    public static final String DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES_DEFAULT = FALSE.toString();
+
+    /**
      * Gets set of file name patterns for Groovy test files.
-     *
-     * @return
      */
     public static Set<String> getGroovyTestFileNamePattern() {
         return Stream.of(GROOVY_TEST_FILE_NAME_PATTERN.split(",")).collect(toSet());
@@ -307,8 +311,6 @@ public final class CitrusSettings {
 
     /**
      * Gets set of file name patterns for YAML test files.
-     *
-     * @return
      */
     public static Set<String> getYamlTestFileNamePattern() {
         return Stream.of(YAML_TEST_FILE_NAME_PATTERN.split(",")).collect(toSet());
@@ -316,8 +318,6 @@ public final class CitrusSettings {
 
     /**
      * Gets set of file name patterns for XML test files.
-     *
-     * @return
      */
     public static Set<String> getXmlTestFileNamePattern() {
         return Stream.of(XML_TEST_FILE_NAME_PATTERN.split(",")).collect(toSet());
@@ -325,8 +325,6 @@ public final class CitrusSettings {
 
     /**
      * Gets set of file name patterns for Java test files.
-     *
-     * @return
      */
     public static Set<String> getJavaTestFileNamePattern() {
         return Stream.of(JAVA_TEST_FILE_NAME_PATTERN.split(",")).collect(toSet());
@@ -334,8 +332,6 @@ public final class CitrusSettings {
 
     /**
      * Gets the directory where to put message trace files.
-     *
-     * @return
      */
     public static String getMessageTraceDirectory() {
         return getPropertyEnvOrDefault(
@@ -346,8 +342,6 @@ public final class CitrusSettings {
 
     /**
      * Gets the type converter to use by default.
-     *
-     * @return
      */
     public static String getTypeConverter() {
         return getPropertyEnvOrDefault(
@@ -378,8 +372,6 @@ public final class CitrusSettings {
 
     /**
      * Gets the message payload pretty print enabled/disabled setting.
-     *
-     * @return
      */
     public static boolean isPrettyPrintEnabled() {
         return parseBoolean(getPropertyEnvOrDefault(
@@ -390,8 +382,6 @@ public final class CitrusSettings {
 
     /**
      * Get the file path charset parameter.
-     *
-     * @return
      */
     public static String getFilePathCharsetParameter() {
         return getPropertyEnvOrDefault(
@@ -403,8 +393,6 @@ public final class CitrusSettings {
     /**
      * Gets the http message builder force citrus header update enabled/disabled setting, which controls
      * whether the citrus message builder always creates messages with unique ids.
-     *
-     * @return
      */
     public static boolean isHttpMessageBuilderForceCitrusHeaderUpdateEnabled() {
         return parseBoolean(getPropertyEnvOrDefault(
@@ -415,9 +403,6 @@ public final class CitrusSettings {
 
     /**
      * Gets the test file name pattern for given type or empty patterns for unknown type.
-     *
-     * @param type
-     * @return
      */
     public static Set<String> getTestFileNamePattern(String type) {
         return switch (type) {
@@ -482,5 +467,18 @@ public final class CitrusSettings {
                 GROOVY_STATIC_IMPORTS_PROPERTY,
                 GROOVY_STATIC_IMPORTS_ENV,
                 GROOVY_STATIC_IMPORTS_DEFAULT);
+    }
+
+    /**
+     * Whether stack traces should be printed in the default logging reporter or not.
+     */
+    public static boolean isStackTraceOutputEnabled() {
+        return parseBoolean(
+                getPropertyEnvOrDefault(
+                        DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES_PROPERTY,
+                        DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES_ENV,
+                        DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES_DEFAULT
+                )
+        );
     }
 }

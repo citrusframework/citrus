@@ -271,7 +271,6 @@
     <swagger.version>2.2.31</swagger.version>
     <swagger.parser.version>2.1.22</swagger.parser.version>
     <swagger-request-validator.version>2.44.9</swagger-request-validator.version>
-    <system-stubs.version>2.1.7</system-stubs.version>
     <testcontainers.version>1.21.3</testcontainers.version>
     <testng.version>7.11.0</testng.version>
     <!-- bound to https://mvnrepository.com/artifact/io.fabric8/kubernetes-httpclient-vertx/${k8s.client.version} -->

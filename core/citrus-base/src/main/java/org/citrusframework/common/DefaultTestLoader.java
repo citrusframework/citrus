@@ -102,7 +102,6 @@ public class DefaultTestLoader implements TestLoader {
             // This kind of exception indicates that the error has already been handled. Just throw and end test run.
             throw e;
         } catch (Exception | Error e) {
-
             if (e instanceof  RuntimeException runtimeException && isSkipExceptionType(runtimeException)) {
                 throw runtimeException;
             }
@@ -112,6 +111,7 @@ public class DefaultTestLoader implements TestLoader {
             }
 
             testCase.setTestResult(failed(testCase.getName(), testCase.getTestClass().getName(), e));
+
             throw new TestCaseFailedException(e);
         }  finally {
             runner.stop();
