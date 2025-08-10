@@ -16,23 +16,26 @@
 
 package org.citrusframework.report;
 
-import java.time.Duration;
-import java.util.Locale;
-
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.ReflectionHelper;
 import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
+import java.util.Locale;
+import java.util.function.Consumer;
+
 import static java.lang.String.format;
+import static java.util.Objects.requireNonNull;
 import static org.citrusframework.TestResult.failed;
 import static org.citrusframework.TestResult.skipped;
 import static org.citrusframework.TestResult.success;
+import static org.citrusframework.util.ReflectionHelper.findField;
+import static org.citrusframework.util.ReflectionHelper.setField;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.clearInvocations;
@@ -69,7 +72,7 @@ public class LoggingReporterTest {
         fixture = new LoggingReporter();
 
         // Comment this line if you want to see the logs in stdout
-        ReflectionHelper.setField(ReflectionHelper.findField(LoggingReporter.class, "logger"), null, logger);
+        setField(requireNonNull(findField(LoggingReporter.class, "logger")), null, logger);
     }
 
     @Test
@@ -116,6 +119,18 @@ public class LoggingReporterTest {
 
     @Test
     public void testLoggingReporterFailed() {
+        testLoggingReporterFailed((cause) -> verify(logger).error("TEST FAILED SampleIT <org.citrusframework.sample> Nested exception is: Failed!"));
+    }
+
+    @Test
+    public void testLoggingReporterFailed_withStacktrace() {
+        // Override fixture, enable stacktrace output
+        fixture = new LoggingReporter(true);
+
+        testLoggingReporterFailed((cause) -> verify(logger).error("TEST FAILED SampleIT <org.citrusframework.sample> Nested exception is: ", cause));
+    }
+
+    public void testLoggingReporterFailed(Consumer<Throwable> verifyErrorLogInvocation) {
         var nestedException = new CitrusRuntimeException("I am the final boss.");
         var cause = new CitrusRuntimeException("Failed!", nestedException);
 
@@ -128,7 +143,7 @@ public class LoggingReporterTest {
         fixture.onFinish();
         fixture.onFinishSuccess();
 
-        verify(logger).error("TEST FAILED SampleIT <org.citrusframework.sample> Nested exception is: ", cause);
+        verifyErrorLogInvocation.accept(cause);
 
         TestResults testResults = new TestResults();
         testResults.addResult(failed("testLoggingReporterFailed-1", getClass().getSimpleName(), cause).withDuration(Duration.ofMillis(1234)));

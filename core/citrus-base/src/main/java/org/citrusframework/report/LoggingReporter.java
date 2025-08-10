@@ -16,9 +16,8 @@
 
 package org.citrusframework.report;
 
-import java.util.Optional;
-
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.CitrusVersion;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestCase;
@@ -30,6 +29,8 @@ import org.citrusframework.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLoggerFactory;
+
+import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.time.Duration.ZERO;
@@ -94,6 +95,20 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         return nonNull(test.getTestResult()) && nonNull(test.getTestResult().getDuration()) ? " (" + test.getTestResult().getDuration().toString() + ") " : "";
     }
 
+    private final boolean stackTraceOutputEnabled;
+
+    public LoggingReporter() {
+        this(CitrusSettings.isStackTraceOutputEnabled());
+    }
+
+    public LoggingReporter(boolean stackTraceOutputEnabled) {
+        this.stackTraceOutputEnabled = stackTraceOutputEnabled;
+    }
+
+    public boolean isStackTraceOutputEnabled() {
+        return stackTraceOutputEnabled;
+    }
+
     @Override
     public void generate(TestResults testResults) {
         newLine();
@@ -142,7 +157,12 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         newLine();
 
         var duration = formatDurationString(testCase);
-        error("TEST FAILED " + testCase.getName() + " <" + testCase.getPackageName() + ">" + duration + " Nested exception is: ", cause);
+
+        if (stackTraceOutputEnabled) {
+            error("TEST FAILED " + testCase.getName() + " <" + testCase.getPackageName() + ">" + duration + " Nested exception is: ", cause);
+        } else {
+            error("TEST FAILED " + testCase.getName() + " <" + testCase.getPackageName() + ">" + duration + " Nested exception is: " + cause.getMessage());
+        }
 
         separator();
         newLine();
@@ -198,7 +218,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     public void onStart() {
         if (!isInitialized) {
             printBanner();
-            LoggingReporter.initialized();
+            initialized();
         }
 
         separator();

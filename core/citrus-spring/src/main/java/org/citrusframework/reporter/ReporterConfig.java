@@ -19,7 +19,11 @@ package org.citrusframework.reporter;
 import org.citrusframework.report.HtmlReporter;
 import org.citrusframework.report.JUnitReporter;
 import org.citrusframework.report.LoggingReporter;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Condition;
+import org.springframework.context.annotation.ConditionContext;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
 @Configuration
