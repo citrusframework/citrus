@@ -10,7 +10,7 @@ import org.citrusframework.openapi.generator.soap.bookservice.BookServiceOpenApi
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:48.787357800+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-07-25T13:14:45.154485300+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class BookServiceNamespaceHandler extends NamespaceHandlerSupport {
 
     @Override

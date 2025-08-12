@@ -25,7 +25,7 @@ import java.time.LocalDate;
 /**
  * Additional historical data for a vaccination report, not contained in internal storage. 
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-06-29T17:00:47.279105500+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-07-25T13:14:38.461661900+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
 public class HistoricalData {
   @jakarta.annotation.Nullable
   private LocalDate lastVaccinationDate;
