@@ -100,7 +100,9 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
             return true;
         }
 
-        if (!executedActions.contains(activeAction)) {
+        if (activeAction != null  && !executedActions.contains(activeAction)) {
+            logger.debug("{} not completed yet", Optional.ofNullable(activeAction.getName()).filter(name -> !name.trim().isEmpty())
+                    .orElseGet(() -> activeAction.getClass().getName()));
             return false;
         }
 
