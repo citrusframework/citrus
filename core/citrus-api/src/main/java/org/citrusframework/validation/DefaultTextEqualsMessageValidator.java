@@ -68,6 +68,8 @@ public class DefaultTextEqualsMessageValidator extends DefaultMessageValidator {
         if (!receivedPayload.equals(controlPayload)) {
             throw new ValidationException("Validation failed - message payload not equal " + getFirstDiff(receivedPayload, controlPayload));
         }
+
+        logger.debug("Message validation successful: All values OK");
     }
 
     public String getFirstDiff(String received, String control) {
