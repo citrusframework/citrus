@@ -356,12 +356,12 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
                     .exception(ActionTimeoutException.class)
                     .message("Action timeout after 2000 milliseconds. Failed to receive message on endpoint: 'names'")
                     .when(receive(kafkaEndpoint)
-                        .timeout(2_000)
+                        .timeout(2000)
                         .selector(
                                 kafkaMessageFilter()
                                         .eventLookbackWindow(Duration.ofSeconds(1L))
                                         .kafkaMessageSelector(kafkaHeaderEquals(key, "Samwise"))
-                                        .pollTimeout(Duration.ofSeconds(3)) // Note that pollTimeout > overall receive timeout
+                                        .pollTimeout(Duration.ofSeconds(4)) // Note that pollTimeout > overall receive timeout
                                         .build()
                         )
                         .message()
