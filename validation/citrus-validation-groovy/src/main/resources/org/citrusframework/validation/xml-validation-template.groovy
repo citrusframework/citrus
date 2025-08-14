@@ -11,7 +11,7 @@ public class ValidationScript implements GroovyScriptExecutor{
 
         def root;
         if (payload.length()) {
-            root = new XmlSlurper().parseText(payload)
+            root = new XmlSlurper(false, true, true).parseText(payload)
         } else {
             root = "";
         }
