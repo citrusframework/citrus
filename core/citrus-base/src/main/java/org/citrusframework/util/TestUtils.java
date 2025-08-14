@@ -87,12 +87,12 @@ public abstract class TestUtils {
         ScheduledFuture<?> scheduler = null;
         try {
             final CompletableFuture<Boolean> finished = new CompletableFuture<>();
-             scheduler = scheduledExecutor.scheduleAtFixedRate(() -> {
+            scheduler = scheduledExecutor.scheduleAtFixedRate(() -> {
                 try {
                     if (container.isDone(context)) {
                         finished.complete(true);
-                    } else {
-                        logger.debug("Wait for test container to finish properly ...");
+                    } else if (logger.isDebugEnabled()) {
+                        logger.debug("Wait for test container in test '%s' to finish properly ...".formatted(getTestName(context)));
                     }
                 } catch (Exception e) {
                     if (logger.isDebugEnabled()) {
@@ -105,7 +105,7 @@ public abstract class TestUtils {
 
             finished.get(timeout, TimeUnit.MILLISECONDS);
         } catch (ExecutionException | TimeoutException | InterruptedException e) {
-            throw new CitrusRuntimeException("Failed to wait for test container to finish properly", e);
+            throw new CitrusRuntimeException("Failed to wait for test container in test '%s' to finish properly".formatted(getTestName(context)), e);
         } finally {
             if (scheduler != null) {
                 scheduler.cancel(true);
@@ -121,6 +121,14 @@ public abstract class TestUtils {
             if (!scheduledExecutor.isTerminated()) {
                 scheduledExecutor.shutdownNow();
             }
+        }
+    }
+
+    public static String getTestName(TestContext context) {
+        if (context.getVariables().containsKey(CitrusSettings.TEST_NAME_VARIABLE)) {
+            return context.getVariable(CitrusSettings.TEST_NAME_VARIABLE);
+        } else {
+            return "";
         }
     }
 

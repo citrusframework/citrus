@@ -70,7 +70,7 @@ public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
     }
 
     @Test(expectedExceptions = TestCaseFailedException.class,
-          expectedExceptionsMessageRegExp = "Failed to wait for test container to finish properly")
+          expectedExceptionsMessageRegExp = "Failed to wait for test container in test 'MyTestCase' to finish properly")
     public void testWaitForFinishTimeout() {
         final DefaultTestCase testcase = new DefaultTestCase();
         testcase.setTimeout(500L);

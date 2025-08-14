@@ -115,7 +115,7 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
         }
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class, expectedExceptionsMessageRegExp = "Failed to wait for test container to finish properly")
+    @Test(expectedExceptions = TestCaseFailedException.class, expectedExceptionsMessageRegExp = "Failed to wait for test container in test 'MyTestCase' to finish properly")
     public void testWaitForFinishTimeout() {
         fixture.setTimeout(500L);
         fixture.setName("MyTestCase");
