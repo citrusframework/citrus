@@ -18,14 +18,12 @@ package org.citrusframework.kafka.integration;
 
 import java.time.Duration;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.assertj.core.api.ThrowableAssert;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.internal.GitHubIssue;
 import org.citrusframework.kafka.endpoint.KafkaEndpoint;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector;
@@ -36,7 +34,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static java.util.Objects.nonNull;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.kafka.endpoint.KafkaMessageFilter.kafkaMessageFilter;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.ValueMatchingStrategy.ENDS_WITH;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.ValueMatchingStrategy.STARTS_WITH;
@@ -233,8 +230,11 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
                         .message(new KafkaMessage(body).setHeader(key, value))
         );
 
-        ThrowableAssert.ThrowingCallable receiver = () -> then(
-                receive(kafkaWithRandomConsumerGroupEndpoint)
+        then(
+                assertException()
+                    .exception(CitrusRuntimeException.class)
+                    .message("@startsWith(Failed to resolve Kafka message using selector)@")
+                    .when(receive(kafkaWithRandomConsumerGroupEndpoint)
                         .selector(
                                 kafkaMessageFilter()
                                         .eventLookbackWindow(Duration.ofSeconds(1L))
@@ -243,12 +243,8 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
                         )
                         .message()
                         .body(body)
+                    )
         );
-
-        assertThatThrownBy(receiver)
-                .isInstanceOf(TestCaseFailedException.class)
-                .hasRootCauseInstanceOf(CitrusRuntimeException.class)
-                .hasMessageContaining("Failed to resolve Kafka message using selector");
     }
 
     @Test
@@ -266,8 +262,11 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
 
         when(sleep().seconds(2));
 
-        ThrowableAssert.ThrowingCallable receiver = () -> then(
-                receive(kafkaWithRandomConsumerGroupEndpoint)
+        then(
+                assertException()
+                    .exception(CitrusRuntimeException.class)
+                    .message("@startsWith(Failed to resolve Kafka message using selector)@")
+                    .when(receive(kafkaWithRandomConsumerGroupEndpoint)
                         .selector(
                                 kafkaMessageFilter()
                                         .eventLookbackWindow(Duration.ofSeconds(1L))
@@ -276,12 +275,8 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
                         )
                         .message()
                         .body(body)
+                    )
         );
-
-        assertThatThrownBy(receiver)
-                .isInstanceOf(TestCaseFailedException.class)
-                .hasRootCauseInstanceOf(CitrusRuntimeException.class)
-                .hasMessageContaining("Failed to resolve Kafka message using selector");
     }
 
     @Test
@@ -301,8 +296,11 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
                         .message(new KafkaMessage(body).setHeader(key, "Gandalf the White"))
         );
 
-        ThrowableAssert.ThrowingCallable receiver = () -> then(
-                receive(kafkaWithRandomConsumerGroupEndpoint)
+        then(
+                assertException()
+                    .exception(CitrusRuntimeException.class)
+                    .message("@startsWith(More than one matching record found in topic)@")
+                    .when(receive(kafkaWithRandomConsumerGroupEndpoint)
                         .selector(
                                 kafkaMessageFilter()
                                         .eventLookbackWindow(Duration.ofSeconds(1L))
@@ -311,12 +309,8 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
                         )
                         .message()
                         .body(body)
+                    )
         );
-
-        assertThatThrownBy(receiver)
-                .isInstanceOf(TestCaseFailedException.class)
-                .hasRootCauseInstanceOf(CitrusRuntimeException.class)
-                .hasMessageContaining("More than one matching record found in topic");
     }
 
     @Test
@@ -357,8 +351,11 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
                         .message(new KafkaMessage(body).setHeader(key, value))
         );
 
-        ThrowableAssert.ThrowingCallable receiver = () -> then(
-                receive(kafkaEndpoint)
+        then(
+                assertException()
+                    .exception(ActionTimeoutException.class)
+                    .message("Action timeout after 2000 milliseconds. Failed to receive message on endpoint: 'names'")
+                    .when(receive(kafkaEndpoint)
                         .timeout(2_000)
                         .selector(
                                 kafkaMessageFilter()
@@ -369,12 +366,8 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
                         )
                         .message()
                         .body(body)
+                    )
         );
-
-        assertThatThrownBy(receiver)
-                .isInstanceOf(TestCaseFailedException.class)
-                .hasRootCauseInstanceOf(TimeoutException.class)
-                .hasMessageContaining("Action timeout after 2000 milliseconds. Failed to receive message on endpoint: 'names'");
     }
 
     @Test
