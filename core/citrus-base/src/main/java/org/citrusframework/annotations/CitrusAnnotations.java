@@ -22,8 +22,10 @@ import java.util.Arrays;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
+import org.citrusframework.DefaultTestActions;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.common.Named;
 import org.citrusframework.context.TestContext;
@@ -36,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Dependency injection support for {@link CitrusFramework}, {@link CitrusResource} and {@link CitrusEndpoint} annotations.
- *
  * @since 2.5
  */
 public abstract class CitrusAnnotations {
@@ -53,7 +54,6 @@ public abstract class CitrusAnnotations {
 
     /**
      * Creates new Citrus instance and injects all supported components and endpoints to target object using annotations.
-     * @param target
      */
     public static void injectAll(final Object target) {
         injectAll(target, Citrus.newInstance());
@@ -61,7 +61,6 @@ public abstract class CitrusAnnotations {
 
     /**
      * Creates new Citrus test context and injects all supported components and endpoints to target object using annotations.
-     * @param target
      */
     public static void injectAll(final Object target, final Citrus citrusFramework) {
         injectAll(target, citrusFramework, citrusFramework.getCitrusContext().createTestContext());
@@ -69,7 +68,6 @@ public abstract class CitrusAnnotations {
 
     /**
      * Injects all supported components and endpoints to target object using annotations.
-     * @param target
      */
     public static void injectAll(final Object target, final Citrus citrusFramework, final TestContext context) {
         injectCitrusFramework(target, citrusFramework);
@@ -81,14 +79,12 @@ public abstract class CitrusAnnotations {
 
         injectEndpoints(target, context);
         injectTestContext(target, context);
+        injectTestActionBuilder(target);
     }
 
     /**
      * Reads all {@link CitrusEndpoint} and {@link CitrusEndpointConfig} related annotations on target object field declarations and
      * injects proper endpoint instances.
-     *
-     * @param target
-     * @param context
      */
     public static void injectEndpoints(final Object target, final TestContext context) {
         CitrusEndpointAnnotations.injectEndpoints(target, context);
@@ -96,8 +92,6 @@ public abstract class CitrusAnnotations {
 
     /**
      * Inject Citrus framework instance to the test class fields with {@link CitrusFramework} annotation.
-     * @param testCase
-     * @param citrusFramework
      */
     public static void injectCitrusFramework(final Object testCase, final Citrus citrusFramework) {
         ReflectionHelper.doWithFields(testCase.getClass(), field -> {
@@ -112,8 +106,6 @@ public abstract class CitrusAnnotations {
 
     /**
      * Inject Citrus context instance to the test class fields with {@link CitrusResource} annotation.
-     * @param target
-     * @param context
      */
     public static void injectCitrusContext(final Object target, final CitrusContext context) {
         ReflectionHelper.doWithFields(target.getClass(), field -> {
@@ -128,8 +120,6 @@ public abstract class CitrusAnnotations {
 
     /**
      * Inject test context instance to the test class fields with {@link CitrusResource} annotation.
-     * @param target
-     * @param context
      */
     public static void injectTestContext(final Object target, final TestContext context) {
         ReflectionHelper.doWithFields(target.getClass(), field -> {
@@ -148,9 +138,26 @@ public abstract class CitrusAnnotations {
     }
 
     /**
+     * Inject test context instance to the test class fields with {@link CitrusResource} annotation.
+     */
+    public static void injectTestActionBuilder(final Object target) {
+        ReflectionHelper.doWithFields(target.getClass(), field -> {
+            if (!field.isAnnotationPresent(CitrusResource.class) || !TestActionSupport.class.isAssignableFrom(field.getType())) {
+                return;
+            }
+
+            Class<?> type = field.getType();
+            if (TestActionSupport.class.isAssignableFrom(type)) {
+                logger.trace("Injecting test action builder instance on test class field '{}'", field.getName());
+                ReflectionHelper.setField(field, target, new DefaultTestActions());
+            } else {
+                throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
+            }
+        });
+    }
+
+    /**
      * Inject test runner instance to the test class fields with {@link CitrusResource} annotation.
-     * @param target
-     * @param runner
      */
     public static void injectTestRunner(final Object target, final TestCaseRunner runner) {
         ReflectionHelper.doWithFields(target.getClass(), field -> {
@@ -173,8 +180,6 @@ public abstract class CitrusAnnotations {
 
     /**
      * Inject test action runner instance to the test class fields with {@link CitrusResource} annotation.
-     * @param target
-     * @param runner
      */
     private static void injectTestActionRunner(final Object target, final TestActionRunner runner) {
         ReflectionHelper.doWithFields(target.getClass(), field -> {
@@ -194,8 +199,6 @@ public abstract class CitrusAnnotations {
 
     /**
      * Inject test action runner instance to the test class fields with {@link CitrusResource} annotation.
-     * @param target
-     * @param runner
      */
     private static void injectGherkinTestActionRunner(final Object target, final GherkinTestActionRunner runner) {
         ReflectionHelper.doWithFields(target.getClass(), field -> {
@@ -215,8 +218,6 @@ public abstract class CitrusAnnotations {
 
     /**
      * Parse given configuration class and bind annotated fields, methods to reference registry.
-     * @param configClass
-     * @param citrusContext
      */
     public static void parseConfiguration(Class<?> configClass, CitrusContext citrusContext) {
         try {
@@ -228,8 +229,6 @@ public abstract class CitrusAnnotations {
 
     /**
      * Parse given configuration class and bind annotated fields, methods to reference registry.
-     * @param configuration
-     * @param citrusContext
      */
     public static void parseConfiguration(Object configuration, CitrusContext citrusContext) {
         Class<?> configClass = configuration.getClass();

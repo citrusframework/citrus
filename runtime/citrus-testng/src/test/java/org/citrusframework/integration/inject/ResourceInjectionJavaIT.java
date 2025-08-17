@@ -49,6 +49,9 @@ public class ResourceInjectionJavaIT extends TestNGCitrusSpringSupport implement
     @CitrusResource
     private TestContext globalContext;
 
+    @CitrusResource
+    private TestActionSupport actions;
+
     @Test
     @CitrusTest
     public void injectResources(@Optional @CitrusResource TestCaseRunner runner,
@@ -67,6 +70,7 @@ public class ResourceInjectionJavaIT extends TestNGCitrusSpringSupport implement
         Assert.assertNotNull(citrus);
         Assert.assertNotNull(directEndpoint);
         Assert.assertNotNull(globalContext);
+        Assert.assertNotNull(actions);
         Assert.assertEquals(context, globalContext);
     }
 
@@ -93,6 +97,7 @@ public class ResourceInjectionJavaIT extends TestNGCitrusSpringSupport implement
         Assert.assertNotNull(citrus);
         Assert.assertNotNull(directEndpoint);
         Assert.assertNotNull(globalContext);
+        Assert.assertNotNull(actions);
         Assert.assertEquals(context, globalContext);
     }
 
@@ -117,6 +122,7 @@ public class ResourceInjectionJavaIT extends TestNGCitrusSpringSupport implement
         Assert.assertNotNull(citrus);
         Assert.assertNotNull(directEndpoint);
         Assert.assertNotNull(globalContext);
+        Assert.assertNotNull(actions);
         Assert.assertEquals(context, globalContext);
     }
 

@@ -19,9 +19,11 @@ package org.citrusframework.junit.jupiter;
 import java.lang.reflect.Method;
 
 import org.citrusframework.Citrus;
+import org.citrusframework.DefaultTestActions;
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestCaseRunnerFactory;
@@ -226,6 +228,8 @@ public final class CitrusExtensionHelper {
             return runner;
         } else if (TestContext.class.isAssignableFrom(parameterContext.getParameter().getType())) {
             return CitrusExtensionHelper.getTestContext(extensionContext);
+        } else if (TestActionSupport.class.isAssignableFrom(parameterContext.getParameter().getType())) {
+            return new DefaultTestActions();
         }
 
         throw new CitrusRuntimeException(String.format("Failed to resolve parameter %s", parameterContext.getParameter()));

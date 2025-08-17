@@ -45,6 +45,9 @@ public class ResourceInjectionJUnit5IT implements TestActionSupport {
     @CitrusResource
     private TestContext globalContext;
 
+    @CitrusResource
+    private TestActionSupport actions;
+
     @Test
     @CitrusTest
     public void injectResourceActionRunner(@CitrusResource TestActionRunner runner, @CitrusResource TestContext context) {
@@ -62,6 +65,7 @@ public class ResourceInjectionJUnit5IT implements TestActionSupport {
         Assertions.assertNotNull(citrus);
         Assertions.assertNotNull(directEndpoint);
         Assertions.assertNotNull(globalContext);
+        Assertions.assertNotNull(actions);
         Assertions.assertEquals(context, globalContext);
     }
 
@@ -82,6 +86,7 @@ public class ResourceInjectionJUnit5IT implements TestActionSupport {
         Assertions.assertNotNull(citrus);
         Assertions.assertNotNull(directEndpoint);
         Assertions.assertNotNull(globalContext);
+        Assertions.assertNotNull(actions);
         Assertions.assertEquals(context, globalContext);
     }
 }

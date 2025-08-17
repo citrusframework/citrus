@@ -47,6 +47,9 @@ public class ResourceInjectionJUnit4IT extends JUnit4CitrusSpringSupport impleme
     @CitrusResource
     private TestContext globalContext;
 
+    @CitrusResource
+    private TestActionSupport actions;
+
     @Test
     @CitrusTest
     public void injectActionRunner(@CitrusResource TestActionRunner runner, @CitrusResource TestContext context) {
@@ -63,6 +66,7 @@ public class ResourceInjectionJUnit4IT extends JUnit4CitrusSpringSupport impleme
         Assert.assertNotNull(citrus);
         Assert.assertNotNull(directEndpoint);
         Assert.assertNotNull(globalContext);
+        Assert.assertNotNull(actions);
         Assert.assertEquals(globalContext, context);
     }
 
@@ -83,6 +87,7 @@ public class ResourceInjectionJUnit4IT extends JUnit4CitrusSpringSupport impleme
         Assert.assertNotNull(citrus);
         Assert.assertNotNull(directEndpoint);
         Assert.assertNotNull(globalContext);
+        Assert.assertNotNull(actions);
         Assert.assertEquals(globalContext, context);
     }
 }
