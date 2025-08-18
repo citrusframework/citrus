@@ -43,7 +43,8 @@ public class YamlMessageValidationContext extends DefaultMessageValidationContex
     /**
      * Fluent builder
      */
-    public static final class Builder extends MessageValidationContext.Builder<YamlMessageValidationContext, Builder> {
+    public static final class Builder extends MessageValidationContext.Builder<YamlMessageValidationContext, Builder>
+            implements YamlMessageValidationContextBuilder<YamlMessageValidationContext, Builder> {
 
         public static Builder yaml() {
             return new Builder();

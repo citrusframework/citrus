@@ -23,12 +23,12 @@ import org.citrusframework.DefaultTestActionBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActionContainerBuilder;
-import org.citrusframework.TestContainers;
+import org.citrusframework.TestActionContainers;
 import org.citrusframework.actions.*;
 import org.citrusframework.condition.Condition;
 import org.citrusframework.container.*;
 
-public interface BaseTestActionSupport extends BaseTestActions, TestContainers {
+public interface BaseTestActionSupport extends BaseTestActions, TestActionContainers {
 
     @Override
     default DefaultTestActionBuilder action(TestAction action) {
@@ -59,52 +59,52 @@ public interface BaseTestActionSupport extends BaseTestActions, TestContainers {
     }
 
     @Override
-    default AntRunActionBuilder<AntRunAction> antrun() {
+    default AntRunAction.Builder antrun() {
         return new AntRunAction.Builder();
     }
 
     @Override
-    default ApplyTestBehaviorActionBuilder<ApplyTestBehaviorAction> apply() {
+    default ApplyTestBehaviorAction.Builder apply() {
         return new ApplyTestBehaviorAction.Builder();
     }
 
     @Override
-    default CreateVariablesActionBuilder<CreateVariablesAction> createVariables() {
+    default CreateVariablesAction.Builder createVariables() {
         return new CreateVariablesAction.Builder();
     }
 
     @Override
-    default CreateEndpointActionBuilder<CreateEndpointAction> createEndpoint() {
+    default CreateEndpointAction.Builder createEndpoint() {
         return new CreateEndpointAction.Builder();
     }
 
     @Override
-    default EchoActionBuilder<EchoAction> echo() {
+    default EchoAction.Builder echo() {
         return new EchoAction.Builder();
     }
 
     @Override
-    default ReceiveTimeoutActionBuilder<ReceiveTimeoutAction> expectTimeout() {
+    default ReceiveTimeoutAction.Builder expectTimeout() {
         return new ReceiveTimeoutAction.Builder();
     }
 
     @Override
-    default FailActionBuilder<FailAction> fail() {
+    default FailAction.Builder fail() {
         return new FailAction.Builder();
     }
 
     @Override
-    default InputActionBuilder<InputAction> input() {
+    default InputAction.Builder input() {
         return new InputAction.Builder();
     }
 
     @Override
-    default LoadPropertiesActionBuilder<LoadPropertiesAction> load() {
+    default LoadPropertiesAction.Builder load() {
         return new LoadPropertiesAction.Builder();
     }
 
     @Override
-    default PurgeEndpointActionBuilder<PurgeEndpointAction> purge() {
+    default PurgeEndpointAction.Builder purge() {
         return new PurgeEndpointAction.Builder();
     }
 
@@ -114,7 +114,7 @@ public interface BaseTestActionSupport extends BaseTestActions, TestContainers {
     }
 
     @Override
-    default SleepActionBuilder<SleepAction> sleep() {
+    default SleepAction.Builder sleep() {
         return new SleepAction.Builder();
     }
 
@@ -124,32 +124,32 @@ public interface BaseTestActionSupport extends BaseTestActions, TestContainers {
     }
 
     @Override
-    default StartServerActionBuilder<StartServerAction> startServer() {
+    default StartServerAction.Builder startServer() {
         return new StartServerAction.Builder();
     }
 
     @Override
-    default StopServerActionBuilder<StopServerAction> stopServer() {
+    default StopServerAction.Builder stopServer() {
         return new StopServerAction.Builder();
     }
 
     @Override
-    default StopTimeActionBuilder<StopTimeAction> stopTime() {
+    default StopTimeAction.Builder stopTime() {
         return new StopTimeAction.Builder();
     }
 
     @Override
-    default StopTimerActionBuilder<StopTimerAction> stopTimer() {
+    default StopTimerAction.Builder stopTimer() {
         return new StopTimerAction.Builder();
     }
 
     @Override
-    default TraceVariablesActionBuilder<TraceVariablesAction> trace() {
+    default TraceVariablesAction.Builder trace() {
         return new TraceVariablesAction.Builder();
     }
 
     @Override
-    default TransformActionBuilder<TransformAction> transform() {
+    default TransformAction.Builder transform() {
         return new TransformAction.Builder();
     }
 
@@ -158,62 +158,62 @@ public interface BaseTestActionSupport extends BaseTestActions, TestContainers {
      */
 
     @Override
-    default ApplyTemplateBuilder<Template, Template.Builder> applyTemplate() {
+    default Template.Builder applyTemplate() {
         return new Template.Builder();
     }
 
     @Override
-    default AssertContainerBuilder<Assert, Assert.Builder> assertException() {
+    default Assert.Builder assertException() {
         return new Assert.Builder();
     }
 
     @Override
-    default AsyncContainerBuilder<Async, Async.Builder> async() {
+    default Async.Builder async() {
         return new Async.Builder();
     }
 
     @Override
-    default CatchContainerBuilder<Catch, Catch.Builder> catchException() {
+    default Catch.Builder catchException() {
         return new Catch.Builder();
     }
 
     @Override
-    default ConditionalContainerBuilder<Conditional, Conditional.Builder> conditional() {
+    default Conditional.Builder conditional() {
         return new Conditional.Builder();
     }
 
     @Override
-    default FinallyContainerBuilder<FinallySequence, FinallySequence.Builder> doFinally() {
+    default FinallySequence.Builder doFinally() {
         return new FinallySequence.Builder();
     }
 
     @Override
-    default IterateContainerBuilder<Iterate, Iterate.Builder> iterate() {
+    default Iterate.Builder iterate() {
         return new Iterate.Builder();
     }
 
     @Override
-    default ParallelContainerBuilder<Parallel, Parallel.Builder> parallel() {
+    default Parallel.Builder parallel() {
         return new Parallel.Builder();
     }
 
     @Override
-    default RepeatOnErrorUntilTrueContainerBuilder<RepeatOnErrorUntilTrue, RepeatOnErrorUntilTrue.Builder> repeatOnError() {
+    default RepeatOnErrorUntilTrue.Builder repeatOnError() {
         return new RepeatOnErrorUntilTrue.Builder();
     }
 
     @Override
-    default RepeatUntilTrueContainerBuilder<RepeatUntilTrue, RepeatUntilTrue.Builder> repeat() {
+    default RepeatUntilTrue.Builder repeat() {
         return new RepeatUntilTrue.Builder();
     }
 
     @Override
-    default SequentialContainerBuilder<Sequence, Sequence.Builder> sequential() {
+    default Sequence.Builder sequential() {
         return new Sequence.Builder();
     }
 
     @Override
-    default TimerContainerBuilder<Timer, Timer.Builder> timer() {
+    default Timer.Builder timer() {
         return new Timer.Builder();
     }
 

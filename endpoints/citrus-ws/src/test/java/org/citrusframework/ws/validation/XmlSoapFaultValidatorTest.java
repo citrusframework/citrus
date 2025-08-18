@@ -18,6 +18,8 @@ package org.citrusframework.ws.validation;
 
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.validation.ws.SoapFaultDetailValidationContext;
+import org.citrusframework.validation.ws.SoapFaultValidationContext;
 import org.citrusframework.ws.message.SoapFault;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;

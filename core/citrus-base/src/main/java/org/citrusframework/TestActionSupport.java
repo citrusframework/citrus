@@ -31,11 +31,13 @@ import org.citrusframework.dsl.selenium.SeleniumTestActionSupport;
 import org.citrusframework.dsl.soap.SoapTestActionSupport;
 import org.citrusframework.dsl.sql.SqlTestActionSupport;
 import org.citrusframework.dsl.testcontainers.TestcontainersTestActionSupport;
+import org.citrusframework.validation.DefaultValidations;
+import org.citrusframework.validation.Validations;
 
 /**
  * Interface combines default implementations with domain specific language methods for all test actions available in Citrus.
  */
-public interface TestActionSupport extends TestActions, TestContainers,
+public interface TestActionSupport extends TestActions, TestActionContainers,
         BaseTestActionSupport,
         AgentTestActionSupport,
         CamelTestActionSupport,
@@ -52,4 +54,15 @@ public interface TestActionSupport extends TestActions, TestContainers,
         SqlTestActionSupport,
         TestcontainersTestActionSupport {
 
+    default TestActions actions() {
+        return this;
+    }
+
+    default TestActionContainers containers() {
+        return this;
+    }
+
+    default Validations validation() {
+        return new DefaultValidations();
+    }
 }

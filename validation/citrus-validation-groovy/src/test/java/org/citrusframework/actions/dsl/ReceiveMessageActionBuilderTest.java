@@ -44,7 +44,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.validation.script.DefaultScriptValidationContext.Builder.groovy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
@@ -79,7 +78,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest impl
         runner.run(receive(messageEndpoint)
                                 .message()
                                 .type(MessageType.JSON)
-                                .validate(groovy().script("assert json.message == 'Hello Citrus!'"))
+                                .validate(validation().groovy().script("assert json.message == 'Hello Citrus!'"))
                                 .validator("groovyMessageValidator"));
 
         TestCase test = runner.getTestCase();
@@ -131,7 +130,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest impl
         runner.run(receive(messageEndpoint)
                                 .message()
                                 .type(MessageType.JSON)
-                                .validate(groovy().scriptResource("classpath:org/citrusframework/actions/dsl/validation.groovy"))
+                                .validate(validation().groovy().scriptResource("classpath:org/citrusframework/actions/dsl/validation.groovy"))
                                 .validator("groovyMessageValidator"));
 
         TestCase test = runner.getTestCase();
@@ -182,7 +181,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest impl
         runner.run(receive(messageEndpoint)
                                 .message()
                                 .type(MessageType.JSON)
-                                .validate(groovy().script(Resources.fromClasspath("org/citrusframework/actions/dsl/validation.groovy")))
+                                .validate(validation().groovy().script(Resources.fromClasspath("org/citrusframework/actions/dsl/validation.groovy")))
                                 .validator("groovyMessageValidator"));
 
         TestCase test = runner.getTestCase();
@@ -233,7 +232,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest impl
         runner.run(receive(messageEndpoint)
                                 .message()
                                 .type(MessageType.JSON)
-                                .validate(groovy().script("assert json.message == 'Hello Citrus!'"))
+                                .validate(validation().groovy().script("assert json.message == 'Hello Citrus!'"))
                                 .validator("groovyMessageValidator")
                                 .header("operation", "sayHello"));
 

@@ -42,8 +42,6 @@ import org.testng.annotations.Test;
 
 import static java.util.Collections.singletonList;
 import static org.citrusframework.message.MessageType.JSON;
-import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
-import static org.citrusframework.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.testng.Assert.assertThrows;
@@ -170,8 +168,8 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
             .client(httpClient).receive("getPetById", OK.name())
             .schemaValidation(true)
             .message()
-            .validate(
-                jsonPath().expression("$.name",
+            .validate(validation().jsonPath()
+                    .expression("$.name",
                     "@assertThat(anyOf(equalTo('hasso'), equalTo('cutie'), equalTo('fluffy')))@")));
 
     }
@@ -205,9 +203,8 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
             .client(httpClient).receive("getPetById", OK.name())
             .schemaValidation(true)
             .message()
-            .validate(
-                jsonPath().expression("$.name",
-                    "other name"));
+            .validate(validation().jsonPath()
+                    .expression("$.name", "other name"));
         assertThrows(() -> then(clientResponseActionBuilder));
 
     }
@@ -405,7 +402,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport implements TestAc
                 .response(OK)
                 .message()
                 .type(JSON)
-                .validate(openApi()
+                .validate(validation().openApi()
                         .schemaValidation(true)
                         .schemaRepository("petstore-v3.json")
                         .schema("getPetById"))));

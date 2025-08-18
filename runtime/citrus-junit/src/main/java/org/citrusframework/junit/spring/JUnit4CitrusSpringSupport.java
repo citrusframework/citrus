@@ -31,6 +31,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.junit.CitrusFrameworkMethod;
 import org.citrusframework.junit.JUnit4Helper;
+import org.citrusframework.validation.DefaultValidations;
+import org.citrusframework.validation.Validations;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
@@ -147,6 +149,15 @@ public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
     @Override
     public TestActions actions() {
         return new DefaultTestActions();
+    }
+
+    @Override
+    public TestActionContainers containers() {
+        return new DefaultTestActions();
+    }
+
+    public Validations validation() {
+        return new DefaultValidations();
     }
 
     @Override

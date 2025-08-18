@@ -16,7 +16,6 @@
 
 package org.citrusframework.http.groovy
 
-
 import static org.citrusframework.dsl.PathExpressionSupport.path
 
 name "HttpServerTest"

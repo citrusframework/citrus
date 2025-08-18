@@ -20,14 +20,15 @@ import org.citrusframework.openapi.OpenApiSettings;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.SchemaValidationContext;
-import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.openapi.OpenApiMessageValidationContextBuilder;
 
 /**
  * Validation context holding OpenAPI specific validation information.
  *
  * @since 4.3
  */
-public class OpenApiMessageValidationContext extends DefaultMessageValidationContext implements SchemaValidationContext {
+public class OpenApiMessageValidationContext extends DefaultMessageValidationContext
+        implements SchemaValidationContext {
 
     /**
      * Should message be validated with its schema definition. This is enabled with respect to
@@ -77,9 +78,8 @@ public class OpenApiMessageValidationContext extends DefaultMessageValidationCon
     /**
      * Fluent builder
      */
-    public static final class Builder implements
-            ValidationContext.Builder<OpenApiMessageValidationContext, OpenApiMessageValidationContext.Builder>,
-            SchemaValidationContext.Builder<OpenApiMessageValidationContext.Builder> {
+    public static final class Builder
+            implements OpenApiMessageValidationContextBuilder<OpenApiMessageValidationContext, Builder> {
 
         private OpenApiSpecification openApiSpecification;
 
@@ -96,20 +96,18 @@ public class OpenApiMessageValidationContext extends DefaultMessageValidationCon
          */
         private Boolean schemaValidation = OpenApiSettings.isRequestValidationEnabled();
 
-        public static OpenApiMessageValidationContext.Builder openApi(OpenApiSpecification openApiSpecification) {
+        public static Builder openApi(OpenApiSpecification openApiSpecification) {
             Builder builder = new Builder();
             builder.openApiSpecification = openApiSpecification;
             return builder;
         }
 
-        public static OpenApiMessageValidationContext.Builder openApi() {
+        public static Builder openApi() {
             return new Builder();
         }
 
-        /**
-         * Sets schema validation enabled/disabled for this message.
-         */
-        public OpenApiMessageValidationContext.Builder schemaValidation(final boolean enabled) {
+        @Override
+        public Builder schemaValidation(final boolean enabled) {
             this.schemaValidation = enabled;
             return this;
         }
@@ -118,7 +116,7 @@ public class OpenApiMessageValidationContext extends DefaultMessageValidationCon
          * Not used for open api validation. Schema is automatically derived from associated openApiSpecification.
          */
         @Override
-        public OpenApiMessageValidationContext.Builder schema(final String schemaName) {
+        public Builder schema(final String schemaName) {
             this.operationKey = schemaName;
             return this;
         }
@@ -127,7 +125,7 @@ public class OpenApiMessageValidationContext extends DefaultMessageValidationCon
          * Not used for open api validation. Schema is automatically derived from associated openApiSpecification.
          */
         @Override
-        public OpenApiMessageValidationContext.Builder schemaRepository(final String schemaRepository) {
+        public Builder schemaRepository(final String schemaRepository) {
             openApiSpecificationId = schemaRepository;
             return this;
         }

@@ -59,7 +59,7 @@ public class JsonPathExpressionValidationIT extends TestNGCitrusSpringSupport im
         $(receive(direct)
                 .message()
                 .body("{\"user\":\"@ignore@\", \"age\": \"@ignore@\"}")
-                .validate(jsonPath()
+                .validate(validation().jsonPath()
                             .expression("$.user", "christoph")
                             .expression("$.age", 32))
         );
@@ -82,7 +82,7 @@ public class JsonPathExpressionValidationIT extends TestNGCitrusSpringSupport im
                 .body("{\"user\":\"x\", \"age\": \"99\"}")
                 .process(jsonPath().expression("$.age", 32))
                 .process(jsonPath().expression("$.user", "christoph"))
-                .validate(jsonPath()
+                .validate(validation().jsonPath()
                             .expression("$.user", "christoph")
                             .expression("$.age", 32))
         );
@@ -100,7 +100,7 @@ public class JsonPathExpressionValidationIT extends TestNGCitrusSpringSupport im
         $(receive(direct)
                 .message()
                 .body("{\"user\":\"@ignore@\", \"age\": \"@ignore@\"}")
-                .validate(jsonPath().expression("$.user", "wrong"))
+                .validate(validation().jsonPath().expression("$.user", "wrong"))
         );
     }
 
@@ -116,8 +116,8 @@ public class JsonPathExpressionValidationIT extends TestNGCitrusSpringSupport im
         $(receive(direct)
                 .message()
                 .body("{\"user\":\"@ignore@\", \"age\": \"@ignore@\"}")
-                .validate(jsonPath().expression("$.user", "christoph"))
-                .validate(jsonPath().expression("$.age", 32))
+                .validate(validation().jsonPath().expression("$.user", "christoph"))
+                .validate(validation().jsonPath().expression("$.age", 32))
         );
     }
 
@@ -133,8 +133,8 @@ public class JsonPathExpressionValidationIT extends TestNGCitrusSpringSupport im
         $(receive(direct)
                 .message()
                 .body("{\"user\":\"@ignore@\", \"age\": \"@ignore@\"}")
-                .validate(jsonPath().expression("$.user", "christoph"))
-                .validate(jsonPath().expression("$.age", 0))
+                .validate(validation().jsonPath().expression("$.user", "christoph"))
+                .validate(validation().jsonPath().expression("$.age", 0))
         );
     }
 }

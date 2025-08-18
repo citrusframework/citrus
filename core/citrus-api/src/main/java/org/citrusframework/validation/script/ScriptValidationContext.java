@@ -16,10 +16,7 @@
 
 package org.citrusframework.validation.script;
 
-import java.nio.charset.Charset;
-
 import org.citrusframework.context.TestContext;
-import org.citrusframework.spi.Resource;
 import org.citrusframework.validation.context.ValidationContext;
 
 public interface ScriptValidationContext extends ValidationContext {
@@ -37,41 +34,4 @@ public interface ScriptValidationContext extends ValidationContext {
      */
     String getValidationScript(TestContext context);
 
-    /**
-     * Fluent builder
-     * @param <T> context type
-     * @param <B> builder reference to self
-     */
-    interface Builder<T extends ScriptValidationContext, B extends Builder<T, B>> extends ValidationContext.Builder<T, B> {
-
-        /**
-         * Adds script validation.
-         */
-        B script(String validationScript);
-
-        /**
-         * Reads validation script file resource and sets content as validation script.
-         */
-        B script(Resource scriptResource);
-
-        /**
-         * Reads validation script file resource and sets content as validation script.
-         */
-        B script(Resource scriptResource, Charset charset);
-
-        /**
-         * Adds script validation file resource.
-         */
-        B scriptResource(String fileResourcePath);
-
-        /**
-         * Adds charset of script validation file resource.
-         */
-        B scriptResourceCharset(String charsetName);
-
-        /**
-         * Adds custom validation script type.
-         */
-        B scriptType(String type);
-    }
 }

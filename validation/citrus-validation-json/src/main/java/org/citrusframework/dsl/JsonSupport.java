@@ -25,7 +25,6 @@ public class JsonSupport {
 
     /**
      * Static entrance for all Json related Java DSL functionalities.
-     * @return
      */
     public static JsonMessageValidationContext.Builder json() {
         return new JsonMessageValidationContext.Builder();

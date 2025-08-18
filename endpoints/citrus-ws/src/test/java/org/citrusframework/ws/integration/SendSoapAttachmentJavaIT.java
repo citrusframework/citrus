@@ -23,7 +23,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
-import static org.citrusframework.dsl.XmlSupport.xml;
 
 @Test
 public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
@@ -45,7 +44,7 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport implemen
                                 .body("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                             "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                         "</ns0:SoapMessageWithAttachmentRequest>")
-                                .validate(xml().schemaValidation(false))
+                                .validate(validation().xml().schemaValidation(false))
                                 .extract(fromHeaders()
                                             .header("citrus_jms_messageId", "internal_correlation_id"))
                                 .attachment("MySoapAttachment", "text/plain", Resources.fromClasspath("org/citrusframework/ws/soapAttachment.txt"))
@@ -68,7 +67,7 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport implemen
                             "<ns0:Operation>Read the attachment</ns0:Operation>" +
                             "<ns0:Success>true</ns0:Success>" +
                         "</ns0:SoapMessageWithAttachmentResponse>")
-                .validate(xml().schemaValidation(false)));
+                .validate(validation().xml().schemaValidation(false)));
 
         given(parallel().actions(
                 soap().client("helloSoapClient")
@@ -85,7 +84,7 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport implemen
                                 .body("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                             "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                         "</ns0:SoapMessageWithAttachmentRequest>")
-                                .validate(xml().schemaValidation(false))
+                                .validate(validation().xml().schemaValidation(false))
                                 .extract(fromHeaders()
                                             .header("citrus_jms_messageId", "internal_correlation_id"))
                                 .attachment("MySoapAttachment", "text/plain", "This is an attachment!")
@@ -108,6 +107,6 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport implemen
                         "<ns0:Operation>Read the attachment</ns0:Operation>" +
                         "<ns0:Success>true</ns0:Success>" +
                         "</ns0:SoapMessageWithAttachmentResponse>")
-                .validate(xml().schemaValidation(false)));
+                .validate(validation().xml().schemaValidation(false)));
     }
 }

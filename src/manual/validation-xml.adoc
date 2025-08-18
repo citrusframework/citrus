@@ -188,7 +188,7 @@ receive("someEndpoint")
                 "<Timestamp>?</Timestamp>" +
                 "<MessageId>?</MessageId>" +
             "</TestMessage>")
-    .validate(xpath()
+    .validate(validate().xpath()
             .ignore("/TestMessage/Timestamp")
             .ignore("/TestMessage/MessageId"));
 ----
@@ -266,7 +266,7 @@ You would rather want to use explicit element validation with XPath.
 ----
 receive("someEndpoint")
     .message()
-    .validate(xpath()
+    .validate(validate().xpath()
         .expression("/TestRequest/MessageId", "${messageId}")
         .expression("//VersionId", "2"));
 }
@@ -296,7 +296,7 @@ expressions.put("//VersionId", "2");
 
 receive("someEndpoint")
     .message()
-    .validate(xpath()
+    .validate(validate().xpath()
         .expressions(expressions));
 }
 ----
@@ -328,7 +328,7 @@ types so that you can validate some element value. But you can also use differen
 [source,java,indent=0,role="primary"]
 ----
 receive("someEndpoint")
-    .validate(xpath()
+    .validate(validate().xpath()
         .expression("boolean:/TestRequest/Error", false)
         .expression("number:/TestRequest/Status[.='success']", 3)
         .expression("node-set:/TestRequest/OrderType", "[single, multi, multi]");
@@ -361,7 +361,7 @@ use validations such as *greaterThan*, *lessThan*, *hasSize* and much more.
 [source,java,indent=0,role="primary"]
 ----
 receive("someEndpoint")
-    .validate(xpath()
+    .validate(validate().xpath()
         .expression("/TestRequest/Error", anyOf(empty(), nullValue()))
         .expression("number:/TestRequest/Status[.='success']", greaterThan(0.0))
         .expression("integer:/TestRequest/Status[.='failed']", lowerThan(1))
@@ -426,7 +426,7 @@ Now we would like to validate some elements in this message using XPath
 [source,java,indent=0,role="primary"]
 ----
 receive("someEndpoint")
-    .validate(xpath()
+    .validate(validate().xpath()
         .expression("//TestMessage/TestHeader/VersionId", 2L)
         .expression("//TestMessage/TestHeader/CorrelationId", "${correlationId}");
 ----
@@ -452,7 +452,7 @@ namespace declaration in the expression. The correct XPath expression uses the n
 [source,java,indent=0,role="primary"]
 ----
 receive("someEndpoint")
-    .validate(xpath()
+    .validate(validate().xpath()
         .expression("//ns1:TestMessage/ns1:TestHeader/ns1:VersionId", 2L)
         .expression("//ns1:TestMessage/ns1:TestHeader/ns1:CorrelationId", "${correlationId}");
 ----
@@ -480,7 +480,7 @@ You can avoid this effect when specifying your own namespace context and your ow
 [source,java,indent=0,role="primary"]
 ----
 receive("someEndpoint")
-    .validate(xpath()
+    .validate(validate().xpath()
         .expression("//pfx:TestMessage/pfx:TestHeader/pfx:VersionId", 2L)
         .expression("//pfx:TestMessage/pfx:TestHeader/pfx:CorrelationId", "${correlationId}")
         .namespaceContext("pfx", "http://citrus.com/namespace"));
@@ -556,7 +556,7 @@ The message uses default namespaces. The following approach in XPath will fail d
 [source,java,indent=0,role="primary"]
 ----
 receive("someEndpoint")
-    .validate(xpath()
+    .validate(validate().xpath()
         .expression("//TestMessage/TestHeader/VersionId", 2L)
         .expression("//TestMessage/TestHeader/CorrelationId", "${correlationId}"));
 ----
@@ -581,7 +581,7 @@ with default namespaces:
 [source,java,indent=0,role="primary"]
 ----
 receive("someEndpoint")
-    .validate(xpath()
+    .validate(validate().xpath()
         .expression("//:TestMessage/:TestHeader/:VersionId", 2L)
         .expression("//:TestMessage/:TestHeader/:CorrelationId", "${correlationId}"));
 ----
@@ -871,7 +871,7 @@ the XML schema for some reason you have to disable the validation explicitly in 
 [source,java,indent=0,role="primary"]
 ----
 receive("someEndpoint")
-    .validate(xpath()
+    .validate(validate().xpath()
             .expression("//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId", "${messageId}")
             .expression("//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId", "${correlationId}")
             .schemaValidation(false)

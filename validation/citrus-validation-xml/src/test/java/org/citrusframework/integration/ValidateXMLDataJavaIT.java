@@ -21,8 +21,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.XmlSupport.xml;
-
 @Test
 public class ValidateXMLDataJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
@@ -51,7 +49,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusSpringSupport implements 
                            "<User>${user}</User>" +
                            "<Text>xxx</Text>" +
                        "</HelloRequest>")
-            .validate(xml()
+            .validate(validation().xml()
                         .ignore("HelloRequest.Text"))
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
@@ -75,7 +73,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusSpringSupport implements 
                            "<ns0:User>${user}</ns0:User>" +
                            "<ns0:Text>xxx</ns0:Text>" +
                        "</ns0:HelloRequest>")
-            .validate(xml()
+            .validate(validation().xml()
                     .namespaceContext("ns", "http://citrusframework.org/schemas/samples/HelloService.xsd")
                     .ignore("//ns:HelloRequest/ns:Text"))
             .header("Operation", "sayHello")
@@ -100,7 +98,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusSpringSupport implements 
                            "<ns0:User>@equalsIgnoreCase('christoph')@</ns0:User>" +
                            "<ns0:Text>@ignore@</ns0:Text>" +
                        "</ns0:HelloRequest>")
-            .validate(xml()
+            .validate(validation().xml()
                         .schema("helloSchema"))
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
@@ -124,7 +122,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusSpringSupport implements 
                            "<ns0:User>${user}</ns0:User>" +
                            "<ns0:Text>@ignore@</ns0:Text>" +
                        "</ns0:HelloRequest>")
-            .validate(xml()
+            .validate(validation().xml()
                     .schemaRepository("helloSchemaRepository"))
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));

@@ -175,7 +175,7 @@ receive(someEndpoint)
              token: "?"
              lastLogin: 0
          """
-    .validate(yaml()
+    .validate(validate().yaml()
                 .ignore("$.users.token")
                 .ignore("$.users.lastLogin"));
 ----

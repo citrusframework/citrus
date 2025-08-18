@@ -32,7 +32,7 @@ import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.script.DefaultScriptValidationContext;
-import org.citrusframework.validation.script.ScriptValidationContext;
+import org.citrusframework.validation.script.ScriptValidationContextBuilder;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.yaml.actions.script.ScriptDefinitionType;
 
@@ -130,7 +130,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     }
 
     private void addScriptValidationContext() {
-        ScriptValidationContext.Builder<?, ?> context = null;
+        ScriptValidationContextBuilder<?, ?> context = null;
 
         for (Validate validateElement : getValidate()) {
             ScriptDefinitionType scriptElement = validateElement.getScript();

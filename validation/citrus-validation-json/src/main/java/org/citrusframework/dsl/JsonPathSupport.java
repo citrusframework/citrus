@@ -34,7 +34,6 @@ public class JsonPathSupport implements WithExpressions<JsonPathSupport>, PathEx
 
     /**
      * Static entrance for all JsonPath related Java DSL functionalities.
-     * @return
      */
     public static JsonPathSupport jsonPath() {
         return new JsonPathSupport();

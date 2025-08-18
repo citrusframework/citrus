@@ -28,6 +28,7 @@ import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
+import org.citrusframework.validation.script.ScriptValidationContextBuilder;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -159,7 +160,7 @@ public class SQLActionParser implements BeanDefinitionParser {
     private ScriptValidationContext getScriptValidationContext(Element scriptElement) {
         String type = scriptElement.getAttribute("type");
 
-        ScriptValidationContext.Builder<?, ?> validationContext = new DefaultScriptValidationContext.Builder()
+        ScriptValidationContextBuilder<?, ?> validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(type);
         String filePath = scriptElement.getAttribute("file");
         if (StringUtils.hasText(filePath)) {

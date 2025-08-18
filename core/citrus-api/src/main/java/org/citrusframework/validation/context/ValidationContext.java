@@ -16,11 +16,28 @@
 
 package org.citrusframework.validation.context;
 
+import java.util.Map;
+import java.util.Optional;
+
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.ResourcePathTypeResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Basic validation context holding validation specific information.
  *
  */
 public interface ValidationContext {
+
+    /** Logger */
+    Logger logger = LoggerFactory.getLogger(ValidationContext.class);
+
+    /** Endpoint builder resource lookup path */
+    String RESOURCE_PATH = "META-INF/citrus/validation/builder";
+
+    /** Default Citrus validation context builders from classpath resource properties */
+    ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /**
      * Indicates whether this validation context requires a validator.
@@ -44,6 +61,36 @@ public interface ValidationContext {
      */
     default ValidationStatus getStatus() {
         return ValidationStatus.UNKNOWN;
+    }
+
+    /**
+     * Resolves all available validation context builders from resource path lookup.
+     * Scans classpath for validation context builder meta information and instantiates those builders.
+     */
+    static Map<String, Builder<?, ?>> lookup() {
+        Map<String, Builder<?, ?>> builders = TYPE_RESOLVER.resolveAll();
+
+        if (logger.isDebugEnabled()) {
+            builders.forEach((k, v) -> logger.debug("Found validation context builder '{}' as {}", k, v.getClass()));
+        }
+        return builders;
+    }
+
+    /**
+     * Resolves validation context builder from resource path lookup with given resource name.
+     * Scans classpath for validation context builder meta information with given name and returns instance of the builder.
+     * Returns optional instead of throwing exception when no validation context builder could be found.
+     * <p>
+     * Given builder name is a combination of resource file name and type property separated by '.' character.
+     */
+    static Optional<Builder<?, ?>> lookup(String builder) {
+        try {
+            return Optional.of(TYPE_RESOLVER.resolve(builder));
+        } catch (CitrusRuntimeException e) {
+            logger.warn("Failed to resolve validation context builder from resource '{}/{}'", RESOURCE_PATH, builder);
+        }
+
+        return Optional.empty();
     }
 
     /**

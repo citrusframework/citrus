@@ -11,10 +11,12 @@ import java.util.UUID;
 
 import jakarta.servlet.http.Cookie;
 import org.assertj.core.api.Assertions;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.actions.ReceiveMessageAction.ReceiveMessageActionBuilder;
 import org.citrusframework.actions.SendMessageAction.SendMessageActionBuilder;
+import org.citrusframework.actions.http.HttpReceiveRequestMessageBuilderFactory;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
@@ -26,7 +28,6 @@ import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.http.actions.HttpClientRequestActionBuilder;
 import org.citrusframework.http.actions.HttpClientResponseActionBuilder;
-import org.citrusframework.http.actions.HttpServerRequestActionBuilder.HttpMessageBuilderSupport;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.message.HttpMessage;
@@ -64,8 +65,6 @@ import static org.citrusframework.openapi.generator.util.MultipartConverter.mult
 import static org.citrusframework.util.FileUtils.copyToByteArray;
 import static org.citrusframework.util.FileUtils.readToString;
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
-import static org.citrusframework.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
-import static org.citrusframework.validation.script.DefaultScriptValidationContext.Builder.groovy;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
@@ -245,7 +244,7 @@ class GeneratedRestApiIT {
     }
 
     @Nested
-    class OperationWithoutOperationId {
+    class OperationWithoutOperationId implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withoutOperationIdTest")
@@ -282,16 +281,16 @@ class GeneratedRestApiIT {
      * <a href="https://swagger.io/docs/specification/serialization/">...</a>
      */
     @Nested
-    class ParameterSerialization {
+    class ParameterSerialization implements TestActionSupport {
 
         @Nested
-        class PathParameter {
+        class PathParameter implements TestActionSupport {
 
             @Nested
-            class SimpleStyle {
+            class SimpleStyle implements TestActionSupport {
 
                 @Nested
-                class Array {
+                class Array implements TestActionSupport {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
@@ -430,7 +429,7 @@ class GeneratedRestApiIT {
                 }
 
                 @Nested
-                class ExplodedArray {
+                class ExplodedArray implements TestActionSupport {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
@@ -574,10 +573,10 @@ class GeneratedRestApiIT {
             }
 
             @Nested
-            class LabelStyle {
+            class LabelStyle implements TestActionSupport {
 
                 @Nested
-                class Array {
+                class Array implements TestActionSupport {
 
                     /**
                      * Non exploded representation is currently not supported by validator.
@@ -746,7 +745,7 @@ class GeneratedRestApiIT {
                 }
 
                 @Nested
-                class ExplodedArray {
+                class ExplodedArray implements TestActionSupport {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
@@ -891,10 +890,10 @@ class GeneratedRestApiIT {
             }
 
             @Nested
-            class MatrixStyle {
+            class MatrixStyle implements TestActionSupport {
 
                 @Nested
-                class Array {
+                class Array implements TestActionSupport {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
@@ -1032,7 +1031,7 @@ class GeneratedRestApiIT {
                 }
 
                 @Nested
-                class ExplodedArray {
+                class ExplodedArray implements TestActionSupport {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
@@ -1173,13 +1172,13 @@ class GeneratedRestApiIT {
         }
 
         @Nested
-        class HeaderParameter {
+        class HeaderParameter implements TestActionSupport {
 
             @Nested
-            class SimpleStyle {
+            class SimpleStyle implements TestActionSupport {
 
                 @Nested
-                class Array {
+                class Array implements TestActionSupport {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
@@ -1311,7 +1310,7 @@ class GeneratedRestApiIT {
                 }
 
                 @Nested
-                class ArrayExploded {
+                class ArrayExploded implements TestActionSupport {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
@@ -1447,10 +1446,10 @@ class GeneratedRestApiIT {
         }
 
         @Nested
-        class QueryParameter {
+        class QueryParameter implements TestActionSupport {
 
             @Nested
-            class RefencedObjectQueryParameter {
+            class RefencedObjectQueryParameter implements TestActionSupport {
 
                 // Asserts that a nested json can be sent as query parameter.
                 @Test
@@ -1502,10 +1501,10 @@ class GeneratedRestApiIT {
             }
 
             @Nested
-            class FormStyle {
+            class FormStyle implements TestActionSupport {
 
                 @Nested
-                class Array {
+                class Array implements TestActionSupport {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
@@ -1636,7 +1635,7 @@ class GeneratedRestApiIT {
                 }
 
                 @Nested
-                class ArrayExploded {
+                class ArrayExploded implements TestActionSupport {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
@@ -1779,10 +1778,10 @@ class GeneratedRestApiIT {
             }
 
             @Nested
-            class DeepObjectStyleExploded {
+            class DeepObjectStyleExploded implements TestActionSupport {
 
                 @Nested
-                class ArrayExploded {
+                class ArrayExploded implements TestActionSupport {
 
                     @Test
                     void java_object_value(@CitrusResource TestCaseRunner runner) {
@@ -1829,13 +1828,13 @@ class GeneratedRestApiIT {
         }
 
         @Nested
-        class CookieParameter {
+        class CookieParameter implements TestActionSupport {
 
             @Nested
-            class FormStyle {
+            class FormStyle implements TestActionSupport {
 
                 @Nested
-                class Array {
+                class Array implements TestActionSupport {
 
                     @Test
                     void java_single_value(@CitrusResource TestCaseRunner runner) {
@@ -1983,7 +1982,7 @@ class GeneratedRestApiIT {
          * Demonstrates testing of array data in query parameters.
          */
         @Nested
-        class Combined {
+        class Combined implements TestActionSupport {
 
             @Test
             @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withArrayQueryDataTest")
@@ -2007,7 +2006,7 @@ class GeneratedRestApiIT {
                     .receive()
                     .put("/api/v3/ext/pet/1234")
                     .message()
-                    .validate(groovy().script("""
+                    .validate(validation().groovy().script("""
                         assert receivedMessage.getHeader("sampleStringHeader") == header1
                         org.assertj.core.api.Assertions.assertThat(((org.citrusframework.http.message.HttpMessage)receivedMessage).getQueryParams()).containsExactlyInAnyOrderEntriesOf(
                                                              java.util.Map.of(
@@ -2041,7 +2040,7 @@ class GeneratedRestApiIT {
     }
 
     @Nested
-    class ParameterThatNeedUrlEncoding {
+    class ParameterThatNeedUrlEncoding implements TestActionSupport {
 
         @Test
         void java_parameter_with_url_encoding(@CitrusResource TestCaseRunner runner) {
@@ -2070,7 +2069,7 @@ class GeneratedRestApiIT {
      * Demonstrates the usage of form data.
      */
     @Nested
-    class FormData {
+    class FormData implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withFormDataTest")
@@ -2151,7 +2150,7 @@ class GeneratedRestApiIT {
      * Contains test cases for scenarios where validation failures are expected.
      */
     @Nested
-    class ValidationFailures {
+    class ValidationFailures implements TestActionSupport {
 
         /**
          * Tests where validation fails due to an incorrect reason phrase in the API response.
@@ -2200,7 +2199,7 @@ class GeneratedRestApiIT {
          * Tests where validation fails due to an incorrect HTTP status in the API response.
          */
         @Nested
-        class FailOnStatus {
+        class FailOnStatus implements TestActionSupport {
 
             @Test
             @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withFailOnStatusTest")
@@ -2243,7 +2242,7 @@ class GeneratedRestApiIT {
          * Tests where validation fails due to an incorrect HTTP version in the API response.
          */
         @Nested
-        class FailOnVersion {
+        class FailOnVersion implements TestActionSupport {
 
             @Test
             @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withFailOnVersionTest")
@@ -2286,7 +2285,7 @@ class GeneratedRestApiIT {
          * Tests where validation fails due to an invalid response body.
          */
         @Nested
-        class FailOnInvalidResponse {
+        class FailOnInvalidResponse implements TestActionSupport {
 
             @Test
             @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withFailOnInvalidResponseTest")
@@ -2328,7 +2327,7 @@ class GeneratedRestApiIT {
          * Tests where validation fails due to an incorrect body resource during validation.
          */
         @Nested
-        class FailOnBodyResourceValidation {
+        class FailOnBodyResourceValidation implements TestActionSupport {
 
             @Test
             @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withFailOnBodyResourceValidationTest")
@@ -2372,7 +2371,7 @@ class GeneratedRestApiIT {
          * Tests where validation fails due to incorrect data in the response body.
          */
         @Nested
-        class FailOnBodyDataValidation {
+        class FailOnBodyDataValidation implements TestActionSupport {
 
             @Test
             @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withFailOnBodyDataValidationTest")
@@ -2416,7 +2415,7 @@ class GeneratedRestApiIT {
          * Tests where validation fails due to invalid JSON path expressions in the response body.
          */
         @Nested
-        class FailOnJsonPathInvalid {
+        class FailOnJsonPathInvalid implements TestActionSupport {
 
             @Test
             @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withFailOnJsonPathInvalidTest")
@@ -2447,7 +2446,7 @@ class GeneratedRestApiIT {
 
                 HttpClientResponseActionBuilder.HttpMessageBuilderSupport builder = petApi
                     .receiveGetPetById(OK).message()
-                    .validate(jsonPath().expression("$.name", "unknown"));
+                    .validate(validation().jsonPath().expression("$.name", "unknown"));
                 assertThatThrownBy(() -> runner.when(builder))
                     .isInstanceOf(TestCaseFailedException.class)
                     .hasMessageContaining(
@@ -2461,7 +2460,7 @@ class GeneratedRestApiIT {
      * Demonstrates the usage of a TestActor to control execution of test actions.
      */
     @Nested
-    class Actor {
+    class Actor implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withActorTest")
@@ -2477,7 +2476,7 @@ class GeneratedRestApiIT {
                 .actor(petStoreActor)
                 .fork(true));
 
-            HttpMessageBuilderSupport builder = http().server(httpServer)
+            HttpReceiveRequestMessageBuilderFactory<?, ?> builder = http().server(httpServer)
                 .receive()
                 .get("/api/v3/pet/${petId}")
                 .message()
@@ -2495,7 +2494,7 @@ class GeneratedRestApiIT {
      * Demonstrates the usage of a specific URI for sending HTTP requests in tests.
      */
     @Nested
-    class SpecificUri {
+    class SpecificUri implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withSpecificUriTest")
@@ -2527,7 +2526,7 @@ class GeneratedRestApiIT {
 
             runner.then(petApi.receiveGetPetById(OK)
                 .message()
-                .validate(jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
+                .validate(validation().jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
             );
         }
     }
@@ -2536,7 +2535,7 @@ class GeneratedRestApiIT {
      * Demonstrates the usage of a specific endpoint for sending HTTP requests in tests.
      */
     @Nested
-    class SpecificEndpoint {
+    class SpecificEndpoint implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withSpecificEndpointTest")
@@ -2567,13 +2566,13 @@ class GeneratedRestApiIT {
 
             runner.then(petApi.receiveGetPetById(OK).endpoint(otherApplicationServiceClient)
                 .message()
-                .validate(jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
+                .validate(validation().jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
             );
         }
     }
 
     @Nested
-    class SpecialFormat {
+    class SpecialFormat implements TestActionSupport {
 
 
         @Test
@@ -2601,7 +2600,7 @@ class GeneratedRestApiIT {
 
             runner.then(petApi.receiveGetPetById(OK).endpoint(otherApplicationServiceClient)
                 .message()
-                .validate(jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
+                .validate(validation().jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
             );
         }
     }
@@ -2611,7 +2610,7 @@ class GeneratedRestApiIT {
      * testing.
      */
     @Nested
-    class NestedReceiveInXml {
+    class NestedReceiveInXml implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withNestedReceiveInXmlWithDefaultClientTest")
@@ -2634,16 +2633,16 @@ class GeneratedRestApiIT {
      * Demonstrates the usage of different authentication mechanisms for testing.
      */
     @Nested
-    class Security {
+    class Security implements TestActionSupport {
 
         @Nested
-        class BasicAuthentication {
+        class BasicAuthentication implements TestActionSupport {
 
             /**
              * Demonstrates basic authentication using global credentials from properties.
              */
             @Nested
-            class BasicAuthenticationFromProperties {
+            class BasicAuthenticationFromProperties implements TestActionSupport {
 
                 @Test
                 @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withBasicAuthenticationFromPropertiesTest")
@@ -2682,7 +2681,7 @@ class GeneratedRestApiIT {
              * Demonstrates specific basic authentication with custom credentials.
              */
             @Nested
-            class WithBasicAuthenticationOverridingProperties {
+            class WithBasicAuthenticationOverridingProperties implements TestActionSupport {
 
                 @Test
                 @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withBasicAuthenticationOverridingPropertiesTest")
@@ -2720,13 +2719,13 @@ class GeneratedRestApiIT {
         }
 
         @Nested
-        class BearerAuthentication {
+        class BearerAuthentication implements TestActionSupport {
 
             /**
              * Demonstrates bearer authentication using a global token from properties.
              */
             @Nested
-            class WithBasicBearerAuthenticationFromProperties {
+            class WithBasicBearerAuthenticationFromProperties implements TestActionSupport {
 
                 @Test
                 @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withBasicBearerAuthenticationFromPropertiesTest")
@@ -2765,7 +2764,7 @@ class GeneratedRestApiIT {
              * Demonstrates bearer authentication using specific token.
              */
             @Nested
-            class WithBasicBearerAuthenticationOverridingProperties {
+            class WithBasicBearerAuthenticationOverridingProperties implements TestActionSupport {
 
                 @Test
                 @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withBasicBearerAuthenticationOverridingPropertiesTest")
@@ -2802,13 +2801,13 @@ class GeneratedRestApiIT {
         }
 
         @Nested
-        class ApiKeyAuthentication {
+        class ApiKeyAuthentication implements TestActionSupport {
 
             /**
              * Demonstrates API key authentication using default values from properties.
              */
             @Nested
-            class ApiKeyAuthenticationFromProperties {
+            class ApiKeyAuthenticationFromProperties implements TestActionSupport {
 
                 @Test
                 @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withApiKeysFromPropertiesTest")
@@ -2853,7 +2852,7 @@ class GeneratedRestApiIT {
              * Demonstrates API key authentication with custom values overriding properties.
              */
             @Nested
-            class ApiKeyAuthenticationOverridingProperties {
+            class ApiKeyAuthenticationOverridingProperties implements TestActionSupport {
 
                 @Test
                 @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withApiKeysOverridingPropertiesTest")
@@ -2904,7 +2903,7 @@ class GeneratedRestApiIT {
      * Demonstrates testing of multipart requests.
      */
     @Nested
-    class Multipart {
+    class Multipart implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withMultipartTest")
@@ -2965,7 +2964,7 @@ class GeneratedRestApiIT {
      * cookies.
      */
     @Nested
-    class NonApiQueryParameters {
+    class NonApiQueryParameters implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withNonApiQueryParamTest")
@@ -3006,7 +3005,7 @@ class GeneratedRestApiIT {
      * Demonstrates testing of form URL-encoded data in requests.
      */
     @Nested
-    class FormUrlEncoded {
+    class FormUrlEncoded implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withFormUrlEncodedTest")
@@ -3069,7 +3068,7 @@ class GeneratedRestApiIT {
      * Demonstrates testing of requests using the type-safe Java DSL.
      */
     @Nested
-    class TypeSafeJavaDsl {
+    class TypeSafeJavaDsl implements TestActionSupport {
 
         @Test
         void java(@CitrusResource TestCaseRunner runner) {
@@ -3125,7 +3124,7 @@ class GeneratedRestApiIT {
      * Demonstrates testing of plain text bodies in requests.
      */
     @Nested
-    class BodyAsPlainText {
+    class BodyAsPlainText implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withBodyAsPlainTextTest")
@@ -3177,7 +3176,7 @@ class GeneratedRestApiIT {
      * Demonstrates testing of request bodies read from resources.
      */
     @Nested
-    class BodyFromResource {
+    class BodyFromResource implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withBodyFromResourceTest")
@@ -3211,7 +3210,7 @@ class GeneratedRestApiIT {
      * Demonstrates testing of control response bodies from plain text.
      */
     @Nested
-    class ReceiveBodyFromPlainText {
+    class ReceiveBodyFromPlainText implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withReceiveBodyFromPlainTextTest")
@@ -3271,7 +3270,7 @@ class GeneratedRestApiIT {
      * Demonstrates testing of control response bodies from resource.
      */
     @Nested
-    class ReceiveBodyFromResource {
+    class ReceiveBodyFromResource implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withReceiveBodyFromResourceTest")
@@ -3313,7 +3312,7 @@ class GeneratedRestApiIT {
      * Demonstrates testing of received non-API cookies.
      */
     @Nested
-    class ReceiveNonApiCookie {
+    class ReceiveNonApiCookie implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withReceiveNonApiCookieTest")
@@ -3354,7 +3353,7 @@ class GeneratedRestApiIT {
      * Demonstrates validation of response by JSON path validation.
      */
     @Nested
-    class JsonPathValidation {
+    class JsonPathValidation implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withJsonPathValidationTest")
@@ -3386,7 +3385,7 @@ class GeneratedRestApiIT {
 
             runner.then(petApi.receiveGetPetById(OK)
                 .message()
-                .validate(jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
+                .validate(validation().jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
             );
         }
     }
@@ -3395,7 +3394,7 @@ class GeneratedRestApiIT {
      * Demonstrates extraction of response data using JSON path.
      */
     @Nested
-    class JsonPathExtraction {
+    class JsonPathExtraction implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withJsonPathExtractionTest")
@@ -3442,7 +3441,7 @@ class GeneratedRestApiIT {
      * Demonstrates testing of API cookies in requests.
      */
     @Nested
-    class ApiCookie {
+    class ApiCookie implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withApiCookieTest")
@@ -3484,7 +3483,7 @@ class GeneratedRestApiIT {
      * Demonstrates testing of file uploads and validations of the response.
      */
     @Nested
-    class FileUpload {
+    class FileUpload implements TestActionSupport {
 
         @Test
         @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withFileUploadTest")
@@ -3531,8 +3530,8 @@ class GeneratedRestApiIT {
             runner.then(petApi
                 .receiveUploadFile(OK)
                 .message()
-                .validate(jsonPath().expression("$.code", "12"))
-                .validate(jsonPath().expression("$.message", "image successfully uploaded")));
+                .validate(validation().jsonPath().expression("$.code", "12"))
+                .validate(validation().jsonPath().expression("$.message", "image successfully uploaded")));
         }
     }
 }

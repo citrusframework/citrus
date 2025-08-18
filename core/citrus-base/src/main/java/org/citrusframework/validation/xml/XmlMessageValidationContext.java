@@ -68,11 +68,11 @@ public class XmlMessageValidationContext extends DefaultMessageValidationContext
     /**
      * Fluent builder.
      */
-    public static final class Builder extends XmlValidationContextBuilder<XmlMessageValidationContext, Builder> {
+    public static final class Builder extends XmlValidationContextBuilder<XmlMessageValidationContext, Builder>
+            implements XmlMessageValidationContextBuilder<XmlMessageValidationContext, Builder> {
 
         /**
          * Static entry method for fluent builder API.
-         * @return
          */
         public static Builder xml() {
             return new Builder();
@@ -104,18 +104,7 @@ public class XmlMessageValidationContext extends DefaultMessageValidationContext
             return builder;
         }
 
-        public XpathMessageValidationContext.Builder expressions() {
-            return new XpathMessageValidationContext.Builder();
-        }
-
-        public XpathMessageValidationContext.Builder expression(String path, Object expectedValue) {
-            return new XpathMessageValidationContext.Builder().expression(path, expectedValue);
-        }
-
-        /**
-         * Convert to Xpath message validation context builder.
-         * @return
-         */
+        @Override
         public XpathMessageValidationContext.Builder xpath() {
             return new XpathMessageValidationContext.Builder()
                         .namespaceContext(namespaces)
@@ -136,7 +125,7 @@ public class XmlMessageValidationContext extends DefaultMessageValidationContext
      * Base fluent builder for XML validation contexts.
      */
     public static abstract class XmlValidationContextBuilder<T extends XmlMessageValidationContext, S extends XmlValidationContextBuilder<T, S>>
-            extends MessageValidationContext.Builder<T, S> implements XmlNamespaceAware {
+            extends MessageValidationContext.Builder<T, S> implements XmlValidationContextBuilderBase<T, S>, XmlNamespaceAware {
 
         protected final S self;
 
@@ -149,47 +138,25 @@ public class XmlMessageValidationContext extends DefaultMessageValidationContext
             this.self = (S) this;
         }
 
-        /**
-         * Validates XML namespace with prefix and uri.
-         *
-         * @param prefix
-         * @param namespaceUri
-         * @return
-         */
+        @Override
         public S namespace(final String prefix, final String namespaceUri) {
             this.controlNamespaces.put(prefix, namespaceUri);
             return self;
         }
 
-        /**
-         * Validates XML namespace with prefix and uri.
-         *
-         * @param namespaces
-         * @return
-         */
+        @Override
         public S namespaces(final Map<String, String> namespaces) {
             this.controlNamespaces.putAll(namespaces);
             return self;
         }
 
-        /**
-         * Add namespaces as context to the expression evaluation. Keys are prefixes and values are namespace URIs.
-         *
-         * @param prefix
-         * @param namespaceUri
-         * @return
-         */
+        @Override
         public S namespaceContext(final String prefix, final String namespaceUri) {
             this.namespaces.put(prefix, namespaceUri);
             return self;
         }
 
-        /**
-         * Add namespaces as context to the expression evaluation. Keys are prefixes and values are namespace URIs.
-         *
-         * @param namespaces
-         * @return
-         */
+        @Override
         public S namespaceContext(final Map<String, String> namespaces) {
             this.namespaces.putAll(namespaces);
             return self;

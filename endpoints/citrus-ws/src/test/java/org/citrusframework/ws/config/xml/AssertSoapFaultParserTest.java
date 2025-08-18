@@ -18,7 +18,7 @@ package org.citrusframework.ws.config.xml;
 
 import org.citrusframework.testng.AbstractActionParserTest;
 import org.citrusframework.ws.actions.AssertSoapFault;
-import org.citrusframework.ws.validation.SoapFaultDetailValidationContext;
+import org.citrusframework.validation.ws.SoapFaultDetailValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -81,7 +81,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
 
         Assert.assertEquals(action.getValidationContext().getValidationContexts().size(), 1L);
 
-        SoapFaultDetailValidationContext detailValidationContext = action.getValidationContext().getValidationContexts().get(0);
+        SoapFaultDetailValidationContext detailValidationContext = action.getValidationContext().getValidationContexts().get(0).build();
         Assert.assertTrue(detailValidationContext.isSchemaValidationEnabled());
         Assert.assertEquals(detailValidationContext.getSchemaRepository(), "fooSchemaRepository");
         Assert.assertNull(detailValidationContext.getSchema());
@@ -97,7 +97,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultDetails().get(0), "FaultDetail");
         Assert.assertEquals(action.getValidationContext().getValidationContexts().size(), 1L);
 
-        detailValidationContext = action.getValidationContext().getValidationContexts().get(0);
+        detailValidationContext = action.getValidationContext().getValidationContexts().get(0).build();
         Assert.assertTrue(detailValidationContext.isSchemaValidationEnabled());
         Assert.assertNull(detailValidationContext.getSchemaRepository());
         Assert.assertEquals(detailValidationContext.getSchema(), "fooSchema");
@@ -113,7 +113,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultDetails().get(0), "FaultDetail");
         Assert.assertEquals(action.getValidationContext().getValidationContexts().size(), 1L);
 
-        detailValidationContext = action.getValidationContext().getValidationContexts().get(0);
+        detailValidationContext = action.getValidationContext().getValidationContexts().get(0).build();
         Assert.assertFalse(detailValidationContext.isSchemaValidationEnabled());
         Assert.assertNull(detailValidationContext.getSchemaRepository());
         Assert.assertNull(detailValidationContext.getSchema());

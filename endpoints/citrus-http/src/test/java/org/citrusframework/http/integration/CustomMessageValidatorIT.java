@@ -31,8 +31,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.XpathSupport.xpath;
-
 /**
  * @since 2.7.5
  */
@@ -69,7 +67,7 @@ public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport implemen
                 .message()
                 .contentType(MediaType.APPLICATION_XML_VALUE)
                 .validators(new DomXmlMessageValidator(), new XpathMessageValidator())
-                .validate(xpath()
+                .validate(validation().xpath()
                         .expression("//doc/@text", "hello")));
 
         then(http().server(httpServer)
@@ -100,7 +98,7 @@ public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport implemen
                 .message()
                 .contentType(MediaType.APPLICATION_XML_VALUE)
                 .validators(new DomXmlMessageValidator(), new XpathMessageValidator())
-                .validate(xpath()
+                .validate(validation().xpath()
                         .expression("//doc/@text", "nothello"))));
     }
 }

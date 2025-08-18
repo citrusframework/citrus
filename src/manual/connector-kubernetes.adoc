@@ -2168,7 +2168,7 @@ public void kubernetesSendReceiveTest() {
           }
         }
         """)
-        .validate(json().expression("$.result.items.size()", 0));
+        .validate(validate().json().expression("$.result.items.size()", 0));
 }
 ----
 

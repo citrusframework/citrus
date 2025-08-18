@@ -40,7 +40,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.validation.json.JsonMessageValidationContext.Builder.json;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.nullValue;
@@ -82,7 +81,7 @@ public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport impleme
                         .message()
                         .type(MessageType.JSON)
                         .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\",\"active\": true}, \"index\":5, \"id\":\"x123456789x\"}")
-                        .validate(json()
+                        .validate(validation().json()
                                     .expression("$.person.name", "John")
                                     .expression("$.person.active", true)
                                     .expression("$.id", anyOf(containsString("123456789"), nullValue()))

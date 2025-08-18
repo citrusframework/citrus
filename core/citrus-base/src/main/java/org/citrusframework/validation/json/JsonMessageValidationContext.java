@@ -16,6 +16,8 @@
 
 package org.citrusframework.validation.json;
 
+import java.util.Map;
+
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
 
@@ -43,16 +45,25 @@ public class JsonMessageValidationContext extends DefaultMessageValidationContex
     /**
      * Fluent builder
      */
-    public static final class Builder extends MessageValidationContext.Builder<JsonMessageValidationContext, Builder> {
+    public static final class Builder extends MessageValidationContext.Builder<JsonMessageValidationContext, Builder>
+            implements JsonMessageValidationContextBuilder<JsonMessageValidationContext, Builder> {
 
         public static Builder json() {
             return new Builder();
         }
 
-        public JsonPathMessageValidationContext.Builder expressions() {
+        @Override
+        public JsonPathMessageValidationContext.Builder path() {
             return new JsonPathMessageValidationContext.Builder();
         }
 
+        @Override
+        public JsonPathMessageValidationContext.Builder expressions(Map<String, Object> expressions) {
+            return new JsonPathMessageValidationContext.Builder()
+                    .expressions(expressions);
+        }
+
+        @Override
         public JsonPathMessageValidationContext.Builder expression(String path, Object expectedValue) {
             return new JsonPathMessageValidationContext.Builder()
                     .expression(path, expectedValue);

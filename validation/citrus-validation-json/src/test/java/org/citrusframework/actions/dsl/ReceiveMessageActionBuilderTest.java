@@ -58,7 +58,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.dsl.JsonPathSupport.jsonPath;
-import static org.citrusframework.dsl.JsonSupport.json;
 import static org.citrusframework.dsl.MessageSupport.MessageBodySupport.fromBody;
 import static org.citrusframework.dsl.PathExpressionSupport.path;
 import static org.citrusframework.message.MessageType.JSON;
@@ -608,7 +607,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .message()
                 .type(JSON)
                 .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\",\"active\": true}, \"index\":5, \"id\":\"x123456789x\"}")
-                .validate(jsonPath()
+                .validate(validation().jsonPath()
                         .expression("$.person.name", "John")
                         .expression("$.person.active", true)
                         .expression("$.id", anyOf(containsString("123456789"), nullValue()))
@@ -659,9 +658,9 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .message()
                 .type(JSON)
                 .body("{\"text\":\"Citrus rocks!\", \"user\":\"christoph\"}")
-                .validate(jsonPath()
+                .validate(validation().jsonPath()
                         .expression("$.user", "christoph"))
-                .validate(jsonPath()
+                .validate(validation().jsonPath()
                         .expression("$.text", "Citrus rocks!")));
 
         TestCase test = runner.getTestCase();
@@ -761,7 +760,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .message()
                 .type(JSON)
                 .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                .validate(jsonPath()
+                .validate(validation().jsonPath()
                         .expression("$.person.name", "John")
                         .expression("$.text", "Hello Citrus!")));
     }
@@ -782,7 +781,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .message()
                 .type(JSON)
                 .body("{\"text\":\"Hello Citrus!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                .validate(json()
+                .validate(validation().json()
                         .expression("$.person.name", "John")
                         .expression("$.text", "Hello World!")));
     }
@@ -803,7 +802,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .message()
                 .type(JSON)
                 .body("{\"text\":\"?\", \"person\":{\"name\":\"John\",\"surname\":\"?\"}, \"index\":0, \"id\":\"x123456789x\"}")
-                .validate(json()
+                .validate(validation().json()
                         .ignore("$..text")
                         .ignore("$.person.surname")
                         .ignore("$.index")));
@@ -858,7 +857,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         runner.run(receive(messageEndpoint)
                 .message()
                 .body("{}")
-                .validate(json()
+                .validate(validation().json()
                         .schemaRepository("customJsonSchemaRepository")));
 
         TestCase test = runner.getTestCase();
@@ -907,7 +906,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         runner.run(receive(messageEndpoint)
                 .message()
                 .body("{}")
-                .validate(json()
+                .validate(validation().json()
                         .schema("jsonTestSchema")));
 
         TestCase test = runner.getTestCase();
@@ -954,7 +953,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         runner.run(receive(messageEndpoint)
                 .message()
                 .body("{}")
-                .validate(json()
+                .validate(validation().json()
                         .schemaValidation(true)));
 
         TestCase test = runner.getTestCase();
@@ -992,7 +991,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         runner.run(receive(messageEndpoint)
                 .message()
                 .body("{}")
-                .validate(json()
+                .validate(validation().json()
                         .schemaValidation(false)));
 
         TestCase test = runner.getTestCase();

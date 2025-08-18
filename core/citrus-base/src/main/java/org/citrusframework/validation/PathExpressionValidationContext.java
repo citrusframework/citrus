@@ -19,12 +19,15 @@ package org.citrusframework.validation;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.expression.PathExpressionValidationContextBuilder;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.xml.XpathMessageValidationContext;
+import org.citrusframework.variable.VariableExtractor;
 
 public class PathExpressionValidationContext {
 
@@ -38,14 +41,12 @@ public class PathExpressionValidationContext {
     /**
      * Fluent builder.
      */
-    public static final class Builder
-            implements ValidationContext.Builder<ValidationContext, Builder>, WithExpressions<Builder> {
+    public static final class Builder implements PathExpressionValidationContextBuilder<ValidationContext, Builder> {
 
-        private Map<String, Object> expressions = new HashMap<>();
+        private final Map<String, Object> expressions = new HashMap<>();
 
         /**
          * Static entry method for fluent builder API.
-         * @return
          */
         public static Builder pathExpression() {
             return new Builder();
@@ -63,6 +64,7 @@ public class PathExpressionValidationContext {
             return this;
         }
 
+        @Override
         public Builder jsonPath(final String expression, final Object value) {
             if (!JsonPathMessageValidationContext.isJsonPathExpression(expression)) {
                 throw new CitrusRuntimeException(String.format("Unsupported json path expression '%s'", expression));
@@ -70,12 +72,27 @@ public class PathExpressionValidationContext {
             return expression(expression, value);
         }
 
+        @Override
         public Builder xpath(final String expression, final Object value) {
             if (!XpathMessageValidationContext.isXpathExpression(expression)) {
                 throw new CitrusRuntimeException(String.format("Unsupported xpath expression '%s'", expression));
             }
 
             return expression(expression, value);
+        }
+
+        @Override
+        public MessageProcessor asProcessor() {
+            return new DelegatingPathExpressionProcessor.Builder()
+                    .expressions(expressions)
+                    .build();
+        }
+
+        @Override
+        public VariableExtractor asExtractor() {
+            return new DelegatingPayloadVariableExtractor.Builder()
+                    .expressions(expressions)
+                    .build();
         }
 
         @Override

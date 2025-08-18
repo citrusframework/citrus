@@ -18,6 +18,8 @@ package org.citrusframework;
 
 import java.util.List;
 
+import org.citrusframework.validation.Validations;
+
 public interface TestActionRunner {
 
     /**
@@ -62,6 +64,16 @@ public interface TestActionRunner {
      * Provide access to all available test actions.
      */
     TestActions actions();
+
+    /**
+     * Provide access to all available test action containers.
+     */
+    TestActionContainers containers();
+
+    /**
+     * Provide access to all available test validations.
+     */
+    Validations validation();
 
     /**
      * Builds and runs given test action.

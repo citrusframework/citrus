@@ -244,7 +244,7 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
 
     @Override
     public void validate(Message message, TestContext context, String schemaRepository, String schema) {
-        XmlMessageValidationContext validationContext = Builder.xml()
+        XmlMessageValidationContext validationContext = new Builder()
             .schemaValidation(true)
             .schema(schema)
             .schemaRepository(schemaRepository).build();

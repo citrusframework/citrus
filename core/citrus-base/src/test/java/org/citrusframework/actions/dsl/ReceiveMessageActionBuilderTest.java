@@ -62,7 +62,6 @@ import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHe
 import static org.citrusframework.dsl.MessageSupport.message;
 import static org.citrusframework.message.MessageType.PLAINTEXT;
 import static org.citrusframework.message.MessageType.XML;
-import static org.citrusframework.validation.xml.XmlMessageValidationContext.Builder.xml;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -1063,7 +1062,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         runner.run(receive(messageEndpoint)
                 .message()
                 .body("{}")
-                .validate(xml()
+                .validate(validation().xml()
                         .schemaValidation(false)));
 
         TestCase test = runner.getTestCase();
