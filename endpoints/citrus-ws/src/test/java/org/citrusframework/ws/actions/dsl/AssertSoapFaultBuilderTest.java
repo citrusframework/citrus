@@ -32,7 +32,7 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.ws.UnitTestSupport;
 import org.citrusframework.ws.actions.AssertSoapFault;
-import org.citrusframework.ws.validation.SoapFaultValidationContext;
+import org.citrusframework.validation.ws.SoapFaultValidationContext;
 import org.citrusframework.ws.validation.SoapFaultValidator;
 import org.citrusframework.xml.StringSource;
 import org.mockito.Mockito;

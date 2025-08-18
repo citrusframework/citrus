@@ -25,6 +25,7 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.ws.SoapFaultDetailValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

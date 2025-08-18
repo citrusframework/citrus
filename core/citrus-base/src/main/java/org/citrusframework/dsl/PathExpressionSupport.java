@@ -34,7 +34,6 @@ public class PathExpressionSupport implements WithExpressions<PathExpressionSupp
 
     /**
      * Static entrance for all generic path expression related Java DSL functionalities.
-     * @return
      */
     public static PathExpressionSupport path() {
         return new PathExpressionSupport();

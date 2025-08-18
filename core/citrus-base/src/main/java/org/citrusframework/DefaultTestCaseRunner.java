@@ -22,6 +22,8 @@ import org.citrusframework.actions.ApplyTestBehaviorAction;
 import org.citrusframework.container.FinallySequence;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.validation.DefaultValidations;
+import org.citrusframework.validation.Validations;
 
 public class DefaultTestCaseRunner implements TestCaseRunner {
 
@@ -124,6 +126,16 @@ public class DefaultTestCaseRunner implements TestCaseRunner {
     @Override
     public TestActions actions() {
         return new DefaultTestActions();
+    }
+
+    @Override
+    public TestActionContainers containers() {
+        return new DefaultTestActions();
+    }
+
+    @Override
+    public Validations validation() {
+        return new DefaultValidations();
     }
 
     @Override

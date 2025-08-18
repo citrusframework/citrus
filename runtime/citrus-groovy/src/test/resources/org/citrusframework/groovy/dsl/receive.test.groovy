@@ -20,12 +20,6 @@ import org.citrusframework.message.MessageType
 
 import static org.citrusframework.dsl.MessageSupport.MessageBodySupport.fromBody
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders
-import static org.citrusframework.dsl.PathExpressionSupport.path
-import static org.citrusframework.validation.json.JsonMessageValidationContext.Builder.json
-import static org.citrusframework.validation.json.JsonPathMessageValidationContext.Builder.jsonPath
-import static org.citrusframework.validation.script.DefaultScriptValidationContext.Builder.groovy
-import static org.citrusframework.validation.xml.XmlMessageValidationContext.Builder.xml
-import static org.citrusframework.validation.xml.XpathMessageValidationContext.Builder.xpath
 
 name "ReceiveTest"
 author "Christoph"
@@ -91,8 +85,8 @@ actions {
             .endpoint("helloEndpoint")
             .message()
             .body("<ns:TestMessage xmlns:ns=\"http://citrusframework.org\">Hello Citrus</ns:TestMessage>")
-            .process(path().expression("/ns:TestMessage/", "newValue"))
-            .validate(xml()
+            .process(validation().path().expression("/ns:TestMessage/", "newValue"))
+            .validate(validation().xml()
                     .ignore("/ns:TestMessage/ns:ignore")
                     .namespaceContext("ctx", "http://citrusframework.org/test")
                     .namespace("ns", "http://citrusframework.org")
@@ -102,7 +96,7 @@ actions {
     $(receive()
             .endpoint("direct:helloQueue")
             .message()
-            .validate(path()
+            .validate(validation().path()
                     .expression("/TestMessage/text", "Hello Citrus")
                     .expression("/TestMessage/foo", true))
     )
@@ -110,7 +104,7 @@ actions {
     $(receive()
             .endpoint("direct:helloQueue")
             .message()
-            .validate(xpath()
+            .validate(validation().xpath()
                     .expression("/TestMessage/text", "Hello Citrus")
                     .expression("/TestMessage/foo", true))
     )
@@ -118,21 +112,21 @@ actions {
     $(receive()
             .endpoint("direct:helloQueue")
             .message()
-            .validate(groovy().script("assert true"))
-            .validate(path().expression("/TestMessage/foo", true))
+            .validate(validation().groovy().script("assert true"))
+            .validate(validation().path().expression("/TestMessage/foo", true))
     )
 
     $(receive()
             .endpoint("direct:helloQueue")
             .message()
-            .validate(groovy().scriptResource("classpath:org/citrusframework/groovy/test-validation-script.groovy"))
+            .validate(validation().groovy().scriptResource("classpath:org/citrusframework/groovy/test-validation-script.groovy"))
     )
 
     $(receive()
             .endpoint("direct:helloQueue")
             .message()
             .type(MessageType.JSON)
-            .validate(path()
+            .validate(validation().path()
                     .expression('$.json.text', "Hello Citrus")
                     .expression('$..foo.bar', true))
     )
@@ -141,7 +135,7 @@ actions {
             .endpoint("direct:helloQueue")
             .message()
             .type(MessageType.JSON)
-            .validate(jsonPath()
+            .validate(validation().jsonPath()
                     .expression('$.json.text', "Hello Citrus")
                     .expression('$..foo.bar', true))
     )
@@ -151,8 +145,8 @@ actions {
             .message()
             .body('{ "FooMessage": { "foo": "Hello World!" }, { "bar": "@ignore@" }}')
             .type(MessageType.JSON)
-            .validate(json().ignore('$.FooMessage.bar'))
-            .process(jsonPath().expression('$.FooMessage.foo', "newValue"))
+            .validate(validation().json().ignore('$.FooMessage.bar'))
+            .process(validation().jsonPath().expression('$.FooMessage.foo', "newValue"))
     )
 
     $(receive()

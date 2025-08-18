@@ -16,59 +16,17 @@
 
 package org.citrusframework.ws.validation;
 
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
-import org.citrusframework.validation.xml.XpathMessageValidationContext;
+@Deprecated
+public class SoapFaultDetailValidationContext extends org.citrusframework.validation.ws.SoapFaultDetailValidationContext {
 
-/**
- * Soap fault detail validation context extends XML validation context.
- */
-public class SoapFaultDetailValidationContext extends XmlMessageValidationContext {
-
-    /**
-     * Default constructor.
-     */
-    public SoapFaultDetailValidationContext() {
-        this(Builder.faultDetail());
-    }
-
-    /**
-     * Constructor using fluent builder.
-     * @param builder
-     */
-    public SoapFaultDetailValidationContext(Builder builder) {
-        super(builder);
-    }
-
-    /**
-     * Fluent builder.
-     */
-    public static final class Builder extends XmlValidationContextBuilder<SoapFaultDetailValidationContext, Builder> {
+    @Deprecated
+    public static class Builder extends org.citrusframework.validation.ws.SoapFaultDetailValidationContext.Builder {
 
         /**
          * Static entry method for fluent builder API.
-         * @return
          */
         public static Builder faultDetail() {
             return new Builder();
-        }
-
-        /**
-         * Convert to Xpath message validation context builder.
-         * @return
-         */
-        public XpathMessageValidationContext.Builder xpath() {
-            return new XpathMessageValidationContext.Builder()
-                    .namespaceContext(namespaces)
-                    .namespaces(controlNamespaces)
-                    .schemaValidation(schemaValidation)
-                    .schemaRepository(schemaRepository)
-                    .schema(schema)
-                    .ignore(ignoreExpressions);
-        }
-
-        @Override
-        public SoapFaultDetailValidationContext build() {
-            return new SoapFaultDetailValidationContext(this);
         }
     }
 }

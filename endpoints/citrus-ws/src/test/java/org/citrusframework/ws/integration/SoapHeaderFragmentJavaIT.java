@@ -22,7 +22,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
-import static org.citrusframework.dsl.XmlSupport.xml;
 
 @Test
 public class SoapHeaderFragmentJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
@@ -74,7 +73,7 @@ public class SoapHeaderFragmentJavaIT extends TestNGCitrusSpringSupport implemen
                               "<ns0:Text>Hello WebServer</ns0:Text>" +
                           "</ns0:HelloHeader>" +
                       "</SOAP-ENV:Header>")
-            .validate(xml().schemaValidation(false))
+            .validate(validation().xml().schemaValidation(false))
             .extract(fromHeaders()
                         .header("citrus_jms_messageId", "internal_correlation_id")));
 
@@ -117,7 +116,7 @@ public class SoapHeaderFragmentJavaIT extends TestNGCitrusSpringSupport implemen
                           "</SOAP-ENV:Header>")
             .header("Operation", "answerHello")
             .header("operation", "answerHello")
-            .validate(xml().schemaValidation(false))
+            .validate(validation().xml().schemaValidation(false))
             .timeout(5000L));
     }
 }

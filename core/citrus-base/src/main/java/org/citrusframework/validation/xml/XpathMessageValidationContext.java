@@ -19,14 +19,11 @@ package org.citrusframework.validation.xml;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageProcessor;
-import org.citrusframework.message.MessageProcessorAdapter;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.variable.VariableExtractor;
-import org.citrusframework.variable.VariableExtractorAdapter;
 
 /**
  * Specialised Xml validation context adds XPath expression evaluation.
@@ -62,13 +59,12 @@ public class XpathMessageValidationContext extends XmlMessageValidationContext {
      * Fluent builder.
      */
     public static final class Builder extends XmlValidationContextBuilder<XpathMessageValidationContext, Builder>
-            implements WithExpressions<Builder>, VariableExtractorAdapter, MessageProcessorAdapter {
+            implements XpathMessageValidationContextBuilder<XpathMessageValidationContext, Builder> {
 
         private final Map<String, Object> expressions = new HashMap<>();
 
         /**
          * Static entry method for fluent builder API.
-         * @return
          */
         public static Builder xpath() {
             return new Builder();

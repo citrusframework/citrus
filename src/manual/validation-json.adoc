@@ -307,7 +307,7 @@ receive(someEndpoint)
                 "\"lastLogin\": 0" +
             "}]" +
         "}")
-    .validate(json()
+        .validate(validate().json()
                 .ignore("$.users[*].token")
                 .ignore("$..lastLogin"));
 ----
@@ -362,7 +362,7 @@ Let's continue to use JsonPath expressions when validating a received message in
 receive(someEndpoint)
     .message()
     .type(MessageType.JSON)
-    .validate(jsonPath()
+    .validate(validate().jsonPath()
         .expression("$.user.name", "Penny")
         .expression("$['user']['name']", "${userName}")
         .expression("$.user.aliases", "[\"penny\",\"jenny\",\"nanny\"]")
@@ -400,7 +400,7 @@ validationMap.put("$.user.address[?(@.type='office')]", "{\"city\":\"Munich\",\"
 receive(someEndpoint)
     .message()
     .type(MessageType.JSON)
-    .validate(jsonPath().expressions(validationMap));
+    .validate(validate().jsonPath().expressions(validationMap));
 ----
 
 The above JsonPath expressions will be evaluated when Citrus validates the received message.
@@ -430,7 +430,7 @@ See the following example on how to use it:
 receive(someEndpoint)
     .message()
     .type(MessageType.JSON)
-    .validate(jsonPath()
+    .validate(validate().jsonPath()
         .expression("$.user.keySet()", "[id,name,admin,projects]")
         .expression("$.user.aliases.size()", "3"));
 ----
@@ -460,7 +460,7 @@ See the following examples that demonstrate how this works:
 receive(someEndpoint)
     .message()
     .type(MessageType.JSON)
-    .validate(jsonPath()
+    .validate(validate().jsonPath()
                 .expression("$.user.keySet()", contains("id","name","admin","projects"))
                 .expression("$.user.aliases.size()", allOf(greaterThan(0), lessThan(5))));
 ----
@@ -500,7 +500,7 @@ receive(someEndpoint)
     .message()
     .type(MessageType.JSON)
     .body()
-    .validate(json()
+    .validate(validate().json()
         .schemaValidation(true)
         .schema("bookStore"));
 ----

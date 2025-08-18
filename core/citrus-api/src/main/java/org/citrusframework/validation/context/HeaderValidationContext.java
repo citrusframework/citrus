@@ -51,53 +51,42 @@ public class HeaderValidationContext implements ValidationContext {
     /**
      * Fluent builder.
      */
-    public static final class Builder implements ValidationContext.Builder<HeaderValidationContext, Builder> {
+    public static final class Builder implements HeaderValidationContextBuilder<HeaderValidationContext, Builder> {
 
         /** List of special header validators */
-        private List<HeaderValidator> validators = new ArrayList<>();
+        private final List<HeaderValidator> validators = new ArrayList<>();
 
         /** List of special header validator references */
-        private List<String> validatorNames = new ArrayList<>();
+        private final List<String> validatorNames = new ArrayList<>();
 
         /** Should header name validation ignore case sensitivity */
         private boolean headerNameIgnoreCase = false;
 
-        /**
-         * Sets the headerNameIgnoreCase.
-         */
+        @Override
         public Builder ignoreCase(boolean headerNameIgnoreCase) {
             this.headerNameIgnoreCase = headerNameIgnoreCase;
             return this;
         }
 
-
-        /**
-         * Adds header validator.
-         */
+        @Override
         public Builder validator(HeaderValidator validator) {
             this.validators.add(validator);
             return this;
         }
 
-        /**
-         * Adds header validator reference.
-         */
+        @Override
         public Builder validator(String validatorName) {
             this.validatorNames.add(validatorName);
             return this;
         }
 
-        /**
-         * Sets the validators.
-         */
+        @Override
         public Builder validators(List<HeaderValidator> validators) {
             this.validators.addAll(validators);
             return this;
         }
 
-        /**
-         * Sets the validatorNames.
-         */
+        @Override
         public Builder validatorNames(List<String> validatorNames) {
             this.validatorNames.addAll(validatorNames);
             return this;

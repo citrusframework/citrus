@@ -19,8 +19,6 @@ package org.citrusframework.groovy.dsl
 import org.citrusframework.message.MessageType
 
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders
-import static org.citrusframework.dsl.PathExpressionSupport.path
-import static org.citrusframework.validation.json.JsonPathMessageValidationContext.Builder.jsonPath
 
 name "SendTest"
 author "Christoph"
@@ -69,7 +67,7 @@ actions {
         .header("operation", "sayHello")
         .dictionary(myDataDictionary)
         .body("<TestMessage>Hello Citrus</TestMessage>")
-        .process(path().expression("/TestMessage/text()", "newValue"))
+        .process(validation().path().expression("/TestMessage/text()", "newValue"))
         .extract(fromHeaders().header("operation", "operation"))
     )
 
@@ -92,7 +90,7 @@ actions {
         .message()
         .body('{ "FooMessage": { "foo": "Hello World!" }, { "bar": "@ignore@" }}')
         .type(MessageType.JSON)
-        .process(jsonPath().expression('$.FooMessage.foo', "newValue"))
+        .process(validation().jsonPath().expression('$.FooMessage.foo', "newValue"))
     )
 
     $(send()

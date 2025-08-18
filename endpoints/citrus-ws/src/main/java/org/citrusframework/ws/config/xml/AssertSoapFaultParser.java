@@ -27,8 +27,8 @@ import org.citrusframework.config.xml.DescriptionElementParser;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.actions.AssertSoapFault;
-import org.citrusframework.ws.validation.SoapFaultDetailValidationContext;
-import org.citrusframework.ws.validation.SoapFaultValidationContext;
+import org.citrusframework.validation.ws.SoapFaultDetailValidationContext;
+import org.citrusframework.validation.ws.SoapFaultValidationContext;
 import org.citrusframework.ws.validation.SoapFaultValidator;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -94,7 +94,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
             if (StringUtils.hasText(schemaRepository)) {
                 context.schemaRepository(schemaRepository);
             }
-            validationContext.detail(context.build());
+            validationContext.detail(context);
         }
 
         if (!soapFaultDetails.isEmpty() || !soapFaultDetailPaths.isEmpty()) {

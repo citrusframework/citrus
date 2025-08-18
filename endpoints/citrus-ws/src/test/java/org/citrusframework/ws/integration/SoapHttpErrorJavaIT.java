@@ -22,7 +22,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
-import static org.citrusframework.dsl.XmlSupport.xml;
 
 @Test
 public class SoapHttpErrorJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
@@ -61,7 +60,7 @@ public class SoapHttpErrorJavaIT extends TestNGCitrusSpringSupport implements Te
                     .header("Operation", "sayHello")
                     .header("operation", "sayHello")
                     .header("citrus_soap_action", "sayHello")
-                    .validate(xml().schemaValidation(false))
+                    .validate(validation().xml().schemaValidation(false))
                     .extract(fromHeaders()
                                 .header("citrus_jms_messageId", "internal_correlation_id")),
                 send("soapResponseEndpoint")

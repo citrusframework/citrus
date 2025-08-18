@@ -22,7 +22,7 @@ You can use the Hamcrest assertions when receiving a message in order to validat
 [source,java,indent=0,role="primary"]
 ----
 receive("someEndpoint")
-    .validate(xpath()
+    .validate(validate().xpath()
         .expression("/TestRequest/Error", anyOf(empty(), nullValue()))
         .expression("number:/TestRequest/Status[.='success']", greaterThan(0.0))
         .expression("integer:/TestRequest/Status[.='failed']", lowerThan(1))

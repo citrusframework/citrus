@@ -40,8 +40,8 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.ws.message.SoapFault;
 import org.citrusframework.ws.validation.SimpleSoapFaultValidator;
-import org.citrusframework.ws.validation.SoapFaultDetailValidationContext;
-import org.citrusframework.ws.validation.SoapFaultValidationContext;
+import org.citrusframework.validation.ws.SoapFaultDetailValidationContext;
+import org.citrusframework.validation.ws.SoapFaultValidationContext;
 import org.citrusframework.ws.validation.SoapFaultValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -401,7 +401,7 @@ public class AssertSoapFault extends AbstractActionContainer {
                 this.validationContext = new SoapFaultValidationContext.Builder();
             }
 
-            this.validationContext.detail(validationContext.build());
+            this.validationContext.detail(validationContext);
             return this;
         }
 
@@ -427,7 +427,7 @@ public class AssertSoapFault extends AbstractActionContainer {
                 this.validationContext = new SoapFaultValidationContext.Builder();
 
                 if (!faultDetailResourcePaths.isEmpty() || !faultDetails.isEmpty()) {
-                    this.validationContext.detail(new SoapFaultDetailValidationContext.Builder().build());
+                    this.validationContext.detail(new SoapFaultDetailValidationContext.Builder());
                 }
             }
 

@@ -34,7 +34,7 @@ import org.citrusframework.container.WaitContainerBuilder;
 /**
  * Interface combines domain specific language methods for all test action containers available in Citrus.
  */
-public interface TestContainers extends
+public interface TestActionContainers extends
         ApplyTemplateBuilder.BuilderFactory,
         AssertContainerBuilder.BuilderFactory,
         AsyncContainerBuilder.BuilderFactory,

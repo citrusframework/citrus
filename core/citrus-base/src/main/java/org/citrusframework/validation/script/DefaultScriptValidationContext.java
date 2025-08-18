@@ -54,7 +54,6 @@ public class DefaultScriptValidationContext extends DefaultValidationContext imp
 
     /**
      * Constructor using type field.
-     * @param scriptType
      */
     public DefaultScriptValidationContext(String scriptType) {
         this(new Builder()
@@ -92,7 +91,7 @@ public class DefaultScriptValidationContext extends DefaultValidationContext imp
     /**
      * Fluent builder
      */
-    public static final class Builder implements ScriptValidationContext.Builder<DefaultScriptValidationContext, Builder> {
+    public static final class Builder implements ScriptValidationContextBuilder<DefaultScriptValidationContext, Builder> {
 
         private String validationScriptResourcePath;
         private String validationScriptResourceCharset = CitrusSettings.CITRUS_FILE_ENCODING;

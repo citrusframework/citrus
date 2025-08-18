@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.Endpoint;
@@ -58,10 +59,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.validation.json.JsonMessageValidationContext.Builder.json;
-import static org.citrusframework.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
-import static org.citrusframework.validation.xml.XmlMessageValidationContext.Builder.xml;
-import static org.citrusframework.validation.xml.XpathMessageValidationContext.Builder.xpath;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
@@ -69,7 +66,7 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-public class ReceiveMessageBuilderTest {
+public class ReceiveMessageBuilderTest implements TestActionSupport {
 
 	@Mock
 	private Resource resource;
@@ -500,7 +497,7 @@ public class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 
 		//WHEN
-		builder.validate(xml().schemaValidation(true));
+		builder.validate(validation().xml().schemaValidation(true));
 
 		//THEN
 		final XmlMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
@@ -520,7 +517,7 @@ public class ReceiveMessageBuilderTest {
 		final String uri = "http://foo.com";
 
 		//WHEN
-		builder.validate(xml().namespace(prefix, uri));
+		builder.validate(validation().xml().namespace(prefix, uri));
 
 		//THEN
 		final XmlMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
@@ -542,7 +539,7 @@ public class ReceiveMessageBuilderTest {
 		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		builder.validate(jsonPath()
+		builder.validate(validation().jsonPath()
 				.expression(path, controlValue));
 
 		//THEN
@@ -565,7 +562,7 @@ public class ReceiveMessageBuilderTest {
 		builder.message().type(MessageType.XML);
 
 		//WHEN
-		builder.validate(xpath()
+		builder.validate(validation().xpath()
 				.expression(path, controlValue));
 
 		//THEN
@@ -596,7 +593,7 @@ public class ReceiveMessageBuilderTest {
 		builder.message().type( MessageType.XML);
 
 		//WHEN
-		builder.validate(xpath()
+		builder.validate(validation().xpath()
 				.expressions(map));
 
 		//THEN
@@ -629,7 +626,7 @@ public class ReceiveMessageBuilderTest {
 		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		builder.validate(jsonPath()
+		builder.validate(validation().jsonPath()
 				.expressions(map));
 
 		//THEN
@@ -654,7 +651,7 @@ public class ReceiveMessageBuilderTest {
 		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		builder.validate(json()
+		builder.validate(validation().json()
 				.ignore(path));
 
 		//THEN
@@ -676,7 +673,7 @@ public class ReceiveMessageBuilderTest {
 		builder.message().type(MessageType.XML);
 
 		//WHEN
-		builder.validate(xml().ignore(path));
+		builder.validate(validation().xml().ignore(path));
 
 		//THEN
 
@@ -697,7 +694,7 @@ public class ReceiveMessageBuilderTest {
 		builder.message().type(MessageType.XML);
 
 		//WHEN
-		builder.validate(xml().schema(schemaName));
+		builder.validate(validation().xml().schema(schemaName));
 
 		//THEN
 
@@ -718,7 +715,7 @@ public class ReceiveMessageBuilderTest {
 		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		builder.validate(json().schema(schemaName));
+		builder.validate(validation().json().schema(schemaName));
 
 		//THEN
 
@@ -739,7 +736,7 @@ public class ReceiveMessageBuilderTest {
 		builder.message().type(MessageType.XML);
 
 		//WHEN
-		builder.validate(xml().schemaRepository(schemaRepository));
+		builder.validate(validation().xml().schemaRepository(schemaRepository));
 
 		//THEN
 
@@ -760,7 +757,7 @@ public class ReceiveMessageBuilderTest {
 		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		builder.validate(json().schemaRepository(schemaRepository));
+		builder.validate(validation().json().schemaRepository(schemaRepository));
 
 		//THEN
 

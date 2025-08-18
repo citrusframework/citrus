@@ -21,6 +21,8 @@ import java.util.List;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.util.XMLUtils;
+import org.citrusframework.validation.ws.SoapFaultDetailValidationContext;
+import org.citrusframework.validation.ws.SoapFaultValidationContext;
 import org.citrusframework.ws.message.SoapFault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,16 +61,16 @@ public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultVali
             String receivedDetailString = receivedDetailElements.get(i);
             String controlDetailString = controlDetailElements.get(i);
 
-            SoapFaultDetailValidationContext detailValidationContext;
+            SoapFaultDetailValidationContext.Builder detailValidationContext;
             if (validationContext.getValidationContexts() == null || validationContext.getValidationContexts().isEmpty()) {
-                detailValidationContext = new SoapFaultDetailValidationContext.Builder().build();
+                detailValidationContext = new SoapFaultDetailValidationContext.Builder();
             } else {
                 detailValidationContext = validationContext.getValidationContexts().get(i++);
             }
 
             validateFaultDetailString(XMLUtils.omitXmlDeclaration(receivedDetailString),
                                     XMLUtils.omitXmlDeclaration(controlDetailString),
-                                    context, detailValidationContext);
+                                    context, detailValidationContext.build());
         }
     }
 

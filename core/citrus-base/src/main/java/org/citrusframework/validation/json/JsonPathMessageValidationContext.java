@@ -19,16 +19,12 @@ package org.citrusframework.validation.json;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageProcessor;
-import org.citrusframework.message.MessageProcessorAdapter;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.validation.context.DefaultValidationContext;
-import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;
-import org.citrusframework.variable.VariableExtractorAdapter;
 
 /**
  * Specialised validation context adds JSON path expressions for message validation.
@@ -62,14 +58,12 @@ public class JsonPathMessageValidationContext extends DefaultValidationContext {
     /**
      * Fluent builder.
      */
-    public static final class Builder
-            implements ValidationContext.Builder<JsonPathMessageValidationContext, Builder>, WithExpressions<Builder>, VariableExtractorAdapter, MessageProcessorAdapter {
+    public static final class Builder implements JsonPathMessageValidationContextBuilder<JsonPathMessageValidationContext, Builder> {
 
         private final Map<String, Object> expressions = new HashMap<>();
 
         /**
          * Static entry method for fluent builder API.
-         * @return
          */
         public static Builder jsonPath() {
             return new Builder();

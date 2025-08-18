@@ -22,8 +22,6 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.XmlSupport.xml;
-
 @Test
 public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
@@ -42,7 +40,7 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport implemen
             .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                     "<Message>Hello</Message>" +
                 "</trq:TestRequest>")
-            .validate(xml()
+            .validate(validation().xml()
                     .schemaValidation(false)
                     .namespace("trq", "http://citrusframework.org/schemas/test"))
             .timeout(5000));
@@ -60,7 +58,7 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport implemen
             .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\" xmlns:msg=\"http://citrusframework.org/schemas/message\">" +
                     "<msg:Message>Hello</msg:Message>" +
                 "</trq:TestRequest>")
-            .validate(xml()
+            .validate(validation().xml()
                     .schemaValidation(false)
                     .namespace("trq", "http://citrusframework.org/schemas/test")
                     .namespace("msg", "http://citrusframework.org/schemas/message"))
@@ -79,7 +77,7 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport implemen
             .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                     "<msg:Message xmlns:msg=\"http://citrusframework.org/schemas/message\">Hello</msg:Message>" +
                 "</trq:TestRequest>")
-            .validate(xml()
+            .validate(validation().xml()
                         .schemaValidation(false)
                         .namespace("trq", "http://citrusframework.org/schemas/test")
                         .namespace("msg", "http://citrusframework.org/schemas/message"))
@@ -100,7 +98,7 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport implemen
                 .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                         "<Message>Hello</Message>" +
                     "</trq:TestRequest>")
-                .validate(xml()
+                .validate(validation().xml()
                             .schemaValidation(false)
                             .namespace("trq", "http://citrusframework.org/schemas/test")
                             .namespace("missing", "http://citrusframework.org/schemas/missing"))
@@ -122,7 +120,7 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport implemen
                 .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                         "<Message>Hello</Message>" +
                     "</trq:TestRequest>")
-                .validate(xml()
+                .validate(validation().xml()
                         .schemaValidation(false)
                         .namespace("trq", "http://citrusframework.org/schemas/test"))
                 .timeout(5000)
@@ -143,7 +141,7 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport implemen
                 .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                         "<Message>Hello</Message>" +
                     "</trq:TestRequest>")
-                .validate(xml()
+                .validate(validation().xml()
                         .schemaValidation(false)
                         .namespace("trq", "http://citrusframework.org/schemas/test"))
                 .timeout(5000)

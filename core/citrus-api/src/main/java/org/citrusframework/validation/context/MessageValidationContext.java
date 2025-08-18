@@ -31,7 +31,7 @@ public interface MessageValidationContext extends ValidationContext, SchemaValid
      * Base fluent builder for message validation contexts.
      */
     abstract class Builder<T extends MessageValidationContext, S extends Builder<T, S>>
-            implements ValidationContext.Builder<T, Builder<T, S>>, SchemaValidationContext.Builder<Builder<T, S>> {
+            implements MessageValidationContextBuilder<T, S> {
 
         protected final S self;
 
@@ -44,56 +44,31 @@ public interface MessageValidationContext extends ValidationContext, SchemaValid
             this.self = (S) this;
         }
 
-        /**
-         * Sets schema validation enabled/disabled for this message.
-         *
-         * @param enabled
-         * @return
-         */
+        @Override
         public S schemaValidation(final boolean enabled) {
             this.schemaValidation = enabled;
             return self;
         }
 
-        /**
-         * Sets explicit schema instance name to use for schema validation.
-         *
-         * @param schemaName
-         * @return
-         */
+        @Override
         public S schema(final String schemaName) {
             this.schema = schemaName;
             return self;
         }
 
-        /**
-         * Sets explicit xsd schema repository instance to use for validation.
-         *
-         * @param schemaRepository
-         * @return
-         */
+        @Override
         public S schemaRepository(final String schemaRepository) {
             this.schemaRepository = schemaRepository;
             return self;
         }
 
-        /**
-         * Adds ignore path expression for message element.
-         *
-         * @param path
-         * @return
-         */
+        @Override
         public S ignore(final String path) {
             this.ignoreExpressions.add(path);
             return self;
         }
 
-        /**
-         * Adds a list of ignore path expressions for message element.
-         *
-         * @param paths
-         * @return
-         */
+        @Override
         public S ignore(final Set<String> paths) {
             this.ignoreExpressions.addAll(paths);
             return self;

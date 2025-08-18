@@ -28,6 +28,7 @@ import org.citrusframework.DefaultTestActions;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestActionContainers;
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestActions;
 import org.citrusframework.TestBehavior;
@@ -43,6 +44,8 @@ import org.citrusframework.common.TestSourceAware;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.validation.DefaultValidations;
+import org.citrusframework.validation.Validations;
 import org.testng.IHookCallBack;
 import org.testng.IHookable;
 import org.testng.ITestResult;
@@ -262,6 +265,15 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
     @Override
     public TestActions actions() {
         return new DefaultTestActions();
+    }
+
+    @Override
+    public TestActionContainers containers() {
+        return new DefaultTestActions();
+    }
+
+    public Validations validation() {
+        return new DefaultValidations();
     }
 
     @Override

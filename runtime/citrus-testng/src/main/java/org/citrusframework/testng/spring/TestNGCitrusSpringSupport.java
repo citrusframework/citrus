@@ -36,6 +36,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testng.TestNGHelper;
 import org.citrusframework.util.ObjectHelper;
+import org.citrusframework.validation.DefaultValidations;
+import org.citrusframework.validation.Validations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.IHookCallBack;
@@ -286,6 +288,15 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
     @Override
     public TestActions actions() {
         return new DefaultTestActions();
+    }
+
+    @Override
+    public TestActionContainers containers() {
+        return new DefaultTestActions();
+    }
+
+    public Validations validation() {
+        return new DefaultValidations();
     }
 
     @Override

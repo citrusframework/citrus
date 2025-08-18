@@ -18,6 +18,7 @@ package org.citrusframework.ws.validation;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.validation.ws.SoapFaultDetailValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

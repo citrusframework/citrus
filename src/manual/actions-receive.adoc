@@ -428,7 +428,7 @@ public void jsonPathTest() {
         .message()
         .type(MessageType.JSON)
         .body(new ClassPathResource("path/to/request.xml"))
-        .validate(jsonPath()
+        .validate(validate().jsonPath()
             .expression("$.user.name", "Penny")
             .expression("$['user']['name']", "${userName}"))
     );
@@ -629,7 +629,7 @@ public void ignorePathTest() {
               }]
             }
         """)
-        .validate(json()
+        .validate(validate().json()
                     .ignore("$.users[*].token")
                     .ignore("$..lastLogin"))
     );

@@ -654,7 +654,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
             validationContexts.stream()
                     .filter(HeaderValidationContext.Builder.class::isInstance)
-                    .forEach(c -> ((HeaderValidationContext.Builder) c).ignoreCase(getMessageBuilderSupport().isHeaderNameIgnoreCase()));
+                    .forEach(c -> ((HeaderValidationContext.Builder) c).ignoreCase(messageBuilderSupport.isHeaderNameIgnoreCase()));
 
             if (referenceResolver != null) {
                 if (validationProcessor instanceof ReferenceResolverAware referenceResolverAware) {

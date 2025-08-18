@@ -21,8 +21,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.XmlSupport.xml;
-
 @Test
 public class WebServiceClientJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
@@ -52,6 +50,6 @@ public class WebServiceClientJavaIT extends TestNGCitrusSpringSupport implements
                         "</ns0:HelloStandaloneResponse>")
             .header("Request", "HelloRequest")
             .header("Operation", "sayHelloResponse")
-            .validate(xml().schemaValidation(false)));
+            .validate(validation().xml().schemaValidation(false)));
     }
 }
