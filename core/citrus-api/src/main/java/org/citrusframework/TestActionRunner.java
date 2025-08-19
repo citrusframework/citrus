@@ -19,6 +19,7 @@ package org.citrusframework;
 import java.util.List;
 
 import org.citrusframework.validation.Validations;
+import org.citrusframework.variable.VariableExtractors;
 
 public interface TestActionRunner {
 
@@ -74,6 +75,11 @@ public interface TestActionRunner {
      * Provide access to all available test validations.
      */
     Validations validation();
+
+    /**
+     * Provide access to all available variable extractions.
+     */
+    VariableExtractors extractor();
 
     /**
      * Builds and runs given test action.

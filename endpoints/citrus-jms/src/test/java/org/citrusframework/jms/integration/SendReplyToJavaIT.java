@@ -22,8 +22,6 @@ import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
-
 @Test
 public class SendReplyToJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
@@ -46,7 +44,7 @@ public class SendReplyToJavaIT extends TestNGCitrusSpringSupport implements Test
                         "</GetDateRequestMessage>")
                 .header("Operation", "${operation}")
                 .header("ConversationId", "${conversationId}")
-                .extract(fromHeaders()
+                .extract(extractor().fromHeaders()
                             .header(MessageHeaders.ID, "syncRequestCorrelatorId")),
 
             sequential().actions(

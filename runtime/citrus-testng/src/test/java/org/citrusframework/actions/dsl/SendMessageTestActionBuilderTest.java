@@ -44,7 +44,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
@@ -511,7 +510,7 @@ public class SendMessageTestActionBuilderTest extends UnitTestSupport {
                 .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                 .header("operation", "sayHello")
                 .header("requestId", "123456")
-                .extract(fromHeaders().header("operation", "operationHeader")
+                .extract(extractor().fromHeaders().header("operation", "operationHeader")
                                     .header("requestId", "id")));
 
         Assert.assertNotNull(context.getVariable("operationHeader"));

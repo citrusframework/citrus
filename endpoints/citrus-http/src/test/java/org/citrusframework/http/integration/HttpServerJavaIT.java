@@ -22,8 +22,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
-
 @Test
 public class HttpServerJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
@@ -57,7 +55,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport implements TestA
                     .header("contentType", "application/xml")
                     .accept("application/xml")
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
-                    .extract(fromHeaders()
+                    .extract(extractor().fromHeaders()
                                 .header("citrus_jms_messageId", "correlation_id")),
 
                http().server("httpServerResponseEndpoint")
@@ -111,7 +109,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport implements TestA
                     .header("contentType","application/xml")
                     .accept("application/xml")
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
-                    .extract(fromHeaders()
+                    .extract(extractor().fromHeaders()
                                 .header("citrus_jms_messageId", "correlation_id")),
 
                http().server("httpServerResponseEndpoint")

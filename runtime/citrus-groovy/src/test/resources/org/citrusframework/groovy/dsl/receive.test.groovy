@@ -18,9 +18,6 @@ package org.citrusframework.groovy.dsl
 
 import org.citrusframework.message.MessageType
 
-import static org.citrusframework.dsl.MessageSupport.MessageBodySupport.fromBody
-import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders
-
 name "ReceiveTest"
 author "Christoph"
 status "FINAL"
@@ -77,8 +74,8 @@ actions {
             .message()
             .dictionary(myDataDictionary)
             .body("<TestMessage>Hello Citrus</TestMessage>")
-            .extract(fromHeaders().header("operation", "operation"))
-            .extract(fromBody().expression("/TestMessage/text()", "text"))
+            .extract(extractor().fromHeaders().header("operation", "operation"))
+            .extract(extractor().fromBody().expression("/TestMessage/text()", "text"))
     )
 
     $(receive()
@@ -154,8 +151,8 @@ actions {
             .message()
             .type(MessageType.JSON)
             .body('{ "message": { "text": "Hello World!" }, { "bar": "@ignore@" }}')
-            .extract(fromHeaders().expression("operation", "operation"))
-            .extract(fromBody().expression('$.message.text', "text"))
+            .extract(extractor().fromHeaders().expression("operation", "operation"))
+            .extract(extractor().fromBody().expression('$.message.text', "text"))
     )
 
     $(receive()

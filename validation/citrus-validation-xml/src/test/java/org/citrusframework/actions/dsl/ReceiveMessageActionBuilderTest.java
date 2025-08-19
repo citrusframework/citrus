@@ -68,10 +68,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXParseException;
 
-import static org.citrusframework.dsl.MessageSupport.MessageBodySupport.fromBody;
-import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
-import static org.citrusframework.dsl.PathExpressionSupport.path;
-import static org.citrusframework.dsl.XpathSupport.xpath;
 import static org.citrusframework.message.MessageType.PLAINTEXT;
 import static org.citrusframework.message.MessageType.XML;
 import static org.mockito.Mockito.*;
@@ -977,7 +973,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         runner.run(receive(messageEndpoint)
                 .message()
                 .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                .extract(fromBody().expression("/TestRequest/Message", "message")));
+                .extract(extractor().fromBody().expression("/TestRequest/Message", "message")));
 
         Assert.assertNotNull(context.getVariable("message"));
         Assert.assertEquals(context.getVariable("message"), "Hello World!");
@@ -1016,7 +1012,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         runner.run(receive(messageEndpoint)
                 .message()
                 .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                .extract(path().expression("/TestRequest/Message", "message")));
+                .extract(extractor().path().expression("/TestRequest/Message", "message")));
 
         Assert.assertNotNull(context.getVariable("message"));
         Assert.assertEquals(context.getVariable("message"), "Hello World!");
@@ -1055,7 +1051,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         runner.run(receive(messageEndpoint)
                 .message()
                 .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                .extract(xpath()
+                .extract(extractor().xpath()
                         .expression("/TestRequest/Message", "text")
                         .expression("/TestRequest/Message/@lang", "language")));
 
@@ -1096,7 +1092,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         runner.run(receive(messageEndpoint)
                 .message()
                 .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                .extract(fromHeaders()
+                .extract(extractor().fromHeaders()
                         .header("operation", "operationHeader")
                         .header("requestId", "id")));
 
@@ -1138,10 +1134,10 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         runner.run(receive(messageEndpoint)
                 .message()
                 .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                .extract(fromHeaders()
+                .extract(extractor().fromHeaders()
                         .header("operation", "operationHeader")
                         .header("requestId", "id"))
-                .extract(xpath()
+                .extract(extractor().xpath()
                         .expression("/TestRequest/Message", "text")
                         .expression("/TestRequest/Message/@lang", "language")));
 

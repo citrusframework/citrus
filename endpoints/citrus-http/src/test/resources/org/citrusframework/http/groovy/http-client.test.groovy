@@ -16,8 +16,6 @@
 
 package org.citrusframework.http.groovy
 
-import static org.citrusframework.dsl.PathExpressionSupport.path
-
 name "HttpClientTest"
 author "Christoph"
 status "FINAL"
@@ -60,7 +58,7 @@ actions {
                 .version("HTTP/1.1")
                 .contentType("application/xml")
                 .body('<order><id>${id}</id><item>foo</item></order>')
-                .extract(path().expression("/order/id", "orderId"))
+                .extract(extractor().path().expression("/order/id", "orderId"))
     )
 
     $(http().client("httpClient")

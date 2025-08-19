@@ -29,12 +29,11 @@ import org.citrusframework.message.ScriptPayloadBuilder;
 import org.citrusframework.message.builder.MessageBuilderSupport;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
+import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.validation.interceptor.BinaryMessageProcessor;
 import org.citrusframework.validation.interceptor.GzipMessageProcessor;
+import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.citrusframework.xml.util.PayloadElementParser;
-
-import static org.citrusframework.dsl.MessageSupport.MessageBodySupport.fromBody;
-import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
 
 public final class MessageSupport {
 
@@ -168,7 +167,7 @@ public final class MessageSupport {
             for (Message.Extract.Header extract : value.getHeaders()) {
                 expressions.put(extract.name, extract.variable);
             }
-            builder.message().extract(fromHeaders()
+            builder.message().extract(new MessageHeaderVariableExtractor.Builder()
                     .expressions(expressions));
         }
 
@@ -184,7 +183,7 @@ public final class MessageSupport {
 
                 expressions.put(pathExpression, extract.variable);
             }
-            builder.message().extract(fromBody()
+            builder.message().extract(new DelegatingPayloadVariableExtractor.Builder()
                     .expressions(expressions));
         }
     }

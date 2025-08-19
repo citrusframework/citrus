@@ -21,8 +21,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
-
 @Test
 public class SoapForkModeJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
@@ -54,7 +52,7 @@ public class SoapForkModeJavaIT extends TestNGCitrusSpringSupport implements Tes
                           "<ns0:Text>Hello WebServer</ns0:Text>" +
                       "</ns0:HelloRequest>")
             .validate(validation().xml().schemaValidation(false))
-            .extract(fromHeaders()
+            .extract(extractor().fromHeaders()
                     .header("citrus_jms_messageId", "internal_correlation_id")));
 
         then(soap().server("soapResponseEndpoint")

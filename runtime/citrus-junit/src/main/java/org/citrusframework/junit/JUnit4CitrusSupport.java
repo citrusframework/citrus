@@ -40,6 +40,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.validation.DefaultValidations;
 import org.citrusframework.validation.Validations;
+import org.citrusframework.variable.DefaultVariableExtractors;
+import org.citrusframework.variable.VariableExtractors;
 import org.junit.runner.RunWith;
 
 /**
@@ -139,6 +141,10 @@ public class JUnit4CitrusSupport implements GherkinTestActionRunner, CitrusFrame
 
     public Validations validation() {
         return new DefaultValidations();
+    }
+
+    public VariableExtractors extractor() {
+        return new DefaultVariableExtractors();
     }
 
     @Override

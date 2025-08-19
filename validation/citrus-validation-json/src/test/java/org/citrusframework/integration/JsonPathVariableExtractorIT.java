@@ -32,8 +32,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.JsonPathSupport.jsonPath;
-
 /**
  * @since 3.3.1
  */
@@ -65,7 +63,7 @@ public class JsonPathVariableExtractorIT extends TestNGCitrusSpringSupport imple
         $(receive(direct)
                 .message()
                 .body(JSON_BODY)
-                .extract(jsonPath()
+                .extract(extractor().jsonPath()
                             .expression("$.user", "user")
                             .expression("$.age", "age"))
         );
@@ -86,7 +84,7 @@ public class JsonPathVariableExtractorIT extends TestNGCitrusSpringSupport imple
         $(receive(direct)
                 .message()
                 .body(JSON_BODY)
-                .extract(jsonPath().expression("$.wrong", "user"))
+                .extract(extractor().jsonPath().expression("$.wrong", "user"))
         );
     }
 
@@ -102,8 +100,8 @@ public class JsonPathVariableExtractorIT extends TestNGCitrusSpringSupport imple
         $(receive(direct)
                 .message()
                 .body(JSON_BODY)
-                .extract(jsonPath().expression("$.user", "user"))
-                .extract(jsonPath().expression("$.age", "age"))
+                .extract(extractor().jsonPath().expression("$.user", "user"))
+                .extract(extractor().jsonPath().expression("$.age", "age"))
         );
 
         Assert.assertEquals(context.getVariable("user"), "christoph");

@@ -32,11 +32,10 @@ import org.citrusframework.json.JsonPathUtils;
 import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
-import org.citrusframework.message.MessageProcessorAdapter;
 import org.citrusframework.validation.PathExpressionValidationContext;
-import org.citrusframework.validation.ValidationContextAdapter;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;
+import org.citrusframework.variable.json.JsonPathVariableExtractorBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,7 +108,8 @@ public class JsonPathVariableExtractor implements VariableExtractor {
     /**
      * Fluent builder.
      */
-    public static final class Builder implements VariableExtractor.Builder<JsonPathVariableExtractor, Builder>, MessageProcessorAdapter, ValidationContextAdapter {
+    public static final class Builder implements
+            JsonPathVariableExtractorBuilder<JsonPathVariableExtractor, Builder> {
         private final Map<String, Object> expressions = new LinkedHashMap<>();
 
         public static Builder fromJsonPath() {

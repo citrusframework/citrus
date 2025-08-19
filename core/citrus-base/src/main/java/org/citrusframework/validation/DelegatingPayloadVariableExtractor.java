@@ -25,6 +25,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.xml.XmlNamespaceAware;
+import org.citrusframework.variable.DelegatingPayloadVariableExtractorBuilder;
 import org.citrusframework.variable.VariableExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,24 +119,26 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
     /**
      * Fluent builder.
      */
-    public static final class Builder implements VariableExtractor.Builder<DelegatingPayloadVariableExtractor, Builder> {
+    public static final class Builder implements
+            DelegatingPayloadVariableExtractorBuilder<DelegatingPayloadVariableExtractor, Builder> {
 
         private final Map<String, Object> expressions = new LinkedHashMap<>();
         private final Map<String, String> namespaces = new HashMap<>();
 
         /**
          * Static entry method for builder.
-         * @return
          */
         public static Builder fromBody() {
             return new Builder();
         }
 
+        @Override
         public Builder namespaces(Map<String, String> namespaces) {
             this.namespaces.putAll(namespaces);
             return this;
         }
 
+        @Override
         public Builder namespace(final String prefix, final String namespace) {
             this.namespaces.put(prefix, namespace);
             return this;

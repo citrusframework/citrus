@@ -233,7 +233,7 @@ public void testAsync() {
             http().client(httpClient)
                     .send()
                     .post("/foo")
-                    .extract(fromHeaders().header(MessageHeaders.ID, "request#1")
+                    .extract(extract().fromHeaders().header(MessageHeaders.ID, "request#1")
                     .payload("{ \"info\": \"foo\"}"),
 
             //SUT echoing the input
@@ -253,7 +253,7 @@ public void testAsync() {
             http().client(httpClient)
                     .send()
                     .post("/boo")
-                    .extract(fromHeaders().header(MessageHeaders.ID, "request#2")
+                    .extract(extract().fromHeaders().header(MessageHeaders.ID, "request#2")
                     .payload("{ \"info\": \"boo\"}"),
 
             //SUT echoing the input

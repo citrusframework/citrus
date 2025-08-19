@@ -27,8 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.XpathSupport.xpath;
-
 @Test
 public class ValidateXpathJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
@@ -204,7 +202,7 @@ public class ValidateXpathJavaIT extends TestNGCitrusSpringSupport implements Te
                              .namespaceContext(namespaceContextBuilder.getNamespaceMappings()))
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}")
-            .extract(xpath().expression("/def:HelloRequest/def:Text", "extractedText")));
+            .extract(extractor().xpath().expression("/def:HelloRequest/def:Text", "extractedText")));
 
         $(new AbstractTestAction() {
             @Override

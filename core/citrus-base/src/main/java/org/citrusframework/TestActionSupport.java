@@ -33,6 +33,8 @@ import org.citrusframework.dsl.sql.SqlTestActionSupport;
 import org.citrusframework.dsl.testcontainers.TestcontainersTestActionSupport;
 import org.citrusframework.validation.DefaultValidations;
 import org.citrusframework.validation.Validations;
+import org.citrusframework.variable.DefaultVariableExtractors;
+import org.citrusframework.variable.VariableExtractors;
 
 /**
  * Interface combines default implementations with domain specific language methods for all test actions available in Citrus.
@@ -64,5 +66,9 @@ public interface TestActionSupport extends TestActions, TestActionContainers,
 
     default Validations validation() {
         return new DefaultValidations();
+    }
+
+    default VariableExtractors extractor() {
+        return new DefaultVariableExtractors();
     }
 }
