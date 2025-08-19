@@ -24,6 +24,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.validation.DefaultValidations;
 import org.citrusframework.validation.Validations;
+import org.citrusframework.variable.DefaultVariableExtractors;
+import org.citrusframework.variable.VariableExtractors;
 
 public class DefaultTestCaseRunner implements TestCaseRunner {
 
@@ -136,6 +138,11 @@ public class DefaultTestCaseRunner implements TestCaseRunner {
     @Override
     public Validations validation() {
         return new DefaultValidations();
+    }
+
+    @Override
+    public VariableExtractors extractor() {
+        return new DefaultVariableExtractors();
     }
 
     @Override

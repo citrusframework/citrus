@@ -51,7 +51,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.MessageSupport.message;
 import static org.mockito.Mockito.*;
 
 public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport {
@@ -733,7 +732,7 @@ public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport {
         builder.$(receive().endpoint(messageEndpoint)
                         .message()
                         .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                        .extract(message().headers()
+                        .extract(extractor().message().headers()
                                 .expression("operation", "operationHeader")
                                 .expression("requestId", "id")));
 

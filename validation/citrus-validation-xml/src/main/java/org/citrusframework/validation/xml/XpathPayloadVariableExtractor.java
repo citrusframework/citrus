@@ -30,12 +30,11 @@ import org.citrusframework.exceptions.UnknownElementException;
 import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
-import org.citrusframework.message.MessageProcessorAdapter;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.validation.PathExpressionValidationContext;
-import org.citrusframework.validation.ValidationContextAdapter;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;
+import org.citrusframework.variable.xml.XpathPayloadVariableExtractorBuilder;
 import org.citrusframework.xml.xpath.XPathExpressionResult;
 import org.citrusframework.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
@@ -135,8 +134,9 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     /**
      * Fluent builder.
      */
-    public static final class Builder implements VariableExtractor.Builder<XpathPayloadVariableExtractor, Builder>,
-            XmlNamespaceAware, MessageProcessorAdapter, ValidationContextAdapter {
+    public static final class Builder implements
+            XpathPayloadVariableExtractorBuilder<XpathPayloadVariableExtractor, Builder>, XmlNamespaceAware {
+
         private final Map<String, Object> expressions = new HashMap<>();
         private final Map<String, String> namespaces = new HashMap<>();
 
@@ -144,24 +144,13 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
             return new Builder();
         }
 
-        /**
-         * Adds explicit namespace declaration for later path validation expressions.
-         *
-         * @param prefix
-         * @param namespaceUri
-         * @return
-         */
+        @Override
         public Builder namespace(final String prefix, final String namespaceUri) {
             this.namespaces.put(prefix, namespaceUri);
             return this;
         }
 
-        /**
-         * Sets default namespace declarations on this action builder.
-         *
-         * @param namespaceMappings
-         * @return
-         */
+        @Override
         public Builder namespaces(final Map<String, String> namespaceMappings) {
             this.namespaces.putAll(namespaceMappings);
             return this;

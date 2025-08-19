@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.JsonPathSupport.jsonPath;
 import static org.citrusframework.zookeeper.actions.ZooExecuteAction.Builder.zookeeper;
 
 /**
@@ -48,7 +47,7 @@ public class ZooExecuteJavaIT extends TestNGCitrusSpringSupport implements TestA
 
         run(zookeeper()
             .client(zooClient)
-            .extract(jsonPath()
+            .extract(extractor().jsonPath()
                     .expression("$.responseData.path", "path"))
             .create("/${randomString}", "some test data")
             .acl("OPEN_ACL_UNSAFE")

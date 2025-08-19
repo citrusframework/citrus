@@ -57,9 +57,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.JsonPathSupport.jsonPath;
-import static org.citrusframework.dsl.MessageSupport.MessageBodySupport.fromBody;
-import static org.citrusframework.dsl.PathExpressionSupport.path;
 import static org.citrusframework.message.MessageType.JSON;
 import static org.citrusframework.message.MessageType.PLAINTEXT;
 import static org.citrusframework.message.MessageType.XML;
@@ -462,7 +459,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .message()
                 .type(JSON)
                 .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                .extract(fromBody()
+                .extract(extractor().fromBody()
                         .expression("$.text", "text")
                         .expression("$.toString()", "payload")
                         .expression("$.person", "person")));
@@ -512,7 +509,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .message()
                 .type(JSON)
                 .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                .extract(path()
+                .extract(extractor().path()
                         .expression("$.text", "text")
                         .expression("$.toString()", "payload")
                         .expression("$.person", "person")));
@@ -562,7 +559,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .message()
                 .type(JSON)
                 .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                .extract(jsonPath()
+                .extract(extractor().jsonPath()
                         .expression("$.text", "text")
                         .expression("$.toString()", "payload")
                         .expression("$.person", "person")));
@@ -715,7 +712,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .message()
                 .type(JSON)
                 .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                .extract(jsonPath().expression("$.text", "text")
+                .extract(extractor().jsonPath().expression("$.text", "text")
                         .expression("$.toString()", "payload")
                         .expression("$.person", "person")));
 

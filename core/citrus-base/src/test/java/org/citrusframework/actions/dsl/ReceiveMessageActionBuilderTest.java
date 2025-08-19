@@ -58,8 +58,6 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
-import static org.citrusframework.dsl.MessageSupport.message;
 import static org.citrusframework.message.MessageType.PLAINTEXT;
 import static org.citrusframework.message.MessageType.XML;
 import static org.mockito.Mockito.*;
@@ -930,7 +928,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         runner.run(receive(messageEndpoint)
                 .message()
                 .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                .extract(fromHeaders()
+                .extract(extractor().fromHeaders()
                         .header("operation", "operationHeader")
                         .header("requestId", "id")));
 
@@ -975,7 +973,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         runner.run(receive(messageEndpoint)
                 .message()
                 .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                .extract(message()
+                .extract(extractor().message()
                         .headers()
                         .header("operation", "operationHeader")
                         .header("requestId", "id"))

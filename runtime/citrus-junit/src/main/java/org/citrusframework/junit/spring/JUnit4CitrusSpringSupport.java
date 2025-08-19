@@ -33,6 +33,8 @@ import org.citrusframework.junit.CitrusFrameworkMethod;
 import org.citrusframework.junit.JUnit4Helper;
 import org.citrusframework.validation.DefaultValidations;
 import org.citrusframework.validation.Validations;
+import org.citrusframework.variable.DefaultVariableExtractors;
+import org.citrusframework.variable.VariableExtractors;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
@@ -158,6 +160,10 @@ public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
 
     public Validations validation() {
         return new DefaultValidations();
+    }
+
+    public VariableExtractors extractor() {
+        return new DefaultVariableExtractors();
     }
 
     @Override

@@ -194,7 +194,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         builder.$(send().endpoint(messageEndpoint)
                 .message()
                 .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                .extract(xpath().expression("/TestRequest/Message", "text")
+                .extract(extractor().xpath().expression("/TestRequest/Message", "text")
                                 .expression("/TestRequest/Message/@lang", "language")));
 
         Assert.assertNotNull(context.getVariable("text"));

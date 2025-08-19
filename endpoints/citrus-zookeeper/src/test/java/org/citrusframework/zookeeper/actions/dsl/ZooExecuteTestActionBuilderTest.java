@@ -26,6 +26,7 @@ import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.zookeeper.UnitTestSupport;
 import org.citrusframework.zookeeper.actions.ZooExecuteAction;
@@ -34,14 +35,13 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.PathExpressionSupport.path;
 import static org.citrusframework.zookeeper.actions.ZooExecuteAction.Builder.zookeeper;
 import static org.mockito.Mockito.*;
 
 /**
  * @since 2.5
  */
-public class ZooExecuteTestActionBuilderTest extends UnitTestSupport {
+public class ZooExecuteTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
     private final ZooKeeper zookeeperClientMock = Mockito.mock(ZooKeeper.class);
     private final Stat statMock = prepareStatMock();
@@ -80,7 +80,7 @@ public class ZooExecuteTestActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(zookeeper().client(new org.citrusframework.zookeeper.client.ZooClient(zookeeperClientMock))
                 .validate("$.responseData.state", ZooKeeper.States.CONNECTED.name())
-                .extract(path().expression("$.responseData.state","state")
+                .extract(extractor().path().expression("$.responseData.state","state")
                             .expression("$.responseData.sessionId","sessionId")
                             .expression("$.responseData.sessionPwd","sessionPwd")
                             .expression("$.responseData.sessionTimeout","sessionTimeout"))

@@ -16,8 +16,6 @@
 
 package org.citrusframework.http.groovy
 
-import static org.citrusframework.dsl.PathExpressionSupport.path
-
 name "HttpServerTest"
 author "Christoph"
 status "FINAL"
@@ -65,7 +63,7 @@ actions {
             .message()
             .header("userId", "1001")
             .body("<user><id>1001</id><name>new_user</name></user>")
-            .extract(path().expression("/user/id", "userId"))
+            .extract(extractor().path().expression("/user/id", "userId"))
     )
 
     $(http().server("httpServer")

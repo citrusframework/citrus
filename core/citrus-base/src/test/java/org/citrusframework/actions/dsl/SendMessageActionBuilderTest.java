@@ -52,7 +52,6 @@ import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.MessageSupport.message;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
@@ -613,7 +612,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                         .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                         .header("operation", "sayHello")
                         .header("requestId", "123456")
-                        .extract(message()
+                        .extract(extractor().message()
                                 .headers()
                                 .header("operation", "operationHeader")
                                 .header("requestId", "id")));

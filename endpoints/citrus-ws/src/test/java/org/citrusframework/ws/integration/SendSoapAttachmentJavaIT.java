@@ -22,8 +22,6 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
-
 @Test
 public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
@@ -45,7 +43,7 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport implemen
                                             "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                         "</ns0:SoapMessageWithAttachmentRequest>")
                                 .validate(validation().xml().schemaValidation(false))
-                                .extract(fromHeaders()
+                                .extract(extractor().fromHeaders()
                                             .header("citrus_jms_messageId", "internal_correlation_id"))
                                 .attachment("MySoapAttachment", "text/plain", Resources.fromClasspath("org/citrusframework/ws/soapAttachment.txt"))
                                 .timeout(5000L),
@@ -85,7 +83,7 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport implemen
                                             "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                         "</ns0:SoapMessageWithAttachmentRequest>")
                                 .validate(validation().xml().schemaValidation(false))
-                                .extract(fromHeaders()
+                                .extract(extractor().fromHeaders()
                                             .header("citrus_jms_messageId", "internal_correlation_id"))
                                 .attachment("MySoapAttachment", "text/plain", "This is an attachment!")
                                 .timeout(5000L),

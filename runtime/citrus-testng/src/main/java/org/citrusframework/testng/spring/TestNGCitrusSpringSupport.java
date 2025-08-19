@@ -38,6 +38,8 @@ import org.citrusframework.testng.TestNGHelper;
 import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.validation.DefaultValidations;
 import org.citrusframework.validation.Validations;
+import org.citrusframework.variable.DefaultVariableExtractors;
+import org.citrusframework.variable.VariableExtractors;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.IHookCallBack;
@@ -297,6 +299,10 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
 
     public Validations validation() {
         return new DefaultValidations();
+    }
+
+    public VariableExtractors extractor() {
+        return new DefaultVariableExtractors();
     }
 
     @Override

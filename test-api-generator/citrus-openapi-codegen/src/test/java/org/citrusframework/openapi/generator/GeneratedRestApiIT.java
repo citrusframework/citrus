@@ -45,9 +45,7 @@ import org.citrusframework.openapi.generator.rest.petstore.spring.PetStoreBeanCo
 import org.citrusframework.openapi.testapi.ApiActionBuilderCustomizer;
 import org.citrusframework.openapi.testapi.GeneratedApiOperationInfo;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.validation.json.JsonPathVariableExtractor;
 import org.citrusframework.variable.GlobalVariables;
-import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.citrusframework.ws.endpoint.builder.WebServiceEndpoints;
 import org.citrusframework.ws.server.WebServiceServer;
 import org.junit.jupiter.api.Nested;
@@ -3426,9 +3424,9 @@ class GeneratedRestApiIT {
             runner.when(petApi
                 .receiveGetPetById(OK)
                 .message()
-                .extract(MessageHeaderVariableExtractor.Builder.fromHeaders()
+                .extract(extractor().fromHeaders()
                     .expression("Content-Type", "varContentType"))
-                .extract(JsonPathVariableExtractor.Builder.fromJsonPath()
+                .extract(extractor().fromJsonPath()
                     .expression("$.name", "varName")))
             ;
 

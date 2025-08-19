@@ -16,14 +16,14 @@
 
 package org.citrusframework.variable;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.UnknownElementException;
 import org.citrusframework.message.Message;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -75,37 +75,24 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
     /**
      * Fluent builder.
      */
-    public static final class Builder implements VariableExtractor.Builder<MessageHeaderVariableExtractor, Builder> {
+    public static final class Builder implements MessageHeaderVariableExtractorBuilder<MessageHeaderVariableExtractor, Builder> {
 
         private final Map<String, Object> expressions = new LinkedHashMap<>();
 
         /**
          * Static entry method for builder.
-         *
-         * @return
          */
         public static Builder fromHeaders() {
             return new Builder();
         }
 
-        /**
-         * Evaluate all header name expressions and store values as new variables to the test context.
-         *
-         * @param expressions
-         * @return
-         */
+        @Override
         public Builder headers(Map<String, String> expressions) {
             this.expressions.putAll(expressions);
             return this;
         }
 
-        /**
-         * Reads header by its name and stores value as new variable to the test context.
-         *
-         * @param headerName
-         * @param variableName
-         * @return
-         */
+        @Override
         public Builder header(final String headerName, final String variableName) {
             this.expressions.put(headerName, variableName);
             return this;

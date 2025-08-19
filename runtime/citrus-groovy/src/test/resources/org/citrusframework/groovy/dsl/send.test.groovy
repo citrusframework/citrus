@@ -18,8 +18,6 @@ package org.citrusframework.groovy.dsl
 
 import org.citrusframework.message.MessageType
 
-import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders
-
 name "SendTest"
 author "Christoph"
 status "FINAL"
@@ -68,7 +66,7 @@ actions {
         .dictionary(myDataDictionary)
         .body("<TestMessage>Hello Citrus</TestMessage>")
         .process(validation().path().expression("/TestMessage/text()", "newValue"))
-        .extract(fromHeaders().header("operation", "operation"))
+        .extract(extractor().fromHeaders().header("operation", "operation"))
     )
 
     $(send()

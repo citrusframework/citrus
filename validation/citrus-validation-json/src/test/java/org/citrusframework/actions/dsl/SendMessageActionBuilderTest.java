@@ -182,7 +182,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                 .message()
                 .type(MessageType.JSON)
                 .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                .extract(jsonPath().expression("$.text", "text")
+                .extract(extractor().jsonPath().expression("$.text", "text")
                         .expression("$.person", "person")));
 
         Assert.assertNotNull(context.getVariable("text"));

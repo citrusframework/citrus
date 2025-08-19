@@ -178,9 +178,9 @@ Add this code to your message receiving action.
 public void receiveMessageTest() {
     when(
         receive("helloService")
-            .extract(fromBody()
+            .extract(extract().fromBody()
                     .expression("//TestRequest/VersionId", "versionId"))
-            .extract(fromHeaders()
+            .extract(extract().fromHeaders()
                     .header("Operation", "operation"))
     );
 
