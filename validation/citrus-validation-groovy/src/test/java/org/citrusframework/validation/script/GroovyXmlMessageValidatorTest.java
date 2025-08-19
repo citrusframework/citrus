@@ -133,4 +133,18 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         Assert.assertNotNull(validator.findValidationContext(validationContexts));
     }
+
+    @Test
+    public void shouldProcessXmlWithDTD() {
+        message = new DefaultMessage("""
+  <!DOCTYPE test [ <!ELEMENT test (#PCDATA)> ]>
+  <test>citrus</test>""");
+        String validationScript = "assert root == 'citrus'";
+        ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
+              .scriptType(ScriptTypes.GROOVY)
+              .script(validationScript)
+              .build();
+
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+    }
 }
