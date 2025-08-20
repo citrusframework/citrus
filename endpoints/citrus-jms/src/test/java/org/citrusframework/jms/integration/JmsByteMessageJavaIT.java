@@ -26,8 +26,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.FileUtils;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.validation.interceptor.BinaryMessageProcessor.Builder.toBinary;
-
 @Test
 public class JmsByteMessageJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
@@ -38,7 +36,7 @@ public class JmsByteMessageJavaIT extends TestNGCitrusSpringSupport implements T
                         FileUtils.copyToByteArray(
                                 FileUtils.getFileResource("org/citrusframework/jms/integration/button.png")
                                  .getInputStream())))
-                .process(toBinary()));
+                .process(processor().toBinary()));
 
         then(receive("jms:queue:jms.binary.queue")
                 .message()

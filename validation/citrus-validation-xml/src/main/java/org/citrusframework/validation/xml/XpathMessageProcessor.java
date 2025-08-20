@@ -21,14 +21,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.UnknownElementException;
 import org.citrusframework.message.AbstractMessageProcessor;
 import org.citrusframework.message.Message;
-import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.message.processor.xml.XpathMessageProcessorBuilder;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.xml.xpath.XPathUtils;
@@ -126,7 +125,9 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
     /**
      * Fluent builder.
      */
-    public static final class Builder implements MessageProcessor.Builder<XpathMessageProcessor, Builder>, WithExpressions<Builder> {
+    public static final class Builder implements
+            XpathMessageProcessorBuilder<XpathMessageProcessor, Builder> {
+
         private final Map<String, Object> expressions = new LinkedHashMap<>();
 
         @Override

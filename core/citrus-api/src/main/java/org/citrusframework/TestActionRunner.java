@@ -18,6 +18,7 @@ package org.citrusframework;
 
 import java.util.List;
 
+import org.citrusframework.message.Processors;
 import org.citrusframework.validation.Validations;
 import org.citrusframework.variable.VariableExtractors;
 
@@ -80,6 +81,11 @@ public interface TestActionRunner {
      * Provide access to all available variable extractions.
      */
     VariableExtractors extractor();
+
+    /**
+     * Provide access to all available message processors.
+     */
+    Processors processor();
 
     /**
      * Builds and runs given test action.

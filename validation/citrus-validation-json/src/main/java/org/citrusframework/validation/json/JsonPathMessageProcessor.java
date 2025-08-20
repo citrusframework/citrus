@@ -24,14 +24,13 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
-import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.UnknownElementException;
 import org.citrusframework.message.AbstractMessageProcessor;
 import org.citrusframework.message.Message;
-import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.message.processor.json.JsonPathMessageProcessorBuilder;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,7 +125,9 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
     /**
      * Fluent builder.
      */
-    public static final class Builder implements MessageProcessor.Builder<JsonPathMessageProcessor, Builder>, WithExpressions<Builder> {
+    public static final class Builder implements
+            JsonPathMessageProcessorBuilder<JsonPathMessageProcessor, Builder> {
+
         private final Map<String, Object> expressions = new LinkedHashMap<>();
         private boolean ignoreNotFound = false;
 
@@ -142,6 +143,7 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
             return this;
         }
 
+        @Override
         public Builder ignoreNotFound(boolean ignore) {
             this.ignoreNotFound = ignore;
             return this;
@@ -159,8 +161,6 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
 
     /**
      * Gets the ignoreNotFound.
-     *
-     * @return
      */
     public boolean isIgnoreNotFound() {
         return ignoreNotFound;

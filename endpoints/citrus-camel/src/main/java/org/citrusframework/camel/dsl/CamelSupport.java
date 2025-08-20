@@ -19,9 +19,10 @@ package org.citrusframework.camel.dsl;
 import java.util.function.Function;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.Expression;
+import org.apache.camel.ExpressionFactory;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.DataFormatClause;
-import org.apache.camel.builder.ExpressionClauseSupport;
 import org.apache.camel.model.OutputDefinition;
 import org.apache.camel.model.ProcessorDefinition;
 import org.citrusframework.actions.ReceiveMessageAction;
@@ -41,6 +42,8 @@ import org.citrusframework.camel.endpoint.CamelEndpointConfiguration;
 import org.citrusframework.camel.endpoint.CamelSyncEndpoint;
 import org.citrusframework.camel.endpoint.CamelSyncEndpointConfiguration;
 import org.citrusframework.camel.message.CamelDataFormatMessageProcessor;
+import org.citrusframework.camel.message.InlineProcessDefinition;
+import org.citrusframework.message.processor.camel.CamelExpressionClause;
 import org.citrusframework.camel.message.CamelMessageProcessor;
 import org.citrusframework.camel.message.CamelRouteProcessor;
 import org.citrusframework.camel.message.CamelTransformMessageProcessor;
@@ -196,7 +199,8 @@ public class CamelSupport {
      * @return
      */
     public CamelMessageProcessor.Builder process(Processor processor) {
-        return CamelMessageProcessor.Builder.process(processor)
+        return new CamelMessageProcessor.Builder()
+                .processor(processor)
                 .camelContext(camelContext);
     }
 
@@ -246,33 +250,40 @@ public class CamelSupport {
 
     /**
      * Message processor transforming message with given expression.
-     * @return
      */
-    public ExpressionClauseSupport<CamelTransformMessageProcessor.Builder> transform() {
-        return CamelTransformMessageProcessor.Builder.transform(camelContext);
+    public CamelExpressionClause<CamelTransformMessageProcessor.Builder, ExpressionFactory, Expression> transform() {
+        return new CamelTransformMessageProcessor.Builder(camelContext)
+                .getExpression();
     }
 
     /**
      * Transform message and convert body to given type using the Camel message converter implementation.
-     * @return
      */
     public CamelTransformMessageProcessor.Builder convertBodyTo(Class<?> type) {
-        return CamelTransformMessageProcessor.Builder.transform(camelContext).body(type);
+        return new CamelTransformMessageProcessor.Builder(camelContext)
+                .getExpression()
+                .body(type);
     }
 
     /**
      * Message processor marshalling message body with given data format.
      * @return
      */
-    public DataFormatClause<CamelDataFormatMessageProcessor.Builder.InlineProcessDefinition> marshal() {
-        return CamelDataFormatMessageProcessor.Builder.marshal(camelContext);
+    public DataFormatClause<InlineProcessDefinition> marshal() {
+        return new CamelDataFormatMessageProcessor.Builder()
+                .operation(DataFormatClause.Operation.Marshal)
+                .camelContext(camelContext)
+                .getDataFormatClause();
     }
 
     /**
      * Message processor unmarshalling message body with given data format.
      * @return
      */
-    public DataFormatClause<CamelDataFormatMessageProcessor.Builder.InlineProcessDefinition> unmarshal() {
-        return CamelDataFormatMessageProcessor.Builder.unmarshal(camelContext);
+    public DataFormatClause<InlineProcessDefinition> unmarshal() {
+        return new CamelDataFormatMessageProcessor.Builder()
+                .operation(DataFormatClause.Operation.Unmarshal)
+                .camelContext(camelContext)
+                .getDataFormatClause();
     }
 }

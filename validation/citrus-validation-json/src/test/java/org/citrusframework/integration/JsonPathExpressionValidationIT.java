@@ -29,8 +29,6 @@ import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.JsonPathSupport.jsonPath;
-
 /**
  * @since 3.3.1
  */
@@ -72,16 +70,16 @@ public class JsonPathExpressionValidationIT extends TestNGCitrusSpringSupport im
                 .message()
                 .type(MessageType.JSON)
                 .body("{\"user\":\"?\", \"age\": 0}")
-                .process(jsonPath().expression("$.user", "christoph"))
-                .process(jsonPath().expression("$.age", 32))
+                .process(processor().jsonPath().expression("$.user", "christoph"))
+                .process(processor().jsonPath().expression("$.age", 32))
         );
 
         $(receive(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body("{\"user\":\"x\", \"age\": \"99\"}")
-                .process(jsonPath().expression("$.age", 32))
-                .process(jsonPath().expression("$.user", "christoph"))
+                .process(processor().jsonPath().expression("$.age", 32))
+                .process(processor().jsonPath().expression("$.user", "christoph"))
                 .validate(validation().jsonPath()
                             .expression("$.user", "christoph")
                             .expression("$.age", 32))

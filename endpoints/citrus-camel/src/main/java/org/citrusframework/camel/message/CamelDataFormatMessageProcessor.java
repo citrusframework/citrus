@@ -20,18 +20,11 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.model.DataFormatDefinition;
-import org.apache.camel.model.MarshalDefinition;
-import org.apache.camel.model.ProcessDefinition;
-import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.model.UnmarshalDefinition;
 import org.apache.camel.reifier.dataformat.DataFormatReifier;
 import org.apache.camel.support.processor.MarshalProcessor;
 import org.apache.camel.support.processor.UnmarshalProcessor;
-import org.citrusframework.camel.dsl.CamelContextAware;
-import org.citrusframework.message.MessageProcessor;
-import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.util.StringUtils;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.message.processor.camel.CamelDataFormatMessageProcessorBuilder;
 
 /**
  * Camel message processor working with data formats to marshal/unmarshal the message body.
@@ -41,8 +34,6 @@ public class CamelDataFormatMessageProcessor extends CamelMessageProcessor {
 
     /**
      * Constructor initializing camel context and processor.
-     * @param camelContext
-     * @param processor
      */
     public CamelDataFormatMessageProcessor(CamelContext camelContext, Processor processor) {
         super(camelContext, processor);
@@ -51,38 +42,74 @@ public class CamelDataFormatMessageProcessor extends CamelMessageProcessor {
     /**
      * Fluent builder.
      */
-    public static class Builder extends CamelMessageProcessorBuilder<CamelDataFormatMessageProcessor, Builder> {
+    public static class Builder extends CamelMessageProcessorBuilder<CamelDataFormatMessageProcessor, Builder>
+            implements CamelDataFormatMessageProcessorBuilder<CamelDataFormatMessageProcessor, Builder> {
 
-        private final InlineProcessDefinition processDefinition = new InlineProcessDefinition();
+        private final InlineProcessDefinition processDefinition = new InlineProcessDefinition(this);
         private DataFormatClause.Operation operation;
 
         private DataFormatDefinition dataFormat;
         private boolean allowNullBody;
 
-        public static DataFormatClause<InlineProcessDefinition> marshal() {
-            Builder builder = new Builder();
-            builder.operation = DataFormatClause.Operation.Marshal;
-            return new DataFormatClause<>(builder.processDefinition, builder.operation);
+        public static CamelDataFormatClauseSupport<InlineProcessDefinition> marshal() {
+            return new Builder()
+                    .operation(DataFormatClause.Operation.Marshal)
+                    .getDataFormatClause();
         }
 
-        public static DataFormatClause<InlineProcessDefinition> unmarshal() {
-            Builder builder = new Builder();
-            builder.operation = DataFormatClause.Operation.Unmarshal;
-            return new DataFormatClause<>(builder.processDefinition, builder.operation);
+        public static CamelDataFormatClauseSupport<InlineProcessDefinition> unmarshal() {
+            return new Builder()
+                    .operation(DataFormatClause.Operation.Unmarshal)
+                    .getDataFormatClause();
         }
 
-        public static DataFormatClause<InlineProcessDefinition> marshal(CamelContext camelContext) {
-            Builder builder = new Builder();
-            builder.operation = DataFormatClause.Operation.Marshal;
-            builder.camelContext(camelContext);
-            return new DataFormatClause<>(builder.processDefinition, builder.operation);
+        public static CamelDataFormatClauseSupport<InlineProcessDefinition> marshal(CamelContext camelContext) {
+            return new Builder()
+                    .operation(DataFormatClause.Operation.Marshal)
+                    .camelContext(camelContext)
+                    .getDataFormatClause();
         }
 
-        public static DataFormatClause<InlineProcessDefinition> unmarshal(CamelContext camelContext) {
-            Builder builder = new Builder();
-            builder.operation = DataFormatClause.Operation.Unmarshal;
-            builder.camelContext(camelContext);
-            return new DataFormatClause<>(builder.processDefinition, builder.operation);
+        public static CamelDataFormatClauseSupport<InlineProcessDefinition> unmarshal(CamelContext camelContext) {
+            return new Builder()
+                    .operation(DataFormatClause.Operation.Unmarshal)
+                    .camelContext(camelContext)
+                    .getDataFormatClause();
+        }
+
+        @Override
+        public Builder operation(String operation) {
+            return operation(DataFormatClause.Operation.valueOf(operation));
+        }
+
+        public Builder operation(DataFormatClause.Operation operation) {
+            this.operation = operation;
+            return this;
+        }
+
+        @Override
+        public Builder dataFormat(Object dataFormat) {
+            if (dataFormat instanceof DataFormatDefinition dataFormatDefinition) {
+                return dataFormat(dataFormatDefinition);
+            } else {
+                throw new CitrusRuntimeException("Invalid data format definition type: %s".formatted(dataFormat.getClass().getName()));
+            }
+        }
+
+        public Builder dataFormat(DataFormatDefinition dataFormat) {
+            this.dataFormat = dataFormat;
+            return this;
+        }
+
+        @Override
+        public Builder allowNullBody(boolean allowNullBody) {
+            this.allowNullBody = allowNullBody;
+            return this;
+        }
+
+        @Override
+        public CamelDataFormatClauseSupport<InlineProcessDefinition> getDataFormatClause() {
+            return new CamelDataFormatClauseSupport<>(processDefinition, operation);
         }
 
         @Override
@@ -101,39 +128,6 @@ public class CamelDataFormatMessageProcessor extends CamelMessageProcessor {
             return new CamelDataFormatMessageProcessor(camelContext, processor);
         }
 
-        public class InlineProcessDefinition extends ProcessDefinition implements
-                MessageProcessor.Builder<CamelDataFormatMessageProcessor, Builder>, ReferenceResolverAware, CamelContextAware<Builder> {
-
-            @Override
-            public void addOutput(ProcessorDefinition<?> output) {
-                if (output instanceof MarshalDefinition marshalDefinition) {
-                    dataFormat = marshalDefinition.getDataFormatType();
-                }
-
-                if (output instanceof UnmarshalDefinition unmarshalDefinition) {
-                    dataFormat = unmarshalDefinition.getDataFormatType();
-
-                    if (StringUtils.hasText(unmarshalDefinition.getAllowNullBody())) {
-                        allowNullBody = Boolean.parseBoolean(unmarshalDefinition.getAllowNullBody());
-                    }
-                }
-            }
-
-            @Override
-            public CamelDataFormatMessageProcessor build() {
-                return Builder.this.build();
-            }
-
-            @Override
-            public void setReferenceResolver(ReferenceResolver referenceResolver) {
-                Builder.this.referenceResolver = referenceResolver;
-            }
-
-            @Override
-            public Builder camelContext(CamelContext camelContext) {
-                Builder.this.camelContext = camelContext;
-                return Builder.this;
-            }
-        }
     }
+
 }

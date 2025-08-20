@@ -73,7 +73,6 @@
     </dependency>
   </dependencies>
 
-
   <profiles>
     <profile>
       <id>schemagen</id>

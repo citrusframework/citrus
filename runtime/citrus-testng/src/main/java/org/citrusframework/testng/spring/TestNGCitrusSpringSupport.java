@@ -34,6 +34,8 @@ import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.config.CitrusSpringConfig;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.message.DefaultMessageProcessors;
+import org.citrusframework.message.Processors;
 import org.citrusframework.testng.TestNGHelper;
 import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.validation.DefaultValidations;
@@ -303,6 +305,11 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
 
     public VariableExtractors extractor() {
         return new DefaultVariableExtractors();
+    }
+
+    @Override
+    public Processors processor() {
+        return new DefaultMessageProcessors();
     }
 
     @Override

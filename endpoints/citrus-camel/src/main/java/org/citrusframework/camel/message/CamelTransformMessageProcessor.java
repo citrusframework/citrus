@@ -17,8 +17,11 @@
 package org.citrusframework.camel.message;
 
 import org.apache.camel.CamelContext;
-import org.apache.camel.builder.ExpressionClauseSupport;
+import org.apache.camel.Expression;
+import org.apache.camel.ExpressionFactory;
 import org.apache.camel.processor.TransformProcessor;
+import org.citrusframework.message.processor.camel.CamelExpressionClause;
+import org.citrusframework.message.processor.camel.CamelTransformMessageProcessorBuilder;
 
 /**
  * Camel message processor performs transformation on message headers and body.
@@ -38,21 +41,31 @@ public class CamelTransformMessageProcessor extends CamelMessageProcessor {
     /**
      * Fluent builder.
      */
-    public static class Builder extends CamelMessageProcessorBuilder<CamelTransformMessageProcessor, Builder> {
+    public static class Builder extends CamelMessageProcessorBuilder<CamelTransformMessageProcessor, Builder>
+            implements CamelTransformMessageProcessorBuilder<CamelTransformMessageProcessor, Builder, ExpressionFactory, Expression> {
 
-        private ExpressionClauseSupport<Builder> expression;
+        private final CamelExpressionClause<Builder, ExpressionFactory, Expression> expression;
 
-        public static ExpressionClauseSupport<Builder> transform() {
-            Builder builder = new Builder();
-            builder.expression = new ExpressionClauseSupport<>(builder);
-            return builder.expression;
+        public Builder() {
+            expression = new CamelExpressionClauseSupport<>(this);
         }
 
-        public static ExpressionClauseSupport<Builder> transform(CamelContext camelContext) {
-            Builder builder = new Builder();
-            builder.expression = new ExpressionClauseSupport<>(builder);
-            builder.camelContext(camelContext);
-            return builder.expression;
+        public Builder(CamelContext camelContext) {
+            expression = new CamelExpressionClauseSupport<>(this);
+            camelContext(camelContext);
+        }
+
+        public static CamelExpressionClause<Builder, ExpressionFactory, Expression> transform() {
+            return new Builder().getExpression();
+        }
+
+        public static CamelExpressionClause<Builder, ExpressionFactory, Expression> transform(CamelContext camelContext) {
+            return new Builder(camelContext).getExpression();
+        }
+
+        @Override
+        public CamelExpressionClause<Builder, ExpressionFactory, Expression> getExpression() {
+            return expression;
         }
 
         @Override

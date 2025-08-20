@@ -23,12 +23,12 @@ import java.util.Map;
 import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.message.processor.DelegatingPathExpressionProcessorBuilder;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 
 /**
  * Generic processor implementation delegating to JSONPath or XPath message processor based on given expression
  * type. Delegate processor implementations are referenced through resource path lookup.
- *
  */
 public class DelegatingPathExpressionProcessor implements MessageProcessor {
 
@@ -103,7 +103,6 @@ public class DelegatingPathExpressionProcessor implements MessageProcessor {
 
     /**
      * Gets the JSONPath / XPath expressions.
-     * @return
      */
     public Map<String, Object> getPathExpressions() {
         return pathExpressions;
@@ -112,13 +111,13 @@ public class DelegatingPathExpressionProcessor implements MessageProcessor {
     /**
      * Fluent builder.
      */
-    public static final class Builder implements MessageProcessor.Builder<DelegatingPathExpressionProcessor, Builder>, WithExpressions<Builder> {
+    public static final class Builder implements
+            DelegatingPathExpressionProcessorBuilder<DelegatingPathExpressionProcessor, Builder> {
 
         private final Map<String, Object> expressions = new HashMap<>();
 
         /**
          * Static entry method for fluent builder API.
-         * @return
          */
         public static Builder xpath() {
             return new Builder();

@@ -65,7 +65,7 @@ actions {
         .header("operation", "sayHello")
         .dictionary(myDataDictionary)
         .body("<TestMessage>Hello Citrus</TestMessage>")
-        .process(validation().path().expression("/TestMessage/text()", "newValue"))
+        .process(processor().path().expression("/TestMessage/text()", "newValue"))
         .extract(extractor().fromHeaders().header("operation", "operation"))
     )
 
@@ -88,7 +88,9 @@ actions {
         .message()
         .body('{ "FooMessage": { "foo": "Hello World!" }, { "bar": "@ignore@" }}')
         .type(MessageType.JSON)
-        .process(validation().jsonPath().expression('$.FooMessage.foo', "newValue"))
+        .process(processor()
+                    .path()
+                    .expression('$.FooMessage.foo', "newValue"))
     )
 
     $(send()

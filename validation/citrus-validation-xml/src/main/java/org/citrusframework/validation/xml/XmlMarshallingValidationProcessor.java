@@ -25,7 +25,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
-import org.citrusframework.message.MessageProcessor;
+import org.citrusframework.message.processor.xml.XmlMarshallingValidationProcessorBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
@@ -109,7 +109,8 @@ public abstract class XmlMarshallingValidationProcessor<T> extends AbstractValid
      * Fluent builder.
      * @param <T>
      */
-    public static final class Builder<T> implements MessageProcessor.Builder<XmlMarshallingValidationProcessor<T>, Builder<T>>, ReferenceResolverAware {
+    public static final class Builder<T> implements
+            XmlMarshallingValidationProcessorBuilder<T, XmlMarshallingValidationProcessor<T>, Builder<T>>, ReferenceResolverAware {
 
         private Unmarshaller unmarshaller;
         private final GenericValidationProcessor<T> validationProcessor;
@@ -122,6 +123,16 @@ public abstract class XmlMarshallingValidationProcessor<T> extends AbstractValid
 
         public static <T> Builder<T> validate(GenericValidationProcessor<T> validationProcessor) {
             return new Builder<>(validationProcessor);
+        }
+
+        @Override
+        public Builder<T> unmarshaller(Object unmarshaller) {
+            if (unmarshaller instanceof Unmarshaller xmlUnmarshaller) {
+                return unmarshaller(xmlUnmarshaller);
+            } else {
+                throw new CitrusRuntimeException(("Invalid unmarshaller type, expected an Unmarshaller, " +
+                        "but got %s").formatted(unmarshaller.getClass().getName()));
+            }
         }
 
         public Builder<T> unmarshaller(Unmarshaller unmarshaller) {
