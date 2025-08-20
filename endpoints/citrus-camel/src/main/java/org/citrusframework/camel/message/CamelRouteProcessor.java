@@ -26,7 +26,7 @@ import org.apache.camel.model.OutputDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.citrusframework.camel.dsl.CamelContextAware;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.message.MessageProcessor;
+import org.citrusframework.message.processor.camel.CamelRouteProcessorBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 
@@ -54,7 +54,7 @@ public class CamelRouteProcessor extends CamelMessageProcessor {
      * Fluent builder.
      */
     public static class Builder extends OutputDefinition<Builder>
-            implements MessageProcessor.Builder<CamelRouteProcessor, Builder>, ReferenceResolverAware, CamelContextAware<Builder> {
+            implements CamelRouteProcessorBuilder<CamelRouteProcessor, Builder>, ReferenceResolverAware, CamelContextAware<Builder> {
 
         private String routeId = "citrus-" + UUID.randomUUID();
         private RouteBuilder routeBuilder;
@@ -64,9 +64,7 @@ public class CamelRouteProcessor extends CamelMessageProcessor {
         }
 
         public static Builder route(RouteBuilder routeBuilder) {
-            Builder builder = new Builder();
-            builder.routeBuilder = routeBuilder;
-            return builder;
+            return new Builder().routeBuilder(routeBuilder);
         }
 
         protected CamelContext camelContext;
@@ -79,11 +77,36 @@ public class CamelRouteProcessor extends CamelMessageProcessor {
         }
 
         @Override
+        public Builder routeBuilder(Object routeBuilder) {
+            if (routeBuilder instanceof RouteBuilder builder) {
+                return routeBuilder(builder);
+            } else {
+                throw new IllegalArgumentException(("Invalid route builder type, expected a RouteBuilder, " +
+                        "but got: %s").formatted(routeBuilder.getClass().getName()));
+            }
+        }
+
+        public Builder routeBuilder(RouteBuilder routeBuilder) {
+            this.routeBuilder = routeBuilder;
+            return this;
+        }
+
+        @Override
+        public Builder camelContext(Object camelContext) {
+            if (camelContext instanceof CamelContext context) {
+                return camelContext(context);
+            } else  {
+                throw new CitrusRuntimeException("Invalid Camel context type: " + camelContext.getClass().getName());
+            }
+        }
+
+        @Override
         public Builder camelContext(CamelContext camelContext) {
             this.camelContext = camelContext;
             return this;
         }
 
+        @Override
         public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
             this.referenceResolver = referenceResolver;
             return this;

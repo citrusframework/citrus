@@ -23,11 +23,11 @@ import org.citrusframework.validation.context.ValidationContext;
 public interface JsonMessageValidationContextBuilder<T extends ValidationContext, B extends JsonMessageValidationContextBuilder<T, B>>
         extends MessageValidationContextBuilder<T, B>, WithExpressions<JsonPathMessageValidationContextBuilder<?, ?>> {
 
-    JsonPathMessageValidationContextBuilder<?, ?> path();
+    JsonPathMessageValidationContextBuilder<?, ?> jsonPath();
 
     @Deprecated
     default JsonPathMessageValidationContextBuilder<?, ?> expressions() {
-        return path();
+        return jsonPath();
     }
 
     interface Factory {
@@ -38,7 +38,7 @@ public interface JsonMessageValidationContextBuilder<T extends ValidationContext
         JsonMessageValidationContextBuilder<?, ?> json();
 
         default JsonPathMessageValidationContextBuilder<?, ?> jsonPath() {
-            return json().path();
+            return json().jsonPath();
         }
 
     }

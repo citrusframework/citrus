@@ -1656,7 +1656,9 @@ public class CamelMessageProcessorIT extends TestNGCitrusSpringSupport {
         $(send(camel().endpoint(seda("test")::getUri))
                 .message()
                 .body("Citrus rocks!")
-                .process(camel(camelContext)
+                .process(processor()
+                    .camel()
+                    .camelContext(camelContext)
                     .process(exchange -> exchange
                             .getMessage()
                             .setBody(exchange.getMessage().getBody(String.class).toUpperCase())))
@@ -1684,7 +1686,8 @@ public class CamelMessageProcessorIT extends TestNGCitrusSpringSupport {
                 .body("Citrus rocks!"));
 
         $(receive(camel().endpoint(seda("test")::getUri))
-                .process(camel(camelContext)
+                .process(processor()
+                        .camel(camelContext)
                         .process(exchange -> exchange
                                 .getMessage()
                                 .setBody(exchange.getMessage().getBody(String.class).toUpperCase())))

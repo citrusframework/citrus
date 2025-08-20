@@ -18,19 +18,20 @@ package org.citrusframework.camel.message;
 
 import java.util.Map;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.ExchangePattern;
+import org.apache.camel.Processor;
+import org.apache.camel.support.DefaultExchange;
 import org.citrusframework.camel.dsl.CamelContextAware;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.MessageProcessor;
+import org.citrusframework.message.processor.camel.CamelMessageProcessorBuilderBase;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.ExchangePattern;
-import org.apache.camel.Processor;
-import org.apache.camel.support.DefaultExchange;
 
 /**
  * Message processor delegates to Apache Camel processor and sets the message header and body from the processed Camel
@@ -89,13 +90,34 @@ public class CamelMessageProcessor implements MessageProcessor {
     /**
      * Fluent builder.
      */
-    public static class Builder extends CamelMessageProcessorBuilder<CamelMessageProcessor, Builder> {
+    public static class Builder extends CamelMessageProcessorBuilder<CamelMessageProcessor, Builder>
+            implements org.citrusframework.message.processor.camel.CamelMessageProcessorBuilder<CamelMessageProcessor, Builder> {
+
         private Processor processor;
 
+        public Builder() {}
+
+        public Builder(Processor processor) {
+            this.processor = processor;
+        }
+
         public static Builder process(Processor processor) {
-            Builder builder = new Builder();
-            builder.processor = processor;
-            return builder;
+            return new Builder(processor);
+        }
+
+        @Override
+        public Builder processor(Object processor) {
+            if (processor instanceof Processor camelProcessor) {
+                return processor(camelProcessor);
+            } else {
+                throw new CitrusRuntimeException(("Invalid processor type, expected a Processor, " +
+                        "but got: %s").formatted(processor.getClass().getName()));
+            }
+        }
+
+        public Builder processor(Processor processor) {
+            this.processor = processor;
+            return this;
         }
 
         @Override
@@ -105,7 +127,7 @@ public class CamelMessageProcessor implements MessageProcessor {
     }
 
     public abstract static class CamelMessageProcessorBuilder<T extends CamelMessageProcessor, B extends CamelMessageProcessorBuilder<T, B>>
-            implements MessageProcessor.Builder<T, B>, ReferenceResolverAware, CamelContextAware<B> {
+            implements CamelMessageProcessorBuilderBase<T, B>, ReferenceResolverAware, CamelContextAware<B> {
 
         protected CamelContext camelContext;
         protected ReferenceResolver referenceResolver;
@@ -114,6 +136,15 @@ public class CamelMessageProcessor implements MessageProcessor {
 
         public CamelMessageProcessorBuilder() {
             self = (B) this;
+        }
+
+        @Override
+        public B camelContext(Object camelContext) {
+            if (camelContext instanceof CamelContext context) {
+                return camelContext(context);
+            } else  {
+                throw new CitrusRuntimeException("Invalid Camel context type: " + camelContext.getClass().getName());
+            }
         }
 
         @Override

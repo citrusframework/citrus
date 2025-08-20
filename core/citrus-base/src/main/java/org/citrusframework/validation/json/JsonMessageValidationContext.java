@@ -53,7 +53,7 @@ public class JsonMessageValidationContext extends DefaultMessageValidationContex
         }
 
         @Override
-        public JsonPathMessageValidationContext.Builder path() {
+        public JsonPathMessageValidationContext.Builder jsonPath() {
             return new JsonPathMessageValidationContext.Builder();
         }
 

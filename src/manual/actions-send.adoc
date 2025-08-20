@@ -446,9 +446,9 @@ public void jsonPathTest() {
         .message()
         .type(MessageType.JSON)
         .body(new ClassPathResource("path/to/request.xml"))
-        .process(jsonPath()
+        .process(processor().jsonPath()
             .expression("$.user.name", "Penny")
-            .expression("$['user']['name']", "${userName}"));
+            .expression("$['user']['name']", "${userName}"))
     );
 }
 ----

@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
-import org.citrusframework.message.MessageProcessor;
+import org.citrusframework.message.processor.json.JsonMappingValidationProcessorBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
@@ -89,7 +89,8 @@ public abstract class JsonMappingValidationProcessor<T> extends AbstractValidati
      * Fluent builder.
      * @param <T>
      */
-    public static final class Builder<T> implements MessageProcessor.Builder<JsonMappingValidationProcessor<T>, Builder<T>>, ReferenceResolverAware {
+    public static final class Builder<T> implements
+            JsonMappingValidationProcessorBuilder<T, JsonMappingValidationProcessor<T>, Builder<T>>, ReferenceResolverAware {
 
         private final Class<T> resultType;
         private ObjectMapper mapper;
@@ -105,9 +106,20 @@ public abstract class JsonMappingValidationProcessor<T> extends AbstractValidati
             return new Builder<>(type);
         }
 
+        @Override
         public Builder<T> validator(GenericValidationProcessor<T> validationProcessor) {
             this.validationProcessor = validationProcessor;
             return this;
+        }
+
+        @Override
+        public Builder<T> mapper(Object mapper) {
+            if (mapper instanceof ObjectMapper objectMapper) {
+                return mapper(objectMapper);
+            } else {
+                throw new CitrusRuntimeException(("Invalid mapper type, expected an ObjectMapper, " +
+                        "but got %s").formatted(mapper.getClass().getName()));
+            }
         }
 
         public Builder<T> mapper(ObjectMapper mapper) {
@@ -115,6 +127,7 @@ public abstract class JsonMappingValidationProcessor<T> extends AbstractValidati
             return this;
         }
 
+        @Override
         public Builder<T> withReferenceResolver(ReferenceResolver referenceResolver) {
             this.referenceResolver = referenceResolver;
             return this;

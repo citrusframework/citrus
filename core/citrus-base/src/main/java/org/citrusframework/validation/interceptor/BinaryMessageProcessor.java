@@ -22,8 +22,8 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.AbstractMessageProcessor;
 import org.citrusframework.message.Message;
-import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.message.processor.BinaryMessageProcessorBuilder;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 
@@ -60,7 +60,7 @@ public class BinaryMessageProcessor extends AbstractMessageProcessor {
     /**
      * Fluent builder.
      */
-    public static final class Builder implements MessageProcessor.Builder<BinaryMessageProcessor, Builder> {
+    public static final class Builder implements BinaryMessageProcessorBuilder<BinaryMessageProcessor, Builder> {
 
         private Charset encoding = Charset.forName(CitrusSettings.CITRUS_FILE_ENCODING);
 
@@ -68,20 +68,12 @@ public class BinaryMessageProcessor extends AbstractMessageProcessor {
             return new Builder();
         }
 
-        /**
-         * With custom charset encoding identified by its name.
-         * @param charsetName
-         * @return
-         */
+        @Override
         public Builder encoding(String charsetName) {
             return encoding(Charset.forName(charsetName));
         }
 
-        /**
-         * With custom charset encoding.
-         * @param encoding
-         * @return
-         */
+        @Override
         public Builder encoding(Charset encoding) {
             this.encoding = encoding;
             return this;

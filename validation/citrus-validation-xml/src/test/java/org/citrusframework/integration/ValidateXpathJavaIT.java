@@ -52,7 +52,7 @@ public class ValidateXpathJavaIT extends TestNGCitrusSpringSupport implements Te
 
         $(receive("direct:hello")
             .message()
-            .validate(validation().xml().xpath().expression("//ns0:HelloRequest/ns0:MessageId", "${messageId}")
+            .validate(validation().xpath().expression("//ns0:HelloRequest/ns0:MessageId", "${messageId}")
                              .expression("//ns0:HelloRequest/ns0:CorrelationId", "${correlationId}")
                              .expression("//ns0:HelloRequest/ns0:Text", "Hello ${user}")
                              .namespaceContext("ns0", "http://citrusframework.org/schemas/samples/HelloService.xsd"))
@@ -72,7 +72,7 @@ public class ValidateXpathJavaIT extends TestNGCitrusSpringSupport implements Te
 
         $(receive("direct:hello")
             .message()
-            .validate(validation().xml().xpath().expression("//ns1:HelloRequest/ns1:MessageId", "${messageId}")
+            .validate(validation().xpath().expression("//ns1:HelloRequest/ns1:MessageId", "${messageId}")
                              .expression("//ns1:HelloRequest/ns1:CorrelationId", "${correlationId}")
                              .expression("//ns1:HelloRequest/ns1:Text", "Hello ${user}")
                              .namespaceContext("ns1", "http://citrusframework.org/schemas/samples/HelloService.xsd"))
@@ -196,7 +196,7 @@ public class ValidateXpathJavaIT extends TestNGCitrusSpringSupport implements Te
 
         $(receive("direct:hello")
             .message()
-            .validate(validation().xml().xpath().expression("//def:HelloRequest/def:MessageId", "${messageId}")
+            .validate(validation().xpath().expression("//def:HelloRequest/def:MessageId", "${messageId}")
                              .expression("//def:HelloRequest/def:CorrelationId", "${correlationId}")
                              .expression("//def:HelloRequest/def:Text", "Hello ${user}")
                              .namespaceContext(namespaceContextBuilder.getNamespaceMappings()))

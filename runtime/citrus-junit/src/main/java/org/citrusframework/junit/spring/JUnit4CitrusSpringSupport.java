@@ -31,6 +31,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.junit.CitrusFrameworkMethod;
 import org.citrusframework.junit.JUnit4Helper;
+import org.citrusframework.message.DefaultMessageProcessors;
+import org.citrusframework.message.Processors;
 import org.citrusframework.validation.DefaultValidations;
 import org.citrusframework.validation.Validations;
 import org.citrusframework.variable.DefaultVariableExtractors;
@@ -164,6 +166,11 @@ public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
 
     public VariableExtractors extractor() {
         return new DefaultVariableExtractors();
+    }
+
+    @Override
+    public Processors processor() {
+        return new DefaultMessageProcessors();
     }
 
     @Override

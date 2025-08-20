@@ -46,7 +46,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.dsl.JsonPathSupport.jsonPath;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
@@ -222,7 +221,9 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                 .message()
                 .type(MessageType.JSON)
                 .body("{ \"TestRequest\": { \"Message\": \"?\" }}")
-                .process(jsonPath().expression("$.TestRequest.Message", "Hello World!")));
+                .process(processor().json()
+                            .jsonPath()
+                            .expression("$.TestRequest.Message", "Hello World!")));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);

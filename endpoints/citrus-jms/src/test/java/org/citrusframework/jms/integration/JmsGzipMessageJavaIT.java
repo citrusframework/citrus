@@ -26,8 +26,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.FileUtils;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.validation.interceptor.GzipMessageProcessor.Builder.toGzip;
-
 @Test
 public class JmsGzipMessageJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
@@ -38,7 +36,7 @@ public class JmsGzipMessageJavaIT extends TestNGCitrusSpringSupport implements T
                         FileUtils.copyToByteArray(
                                 FileUtils.getFileResource("org/citrusframework/jms/integration/button.png")
                                  .getInputStream())))
-                .process(toGzip()));
+                .process(processor().toGzip()));
 
         then(receive("jms:queue:jms.gzip.queue")
                 .message()

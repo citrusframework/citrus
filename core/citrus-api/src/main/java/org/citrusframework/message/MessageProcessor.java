@@ -44,15 +44,13 @@ public interface MessageProcessor extends MessageTransformer {
      * Resolves processor from resource path lookup with given processor resource name. Scans classpath for processor meta information
      * with given name and returns instance of processor. Returns optional instead of throwing exception when no processor
      * could be found.
-     * @param processor
-     * @return
      */
-    static <T extends MessageProcessor, B extends Builder<T, B>> Optional<Builder<T, B>> lookup(String processor) {
+    static <T extends MessageProcessor, B extends Builder<T, B>> Optional<Builder<T, B>> lookup(String processor, Object... args) {
         try {
-            Builder<T, B> instance = TYPE_RESOLVER.resolve(processor);
+            Builder<T, B> instance = TYPE_RESOLVER.resolve(processor, args);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            logger.warn("Failed to resolve message processor from resource '{}/{}'", RESOURCE_PATH, processor);
+            logger.warn("Failed to resolve message processor from resource '{}/{}' - caused by: {}", RESOURCE_PATH, processor, e.getMessage());
         }
 
         return Optional.empty();
