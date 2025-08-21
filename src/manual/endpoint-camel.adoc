@@ -1622,13 +1622,13 @@ In Citrus you can use the Camel endpoint DSL to send/receive messages in a test.
 .Java
 [source,java,indent=0,role="primary"]
 ----
-$(send(camel().endpoint(seda("test")::getUri))
+$(send(camel().endpoint(seda("test")::getRawUri))
         .message()
         .body("Citrus rocks!"));
 ----
 
 The fluent endpoint DSL in Camel allows to build the endpoint uri.
-The `camel().endpoint(seda("test")::getUri)` builds the endpoint uri `seda:test`.
+The `camel().endpoint(seda("test")::getRawUri)` builds the endpoint uri `seda:test`.
 The endpoint DSL provides all settings and properties that you can set for a Camel endpoint component.
 
 [[camel-processor-support]]
@@ -1653,7 +1653,7 @@ public class CamelMessageProcessorIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusTest
     public void shouldProcessMessages() {
-        $(send(camel().endpoint(seda("test")::getUri))
+        $(send(camel().endpoint(seda("test")::getRawUri))
                 .message()
                 .body("Citrus rocks!")
                 .process(processor()
@@ -1681,11 +1681,11 @@ public class CamelMessageProcessorIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusTest
     public void shouldProcessMessages() {
-        $(send(camel().endpoint(seda("test")::getUri))
+        $(send(camel().endpoint(seda("test")::getRawUri))
                 .message()
                 .body("Citrus rocks!"));
 
-        $(receive(camel().endpoint(seda("test")::getUri))
+        $(receive(camel().endpoint(seda("test")::getRawUri))
                 .process(processor()
                         .camel(camelContext)
                         .process(exchange -> exchange
@@ -1712,12 +1712,12 @@ public class CamelTransformIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusTest
     public void shouldTransformMessageReceived() {
-        $(send(camel().endpoint(seda("hello")::getUri))
+        $(send(camel().endpoint(seda("hello")::getRawUri))
                 .message()
                 .body("{\"message\": \"Citrus rocks!\"}")
         );
 
-        $(receive(camel().endpoint(seda("hello")::getUri))
+        $(receive(camel().endpoint(seda("hello")::getRawUri))
                 .transform(
                     camel()
                         .camelContext(camelContext)
@@ -1757,7 +1757,7 @@ public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport {
                     .otherwise()
                         .setBody(constant("Hi!")));
 
-        $(send(camel().endpoint(seda("greetings")::getUri))
+        $(send(camel().endpoint(seda("greetings")::getRawUri))
                 .message()
                 .body("{" +
                         "\"greeting\": {" +
@@ -1795,7 +1795,7 @@ public class CamelDataFormatIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusTest
     public void shouldApplyDataFormat() {
-        when(send(camel().endpoint(seda("data")::getUri))
+        when(send(camel().endpoint(seda("data")::getRawUri))
                 .message()
                 .body("Citrus rocks!")
                 .transform(camel(camelContext)

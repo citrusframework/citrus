@@ -37,7 +37,7 @@ public class CamelDataFormatIT extends TestNGCitrusSpringSupport implements Test
     @Test
     @CitrusTest
     public void shouldApplyDataFormat() {
-        when(send(camel.endpoint(seda("data")::getUri))
+        when(send(camel.endpoint(seda("data")::getRawUri))
                 .message()
                 .body("Citrus rocks!")
                 .transform(camel.camelContext(camelContext)
@@ -45,7 +45,7 @@ public class CamelDataFormatIT extends TestNGCitrusSpringSupport implements Test
                         .base64())
         );
 
-        then(receive("camel:" + camel.endpoints().seda("data").getUri())
+        then(receive("camel:" + camel.endpoints().seda("data").getRawUri())
                 .transform(camel.camelContext(camelContext)
                         .unmarshal()
                         .base64())

@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.okhttp.OkDockerHttpClient;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import org.citrusframework.TestActor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ public class TestcontainersActor extends TestActor {
                 } else {
                     DockerClientConfig clientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
                     DockerClient tempClient = DockerClientImpl.getInstance(clientConfig,
-                            new OkDockerHttpClient.Builder().dockerHost(clientConfig.getDockerHost()).build()
+                            new ApacheDockerHttpClient.Builder().dockerHost(clientConfig.getDockerHost()).build()
                     );
                     connected = new AtomicBoolean(verifyConnected(tempClient));
                 }

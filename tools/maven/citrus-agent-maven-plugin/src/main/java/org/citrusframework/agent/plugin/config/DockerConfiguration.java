@@ -19,7 +19,7 @@ package org.citrusframework.agent.plugin.config;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
-import com.github.dockerjava.okhttp.OkDockerHttpClient;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import org.apache.maven.plugins.annotations.Parameter;
 
 public class DockerConfiguration {
@@ -68,7 +68,7 @@ public class DockerConfiguration {
     public DockerClient getDockerClient() {
         if (dockerClient == null) {
             var dockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
-            dockerClient = DockerClientImpl.getInstance(dockerClientConfig, new OkDockerHttpClient.Builder()
+            dockerClient = DockerClientImpl.getInstance(dockerClientConfig, new ApacheDockerHttpClient.Builder()
                     .dockerHost(dockerClientConfig.getDockerHost())
                     .build());
         }

@@ -49,13 +49,13 @@ public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport implements 
                         "}" +
                     "}"));
 
-        when(send(camel.endpoint(seda("greetings")::getUri))
+        when(send(camel.endpoint(seda("greetings")::getRawUri))
                 .process(beforeSend)
                 .message()
                 .body("EN")
         );
 
-        then(receive("camel:" + camel.endpoints().seda("greetings").getUri())
+        then(receive("camel:" + camel.endpoints().seda("greetings").getRawUri())
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("{" +
@@ -79,7 +79,7 @@ public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport implements 
 
         given(createVariable("lang", "EN"));
 
-        when(send(camel.endpoint(seda("greetings")::getUri))
+        when(send(camel.endpoint(seda("greetings")::getRawUri))
                 .message()
                 .body("{" +
                         "\"greeting\": {" +
@@ -88,7 +88,7 @@ public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport implements 
                       "}")
         );
 
-        then(receive("camel:" + camel.endpoints().seda("greetings").getUri())
+        then(receive("camel:" + camel.endpoints().seda("greetings").getRawUri())
                 .process(beforeReceive)
                 .message()
                 .type(MessageType.PLAINTEXT)
@@ -96,7 +96,7 @@ public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport implements 
 
         given(createVariable("lang", "DE"));
 
-        when(send(camel.endpoint(seda("greetings")::getUri))
+        when(send(camel.endpoint(seda("greetings")::getRawUri))
                 .message()
                 .body("{" +
                         "\"greeting\": {" +
@@ -105,7 +105,7 @@ public class CamelRouteProcessorIT extends TestNGCitrusSpringSupport implements 
                     "}")
         );
 
-        then(receive("camel:" + camel.endpoints().seda("greetings").getUri())
+        then(receive("camel:" + camel.endpoints().seda("greetings").getRawUri())
                 .process(beforeReceive)
                 .message()
                 .type(MessageType.PLAINTEXT)

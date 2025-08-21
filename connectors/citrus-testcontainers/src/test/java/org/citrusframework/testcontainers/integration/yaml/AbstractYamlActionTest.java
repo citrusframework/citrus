@@ -17,7 +17,7 @@
 package org.citrusframework.testcontainers.integration.yaml;
 
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.okhttp.OkDockerHttpClient;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusInstanceManager;
@@ -99,7 +99,7 @@ public class AbstractYamlActionTest extends AbstractTestNGUnitTest {
     protected DockerClient createDockerClient() {
         DockerClientConfig clientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
         return DockerClientImpl.getInstance(clientConfig,
-                new OkDockerHttpClient.Builder().dockerHost(clientConfig.getDockerHost()).build()
+                new ApacheDockerHttpClient.Builder().dockerHost(clientConfig.getDockerHost()).build()
         );
     }
 }

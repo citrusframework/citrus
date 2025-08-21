@@ -51,17 +51,17 @@ public class CamelRouteActionIT extends TestNGCitrusSpringSupport implements Tes
                 }
             }));
 
-        when(send(camel.endpoint(direct("messages")::getUri))
+        when(send(camel.endpoint(direct("messages")::getRawUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("Citrus rocks!"));
 
-        then(receive(camel.endpoint(seda("words")::getUri))
+        then(receive(camel.endpoint(seda("words")::getRawUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("Citrus"));
 
-        then(receive(camel.endpoint(seda("words")::getUri))
+        then(receive(camel.endpoint(seda("words")::getRawUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("rocks!"));
