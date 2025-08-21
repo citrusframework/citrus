@@ -28,34 +28,39 @@ import org.citrusframework.openapi.validation.OpenApiOperationToMessageHeadersPr
 import org.citrusframework.openapi.validation.OpenApiValidationContext;
 
 import static org.citrusframework.openapi.OpenApiMessageType.REQUEST;
+import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabled;
 import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
 
 /**
  * @since 4.1
  */
 public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBuilder
-        implements OpenApiSpecificationSourceAwareBuilder<ReceiveMessageAction>, org.citrusframework.actions.openapi.OpenApiServerRequestActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport, HttpServerRequestActionBuilder> {
+    implements OpenApiSpecificationSourceAwareBuilder<ReceiveMessageAction>,
+    org.citrusframework.actions.openapi.OpenApiServerRequestActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport, HttpServerRequestActionBuilder> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
     private final String operationKey;
     private OpenApiOperationToMessageHeadersProcessor openApiOperationToMessageHeadersProcessor;
 
     /**
-     * Schema validation is enabled by default.
+     * Allow null to be able to identify if schemaValidation was explicitly set on builder. By
+     * default, inherit enablement by OpenApi.
      */
-    private boolean schemaValidation = true;
+    private Boolean schemaValidation;
 
     /**
      * Default constructor initializes http request message builder.
      */
-    public OpenApiServerRequestActionBuilder(OpenApiSpecificationSource openApiSpecificationSource, String operationKey) {
+    public OpenApiServerRequestActionBuilder(OpenApiSpecificationSource openApiSpecificationSource,
+        String operationKey) {
         this(new HttpMessage(), openApiSpecificationSource, operationKey);
     }
 
     public OpenApiServerRequestActionBuilder(HttpMessage httpMessage,
-                                             OpenApiSpecificationSource openApiSpecificationSource,
-                                             String operationKey) {
-        super(new OpenApiServerRequestMessageBuilder(httpMessage, openApiSpecificationSource), httpMessage);
+        OpenApiSpecificationSource openApiSpecificationSource,
+        String operationKey) {
+        super(new OpenApiServerRequestMessageBuilder(httpMessage, openApiSpecificationSource),
+            httpMessage);
         this.openApiSpecificationSource = openApiSpecificationSource;
         this.operationKey = operationKey;
     }
@@ -69,7 +74,19 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
     @Override
     protected void reconcileValidationContexts() {
         super.reconcileValidationContexts();
-        OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(referenceResolver);
+        OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(
+            referenceResolver);
+
+        if (schemaValidation == null) {
+            // Honor default enablement of schema validation
+            OpenApiValidationContext openApiValidationContext = openApiSpecification.getOpenApiValidationContext();
+            if (openApiValidationContext != null) {
+                schemaValidation = openApiValidationContext.isRequestValidationEnabled();
+            } else {
+                schemaValidation = isRequestValidationEnabled();
+            }
+        }
+
         if (getValidationContexts().stream()
             .noneMatch(OpenApiMessageValidationContext.class::isInstance)) {
             validate(openApi(openApiSpecification)
@@ -80,16 +97,12 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
 
     @Override
     public ReceiveMessageAction doBuild() {
-        OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(referenceResolver);
-
-        // Honor default enablement of schema validation
-        OpenApiValidationContext openApiValidationContext = openApiSpecification.getOpenApiValidationContext();
-        if (openApiValidationContext != null && schemaValidation) {
-            schemaValidation = openApiValidationContext.isRequestValidationEnabled();
-        }
+        OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(
+            referenceResolver);
 
         if (!messageProcessors.contains(openApiOperationToMessageHeadersProcessor)) {
-            openApiOperationToMessageHeadersProcessor = new OpenApiOperationToMessageHeadersProcessor(openApiSpecification, operationKey, REQUEST);
+            openApiOperationToMessageHeadersProcessor = new OpenApiOperationToMessageHeadersProcessor(
+                openApiSpecification, operationKey, REQUEST);
             process(openApiOperationToMessageHeadersProcessor);
         }
 
@@ -115,7 +128,8 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
 
         @Override
         public Message build(TestContext context, String messageType) {
-            OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(context.getReferenceResolver());
+            OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(
+                context.getReferenceResolver());
 
             context.setVariable(openApiSpecification.getUid(), openApiSpecification);
             return super.build(context, messageType);

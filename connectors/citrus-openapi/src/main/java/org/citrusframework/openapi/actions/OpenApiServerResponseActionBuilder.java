@@ -53,6 +53,7 @@ import static org.citrusframework.openapi.AutoFillType.NONE;
 import static org.citrusframework.openapi.AutoFillType.REQUIRED;
 import static org.citrusframework.openapi.OpenApiMessageType.RESPONSE;
 import static org.citrusframework.openapi.OpenApiSettings.getResponseAutoFillRandomValues;
+import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabled;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -68,7 +69,12 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
     private final OpenApiSpecificationSource openApiSpecificationSource;
     private final String operationKey;
     private OpenApiOperationToMessageHeadersProcessor openApiOperationToMessageHeadersProcessor;
-    private boolean schemaValidation = true;
+
+    /**
+     * Allow null to be able to identify if schemaValidation was explicitly set on builder.
+     * By default, inherit enablement by OpenApi.
+     */
+    private Boolean schemaValidation;
 
     /**
      * Default constructor initializes http response message builder.
@@ -107,10 +113,14 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
         OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(
             referenceResolver);
 
-        // Honor default enablement of schema validation
-        OpenApiValidationContext openApiValidationContext = openApiSpecification.getOpenApiValidationContext();
-        if (openApiValidationContext != null && schemaValidation) {
-            schemaValidation = openApiValidationContext.isResponseValidationEnabled();
+        if (schemaValidation == null) {
+            // Honor default enablement of schema validation
+            OpenApiValidationContext openApiValidationContext = openApiSpecification.getOpenApiValidationContext();
+            if (openApiValidationContext != null) {
+                schemaValidation = openApiValidationContext.isResponseValidationEnabled();
+            } else {
+                schemaValidation = isRequestValidationEnabled();
+            }
         }
 
         if (schemaValidation && !messageProcessors.contains(
