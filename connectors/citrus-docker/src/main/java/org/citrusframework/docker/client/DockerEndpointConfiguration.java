@@ -16,13 +16,13 @@
 
 package org.citrusframework.docker.client;
 
-import org.citrusframework.endpoint.AbstractPollableEndpointConfiguration;
-import org.citrusframework.message.DefaultMessageCorrelator;
-import org.citrusframework.message.MessageCorrelator;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
-import com.github.dockerjava.okhttp.OkDockerHttpClient;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import org.citrusframework.endpoint.AbstractPollableEndpointConfiguration;
+import org.citrusframework.message.DefaultMessageCorrelator;
+import org.citrusframework.message.MessageCorrelator;
 
 /**
  * @since 2.5
@@ -43,7 +43,7 @@ public class DockerEndpointConfiguration extends AbstractPollableEndpointConfigu
      * @return
      */
     private com.github.dockerjava.api.DockerClient createDockerClient() {
-        return DockerClientImpl.getInstance(getDockerClientConfig(), new OkDockerHttpClient.Builder()
+        return DockerClientImpl.getInstance(getDockerClientConfig(), new ApacheDockerHttpClient.Builder()
                         .dockerHost(getDockerClientConfig().getDockerHost())
                 .build());
     }

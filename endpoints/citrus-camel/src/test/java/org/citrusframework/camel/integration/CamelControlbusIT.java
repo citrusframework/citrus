@@ -68,17 +68,17 @@ public class CamelControlbusIT extends TestNGCitrusSpringSupport implements Test
                 .status()
                 .result(ServiceStatus.Started));
 
-        when(send(camel.endpoint(direct("message")::getUri))
+        when(send(camel.endpoint(direct("message")::getRawUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("Citrus rocks!"));
 
-        then(receive(camel.endpoint(seda("words")::getUri))
+        then(receive(camel.endpoint(seda("words")::getRawUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("Citrus"));
 
-        then(receive(camel.endpoint(seda("words")::getUri))
+        then(receive(camel.endpoint(seda("words")::getRawUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("rocks!"));

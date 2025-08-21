@@ -58,7 +58,6 @@ public class CamelSupport {
 
     /**
      * Static entrance for all Camel related Java DSL functionalities.
-     * @return
      */
     public static CamelSupport camel() {
         return new CamelSupport();
@@ -66,7 +65,6 @@ public class CamelSupport {
 
     /**
      * Static entrance for all Camel related Java DSL functionalities.
-     * @return
      */
     public static CamelSupport camel(CamelContext camelContext) {
         return new CamelSupport()
@@ -75,7 +73,6 @@ public class CamelSupport {
 
     /**
      * Sets Camel context.
-     * @return
      */
     public CamelSupport camelContext(CamelContext camelContext) {
         this.camelContext = camelContext;
@@ -84,7 +81,6 @@ public class CamelSupport {
 
     /**
      * Entrance for Camel context related Java DSL functionalities.
-     * @return
      */
     public CamelContextActionBuilder camelContext() {
         return new CamelContextActionBuilder();
@@ -92,7 +88,6 @@ public class CamelSupport {
 
     /**
      * Sends message using Camel endpointUris.
-     * @return
      */
     public CamelExchangeActionBuilder<SendMessageAction.Builder> send() {
         return new CamelActionBuilder().send();
@@ -100,7 +95,6 @@ public class CamelSupport {
 
     /**
      * Receives message using Camel endpointUris.
-     * @return
      */
     public CamelExchangeActionBuilder<ReceiveMessageAction.Builder> receive() {
         return new CamelActionBuilder().receive();
@@ -108,7 +102,6 @@ public class CamelSupport {
 
     /**
      * Constructs proper endpoint uri from endpoint uri builder.
-     * @return
      */
     public CamelEndpoint endpoint(EndpointUriBuilder builder) {
         return new CamelEndpointBuilder()
@@ -119,7 +112,6 @@ public class CamelSupport {
 
     /**
      * Constructs proper endpoint uri from endpoint uri builder.
-     * @return
      */
     public CamelEndpoint endpoint(String endpointUri) {
         return endpoint(endpointUri, false);
@@ -127,7 +119,6 @@ public class CamelSupport {
 
     /**
      * Constructs proper endpoint uri from endpoint uri builder.
-     * @return
      */
     public CamelEndpoint endpoint(String endpointUri, boolean inOut) {
         if (inOut) {
@@ -149,7 +140,6 @@ public class CamelSupport {
 
     /**
      * Constructs proper endpoint uri from endpoint uri builder.
-     * @return
      */
     public String endpointUri(EndpointUriBuilder builder) {
         return "camel:" + builder.getUri();
@@ -157,7 +147,6 @@ public class CamelSupport {
 
     /**
      * Entry point for the Camel endpoint builder DSL.
-     * @return
      */
     public EndpointBuilderFactorySupport endpoints() {
         return new EndpointBuilderFactorySupport();
@@ -165,7 +154,6 @@ public class CamelSupport {
 
     /**
      * Binds given component to the Camel context.
-     * @return
      */
     public CreateCamelComponentAction.Builder bind(String name, Object component) {
         return new CamelActionBuilder()
@@ -175,7 +163,6 @@ public class CamelSupport {
 
     /**
      * Binds a component to the Camel context.
-     * @return
      */
     public CreateCamelComponentAction.Builder bind() {
         return new CamelActionBuilder()
@@ -185,7 +172,6 @@ public class CamelSupport {
 
     /**
      * Creates new control bus test action builder and sets the Camel context.
-     * @return
      */
     public CamelControlBusAction.Builder controlBus() {
         return new CamelActionBuilder()
@@ -195,8 +181,6 @@ public class CamelSupport {
 
     /**
      * Message processor delegating to given Apache Camel processor.
-     * @param processor
-     * @return
      */
     public CamelMessageProcessor.Builder process(Processor processor) {
         return new CamelMessageProcessor.Builder()
@@ -206,7 +190,6 @@ public class CamelSupport {
 
     /**
      * Perform actions on a Camel route such as start/stop/create and process.
-     * @return
      */
     public CamelRouteActionBuilder route() {
         return new CamelActionBuilder()
@@ -216,7 +199,6 @@ public class CamelSupport {
 
     /**
      * Perform actions with Camel infra.
-     * @return
      */
     public CamelInfraActionBuilder infra() {
         return new CamelActionBuilder()
@@ -226,7 +208,6 @@ public class CamelSupport {
 
     /**
      * Perform actions with Camel JBang.
-     * @return
      */
     public CamelJBangActionBuilder jbang() {
         return new CamelActionBuilder()
@@ -236,7 +217,6 @@ public class CamelSupport {
 
     /**
      * Route processor delegating to given Apache Camel processor.
-     * @return
      */
     public CamelRouteProcessor.Builder route(
             Function<OutputDefinition<CamelRouteProcessor.Builder>, ProcessorDefinition<?>> configurer) {
@@ -267,7 +247,6 @@ public class CamelSupport {
 
     /**
      * Message processor marshalling message body with given data format.
-     * @return
      */
     public DataFormatClause<InlineProcessDefinition> marshal() {
         return new CamelDataFormatMessageProcessor.Builder()
@@ -278,7 +257,6 @@ public class CamelSupport {
 
     /**
      * Message processor unmarshalling message body with given data format.
-     * @return
      */
     public DataFormatClause<InlineProcessDefinition> unmarshal() {
         return new CamelDataFormatMessageProcessor.Builder()

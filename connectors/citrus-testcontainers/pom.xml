@@ -36,7 +36,7 @@
     </dependency>
     <dependency>
       <groupId>com.github.docker-java</groupId>
-      <artifactId>docker-java-transport-okhttp</artifactId>
+      <artifactId>docker-java-transport-httpclient5</artifactId>
     </dependency>
 
     <dependency>

@@ -37,7 +37,7 @@ public class CamelTransformIT extends TestNGCitrusSpringSupport implements TestA
     @Test
     @CitrusTest
     public void shouldTransformMessageSent() {
-        when(send(camel.endpoint(seda("hello")::getUri))
+        when(send(camel.endpoint(seda("hello")::getRawUri))
                 .message()
                 .body("{\"message\": \"Citrus rocks!\"}")
                 .transform(
@@ -47,7 +47,7 @@ public class CamelTransformIT extends TestNGCitrusSpringSupport implements TestA
                         .jsonpath("$.message"))
         );
 
-        then(receive(camel.endpoint(seda("hello")::getUri))
+        then(receive(camel.endpoint(seda("hello")::getRawUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("Citrus rocks!"));
@@ -56,12 +56,12 @@ public class CamelTransformIT extends TestNGCitrusSpringSupport implements TestA
     @Test
     @CitrusTest
     public void shouldTransformMessageReceived() {
-        when(send(camel.endpoint(seda("hello")::getUri))
+        when(send(camel.endpoint(seda("hello")::getRawUri))
                 .message()
                 .body("{\"message\": \"Citrus rocks!\"}")
         );
 
-        then(receive(camel.endpoint(seda("hello")::getUri))
+        then(receive(camel.endpoint(seda("hello")::getRawUri))
                 .transform(
                     camel
                         .camelContext(camelContext)

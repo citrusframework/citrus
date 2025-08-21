@@ -37,7 +37,7 @@ public class CamelProcessorIT extends TestNGCitrusSpringSupport implements TestA
     @Test
     @CitrusTest
     public void shouldProcessSentMessage() {
-        when(send(camel.endpoint(seda("test")::getUri))
+        when(send(camel.endpoint(seda("test")::getRawUri))
                 .message()
                 .body("Citrus rocks!")
                 .process(camel.camelContext(camelContext)
@@ -46,7 +46,7 @@ public class CamelProcessorIT extends TestNGCitrusSpringSupport implements TestA
                             .setBody(exchange.getMessage().getBody(String.class).toUpperCase())))
         );
 
-        then(receive(camel.endpoint(seda("test")::getUri))
+        then(receive(camel.endpoint(seda("test")::getRawUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("CITRUS ROCKS!"));
@@ -55,11 +55,11 @@ public class CamelProcessorIT extends TestNGCitrusSpringSupport implements TestA
     @Test
     @CitrusTest
     public void shouldProcessReceivedMessage() {
-        when(send(camel.endpoint(seda("test")::getUri))
+        when(send(camel.endpoint(seda("test")::getRawUri))
                 .message()
                 .body("Citrus rocks!"));
 
-        then(receive(camel.endpoint(seda("test")::getUri))
+        then(receive(camel.endpoint(seda("test")::getRawUri))
                 .process(camel.camelContext(camelContext)
                         .process(exchange -> exchange
                                 .getMessage()

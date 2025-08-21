@@ -17,7 +17,7 @@
 package org.citrusframework.testcontainers.integration;
 
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.okhttp.OkDockerHttpClient;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import org.citrusframework.testcontainers.TestcontainersActor;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testcontainers.shaded.com.github.dockerjava.core.DefaultDockerClientConfig;
@@ -53,7 +53,7 @@ public class AbstractTestcontainersIT extends TestNGCitrusSpringSupport {
     protected DockerClient createDockerClient() {
         DockerClientConfig clientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
         return DockerClientImpl.getInstance(clientConfig,
-                new OkDockerHttpClient.Builder().dockerHost(clientConfig.getDockerHost()).build()
+                new ApacheDockerHttpClient.Builder().dockerHost(clientConfig.getDockerHost()).build()
         );
     }
 }
