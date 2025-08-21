@@ -41,6 +41,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
 import static org.citrusframework.openapi.OpenApiMessageType.REQUEST;
+import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabled;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
 import static org.citrusframework.openapi.model.OasModelHelper.getRequestBodySchema;
@@ -56,7 +57,12 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
     private final OpenApiSpecificationSource openApiSpecificationSource;
     private final String operationKey;
     private OpenApiOperationToMessageHeadersProcessor openApiOperationToMessageHeadersProcessor;
-    private boolean schemaValidation = true;
+
+    /**
+     * Allow null to be able to identify if schemaValidation was explicitly set on builder.
+     * By default, inherit enablement by OpenApi.
+     */
+    private Boolean schemaValidation;
 
     /**
      * Default constructor initializes http request message builder.
@@ -100,10 +106,14 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
         OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(
             referenceResolver);
 
-        // Honor default enablement of schema validation
-        OpenApiValidationContext openApiValidationContext = openApiSpecification.getOpenApiValidationContext();
-        if (openApiValidationContext != null && schemaValidation) {
-            schemaValidation = openApiValidationContext.isRequestValidationEnabled();
+        if (schemaValidation == null) {
+            // Honor default enablement of schema validation
+            OpenApiValidationContext openApiValidationContext = openApiSpecification.getOpenApiValidationContext();
+            if (openApiValidationContext != null) {
+                schemaValidation = openApiValidationContext.isRequestValidationEnabled();
+            } else {
+                schemaValidation = isRequestValidationEnabled();
+            }
         }
 
         if (schemaValidation && !messageProcessors.contains(

@@ -27,8 +27,8 @@ import org.citrusframework.http.server.HttpServerBuilder;
 import org.citrusframework.openapi.AutoFillType;
 import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.openapi.OpenApiSpecification;
-import org.citrusframework.openapi.actions.OpenApiActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiServerRequestActionBuilder;
+import org.citrusframework.openapi.actions.OpenApiServerResponseActionBuilder;
 import org.citrusframework.openapi.integration.OpenApiServerIT.Config;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
@@ -41,10 +41,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static java.util.Collections.singletonList;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.testng.Assert.assertThrows;
 
@@ -62,8 +64,17 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
     @Autowired
     private HttpClient httpClient;
 
-    private final OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
+    private static final OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
         Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
+
+    private static final OpenApiSpecification petstoreSpecWithValidationDisabled = OpenApiSpecification.from(
+        Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
+
+    @BeforeTest
+    void beforeTest() {
+        petstoreSpecWithValidationDisabled.setApiRequestValidationEnabled(false);
+        petstoreSpecWithValidationDisabled.setApiResponseValidationEnabled(false);
+    }
 
     @CitrusTest
     public void getPetById() {
@@ -83,7 +94,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
             .message()
         );
 
-        HttpStatus httpStatus = HttpStatus.OK;
+        HttpStatus httpStatus = OK;
         then(openapi(petstoreSpec)
             .server(httpServer)
             .send("getPetById", httpStatus.name()));
@@ -162,7 +173,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
 
         TestActionBuilder<?> getPetByIdResponseBuilder = openapi(petstoreSpec)
             .server(httpServer)
-            .send("getPetById", HttpStatus.OK.name())
+            .send("getPetById", OK.name())
             .message().body("""
                         {
                           "id": "xxxx",
@@ -197,7 +208,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
 
         TestActionBuilder<?> getPetByIdResponseBuilder = openapi(petstoreSpec)
             .server(httpServer)
-            .send("getPetById", HttpStatus.OK.name())
+            .send("getPetById", OK.name())
             .schemaValidation(false)
             .message().body("""
                         {
@@ -217,7 +228,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
         then(http()
             .client(httpClient)
             .receive()
-            .response(HttpStatus.OK)
+            .response(OK)
             .message()
             .body("""
                         {
@@ -234,44 +245,63 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
                 """));
     }
 
-    @CitrusTest
-    public void shouldExecuteAddPet() {
-        shouldExecuteAddPet(new OpenApiActionBuilder(petstoreSpec), VALID_PET_PATH, true);
+    @DataProvider(name = "validationConfigurations")
+    public static Object[][] validationConfigurations() {
+        return new Object[][]{
+            {petstoreSpecWithValidationDisabled, null, true},
+            {petstoreSpecWithValidationDisabled, true, false},
+            {petstoreSpecWithValidationDisabled, false, true},
+            {petstoreSpec, null, false},
+            {petstoreSpec, true, false},
+            {petstoreSpec, false, true},
+        };
     }
 
     @CitrusTest
-    public void shouldFailOnMissingNameInRequest() {
-        shouldExecuteAddPet(new OpenApiActionBuilder(petstoreSpec), INVALID_PET_PATH, false);
+    @Test(dataProvider = "validationConfigurations")
+    public void properlyValidateReceiveRequestValidation(OpenApiSpecification openApiSpecification,
+        Boolean builderValidation, boolean shouldPass) {
+        shouldExecuteAddPet(openApiSpecification, INVALID_PET_PATH, builderValidation, shouldPass);
     }
 
     @CitrusTest
-    public void shouldPassOnMissingNameInRequestIfValidationIsDisabled() {
-        shouldExecuteAddPet(new OpenApiActionBuilder(petstoreSpec), INVALID_PET_PATH, false);
-    }
-
-    @CitrusTest
-    public void shouldFailOnMissingNameInResponse() {
+    @Test(dataProvider = "validationConfigurations")
+    public void performProperSendResponseValidation(OpenApiSpecification openApiSpecification,
+        Boolean builderValidation, boolean shouldPass) {
         variable("petId", "1001");
 
         when(http()
             .client(httpClient)
             .send()
-            .get("/pet/${petId}")
+            .get("/petstore/v3/pet/${petId}")
             .message()
             .accept(APPLICATION_JSON_VALUE)
             .fork(true));
 
-        then(openapi(petstoreSpec)
+        then(openapi(openApiSpecification)
             .server(httpServer)
             .receive("getPetById"));
 
-        TestActionBuilder<?> sendMessageActionBuilder = openapi(petstoreSpec)
+        OpenApiServerResponseActionBuilder sendMessageActionBuilder = (OpenApiServerResponseActionBuilder) openapi(
+            openApiSpecification)
             .server(httpServer)
-            .send("getPetById", HttpStatus.OK.name())
-            .message()
+            .send("getPetById", OK.name());
+        sendMessageActionBuilder.message()
             .body(Resources.create(INVALID_PET_PATH));
 
-        assertThrows(TestCaseFailedException.class, () -> then(sendMessageActionBuilder));
+        if (builderValidation != null) {
+            sendMessageActionBuilder.schemaValidation(builderValidation);
+        }
+
+        if (shouldPass) {
+            when(sendMessageActionBuilder);
+            then(http()
+                .client(httpClient)
+                .receive()
+                .response(OK));
+        } else {
+            assertThrows(TestCaseFailedException.class, () -> then(sendMessageActionBuilder));
+        }
     }
 
     @CitrusTest
@@ -292,7 +322,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
 
         TestActionBuilder<?> sendMessageActionBuilder = openapi(petstoreSpec)
             .server(httpServer)
-            .send("getPetById", HttpStatus.OK.name())
+            .send("getPetById", OK.name())
             .autoFill(AutoFillType.NONE);
 
         assertThrows(TestCaseFailedException.class, () -> then(sendMessageActionBuilder));
@@ -470,8 +500,8 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
         assertThrows(() -> then(receiveActionBuilder));
     }
 
-    private void shouldExecuteAddPet(OpenApiActionBuilder openapi, String requestFile,
-        boolean valid) {
+    private void shouldExecuteAddPet(OpenApiSpecification openApiSpecification, String requestFile,
+        Boolean validateServerReceive, boolean shouldPass) {
         variable("petId", "1001");
 
         when(http()
@@ -483,14 +513,19 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
             .contentType(APPLICATION_JSON_VALUE)
             .fork(true));
 
-        OpenApiServerRequestActionBuilder receiveActionBuilder = openapi
+        OpenApiServerRequestActionBuilder receiveActionBuilder = (OpenApiServerRequestActionBuilder) openapi(
+            openApiSpecification)
             .server(httpServer)
             .receive("addPet");
 
-        if (valid) {
+        if (validateServerReceive != null) {
+            receiveActionBuilder.schemaValidation(validateServerReceive);
+        }
+
+        if (shouldPass) {
             then(receiveActionBuilder);
 
-            when(openapi
+            when(openapi(openApiSpecification)
                 .server(httpServer)
                 .send("addPet", HttpStatus.CREATED));
 
@@ -536,7 +571,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport implements TestAc
             .message()
         );
 
-        HttpStatus httpStatus = HttpStatus.OK;
+        HttpStatus httpStatus = OK;
         then(openapi().alias(alias)
             .server(httpServer)
             .send("getPetById", httpStatus.name()));
