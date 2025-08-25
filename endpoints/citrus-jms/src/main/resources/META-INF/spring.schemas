@@ -49,7 +49,7 @@ http\://www.citrusframework.org/schema/jms/config/citrus-jms-config-4.5.0.xsd=or
 http\://www.citrusframework.org/schema/jms/config/citrus-jms-config-4.5.1.xsd=org/citrusframework/schema/citrus-jms-config-4.5.1.xsd
 http\://www.citrusframework.org/schema/jms/config/citrus-jms-config-4.5.2.xsd=org/citrusframework/schema/citrus-jms-config-4.5.2.xsd
 http\://www.citrusframework.org/schema/jms/config/citrus-jms-config-4.6.0.xsd=org/citrusframework/schema/citrus-jms-config-4.6.0.xsd
-http\://www.citrusframework.org/schema/jms/config/citrus-jms-config-4.8.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-jms-config-4.8.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/jms/config/citrus-jms-config-4.8.0.xsd=org/citrusframework/schema/citrus-jms-config-4.8.0.xsd
 http\://www.citrusframework.org/schema/jms/config/citrus-jms-config-4.7.0.xsd=org/citrusframework/schema/citrus-jms-config-4.7.0.xsd
 http\://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd=org/citrusframework/schema/citrus-jms-config.xsd
 http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase-2.0.xsd=com/consol/citrus/schema/citrus-jms-testcase-2.0.xsd
@@ -103,6 +103,6 @@ http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase-4.5.0.xs
 http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase-4.5.1.xsd=org/citrusframework/schema/citrus-jms-testcase-4.5.1.xsd
 http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase-4.5.2.xsd=org/citrusframework/schema/citrus-jms-testcase-4.5.2.xsd
 http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase-4.6.0.xsd=org/citrusframework/schema/citrus-jms-testcase-4.6.0.xsd
-http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase-4.8.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-jms-testcase-4.8.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase-4.8.0.xsd=org/citrusframework/schema/citrus-jms-testcase-4.8.0.xsd
 http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase-4.7.0.xsd=org/citrusframework/schema/citrus-jms-testcase-4.7.0.xsd
 http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd=org/citrusframework/schema/citrus-jms-testcase.xsd
