@@ -378,6 +378,13 @@
         <version>4.9.0-SNAPSHOT</version>
       </dependency>
 
+      <!-- OpenAPI Generator -->
+      <dependency>
+        <groupId>org.citrusframework</groupId>
+        <artifactId>citrus-test-api-core</artifactId>
+        <version>4.9.0-SNAPSHOT</version>
+      </dependency>
+
       <!-- Tools -->
       <dependency>
         <groupId>org.citrusframework</groupId>
