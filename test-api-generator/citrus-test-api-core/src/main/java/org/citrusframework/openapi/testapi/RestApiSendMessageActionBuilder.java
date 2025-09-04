@@ -204,7 +204,7 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
         String formatted = formatArray(name, value, parameterStyle, explode, isObject);
         String[] keyValue = formatted.split("=");
 
-        // URL Encoding is mandatory especially in the case of multiple values, as multiple values
+        // URL Encoding is required especially in the case of multiple values, as multiple values
         // are separated by a comma and a comma is not a valid character in cookies.
         cookieParameter(keyValue[0], keyValue[1]);
     }
@@ -306,9 +306,10 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
         }
 
         private void pathParameter(String name, Object value, ParameterStyle parameterStyle, boolean explode, boolean isObject) {
-            if (value == null) {
+            // A missing path parameter would result in improper URL. That is why we fail on null or empty.
+            if (value == null || isEmpty(value.toString())) {
                 throw new CitrusRuntimeException(
-                        "Mandatory path parameter '%s' must not be null".formatted(name));
+                        "Required path parameter '%s' must not be empty".formatted(name));
             }
 
             pathParameters.put(name, new ParameterData(name, value, parameterStyle, explode, isObject));

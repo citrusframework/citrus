@@ -142,6 +142,11 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
 
         beanDefinitionBuilder.addPropertyValue("autoFill", element.getAttribute("autofill"));
 
+        String actionLevelSchemaValidation  = element.getAttribute("schema-validation");
+        if (StringUtils.isNotEmpty(actionLevelSchemaValidation)) {
+            beanDefinitionBuilder.addPropertyValue("schemaValidation", Boolean.valueOf(actionLevelSchemaValidation));
+        }
+
         setDefaultEndpoint(beanDefinitionBuilder);
 
         Element receive = getChildElementByTagName(element, "receive");
@@ -174,7 +179,7 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
         ParserContext parserContext,
         BeanDefinitionBuilder sendActionBeanDefinitionBuilder) {
 
-        Class<? extends AbstractTestContainerFactoryBean<?, ?>> containerClass = createSequenceContainer(
+        var containerClass = createSequenceContainer(
             fork);
 
         BeanDefinitionBuilder sequenceBuilder = genericBeanDefinition(containerClass);
@@ -204,7 +209,7 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
         return sequenceBuilder;
     }
 
-    protected Class<? extends AbstractTestContainerFactoryBean<?, ?>> createSequenceContainer(boolean fork) {
+    protected Class<? extends AbstractTestContainerFactoryBean> createSequenceContainer(boolean fork) {
         return fork ? AsyncFactoryBean.class : SequenceFactoryBean.class;
     }
 
@@ -272,12 +277,18 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
      */
     private void readConstructorParameters(Element element, BeanDefinitionBuilder actionBuilder) {
         for (String parameterName : constructorParameters) {
+            // Allow null values for negative testing (missing parameters)
+            Object values;
             if (element.hasAttribute(parameterName)) {
-                actionBuilder.addConstructorArgValue(element.getAttribute(parameterName));
+                // Value coded as attribute
+                values = element.getAttribute(parameterName);
             } else {
-                List<String> values = collectChildNodeContents(element, parameterName);
-                actionBuilder.addConstructorArgValue(values);
+                // Array type attributes are coded as child elements
+                List<String> valueArray = collectChildNodeContents(element, parameterName);
+                values = valueArray.isEmpty() ? null : valueArray;
             }
+
+            actionBuilder.addConstructorArgValue(values);
         }
     }
 

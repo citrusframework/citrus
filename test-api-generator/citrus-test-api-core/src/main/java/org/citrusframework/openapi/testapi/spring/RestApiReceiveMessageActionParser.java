@@ -21,6 +21,7 @@ import java.util.List;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.config.xml.AbstractReceiveMessageActionFactoryBean;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.actions.HttpClientResponseActionBuilder;
 import org.citrusframework.http.actions.HttpClientResponseActionBuilder.HttpMessageBuilderSupport;
 import org.citrusframework.http.config.xml.HttpReceiveResponseActionParser;
@@ -42,9 +43,11 @@ import org.springframework.http.HttpStatusCode;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
+import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
 import static org.citrusframework.openapi.validation.OpenApiMessageValidationContext.Builder.openApi;
 import static org.citrusframework.util.StringUtils.hasText;
+import static org.citrusframework.util.StringUtils.isNotEmpty;
 import static org.springframework.beans.factory.support.BeanDefinitionBuilder.genericBeanDefinition;
 
 /**
@@ -55,6 +58,8 @@ import static org.springframework.beans.factory.support.BeanDefinitionBuilder.ge
 public class RestApiReceiveMessageActionParser extends HttpReceiveResponseActionParser {
 
     public static final String STATUS_CODE = "responseCode";
+    public static final String SCHEMA_VALIDATION = "schema-validation";
+
     /**
      * The generated api bean class.
      */
@@ -78,10 +83,10 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
     private final String defaultApiEndpointName;
 
     public RestApiReceiveMessageActionParser(OpenApiSpecification openApiSpecification,
-                                             String operationId,
-                                             Class<? extends GeneratedApi> apiBeanClass,
-                                             Class<? extends RestApiReceiveMessageActionBuilder> beanClass,
-                                             String defaultApiEndpointName) {
+        String operationId,
+        Class<? extends GeneratedApi> apiBeanClass,
+        Class<? extends RestApiReceiveMessageActionBuilder> beanClass,
+        String defaultApiEndpointName) {
         this.openApiSpecification = openApiSpecification;
         this.operationId = operationId;
         this.apiBeanClass = apiBeanClass;
@@ -91,18 +96,19 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
 
     @Override
     protected BeanDefinitionBuilder createBeanDefinitionBuilder(Element element,
-                                                                ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinitionBuilder = super.createBeanDefinitionBuilder(element, parserContext);
+        ParserContext parserContext) {
+        BeanDefinitionBuilder beanDefinitionBuilder = super.createBeanDefinitionBuilder(element,
+            parserContext);
 
         // Remove the messageBuilder property and inject it directly into the action builder.
         BeanDefinition beanDefinition = beanDefinitionBuilder.getBeanDefinition();
         OpenApiClientResponseMessageBuilder messageBuilder = (OpenApiClientResponseMessageBuilder) beanDefinition.getPropertyValues()
-                .get("messageBuilder");
+            .get("messageBuilder");
 
         String statusCodeString = element.getAttribute(STATUS_CODE);
         messageBuilder.statusCode(statusCodeString);
 
-        if (StringUtils.isNotEmpty(statusCodeString) &&  messageBuilder.getMessage() != null ) {
+        if (StringUtils.isNotEmpty(statusCodeString) && messageBuilder.getMessage() != null) {
             try {
                 HttpStatusCode httpStatusCode = HttpStatusCode.valueOf(
                     parseInt(statusCodeString));
@@ -113,6 +119,27 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
         }
 
         beanDefinition.getPropertyValues().removePropertyValue("messageBuilder");
+
+        /*
+         * Allows overriding schema validation at the action level.
+         * For simplicity, this setting takes precedence over any existing
+         * message-level validation settings.
+         */
+        String actionLevelSchemaValidation = element.getAttribute(SCHEMA_VALIDATION);
+        if (isNotEmpty(actionLevelSchemaValidation)) {
+            boolean isSchemaValidation = parseBoolean(actionLevelSchemaValidation);
+            beanDefinitionBuilder.addPropertyValue("schemaValidation", isSchemaValidation);
+            var validationContextBuilder = (List) beanDefinition.getPropertyValues()
+                .get("validationContextBuilder");
+            if (validationContextBuilder != null) {
+                OpenApiMessageValidationContext.Builder openApiValidationContextBuilder = (OpenApiMessageValidationContext.Builder) validationContextBuilder.stream()
+                    .filter(builder -> builder instanceof OpenApiMessageValidationContext.Builder)
+                    .findFirst().orElse(null);
+                openApiValidationContextBuilder.schemaValidation(isSchemaValidation);
+            } else {
+                throw new CitrusRuntimeException("Unexpectedly did not find OpenApiMessageValidationContextBuilder in bean properties!");
+            }
+        }
 
         BeanDefinitionBuilder actionBuilder = genericBeanDefinition(beanClass);
         actionBuilder.addConstructorArgValue(new RuntimeBeanReference(apiBeanClass));
@@ -136,7 +163,8 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
      */
     protected void setDefaultEndpoint(BeanDefinitionBuilder beanDefinitionBuilder) {
         if (!beanDefinitionBuilder.getBeanDefinition().getPropertyValues().contains("endpoint")
-            && !beanDefinitionBuilder.getBeanDefinition().getPropertyValues().contains("endpointUri")) {
+            && !beanDefinitionBuilder.getBeanDefinition().getPropertyValues()
+            .contains("endpointUri")) {
             beanDefinitionBuilder.addPropertyReference("endpoint", defaultApiEndpointName);
         }
     }
@@ -154,14 +182,16 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
     @Override
     protected HttpMessageBuilder createMessageBuilder(HttpMessage httpMessage) {
         return new OpenApiClientResponseMessageBuilder(httpMessage,
-                new OpenApiSpecificationSource(openApiSpecification), operationId, null);
+            new OpenApiSpecificationSource(openApiSpecification), operationId, null);
     }
 
     @Override
     protected List<ValidationContext.Builder<?, ?>> parseValidationContexts(Element messageElement,
-                                                              BeanDefinitionBuilder builder) {
-        List<ValidationContext.Builder<?, ?>> validationContextBuilders = super.parseValidationContexts(messageElement, builder);
-        OpenApiMessageValidationContext.Builder openApiMessageValidationContextBuilder = getOpenApiMessageValidationContext(messageElement);
+        BeanDefinitionBuilder builder) {
+        List<ValidationContext.Builder<?, ?>> validationContextBuilders = super.parseValidationContexts(
+            messageElement, builder);
+        OpenApiMessageValidationContext.Builder openApiMessageValidationContextBuilder = getOpenApiMessageValidationContext(
+            messageElement);
         validationContextBuilders.add(openApiMessageValidationContextBuilder);
         return validationContextBuilders;
     }
@@ -169,10 +199,19 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
     /**
      * Constructs the OpenAPI message validation context based on the XML element.
      */
-    private OpenApiMessageValidationContext.Builder getOpenApiMessageValidationContext(Element messageElement) {
-        OpenApiMessageValidationContext.Builder validationContextBuilder = openApi(openApiSpecification);
+    private OpenApiMessageValidationContext.Builder getOpenApiMessageValidationContext(
+        Element messageElement) {
+        OpenApiMessageValidationContext.Builder validationContextBuilder = openApi(
+            openApiSpecification);
 
         if (messageElement != null) {
+            Element parentElement = (Element) messageElement.getParentNode();
+            String actionSchemaValidation = parentElement.getAttribute(SCHEMA_VALIDATION);
+            if (hasText(actionSchemaValidation)) {
+                validationContextBuilder.schemaValidation(
+                    parseBoolean(actionSchemaValidation));
+            }
+
             String schema = messageElement.getAttribute("schema");
             if (hasText(schema)) {
                 validationContextBuilder.schema(schema);
@@ -183,9 +222,9 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
                 validationContextBuilder.schema(schemaRepository);
             }
 
-            String schemaValidation = messageElement.getAttribute("schema-validation");
+            String schemaValidation = messageElement.getAttribute(SCHEMA_VALIDATION);
             if (hasText(schemaValidation)) {
-                validationContextBuilder.schemaValidation(Boolean.parseBoolean(schemaValidation));
+                validationContextBuilder.schemaValidation(parseBoolean(schemaValidation));
             }
         }
 
@@ -197,11 +236,12 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
      * {@link RestApiReceiveMessageActionBuilder}.
      */
     public static class TestApiOpenApiClientReceiveActionBuilderFactoryBean extends
-            AbstractReceiveMessageActionFactoryBean<ReceiveMessageAction, HttpMessageBuilderSupport, HttpClientResponseActionBuilder> {
+        AbstractReceiveMessageActionFactoryBean<ReceiveMessageAction, HttpMessageBuilderSupport, HttpClientResponseActionBuilder> {
 
         private RestApiReceiveMessageActionBuilder builder;
 
-        public TestApiOpenApiClientReceiveActionBuilderFactoryBean(RestApiReceiveMessageActionBuilder builder) {
+        public TestApiOpenApiClientReceiveActionBuilderFactoryBean(
+            RestApiReceiveMessageActionBuilder builder) {
             this.builder = builder;
         }
 
@@ -222,6 +262,10 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
 
         public void setBuilder(RestApiReceiveMessageActionBuilder builder) {
             this.builder = builder;
+        }
+
+        public void setSchemaValidation(final boolean enabled) {
+            this.builder.schemaValidation(enabled);
         }
     }
 }

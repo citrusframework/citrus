@@ -32,9 +32,7 @@
                 </http:body>
             </http:send-response>
 
-            <petstore:receive-get-pet-by-id>
-                <http:body schema-validation="false"/>
-            </petstore:receive-get-pet-by-id>
+            <petstore:receive-get-pet-by-id schema-validation="false"/>
         </actions>
     </testcase>
 </spring:beans>
