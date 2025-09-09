@@ -1,0 +1,64 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+    xmlns:petstore="http://www.citrusframework.org/citrus-test-schema/petstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/http/testcase
+    http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/petstore-api
+    http://www.citrusframework.org/citrus-test-schema/petstore-api/petstore-api.xsd"
+>
+
+    <template name="addPetTemplate">
+
+        <create-variables>
+            <variable name="petId" value="1234" />
+        </create-variables>
+
+        <petstore:send-add-pet fork="true">
+            <petstore:body>
+                <petstore:data>${pet}</petstore:data>
+            </petstore:body>
+        </petstore:send-add-pet>
+
+        <http:receive-request server="httpServer">
+            <http:POST path="/api/v3/pet">
+                <http:body>
+                    <http:data>
+                        ${pet}
+                    </http:data>
+                </http:body>
+            </http:POST>
+        </http:receive-request>
+
+        <http:send-response server="httpServer">
+            <http:headers status="200">
+                <http:header name="Content-Type" value="application/json" />
+            </http:headers>
+            <http:body type="json">
+                <http:data>${pet}</http:data>
+            </http:body>
+        </http:send-response>
+
+        <petstore:receive-add-pet responseCode="200"/>
+    </template>
+
+    <testcase name="performAddPetFromTemplateTest">
+        <actions>
+
+            <call-template name="addPetTemplate">
+                <parameter name="pet" value="citrus:readFile('org/citrusframework/openapi/generator/GeneratedApiTest/payloads/addPetMessage1.json')" />
+            </call-template>
+
+            <call-template name="addPetTemplate">
+                <parameter name="pet" value="citrus:readFile('org/citrusframework/openapi/generator/GeneratedApiTest/payloads/addPetMessage2.json')" />
+            </call-template>
+
+        </actions>
+    </testcase>
+</spring:beans>

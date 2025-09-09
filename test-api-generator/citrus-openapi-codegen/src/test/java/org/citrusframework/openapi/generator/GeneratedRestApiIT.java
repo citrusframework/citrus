@@ -3638,7 +3638,7 @@ class GeneratedRestApiIT {
         }
 
         @Test
-        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "negativeRequestWithMissingRequiredQueryParameter")
+        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "negativeRequestWithMissingRequiredQueryParameterTest")
         void xml_perform_request_with_missing_required_query_parameter() {
         }
 
@@ -3664,8 +3664,28 @@ class GeneratedRestApiIT {
         }
 
         @Test
-        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "negativeRequestWithMissingRequiredHeaderParameter")
+        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "negativeRequestWithMissingRequiredHeaderParameterTest")
         void xml_perform_request_with_missing_required_header_parameter() {
         }
+    }
+
+    @Nested
+    class TemplateBased {
+
+        @Test
+        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "performGetPetFromTemplateTest")
+        void xml_perform_get_pet_from_template() {
+        }
+
+        @Test
+        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "performFindPetFromTemplateTest")
+        void xml_perform_find_pet_from_template() {
+        }
+
+        @Test
+        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "performAddPetFromTemplateTest")
+        void xml_perform_add_pet_from_template() {
+        }
+
     }
 }

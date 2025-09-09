@@ -22,6 +22,12 @@ import static java.util.Optional.ofNullable;
 
 public final class SystemProvider {
 
+    public static final SystemProvider SYSTEM_PROVIDER = new SystemProvider();
+
+    private SystemProvider() {
+        // Singleton
+    }
+
     public Optional<String> getEnv(String envVarName) {
         return ofNullable(System.getenv(envVarName));
     }

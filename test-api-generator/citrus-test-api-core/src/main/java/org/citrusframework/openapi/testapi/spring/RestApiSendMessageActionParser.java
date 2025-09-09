@@ -156,6 +156,14 @@ public class RestApiSendMessageActionParser extends HttpSendRequestActionParser 
                 beanDefinitionBuilder);
         }
 
+        // Since we use bean properties to fill the properties, we must make
+        // sure to not accumulate attributes e.g. query/header. Note that the
+        // base message in the builder never changes as it is part of the bean
+        // definition itself. So we cannot apply our properties to this message.
+        // Therefore, the underlying bean collects all parameters and applies
+        // them to the message that is created by the builder.
+        beanDefinitionBuilder.setScope(BeanDefinition.SCOPE_PROTOTYPE);
+
         return beanDefinitionBuilder;
     }
 

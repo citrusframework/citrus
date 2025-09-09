@@ -25,6 +25,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 import static org.citrusframework.util.StringUtils.hasText;
+import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROTOTYPE;
 import static org.springframework.beans.factory.support.BeanDefinitionBuilder.genericBeanDefinition;
 
 public class SoapApiReceiveMessageActionParser extends ReceiveSoapMessageActionParser {
@@ -57,6 +58,7 @@ public class SoapApiReceiveMessageActionParser extends ReceiveSoapMessageActionP
         BeanDefinitionBuilder actionBuilder = createTestApiActionBuilder();
         beanDefinitionBuilder.addConstructorArgValue(actionBuilder.getBeanDefinition());
 
+        beanDefinitionBuilder.setScope(SCOPE_PROTOTYPE);
         return beanDefinitionBuilder;
     }
 

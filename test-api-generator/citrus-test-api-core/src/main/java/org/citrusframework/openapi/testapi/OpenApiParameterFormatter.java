@@ -16,14 +16,15 @@
 
 package org.citrusframework.openapi.testapi;
 
+import java.beans.FeatureDescriptor;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,24 +43,34 @@ import static java.lang.String.format;
 import static java.net.URLDecoder.decode;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.citrusframework.openapi.testapi.ParameterStyle.DEEPOBJECT;
+import static org.citrusframework.openapi.testapi.ParameterStyle.FORM;
+import static org.citrusframework.openapi.testapi.ParameterStyle.LABEL;
+import static org.citrusframework.openapi.testapi.ParameterStyle.MATRIX;
 import static org.citrusframework.openapi.testapi.ParameterStyle.NONE;
+import static org.citrusframework.openapi.testapi.ParameterStyle.PIPEDELIMITED;
+import static org.citrusframework.openapi.testapi.ParameterStyle.SIMPLE;
+import static org.citrusframework.openapi.testapi.ParameterStyle.SPACEDELIMITED;
 import static org.citrusframework.openapi.testapi.ParameterStyle.X_ENCODE_AS_JSON;
 
 class OpenApiParameterFormatter {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    public static final String PARAMETER_NAME_TOKEN = "%PARAMETER_NAME_TOKEN%";
 
-    private static final FormatParameters DEFAULT_FORMAT_PARAMETERS = new FormatParameters("", ",");
-    private static final FormatParameters PIPE_DELIMITED_FORMAT_PARAMETERS = new FormatParameters(
-        "", "|");
-    private static final FormatParameters SPACE_DELIMITED_FORMAT_PARAMETERS = new FormatParameters(
-        "", " ");
-    private static final FormatParameters DEFAULT_LABEL_FORMAT_PARAMETERS = new FormatParameters(
-        ".", ",");
-    private static final FormatParameters DEFAULT_LABEL_EXPLODED_PARAMETERS = new FormatParameters(
-        ".", ".");
+    private static final Map<ParameterStyle, StyleEncoder> ENCODER_LOOKUP = Map.of(
+        NONE, new NoneEncoder(),
+        MATRIX, new MatrixEncoder(),
+        LABEL, new LabelEncoder(),
+        SIMPLE, new SimpleEncoder(new FormatParameters(PARAMETER_NAME_TOKEN + "=", ",")),
+        FORM, new FormEncoder(),
+        SPACEDELIMITED, new SimpleEncoder(new FormatParameters(PARAMETER_NAME_TOKEN + "=", "%20")),
+        PIPEDELIMITED, new SimpleEncoder(new FormatParameters(PARAMETER_NAME_TOKEN + "=", "%7C")),
+        DEEPOBJECT, new DeepObjectEncoder(),
+        X_ENCODE_AS_JSON, new XEncodeAsJsonEncoder()
+    );
 
     private OpenApiParameterFormatter() {
         // Static access only.
@@ -68,159 +79,23 @@ class OpenApiParameterFormatter {
     /**
      * Formats a list of values as a single String based on the separator and other settings.
      */
-    static String formatArray(String parameterName,
+    static String formatAccordingToStyle(String parameterName,
         Object parameterValue,
         ParameterStyle parameterStyle,
         boolean explode,
         boolean isObject) {
 
-        if (X_ENCODE_AS_JSON.equals(parameterStyle)) {
-            return encodeAsJson(parameterName, parameterValue);
-        } else {
-            return encodeAccordingToSpec(parameterName, parameterValue, parameterStyle, explode,
+        StyleEncoder styleEncoder = ENCODER_LOOKUP.get(parameterStyle);
+        if (styleEncoder != null) {
+            return styleEncoder.encodeAccordingToSpec(parameterName, parameterValue, explode,
                 isObject);
         }
+
+        throw new IllegalArgumentException(
+            String.format("Parameter style '%s' is not supported", parameterStyle));
     }
 
-    private static String encodeAccordingToSpec(String parameterName, Object parameterValue,
-        ParameterStyle parameterStyle, boolean explode, boolean isObject) {
-        List<String> values = toList(parameterValue, isObject);
-
-        if (NONE.equals(parameterStyle)) {
-            return parameterName + "=" + (parameterValue != null ? parameterValue.toString()
-                : null);
-        }
-
-        if (DEEPOBJECT.equals(parameterStyle)) {
-            return formatDeepObject(parameterName, values);
-        }
-
-        FormatParameters formatParameters = determineFormatParameters(parameterName, parameterStyle,
-            explode, isObject);
-
-        if (isObject && explode) {
-            return formatParameters.prefix + explode(values, formatParameters.separator);
-        } else {
-            return formatParameters.prefix + values.stream()
-                .collect(joining(formatParameters.separator));
-        }
-    }
-
-    /**
-     * This is an extension to the standard OpenAPI spec, that supports a common coding style for
-     * deeply nested objects, where the json itself is serialized as string.
-     */
-    private static String encodeAsJson(String parameterName, Object parameterValue) {
-        if (parameterValue == null) {
-            return "";
-        }
-
-        JsonNode jsonNode;
-
-        // If it's a string, try parsing as JSON, fallback to URL decoding, as the user might have
-        // encoded the content already.
-        if (parameterValue instanceof String stringValue) {
-            jsonNode = tryParseJson(stringValue);
-            if (jsonNode == null) {
-                String decoded = decode(stringValue, StandardCharsets.UTF_8);
-                jsonNode = tryParseJson(decoded);
-                if (jsonNode == null) {
-                    throw new IllegalArgumentException(format(
-                        "Unable to convert string to JSON. Is this a valid JSON or URL-encoded JSON string?%n%s",
-                        stringValue));
-                }
-            }
-        } else {
-            // If not a string, try to convert object directly
-            jsonNode = objectMapper.valueToTree(parameterValue);
-        }
-
-        try {
-            String compactJson = objectMapper.writeValueAsString(jsonNode).replaceAll("\\R", "");
-
-            // There is no other way to pass this into a query parameter, then URL encoding it.
-            return parameterName + "=" + URLEncoder.encode(compactJson, StandardCharsets.UTF_8);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Unable to serialize object to JSON string.", e);
-        }
-    }
-
-    /**
-     * Try to parse the input as json. Silently returns null if input cannot be parsed to json.
-     */
-    private static @Nullable JsonNode tryParseJson(String input) {
-        try {
-            return objectMapper.readTree(input);
-        } catch (JsonProcessingException e) {
-            return null;
-        }
-    }
-
-    private static String formatDeepObject(String parameterName, List<String> values) {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < values.size(); i += 2) {
-            String key = values.get(i);
-            String value = values.get(i + 1);
-            builder.append("%s[%s]=%s".formatted(parameterName, key, value));
-            builder.append("&");
-        }
-
-        if (!builder.isEmpty()) {
-            builder.deleteCharAt(builder.length() - 1);
-        }
-
-        return builder.toString();
-    }
-
-    private static FormatParameters determineFormatParameters(String parameterName,
-        ParameterStyle parameterStyle,
-        boolean explode,
-        boolean isObject) {
-        return switch (parameterStyle) {
-            case MATRIX -> matrixFormatParameters(parameterName, explode, isObject);
-            case LABEL -> labelFormatParameters(explode);
-            case FORM -> formFormatParameters(parameterName, explode, isObject);
-            case PIPEDELIMITED -> PIPE_DELIMITED_FORMAT_PARAMETERS;
-            case SPACEDELIMITED -> SPACE_DELIMITED_FORMAT_PARAMETERS;
-            case NONE, SIMPLE, DEEPOBJECT, X_ENCODE_AS_JSON -> DEFAULT_FORMAT_PARAMETERS;
-        };
-    }
-
-    private static FormatParameters formFormatParameters(String parameterName, boolean explode,
-        boolean isObject) {
-        if (explode) {
-            if (isObject) {
-                return new FormatParameters("", "&");
-            }
-            return new FormatParameters(parameterName + "=", "&" + parameterName + "=");
-        } else {
-            return new FormatParameters(parameterName + "=", ",");
-        }
-    }
-
-    private static FormatParameters labelFormatParameters(boolean explode) {
-        return explode ? DEFAULT_LABEL_EXPLODED_PARAMETERS : DEFAULT_LABEL_FORMAT_PARAMETERS;
-    }
-
-    private static FormatParameters matrixFormatParameters(String parameterName, boolean explode,
-        boolean isObject) {
-        String prefix;
-        String separator = ",";
-        if (explode) {
-            if (isObject) {
-                prefix = ";";
-            } else {
-                prefix = ";" + parameterName + "=";
-            }
-            separator = prefix;
-        } else {
-            prefix = ";" + parameterName + "=";
-        }
-
-        return new FormatParameters(prefix, separator);
-    }
-
-    private static String explode(List<String> values, String delimiter) {
+    private static String formatExploded(List<String> values, String delimiter) {
         return IntStream.range(0, values.size() / 2)
             .mapToObj(i -> values.get(2 * i) + "=" + values.get(2 * i + 1))
             .collect(joining(delimiter));
@@ -290,20 +165,254 @@ class OpenApiParameterFormatter {
     protected static Map<String, Object> convertBeanToMap(Object bean) {
         Map<String, Object> map = new TreeMap<>();
         try {
-            for (PropertyDescriptor propertyDescriptor : Introspector.getBeanInfo(
-                bean.getClass(), Object.class).getPropertyDescriptors()) {
-                String propertyName = propertyDescriptor.getName();
-                Object propertyValue = propertyDescriptor.getReadMethod().invoke(bean);
-                if (propertyValue != null) {
-                    map.put(propertyName, propertyValue);
+            Arrays.stream(Introspector.getBeanInfo(
+                bean.getClass(), Object.class).getPropertyDescriptors()).sorted(
+                comparing(FeatureDescriptor::getName)).forEach(propertyDescriptor -> {
+                try {
+                    String propertyName = propertyDescriptor.getName();
+                    Object propertyValue = propertyDescriptor.getReadMethod().invoke(bean);
+                    if (propertyValue != null) {
+                        map.put(propertyName, propertyValue);
+                    }
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new CitrusRuntimeException(
+                        "Error converting bean to map: " + e.getMessage(), e);
                 }
-            }
-        } catch (IntrospectionException | IllegalAccessException | InvocationTargetException e) {
+            });
+        } catch (IntrospectionException e) {
             throw new CitrusRuntimeException("Error converting bean to map: " + e.getMessage(), e);
         }
         return map;
     }
 
     private record FormatParameters(String prefix, String separator) {
+
+    }
+
+    private interface StyleEncoder {
+
+        String encodeAccordingToSpec(String parameterName, Object parameterValue,
+            boolean explode, boolean isObject);
+    }
+
+    private static class NoneEncoder implements StyleEncoder {
+
+        @Override
+        public String encodeAccordingToSpec(String parameterName, Object parameterValue,
+            boolean explode, boolean isObject) {
+            return parameterName + "=" + (parameterValue != null ? parameterValue.toString()
+                : null);
+        }
+    }
+
+    private static class MatrixEncoder implements StyleEncoder {
+
+        @Override
+        public String encodeAccordingToSpec(String parameterName, Object parameterValue,
+            boolean explode, boolean isObject) {
+            List<String> values = toList(parameterValue, isObject);
+            FormatParameters formatParameters = matrixFormatParameters(parameterName, explode,
+                isObject);
+
+            String prefix = formatParameters.prefix.replace(PARAMETER_NAME_TOKEN, parameterName);
+
+            String encoded;
+            if (isObject && explode) {
+                encoded = prefix + formatExploded(values, formatParameters.separator);
+            } else {
+                encoded = prefix + values.stream()
+                    .collect(joining(formatParameters.separator));
+            }
+
+            return encoded;
+        }
+
+        private static FormatParameters matrixFormatParameters(String parameterName,
+            boolean explode,
+            boolean isObject) {
+            String prefix;
+            String separator = ",";
+            if (explode) {
+                if (isObject) {
+                    prefix = ";";
+                } else {
+                    prefix = ";" + parameterName + "=";
+                }
+                separator = prefix;
+            } else {
+                prefix = ";" + parameterName + "=";
+            }
+
+            return new FormatParameters(PARAMETER_NAME_TOKEN + "=" + prefix, separator);
+        }
+    }
+
+    private static class LabelEncoder implements StyleEncoder {
+
+        private static final FormatParameters DEFAULT_LABEL_FORMAT_PARAMETERS = new FormatParameters(
+            "%PARAMETER_NAME_TOKEN%=.", ",");
+        private static final FormatParameters DEFAULT_LABEL_EXPLODED_PARAMETERS = new FormatParameters(
+            "%PARAMETER_NAME_TOKEN%=.", ".");
+
+        @Override
+        public String encodeAccordingToSpec(String parameterName, Object parameterValue,
+            boolean explode, boolean isObject) {
+            List<String> values = toList(parameterValue, isObject);
+            FormatParameters formatParameters = labelFormatParameters(explode);
+
+            String prefix = formatParameters.prefix.replace(PARAMETER_NAME_TOKEN, parameterName);
+
+            String encoded;
+            if (isObject && explode) {
+                encoded = prefix + formatExploded(values, formatParameters.separator);
+            } else {
+                encoded = prefix + values.stream()
+                    .collect(joining(formatParameters.separator));
+            }
+
+            return encoded;
+        }
+
+        private static FormatParameters labelFormatParameters(boolean explode) {
+            return explode ? DEFAULT_LABEL_EXPLODED_PARAMETERS : DEFAULT_LABEL_FORMAT_PARAMETERS;
+        }
+    }
+
+    private static class SimpleEncoder implements StyleEncoder {
+
+        private final FormatParameters formatParameters;
+
+        private SimpleEncoder(FormatParameters formatParameters) {
+            this.formatParameters = formatParameters;
+        }
+
+        @Override
+        public String encodeAccordingToSpec(String parameterName, Object parameterValue,
+            boolean explode, boolean isObject) {
+            List<String> values = toList(parameterValue, isObject);
+            String prefix = formatParameters.prefix.replace(PARAMETER_NAME_TOKEN, parameterName);
+
+            String encoded;
+            if (isObject && explode) {
+                encoded = prefix + formatExploded(values, formatParameters.separator);
+            } else {
+                encoded = prefix + values.stream()
+                    .collect(joining(formatParameters.separator));
+            }
+
+            return encoded;
+        }
+    }
+
+    private static class FormEncoder implements StyleEncoder {
+
+        @Override
+        public String encodeAccordingToSpec(String parameterName, Object parameterValue,
+            boolean explode, boolean isObject) {
+            List<String> values = toList(parameterValue, isObject);
+            FormatParameters formatParameters = formFormatParameters(parameterName, explode,
+                isObject);
+
+            String encoded;
+            if (isObject && explode) {
+                encoded =
+                    formatParameters.prefix + formatExploded(values, formatParameters.separator);
+            } else {
+                encoded = formatParameters.prefix + values.stream()
+                    .collect(joining(formatParameters.separator));
+            }
+
+            return encoded;
+        }
+
+        private static FormatParameters formFormatParameters(String parameterName, boolean explode,
+            boolean isObject) {
+            if (explode) {
+                if (isObject) {
+                    return new FormatParameters("", "&");
+                }
+                return new FormatParameters(parameterName + "=", "&" + parameterName + "=");
+            } else {
+                return new FormatParameters(parameterName + "=", ",");
+            }
+        }
+    }
+
+    /**
+     * This is an extension to the standard OpenAPI spec, that supports a common coding style for
+     * deeply nested objects, where the json itself is serialized as string.
+     */
+    private static class DeepObjectEncoder implements StyleEncoder {
+
+        @Override
+        public String encodeAccordingToSpec(String parameterName, Object parameterValue,
+            boolean explode, boolean isObject) {
+            List<String> values = toList(parameterValue, isObject);
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < values.size(); i += 2) {
+                String key = values.get(i);
+                String value = values.get(i + 1);
+                builder.append("%s[%s]=%s".formatted(parameterName, key, value));
+                builder.append("&");
+            }
+
+            if (!builder.isEmpty()) {
+                builder.deleteCharAt(builder.length() - 1);
+            }
+
+            return builder.toString();
+        }
+    }
+
+    private static class XEncodeAsJsonEncoder implements StyleEncoder {
+
+        @Override
+        public String encodeAccordingToSpec(String parameterName, Object parameterValue,
+            boolean explode, boolean isObject) {
+            if (parameterValue == null) {
+                return "";
+            }
+
+            JsonNode jsonNode;
+
+            // If it's a string, try parsing as JSON, fallback to URL decoding, as the user might have
+            // encoded the content already.
+            if (parameterValue instanceof String stringValue) {
+                jsonNode = tryParseJson(stringValue);
+                if (jsonNode == null) {
+                    String decoded = decode(stringValue, StandardCharsets.UTF_8);
+                    jsonNode = tryParseJson(decoded);
+                    if (jsonNode == null) {
+                        throw new IllegalArgumentException(format(
+                            "Unable to convert string to JSON. Is this a valid JSON or URL-encoded JSON string?%n%s",
+                            stringValue));
+                    }
+                }
+            } else {
+                // If not a string, try to convert object directly
+                jsonNode = objectMapper.valueToTree(parameterValue);
+            }
+
+            try {
+                String compactJson = objectMapper.writeValueAsString(jsonNode)
+                    .replaceAll("\\R", "");
+
+                // There is no other way to pass this into a query parameter, then URL encoding it.
+                return parameterName + "=" + URLEncoder.encode(compactJson, StandardCharsets.UTF_8);
+            } catch (JsonProcessingException e) {
+                throw new IllegalArgumentException("Unable to serialize object to JSON string.", e);
+            }
+        }
+
+        /**
+         * Try to parse the input as json. Silently returns null if input cannot be parsed to json.
+         */
+        private @Nullable JsonNode tryParseJson(String input) {
+            try {
+                return objectMapper.readTree(input);
+            } catch (JsonProcessingException e) {
+                return null;
+            }
+        }
     }
 }

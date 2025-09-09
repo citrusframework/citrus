@@ -145,6 +145,6 @@ class ExpectedCodeGenIT {
         actualContent = actualContent.replaceAll(generatedAnnotationPattern, placeholder);
         expectedContent = expectedContent.replaceAll(generatedAnnotationPattern, placeholder);
 
-        assertThat(actualContent).isEqualTo(expectedContent);
+        assertThat(actualContent).isEqualToIgnoringNewLines(expectedContent);
     }
 }

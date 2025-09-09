@@ -16,28 +16,21 @@
 
 package org.citrusframework.util;
 
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
-
 import java.util.Optional;
 
+import org.testng.annotations.Test;
+
+import static org.citrusframework.util.SystemProvider.SYSTEM_PROVIDER;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 
 public class SystemProviderTest {
 
-    private SystemProvider systemProvider;
-
-    @BeforeTest
-    public void beforeTestSetup() {
-        systemProvider = new SystemProvider();
-    }
-
     @Test
     public void getEnvWithExistingVariable() {
         // Assuming 'PATH' is an existing environment variable
         String envVarName = "PATH";
-        Optional<String> result = systemProvider.getEnv(envVarName);
+        Optional<String> result = SYSTEM_PROVIDER.getEnv(envVarName);
 
         assertTrue("Expected environment variable PATH to be present", result.isPresent());
     }
@@ -45,7 +38,7 @@ public class SystemProviderTest {
     @Test
     public void getEnvWithNonExistingVariable() {
         String envVarName = "NON_EXISTING_ENV_VAR";
-        Optional<String> result = systemProvider.getEnv(envVarName);
+        Optional<String> result = SYSTEM_PROVIDER.getEnv(envVarName);
 
         assertFalse("Expected environment variable NON_EXISTING_ENV_VAR to not be present", result.isPresent());
     }
@@ -54,7 +47,7 @@ public class SystemProviderTest {
     public void getPropertyWithExistingProperty() {
         // Assuming 'java.version' is an existing system property
         String propertyName = "java.version";
-        Optional<String> result = systemProvider.getProperty(propertyName);
+        Optional<String> result = SYSTEM_PROVIDER.getProperty(propertyName);
 
         assertTrue("Expected system property java.version to be present", result.isPresent());
     }
@@ -62,7 +55,7 @@ public class SystemProviderTest {
     @Test
     public void getPropertyWithNonExistingProperty() {
         String propertyName = "NON_EXISTING_SYSTEM_PROPERTY";
-        Optional<String> result = systemProvider.getProperty(propertyName);
+        Optional<String> result = SYSTEM_PROVIDER.getProperty(propertyName);
 
         assertFalse("Expected system property NON_EXISTING_SYSTEM_PROPERTY to not be present", result.isPresent());
     }

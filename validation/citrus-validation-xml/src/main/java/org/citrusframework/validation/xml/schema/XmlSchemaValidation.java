@@ -54,6 +54,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXParseException;
 
 import static java.lang.String.format;
+import static org.citrusframework.util.SystemProvider.SYSTEM_PROVIDER;
 import static org.citrusframework.validation.xml.schema.ValidationStrategy.FAIL;
 import static org.citrusframework.xml.schema.AbstractSchemaCollection.W3C_XML_SCHEMA_NS_URI;
 
@@ -72,7 +73,7 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
     private final ValidationStrategy noSchemaFoundStrategy;
 
     public XmlSchemaValidation() {
-        this(new SystemProvider());
+        this(SYSTEM_PROVIDER);
     }
 
     /**

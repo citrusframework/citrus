@@ -19,7 +19,6 @@ package org.citrusframework.openapi.generator;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,9 +41,6 @@ import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.testapi.RestApiSendMessageActionBuilder;
 import org.citrusframework.openapi.testapi.SoapApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.testapi.SoapApiSendMessageActionBuilder;
-import org.citrusframework.spi.Resource;
-import org.citrusframework.spi.Resources;
-import org.citrusframework.util.FileUtils;
 import org.openapitools.codegen.CodegenConstants;
 import org.openapitools.codegen.CodegenOperation;
 import org.openapitools.codegen.CodegenParameter;
@@ -378,56 +374,27 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
      * repository.
      */
     private void writeApiToResourceFolder() {
-        // Build the target directory path, write to source (not resource) to avoid
-        // issues with classpath configuration in maven.
-        String directoryPath = appendSegmentToUrlPath(getOutputDir(), getSourceFolder());
-        directoryPath = appendSegmentToUrlPath(directoryPath, invokerPackage.replace('.', File.separatorChar));
+        String directoryPath = appendSegmentToUrlPath(getOutputDir(), getResourceFolder());
+        directoryPath = appendSegmentToUrlPath(directoryPath,
+            invokerPackage.replace('.', File.separatorChar));
+        additionalProperties.put("invokerPackagePath", invokerPackage.replace('.', '/'));
 
         String filename = getApiPrefix() + "_openApi.yaml";
         File directory = new File(directoryPath);
-
-        // Ensure directory exists
         if (!directory.exists() && !directory.mkdirs()) {
-            throw new CitrusRuntimeException(
-                "Unable to create directory for API resource: " + directory.getAbsolutePath()
-            );
+            throw new CitrusRuntimeException("Unable to create directory for api resource!");
         }
 
         File file = new File(directory, filename);
 
-        String openApiContent = null;
-
-        // Attempt to load the original OpenAPI spec from inputSpec
-        try {
-            if (inputSpec != null) {
-                Resource resource = Resources.create(inputSpec);
-                if (resource != null && resource.exists()) {
-                    openApiContent = FileUtils.readToString(resource, StandardCharsets.UTF_8);
-                }
-            }
-        } catch (IOException e) {
-            logger.error(String.format(
-                "Unable to reload OpenAPI from inputSpec '%s', falling back to serializing from loaded OpenAPI.",
-                inputSpec
-            ), e);
-        }
-
-        // Fallback: serialize the already loaded OpenAPI object
-        // Note: Writing OpenAPI 3.1.0 may have issues with certain schemas not being fully serialized
-        if (openApiContent == null) {
-            openApiContent = Yaml.pretty(openAPI);
-        }
-
-        // Write the OpenAPI content to the target file
         try (FileWriter writer = new FileWriter(file)) {
-            writer.write(openApiContent);
+            String yamlContent = Yaml.pretty(openAPI);
+            writer.write(yamlContent);
         } catch (IOException e) {
             throw new CitrusRuntimeException(
-                "Unable to write OpenAPI to resource folder: " + file.getAbsolutePath(), e
-            );
+                "Unable to write OpenAPI to source folder: " + file.getAbsolutePath());
         }
     }
-
 
     @Override
     public void preprocessOpenAPI(OpenAPI openAPI) {

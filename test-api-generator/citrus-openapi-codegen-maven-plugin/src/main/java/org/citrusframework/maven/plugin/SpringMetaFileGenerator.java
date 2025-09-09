@@ -134,7 +134,7 @@ public class SpringMetaFileGenerator {
         String filename = "spring.handlers";
         writeSpringMetaFile(springMetafileDirectory, filename, (fileWriter, apiConfig) -> {
 
-            String classNamePrefix =camelize(apiConfig.getPrefix(), CamelizeOption.UPPERCASE_FIRST_CHAR);
+            String classNamePrefix = camelize(apiConfig.getPrefix(), CamelizeOption.UPPERCASE_FIRST_CHAR);
             String targetXmlnsNamespace = replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(), apiConfig.getPrefix(), apiConfig.getVersion());
             String invokerPackage = replaceDynamicVarsToLowerCase(apiConfig.getInvokerPackage(), apiConfig.getPrefix(), apiConfig.getVersion());
             String namespaceHandlerClass = invokerPackage + ".spring." + classNamePrefix + "NamespaceHandler";

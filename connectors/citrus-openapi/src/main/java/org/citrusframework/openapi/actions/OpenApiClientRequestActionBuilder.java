@@ -47,7 +47,6 @@ import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboun
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
 import static org.citrusframework.openapi.model.OasModelHelper.getRequestBodySchema;
 import static org.citrusframework.openapi.model.OasModelHelper.isOperationRequestBodyRequired;
-import static org.citrusframework.util.StringUtils.isNotEmpty;
 
 /**
  * @since 4.1
@@ -210,32 +209,25 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                 setMissingQueryParametersToRandomValues(openApiSpecification, context, operation);
             }
 
+            String randomizedPath = path;
             setMissingBodyToRandomValue(openApiSpecification, context, operation);
-            String randomizedPath = getMessage().getPath() != null ? getMessage().getPath() : path;
             if (operation.parameters != null) {
                 List<OasParameter> pathParams = operation.parameters.stream()
                     .filter(p -> "path".equals(p.in)).toList();
 
                 for (OasParameter parameter : pathParams) {
-                    String parameterValue = null;
-                    String pathParameterValue = getDefinedPathParameter(context,
-                        parameter.getName());
-                    if (isNotEmpty(pathParameterValue)) {
-                        parameterValue = "\\" + pathParameterValue;
-                    } else if (autoFill != NONE) {
-                        parameterValue = createRandomValueExpression(
-                            (OasSchema) parameter.schema);
-                    }
 
-                    if (parameterValue == null) {
-                        throw new CitrusRuntimeException(
-                            "Path parameter value is null. Path parameters are required for proper operation resolution and cannot be null."
-                        );
+                    Object value = context.getVariables().get(parameter.name);
+                    if (value == null) {
+                        if (autoFill != NONE) {
+                            // Fill the path parameter via context
+                            context.setVariable(parameter.name, createRandomValueExpression(
+                                (OasSchema) parameter.schema));
+                            randomizedPath = path.replace("{"+parameter.name+"}", "${"+parameter.name+"}");
+                        }
+                    } else {
+                         randomizedPath = path.replace("{"+parameter.name+"}", "${"+parameter.name+"}");
                     }
-
-                    randomizedPath = randomizedPath.replaceAll(
-                        "\\{" + parameter.getName() + "}",
-                        parameterValue);
                 }
             }
 

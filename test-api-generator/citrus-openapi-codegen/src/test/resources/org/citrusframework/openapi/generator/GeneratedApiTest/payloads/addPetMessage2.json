@@ -1,0 +1,6 @@
+{
+    "id": 666,
+    "name": "Garfield",
+    "tags": [{"id": 1298, "name": "comic cat"}],
+    "photoUrls": ["url1", "url2"]
+}
