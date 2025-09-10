@@ -51,12 +51,18 @@ public void GroovyTest() {
     </variables>
     <actions>
         <groovy>
+          <script>
             println 'Hello Citrus'
+          </script>
         </groovy>
         <groovy>
+          <script>
             println 'The variable is: ${time}'
+          </script>
         </groovy>
-        <groovy file="classpath:org/citrusframework/script/example.groovy"/>
+        <groovy>
+          <script file="classpath:org/citrusframework/script/example.groovy"/>
+        </groovy>
     </actions>
 </test>
 ----
@@ -75,7 +81,8 @@ actions:
       script: |
         println 'The variable is: ${time}'
   - groovy:
-      file: classpath:org/citrusframework/script/example.groovy
+      script:
+        file: classpath:org/citrusframework/script/example.groovy
 ----
 
 .Spring XML
