@@ -172,7 +172,7 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
 
     private boolean findProcessAndVerifyStatus(Long pid, String name, String phase) {
         Map<String, String> properties = camelJBang().get(pid);
-        if ((phase.equals("Stopped") && properties.isEmpty()) || (!properties.isEmpty() && properties.get("STATUS").equals(phase))) {
+        if ((phase.equals("Stopped") && properties.isEmpty()) || (!properties.isEmpty() && properties.getOrDefault("STATUS", "").equals(phase))) {
             logger.info(String.format("Verified Camel integration '%s' state '%s' - All values OK!", name, phase));
             return true;
         } else if (properties.getOrDefault("STATUS", "").equals("Error")) {
