@@ -16,6 +16,13 @@
 
 package org.citrusframework.kafka.endpoint;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -24,13 +31,6 @@ import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 
 import static java.lang.String.format;
 import static java.util.Objects.isNull;
@@ -115,6 +115,12 @@ public class KafkaProducer implements Producer {
         }
 
         context.onOutboundMessage(message);
+    }
+
+    public void stop() {
+        if (producer != null) {
+            producer.close();
+        }
     }
 
     /**

@@ -16,16 +16,16 @@
 
 package org.citrusframework;
 
-import org.citrusframework.common.TestLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import org.citrusframework.common.TestLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -303,6 +303,20 @@ public final class CitrusSettings {
     public static final String DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES_DEFAULT = FALSE.toString();
 
     /**
+     * Flag to enable/disable auto close of dynamic endpoints.
+     */
+    public static final String AUTO_CLOSE_DYNAMIC_ENDPOINTS_PROPERTY = "citrus.dynamic.endpoints.auto.close";
+    public static final String AUTO_CLOSE_DYNAMIC_ENDPOINTS_ENV = "CITRUS_DYNAMIC_ENDPOINTS_AUTO_CLOSE";
+    public static final String AUTO_CLOSE_DYNAMIC_ENDPOINTS_DEFAULT = FALSE.toString();
+
+    /**
+     * Flag to enable/disable auto removal of dynamic endpoints.
+     */
+    public static final String AUTO_REMOVE_DYNAMIC_ENDPOINTS_PROPERTY = "citrus.dynamic.endpoints.auto.remove";
+    public static final String AUTO_REMOVE_DYNAMIC_ENDPOINTS_ENV = "CITRUS_DYNAMIC_ENDPOINTS_AUTO_REMOVE";
+    public static final String AUTO_REMOVE_DYNAMIC_ENDPOINTS_DEFAULT = FALSE.toString();
+
+    /**
      * Gets set of file name patterns for Groovy test files.
      */
     public static Set<String> getGroovyTestFileNamePattern() {
@@ -478,6 +492,34 @@ public final class CitrusSettings {
                         DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES_PROPERTY,
                         DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES_ENV,
                         DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES_DEFAULT
+                )
+        );
+    }
+
+    /**
+     * Setting marks auto close for dynamic endpoints.
+     * If set to true all dynamic endpoints will be closed automatically after the test.
+     */
+    public static boolean isAutoCloseDynamicEndpoints() {
+        return parseBoolean(
+                getPropertyEnvOrDefault(
+                        AUTO_CLOSE_DYNAMIC_ENDPOINTS_PROPERTY,
+                        AUTO_CLOSE_DYNAMIC_ENDPOINTS_ENV,
+                        AUTO_CLOSE_DYNAMIC_ENDPOINTS_DEFAULT
+                )
+        );
+    }
+
+    /**
+     * Setting marks auto removal for dynamic endpoints.
+     * If set to true all dynamic endpoints will be closed and removed automatically after the test.
+     */
+    public static boolean isAutoRemoveDynamicEndpoints() {
+        return parseBoolean(
+                getPropertyEnvOrDefault(
+                        AUTO_REMOVE_DYNAMIC_ENDPOINTS_PROPERTY,
+                        AUTO_REMOVE_DYNAMIC_ENDPOINTS_ENV,
+                        AUTO_REMOVE_DYNAMIC_ENDPOINTS_DEFAULT
                 )
         );
     }

@@ -26,13 +26,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.citrusframework.CitrusSettings;
+import org.citrusframework.common.ShutdownPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ReflectionHelper;
-import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.TypeConversionUtils;
 
 /**
@@ -73,25 +76,50 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
             }
 
             Map<String, String> parameters = getParameters(endpointUri);
-            String endpointName = null;
-            if (parameters.containsKey(ENDPOINT_NAME)) {
-                endpointName = parameters.remove(ENDPOINT_NAME);
-            }
-
-            Endpoint endpoint = createEndpoint(path, parameters, context);
+            Endpoint endpoint = createEndpoint(path, getEndpointParameters(parameters), context);
 
             if (endpoint instanceof ReferenceResolverAware) {
                 ((ReferenceResolverAware) endpoint).setReferenceResolver(context.getReferenceResolver());
             }
 
-            if (StringUtils.hasText(endpointName)) {
-                endpoint.setName(endpointName);
+            if (parameters.containsKey(EndpointComponent.ENDPOINT_NAME)) {
+                endpoint.setName(parameters.get(EndpointComponent.ENDPOINT_NAME));
+            }
+
+            boolean autoClose = Optional.ofNullable(parameters.get(EndpointComponent.AUTO_CLOSE))
+                    .map(Boolean::parseBoolean)
+                    .orElseGet(CitrusSettings::isAutoCloseDynamicEndpoints);
+            if (autoClose) {
+                context.doFinally(() -> ctx -> {
+                    if (endpoint instanceof ShutdownPhase destroyable) {
+                        logger.info("Stopping endpoint '{}' due to auto close setting", endpoint.getName());
+                        destroyable.destroy();
+                    }
+                });
             }
 
             return endpoint;
         } catch (URISyntaxException e) {
             throw new CitrusRuntimeException(String.format("Unable to parse endpoint uri '%s'", endpointUri), e);
         }
+    }
+
+    /**
+     * Removes other settings from given parameter map and returns just the endpoint parameters.
+     */
+    private Map<String, String> getEndpointParameters(Map<String, String> parameters) {
+        Set<String> internalSettings = Set.of(ENDPOINT_NAME, AUTO_CLOSE, AUTO_REMOVE);
+        HashMap<String, String> result = new HashMap<>();
+
+        for (String key : parameters.keySet()) {
+            if (internalSettings.contains(key)) {
+                continue;
+            }
+
+            result.put(key, parameters.get(key));
+        }
+
+        return result;
     }
 
     @Override
@@ -148,12 +176,8 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
 
     /**
      * Removes non config parameters from list of endpoint parameters according to given endpoint configuration type. All
-     * parameters that do not reside to a endpoint configuration setting are removed so the result is a qualified list
+     * parameters that do not reside to an endpoint configuration setting are removed so the result is a qualified list
      * of endpoint configuration parameters.
-     *
-     * @param parameters
-     * @param endpointConfigurationType
-     * @return
      */
     protected Map<String, String> getEndpointConfigurationParameters(Map<String, String> parameters,
                                                                      Class<? extends EndpointConfiguration> endpointConfigurationType) {
@@ -174,10 +198,6 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
      * Filters non endpoint configuration parameters from parameter list and puts them
      * together as parameters string. According to given endpoint configuration type only non
      * endpoint configuration settings are added to parameter string.
-     *
-     * @param parameters
-     * @param endpointConfigurationType
-     * @return
      */
     protected String getParameterString(Map<String, String> parameters,
                                         Class<? extends EndpointConfiguration> endpointConfigurationType) {
@@ -212,10 +232,6 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
 
     /**
      * Create endpoint instance from uri resource and parameters.
-     * @param resourcePath
-     * @param parameters
-     * @param context
-     * @return
      */
     protected abstract Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context);
 

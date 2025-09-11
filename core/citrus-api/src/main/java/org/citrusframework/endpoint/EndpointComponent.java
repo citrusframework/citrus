@@ -38,6 +38,8 @@ public interface EndpointComponent {
     Logger logger = LoggerFactory.getLogger(EndpointComponent.class);
 
     String ENDPOINT_NAME = "endpointName";
+    String AUTO_CLOSE = "autoClose";
+    String AUTO_REMOVE = "autoRemove";
 
     /** Endpoint component resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/endpoint/component";
