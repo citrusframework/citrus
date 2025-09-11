@@ -16,6 +16,8 @@
 
 package org.citrusframework.junit.jupiter.spring;
 
+import java.lang.reflect.Method;
+
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusSpringContext;
 import org.citrusframework.CitrusSpringContextProvider;
@@ -36,8 +38,6 @@ import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.springframework.context.ApplicationContext;
 
-import java.lang.reflect.Method;
-
 import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.requiresCitrus;
 import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.setCitrus;
 import static org.springframework.test.context.junit.jupiter.SpringExtension.getApplicationContext;
@@ -53,7 +53,8 @@ import static org.springframework.test.context.junit.jupiter.SpringExtension.get
  * Extension is based on Citrus Xml test extension that also allows to load test cases from external Spring configuration files.
  *
  */
-public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecutionCallback, InvocationInterceptor, AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler, AfterEachCallback {
+public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecutionCallback, InvocationInterceptor,
+        AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler, AfterEachCallback {
 
     private Citrus citrus;
     private ApplicationContext applicationContext;
@@ -86,6 +87,11 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecu
     }
 
     @Override
+    public void interceptTestTemplateMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        delegate.interceptTestTemplateMethod(invocation, invocationContext, extensionContext);
+    }
+
+    @Override
     public void afterEach(ExtensionContext extensionContext) throws Exception {
         delegate.afterEach(extensionContext);
     }
@@ -107,9 +113,6 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecu
 
     /**
      * Create Citrus instance if not set already. Use SpringExtension to load application context.
-     *
-     * @param extensionContext
-     * @return
      */
     protected Citrus getCitrus(ExtensionContext extensionContext) {
         ApplicationContext ctx = getApplicationContext(extensionContext);

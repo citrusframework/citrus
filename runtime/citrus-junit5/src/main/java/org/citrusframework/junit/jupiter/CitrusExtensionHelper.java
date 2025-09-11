@@ -56,8 +56,6 @@ public final class CitrusExtensionHelper {
 
     /**
      * Checks for test factory annotations on test method.
-     * @param method
-     * @return
      */
     public static boolean isTestFactoryMethod(Method method) {
         return method.isAnnotationPresent(CitrusTestFactory.class);
@@ -65,8 +63,6 @@ public final class CitrusExtensionHelper {
 
     /**
      * Checks for Citrus test source annotations on test method.
-     * @param method
-     * @return
      */
     public static boolean isTestSourceMethod(Method method) {
         return method.isAnnotationPresent(CitrusTestSource.class);
@@ -74,9 +70,6 @@ public final class CitrusExtensionHelper {
 
     /**
      * Creates new test runner instance for this test method.
-     * @param testName
-     * @param extensionContext
-     * @return
      */
     public static TestCaseRunner createTestRunner(String testName, ExtensionContext extensionContext) {
         TestCaseRunner testCaseRunner = TestCaseRunnerFactory.createRunner(
@@ -90,7 +83,6 @@ public final class CitrusExtensionHelper {
 
     /**
      * Get the {@link TestCaseRunner} associated with the supplied {@code ExtensionContext} and its required test class name.
-     * @param extensionContext
      * @return the {@code TestCaseRunner} (never {@code null})
      */
     public static TestCaseRunner getTestRunner(ExtensionContext extensionContext) {
@@ -112,7 +104,6 @@ public final class CitrusExtensionHelper {
 
     /**
      * Get the {@link TestLoader} associated with the supplied {@code ExtensionContext} and its required test class name.
-     * @param extensionContext
      * @return the {@code TestLoader} (never {@code null})
      */
     public static TestLoader getTestLoader(ExtensionContext extensionContext) {
@@ -124,7 +115,6 @@ public final class CitrusExtensionHelper {
 
     /**
      * Get the {@link TestCase} associated with the supplied {@code ExtensionContext} and its required test class name.
-     * @param extensionContext
      * @return the {@code TestCase} (never {@code null})
      */
     public static TestCase getTestCase(ExtensionContext extensionContext) {
@@ -142,8 +132,6 @@ public final class CitrusExtensionHelper {
      * Creates new test loader which has TestNG test annotations set for test execution. Only
      * suitable for tests that get created at runtime through factory method. Subclasses
      * may overwrite this in order to provide custom test loader with custom test annotations set.
-     * @param extensionContext
-     * @return
      */
     public static TestLoader createTestLoader(ExtensionContext extensionContext) {
         Method method = extensionContext.getRequiredTestMethod();
@@ -173,7 +161,6 @@ public final class CitrusExtensionHelper {
 
     /**
      * Get the {@link TestContext} associated with the supplied {@code ExtensionContext} and its required test class name.
-     * @param extensionContext
      * @return the {@code TestContext} (never {@code null})
      */
     public static TestContext getTestContext(ExtensionContext extensionContext) {
@@ -183,9 +170,17 @@ public final class CitrusExtensionHelper {
     }
 
     /**
+     * Removes all stored objects related to the current test execution.
+     */
+    public static void clearStoredObjects(ExtensionContext extensionContext) {
+        extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).remove(getBaseKey(extensionContext) + TestLoader.class.getSimpleName());
+        extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).remove(getBaseKey(extensionContext) + TestContext.class.getSimpleName());
+        extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).remove(getBaseKey(extensionContext) + TestCase.class.getSimpleName());
+        extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).remove(getBaseKey(extensionContext) + TestCaseRunner.class.getSimpleName());
+    }
+
+    /**
      * Gets base key for store.
-     * @param extensionContext
-     * @return
      */
     public static String getBaseKey(ExtensionContext extensionContext) {
         return extensionContext.getRequiredTestClass().getName() + "." + extensionContext.getRequiredTestMethod().getName() + "#";
@@ -193,7 +188,6 @@ public final class CitrusExtensionHelper {
 
     /**
      * Get the {@link Citrus} associated with the supplied {@code ExtensionContext}.
-     * @param extensionContext
      * @return the {@code Citrus} (never {@code null})
      */
     public static Citrus getCitrus(ExtensionContext extensionContext) {
@@ -209,9 +203,6 @@ public final class CitrusExtensionHelper {
 
     /**
      * Sets the {@link Citrus} instance on the {@code ExtensionContext}.
-     * @param citrus
-     * @param extensionContext
-     * @return the {@code Citrus} (never {@code null})
      */
     public static void setCitrus(Citrus citrus, ExtensionContext extensionContext) {
         ObjectHelper.assertNotNull(extensionContext, "ExtensionContext must not be null");
@@ -237,8 +228,6 @@ public final class CitrusExtensionHelper {
 
     /**
      * Checks if Citrus instance is present in given extension context.
-     * @param extensionContext
-     * @return
      */
     public static boolean requiresCitrus(ExtensionContext extensionContext) {
         ObjectHelper.assertNotNull(extensionContext, "ExtensionContext must not be null");
@@ -249,17 +238,10 @@ public final class CitrusExtensionHelper {
     /**
      * Configure given test loader instance with proper test name, package name and optional sources based on
      * Citrus test annotation information.
-     * @param testLoader
-     * @param extensionContext
-     * @param method
-     * @param methodNames
-     * @param methodPackageName
-     * @param packagesToScan
-     * @param sources
      */
     private static void configure(TestLoader testLoader, ExtensionContext extensionContext, Method method,
                                   String[] methodNames, String methodPackageName, String[] packagesToScan, String[] sources) {
-        String testName = extensionContext.getRequiredTestClass().getSimpleName();
+        String testClassName = extensionContext.getRequiredTestClass().getSimpleName();
         String packageName = method.getDeclaringClass().getPackage().getName();
         String source = null;
 
@@ -267,10 +249,13 @@ public final class CitrusExtensionHelper {
             packageName = methodPackageName;
         }
 
+        String testName;
         if (methodNames.length > 0) {
             testName = methodNames[0];
         } else if (packagesToScan.length == 0 && sources.length == 0) {
             testName = method.getName();
+        } else {
+            testName = testClassName;
         }
 
         if (sources.length > 0) {
@@ -289,6 +274,15 @@ public final class CitrusExtensionHelper {
             }
 
             packageName = packageName.replace("/", ".");
+        }
+
+        if (!isTestFactoryMethod(method) && !isTestSourceMethod(method) && !testClassName.equals(testName)) {
+            testName = testClassName + "." + testName;
+        }
+
+        if (extensionContext.getDisplayName().startsWith("[")) {
+            // seems to be a parameterized test
+            testName = "%s (%s)".formatted(testName, extensionContext.getDisplayName());
         }
 
         testLoader.setTestClass(extensionContext.getRequiredTestClass());
