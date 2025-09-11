@@ -171,6 +171,10 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
         } else if (nonNull(kafkaConsumer)) {
             kafkaConsumer.stop();
         }
+
+        if (nonNull(kafkaProducer)) {
+            kafkaProducer.stop();
+        }
     }
 
     public ReceiveMessageBuilderFactory<?, ?> findKafkaEventHeaderEquals(Duration lookbackWindow, String key, String value) {

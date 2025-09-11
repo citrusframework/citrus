@@ -21,9 +21,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusEndpointConfig;
 import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.common.ShutdownPhase;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -141,12 +143,7 @@ public class DefaultEndpointFactory implements EndpointFactory {
         }
 
         Map<String, String> parameters = component.get().getParameters(endpointUri);
-        String cachedEndpointName;
-        if (parameters.containsKey(EndpointComponent.ENDPOINT_NAME)) {
-            cachedEndpointName = parameters.remove(EndpointComponent.ENDPOINT_NAME);
-        } else {
-            cachedEndpointName = endpointUri;
-        }
+        String cachedEndpointName = parameters.getOrDefault(EndpointComponent.ENDPOINT_NAME, endpointUri);
 
         synchronized (endpointCache) {
             if (endpointCache.containsKey(cachedEndpointName)) {
@@ -157,6 +154,22 @@ public class DefaultEndpointFactory implements EndpointFactory {
             } else {
                 Endpoint endpoint = component.get().createEndpoint(endpointUri, context);
                 endpointCache.put(cachedEndpointName, endpoint);
+
+                boolean autoRemove = Optional.ofNullable(parameters.get(EndpointComponent.AUTO_REMOVE))
+                                                    .map(Boolean::parseBoolean)
+                                                    .orElseGet(CitrusSettings::isAutoRemoveDynamicEndpoints);
+                if (autoRemove) {
+                    context.doFinally(() -> ctx -> {
+                        logger.info("Stopping and removing endpoint '{}' due to auto remove setting", endpoint.getName());
+                        if (endpoint instanceof ShutdownPhase destroyable) {
+                            destroyable.destroy();
+                        }
+
+                        synchronized (endpointCache) {
+                            endpointCache.remove(cachedEndpointName);
+                        }
+                    });
+                }
                 return endpoint;
             }
         }
