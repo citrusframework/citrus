@@ -121,8 +121,7 @@ public class DefaultTestLoader implements TestLoader {
     /**
      * Return true if the throwable is considered a skip exception that must be passed up to the
      * testing framework in order to report that this test was skipped.
-     *
-     * Sublasses may override according to the framework
+     * Subclasses may override according to the framework
      */
     protected boolean isSkipExceptionType(Throwable e) {
         return false;
