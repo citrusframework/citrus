@@ -1,0 +1,60 @@
+name: "CamelJBangCmdSendTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      jbang:
+        run:
+          integration:
+            name: "echo-yaml"
+            file: "classpath:org/citrusframework/camel/integration/echo.yaml"
+
+  - camel:
+      jbang:
+        cmd:
+          send:
+            integration: "echo-yaml"
+            body:
+              data: "Hello Camel"
+  - camel:
+      jbang:
+        verify:
+          integration: "echo-yaml"
+          logMessage: "HELLO CAMEL"
+
+  - camel:
+      jbang:
+        cmd:
+          send:
+            integration: "echo-yaml"
+            endpoint: "direct:echo"
+            body:
+              data: "Camel rocks!"
+  - camel:
+      jbang:
+        verify:
+          integration: "echo-yaml"
+          logMessage: "CAMEL ROCKS!"
+
+  - camel:
+      jbang:
+        cmd:
+          send:
+            integration: "echo-yaml"
+            uri: "direct:echo"
+            timeout: 5000
+            reply: true
+            headers:
+              foo: bar
+            body:
+              data: "Good Bye Camel!"
+  - camel:
+      jbang:
+        verify:
+          integration: "echo-yaml"
+          logMessage: "GOOD BYE CAMEL!"
+finally:
+  - camel:
+      jbang:
+        stop:
+          integration: "echo-yaml"

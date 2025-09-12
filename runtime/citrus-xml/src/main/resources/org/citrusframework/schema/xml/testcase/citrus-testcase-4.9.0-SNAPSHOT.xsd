@@ -1097,6 +1097,47 @@
           </xs:annotation>
           <xs:complexType>
             <xs:choice>
+              <xs:element name="cmd">
+                <xs:complexType>
+                  <xs:choice>
+                    <xs:element name="send">
+                      <xs:complexType>
+                        <xs:annotation>
+                          <xs:documentation>Sends a message via Camel JBang.</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                          <xs:element name="headers" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="header" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:attribute name="name" type="xs:string" use="required"/>
+                                    <xs:attribute name="value" type="xs:string" use="required"/>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="body">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="data" type="xs:string" minOccurs="0"/>
+                              </xs:sequence>
+                              <xs:attribute name="file" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="integration" type="xs:string"/>
+                        <xs:attribute name="endpoint" type="xs:string"/>
+                        <xs:attribute name="timeout" type="xs:string" default="20000"/>
+                        <xs:attribute name="uri" type="xs:string"/>
+                        <xs:attribute name="reply" type="xs:boolean"/>
+                        <xs:attribute name="args" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:choice>
+                </xs:complexType>
+              </xs:element>
               <xs:element name="plugin">
                 <xs:complexType>
                   <xs:choice>

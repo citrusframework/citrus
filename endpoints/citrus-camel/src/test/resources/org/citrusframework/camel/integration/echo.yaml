@@ -1,0 +1,6 @@
+- from:
+    uri: "direct:echo"
+    steps:
+      - transform:
+          simple: "${body.toUpperCase()}"
+      - to: "log:info"

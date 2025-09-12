@@ -61,6 +61,70 @@ public class CamelJBangIT extends TestNGCitrusSupport implements TestActionSuppo
     }
 
     @Test
+    @CitrusTest(name = "CmdSendMessage_IT")
+    public void cmdSendMessageIT() {
+        if (!TestUtils.isNetworkReachable()) {
+            throw new SkipException("Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
+        }
+
+        given(doFinally().actions(
+                catchException().actions(camel().jbang().stop().integration("echo"))
+        ));
+
+        given(camel().jbang()
+                .run("echo", """
+                - from:
+                    uri: "direct:echo"
+                    steps:
+                      - transform:
+                          simple: "${body.toUpperCase()}"
+                      - to: "log:info"
+                """))
+        .and(camel().jbang()
+                .verify()
+                .integration("echo")
+                .waitForLogMessage("Started route1 (direct://echo)"));
+
+        when(camel().jbang()
+                    .cmd()
+                    .send()
+                    .integration("echo")
+                    .body("Hello Camel"));
+
+        then(camel().jbang()
+                .verify()
+                .integration("echo")
+                .waitForLogMessage("HELLO CAMEL"));
+
+        when(camel().jbang()
+                    .cmd()
+                    .send()
+                    .integration("echo")
+                    .endpoint("direct:echo")
+                    .body("Camel rocks!"));
+
+        then(camel().jbang()
+                .verify()
+                .integration("echo")
+                .waitForLogMessage("CAMEL ROCKS!"));
+
+        when(camel().jbang()
+                    .cmd()
+                    .send()
+                    .integration("echo")
+                    .endpointUri("direct:echo")
+                    .reply(true)
+                    .withArg("--show-headers")
+                    .header("foo", "bar")
+                    .body("Good Bye Camel!"));
+
+        then(camel().jbang()
+                .verify()
+                .integration("echo")
+                .waitForLogMessage("GOOD BYE CAMEL!"));
+    }
+
+    @Test
     @CitrusTest(name = "RunIntegration_Resource_IT")
     public void runIntegrationWithResourceIT() {
 

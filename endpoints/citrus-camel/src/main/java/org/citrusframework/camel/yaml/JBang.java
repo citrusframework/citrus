@@ -17,11 +17,14 @@
 package org.citrusframework.camel.yaml;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.AbstractCamelJBangAction;
 import org.citrusframework.camel.actions.AddCamelPluginAction;
+import org.citrusframework.camel.actions.CamelCmdSendAction;
 import org.citrusframework.camel.actions.CamelKubernetesDeleteAction;
 import org.citrusframework.camel.actions.CamelKubernetesRunIntegrationAction;
 import org.citrusframework.camel.actions.CamelKubernetesVerifyAction;
@@ -69,6 +72,10 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
     public void setPlugin(Plugin plugin) {
         this.builder = plugin.getBuilder();
+    }
+
+    public void setCmd(Cmd cmd) {
+        this.builder = cmd.getBuilder();
     }
 
     public void setKubernetes(Kubernetes kubernetes) {
@@ -379,6 +386,159 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
             public void setArgs(List<String> args) {
                 this.args = args;
+            }
+        }
+    }
+
+    public static class Cmd implements CamelActionBuilderWrapper<AbstractCamelJBangAction.Builder<?, ?>> {
+
+        private AbstractCamelJBangAction.Builder<?, ?> builder;
+
+        public void setSend(Send send) {
+            CamelCmdSendAction.Builder builder = new CamelCmdSendAction.Builder();
+
+            builder.timeout(send.getTimeout());
+
+            if (send.getHeaders() != null) {
+                for (Map.Entry<String, String> header : send.getHeaders().entrySet()) {
+                    builder.header(header.getKey(), header.getValue());
+                }
+            }
+
+            builder.integration(send.getIntegration());
+
+            if (send.getBody() != null) {
+                if (send.getBody().getData() != null) {
+                    builder.body(send.getBody().getData());
+                } else if (send.getBody().getFile() != null) {
+                    builder.body("file:" + send.getBody().getFile());
+                }
+            }
+
+            if (send.getEndpoint() != null) {
+                builder.endpoint(send.getEndpoint());
+            }
+
+            if (send.getUri() != null) {
+                builder.endpointUri(send.getUri());
+            }
+
+            if (send.getArgs() != null) {
+                send.getArgs().forEach(builder::withArg);
+            }
+
+            builder.reply(send.isReply());
+
+            this.builder = builder;
+        }
+
+        @Override
+        public AbstractCamelJBangAction.Builder<?, ?> getBuilder() {
+            return builder;
+        }
+
+        public static class Send {
+
+            protected String timeout = "20000";
+            protected String integration;
+            protected String endpoint;
+            protected String uri;
+            protected List<String> args;
+            protected boolean reply;
+
+            protected Map<String, String> headers;
+            protected Body body;
+
+            public void setTimeout(String timeout) {
+                this.timeout = timeout;
+            }
+
+            public String getTimeout() {
+                return timeout;
+            }
+
+            public void setHeaders(Map<String, String> headers) {}
+
+            public Map<String, String> getHeaders() {
+                if (headers == null) {
+                    headers = new HashMap<>();
+                }
+
+                return headers;
+            }
+
+            public String getIntegration() {
+                return integration;
+            }
+
+            public void setIntegration(String integration) {
+                this.integration = integration;
+            }
+
+            public String getEndpoint() {
+                return endpoint;
+            }
+
+            public void setEndpoint(String endpoint) {
+                this.endpoint = endpoint;
+            }
+
+            public String getUri() {
+                return uri;
+            }
+
+            public void setUri(String uri) {
+                this.uri = uri;
+            }
+
+            public List<String> getArgs() {
+                if (args == null) {
+                    args = new ArrayList<>();
+                }
+                return this.args;
+            }
+
+            public void setArgs(List<String> args) {
+                this.args = args;
+            }
+
+            public void setBody(Body body) {
+                this.body = body;
+            }
+
+            public Body getBody() {
+                return body;
+            }
+
+            public boolean isReply() {
+                return reply;
+            }
+
+            public void setReply(boolean reply) {
+                this.reply = reply;
+            }
+
+            public static class Body {
+
+                protected String file;
+
+                protected String data;
+
+                public String getData() {
+                    return data;
+                }
+
+                public void setData(String data) {
+                    this.data = data;
+                }
+
+                public String getFile() {
+                    return file;
+                }
+
+                public void setFile(String file) {
+                    this.file = file;
+                }
             }
         }
     }

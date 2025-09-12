@@ -51,4 +51,9 @@ public interface CamelJBangActionBuilder<T extends TestAction, B extends CamelJB
      * Perform actions related to Camel JBang plugins.
      */
     CamelJBangPluginActionBuilder<?, ?> plugin();
+
+    /**
+     * Perform actions related to Camel JBang commands.
+     */
+    CamelJBangCmdActionBuilder<?, ?> cmd();
 }

@@ -124,11 +124,6 @@ public class CamelJBang {
 
     /**
      * Run given integration with JBang Camel app.
-     * @param name
-     * @param file
-     * @param resources
-     * @param args
-     * @return
      */
     public ProcessAndOutput run(String name, String file, List<String> resources, String... args) {
         List<String> runArgs = new ArrayList<>();
@@ -172,7 +167,6 @@ public class CamelJBang {
 
     /**
      * Stops given Camel integration identified by its process id.
-     * @param pid
      */
     public void stop(Long pid) {
         ProcessAndOutput p = app.run("stop", String.valueOf(pid)) ;
@@ -203,7 +197,6 @@ public class CamelJBang {
 
     /**
      * Get details for integration previously run via JBang Camel app. Integration is identified by its process id.
-     * @param pid
      */
     public Map<String, String> get(Long pid) {
         Map<String, String> properties = new HashMap<>();
@@ -311,6 +304,26 @@ public class CamelJBang {
         if (exitValue != OK_EXIT_CODE && exitValue != 1) {
             throw new CitrusRuntimeException("Error while adding Camel JBang plugin. Exit code: " + exitValue);
         }
+    }
+
+    public ProcessAndOutput send(String ... args) {
+        List<String> fullArgs = new ArrayList<>();
+        fullArgs.add("send");
+        fullArgs.addAll(Arrays.asList(args));
+
+        ProcessAndOutput pao = app.run("cmd", fullArgs);
+        int exitValue = pao.getProcess().exitValue();
+        if (exitValue != OK_EXIT_CODE && exitValue != 1) {
+            logger.warn("Failed to send message via Camel JBang command:%n\t camel cmd %s".formatted(String.join(" ", fullArgs)));
+            throw new CitrusRuntimeException("Error while sending message via Camel JBang: '%s' Exit code: %d"
+                    .formatted(pao.getOutput(), exitValue));
+        }
+
+        if (pao.getOutput().contains("Send timeout")) {
+            throw new CitrusRuntimeException("Send timeout while sending message via Camel JBang");
+        }
+
+        return pao;
     }
 
     public KubernetesPlugin kubernetes() {
