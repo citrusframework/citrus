@@ -28,23 +28,7 @@ import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActor;
-import org.citrusframework.camel.actions.AbstractCamelAction;
-import org.citrusframework.camel.actions.CamelControlBusAction;
-import org.citrusframework.camel.actions.AddCamelPluginAction;
-import org.citrusframework.camel.actions.CamelRunIntegrationAction;
-import org.citrusframework.camel.actions.CamelStopIntegrationAction;
-import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
-import org.citrusframework.camel.actions.CreateCamelComponentAction;
-import org.citrusframework.camel.actions.CreateCamelContextAction;
-import org.citrusframework.camel.actions.CreateCamelRouteAction;
-import org.citrusframework.camel.actions.CamelKubernetesDeleteAction;
-import org.citrusframework.camel.actions.CamelKubernetesRunIntegrationAction;
-import org.citrusframework.camel.actions.RemoveCamelRouteAction;
-import org.citrusframework.camel.actions.StartCamelContextAction;
-import org.citrusframework.camel.actions.StartCamelRouteAction;
-import org.citrusframework.camel.actions.StopCamelContextAction;
-import org.citrusframework.camel.actions.StopCamelRouteAction;
-import org.citrusframework.camel.actions.CamelKubernetesVerifyAction;
+import org.citrusframework.camel.actions.*;
 import org.citrusframework.camel.actions.infra.CamelRunInfraAction;
 import org.citrusframework.camel.actions.infra.CamelStopInfraAction;
 import org.citrusframework.camel.util.CamelUtils;
@@ -282,6 +266,43 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                 if (jbang.getPlugin().getAdd().getArgLine() != null) {
                     builder.withArgs(jbang.getPlugin().getAdd().getArgLine().split(" "));
                 }
+                this.builder = builder;
+            }
+        } else if (jbang.getCmd() != null) {
+            if (jbang.getCmd().getSend() != null) {
+                CamelCmdSendAction.Builder builder = new CamelCmdSendAction.Builder();
+                builder.integration(jbang.getCmd().getSend().getIntegration());
+
+                builder.timeout(jbang.getCmd().getSend().getTimeout());
+
+                if (jbang.getCmd().getSend().getHeaders() != null) {
+                    for (JBang.Cmd.Send.Headers.Header header : jbang.getCmd().getSend().getHeaders().getHeaders()) {
+                        builder.header(header.getName(), header.getValue());
+                    }
+                }
+
+                if (jbang.getCmd().getSend().getBody() != null) {
+                    if (jbang.getCmd().getSend().getBody().getData() != null) {
+                        builder.body(jbang.getCmd().getSend().getBody().getData());
+                    } else if (jbang.getCmd().getSend().getBody().getFile() != null) {
+                        builder.body("file:" + jbang.getCmd().getSend().getBody().getFile());
+                    }
+                }
+
+                if (jbang.getCmd().getSend().getEndpoint() != null) {
+                    builder.endpoint(jbang.getCmd().getSend().getEndpoint());
+                }
+
+                if (jbang.getCmd().getSend().getUri() != null) {
+                    builder.endpointUri(jbang.getCmd().getSend().getUri());
+                }
+
+                if (jbang.getCmd().getSend().getArgLine() != null) {
+                    builder.withArgs(jbang.getCmd().getSend().getArgLine().split(" "));
+                }
+
+                builder.reply(jbang.getCmd().getSend().isReply());
+
                 this.builder = builder;
             }
         } else if (jbang.getKubernetes() != null) {

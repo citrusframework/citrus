@@ -32,6 +32,7 @@ import org.citrusframework.camel.jbang.CamelJBangSettings;
         "plugin",
         "kubernetes",
         "run",
+        "cmd",
         "stop",
         "verify",
 })
@@ -54,6 +55,9 @@ public class JBang {
 
     @XmlElement
     protected Plugin plugin;
+
+    @XmlElement
+    protected Cmd cmd;
 
     @XmlElement
     protected Kubernetes kubernetes;
@@ -104,6 +108,14 @@ public class JBang {
 
     public Plugin getPlugin() {
         return plugin;
+    }
+
+    public void setCmd(Cmd cmd) {
+        this.cmd = cmd;
+    }
+
+    public Cmd getCmd() {
+        return cmd;
     }
 
     public Kubernetes getKubernetes() {
@@ -549,6 +561,190 @@ public class JBang {
 
             public void setArgLine(String argLine) {
                 this.argLine = argLine;
+            }
+        }
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+            "send"
+    })
+    public static class Cmd {
+
+        @XmlElement
+        protected Send send;
+
+        public void setSend(Send send) {
+            this.send = send;
+        }
+
+        public Send getSend() {
+            return this.send;
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+                "headers",
+                "body"
+        })
+        public static class Send {
+
+            @XmlAttribute(name = "integration")
+            protected String integration;
+            @XmlAttribute
+            protected String timeout = "20000";
+            @XmlAttribute
+            protected String endpoint;
+            @XmlAttribute(name = "uri")
+            protected String uri;
+            @XmlAttribute(name = "args")
+            protected String argLine;
+            @XmlAttribute
+            protected boolean reply;
+
+            @XmlElement
+            protected Headers headers;
+            @XmlElement
+            protected Body body;
+
+            public void setTimeout(String timeout) {
+                this.timeout = timeout;
+            }
+
+            public String getTimeout() {
+                return timeout;
+            }
+
+            public String getIntegration() {
+                return integration;
+            }
+
+            public void setIntegration(String integration) {
+                this.integration = integration;
+            }
+
+            public String getEndpoint() {
+                return endpoint;
+            }
+
+            public void setEndpoint(String endpoint) {
+                this.endpoint = endpoint;
+            }
+
+            public String getUri() {
+                return uri;
+            }
+
+            public void setUri(String uri) {
+                this.uri = uri;
+            }
+
+            public String getArgLine() {
+                return argLine;
+            }
+
+            public void setArgLine(String argLine) {
+                this.argLine = argLine;
+            }
+
+            public void setHeaders(Headers headers) {
+                this.headers = headers;
+            }
+
+            public Headers getHeaders() {
+                return headers;
+            }
+
+            public void setBody(Body body) {
+                this.body = body;
+            }
+
+            public Body getBody() {
+                return body;
+            }
+
+            public void setReply(boolean reply) {
+                this.reply = reply;
+            }
+
+            public boolean isReply() {
+                return reply;
+            }
+
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = "", propOrder = {
+                    "headers"
+            })
+            public static class Headers {
+
+                @XmlElement(name = "header")
+                protected List<Header> headers;
+
+                public void setHeaders(List<Header> headers) {
+                    this.headers = headers;
+                }
+
+                public List<Header> getHeaders() {
+                    if (headers == null) {
+                        headers = new ArrayList<>();
+                    }
+
+                    return headers;
+                }
+
+                @XmlAccessorType(XmlAccessType.FIELD)
+                @XmlType(name = "", propOrder = {})
+                public static class Header {
+                    @XmlAttribute(required = true)
+                    private String name;
+                    @XmlAttribute(required = true)
+                    private String value;
+
+                    public void setName(String name) {
+                        this.name = name;
+                    }
+
+                    public String getName() {
+                        return name;
+                    }
+
+                    public void setValue(String value) {
+                        this.value = value;
+                    }
+
+                    public String getValue() {
+                        return value;
+                    }
+                }
+            }
+
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = "", propOrder = {
+                    "data"
+            })
+            public static class Body {
+
+                @XmlAttribute
+                protected String file;
+
+                @XmlElement
+                protected String data;
+
+                public String getData() {
+                    return data;
+                }
+
+                public void setData(String data) {
+                    this.data = data;
+                }
+
+                public String getFile() {
+                    return file;
+                }
+
+                public void setFile(String file) {
+                    this.file = file;
+                }
             }
         }
     }

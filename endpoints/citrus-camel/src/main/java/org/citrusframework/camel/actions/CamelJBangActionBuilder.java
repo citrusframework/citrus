@@ -81,6 +81,13 @@ public class CamelJBangActionBuilder extends AbstractReferenceResolverAwareTestA
         return builder;
     }
 
+    @Override
+    public CamelCmdActionBuilder cmd() {
+        CamelCmdActionBuilder builder = new CamelCmdActionBuilder();
+        this.delegate = builder;
+        return builder;
+    }
+
     /**
      * Perform actions related to Camel JBang Kubernetes plugin.
      * @return
