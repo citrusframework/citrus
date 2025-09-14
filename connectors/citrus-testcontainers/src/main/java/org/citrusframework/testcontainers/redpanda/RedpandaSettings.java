@@ -32,7 +32,7 @@ public class RedpandaSettings {
 
     private static final String VERSION_PROPERTY = REDPANDA_PROPERTY_PREFIX + "version";
     private static final String VERSION_ENV = REDPANDA_ENV_PREFIX + "VERSION";
-    private static final String VERSION_DEFAULT = "v24.2.8";
+    private static final String VERSION_DEFAULT = "v25.2.4";
 
     private static final String SERVICE_NAME_PROPERTY = REDPANDA_PROPERTY_PREFIX + "service.name";
     private static final String SERVICE_NAME_ENV = REDPANDA_ENV_PREFIX + "SERVICE_NAME";

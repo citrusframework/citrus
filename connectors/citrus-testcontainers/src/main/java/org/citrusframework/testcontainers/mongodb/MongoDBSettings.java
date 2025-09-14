@@ -34,7 +34,7 @@ public class MongoDBSettings {
 
     private static final String VERSION_PROPERTY = MONGODB_PROPERTY_PREFIX + "version";
     private static final String VERSION_ENV = MONGODB_ENV_PREFIX + "VERSION";
-    private static final String VERSION_DEFAULT = "4.0.10";
+    private static final String VERSION_DEFAULT = "8.0.13";
 
     private static final String SERVICE_NAME_PROPERTY = MONGODB_PROPERTY_PREFIX + "service.name";
     private static final String SERVICE_NAME_ENV = MONGODB_ENV_PREFIX + "SERVICE_NAME";

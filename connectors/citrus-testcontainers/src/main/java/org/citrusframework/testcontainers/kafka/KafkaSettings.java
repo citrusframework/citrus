@@ -32,7 +32,7 @@ public class KafkaSettings {
 
     private static final String VERSION_PROPERTY = KAFKA_PROPERTY_PREFIX + "version";
     private static final String VERSION_ENV = KAFKA_ENV_PREFIX + "VERSION";
-    private static final String VERSION_DEFAULT = "7.7.1";
+    private static final String VERSION_DEFAULT = "7.9.2";
 
     private static final String SERVICE_NAME_PROPERTY = KAFKA_PROPERTY_PREFIX + "service.name";
     private static final String SERVICE_NAME_ENV = KAFKA_ENV_PREFIX + "SERVICE_NAME";

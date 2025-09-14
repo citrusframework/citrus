@@ -39,9 +39,6 @@ public final class CloudEventSupport {
 
     /**
      * Prepare request message with given event data as body and CloudEvent attributes set as Http headers.
-     * @param eventData
-     * @param attributes
-     * @return
      */
     public static CloudEventMessage createEventMessage(String eventData, Map<String, Object> attributes) {
         CloudEventMessage request = CloudEventMessage.fromEvent(CloudEvent.v1_0());
@@ -75,11 +72,9 @@ public final class CloudEventSupport {
 
     /**
      * Reads given json string and extracts CloudEvent attributes.
-     * @param json
-     * @return
      */
-    public static Map<String, String> attributesFromJson(String json) {
-        Map<String, String> attributes = new HashMap<>();
+    public static Map<String, Object> attributesFromJson(String json) {
+        Map<String, Object> attributes = new HashMap<>();
         try {
             JsonNode event = new ObjectMapper().reader().readTree(json);
             for (CloudEvent.Attribute attribute : CloudEvent.v1_0().attributes()) {
