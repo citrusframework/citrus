@@ -18,7 +18,7 @@ package org.citrusframework.agent.connector.actions;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.agent.connector.CitrusAgentSettings;
-import org.springframework.util.Assert;
+import org.citrusframework.util.ObjectHelper;
 
 public class AgentActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<AgentAction>,
         org.citrusframework.actions.agent.AgentActionBuilder<AgentAction, AgentActionBuilder> {
@@ -56,7 +56,7 @@ public class AgentActionBuilder implements TestActionBuilder.DelegatingTestActio
 
     @Override
     public AgentAction build() {
-        Assert.notNull(delegate, "Missing delegate action to build");
+        ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
         delegate.agent(agentName);
         return delegate.build();
     }

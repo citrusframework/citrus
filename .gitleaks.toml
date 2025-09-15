@@ -4,5 +4,11 @@
   # Ignore based on any subset of the file path
   paths = [
     # Ignore all example certs
+    '''tools\/cucumber-steps\/src\/main\/resources\/keystore\/.*\.pem$''',
+    '''tools\/cucumber-steps\/src\/main\/resources\/keystore\/.*\.key$''',
+    '''tools\/cucumber-steps\/src\/main\/resources\/keystore\/.*\.jks$''',
+    '''tools\/cucumber-steps\/src\/main\/resources\/keystore\/.*\.crt$''',
+    '''tools\/cucumber-steps\/src\/main\/resources\/keystore\/.*\.cert$''',
+    '''tools\/cucumber-steps\/src\/main\/resources\/keystore\/.*\.p12$''',
     '''endpoints\/citrus-ssh\/src\/main\/resources\/org\/citrusframework\/ssh\/.*\.pem$''',
   ]

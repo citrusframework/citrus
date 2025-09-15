@@ -190,6 +190,7 @@
     <jaxb.maven.plugin.version>3.3.0</jaxb.maven.plugin.version>
 
     <activemq.artemis.version>2.42.0</activemq.artemis.version>
+    <activemq.version>6.1.6</activemq.version>
     <angus-mail.version>2.0.2</angus-mail.version>
     <apache.ant.version>1.10.15</apache.ant.version>
     <apache.camel.version>4.14.0</apache.camel.version>
@@ -937,6 +938,25 @@
         <version>${apache.camel.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-mongodb</artifactId>
+        <version>${apache.camel.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-aws2-kinesis</artifactId>
+        <version>${apache.camel.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-aws2-s3</artifactId>
+        <version>${apache.camel.version}</version>
+        <scope>test</scope>
+      </dependency>
+
       <!-- Citrus ftp dependencies -->
       <dependency>
         <groupId>org.apache.ftpserver</groupId>
@@ -1268,6 +1288,20 @@
         <groupId>org.xerial.snappy</groupId>
         <artifactId>snappy-java</artifactId>
         <version>${snappy.version}</version>
+      </dependency>
+
+      <!-- JMS connection factory dependencies in provided scope -->
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-client</artifactId>
+        <version>${activemq.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>artemis-jakarta-client</artifactId>
+        <version>${activemq.artemis.version}</version>
+        <scope>provided</scope>
       </dependency>
 
       <!-- Test scoped dependencies -->

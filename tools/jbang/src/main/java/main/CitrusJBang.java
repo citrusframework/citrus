@@ -22,6 +22,7 @@
 //DEPS org.citrusframework:citrus-jbang:${citrus.jbang.version:4.9.0-SNAPSHOT}
 //DEPS org.citrusframework:citrus-agent:${citrus.jbang.version:4.9.0-SNAPSHOT}
 //DEPS org.citrusframework:citrus-agent-connector:${citrus.jbang.version:4.9.0-SNAPSHOT}
+//DEPS org.citrusframework:citrus-cucumber-steps:${citrus.jbang.version:4.9.0-SNAPSHOT}
 //DEPS org.citrusframework:citrus-jbang-connector
 //DEPS org.citrusframework:citrus-groovy
 //DEPS org.citrusframework:citrus-xml

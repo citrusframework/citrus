@@ -29,12 +29,14 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
 public class EndpointConfigurationScript implements ReferenceResolverAware {
 
+    private Citrus citrus;
     private ReferenceResolver referenceResolver;
 
     private final String script;
 
     public EndpointConfigurationScript(String script, Citrus citrus) {
         this(script, citrus.getCitrusContext());
+        this.citrus = citrus;
     }
 
     public EndpointConfigurationScript(String script, CitrusContext citrusContext) {
@@ -53,7 +55,7 @@ public class EndpointConfigurationScript implements ReferenceResolverAware {
     public void execute(TestContext context) {
         EndpointsConfiguration configuration = new EndpointsConfiguration();
         ImportCustomizer ic = new ImportCustomizer();
-        GroovyShellUtils.run(ic, configuration, context.replaceDynamicContentInString(script), null, context);
+        GroovyShellUtils.run(ic, configuration, context.replaceDynamicContentInString(script), citrus, context);
 
         configuration.getEndpoints().forEach(endpoint -> {
             ReferenceResolver resolverToUse = referenceResolver;
@@ -69,9 +71,9 @@ public class EndpointConfigurationScript implements ReferenceResolverAware {
                 initializingBean.initialize();
             }
 
-            PropertyUtils.configure(endpoint.getName(), endpoint, resolverToUse);
-
             onCreate(endpoint);
+
+            PropertyUtils.configure(endpoint.getName(), endpoint, resolverToUse);
 
             resolverToUse.bind(endpoint.getName(), endpoint);
         });
@@ -79,7 +81,6 @@ public class EndpointConfigurationScript implements ReferenceResolverAware {
 
     /**
      * Subclasses may add custom endpoint configuration logic here.
-     * @param endpoint
      */
     protected void onCreate(Endpoint endpoint) {
     }

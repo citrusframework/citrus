@@ -80,7 +80,7 @@ public class KnativeServiceConfiguration {
                 Assert.assertEquals(message.getHeader("Ce-Specversion"), "1.0");
                 Assert.assertEquals(message.getHeader("Ce-Subject"), "hello");
                 Assert.assertEquals(message.getHeader("Ce-Type"), "greeting");
-                Assert.assertEquals(message.getHeader("Ce-Source"), "https://github.com/citrusframework/yaks");
+                Assert.assertEquals(message.getHeader("Ce-Source"), "https://github.com/citrusframework/citrus");
                 Assert.assertEquals(message.getHeader("Content-Type").toString(), MediaType.APPLICATION_JSON_UTF8_VALUE);
                 Assert.assertEquals(message.getPayload(String.class), "{\"msg\": \"Hello Knative!\"}");
 

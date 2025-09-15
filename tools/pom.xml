@@ -20,6 +20,7 @@
     <module>maven</module>
     <module>jbang</module>
     <module>agent</module>
+    <module>cucumber-steps</module>
     <module>archetypes</module>
   </modules>
 
