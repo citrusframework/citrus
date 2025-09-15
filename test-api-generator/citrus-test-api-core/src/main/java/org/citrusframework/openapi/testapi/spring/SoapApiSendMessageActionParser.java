@@ -32,6 +32,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 import static java.lang.Boolean.parseBoolean;
+import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROTOTYPE;
 import static org.springframework.beans.factory.support.BeanDefinitionBuilder.genericBeanDefinition;
 import static org.springframework.util.xml.DomUtils.getChildElementByTagName;
 
@@ -85,6 +86,7 @@ public class SoapApiSendMessageActionParser extends SendSoapMessageActionParser 
         BeanDefinitionBuilder actionBuilder = createTestApiActionBuilder();
         beanDefinitionBuilder.addConstructorArgValue(actionBuilder.getBeanDefinition());
 
+        beanDefinitionBuilder.setScope(SCOPE_PROTOTYPE);
         return beanDefinitionBuilder;
     }
 

@@ -23,6 +23,7 @@ import org.citrusframework.util.SystemProvider;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.String.valueOf;
+import static org.citrusframework.util.SystemProvider.SYSTEM_PROVIDER;
 
 /**
  * A configuration class for sharded test loading and execution withing the citrus framework. It uses environment
@@ -100,7 +101,7 @@ public final class ShardingConfiguration {
      * Default sharding configuration which initializes the sharding with system properties and environment variables.
      */
     public ShardingConfiguration() {
-        this(new SystemProvider());
+        this(SYSTEM_PROVIDER);
     }
 
     /**
@@ -120,7 +121,7 @@ public final class ShardingConfiguration {
      * @param shardNumber         the specific shard number for this loader, zero-based.
      */
     public ShardingConfiguration(int totalNumberOfShards, int shardNumber) {
-        this(totalNumberOfShards, shardNumber, new SystemProvider());
+        this(totalNumberOfShards, shardNumber, SYSTEM_PROVIDER);
     }
 
     /**

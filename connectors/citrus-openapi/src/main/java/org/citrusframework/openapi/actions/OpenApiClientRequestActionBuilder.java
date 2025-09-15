@@ -40,19 +40,20 @@ import org.citrusframework.openapi.validation.OpenApiValidationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
+import static org.citrusframework.openapi.AutoFillType.NONE;
 import static org.citrusframework.openapi.OpenApiMessageType.REQUEST;
 import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabled;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
 import static org.citrusframework.openapi.model.OasModelHelper.getRequestBodySchema;
 import static org.citrusframework.openapi.model.OasModelHelper.isOperationRequestBodyRequired;
-import static org.citrusframework.util.StringUtils.isNotEmpty;
 
 /**
  * @since 4.1
  */
 public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBuilder
-        implements OpenApiSpecificationSourceAwareBuilder<SendMessageAction>, org.citrusframework.actions.openapi.OpenApiClientRequestActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {
+    implements OpenApiSpecificationSourceAwareBuilder<SendMessageAction>,
+    org.citrusframework.actions.openapi.OpenApiClientRequestActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
     private final String operationKey;
@@ -148,7 +149,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
 
         private final String operationKey;
 
-        private AutoFillType autoFill ;
+        private AutoFillType autoFill;
 
         public OpenApiClientRequestMessageBuilder(HttpMessage httpMessage,
             OpenApiSpecificationSource openApiSpec,
@@ -208,25 +209,25 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                 setMissingQueryParametersToRandomValues(openApiSpecification, context, operation);
             }
 
+            String randomizedPath = path;
             setMissingBodyToRandomValue(openApiSpecification, context, operation);
-            String randomizedPath = getMessage().getPath() != null ? getMessage().getPath() : path;
             if (operation.parameters != null) {
                 List<OasParameter> pathParams = operation.parameters.stream()
                     .filter(p -> "path".equals(p.in)).toList();
 
                 for (OasParameter parameter : pathParams) {
-                    String parameterValue;
-                    String pathParameterValue = getDefinedPathParameter(context,
-                        parameter.getName());
-                    if (isNotEmpty(pathParameterValue)) {
-                        parameterValue = "\\" + pathParameterValue;
-                    } else {
-                        parameterValue = createRandomValueExpression(
-                            (OasSchema) parameter.schema);
-                    }
 
-                    randomizedPath = randomizedPath.replaceAll("\\{" + parameter.getName() + "}",
-                        parameterValue);
+                    Object value = context.getVariables().get(parameter.name);
+                    if (value == null) {
+                        if (autoFill != NONE) {
+                            // Fill the path parameter via context
+                            context.setVariable(parameter.name, createRandomValueExpression(
+                                (OasSchema) parameter.schema));
+                            randomizedPath = path.replace("{"+parameter.name+"}", "${"+parameter.name+"}");
+                        }
+                    } else {
+                         randomizedPath = path.replace("{"+parameter.name+"}", "${"+parameter.name+"}");
+                    }
                 }
             }
 
@@ -253,10 +254,11 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                 Optional<OasSchema> body = getRequestBodySchema(
                     openApiSpecification.getOpenApiDoc(context), operation);
 
-
                 body.ifPresent(oasSchema -> {
 
-                    if (autoFill.shouldFill(isOperationRequestBodyRequired(openApiSpecification.getOpenApiDoc(context), operation))) {
+                    if (autoFill.shouldFill(
+                        isOperationRequestBodyRequired(openApiSpecification.getOpenApiDoc(context),
+                            operation))) {
                         getMessage().setPayload(
                             createOutboundPayload(oasSchema, openApiSpecification));
                     }

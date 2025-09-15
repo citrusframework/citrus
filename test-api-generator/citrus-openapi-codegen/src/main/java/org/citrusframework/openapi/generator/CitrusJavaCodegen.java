@@ -377,9 +377,9 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
         String directoryPath = appendSegmentToUrlPath(getOutputDir(), getResourceFolder());
         directoryPath = appendSegmentToUrlPath(directoryPath,
             invokerPackage.replace('.', File.separatorChar));
+        additionalProperties.put("invokerPackagePath", invokerPackage.replace('.', '/'));
 
         String filename = getApiPrefix() + "_openApi.yaml";
-
         File directory = new File(directoryPath);
         if (!directory.exists() && !directory.mkdirs()) {
             throw new CitrusRuntimeException("Unable to create directory for api resource!");
@@ -392,7 +392,7 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
             writer.write(yamlContent);
         } catch (IOException e) {
             throw new CitrusRuntimeException(
-                "Unable to write OpenAPI to resource folder: " + file.getAbsolutePath());
+                "Unable to write OpenAPI to source folder: " + file.getAbsolutePath());
         }
     }
 

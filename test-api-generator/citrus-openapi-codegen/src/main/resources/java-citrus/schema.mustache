@@ -57,11 +57,20 @@
         <xs:attribute name="actor" type="xs:string"/>
         <xs:attribute name="fork" type="xs:boolean"/>
         <xs:attribute name="autofill" type="AutofillType"/>
+        <xs:attribute name="schema-validation"  type="xs:boolean"/>
     </xs:complexType>
 
     <xs:complexType name="AbstractTestApiReceiveResponseType">
         <xs:complexContent>
-            <xs:extension base="http:ClientReceiveResponseType"/>
+            <xs:extension base="http:ClientReceiveResponseType">
+                <xs:attribute name="schema-validation"  type="xs:boolean">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Turn on/off schema validation. Takes preceedence over settings on message level.
+                        </xs:documentation>
+                     </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
         </xs:complexContent>
     </xs:complexType>
 
@@ -70,7 +79,7 @@
             <xs:extension base="AbstractTestApiSendRequestWithoutBodyType">
                 <xs:sequence>
                     {{^isMultipart}}
-                    <xs:element ref="abstract-body" minOccurs="{{#required}}1{{/required}}{{^required}}0{{/required}}">
+                    <xs:element ref="abstract-body" minOccurs="0">
                         <xs:annotation>
                             <xs:documentation>
                                 <b>{{^required}}Optional {{/required}}Body - {{summary}}</b>{{#description}}
@@ -206,7 +215,7 @@
                 <xs:sequence>
                     {{#queryParams}}
                         {{#isArray}}
-                    <xs:element name="{{paramName}}" type="xs:string"{{^required}} minOccurs="0"{{/required}} maxOccurs="unbounded">
+                    <xs:element name="{{paramName}}" type="xs:string" minOccurs="0" maxOccurs="unbounded">
                         {{#description}}
                             <xs:annotation>
                                 <xs:documentation>{{description}}</xs:documentation>
@@ -217,7 +226,7 @@
                     {{/queryParams}}
                     {{#headerParams}}
                         {{#isArray}}
-                    <xs:element name="{{paramName}}" type="xs:string"{{^required}} minOccurs="0"{{/required}} maxOccurs="unbounded">
+                    <xs:element name="{{paramName}}" type="xs:string" minOccurs="0" maxOccurs="unbounded">
                         {{#description}}
                             <xs:annotation>
                                 <xs:documentation>{{description}}</xs:documentation>
@@ -239,7 +248,7 @@
                     {{/pathParams}}
                     {{#formParams}}
                         {{#isArray}}
-                    <xs:element name="{{paramName}}" type="xs:string"{{^required}} minOccurs="0"{{/required}} maxOccurs="unbounded">
+                    <xs:element name="{{paramName}}" type="xs:string" minOccurs="0" maxOccurs="unbounded">
                         {{#description}}
                             <xs:annotation>
                                 <xs:documentation>{{description}}</xs:documentation>
@@ -250,7 +259,7 @@
                     {{/formParams}}
                     {{#cookieParams}}
                         {{#isArray}}
-                            <xs:element name="{{paramName}}" type="xs:string"{{^required}} minOccurs="0"{{/required}} maxOccurs="unbounded">
+                            <xs:element name="{{paramName}}" type="xs:string" minOccurs="0" maxOccurs="unbounded">
                                 {{#description}}
                                     <xs:annotation>
                                         <xs:documentation>{{description}}</xs:documentation>
@@ -263,7 +272,7 @@
                 </xs:sequence>
                 {{#queryParams}}
                     {{^isArray}}
-                <xs:attribute name="{{paramName}}" type="xs:string"{{#required}} use="required"{{/required}}>
+                <xs:attribute name="{{paramName}}" type="xs:string">
                     {{#description}}
                     <xs:annotation>
                         <xs:documentation>{{description}}</xs:documentation>
@@ -274,7 +283,7 @@
                 {{/queryParams}}
                 {{#headerParams}}
                     {{^isArray}}
-                <xs:attribute name="{{paramName}}" type="xs:string"{{#required}} use="required"{{/required}}>
+                <xs:attribute name="{{paramName}}" type="xs:string">
                     {{#description}}
                         <xs:annotation>
                             <xs:documentation>{{description}}</xs:documentation>
@@ -296,7 +305,7 @@
                 {{/pathParams}}
                 {{#formParams}}
                     {{^isArray}}
-                <xs:attribute name="{{paramName}}" type="xs:string"{{#required}} use="required"{{/required}}>
+                <xs:attribute name="{{paramName}}" type="xs:string">
                     {{#description}}
                     <xs:annotation>
                         <xs:documentation>{{description}}</xs:documentation>
@@ -307,7 +316,7 @@
                 {{/formParams}}
                 {{#cookieParams}}
                     {{^isArray}}
-                        <xs:attribute name="{{paramName}}" type="xs:string"{{#required}} use="required"{{/required}}>
+                        <xs:attribute name="{{paramName}}" type="xs:string">
                             {{#description}}
                             <xs:annotation>
                                 <xs:documentation>{{description}}</xs:documentation>

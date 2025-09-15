@@ -1281,6 +1281,43 @@ paths:
                     description: Bad Request - Invalid form data
                 '500':
                     description: Internal Server Error
+    /pet/tag/{petId}:
+        put:
+            tags:
+                - extPet
+            summary: Tag a pet with required parameters
+            operationId: tagPet
+            description: "Used to test negative calls with required parameters."
+            parameters:
+                -   name: petId
+                    in: path
+                    description: IDs of pet to return
+                    required: true
+                    schema:
+                        type: string
+                -   name: queryTag
+                    in: query
+                    description: A tag as query parameter
+                    required: true
+                    schema:
+                        type: string
+                -   name: headerTag
+                    in: header
+                    description: A tag as header parameter
+                    required: true
+                    schema:
+                        type: string
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: './petstore-v3.yaml#/components/schemas/Pet'
+                '400':
+                    description: Invalid ID supplied
+                '404':
+                    description: Pet not found
 
 components:
     securitySchemes:

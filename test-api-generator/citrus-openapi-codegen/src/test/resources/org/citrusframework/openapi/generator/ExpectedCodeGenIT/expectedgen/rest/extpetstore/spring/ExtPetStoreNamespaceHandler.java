@@ -12,7 +12,7 @@ import org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStoreOpenApi
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-07-25T13:14:38.461661900+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-09-11T09:45:43.184827600+02:00[Europe/Zurich]", comments = "Generator version: 7.15.0")
 public class ExtPetStoreNamespaceHandler extends NamespaceHandlerSupport {
 
     @Override
@@ -227,6 +227,12 @@ public class ExtPetStoreNamespaceHandler extends NamespaceHandlerSupport {
                 ExtPetApi.PostVaccinationFormDataReceiveActionBuilder.class,
                 new String[]{  },
             new String[]{ "vaccine", "isFirstVaccination", "doseNumber", "vaccinationDate" });
+
+            registerOperationParsers(ExtPetApi.class,"tag-pet", "tagPet", "/pet/tag/{petId}",
+                ExtPetApi.TagPetSendActionBuilder.class,
+                ExtPetApi.TagPetReceiveActionBuilder.class,
+                new String[]{ "petId", "queryTag", "headerTag" },
+            new String[]{  });
 
             registerOperationParsers(ExtPetApi.class,"update-pet-with-array-query-data", "updatePetWithArrayQueryData", "/pet/{petId}",
                 ExtPetApi.UpdatePetWithArrayQueryDataSendActionBuilder.class,

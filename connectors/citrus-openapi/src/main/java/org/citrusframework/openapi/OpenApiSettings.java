@@ -26,6 +26,7 @@ import static org.citrusframework.openapi.validation.OpenApiValidationPolicy.REP
 import static org.citrusframework.util.EnvUtils.booleanPropertyOrDefault;
 import static org.citrusframework.util.EnvUtils.enumPropertyOrDefault;
 import static org.citrusframework.util.EnvUtils.transformPropertyToEnv;
+import static org.citrusframework.util.SystemProvider.SYSTEM_PROVIDER;
 
 /**
  * The {@code OpenApiSettings} class provides configuration settings for enabling or disabling
@@ -62,7 +63,6 @@ public class OpenApiSettings {
     public static final String OPEN_API_VALIDATION_POLICY_ENV = transformPropertyToEnv(
         OPEN_API_VALIDATION_POLICY_PROPERTY);
 
-    private static final SystemProvider SYSTEM_PROVIDER = new SystemProvider();
 
     private OpenApiSettings() {
         // static access only

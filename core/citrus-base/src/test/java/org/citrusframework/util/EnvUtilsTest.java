@@ -60,6 +60,26 @@ public class EnvUtilsTest {
     }
 
     @Test
+    public void testBooleanPropertyOrDefault_DefaultTrueOnEmptyProperty() {
+        when(systemProvider.getProperty("feature.enabled")).thenReturn(Optional.of(""));
+        when(systemProvider.getEnv("FEATURE_ENABLED")).thenReturn(Optional.empty());
+
+        boolean result = booleanPropertyOrDefault(systemProvider, "feature.enabled",
+            "FEATURE_ENABLED", true);
+        assertTrue(result);
+    }
+
+    @Test
+    public void testBooleanPropertyOrDefault_DefaultFalseOnEmptyProperty() {
+        when(systemProvider.getProperty("feature.enabled")).thenReturn(Optional.of(""));
+        when(systemProvider.getEnv("FEATURE_ENABLED")).thenReturn(Optional.empty());
+
+        boolean result = booleanPropertyOrDefault(systemProvider, "feature.enabled",
+            "FEATURE_ENABLED", false);
+        assertFalse(result);
+    }
+
+    @Test
     public void testEnumPropertyOrDefault_PropertySet() {
         when(systemProvider.getProperty("enum.test")).thenReturn(Optional.of("VALUE_ONE"));
 

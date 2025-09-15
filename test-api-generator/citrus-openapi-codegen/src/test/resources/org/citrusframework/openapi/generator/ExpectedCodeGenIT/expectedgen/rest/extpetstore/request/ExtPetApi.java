@@ -44,7 +44,7 @@ import java.util.UUID;
 import org.citrusframework.openapi.generator.rest.extpetstore.model.VaccinationDocumentResult;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-07-25T13:14:38.461661900+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-09-11T09:45:43.184827600+02:00[Europe/Zurich]", comments = "Generator version: 7.15.0")
 public class ExtPetApi implements GeneratedApi
 {
 
@@ -888,6 +888,21 @@ public class ExtPetApi implements GeneratedApi
 
     public PostVaccinationFormDataReceiveActionBuilder receivePostVaccinationFormData(@NotNull String statusCode)   {
         return new PostVaccinationFormDataReceiveActionBuilder(this,  statusCode);
+    }
+
+    /**
+     * Builder with type safe required parameters.
+     */
+    public TagPetSendActionBuilder sendTagPet(String petId, String queryTag, String headerTag)   {
+            return new TagPetSendActionBuilder(this, petId, queryTag, headerTag);
+    }
+
+    public TagPetReceiveActionBuilder receiveTagPet(@NotNull HttpStatus statusCode)   {
+        return new TagPetReceiveActionBuilder(this, Integer.toString(statusCode.value()));
+    }
+
+    public TagPetReceiveActionBuilder receiveTagPet(@NotNull String statusCode)   {
+        return new TagPetReceiveActionBuilder(this,  statusCode);
     }
 
     /**
@@ -5252,6 +5267,120 @@ public class ExtPetApi implements GeneratedApi
         }
 
         public PostVaccinationFormDataReceiveActionBuilder(ExtPetApi extPetApi, OpenApiClientResponseMessageBuilder messageBuilder) {
+            super(extPetApi, extPetStoreSpecification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
+        }
+
+        @Override
+        public String getOperationName() {
+            return OPERATION_NAME;
+        }
+
+        @Override
+        public String getMethod() {
+            return METHOD;
+        }
+
+        @Override
+        public String getPath() {
+            return ENDPOINT;
+        }
+
+        @Override
+        public ReceiveMessageAction doBuild() {
+
+            if (getCustomizers() != null) {
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(this, this));
+            }
+
+            return super.doBuild();
+        }
+
+    }
+
+    public static class TagPetSendActionBuilder extends
+                RestApiSendMessageActionBuilder implements GeneratedApiOperationInfo {
+
+        private static final String METHOD = "PUT";
+
+        private static final String ENDPOINT = "/api/v3/ext/pet/tag/{petId}";
+
+        private static final String OPERATION_NAME = "tagPet";
+
+        /**
+         * Constructor with type safe required parameters.
+         */
+        public TagPetSendActionBuilder(ExtPetApi extPetApi, String petId, String queryTag, String headerTag) {
+            super(extPetApi, extPetStoreSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+            pathParameter("petId", petId, ParameterStyle.SIMPLE, false, false);
+                queryParameter("queryTag", queryTag, ParameterStyle.FORM, true, false);
+            headerParameter("headerTag", headerTag, ParameterStyle.SIMPLE, false, false);
+        }
+
+        @Override
+        public String getOperationName() {
+            return OPERATION_NAME;
+        }
+
+        @Override
+        public String getMethod() {
+            return METHOD;
+        }
+
+        @Override
+        public String getPath() {
+            return ENDPOINT;
+        }
+
+        /**
+         * Constructor with required parameters as string to allow for dynamic content.
+         */
+        public TagPetSendActionBuilder(ExtPetApi extPetApi, TestApiClientRequestMessageBuilder messageBuilder, String petIdExpression, String queryTagExpression, String headerTagExpression) {
+            super(extPetApi, extPetStoreSpecification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
+            pathParameter("petId", petIdExpression, ParameterStyle.SIMPLE, false, false);
+            queryParameter("queryTag", queryTagExpression, ParameterStyle.FORM, true, false);
+            headerParameter("headerTag", headerTagExpression, ParameterStyle.SIMPLE, false, false);
+        }
+
+        public TagPetSendActionBuilder petId(String petId) {
+            pathParameter("petId", petId, ParameterStyle.SIMPLE, false, false);
+            return this;
+        }
+
+        public TagPetSendActionBuilder queryTag(String queryTag) {
+            queryParameter("queryTag", queryTag, ParameterStyle.FORM, true, false);
+            return this;
+        }
+
+        public TagPetSendActionBuilder headerTag(String headerTag) {
+            headerParameter("headerTag", headerTag, ParameterStyle.SIMPLE, false, false);
+            return this;
+        }
+
+        @Override
+        public SendMessageAction doBuild() {
+
+            if (getCustomizers() != null) {
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(this, this));
+            }
+
+            return super.doBuild();
+        }
+    }
+
+    public static class TagPetReceiveActionBuilder extends
+                        RestApiReceiveMessageActionBuilder implements GeneratedApiOperationInfo {
+
+        private static final String METHOD = "PUT";
+
+        private static final String ENDPOINT = "/api/v3/ext/pet/tag/{petId}";
+
+        private static final String OPERATION_NAME = "tagPet";
+
+        public TagPetReceiveActionBuilder(ExtPetApi extPetApi,  String statusCode) {
+            super(extPetApi, extPetStoreSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
+        }
+
+        public TagPetReceiveActionBuilder(ExtPetApi extPetApi, OpenApiClientResponseMessageBuilder messageBuilder) {
             super(extPetApi, extPetStoreSpecification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
         }
 

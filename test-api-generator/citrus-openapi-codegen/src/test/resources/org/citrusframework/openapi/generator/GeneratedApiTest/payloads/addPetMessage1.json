@@ -1,6 +1,6 @@
 {
     "id": 12,
     "name": "Snoopy",
-    "tags": ["comic dog"],
+    "tags": [{"id": 1298, "name": "comic dog"}],
     "photoUrls": ["url1", "url2"]
 }

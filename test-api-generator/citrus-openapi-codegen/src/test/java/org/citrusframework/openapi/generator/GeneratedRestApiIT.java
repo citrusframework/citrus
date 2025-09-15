@@ -35,6 +35,8 @@ import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringExtension;
 import org.citrusframework.message.Message;
+import org.citrusframework.openapi.AutoFillType;
+import org.citrusframework.openapi.actions.OpenApiClientRequestActionBuilder;
 import org.citrusframework.openapi.generator.GeneratedRestApiIT.Config;
 import org.citrusframework.openapi.generator.rest.extpetstore.model.PetIdentifier;
 import org.citrusframework.openapi.generator.rest.extpetstore.request.ExtPetApi;
@@ -63,6 +65,7 @@ import static org.citrusframework.openapi.generator.util.MultipartConverter.mult
 import static org.citrusframework.util.FileUtils.copyToByteArray;
 import static org.citrusframework.util.FileUtils.readToString;
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
@@ -274,6 +277,7 @@ class GeneratedRestApiIT {
 
         }
     }
+
     /**
      * Demonstrates usage of parameter serialization according to
      * <a href="https://swagger.io/docs/specification/serialization/">...</a>
@@ -1454,7 +1458,7 @@ class GeneratedRestApiIT {
                 void java_non_url_encoded(@CitrusResource TestCaseRunner runner) {
 
                     String owner = """
-                    {"name":"Max Mustermann","email":"maxmuster@muster.de","phone":"+491234567890","address":{"street":"Musterstreet","town":"Mustertown"}}""";
+                        {"name":"Max Mustermann","email":"maxmuster@muster.de","phone":"+491234567890","address":{"street":"Musterstreet","town":"Mustertown"}}""";
 
                     runner.variable("owner", owner);
                     runner.when(extPetApi.sendPostOwner$("${owner}")
@@ -1478,7 +1482,7 @@ class GeneratedRestApiIT {
                 void java_url_encoded(@CitrusResource TestCaseRunner runner) {
 
                     String owner = """
-                    {"name":"Max Mustermann","email":"maxmuster@muster.de","phone":"+491234567890","address":{"street":"Musterstreet","town":"Mustertown"}}""";
+                        {"name":"Max Mustermann","email":"maxmuster@muster.de","phone":"+491234567890","address":{"street":"Musterstreet","town":"Mustertown"}}""";
 
                     runner.variable("owner", owner);
                     runner.when(extPetApi.sendPostOwner$("citrus:urlEncode('${owner}')")
@@ -2044,7 +2048,7 @@ class GeneratedRestApiIT {
         void java_parameter_with_url_encoding(@CitrusResource TestCaseRunner runner) {
 
             runner.when(extPetApi.sendGetPetWithParametersRequiringEncoding(1)
-                    .queryID(4)
+                .queryID(4)
                 .fork(true));
 
             runner.then(http().server(httpServer)
@@ -2524,7 +2528,8 @@ class GeneratedRestApiIT {
 
             runner.then(petApi.receiveGetPetById(OK)
                 .message()
-                .validate(validation().jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
+                .validate(
+                    validation().jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
             );
         }
     }
@@ -2564,7 +2569,8 @@ class GeneratedRestApiIT {
 
             runner.then(petApi.receiveGetPetById(OK).endpoint(otherApplicationServiceClient)
                 .message()
-                .validate(validation().jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
+                .validate(
+                    validation().jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
             );
         }
     }
@@ -2598,7 +2604,8 @@ class GeneratedRestApiIT {
 
             runner.then(petApi.receiveGetPetById(OK).endpoint(otherApplicationServiceClient)
                 .message()
-                .validate(validation().jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
+                .validate(
+                    validation().jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
             );
         }
     }
@@ -3383,7 +3390,8 @@ class GeneratedRestApiIT {
 
             runner.then(petApi.receiveGetPetById(OK)
                 .message()
-                .validate(validation().jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
+                .validate(
+                    validation().jsonPath().expression("$.name", "@matches('hasso|cutie|fluffy')@"))
             );
         }
     }
@@ -3529,7 +3537,155 @@ class GeneratedRestApiIT {
                 .receiveUploadFile(OK)
                 .message()
                 .validate(validation().jsonPath().expression("$.code", "12"))
-                .validate(validation().jsonPath().expression("$.message", "image successfully uploaded")));
+                .validate(validation().jsonPath()
+                    .expression("$.message", "image successfully uploaded")));
         }
+    }
+
+    /**
+     * Tests that execute requests with non schema conform settings.
+     */
+    @Nested
+    class NegativeTests {
+
+        // One OK test to ensure correctness
+        @Test
+        void java_perform_request_with_all_required_parameter(
+            @CitrusResource TestCaseRunner runner) {
+
+            runner.variable("petId", "5678");
+            runner.when(extPetApi.sendTagPet("${petId}", "tag1", "tag2")
+                .autoFill(AutoFillType.NONE) // do not autofill as required parameters would be set
+                .fork(true));
+            runner.then(http().server(httpServer)
+                .receive()
+                .put("/api/v3/ext/pet/tag/5678")
+                .message());
+
+            runner.then(http().server(httpServer)
+                .send()
+                .response(OK)
+                .message()
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(Resources.create(
+                    "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetById_response.json"))
+                .contentType(APPLICATION_JSON_VALUE));
+
+            runner.when(extPetApi
+                .receiveTagPet(OK));
+        }
+
+        // One OK test to ensure correctness
+        @Test
+        void java_perform_request_with_none_required_parameter(
+            @CitrusResource TestCaseRunner runner) {
+
+            // Note that petId is a path parameter and is a must-have because it is part of th URI
+            OpenApiClientRequestActionBuilder tagPetActionBuilderQueryAndHeaderMissing = extPetApi.sendTagPet(
+                    "1234", null, null)
+                .autoFill(AutoFillType.NONE);
+
+            assertThatThrownBy(() -> runner.when(tagPetActionBuilderQueryAndHeaderMissing))
+                .isInstanceOf(TestCaseFailedException.class)
+                .hasCauseInstanceOf(ValidationException.class)
+                .hasMessage(	"""
+                    OpenApi request validation failed for operation: PUT_/pet/tag/{petId} (tagPet)
+                    \tERROR - Header parameter 'headerTag' is required on path '/pet/tag/{petId}' but not found in request.: []
+                    \tERROR - Query parameter 'queryTag' is required on path '/pet/tag/{petId}' but not found in request.: []""");
+        }
+
+        @Test
+        void java_perform_request_with_missing_all_required_parameters(
+            @CitrusResource TestCaseRunner runner) {
+
+            // Note that petId is a path parameter and is a must-have because it is part of th URI
+            runner.when(extPetApi.sendTagPet("1234", null, null)
+                .autoFill(AutoFillType.NONE) // do not autofill as required parameters would be set
+                .schemaValidation(false) // do not validate as this would fail
+                .fork(true));
+            runner.then(http().server(httpServer)
+                .receive()
+                .put("/api/v3/ext/pet/tag/1234")
+                .message());
+
+            runner.then(http().server(httpServer)
+                .send()
+                .response(BAD_REQUEST));
+
+            runner.when(extPetApi
+                .receiveTagPet(BAD_REQUEST));
+        }
+
+        @Test
+        void java_perform_request_with_missing_required_query_parameter(
+            @CitrusResource TestCaseRunner runner) {
+
+            runner.when(extPetApi.sendTagPet("1234", null, null)
+                .autoFill(AutoFillType.NONE) // do not autofill as required parameters would be set
+                .schemaValidation(false) // do not validate as this would fail
+                .fork(true));
+            runner.then(http().server(httpServer)
+                .receive()
+                .put("/api/v3/ext/pet/tag/1234")
+                .message());
+
+            runner.then(http().server(httpServer)
+                .send()
+                .response(BAD_REQUEST));
+
+            runner.when(extPetApi
+                .receiveTagPet(BAD_REQUEST));
+        }
+
+        @Test
+        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "negativeRequestWithMissingRequiredQueryParameterTest")
+        void xml_perform_request_with_missing_required_query_parameter() {
+        }
+
+        @Test
+        void java_perform_request_with_missing_required_header_parameter(
+            @CitrusResource TestCaseRunner runner) {
+
+            runner.when(extPetApi.sendTagPet("1234", "tag1", null)
+                .autoFill(AutoFillType.NONE) // do not autofill as required parameters would be set
+                .schemaValidation(false) // do not validate as this would fail
+                .fork(true));
+            runner.then(http().server(httpServer)
+                .receive()
+                .put("/api/v3/ext/pet/tag/1234")
+                .message());
+
+            runner.then(http().server(httpServer)
+                .send()
+                .response(BAD_REQUEST));
+
+            runner.when(extPetApi
+                .receiveTagPet(BAD_REQUEST));
+        }
+
+        @Test
+        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "negativeRequestWithMissingRequiredHeaderParameterTest")
+        void xml_perform_request_with_missing_required_header_parameter() {
+        }
+    }
+
+    @Nested
+    class TemplateBased {
+
+        @Test
+        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "performGetPetFromTemplateTest")
+        void xml_perform_get_pet_from_template() {
+        }
+
+        @Test
+        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "performFindPetFromTemplateTest")
+        void xml_perform_find_pet_from_template() {
+        }
+
+        @Test
+        @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "performAddPetFromTemplateTest")
+        void xml_perform_add_pet_from_template() {
+        }
+
     }
 }

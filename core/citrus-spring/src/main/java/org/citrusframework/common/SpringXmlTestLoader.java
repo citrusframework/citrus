@@ -32,6 +32,8 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import static java.lang.String.format;
+
 /**
  * Loads test case as Spring bean from XML application context file. Loader holds application context file
  * for test case and a parent application context. At runtime this class loads the Spring application context and gets
@@ -57,7 +59,14 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
             citrus.run(testCase, context);
             handler.forEach(handler -> handler.accept(testCase));
         } catch (NoSuchBeanDefinitionException e) {
-            throw context.handleError(testName, packageName, "Failed to load Spring XML test with name '" + testName + "'", e);
+            logger.error(
+                """
+                The bean test representation could not be found in the context. This means, that either
+                the name of the test does not match the expected name '{}' or there was a failure parsing
+                 the xml representation. Failed to load Spring XML test with name '
+                """, testName, e);
+            throw context.handleError(testName, packageName,
+                "Failed to load Spring XML test with name '" + testName + "'", e);
         }
     }
 
@@ -71,13 +80,13 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
             configureCustomParsers(parentApplicationContext);
 
             return new ClassPathXmlApplicationContext(
-                    new String[]{
-                            getSource().getFilePath(),
-                            "org/citrusframework/spring/annotation-config-ctx.xml"},
-                    true, parentApplicationContext);
+                new String[]{
+                    getSource().getFilePath(),
+                    "org/citrusframework/spring/annotation-config-ctx.xml"},
+                true, parentApplicationContext);
         } catch (Exception e) {
             throw citrusContext.getTestContextFactory().getObject()
-                    .handleError(testName, packageName, "Failed to load test case", e);
+                .handleError(testName, packageName, "Failed to load test case", e);
         }
     }
 
@@ -93,11 +102,16 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
                 Class<? extends BeanDefinitionParser> parserClass = beanDefinitionParserConfiguration.parser();
                 try {
                     if (parserClass != null) {
-                        BeanDefinitionParser parserOverride = parserClass.getDeclaredConstructor().newInstance();
-                        CitrusNamespaceParserRegistry.registerParser(beanDefinitionParserConfiguration.name(), parserOverride);
+                        BeanDefinitionParser parserOverride = parserClass.getDeclaredConstructor()
+                            .newInstance();
+                        CitrusNamespaceParserRegistry.registerParser(
+                            beanDefinitionParserConfiguration.name(), parserOverride);
                     }
-                } catch (NoSuchMethodException | InstantiationException | InvocationTargetException | IllegalAccessException e) {
-                    throw new CitrusRuntimeException(String.format("Could not install custom BeanDefinitionParser '%s'", parserClass), e);
+                } catch (NoSuchMethodException | InstantiationException |
+                         InvocationTargetException | IllegalAccessException e) {
+                    throw new CitrusRuntimeException(
+                        format("Could not install custom BeanDefinitionParser '%s'",
+                            parserClass), e);
                 }
             }
         }
@@ -143,7 +157,8 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
     private void addOptionalTestClassLevelAnnotation(Class<?> testClass,
         List<SpringXmlTestLoaderConfiguration> beanDefinitionParserConfigurationList) {
 
-        SpringXmlTestLoaderConfiguration loaderConfiguration = testClass.getAnnotation(SpringXmlTestLoaderConfiguration.class);
+        SpringXmlTestLoaderConfiguration loaderConfiguration = testClass.getAnnotation(
+            SpringXmlTestLoaderConfiguration.class);
         if (loaderConfiguration != null) {
             beanDefinitionParserConfigurationList.add(loaderConfiguration);
         }
@@ -166,7 +181,8 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
             return source;
         } else {
             String path = packageName.replace('.', '/');
-            String fileName = testName.endsWith(FileUtils.FILE_EXTENSION_XML) ? testName : testName + FileUtils.FILE_EXTENSION_XML;
+            String fileName = testName.endsWith(FileUtils.FILE_EXTENSION_XML) ? testName
+                : testName + FileUtils.FILE_EXTENSION_XML;
             return new TestSource(TestLoader.XML, testName, path + "/" + fileName);
         }
     }
@@ -180,7 +196,9 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
     }
 
     public SpringXmlTestLoader source(String sourceFile) {
-        setSource(new TestSource(TestLoader.XML, FileUtils.getBaseName(FileUtils.getFileName(sourceFile)), sourceFile));
+        setSource(
+            new TestSource(TestLoader.XML, FileUtils.getBaseName(FileUtils.getFileName(sourceFile)),
+                sourceFile));
         return this;
     }
 }

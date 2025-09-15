@@ -251,7 +251,7 @@
     <mockftpserver.version>3.2.0</mockftpserver.version>
     <netty.version>4.2.0.Final</netty.version>
     <okhttp.version>5.1.0</okhttp.version>
-    <org.openapitools.version>7.14.0</org.openapitools.version>
+    <org.openapitools.version>7.15.0</org.openapitools.version>
     <jackson-databind-nullable.version>0.2.7</jackson-databind-nullable.version>
     <picoli-version>4.7.7</picoli-version>
     <postgresql.version>42.7.7</postgresql.version>

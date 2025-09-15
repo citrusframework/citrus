@@ -1,0 +1,40 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+    xmlns:extpetstore="http://www.citrusframework.org/citrus-test-schema/extpetstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/http/testcase
+    http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api
+    http://www.citrusframework.org/citrus-test-schema/extpetstore-api/extpetstore-api.xsd"
+>
+    <testcase name="negativeRequestWithMissingRequiredQueryParameterTest">
+        <actions>
+            <create-variables>
+                <variable name="petId" value="1234" />
+            </create-variables>
+
+            <extpetstore:send-tag-pet
+                fork="true"
+                petId="${petId}"
+                headerTag="headerTag"
+                autofill="NONE"
+                schema-validation="false"/>
+
+            <http:receive-request server="httpServer">
+                <http:PUT path="/api/v3/ext/pet/tag/1234"/>
+            </http:receive-request>
+
+            <http:send-response server="httpServer">
+                <http:headers status="400"/>
+            </http:send-response>
+
+            <extpetstore:receive-tag-pet responseCode="400"/>
+        </actions>
+    </testcase>
+</spring:beans>

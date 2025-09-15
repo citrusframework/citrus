@@ -28,6 +28,7 @@ import java.util.function.BiConsumer;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiConfig;
+import org.openapitools.codegen.utils.CamelizeOption;
 
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
@@ -35,6 +36,7 @@ import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.CITRUS_TEST_
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.CITRUS_TEST_SCHEMA_KEEP_HINT;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVars;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVarsToLowerCase;
+import static org.openapitools.codegen.utils.StringUtils.camelize;
 
 /**
  * Utility class responsible for generating the Spring meta files 'spring.handlers' and 'spring.schemas', used
@@ -131,9 +133,11 @@ public class SpringMetaFileGenerator {
     private void writeSpringHandlerMetaFile(File springMetafileDirectory) throws MojoExecutionException {
         String filename = "spring.handlers";
         writeSpringMetaFile(springMetafileDirectory, filename, (fileWriter, apiConfig) -> {
+
+            String classNamePrefix = camelize(apiConfig.getPrefix(), CamelizeOption.UPPERCASE_FIRST_CHAR);
             String targetXmlnsNamespace = replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(), apiConfig.getPrefix(), apiConfig.getVersion());
             String invokerPackage = replaceDynamicVarsToLowerCase(apiConfig.getInvokerPackage(), apiConfig.getPrefix(), apiConfig.getVersion());
-            String namespaceHandlerClass = invokerPackage + ".spring." + apiConfig.getPrefix() + "NamespaceHandler";
+            String namespaceHandlerClass = invokerPackage + ".spring." + classNamePrefix + "NamespaceHandler";
             appendLine(fileWriter, format("%s=%s%n", targetXmlnsNamespace.replace("http://", "http\\://"), namespaceHandlerClass), filename);
         });
     }
