@@ -260,7 +260,7 @@
     <selenium.version>4.35.0</selenium.version>
     <slf4j.version>2.0.17</slf4j.version>
     <snappy.version>1.1.10.8</snappy.version>
-    <snakeyaml.version>2.4</snakeyaml.version>
+    <snakeyaml.version>2.5</snakeyaml.version>
     <spring.version>6.2.11</spring.version>
     <spring.boot.version>3.5.5</spring.boot.version>
     <spring.ws.version>4.1.1</spring.ws.version>
