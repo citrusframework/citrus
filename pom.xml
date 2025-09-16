@@ -227,7 +227,7 @@
     <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
     <jakarta.validation.version>3.1.1</jakarta.validation.version>
     <jakarta.websocket-api.version>2.2.0</jakarta.websocket-api.version>
-    <jakarta.xml.bind-api.version>4.0.2</jakarta.xml.bind-api.version>
+    <jakarta.xml.bind-api.version>4.0.4</jakarta.xml.bind-api.version>
     <jakarta.xml.soap-api.version>3.0.2</jakarta.xml.soap-api.version>
     <jansi.version>2.4.2</jansi.version>
     <javapoet.version>1.13.0</javapoet.version>
