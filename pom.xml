@@ -280,7 +280,7 @@
     <xmlbeans-xpath.version>2.6.0</xmlbeans-xpath.version>
     <xerces.version>2.12.2</xerces.version>
     <xstream.version>1.4.21</xstream.version>
-    <zookeeper.version>3.9.3</zookeeper.version>
+    <zookeeper.version>3.9.4</zookeeper.version>
 
     <skip.integration.tests>false</skip.integration.tests>
     <skip.unit.tests>false</skip.unit.tests>
