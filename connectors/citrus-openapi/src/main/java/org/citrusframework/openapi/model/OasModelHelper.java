@@ -134,7 +134,7 @@ public final class OasModelHelper {
         return schema != null && schema.$ref != null;
     }
 
-    public static boolean isCompositeSchema(OasSchema schema) {
+    public static boolean isCompositeSchema(@Nullable OasSchema schema) {
         return delegate(schema, Oas20ModelHelper::isCompositeSchema, Oas30ModelHelper::isCompositeSchema);
     }
 

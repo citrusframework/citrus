@@ -93,7 +93,7 @@ public final class Oas20ModelHelper {
         return selectedSchema == null && selectedMediaType == null ? Optional.empty() : Optional.of(new OasAdapter<>(selectedSchema, selectedMediaType));
     }
 
-    public static boolean isCompositeSchema(Oas20Schema schema) {
+    public static boolean isCompositeSchema(@Nullable Oas20Schema schema) {
         // Note that oneOf and anyOf is not supported by Oas20.
         return schema instanceof Oas20AllOfSchema;
     }

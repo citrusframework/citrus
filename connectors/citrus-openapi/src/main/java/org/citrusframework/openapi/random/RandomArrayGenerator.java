@@ -19,7 +19,9 @@ package org.citrusframework.openapi.random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
-import org.citrusframework.openapi.model.OasModelHelper;
+import jakarta.annotation.Nullable;
+
+import static org.citrusframework.openapi.model.OasModelHelper.isArrayType;
 
 /**
  * A generator for producing random arrays based on an OpenAPI schema. This class extends the
@@ -48,8 +50,8 @@ public class RandomArrayGenerator extends RandomGenerator {
     }
 
     @Override
-    public boolean handles(OasSchema other) {
-        return OasModelHelper.isArrayType(other);
+    public boolean handles(@Nullable OasSchema other) {
+        return isArrayType(other);
     }
 
     @Override

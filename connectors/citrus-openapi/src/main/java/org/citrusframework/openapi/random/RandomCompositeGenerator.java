@@ -23,8 +23,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
-import org.citrusframework.openapi.model.OasModelHelper;
+import jakarta.annotation.Nullable;
 
+import static org.citrusframework.openapi.model.OasModelHelper.isCompositeSchema;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
@@ -71,8 +72,8 @@ public class RandomCompositeGenerator extends RandomGenerator {
     }
 
     @Override
-    public boolean handles(OasSchema other) {
-        return OasModelHelper.isCompositeSchema(other);
+    public boolean handles(@Nullable OasSchema other) {
+        return isCompositeSchema(other);
     }
 
     @Override
