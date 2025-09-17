@@ -18,6 +18,7 @@ package org.citrusframework.camel.actions;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.actions.camel.CamelJBangActionBuilderBase;
 import org.citrusframework.camel.jbang.CamelJBang;
 import org.citrusframework.camel.jbang.CamelJBangTestActor;
 import org.citrusframework.spi.ReferenceResolver;
@@ -51,7 +52,6 @@ public abstract class AbstractCamelJBangAction extends AbstractTestAction {
 
     /**
      * Provides access to the configured Camel JBang instance.
-     * @return
      */
     protected CamelJBang camelJBang() {
         return camelJBang;
@@ -68,7 +68,8 @@ public abstract class AbstractCamelJBangAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static abstract class Builder<T extends AbstractCamelJBangAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
+    public static abstract class Builder<T extends AbstractCamelJBangAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B>
+            implements CamelJBangActionBuilderBase<T, B>, ReferenceResolverAware {
 
         protected CamelJBang camelJBang;
         protected String camelVersion;
@@ -80,26 +81,19 @@ public abstract class AbstractCamelJBangAction extends AbstractTestAction {
             actor(new CamelJBangTestActor());
         }
 
-        /**
-         * Sets explicit Camel version.
-         * @param camelVersion
-         * @return
-         */
+        @Override
         public B camelVersion(String camelVersion) {
             this.camelVersion = camelVersion;
             return self;
         }
 
-        /**
-         * Sets explicit Kamelets version.
-         * @param kameletsVersion
-         * @return
-         */
+        @Override
         public B kameletsVersion(String kameletsVersion) {
             this.kameletsVersion = kameletsVersion;
             return self;
         }
 
+        @Override
         public B withReferenceResolver(ReferenceResolver referenceResolver) {
             this.referenceResolver = referenceResolver;
             return self;
@@ -123,7 +117,6 @@ public abstract class AbstractCamelJBangAction extends AbstractTestAction {
 
         /**
          * Subclasses need to implement to create the
-         * @return
          */
         protected abstract T doBuild();
     }

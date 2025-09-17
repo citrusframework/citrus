@@ -356,7 +356,7 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
 
                 this.builder = builder;
             } else if (jbang.getKubernetes().getVerify() != null) {
-                CamelKubernetesVerifyAction.Builder builder = new CamelKubernetesVerifyAction.Builder();
+                CamelKubernetesVerifyIntegrationAction.Builder builder = new CamelKubernetesVerifyIntegrationAction.Builder();
 
                 builder.integration(jbang.getKubernetes().getVerify().getIntegration())
                         .label(jbang.getKubernetes().getVerify().getLabel())
@@ -372,7 +372,7 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                 }
                 this.builder = builder;
             } else if (jbang.getKubernetes().getDelete() != null) {
-                CamelKubernetesDeleteAction.Builder builder = new CamelKubernetesDeleteAction.Builder();
+                CamelKubernetesDeleteIntegrationAction.Builder builder = new CamelKubernetesDeleteIntegrationAction.Builder();
 
                 if (jbang.getKubernetes().getDelete().getIntegration() != null) {
                     if (jbang.getKubernetes().getDelete().getIntegration().getFile() != null) {

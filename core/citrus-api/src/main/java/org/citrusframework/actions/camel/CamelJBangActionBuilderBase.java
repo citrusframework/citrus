@@ -17,18 +17,20 @@
 package org.citrusframework.actions.camel;
 
 import org.citrusframework.TestAction;
+import org.citrusframework.TestActionBuilder;
+import org.citrusframework.actions.ActionBuilder;
+import org.citrusframework.actions.ReferenceResolverAwareBuilder;
 
-public interface CamelIntegrationStopActionBuilder<T extends TestAction, B extends CamelIntegrationStopActionBuilder<T, B>>
-        extends CamelJBangActionBuilderBase<T, B> {
-
-    /**
-     * Stop Camel JBang process for this integration.
-     */
-    B integration(String name);
+public interface CamelJBangActionBuilderBase<T extends TestAction, B extends TestActionBuilder<T>>
+        extends ActionBuilder<T, B>, TestActionBuilder<T>, ReferenceResolverAwareBuilder<T, B> {
 
     /**
-     * Sets the integration name.
+     * Sets explicit Camel version.
      */
-    B integrationName(String name);
+    B camelVersion(String camelVersion);
 
+    /**
+     * Sets explicit Kamelets version.
+     */
+    B kameletsVersion(String kameletsVersion);
 }

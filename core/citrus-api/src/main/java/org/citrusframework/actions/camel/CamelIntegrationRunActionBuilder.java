@@ -19,13 +19,10 @@ package org.citrusframework.actions.camel;
 import java.util.Map;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ActionBuilder;
-import org.citrusframework.actions.ReferenceResolverAwareBuilder;
 import org.citrusframework.spi.Resource;
 
 public interface CamelIntegrationRunActionBuilder<T extends TestAction, B extends CamelIntegrationRunActionBuilder<T, B>>
-        extends ActionBuilder<T, B>, TestActionBuilder<T>, ReferenceResolverAwareBuilder<T, B> {
+        extends CamelJBangActionBuilderBase<T, B> {
 
     /**
      * Runs Camel integration from given source code.

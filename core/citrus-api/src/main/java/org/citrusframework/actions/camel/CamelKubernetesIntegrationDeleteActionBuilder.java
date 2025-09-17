@@ -17,18 +17,33 @@
 package org.citrusframework.actions.camel;
 
 import org.citrusframework.TestAction;
+import org.citrusframework.spi.Resource;
 
-public interface CamelIntegrationStopActionBuilder<T extends TestAction, B extends CamelIntegrationStopActionBuilder<T, B>>
+public interface CamelKubernetesIntegrationDeleteActionBuilder<T extends TestAction, B extends CamelKubernetesIntegrationDeleteActionBuilder<T, B>>
         extends CamelJBangActionBuilderBase<T, B> {
 
     /**
-     * Stop Camel JBang process for this integration.
+     * Delete Camel JBang kubernetes resources integration resource.
+     */
+    B integration(Resource resource);
+
+    /**
+     * Delete Camel JBang kubernetes resources for this integration.
      */
     B integration(String name);
 
     /**
-     * Sets the integration name.
+     * Set cluster type target.
      */
-    B integrationName(String name);
+    B clusterType(String clusterType);
 
+    /**
+     * The working directory where to find exported project sources.
+     */
+    B workingDir(String dir);
+
+    /**
+     * The Namespace where the kubernetes resources are deployed.
+     */
+    B namespace(String namespace);
 }

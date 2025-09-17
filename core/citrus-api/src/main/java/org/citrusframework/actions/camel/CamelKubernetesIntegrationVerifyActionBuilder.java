@@ -17,25 +17,35 @@
 package org.citrusframework.actions.camel;
 
 import org.citrusframework.TestAction;
+import org.citrusframework.spi.Resource;
 
-public interface CamelIntegrationVerifyActionBuilder<T extends TestAction, B extends CamelIntegrationVerifyActionBuilder<T, B>>
+public interface CamelKubernetesIntegrationVerifyActionBuilder<T extends TestAction, B extends CamelKubernetesIntegrationVerifyActionBuilder<T, B>>
         extends CamelJBangActionBuilderBase<T, B> {
+
+    /**
+     * Export given Camel integration resource.
+     */
+    B integration(Resource resource);
 
     /**
      * Identify Camel JBang process for this route.
      */
-    B integration(String sourceCode);
+    B integration(String name);
 
     /**
      * Sets the integration name.
      */
     B integrationName(String name);
 
-    B isRunning();
+    /**
+     * Sets the integration label.
+     */
+    B label(String label);
 
-    B isStopped();
-
-    B isInPhase(String phase);
+    /**
+     * Sets the namespace.
+     */
+    B namespace(String namespace);
 
     B printLogs(boolean printLogs);
 
@@ -45,5 +55,18 @@ public interface CamelIntegrationVerifyActionBuilder<T extends TestAction, B ext
 
     B delayBetweenAttempts(long delayBetweenAttempts);
 
-    B stopOnErrorStatus(boolean stopOnErrorStatus);
+    /**
+     * Adds a command argument.
+     */
+    B withArg(String arg);
+
+    /**
+     * Adds a command argument with name and value.
+     */
+    B withArg(String name, String value);
+
+    /**
+     * Adds command arguments.
+     */
+    B withArgs(String... args);
 }

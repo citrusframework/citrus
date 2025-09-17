@@ -14,33 +14,28 @@
  * limitations under the License.
  */
 
-package org.citrusframework.camel.yaml;
-
-import java.nio.file.Paths;
+package org.citrusframework.camel.xml;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.CamelSettings;
-import org.citrusframework.camel.actions.CamelKubernetesDeleteAction;
+import org.citrusframework.camel.actions.CamelKubernetesVerifyIntegrationAction;
 import org.citrusframework.camel.jbang.CamelJBang;
 import org.citrusframework.camel.jbang.KubernetesPlugin;
 import org.citrusframework.jbang.ProcessAndOutput;
-import org.citrusframework.spi.Resources;
-import org.citrusframework.yaml.YamlTestLoader;
+import org.citrusframework.xml.XmlTestLoader;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CamelKubernetesDeleteTest extends AbstractYamlActionTest {
+public class CamelKubernetesVerifyIntegrationTest extends AbstractXmlActionTest {
 
     @Mock
     private CamelJBang camelJBang;
@@ -64,7 +59,7 @@ public class CamelKubernetesDeleteTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadCamelActions() throws Exception {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/yaml/camel-jbang-kubernetes-delete-test.yaml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/camel-jbang-kubernetes-verify-test.xml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.start();
@@ -74,22 +69,22 @@ public class CamelKubernetesDeleteTest extends AbstractYamlActionTest {
 
         context.getReferenceResolver().bind("camel-jbang", camelJBang);
 
-        when(k8sPlugin.delete(eq("route.yaml"), any(String[].class))).thenReturn(pao);
+        when(k8sPlugin.logs("--name", "my-route")).thenReturn(pao);
+        when(k8sPlugin.logs("--label", "app=camel")).thenReturn(pao);
         when(process.exitValue()).thenReturn(0);
-        when(pao.getOutput()).thenReturn("SUCCESS!");
+        when(pao.getOutput()).thenReturn("Camel rocks!");
 
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelJBangKubernetesDeleteTest");
+        Assert.assertEquals(result.getName(), "CamelJBangKubernetesVerifyTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesDeleteAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel-k8s-delete-integration");
+        Assert.assertEquals(result.getActionCount(), 2L);
+        Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesVerifyIntegrationAction.class);
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel-k8s-verify-integration");
 
-        verify(camelJBang).workingDir(Paths.get(Resources.create("classpath:org/citrusframework/camel/integration/route.yaml")
-                .getFile().getParentFile().toPath().toAbsolutePath().toString()));
-        verify(k8sPlugin).delete(eq("route.yaml"), eq(new String[] {}));
+        verify(k8sPlugin).logs("--name", "my-route");
+        verify(k8sPlugin).logs("--label", "app=camel");
     }
 }

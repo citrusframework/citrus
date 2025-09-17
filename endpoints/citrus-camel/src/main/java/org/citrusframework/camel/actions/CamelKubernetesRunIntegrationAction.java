@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.citrusframework.actions.camel.CamelKubernetesIntegrationRunActionBuilder;
 import org.citrusframework.camel.jbang.CamelJBangSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -103,7 +104,7 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
     /**
      * Default constructor.
      */
-    public CamelKubernetesRunIntegrationAction(CamelKubernetesRunIntegrationAction.Builder builder) {
+    public CamelKubernetesRunIntegrationAction(Builder builder) {
         super("k8s-run-integration", builder);
 
         this.integrationName = builder.integrationName;
@@ -209,7 +210,6 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
         }
     }
 
-
     public Resource getIntegrationResource() {
         return integrationResource;
     }
@@ -245,7 +245,8 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelKubernetesRunIntegrationAction, CamelKubernetesRunIntegrationAction.Builder> {
+    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelKubernetesRunIntegrationAction, Builder>
+            implements CamelKubernetesIntegrationRunActionBuilder<CamelKubernetesRunIntegrationAction, Builder> {
 
         private String integrationName;
         private Resource integrationResource;
@@ -264,182 +265,110 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
         private boolean autoRemoveResources = CamelJBangSettings.isAutoRemoveResources();
         private boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
 
-        /**
-         * Sets the integration name.
-         * @param name
-         * @return
-         */
+        @Override
         public Builder integrationName(String name) {
             this.integrationName = name;
             return this;
         }
 
-        /**
-         * Export given Camel integration resource.
-         *
-         * @param resource
-         * @return
-         */
+        @Override
         public Builder integration(Resource resource) {
             this.integrationResource = resource;
             return this;
         }
 
-        /**
-         * Define runtime.
-         *
-         * @param runtime
-         * @return
-         */
+        @Override
         public Builder runtime(String runtime) {
             this.runtime = runtime;
             return this;
         }
 
-        /**
-         * Define container image builder type.
-         *
-         * @param imageBuilder
-         * @return
-         */
+        @Override
         public Builder imageBuilder(String imageBuilder) {
             this.imageBuilder = imageBuilder;
             return this;
         }
 
-        /**
-         * Set container image registry.
-         *
-         * @param imageRegistry
-         * @return
-         */
+        @Override
         public Builder imageRegistry(String imageRegistry) {
             this.imageRegistry = imageRegistry;
             return this;
         }
 
-        /**
-         * Set cluster type target.
-         *
-         * @param clusterType
-         * @return
-         */
+        @Override
         public Builder clusterType(String clusterType) {
             this.clusterType = clusterType;
             return this;
         }
 
-        /**
-         * Adds a command build property.
-         *
-         * @param property
-         * @return
-         */
+        @Override
         public Builder withBuildProperty(String property) {
             this.buildProperties.add(property);
             return this;
         }
 
-        /**
-         * Adds command build properties.
-         *
-         * @param properties
-         * @return
-         */
+        @Override
         public Builder withBuildProperties(String... properties) {
             this.buildProperties.addAll(Arrays.asList(properties));
             return this;
         }
 
-        /**
-         * Adds a command property.
-         *
-         * @param property
-         * @return
-         */
+        @Override
         public Builder withProperty(String property) {
             this.properties.add(property);
             return this;
         }
 
-        /**
-         * Adds command properties.
-         *
-         * @param properties
-         * @return
-         */
+        @Override
         public Builder withProperties(String... properties) {
             this.properties.addAll(Arrays.asList(properties));
             return this;
         }
 
-        /**
-         * Adds a command trait.
-         *
-         * @param trait
-         * @return
-         */
+        @Override
         public Builder withTrait(String trait) {
             this.traits.add(trait);
             return this;
         }
 
-        /**
-         * Adds command traits.
-         *
-         * @param traits
-         * @return
-         */
+        @Override
         public Builder withTraits(String... traits) {
             this.traits.addAll(Arrays.asList(traits));
             return this;
         }
 
-        /**
-         * Adds a command argument.
-         *
-         * @param arg
-         * @return
-         */
+        @Override
         public Builder withArg(String arg) {
             this.args.add(arg);
             return this;
         }
 
-        /**
-         * Adds a command argument with name and value.
-         *
-         * @param name
-         * @param value
-         * @return
-         */
+        @Override
         public Builder withArg(String name, String value) {
             this.args.add(name);
             this.args.add(value);
             return this;
         }
 
-        /**
-         * Adds command arguments.
-         *
-         * @param args
-         * @return
-         */
+        @Override
         public Builder withArgs(String... args) {
             this.args.addAll(Arrays.asList(args));
             return this;
         }
 
+        @Override
         public Builder verbose(boolean enabled) {
             this.verbose = enabled;
             return this;
         }
 
+        @Override
         public Builder autoRemove(boolean enabled) {
             this.autoRemoveResources = enabled;
             return this;
         }
 
+        @Override
         public Builder waitForRunningState(boolean enabled) {
             this.waitForRunningState = enabled;
             return this;

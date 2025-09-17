@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.citrusframework.actions.camel.CamelKubernetesIntegrationVerifyActionBuilder;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ActionTimeoutException;
@@ -18,26 +19,18 @@ import org.slf4j.LoggerFactory;
  * Raises errors when the Camel integration log message is not available.
  * Check operation is automatically retried for a given amount of attempts.
  */
-public class CamelKubernetesVerifyAction extends AbstractCamelJBangAction {
+public class CamelKubernetesVerifyIntegrationAction extends AbstractCamelJBangAction {
 
     private static final Logger INTEGRATION_LOG = LoggerFactory.getLogger("INTEGRATION_LOGS");
 
-    /**
-     * Logger
-     */
-    private static final Logger logger = LoggerFactory.getLogger(CamelKubernetesVerifyAction.class);
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(CamelKubernetesVerifyIntegrationAction.class);
 
-    /**
-     * The integration name
-     */
+    /** The integration name */
     private final String integrationName;
-    /**
-     * Label name and value used as a pod selector
-     */
+    /** Label name and value used as a pod selector */
     private final String label;
-    /**
-     * Kubernetes Namespace
-     */
+    /** Kubernetes namespace */
     private final String namespace;
 
     private final String logMessage;
@@ -51,7 +44,7 @@ public class CamelKubernetesVerifyAction extends AbstractCamelJBangAction {
      */
     private final List<String> args;
 
-    protected CamelKubernetesVerifyAction(CamelKubernetesVerifyAction.Builder builder) {
+    protected CamelKubernetesVerifyIntegrationAction(CamelKubernetesVerifyIntegrationAction.Builder builder) {
         super("k8s-verify-integration", builder);
         this.integrationName = builder.integrationName;
         this.label = builder.label;
@@ -138,7 +131,8 @@ public class CamelKubernetesVerifyAction extends AbstractCamelJBangAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelKubernetesVerifyAction, CamelKubernetesVerifyAction.Builder> {
+    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelKubernetesVerifyIntegrationAction, CamelKubernetesVerifyIntegrationAction.Builder>
+            implements CamelKubernetesIntegrationVerifyActionBuilder<CamelKubernetesVerifyIntegrationAction, Builder> {
 
         private String integrationName;
         private String label;
@@ -153,119 +147,82 @@ public class CamelKubernetesVerifyAction extends AbstractCamelJBangAction {
 
         private final List<String> args = new ArrayList<>();
 
-        /**
-         * Export given Camel integration resource.
-         *
-         * @param resource
-         * @return
-         */
+        @Override
         public Builder integration(Resource resource) {
             this.integrationName = resource.getFile().getName();
             return this;
         }
 
-        /**
-         * Identify Camel JBang process for this route.
-         *
-         * @param name
-         * @return
-         */
+        @Override
         public Builder integration(String name) {
             this.integrationName = name;
             return this;
         }
 
-        /**
-         * Sets the integration name.
-         *
-         * @param name
-         * @return
-         */
+        @Override
         public Builder integrationName(String name) {
             this.integrationName = name;
             return this;
         }
 
-        /**
-         * Sets the integration label.
-         *
-         * @param label
-         * @return
-         */
+        @Override
         public Builder label(String label) {
             this.label = label;
             return this;
         }
 
-        /**
-         * Sets the namespace.
-         *
-         * @param namespace
-         * @return
-         */
+        @Override
         public Builder namespace(String namespace) {
             this.namespace = namespace;
             return this;
         }
 
+        @Override
         public Builder printLogs(boolean printLogs) {
             this.printLogs = printLogs;
             return this;
         }
 
+        @Override
         public Builder waitForLogMessage(String logMessage) {
             this.logMessage = logMessage;
             return this;
         }
 
+        @Override
         public Builder maxAttempts(int maxAttempts) {
             this.maxAttempts = maxAttempts;
             return this;
         }
 
+        @Override
         public Builder delayBetweenAttempts(long delayBetweenAttempts) {
             this.delayBetweenAttempts = delayBetweenAttempts;
             return this;
         }
 
-        /**
-         * Adds a command argument.
-         *
-         * @param arg
-         * @return
-         */
+        @Override
         public Builder withArg(String arg) {
             this.args.add(arg);
             return this;
         }
 
-        /**
-         * Adds a command argument with name and value.
-         *
-         * @param name
-         * @param value
-         * @return
-         */
+        @Override
         public Builder withArg(String name, String value) {
             this.args.add(name);
             this.args.add(value);
             return this;
         }
 
-        /**
-         * Adds command arguments.
-         *
-         * @param args
-         * @return
-         */
+        @Override
         public Builder withArgs(String... args) {
             this.args.addAll(Arrays.asList(args));
             return this;
         }
 
         @Override
-        public CamelKubernetesVerifyAction doBuild() {
-            return new CamelKubernetesVerifyAction(this);
+        public CamelKubernetesVerifyIntegrationAction doBuild() {
+            return new CamelKubernetesVerifyIntegrationAction(this);
         }
     }
 }

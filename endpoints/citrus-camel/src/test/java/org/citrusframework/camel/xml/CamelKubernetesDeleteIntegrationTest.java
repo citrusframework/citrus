@@ -23,7 +23,7 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.CamelSettings;
-import org.citrusframework.camel.actions.CamelKubernetesDeleteAction;
+import org.citrusframework.camel.actions.CamelKubernetesDeleteIntegrationAction;
 import org.citrusframework.camel.jbang.CamelJBang;
 import org.citrusframework.camel.jbang.KubernetesPlugin;
 import org.citrusframework.jbang.ProcessAndOutput;
@@ -40,7 +40,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CamelKubernetesDeleteTest extends AbstractXmlActionTest {
+public class CamelKubernetesDeleteIntegrationTest extends AbstractXmlActionTest {
 
     @Mock
     private CamelJBang camelJBang;
@@ -85,7 +85,7 @@ public class CamelKubernetesDeleteTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesDeleteAction.class);
+        Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesDeleteIntegrationAction.class);
         Assert.assertEquals(result.getTestAction(0).getName(), "camel-k8s-delete-integration");
 
         verify(camelJBang).workingDir(Paths.get(Resources.create("classpath:org/citrusframework/camel/integration/route.yaml")

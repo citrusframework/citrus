@@ -16,52 +16,43 @@
 
 package org.citrusframework.camel.actions;
 
+import org.citrusframework.actions.camel.CamelJBangKubernetesActionBuilder;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;
 
-public class CamelKubernetesPluginActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelJBangAction> {
+public class CamelKubernetesPluginActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelJBangAction>
+        implements CamelJBangKubernetesActionBuilder<AbstractCamelJBangAction, CamelKubernetesPluginActionBuilder> {
 
-    /**
-     * Build and deploy a Camel project to Kubernetes
-     */
+    @Override
     public CamelKubernetesRunIntegrationAction.Builder run() {
         CamelKubernetesRunIntegrationAction.Builder builder = new CamelKubernetesRunIntegrationAction.Builder();
         this.delegate = builder;
         return builder;
     }
 
-    /**
-     * Delete a deployed Camel application using the previous exported Kubernetes manifest.
-     */
-    public CamelKubernetesDeleteAction.Builder delete() {
-        CamelKubernetesDeleteAction.Builder builder = new CamelKubernetesDeleteAction.Builder();
+    @Override
+    public CamelKubernetesDeleteIntegrationAction.Builder delete() {
+        CamelKubernetesDeleteIntegrationAction.Builder builder = new CamelKubernetesDeleteIntegrationAction.Builder();
         this.delegate = builder;
         return builder;
     }
 
-    /**
-     * Verify the Kubernetes pod status and logs of a deployed Camel integration.
-     */
-    public CamelKubernetesVerifyAction.Builder verify() {
-        CamelKubernetesVerifyAction.Builder builder = new CamelKubernetesVerifyAction.Builder();
+    @Override
+    public CamelKubernetesVerifyIntegrationAction.Builder verify() {
+        CamelKubernetesVerifyIntegrationAction.Builder builder = new CamelKubernetesVerifyIntegrationAction.Builder();
         this.delegate = builder;
         return builder;
     }
 
-    /**
-     * Export a Camel project from given Camel integration.
-     */
+    @Override
     public CamelKubernetesRunIntegrationAction.Builder export() {
         CamelKubernetesRunIntegrationAction.Builder builder = new CamelKubernetesRunIntegrationAction.Builder();
         this.delegate = builder;
         return builder;
     }
 
-    /**
-     * Sets the bean reference resolver.
-     * @param referenceResolver
-     */
+    @Override
     public CamelKubernetesPluginActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
         return this;

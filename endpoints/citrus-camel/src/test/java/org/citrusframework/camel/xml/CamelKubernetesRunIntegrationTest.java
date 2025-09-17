@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.camel.yaml;
+package org.citrusframework.camel.xml;
 
 import java.nio.file.Paths;
 
@@ -28,7 +28,7 @@ import org.citrusframework.camel.jbang.CamelJBang;
 import org.citrusframework.camel.jbang.KubernetesPlugin;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.yaml.YamlTestLoader;
+import org.citrusframework.xml.XmlTestLoader;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
@@ -41,7 +41,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CamelKubernetesRunTest extends AbstractYamlActionTest {
+public class CamelKubernetesRunIntegrationTest extends AbstractXmlActionTest {
 
     @Mock
     private CamelJBang camelJBang;
@@ -65,7 +65,7 @@ public class CamelKubernetesRunTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadCamelActions() throws Exception {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/yaml/camel-jbang-kubernetes-run-test.yaml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/camel-jbang-kubernetes-run-test.xml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.start();
