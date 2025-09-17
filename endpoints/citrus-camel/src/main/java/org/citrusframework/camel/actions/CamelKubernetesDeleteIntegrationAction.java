@@ -19,6 +19,7 @@ package org.citrusframework.camel.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.citrusframework.actions.camel.CamelKubernetesIntegrationDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
@@ -31,12 +32,12 @@ import static org.citrusframework.jbang.JBangSupport.OK_EXIT_CODE;
 /**
  * Delete kubernetes resources deployed from a Camel project or Camel integration with Camel JBang tooling.
  */
-public class CamelKubernetesDeleteAction extends AbstractCamelJBangAction {
+public class CamelKubernetesDeleteIntegrationAction extends AbstractCamelJBangAction {
 
     /**
      * Logger
      */
-    private static final Logger logger = LoggerFactory.getLogger(CamelKubernetesDeleteAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(CamelKubernetesDeleteIntegrationAction.class);
 
     /**
      * Camel integration resource
@@ -66,7 +67,7 @@ public class CamelKubernetesDeleteAction extends AbstractCamelJBangAction {
     /**
      * Default constructor.
      */
-    public CamelKubernetesDeleteAction(Builder builder) {
+    public CamelKubernetesDeleteIntegrationAction(Builder builder) {
         super("k8s-delete-integration", builder);
 
         this.integrationResource = builder.integrationResource;
@@ -130,7 +131,8 @@ public class CamelKubernetesDeleteAction extends AbstractCamelJBangAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelKubernetesDeleteAction, CamelKubernetesDeleteAction.Builder> {
+    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelKubernetesDeleteIntegrationAction, CamelKubernetesDeleteIntegrationAction.Builder>
+            implements CamelKubernetesIntegrationDeleteActionBuilder<CamelKubernetesDeleteIntegrationAction, Builder> {
 
         private Resource integrationResource;
         private String integrationName;
@@ -138,65 +140,39 @@ public class CamelKubernetesDeleteAction extends AbstractCamelJBangAction {
         private String workingDir;
         private String namespace;
 
-
-        /**
-         * Delete Camel JBang kubernetes resources integration resource.
-         *
-         * @param resource
-         * @return
-         */
+        @Override
         public Builder integration(Resource resource) {
             this.integrationResource = resource;
             return this;
         }
 
-        /**
-         * Delete Camel JBang kubernetes resources for this integration.
-         *
-         * @param name
-         * @return
-         */
+        @Override
         public Builder integration(String name) {
             this.integrationName = name;
             return this;
         }
 
-        /**
-         * Set cluster type target.
-         *
-         * @param clusterType
-         * @return
-         */
+        @Override
         public Builder clusterType(String clusterType) {
             this.clusterType = clusterType;
             return this;
         }
 
-        /**
-         * The working directory where to find exported project sources.
-         *
-         * @param dir directory path
-         * @return
-         */
+        @Override
         public Builder workingDir(String dir) {
             this.workingDir = dir;
             return this;
         }
 
-        /**
-         * The Namespace wherethe kubernetes resources are deployed.
-         *
-         * @param namespace namespace
-         * @return
-         */
+        @Override
         public Builder namespace(String namespace) {
             this.namespace = namespace;
             return this;
         }
 
         @Override
-        public CamelKubernetesDeleteAction doBuild() {
-            return new CamelKubernetesDeleteAction(this);
+        public CamelKubernetesDeleteIntegrationAction doBuild() {
+            return new CamelKubernetesDeleteIntegrationAction(this);
         }
     }
 }

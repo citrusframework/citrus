@@ -24,7 +24,6 @@ public interface ReferenceResolverAwareBuilder<T extends TestAction, B extends T
 
     /**
      * Sets the bean reference resolver for using endpoint names.
-     * @param referenceResolver
      */
     B withReferenceResolver(ReferenceResolver referenceResolver);
 }

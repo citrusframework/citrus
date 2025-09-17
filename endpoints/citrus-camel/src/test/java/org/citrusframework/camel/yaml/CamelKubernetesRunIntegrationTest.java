@@ -14,28 +14,34 @@
  * limitations under the License.
  */
 
-package org.citrusframework.camel.xml;
+package org.citrusframework.camel.yaml;
+
+import java.nio.file.Paths;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.CamelSettings;
-import org.citrusframework.camel.actions.CamelKubernetesVerifyAction;
+import org.citrusframework.camel.actions.CamelKubernetesRunIntegrationAction;
 import org.citrusframework.camel.jbang.CamelJBang;
 import org.citrusframework.camel.jbang.KubernetesPlugin;
 import org.citrusframework.jbang.ProcessAndOutput;
-import org.citrusframework.xml.XmlTestLoader;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.yaml.YamlTestLoader;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CamelKubernetesVerifyTest extends AbstractXmlActionTest {
+public class CamelKubernetesRunIntegrationTest extends AbstractYamlActionTest {
 
     @Mock
     private CamelJBang camelJBang;
@@ -59,7 +65,7 @@ public class CamelKubernetesVerifyTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadCamelActions() throws Exception {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/camel-jbang-kubernetes-verify-test.xml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/yaml/camel-jbang-kubernetes-run-test.yaml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.start();
@@ -69,22 +75,41 @@ public class CamelKubernetesVerifyTest extends AbstractXmlActionTest {
 
         context.getReferenceResolver().bind("camel-jbang", camelJBang);
 
-        when(k8sPlugin.logs("--name", "my-route")).thenReturn(pao);
-        when(k8sPlugin.logs("--label", "app=camel")).thenReturn(pao);
+        when(k8sPlugin.run(eq("route.yaml"), any(String[].class))).thenReturn(pao);
+        when(k8sPlugin.delete(eq("route.yaml"), any(String[].class))).thenReturn(pao);
         when(process.exitValue()).thenReturn(0);
-        when(pao.getOutput()).thenReturn("Camel rocks!");
+        when(pao.getOutput()).thenReturn("SUCCESS!");
 
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelJBangKubernetesVerifyTest");
+        Assert.assertEquals(result.getName(), "CamelJBangKubernetesRunTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesVerifyAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel-k8s-verify-integration");
+        Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesRunIntegrationAction.class);
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel-k8s-run-integration");
 
-        verify(k8sPlugin).logs("--name", "my-route");
-        verify(k8sPlugin).logs("--label", "app=camel");
+        int actionIndex = 0;
+
+        CamelKubernetesRunIntegrationAction action = (CamelKubernetesRunIntegrationAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(action.getRuntime());
+
+        action = (CamelKubernetesRunIntegrationAction) result.getTestAction(actionIndex);
+        Assert.assertEquals(action.getRuntime(), "quarkus");
+
+        verify(camelJBang, times(3)).workingDir(Paths.get(Resources.create("classpath:org/citrusframework/camel/integration/route.yaml")
+                .getFile().getParentFile().toPath().toAbsolutePath().toString()));
+        verify(k8sPlugin).run(eq("route.yaml"), eq(new String[] {}));
+        verify(k8sPlugin).run("route.yaml", "--runtime", "quarkus",
+                "--image-builder", "docker",
+                "--image-registry", "localhost:5000",
+                "--cluster-type", "kind",
+                "--build-property", "my-prop=\"foo\"",
+                "--trait", "mount.volumes=\"pvcname:/container/path\"",
+                "--dev",
+                "--verbose=true");
+
+        verify(k8sPlugin).delete(eq("route.yaml"), eq(new String[] {}));
     }
 }

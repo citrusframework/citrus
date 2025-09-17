@@ -23,9 +23,9 @@ import org.citrusframework.actions.ReferenceResolverAwareBuilder;
 public interface CamelJBangActionBuilder<T extends TestAction, B extends CamelJBangActionBuilder<T, B>>
         extends ReferenceResolverAwareBuilder<T, B>, TestActionBuilder<T> {
 
-    CamelJBangActionBuilder<T, B> camelVersion(String camelVersion);
+    B camelVersion(String camelVersion);
 
-    CamelJBangActionBuilder<T, B> kameletsVersion(String kameletsVersion);
+    B kameletsVersion(String kameletsVersion);
 
     /**
      * Runs Camel integration.
@@ -51,6 +51,11 @@ public interface CamelJBangActionBuilder<T extends TestAction, B extends CamelJB
      * Perform actions related to Camel JBang plugins.
      */
     CamelJBangPluginActionBuilder<?, ?> plugin();
+
+    /**
+     * Perform actions related to Camel JBang Kubernetes plugin.
+     */
+    CamelJBangKubernetesActionBuilder<?, ?> kubernetes();
 
     /**
      * Perform actions related to Camel JBang commands.

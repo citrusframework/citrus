@@ -25,9 +25,9 @@ import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.AbstractCamelJBangAction;
 import org.citrusframework.camel.actions.AddCamelPluginAction;
 import org.citrusframework.camel.actions.CamelCmdSendAction;
-import org.citrusframework.camel.actions.CamelKubernetesDeleteAction;
+import org.citrusframework.camel.actions.CamelKubernetesDeleteIntegrationAction;
 import org.citrusframework.camel.actions.CamelKubernetesRunIntegrationAction;
-import org.citrusframework.camel.actions.CamelKubernetesVerifyAction;
+import org.citrusframework.camel.actions.CamelKubernetesVerifyIntegrationAction;
 import org.citrusframework.camel.actions.CamelRunIntegrationAction;
 import org.citrusframework.camel.actions.CamelStopIntegrationAction;
 import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
@@ -593,7 +593,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
         }
 
         public void setVerify(Verify verify) {
-            CamelKubernetesVerifyAction.Builder builder = new CamelKubernetesVerifyAction.Builder();
+            CamelKubernetesVerifyIntegrationAction.Builder builder = new CamelKubernetesVerifyIntegrationAction.Builder();
             builder.integration(verify.getIntegration())
                     .label(verify.getLabel())
                     .namespace(verify.getNamespace())
@@ -609,7 +609,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
         }
 
         public void setDelete(Delete delete) {
-            CamelKubernetesDeleteAction.Builder builder = new CamelKubernetesDeleteAction.Builder();
+            CamelKubernetesDeleteIntegrationAction.Builder builder = new CamelKubernetesDeleteIntegrationAction.Builder();
             builder.clusterType(delete.getClusterType())
                     .workingDir(delete.getWorkingDir())
                     .namespace(delete.getNamespace());

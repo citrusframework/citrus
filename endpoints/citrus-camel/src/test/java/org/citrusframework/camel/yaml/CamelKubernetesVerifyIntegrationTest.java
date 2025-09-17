@@ -21,7 +21,7 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.CamelSettings;
-import org.citrusframework.camel.actions.CamelKubernetesVerifyAction;
+import org.citrusframework.camel.actions.CamelKubernetesVerifyIntegrationAction;
 import org.citrusframework.camel.jbang.CamelJBang;
 import org.citrusframework.camel.jbang.KubernetesPlugin;
 import org.citrusframework.jbang.ProcessAndOutput;
@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CamelKubernetesVerifyTest extends AbstractYamlActionTest {
+public class CamelKubernetesVerifyIntegrationTest extends AbstractYamlActionTest {
 
     @Mock
     private CamelJBang camelJBang;
@@ -81,7 +81,7 @@ public class CamelKubernetesVerifyTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesVerifyAction.class);
+        Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesVerifyIntegrationAction.class);
         Assert.assertEquals(result.getTestAction(0).getName(), "camel-k8s-verify-integration");
 
         verify(k8sPlugin).logs("--name", "my-route");
