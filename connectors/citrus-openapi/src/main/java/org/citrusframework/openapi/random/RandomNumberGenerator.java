@@ -19,11 +19,12 @@ package org.citrusframework.openapi.random;
 import java.math.BigDecimal;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
-import org.citrusframework.openapi.util.OpenApiUtils;
+import jakarta.annotation.Nullable;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static org.citrusframework.openapi.OpenApiConstants.TYPE_INTEGER;
+import static org.citrusframework.openapi.util.OpenApiUtils.isAnyNumberScheme;
 
 /**
  * A generator for producing random numbers based on an OpenAPI schema. This class extends the
@@ -98,8 +99,8 @@ public class RandomNumberGenerator extends RandomGenerator {
     }
 
     @Override
-    public boolean handles(OasSchema other) {
-        return OpenApiUtils.isAnyNumberScheme(other);
+    public boolean handles(@Nullable OasSchema other) {
+        return isAnyNumberScheme(other);
     }
 
     @Override

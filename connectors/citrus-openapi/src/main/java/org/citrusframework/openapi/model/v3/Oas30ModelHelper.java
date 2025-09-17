@@ -27,6 +27,7 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30RequestBody;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import jakarta.annotation.Nullable;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.openapi.model.OasAdapter;
 import org.citrusframework.openapi.model.OasModelHelper;
@@ -95,8 +96,8 @@ public final class Oas30ModelHelper {
                 .toList();
     }
 
-    public static boolean isCompositeSchema(Oas30Schema schema) {
-        return schema.anyOf != null || schema.oneOf != null || schema.allOf != null;
+    public static boolean isCompositeSchema(@Nullable Oas30Schema schema) {
+        return schema != null && (schema.anyOf != null || schema.oneOf != null || schema.allOf != null);
     }
 
     public static String getBasePath(Oas30Document openApiDoc) {
