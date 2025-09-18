@@ -16,14 +16,14 @@
 package org.citrusframework.channel.selector;
 
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.springframework.messaging.Message;
-import org.springframework.util.Assert;
 
 /**
- * Message selector matches one or more header elements with the message header. Only in case all 
+ * Message selector matches one or more header elements with the message header. Only in case all
  * matching header elements are present in message header and its value matches the expected value
  * the message is accepted.
- * 
+ *
  */
 public class PayloadMatchingMessageSelector extends AbstractMessageSelector {
 
@@ -36,11 +36,12 @@ public class PayloadMatchingMessageSelector extends AbstractMessageSelector {
     public PayloadMatchingMessageSelector(String selectKey, String matchingValue, TestContext context) {
         super(selectKey, matchingValue, context);
 
-        Assert.isTrue(selectKey.equals(SELECTOR_ID),
-                String.format("Invalid usage of payload matching message selector - " +
+        if (!selectKey.equals(SELECTOR_ID)) {
+            throw new CitrusRuntimeException(String.format("Invalid usage of payload matching message selector - " +
                         "usage restricted to key '%s' but was '%s'",  SELECTOR_ID, selectKey));
+        }
     }
-    
+
     @Override
     public boolean accept(Message<?> message) {
         return evaluate(getPayloadAsString(message));

@@ -136,6 +136,9 @@ public class Run extends CitrusCommand {
         try {
             resolveTests(files, tests);
         } catch (Exception e) {
+            if (Optional.ofNullable(verbose).map(Boolean::parseBoolean).orElse(false)) {
+                e.printStackTrace(System.err);
+            }
             printer().printErr("Failed to resolve tests", e);
             return 1;
         }
@@ -171,7 +174,8 @@ public class Run extends CitrusCommand {
                 file = loadFromClipboard(file);
             } else if (f.isDirectory()) {
                 resolveTests(Stream.of(Optional.ofNullable(f.list()).orElseGet(() -> new String[] {}))
-                        .map(it -> f.getName() + "/" + it)
+                        .filter(it -> !skipFile(it))
+                        .map(it -> f.getPath() + "/" + it)
                         .collect(Collectors.toSet()).toArray(String[]::new), tests);
                 continue;
             } else if (skipFile(file)) {
@@ -264,6 +268,9 @@ public class Run extends CitrusCommand {
             return true;
         }
         if ("build.gradle".equalsIgnoreCase(name)) {
+            return true;
+        }
+        if ("jbang.properties".equalsIgnoreCase(name)) {
             return true;
         }
 

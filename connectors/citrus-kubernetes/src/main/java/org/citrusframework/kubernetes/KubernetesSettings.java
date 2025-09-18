@@ -174,7 +174,7 @@ public class KubernetesSettings {
     }
 
     /**
-     * Cluster type that YAKS is running on.
+     * Cluster type that Citrus is running on.
      * @return
      */
     public static ClusterType getClusterType() {

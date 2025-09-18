@@ -72,6 +72,12 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
         waitingFor(Wait.forLogMessage(".*Ready\\.\n", 1));
     }
 
+    public LocalStackContainer withNewServices(AwsService... services) {
+        this.services.clear();
+        this.services.addAll(Arrays.asList(services));
+        return self();
+    }
+
     public LocalStackContainer withServices(AwsService... services) {
         this.services.addAll(Arrays.asList(services));
         return self();

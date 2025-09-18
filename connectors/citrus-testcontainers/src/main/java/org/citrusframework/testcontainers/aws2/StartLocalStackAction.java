@@ -160,6 +160,10 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
             LocalStackContainer localStack;
             if (referenceResolver != null && referenceResolver.isResolvable(containerName, LocalStackContainer.class)) {
                 localStack = referenceResolver.resolve(containerName, LocalStackContainer.class);
+
+                if  (!localStack.isRunning()) {
+                    localStack.withNewServices(services.toArray(AwsService[]::new));
+                }
             } else {
                 localStack = new LocalStackContainer(image, localStackVersion)
                         .withServices(services.toArray(AwsService[]::new))

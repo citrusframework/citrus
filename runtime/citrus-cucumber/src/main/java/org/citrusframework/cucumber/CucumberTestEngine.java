@@ -161,7 +161,7 @@ public class CucumberTestEngine extends AbstractTestEngine {
                                 .isPresent() ||
                         "feature".equals(FileUtils.getFileExtension(source.getName()))
                 )
-                .map(TestSource::getName)
+                .map(TestSource::getFilePath)
                 .toList());
     }
 

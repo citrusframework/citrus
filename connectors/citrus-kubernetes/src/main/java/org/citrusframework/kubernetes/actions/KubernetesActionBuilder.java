@@ -28,7 +28,7 @@ import org.citrusframework.actions.kubernetes.KubernetesSecretActionBuilder;
 import org.citrusframework.actions.kubernetes.KubernetesServiceActionBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.endpoint.KubernetesEndpointConfiguration;
-import org.springframework.util.Assert;
+import org.citrusframework.util.ObjectHelper;
 
 public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<KubernetesAction>,
         org.citrusframework.actions.kubernetes.KubernetesActionBuilder<KubernetesAction, KubernetesActionBuilder> {
@@ -54,7 +54,6 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
 
     /**
      * Use a custom Kubernetes client.
-     * @param kubernetesClient
      */
     public KubernetesActionBuilder client(KubernetesClient kubernetesClient) {
         this.kubernetesClient = kubernetesClient;
@@ -123,7 +122,7 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
     }
     @Override
     public KubernetesAction build() {
-        Assert.notNull(delegate, "Missing delegate action to build");
+        ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
         if (kubernetesClient != null) {
             delegate.client(kubernetesClient);
         }

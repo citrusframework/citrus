@@ -21,7 +21,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.springframework.util.Assert;
+import org.citrusframework.util.ObjectHelper;
 
 public class JmsActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>,
         ReferenceResolverAware, org.citrusframework.actions.jms.JmsActionBuilder<TestAction, JmsActionBuilder> {
@@ -46,7 +46,7 @@ public class JmsActionBuilder implements TestActionBuilder.DelegatingTestActionB
 
     @Override
     public TestAction build() {
-        Assert.notNull(delegate, "Missing delegate action to build");
+        ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
 
         if (referenceResolver != null &&
                 delegate instanceof ReferenceResolverAware referenceResolverAware) {
