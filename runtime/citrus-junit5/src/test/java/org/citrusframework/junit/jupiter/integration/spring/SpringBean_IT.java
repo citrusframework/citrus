@@ -38,7 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.util.Assert;
+import org.testng.Assert;
 
 @CitrusSpringSupport
 @ContextConfiguration(classes = {CitrusSpringConfig.class, SpringBean_IT.EndpointConfig.class})
@@ -75,7 +75,7 @@ class SpringBean_IT implements TestActionSupport {
                 @Override
                 public void validateMessage(Message receivedMessage, Message controlMessage,
                                             TestContext context, ValidationContext validationContext) {
-                    Assert.isTrue(receivedMessage.getPayload(String.class).equals(controlMessage.getPayload(String.class)), "Validation failed - " +
+                    Assert.assertTrue(receivedMessage.getPayload(String.class).equals(controlMessage.getPayload(String.class)), "Validation failed - " +
                             "expected message contents not equal!");
                 }
 

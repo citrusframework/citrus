@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.citrusframework</groupId>
+    <artifactId>citrus-tools</artifactId>
+    <version>4.9.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>citrus-cucumber-steps</artifactId>
+  <packaging>pom</packaging>
+  <name>Citrus :: Tools :: Cucumber Steps</name>
+  <description>Citrus Cucumber Steps</description>
+
+  <properties>
+    <activemq.version>6.1.6</activemq.version>
+  </properties>
+
+  <modules>
+    <module>citrus-cucumber-core</module>
+    <module>citrus-cucumber-http</module>
+    <module>citrus-cucumber-groovy</module>
+    <module>citrus-cucumber-camel</module>
+    <module>citrus-cucumber-jdbc</module>
+    <module>citrus-cucumber-jms</module>
+    <module>citrus-cucumber-kafka</module>
+    <module>citrus-cucumber-kubernetes</module>
+    <module>citrus-cucumber-knative</module>
+    <module>citrus-cucumber-openapi</module>
+    <module>citrus-cucumber-selenium</module>
+    <module>citrus-cucumber-testcontainers</module>
+    <module>citrus-cucumber-all</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- JMS connection factory dependencies in provided scope -->
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-client</artifactId>
+        <version>${activemq.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>artemis-jakarta-client</artifactId>
+        <version>${activemq.artemis.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-mongodb</artifactId>
+        <version>${apache.camel.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-aws2-kinesis</artifactId>
+        <version>${apache.camel.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-aws2-s3</artifactId>
+        <version>${apache.camel.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-junit4</artifactId>
+            <version>${maven.surefire.plugin.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

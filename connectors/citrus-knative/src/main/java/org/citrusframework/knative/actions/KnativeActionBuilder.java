@@ -34,7 +34,7 @@ import org.citrusframework.knative.actions.eventing.SendEventAction;
 import org.citrusframework.knative.actions.eventing.VerifyBrokerAction;
 import org.citrusframework.knative.actions.messaging.CreateChannelAction;
 import org.citrusframework.knative.actions.messaging.CreateSubscriptionAction;
-import org.springframework.util.Assert;
+import org.citrusframework.util.ObjectHelper;
 
 public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<KnativeAction>,
         org.citrusframework.actions.knative.KnativeActionBuilder<KnativeAction, KnativeActionBuilder> {
@@ -109,7 +109,7 @@ public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestAct
 
     @Override
     public KnativeAction build() {
-        Assert.notNull(delegate, "Missing delegate action to build");
+        ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
         if (kubernetesClient != null) {
             delegate.client(kubernetesClient);
         }

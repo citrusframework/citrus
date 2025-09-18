@@ -37,7 +37,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.springframework.util.Assert;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -147,7 +147,7 @@ public class CitrusStandaloneIT extends AbstractTestNGSpringContextTests impleme
                 @Override
                 public void validateMessage(Message receivedMessage, Message controlMessage,
                                             TestContext context, ValidationContext validationContext) {
-                    Assert.isTrue(receivedMessage.getPayload(String.class).equals(controlMessage.getPayload(String.class)), "Validation failed - " +
+                    Assert.assertEquals(controlMessage.getPayload(String.class), receivedMessage.getPayload(String.class), "Validation failed - " +
                             "expected message contents not equal!");
                 }
 

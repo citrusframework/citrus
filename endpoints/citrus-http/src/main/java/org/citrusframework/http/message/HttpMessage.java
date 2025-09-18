@@ -519,7 +519,7 @@ public class HttpMessage extends DefaultMessage {
     /**
      * Reads request from complete request dump.
      *
-     * <p>Note that this method is called from YAKS.
+     * <p>Note that this method is called from Citrus.
      *
      * @param requestData The request dump to parse
      * @return The parsed dump as HttpMessage
@@ -551,7 +551,7 @@ public class HttpMessage extends DefaultMessage {
     /**
      * Reads response from complete response dump.
      *
-     * <p>Note that this method is called from YAKS.
+     * <p>Note that this method is called from Citrus.
      *
      * @param responseData The response dump to parse
      * @return The parsed dump as HttpMessage

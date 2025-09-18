@@ -16,16 +16,18 @@
 
 package org.citrusframework.channel.selector;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.MessageSelectorBuilder;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.Message;
-import org.springframework.util.Assert;
-
-import java.util.*;
 
 /**
  * Message selector dispatches incoming messages to several other selector implementations
@@ -58,7 +60,9 @@ public class DispatchingMessageSelector implements MessageSelector {
         this.context = context;
         this.matchingHeaders = MessageSelectorBuilder.withString(selector).toKeyValueMap();
 
-        Assert.isTrue(matchingHeaders.size() > 0, "Invalid empty message selector");
+        if (matchingHeaders.isEmpty()) {
+            throw new CitrusRuntimeException("Invalid empty message selector");
+        }
 
         factories.add(new RootQNameMessageSelector.Factory());
         factories.add(new XpathPayloadMessageSelector.Factory());

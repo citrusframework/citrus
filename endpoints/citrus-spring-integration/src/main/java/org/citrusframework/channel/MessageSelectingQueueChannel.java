@@ -18,12 +18,12 @@ package org.citrusframework.channel;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.Message;
-import org.springframework.util.Assert;
 
 /**
  * Added selective consumption of messages according to a message selector implementation.
@@ -55,8 +55,10 @@ public class MessageSelectingQueueChannel extends QueueChannel {
     public MessageSelectingQueueChannel(int capacity) {
         this(new LinkedBlockingQueue<>(capacity));
 
-        Assert.isTrue(capacity > 0, "The capacity must be a positive integer. " +
-                "For a zero-capacity alternative, consider using a 'RendezvousChannel'.");
+        if (capacity <= 0) {
+            throw new CitrusRuntimeException("The capacity must be a positive integer. " +
+                    "For a zero-capacity alternative, consider using a 'RendezvousChannel'.");
+        }
     }
 
     /**
