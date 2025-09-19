@@ -1,0 +1,541 @@
+[[tools-cucumber-steps-knative]]
+== Knative steps
+
+Knative represents the Kubernetes-based platform to manage serverless workloads.
+You are able to leverage Knative eventing features such as producing and consuming
+events.
+
+Have a look at the complete example in xref:../../examples/knative/knative-eventing.feature[examples/knative-eventing.feature].
+
+The following sections guide you through the Knative eventing capabilities in Citrus.
+
+[[knative-api-version]]
+=== API version
+
+The default Knative API version used to create and manage resources is `v1beta1`. You can overwrite this
+version with a environment variable set on the Citrus configuration.
+
+.Overwrite Knative API version
+[source,bash]
+----
+CITRUS_KNATIVE_API_VERSION=v1
+----
+
+This sets the Knative API version for all operations.
+
+[[knative-client]]
+=== Client configuration
+
+.@Given("^Knative timeout is {time}(?: ms| milliseconds)$")
+[source,gherkin]
+----
+Given("^Knative timeout is {time} milliseconds
+----
+
+This sets the timeout for all Knative client operations.
+
+[[knative-namespace]]
+=== Set namespace
+
+Knative uses the concept of namespaces to separate workloads on the cluster. You
+can connect to a specific namespace with the follwing step.
+
+.@Given("^Knative namespace {name}$")
+[source,gherkin]
+----
+Given Knative namespace {name}
+----
+
+[[knative-broker]]
+=== Knative broker
+
+Eventing deals with publish/subscribe delivery of events in Knative.
+Knative eventing uses a broker that manages channels, subscriptions and events.
+
+.@Given("^Knative broker {name}$")
+[source,gherkin]
+----
+Given Knative broker {name}
+----
+
+This sets the broker name to use in all further steps that publish and consume events. The broker
+should already be present on the Kubernetes namespace. In case there is no broker yet you can create one.
+
+.@Given("^create Knative broker {name}$")
+[source,gherkin]
+----
+Given create Knative broker {name}
+----
+
+The step creates a new broker with the given `{name}`. The broker uses the default settings given
+in the Knative platform.
+
+You can verify that the broker is up and running with the following step:
+
+.@Given("^Knative broker {name} is running$")
+[source,gherkin]
+----
+Given Knative broker {name} is running
+----
+
+[[knative-service]]
+=== Create event consumer service
+
+The Knative broker delivers events to sinks. In order to start consuming events in a test you should
+create a event consumer service which acts as a sink.
+
+.@Given("^create Knative event consumer service {service}$")
+[source,gherkin]
+----
+Given create Knative event consumer service {service}
+----
+
+This step creates a new event consumer service. In particular this step creates a new xref:k8s-service[Kubernetes service].
+The service instantiates a new local Http server and creates a new Kubernetes service from it. The service exposes a
+port which is `8080` by default.
+
+You can adjust the service port as follows:
+
+.@Given("^Knative service port {port}$")
+[source,gherkin]
+----
+Given Knative service port {port}
+----
+
+By default the Kubernetes service uses the service port as a target port when exposing the service.
+You can choose another target port, too.
+
+.@Given("^create Knative event consumer service {service} with target port {port}$")
+[source,gherkin]
+----
+Given create Knative event consumer service {service} with target port {port}
+----
+
+[[knative-trigger]]
+=== Manage triggers
+
+Triggers are used to deliver events to services and channels. Users can create
+a trigger as part of the test in order to start consuming events.
+
+==== Triggers on services
+
+.@Given("^create Knative trigger {trigger} on service {service}$")
+[source,gherkin]
+----
+Given create Knative trigger {trigger} on service {service}
+----
+
+The step creates a new trigger on the given Knative broker. The trigger watches for events
+on the broker and forwards these events to the given service.
+
+The service name either references an existing Kubernetes service or a
+new service that is created as part of the test as described in this guide.
+
+Triggers can use filters on event attributes. This narrows the amount of events handled by the trigger.
+
+.@Given("^create Knative trigger {trigger} on service {service} with filter on attributes$")
+[source,gherkin]
+----
+Given create Knative trigger {trigger} on service {service} with filter on attributes
+| {attribute} | {value} |
+----
+
+You need to add one or many attributes with respective value that should be added to the filter. As a result
+the trigger will only handle events matching the given filters.
+
+==== Triggers on channels
+
+Triggers can also forward events to channels. Subscribers are able to start subscriptions
+on these channels in order to receive the events.
+
+.@Given("^create Knative trigger {trigger} on channel {channel}$")
+[source,gherkin]
+----
+Given create Knative trigger {trigger} on channel {channel}
+----
+
+Of course, you can also add filters on attributes that narrow the amount of events
+handled by the trigger.
+
+.@Given("^create Knative trigger {trigger} on channel {channel} with filter on attributes$")
+[source,gherkin]
+----
+Given create Knative trigger {trigger} on channel {channel} with filter on attributes
+| {attribute} | {value} |
+----
+
+The step uses a data table with attributes and values that should be added to the filter. As a result
+the trigger will only handle events matching the given filters.
+
+==== Delete Knative trigger
+
+You can delete a trigger by giving its name in the current namespace.
+
+.@Given("^delete Knative trigger {trigger}$")
+[source,gherkin]
+----
+Given delete Knative trigger {trigger}
+----
+
+This removes the Knative trigger from the current namespace.
+
+[[knative-channels]]
+=== Create channels
+
+Channels represent a central concept of Knative eventing. Channels are able to deliver events
+to multiple subscribers. A test in Citrus is able to create new channels.
+
+.@Given("^create Knative channel {channel}$")
+[source,gherkin]
+----
+Given create Knative channel {channel}
+----
+
+Once the channel is available you can subscribe a service to the channel.
+
+.@Given subscribe service {service} to Knative channel {channel}$")
+[source,gherkin]
+----
+Given subscribe service {service} to Knative channel {channel}
+----
+
+[[knative-send-events]]
+=== Publish events
+
+The test is able to publish events on the Knative broker. Citrus uses the Knative Http client API
+to publish events on the broker.
+
+Because of that the test needs to specify a proper broker URL before publishing any events.
+
+==== Knative broker URL
+
+.@Given("^Knative broker (?:URL|url): {url}$")
+[source,gherkin]
+----
+Given Knative broker URL: {url}
+----
+
+The URL points to a Knative broker and uses Http as transport. The test is able to publish events
+using this broker endpoint.
+
+==== Knative client
+
+As an alternative to that you can also specify a Http client component which connects to the broker.
+
+.@Given("^Knative client \"{name}\"$")
+[source,gherkin]
+----
+Given Knative client "{name}"
+----
+
+The client references a component in the configuration (e.g. Spring bean).
+
+Now the test is ready to publish the event.
+
+==== Create cloud events
+
+.@When("^(?:create|send) Knative event$")
+[source,gherkin]
+----
+When send Knative event
+| {property} | {value} |
+----
+
+The step uses a data table in order to specify the cloud event properties that should be published.
+The cloud event data structure defines following properties:
+
+* specversion
+* type
+* source
+* subject
+* id
+* datacontenttype
+* data
+
+Following these properties you can specify the cloud event in the send operation.
+
+.Send cloud event
+[source,gherkin]
+----
+When send Knative event
+| specversion     | 1.0 |
+| type            | greeting |
+| source          | https://github.com/citrusframework |
+| subject         | hello |
+| id              | say-hello |
+| datacontenttype | application/json |
+| data            | {"msg": "Hello Knative!"} |
+----
+
+The `data` property defines the cloud event payload which is a Json payload in the example above. This can be
+any payload and depends on what you want to send as part of the event.
+
+As we are using the Http cloud event model we can also use Http property equivalents as property keys.
+
+.Send cloud event via Http properties
+[source,gherkin]
+----
+When send Knative event
+| ce-specversion     | 1.0 |
+| ce-type            | greeting |
+| ce-source          | https://github.com/citrusframework |
+| ce-subject         | hello |
+| ce-id              | say-hello-${id} |
+| Content-Type       | application/json;charset=UTF-8 |
+| data               | {"msg": "Hello Knative!"} |
+----
+
+Instead of using a `data` property in the data table you can also specify the event payload in a separate step.
+
+.@Given("^Knative event data: {data}$")
+[source,gherkin]
+----
+Given Knative event data: {data}
+----
+
+The step sets a single line event data that is going to represent the payload of the cloud event.
+
+The following step supports multiline event data.
+
+.@Given("^Knative event data$")
+[source,gherkin]
+----
+Given Knative event data
+"""
+<<data>>
+"""
+----
+
+With these steps the cloud event data table must not specify the `data` property anymore.
+
+.Send cloud event
+[source,gherkin]
+----
+Given Knative event data
+"""
+{
+  "msg": "Hello Knative!"
+}
+"""
+Then send Knative event
+| specversion     | 1.0 |
+| type            | greeting |
+| source          | https://github.com/citrusframework |
+| subject         | hello |
+| id              | say-hello |
+| datacontenttype | application/json |
+----
+
+==== Create cloud events via Json
+
+The cloud events model supports Json so you can also specify the event with a single step in Json.
+
+.@When("^(?:create|send) Knative event as json$")
+[source,gherkin]
+----
+When send Knative event as json
+"""
+<<json>>
+"""
+----
+
+.Send cloud event via Json
+[source,gherkin]
+----
+When send Knative event as json
+"""
+{
+  "specversion" : "1.0",
+  "type" : "greeting",
+  "source" : "https://github.com/citrusframework",
+  "subject" : "hello",
+  "id" : "say-hello",
+  "datacontenttype" : "application/json",
+  "data" : "{\"msg\": \"Hello Knative!\"}"
+}
+"""
+----
+
+==== Producer timeouts
+
+The producer connects to the Knative broker in order to publish events.
+In case the broker is not available a timeout will fail the test. You can adjust the
+producer timeout.
+
+.@Given("^Knative event producer timeout is {time}(?: ms| milliseconds)$")
+[source,gherkin]
+----
+Given Knative event producer timeout is {time} milliseconds
+----
+
+[[knative-receive-events]]
+=== Receive events
+
+In order to receive events from Knative you should setup a xref:knative-service[service] or xref:knative-channels[channel]
+in combination with a xref:knative-trigger[trigger]. The trigger watches for events on the broker and forwards
+these to the service or channel.
+
+The test is able to receive events and verify its content.
+
+==== Receive cloud events
+
+.@Then("^(?:receive|verify) Knative event$")
+[source,gherkin]
+----
+Then receive Knative event
+| {property} | {value} |
+----
+
+The step uses a data table in order to specify the cloud event properties as expected content.
+The cloud event data structure defines following properties:
+
+* specversion
+* type
+* source
+* subject
+* id
+* datacontenttype
+* data
+
+Following these properties you can specify the cloud event in the receive operation.
+
+.Receive cloud event
+[source,gherkin]
+----
+Then receive Knative event
+| specversion     | 1.0 |
+| type            | greeting |
+| source          | https://github.com/citrusframework |
+| subject         | hello |
+| id              | say-hello |
+| datacontenttype | application/json |
+| data            | {"msg": "Hello Knative!"} |
+----
+
+The `data` property defines the cloud event payload which is a Json payload in the example above. This can be
+any payload and depends on what you want to receive as part of the event.
+
+As we are using the Http cloud event model we can also use Http property equivalents as property keys.
+
+.Receive cloud event via Http properties
+[source,gherkin]
+----
+Then receive Knative event
+| ce-specversion     | 1.0 |
+| ce-type            | greeting |
+| ce-source          | https://github.com/citrusframework |
+| ce-subject         | hello |
+| ce-id              | say-hello-${id} |
+| Content-Type       | application/json;charset=UTF-8 |
+| data               | {"msg": "Hello Knative!"} |
+----
+
+Instead of using a `data` property in the data table you can also specify the event payload in a separate step.
+
+.@Then("^(?:expect|verify) Knative event data: {data}$")
+[source,gherkin]
+----
+Then expect Knative event data: {data}
+----
+
+The step sets a single line event data that is going to represent the payload of the cloud event.
+
+The following step supports multiline event data.
+
+.@Then("^(?:expect|verify) Knative event data$")
+[source,gherkin]
+----
+Then expect Knative event data
+"""
+<<data>>
+"""
+----
+
+With these steps the cloud event data table must not specify the `data` property anymore.
+
+.Receive cloud event
+[source,gherkin]
+----
+Given expect Knative event data
+"""
+{
+  "msg": "Hello Knative!"
+}
+"""
+Then receive Knative event
+| specversion     | 1.0 |
+| type            | greeting |
+| source          | https://github.com/citrusframework |
+| subject         | hello |
+| id              | say-hello |
+| datacontenttype | application/json |
+----
+
+==== Receive cloud events via Json
+
+The cloud events model supports Json so you can also specify the event with a single step in Json.
+
+.@When("^(?:receive|verify) Knative event as json$")
+[source,gherkin]
+----
+Then receive Knative event as json
+"""
+<<json>>
+"""
+----
+
+.Receive cloud event via Json
+[source,gherkin]
+----
+Then receive Knative event as json
+"""
+{
+  "specversion" : "1.0",
+  "type" : "greeting",
+  "source" : "https://github.com/citrusframework",
+  "subject" : "hello",
+  "id" : "say-hello",
+  "datacontenttype" : "application/json",
+  "data" : "{\"msg\": \"Hello Knative!\"}"
+}
+"""
+----
+
+==== Consumer timeouts
+
+The consumer connects to the Knative broker in order to consume events.
+The consumer will wait for events and in case no event arrives in time a
+timeout will fail the test. You can adjust this event consumer timeout.
+
+.@Given("^Knative event consumer timeout is {time}(?: ms| milliseconds)$")
+[source,gherkin]
+----
+Given Knative event consumer timeout is {time} milliseconds
+----
+
+[[knative-resources]]
+=== Manage Knative resources
+
+The described steps are able to create Knative resources on the current Kubernetes namespace.
+By default these resources get removed automatically after the test scenario.
+
+The auto removal of Knative resources can be turned off with the following step.
+
+.@Given("^Disable auto removal of Knative resources$")
+[source,gherkin]
+----
+Given Disable auto removal of Knative resources
+----
+
+Usually this step is a `Background` step for all scenarios in a feature file. This way multiple scenarios can work on
+the very same Knative resources and share integrations.
+
+There is also a separate step to explicitly enable the auto removal.
+
+.@Given("^Enable auto removal of Knative resources$")
+[source,gherkin]
+----
+Given Enable auto removal of Knative resources
+----
+
+By default, all Knative resources are automatically removed after each scenario.

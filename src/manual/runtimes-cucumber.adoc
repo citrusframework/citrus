@@ -381,89 +381,119 @@ As usual, we are able to use *@CitrusResource* annotated *TestCaseRunner* fields
 logic. With this extension you can use the full Spring testing power in your tests in particular dependency injection and
 also transaction management for data persistence tests.
 
-[[yaks-step-definitions]]
-=== YAKS step definitions
+[[citrus-step-definitions]]
+=== Predefined step definitions
 
-https://github.com/citrusframework/yaks[YAKS] is a side project of Citrus and provides some predefined steps for typical
-integration test scenarios that you can use out-of-the-box.
+Citrus provides a set of predefined step implementations for typical integration test scenarios that you can use out-of-the-box in a Cucumber feature.
 
-You can basically define send/receive operations and many other predefined steps to handle Citrus test
-actions. As these steps are predefined in YAKS you just need to use them in your feature stories. The step definitions with
-glue to test actions is handled automatically in YAKS.
+You can basically define send/receive operations and many other predefined steps to leverage Citrus functionality such as endpoints and test
+actions. As these steps are predefined in Citrus you just need to add the step as a line in your feature stories. The step definitions with
+the glue to test actions is handled automatically when running Citrus with Cucumber.
 
-If you want to enable predefined steps support in your test you need to include the YAKS module as a Maven dependency.
+If you want to enable predefined steps support in your test you need to include the Citrus Cucumber steps module as a Maven dependency.
 
-.YAKS module dependency
+.Citrus Cucumber step module dependency
 [source,xml]
 ----
 <dependency>
-  <groupId>org.citrusframework.yaks</groupId>
-  <artifactId>yaks-standard</artifactId>
-  <version>${yaks.version}</version>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-cucumber-core</artifactId>
+  <version>${citrus.version}</version>
   <scope>test</scope>
 </dependency>
 ----
 
 After that you need to include the glue code package in your test class like this:
 
-.Include YAKS steps
+.Include Citrus steps
 [source,java]
 ----
 @RunWith(Cucumber.class)
 @CucumberOptions(
-    extraGlue = { "org.citrusframework.yaks.standard" },
+    extraGlue = { "org.citrusframework.cucumber.steps" },
     plugin = { "pretty", "org.citrusframework.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 
 }
 ----
 
-Instead of writing the glue code on our own in step definition classes we include the glue package `org.citrusframework.yaks.standard`
-as extra glue. This automatically loads all YAKS step definitions in this module. Once you have done this you can use predefined
+Instead of writing the glue code on our own in step definition classes we include the glue package `org.citrusframework.cucumber.steps`
+as extra glue. This automatically loads all predefined Citrus step definitions. Once you have done this you can use predefined
 steps without having to write any glue code in Java.
 
-The YAKS framework provides the following modules with predefined steps:
+[source,gherkin]
+----
+Feature: Hello World
 
-.YAKS modules
+  Scenario: Print Hello World
+    Given variable text="Hello World!"
+    Then print 'You just said: ${text}'
+
+----
+
+The feature uses the default predefined steps `Given variable <name>="<value>"` and `Then print '<output>'` provided by Citrus.
+
+The Citrus framework provides many different modules serving many different aspects of integration testing.
+You can add those steps with modular dependencies in Maven.
+See the following modules with predefined steps provided by Citrus:
+
+.Citrus Cucumber step modules
 |===
 |Module |Description
 
-| yaks-standard
+| citrus-cucumber-core
 | Standard steps such as test variables, sleep/delay, log/print, ...
 
-| yaks-http
+| citrus-cucumber-http
 | Http steps for client and server side communication
 
-| yaks-openapi
+| citrus-cucumber-openapi
 | Load Open API specifications and invoke/verify operations with generated test data
 
-| yaks-kubernetes
+| citrus-cucumber-kubernetes
 | Manage Kubernetes resources (e.g. pods, deployments, custom resources)
 
-| yaks-knative
+| citrus-cucumber-knative
 | Steps to connect with Knative eventing and messaging
 
-| yaks-jms
+| citrus-cucumber-jms
 | Send/receive steps via JMS queues/topics
 
-| yaks-kafka
+| citrus-cucumber-kafka
 | Steps to publish/subscribe on Kafka messaging
 
-| yaks-jdbc
+| citrus-cucumber-jdbc
 | Steps to connect to relational databases
 
-| yaks-camel
+| citrus-cucumber-camel
 | Steps to access Apache Camel components and Camel routes
 
-| yaks-camel-k
-| Manage Camel-K resources on Kubernetes
-
-| yaks-selenium
+| citrus-cucumber-selenium
 | Run UI tests with Selenium using Selenium grid or standalone containers
 
-| yaks-groovy
+| citrus-cucumber-groovy
 | Leverage Groovy scripts as Citrus endpoint and component configuration
+
+| citrus-cucumber-testcontainers
+| Manage Testcontainers instances with starting/stopping databases, message brokers and many more
+
 |===
 
-Once again it should be said that the step definitions included in this modules can be used out-of-the-box. You can start
-to write feature stories in Gherkin syntax that trigger the predefined steps.
+Once again it is important to understand that the predefined step definitions included in these modules can be used out-of-the-box.
+You can just start to write BDD features in Gherkin syntax that trigger these predefined steps.
+
+
+TIP: If you want to include all available step definitions into your project at once you can use the `citrus-cucumber-all` module dependency.
+
+.Include all Citrus Cucumber steps
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-cucumber-all</artifactId>
+  <version>${citrus.version}</version>
+  <scope>test</scope>
+</dependency>
+----
+
+Read more about the individual step implementations and their functionality in xref:tools-cucumber-steps[Tools - Citrus Cucumber steps].

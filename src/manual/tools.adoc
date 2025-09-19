@@ -1,0 +1,8 @@
+[[tools]]
+= Tools
+
+In the following sections we have a closer into various tooling available for Citrus.
+
+include::tools-cucumber-steps.adoc[]
+include::tools-restdocs.adoc[]
+include::tools-tracing.adoc[]

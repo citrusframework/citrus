@@ -1,0 +1,140 @@
+[[tools-cucumber-steps-standard]]
+== Standard steps
+
+The standard steps in Citrus provide a lot of basic functionality that you can just use in your feature files. The functionality is shipped as
+predefined steps that you add to a feature as you write your test.
+
+Most of the standard steps do leverage capabilities of the underlying test framework Citrus such as creating test variables or printing messages
+to the log output.
+
+[[tools-cucumber-steps-variables]]
+=== Create variables
+
+Test variables represent the fundamental concept to own test data throughout your test. Once a variable has been created
+you can reference its value in many places in Citrus. You can add a new identifier as a variable and reference
+its value in many places such as message headers, body content, SQL statements and many more.
+
+.@Given("^variable {name} is \"{value}\"$")
+[source,gherkin]
+----
+Given variable orderId is "1001"
+----
+
+This will create the variable `orderId` in the current test context. All subsequent steps and operations may reference the variable with the expression `${orderId}`.
+Citrus makes sure to replace the variable placeholder with its actual value before sending out messages and before validating incoming messages. As already mentioned
+you can use the variable placeholder expression in many places such as message headers and body content:
+
+.Variable placeholder in a Json payload
+[source,json]
+----
+{
+  "id": "${orderId}",
+  "name": "Watermelon",
+  "amount": 10
+}
+----
+
+You can create multiple variables in one single step using:
+
+.@Given("^variables$")
+[source,gherkin]
+----
+Given variables
+  | orderId  | 1001      |
+  | name     | Pineapple |
+----
+
+You can also load variables from an external property file resource.
+
+.@Given("^load variables {file}$")
+[source,gherkin]
+----
+Given load variables {file}
+----
+
+The given `{file}` should be a property file holding one to many test variables with key and value.
+
+.variable.properties
+[source,properties]
+----
+greeting=Hola
+name=Christoph
+text=Citrus rocks!
+----
+
+Sometimes variables values are too big to write them directly into the feature file (e.g. large request/response body data).
+In this case you may want to load the variable value from an external file.
+
+.@Given("^load variable {name} from {file}$")
+[source,gherkin]
+----
+Given load variable {name} from {file}
+----
+
+The step loads the file content as a String value and references it as a new test variable with the given name.
+
+.Load test variable from file
+[source,gherkin]
+----
+Given load variable body from request.json
+Then log 'Sending request body: ${body}'
+----
+
+[[tools-cucumber-steps-log]]
+=== Log steps
+
+Logging a message to the output can be helpful in terms of debugging and/or to give information about the context of an operation.
+
+Citrus provides following steps to add log output:
+
+.@Then("^(?:log|print) '{text}'$")
+[source,gherkin]
+----
+Then print 'Citrus provides Cloud native BDD testing!'
+And log 'Citrus rocks!'
+----
+
+The steps are printing log messages to the output using INFO level. The text that is printed supports test variables
+and functions. All placeholders will be replaced before logging.
+
+You can also use multiline log messages as shown in the next example.
+
+.@Then("^(?:log|print)$")
+[source,gherkin]
+----
+Given print
+"""
+Hello users!
+
+Citrus provides Cloud Native BDD testing on Kubernetes!
+"""
+----
+
+[[tools-cucumber-steps-sleep]]
+=== Sleep
+
+The `sleep` step lets the test run wait for a given amount of time (in milliseconds). During the sleep no action will be performed and the subsequent steps are postponed respectively.
+
+.@Then("^sleep$")
+[source,gherkin]
+----
+Then sleep
+----
+
+The above step performs a sleep with the default time of 5000 milliseconds.
+
+You can also provide the duration to sleep in milliseconds or ISO 8601 format.
+
+.@Then("^sleep {time} ms$")
+[source,gherkin]
+----
+Then sleep 2500 ms
+----
+
+The step receives a numeric parameter that represents the amount of time (in milliseconds) to wait.
+
+.@Then("^sleep {hours}h {minutes}min {seconds}sec {milliseconds}ms$")
+[source,gherkin]
+----
+Then sleep 1h 25min 15sec 500ms
+----

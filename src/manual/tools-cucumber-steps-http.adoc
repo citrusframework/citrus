@@ -1,0 +1,874 @@
+[[tools-cucumber-steps-http]]
+== Http steps
+
+The Http protocol is a widely used communication protocol when it comes to exchanging data between systems. REST Http services
+are very prominent and producing/consuming those services is a common task in software development these days. Citrus provides
+ready to use steps that are able to exchange request/response messages via Http as a client and server during the test.
+
+The sample below shows how to use Http communication in a test:
+
+.Http communication sample
+[source,gherkin]
+----
+Feature: Http client
+
+  Background:
+    Given URL: https://hello-service
+
+  Scenario: Health check
+    Given path /health is healthy
+
+  Scenario: GET request
+    When send GET /todo
+    Then verify HTTP response body: {"id": "@ignore@", "task": "Sample task", "completed": 0}
+    And receive HTTP 200 OK
+----
+
+The example above sets a base request URL to `https://hello-service` and performs a health check on path `/health`. After that we can
+send a Http `GET` request to the endpoint and verify the response status code.
+
+All steps shown are part of the Citrus framework so you can use them out of the box. The next sections explore the Http
+capabilities in more detail.
+
+[[http-client]]
+=== Http client steps
+
+As a client you can specify the server URL and send requests to it.
+
+.@Given("^(?:URL|url): {url}$")
+[source,gherkin]
+----
+Given URL: {url}
+----
+
+The given URL points to a server endpoint. All further client Http steps send the requests to that endpoint.
+
+As an alternative you can reference a Http client component that previously has been added to the framework configuration.
+
+.@Given("^HTTP client \"{name}\"$")
+[source,gherkin]
+----
+Given HTTP client "{name}"
+----
+
+This step loads a Http client component by its name and uses that for further requests.
+
+Once you have configured the Http endpoint URL or the Http client you can start sending request messages.
+
+[[http-client-request]]
+=== Send Http requests
+
+Sending requests via Http is as easy as choosing the Http method (GET, POST, PUT, DELETE, ...) to use.
+
+.@When("^send (GET|HEAD|POST|PUT|PATCH|DELETE|OPTIONS|TRACE) {path}$")
+[source,gherkin]
+----
+When send {method} {path}
+----
+
+The given path resides to a valid resource on the server endpoint. The resource path is added to the base URL and identifies the resource
+on the server.
+
+.Send Http GET request
+[source,gherkin]
+----
+When send GET /todo
+----
+
+You can choose the Http method that should be used to send the request (e.g. `GET`). Of course the request can have headers and a message body.
+You need to set these before sending the request in separate steps.
+
+==== Request headers
+
+.@Given("^HTTP request header {name}=\"{value}\"$")
+[source,gherkin]
+----
+Given HTTP request header {name}="{value}"
+----
+
+The step above adds a Http header to the request. The header is defined with a name and receives a value. You can set
+multiple headers in a single step, too:
+
+.@Given("^HTTP request headers$")
+[source,gherkin]
+----
+Given HTTP request headers
+  | {name} | {value} |
+----
+
+The step uses a data table to define multiple message headers with name and value.
+
+.Set request headers
+[source,gherkin]
+----
+Given HTTP request headers
+  | Accept          | application/json |
+  | Accept-Encoding | gzip |
+----
+
+==== Request body
+
+The Http request can have a body content which is sent as part of the request.
+
+.@Given("^HTTP request body: {body}$")
+[source,gherkin]
+----
+Given HTTP request body: {body}
+----
+
+The step above specifies the Http request body in a single line. When you need to use multiline body content please use the next step:
+
+.@Given("^HTTP request body$")
+[source,gherkin]
+----
+Given HTTP request body
+"""
+<<content>>
+"""
+----
+
+When the request body is getting too big it may be a better idea to load the content from an external file resource:
+
+.@Given("^load HTTP request body {file}$")
+[source,gherkin]
+----
+Given load HTTP request body {file}
+----
+
+This step loads the body content from the given file resource.
+
+==== Request parameters
+
+The Http request is able to use parameters that get added to the request URL. You can set those parameters in a separate step.
+
+.@Given("^HTTP request query parameter {name}=\"{value}\"$")
+[source,gherkin]
+----
+Given HTTP request query parameter {name}="{value}"
+----
+
+==== Request timeouts
+
+In some cases the client waits a long time for the server to respond. As Http is a synchronous communication protocol by its nature
+the client will synchronously wait for the response before doing any other step. You can specify the time to wait for the server to respond.
+
+.@Given("^HTTP request timeout is {time} milliseconds$")
+[source,gherkin]
+----
+Given HTTP request timeout is {time} milliseconds
+----
+
+This sets the client timeout to thee given time in milliseconds.
+
+==== Request fork mode
+
+As seen in the previous section Http is synchronous by default. This can be a problem when the test needs to do multiple things in parallel. By default the Http
+client step will always block any other step until the server response has been received. You can change this behavior to an asynchronous behavior so the
+next steps will not be blocked by the Http client step.
+
+.@Given("^HTTP request fork mode is (enabled|disabled)$")
+[source,gherkin]
+----
+Given HTTP request fork mode is enabled
+----
+
+This will enable the fork mode so all client request will be non-blocking. By default the fork mode is disabled.
+
+[[http-client-request-raw]]
+=== Send raw Http request data
+
+In the previous section several steps have defined the Http request (header, parameter, body) before sending the message
+in a separate step. As an alternative to this approach you can also specify the complete Http request data in a single step.
+
+.@Given("^send HTTP request$")
+[source,gherkin]
+----
+Given send HTTP request
+"""
+<<request_data>>
+"""
+----
+
+The next example shows the complete Http request data step:
+
+.Send raw Http request data
+[source,gherkin]
+----
+Given send HTTP request
+"""
+GET https://hello-service
+Accept-Charset:utf-8
+Accept:application/json, application/*+json, */*
+Host:localhost:8080
+Content-Type:text/plain;charset=UTF-8
+"""
+----
+
+[[http-client-response]]
+=== Verify Http responses
+
+The time you send out a Http request you will be provided with a response from the server. Citrus is able to verify the
+Http response content in order to make sure that the server has processed the request as expected.
+
+.@Then("^receive HTTP {status_code}(?: {reason_phrase})?$")
+[source,gherkin]
+----
+Then receive HTTP {status_code} {reason_phrase}
+----
+
+The most critical part of the Http response is thee status code (e.g. 200, 404, 500). The status code should refer to the success
+or error of the request. The server can use a wide range of Http status codes that are categorized as follows,
+also see https://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html[W3C].
+
+* _1xx_ informational response – the request was received, continuing process
+* _2xx_ successful – the request was successfully received, understood, and accepted
+* _3xx_ redirection – further action needs to be taken in order to complete the request
+* _4xx_ client error – the request contains bad syntax or cannot be fulfilled
+* _5xx_ server error – the server failed to fulfil an apparently valid request
+
+.Verify Http status code
+[source,gherkin]
+----
+Then receive HTTP 200 OK
+----
+
+The reason phrase `OK` is optional and is also not part of the verification mechanism for the response. It just gives human readers
+a better understanding of the status code.
+
+Of course the Http response can also have headers and a message body. Citrus is able to verify those response data, too. Please
+define the expected headers and body content before verifying the status code.
+
+==== Response headers
+
+.@Then("^expect HTTP response header {name}=\"{value}\"$")
+[source,gherkin]
+----
+Then expect HTTP response header {name}="{value}"
+----
+
+The step above adds a Http header to the response. The header is defined with a name and receives a value. You can set
+multiple headers in a single step, too:
+
+.@Then("^expect HTTP response headers$")
+[source,gherkin]
+----
+Then expect HTTP response headers
+  | {name} | {value} |
+----
+
+The step uses a data table to define multiple message headers with name and value.
+
+.Verify response headers
+[source,gherkin]
+----
+Then expect HTTP response headers
+  | Encoding     | gzip |
+  | Content-Type | application/json |
+----
+
+==== Header name ignore case
+
+Header names are not case-sensitive per Http specification. This means servers and clients may choose the header name case individually. In order to avoid verification errors when expecting headers in Http the header validation mechanism in Citrus is able to ignore the header name case.
+
+.@Given("^HTTP header name ignore case is (enabled|disabled)$")
+[source,gherkin]
+----
+Given HTTP header name ignore case is enabled
+----
+
+This will enable the mode where header name verification is case-insensitive.
+
+You may also use an environment setting `CITRUS_HTTP_HEADER_NAME_IGNORE_CASE=true/false` to enable/disable the setting for the whole test suite. By default, the setting is disabled so header names are verified with case-sensitive mode.
+
+==== Response body
+
+.@Then("^expect HTTP response body: {body}$")
+[source,gherkin]
+----
+Then expect HTTP response body: {body}
+----
+
+The step above specifies the Http response body in a single line. When you need to use multiline body content please use the next step:
+
+.@Then("^expect HTTP response body$")
+[source,gherkin]
+----
+Then expect HTTP response body
+"""
+<<content>>
+"""
+----
+
+When the response body is getting too big it may be a better idea to load the content from an external file resource:
+
+.@Given("^expect HTTP response body loaded from {file}$")
+[source,gherkin]
+----
+Given expect HTTP response body loaded from {file}
+----
+
+This step loads the body content from the given file resource.
+
+[[http-client-response-raw]]
+=== Verify raw Http response data
+
+In the previous section several steps have defined the Http response (header, parameter, body) before verifying the message
+received. As an alternative to this approach you can also specify the complete expected Http response data in a single step.
+
+.@Then("^receive HTTP response$")
+[source,gherkin]
+----
+Then receive HTTP response
+"""
+<<response_data>>
+"""
+----
+
+The next example shows the complete Http response data step:
+
+.Verify raw Http response data
+[source,gherkin]
+----
+Then receive HTTP response
+"""
+HTTP/1.1 200 OK
+Content-Type:application/json
+X-TodoId:@isNumber()@
+Date: @ignore@
+
+{"id": "@ignore@", "task": "Sample task", "completed": 0}
+"""
+----
+
+[[http-response-jsonpath]]
+=== Verify response using JsonPath
+
+When verifying Http client responses sent by the server you can use JsonPath expressions to validate
+the response message body content.
+
+.@Then("^(?:expect|verify) HTTP response expression: {expression}=\"{value}\"$")
+[source,gherkin]
+----
+Then expect HTTP response expression: {expression}="{value}"
+----
+
+The step defines a JsonPath expression (e.g. `$.person.age`) and an expected value. The expression is evaluated against
+the received response message body and the value is compared to the expected value. This way you can explicitly verify elements
+in the Json body.
+
+The very same mechanism also applies to XML message body content. Just use a XPath expression instead of JsonPath.
+
+[[http-server]]
+=== Http server steps
+
+On the server side Citrus needs to start a Http server instance on a given port and listen for incoming requests.
+The test is able to verify incoming requests and then provide a simulated response message with response headers and body content.
+
+.Http communication sample
+[source,gherkin]
+----
+Feature: Http server
+
+  Background:
+    Given HTTP server listening on port 8080
+    And start HTTP server
+
+  Scenario: Expect GET request
+    When receive GET /todo
+    Then HTTP response body:  {"id": 1000, "task": "Sample task", "completed": 0}
+    And send HTTP 200 OK
+
+  Scenario: Expect POST request
+    Given expect HTTP request body: {"id": "@isNumber()@", "task": "New task", "completed": "@matches(0|1)@"}
+    When receive POST /todo
+    Then send HTTP 201 CREATED
+----
+
+In the HTTP server sample above we create a new server instance listening on port `8080`. Then we expect a `GET` request on path `/todo`. The server responds with
+a Http `200 OK` response message and given Json body as payload.
+
+The second scenario expects a POST request with a given body as Json payload. The expected request payload is verified with the powerful Citrus JSON
+message validator being able to compare JSON tree structures in combination with validation matchers such as `isNumber()` or `matches(0|1)`.
+
+After the request verification has passed the server responds with a simple Http `201 CREATED`.
+
+The next sections guide you through the Http server capabilities in Citrus.
+
+[[http-server-config]]
+=== Http server configuration
+
+When the test run starts Citrus will initialize the Http server instance and listen on a port for incoming requests.
+
+==== Http server port
+
+By default this server uses the port `8080`, but you can adjust the port with following step.
+
+.@Given("^HTTP server listening on port {port}$")
+[source,gherkin]
+----
+Given HTTP server listening on port {port}
+----
+
+==== Http server timeout
+
+The test waits for incoming requests but the test may hit request timeouts when no request has been received. By default
+the server waits for five seconds each time a request is expected. You can adjust the server timeout.
+
+.@Given("^HTTP server timeout is {time} milliseconds$")
+[source,gherkin]
+----
+Given HTTP server timeout is {time} milliseconds
+----
+
+This sets the server timeout to the given time in milliseconds.
+
+==== Http server component
+
+You can use the default Http server instance that is automatically created
+or reference server component in the project configuration (e.g. Spring bean, component configuration).
+
+.@Given("^HTTP server \"{name}\"$")
+[source,gherkin]
+----
+Given HTTP server "{name}"
+----
+
+This step loads a Http server component by its name and uses that for server side testing.
+
+==== Create Http server
+
+When dealing with multiple server components at the same time or when a fresh server instance is required you
+can create a new Http server with:
+
+.@Given("^(?:create|new) HTTP server \"{name}\"$")
+[source,gherkin]
+----
+Given new HTTP server "{name}"
+----
+
+This creates a fresh Http server instance. Please mind that a port can only be bound once so you may need to stop
+other server instances or choose another server port.
+
+.@Given("^(?:create|new) HTTP server \"{name}\" with configuration$")
+[source,gherkin]
+----
+Given new HTTP server "{name}" with configuration
+| port    | 8081 |
+| timeout | 1000 |
+----
+
+[[http-server-request]]
+=== Receive Http requests
+
+You can define expected incoming Http requests as part of the test.
+
+.@When("^receive (GET|HEAD|POST|PUT|PATCH|DELETE|OPTIONS|TRACE) {path}$")
+[source,gherkin]
+----
+When receive {method} {path}
+----
+
+The incoming request must match the given '{method}` and `{path}`.
+
+.Receive Http GET request
+[source,gherkin]
+----
+When receive GET /todo
+----
+
+Of course, you can also verify headers and the request message body.
+You need to specify the expected request before receiving the request with the `receive` steps.
+
+==== Request headers
+
+.@Given("^(?:expect|verify) HTTP request header {name}=\"{value}\"$")
+[source,gherkin]
+----
+Given expect HTTP request header {name}="{value}"
+----
+
+The step above adds the Http header to the request validation. The header must be present in the incoming request and
+must match the expected value. You can verify multiple headers in a single step, too:
+
+.@Given("^(?:expect|verify) HTTP request headers$")
+[source,gherkin]
+----
+Given expect HTTP request headers
+  | {name} | {value} |
+----
+
+The step uses a data table to define the message headers with name and value.
+
+.Expect request headers
+[source,gherkin]
+----
+Given expect HTTP request headers
+  | Accept          | application/json |
+  | Accept-Encoding | gzip |
+----
+
+==== Request body
+
+Each incoming Http request can have a body and you are able to verify the body content in multiple ways.
+
+.@Given("^(?:expect|verify) HTTP request body: {body}$")
+[source,gherkin]
+----
+Given expect HTTP request body: {body}
+----
+
+The step above specifies the expected Http request body in a single line. Multiline body content must use the next step:
+
+.@Given("^(?:expect|verify) HTTP request body$")
+[source,gherkin]
+----
+Given expect HTTP request body
+"""
+<<content>>
+"""
+----
+
+When the request body is getting too big it may be a better idea to load the content from an external file resource:
+
+.@Given("^expect HTTP request body loaded from {file}$")
+[source,gherkin]
+----
+Given expect HTTP request body loaded from {file}
+----
+
+This step loads the body content from the given file resource.
+
+==== Request parameters
+
+The Http request can have parameters on the request URL. You can verify those parameters in a separate step.
+
+.@Given("^(?:expect|verify) HTTP request query parameter {name}=\"{value}\"$")
+[source,gherkin]
+----
+Given expect HTTP request query parameter {name}="{value}"
+----
+
+[[http-server-request-raw]]
+=== Receive raw Http request data
+
+In the previous section several steps have defined the expected Http request (header, parameter, body).
+As an alternative to this approach you can also specify the complete Http request data in a single step.
+
+.@Given("^receive HTTP request$")
+[source,gherkin]
+----
+Given receive HTTP request
+"""
+<<request_data>>
+"""
+----
+
+The next example shows the complete Http request data step:
+
+.Receive raw Http request data
+[source,gherkin]
+----
+Given receive HTTP request
+"""
+GET https://hello-service
+Accept-Charset:utf-8
+Accept:application/json, application/*+json, */*
+Host:localhost:8080
+Content-Type:text/plain;charset=UTF-8
+"""
+----
+
+[[http-request-jsonpath]]
+=== Verify requests using JsonPath
+
+When verifying Http client requests you can use JsonPath expressions to validate
+the request message body content.
+
+.@When("^(?:expect|verify) HTTP request expression: {expression}=\"{value}\"$")
+[source,gherkin]
+----
+When expect HTTP request expression: {expression}="{value}"
+----
+
+The step defines a JsonPath expression (e.g. `$.person.age`) and an expected value. The expression is evaluated against
+the received request message body and the value is compared to the expected value. This way you can explicitly verify elements
+in the Json body.
+
+The very same mechanism also applies to XML message body content. Just use a XPath expression instead of JsonPath.
+
+[[http-server-response]]
+=== Send Http responses
+
+The time you have verified a Http request as a server you need to provided a proper response to the calling client.
+Citrus is able to simulate the Http response content.
+
+.@Then("^send HTTP {status_code}(?: {reason_phrase})?$")
+[source,gherkin]
+----
+Then send HTTP {status_code} {reason_phrase}
+----
+
+The step defines the Http response status code (e.g. 200, 404, 500) to return.
+
+.Return Http status code
+[source,gherkin]
+----
+Then send HTTP 200 OK
+----
+
+The reason phrase `OK` is optional. It just gives human readers a
+better understanding of the status code returned.
+
+Of course the Http response can also have headers and a message body. Citrus is able to simulate this response data, too.
+
+==== Response headers
+
+.@Given("^HTTP response header {name}=\"{value}\"$")
+[source,gherkin]
+----
+Given HTTP response header {name}="{value}"
+----
+
+The step above adds a Http header to the response. The header is defined with a name and value. You can set
+multiple headers in a single step, too:
+
+.@Given("^HTTP response headers$")
+[source,gherkin]
+----
+Given HTTP response headers
+  | {name} | {value} |
+----
+
+The step uses a data table to define multiple message headers with name and value.
+
+.Return response headers
+[source,gherkin]
+----
+Given HTTP response headers
+  | Encoding     | gzip |
+  | Content-Type | application/json |
+----
+
+==== Response body
+
+.@Given("^HTTP response body: {body}$")
+[source,gherkin]
+----
+Given HTTP response body: {body}
+----
+
+The step above specifies the Http response body in a single line. When you need to use multiline body content please use the next step:
+
+.@Given("^HTTP response body$")
+[source,gherkin]
+----
+Given HTTP response body
+"""
+<<content>>
+"""
+----
+
+When the response body is getting too big it may be a better idea to load the content from an external file resource:
+
+.@Given("^load HTTP response body {file}$")
+[source,gherkin]
+----
+Given load HTTP response body {file}
+----
+
+This step loads the body content from the given file resource.
+
+[[http-server-response-raw]]
+=== Send raw Http response data
+
+In the previous section several steps have defined the Http response (header, parameter, body).
+As an alternative to this approach you can also specify the complete Http response data in a single step.
+
+.@Then("^send HTTP response$")
+[source,gherkin]
+----
+Then send HTTP response
+"""
+<<response_data>>
+"""
+----
+
+The next example shows the complete Http response data step:
+
+.Return raw Http response data
+[source,gherkin]
+----
+Then send HTTP response
+"""
+HTTP/1.1 200 OK
+Content-Type:application/json
+X-TodoId:@isNumber()@
+Date: @ignore@
+
+{"id": "@ignore@", "task": "Sample task", "completed": 0}
+"""
+----
+
+[[http-health-checks]]
+=== Http health checks
+
+Often Http server provide a health endpoint so clients can check the status of the server to be up and running. The health check is supported with the following steps.
+
+.@Given("^{URL} is healthy$")
+[source,gherkin]
+----
+Given {URL} is healthy
+----
+
+The step performs a health check on the given `{URL}` by sending a request to the endpoint and checking for a response status code marking success (200 OK).
+
+.Health check
+[source,gherkin]
+----
+Given https://some-service-url/health is healthy
+----
+
+Instead of specifying the complete health check URL you can make use of the base URL given in the central Http step.
+
+.@Given("^URL {path} is healthy$")
+[source,gherkin]
+----
+Given path {path} is healthy
+----
+
+The given path is added to the base URL and should resolve to the health check resource on the server (e.g. `/health`).
+
+.Health path check
+[source,gherkin]
+----
+Given URL: https://hello-service
+Given path /health is healthy
+----
+
+The steps above perform the health check only a single time. Based on the provided Http server response status the step passes or fails.
+In some cases can not make sure that the server has been started yet and the health check might fail occasionally. In these cases
+it is a good iodea to use the wait health check step.
+
+.@Given("^wait for URL {url}$")
+[source,gherkin]
+----
+Given wait for URL {url}
+----
+
+The step will wait for given URL to return a `200 OK` response. The step is actively waiting while polling the URL multiple times when the response is
+not positive. By default this step uses a `HEAD` request. You can explicitly choose another Http method, too.
+
+.@Given("^wait for (GET|HEAD|POST|PUT|PATCH|DELETE|OPTIONS|TRACE) on URL {url}$")
+[source,gherkin]
+----
+Given wait for GET on URL {url}
+----
+
+The sample above uses a `GET` request for the health checks.
+
+Also you can explicitly specify the expected return code that must match in order to pass the wait health check.
+
+.@Given("^wait for URL {url} to return {status_code}(?: {reason_phrase}?$")
+[source,gherkin]
+----
+Given wait for URL {url} to return {status_code} {reason_phrase}
+----
+
+Once again the `{reason_phrase}` is optional and only for better readability reasons.
+
+.Wait for specific status code
+[source,gherkin]
+----
+Given wait for URL https://hello-service/health to return 200 OK
+----
+
+Last not least you can specify the request method on the wait operation, too.
+
+.@Given("^wait for (GET|HEAD|POST|PUT|PATCH|DELETE|OPTIONS|TRACE) on URL {url} to return {status_code}(?: {reason_phrase}?$")
+[source,gherkin]
+----
+Given wait for {method} on URL {url} to return {status_code} {reason_phrase}
+----
+
+This completes the health check capabilities in the Http steps.
+
+[[http-secure]]
+=== Https support
+
+Citrus steps support secure Http connections on both client and server.
+
+On the client side enabling secure Http connection is as simple as defining a request URL
+with `https` scheme.
+
+.@Given("^(?:URL|url): {url}$")
+[source,gherkin]
+----
+Given URL: https://some.endpoint/path
+----
+
+Citrus is going to initialize the client with a SSL request factory and use secure Http connections.
+
+On the server side you have to enable secure Http with the following step:
+
+.@Given("^enable secure HTTP server$")
+[source,gherkin]
+----
+Given enable secure HTTP server
+----
+
+Please use this step before starting the server with:
+
+.@Given("^start HTTP server$")
+[source,gherkin]
+----
+Given start HTTP server
+----
+
+The secure SSL connector uses the port `8443` by default. You can adjust this secure port
+with:
+
+.@Given("^HTTP server secure port {port}$")
+[source,gherkin]
+----
+Given HTTP server secure port {port}
+----
+
+The Http server uses a default SSL keystore with a self signed certificate. Users are able
+to customize the server certificate with a custom SSL keystore.
+
+.@Given("^HTTP server SSL keystore path {file}$")
+[source,gherkin]
+----
+Given HTTP server SSL keystore path {file}
+----
+
+.@Given("^HTTP server SSL keystore password {password}$")
+[source,gherkin]
+----
+Given HTTP server SSL keystore password {password}
+----
+
+The steps set a custom keystore (e.g. server.jks) file and a custom keystore password.
+
+The keystore settings are also accessible via environment variables.
+
+.SSL keystore environment variables
+[source,properties]
+----
+CITRUS_HTTP_SECURE_KEYSTORE_PATH={file}
+CITRUS_HTTP_SECURE_KEYSTORE_PASSWIRD={password}
+----
+
+The Http server components also provide a convenient way to add server properties when creating
+new instances:
+
+.@Given("^(?:create|new) HTTP server \"{name}\" with configuration$")
+[source,gherkin]
+----
+Given new HTTP server "{name}" with configuration
+| secure              | true       |
+| securePort          | 8443       |
+| timeout             | 1000       |
+| sslKeystorePath     | server.jks |
+| sslKeystorePassword | secret     |
+----

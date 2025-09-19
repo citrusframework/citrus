@@ -1,0 +1,69 @@
+[[tools-cucumber-steps-testcontainers]]
+== Testcontainers steps
+
+Citrus provides steps that allow to leverage the power of https://www.testcontainers.org/[Testcontainers] library as part of Cloud native tests.
+You can configure and start Testcontainers modules as pod in the current namespace.
+Testcontainers provides a great set of ready-to-use containers (e.g. https://www.testcontainers.org/modules/databases/[database containers], https://www.testcontainers.org/modules/localstack/[AWS cloud stack] and many more).
+
+You can find examples of different Testcontainers in use
+
+* xref:../../examples/postgresql/postgresql.feature[examples/postgresql].
+* xref:../../examples/aws-kinesis/aws-kinesis.feature[examples/aws-kinesis].
+* xref:../../examples/aws-s3/aws-s3.feature[examples/aws-s3].
+
+[[testcontainer-priviledges]]
+=== Setup required privileges
+
+Running Testcontainers in Kubernetes may require privileges on the Citrus service account.
+This depends on the restrictions and RBAC settings in your cluster.
+
+Be sure to add `privileged` security context constraint to the `citrus-viewer` service account in the namespace where tests are run.
+
+.Add privileged security context constraint
+[source,bash]
+----
+oc adm policy add-scc-to-user privileged system:serviceaccount:{namespace}:citrus-viewer
+----
+
+This adds the `privileged` security constraint to the `citrus-viewer` service account.
+This is required for the test to start and manage a Testcontainer pod as part of the test.
+
+[[testcontainer-database]]
+=== Database containers
+
+You can choose from a wide range of database modules provided in Testcontainers.
+Citrus is able to run these database containers as part of the test.
+
+[[testcontainer-postgresql]]
+=== PostgreSQL container
+
+Configure and manage a PostgreSQL database container.
+
+.@Given("^PostgreSQL version (^\\s+)$")
+[source,gherkin]
+----
+Given PostgreSQL version 9.6.12
+----
+
+.@Given("^start PostgreSQL container$")
+[source,gherkin]
+----
+Given start PostgreSQL container
+----
+
+[[testcontainer-mongodb]]
+=== MongoDB container
+
+Configure and manage a MongoDB database container.
+
+.@Given("^MongoDB version (^\\s+)$")
+[source,gherkin]
+----
+Given MongoDB version 4.10.0
+----
+
+.@Given("^start MongoDB container$")
+[source,gherkin]
+----
+Given start MongoDB container
+----

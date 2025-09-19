@@ -1,0 +1,551 @@
+[[tools-cucumber-steps-selenium]]
+== Selenium steps
+
+Selenium is a very popular UI testing tool that enables you to simulate user interactions on a web frontend. Selenium
+supports a wide range of browsers and is able to run with a grid of nodes in a Kubernetes environment.
+
+Citrus provides ready-to-use steps that leverage Selenium UI testing with Cloud-native BDD. Have a look at the complete
+example in xref:../../examples/selenium/selenium.feature[examples/selenium.feature].
+
+The following sections guide you through the Selenium capabilities in Citrus.
+
+[[selenium-browser-type]]
+=== Browser type
+
+Selenium supports many browsers. When running a Citrus test with Selenium you need to choose which browser type to use. By
+default, Citrus uses the `htmlunit` browser type. You can overwrite this type with the system property `citrus.selenium.browser.type`
+or environment variable `CITRUS_SELENIUM_BROWSER_TYPE` set on the Citrus configuration.
+
+.Set Selenium browser type
+[source,bash]
+----
+CITRUS_SELENIUM_BROWSER_TYPE=chrome
+----
+
+These are the supported browser types:
+
+* firefox
+* safari
+* MicrosoftEdge
+* safariproxy
+* chrome
+* htmlunit
+* internet explorer
+* phantomjs
+
+This sets the Selenium browser type for all operations.
+
+[[selenium-browser]]
+=== Selenium broker
+
+Citrus creates a default browser component using the given link:#selenium-browser-type[browser type]. You can also create a
+browser instance by yourself and reference this in your test by its name.
+
+.@Given("^(?:Browser|browser) "{name}"$")
+[source,gherkin]
+----
+Given browser "{name}"
+----
+
+This loads the browser component with given name from the configuration (e.g. Spring application context).
+
+You can also use the system property `citrus.selenium.browser.name` environment variable `CITRUS_SELENIUM_BROWSER_NAME`
+
+[[selenium-browser-remote]]
+=== Remote web driver
+
+As soon as the Citrus test is run on a Kubernetes environment you must use a remote web driver. This is because the default Citrus test
+runtime pod is not able to run UI tests because no web browser infrastructure is installed in the image.
+
+You can automatically start a Selenium sidecar container as part of the test runtime pod. The https://hub.docker.com/u/selenium[Selenium images]
+provide the required web browser infrastructure for UI testing. Citrus adds the Selenium container as a sidecar to the test
+runtime. Now your test is able to connect with the remote browser using a remote web driver connection.
+
+Add the following configuration to the `citrus-config.yaml` in your test.
+
+.citrus-config.yaml
+[source,yaml]
+----
+config:
+  runtime:
+    selenium:
+      image: selenium/standalone-chrome:latest
+    env:
+      - name: CITRUS_SELENIUM_BROWSER_TYPE
+        value: chrome
+      - name: CITRUS_SELENIUM_BROWSER_REMOTE_SERVER_URL
+        value: http://localhost:4444/wd/hub
+----
+
+This sets the Selenium container image (`selenium/standalone-chrome:latest`), the browser type and the remote web driver URL.
+Citrus automatically starts the given Selenium container image and connects the browser to the remote web driver.
+
+This way you can run the UI tests in a Kubernetes environment.
+
+[[selenium-start-stop]]
+=== Start/stop browser
+
+Before you can run some user interactions with Selenium you need to start the browser.
+
+.@Given("^start browser$")
+[source,gherkin]
+----
+Given start browser
+----
+
+.@Given("^stop browser$")
+[source,gherkin]
+----
+Given stop browser
+----
+
+[[selenium-navigate]]
+=== Navigate to URL
+
+See the following step that navigates to a given URL in the browser.
+
+.@When("^(?:User|user) navigates to "{url}"$")
+[source,gherkin]
+----
+When User navigates to "{url}"
+----
+
+[[selenium-verify-elements]]
+=== Verify elements on page
+
+Selenium is able to verify web elements on the current page. You can select the element by its attributes (e.g. id, name, style)
+and verify its properties (e.g. text value, styles).
+
+.@When("^(?:Browser|browser) page should display {element-type} with {attribute}="{value}"$")
+[source,gherkin]
+----
+When Browser page should display {element-type} with {attribute}="{value}"
+----
+
+This step verifies that the given element of type `{element-type}` is present on the current web page. The element is selected
+by the given `{attribute}` and `{value}`.
+
+.Verify heading with text
+[source,gherkin]
+----
+When Browser page should display heading with text="Welcome!"
+----
+
+Possible element types are:
+
+* element
+* button
+* link
+* input
+* textfield
+* form
+* heading
+
+Possible attributes to select the element are:
+
+* id
+* name
+* class-name
+* link-text
+* css-selector
+* tag-name
+* xpath
+
+You can add additional attribute validations in a data table
+
+.Verify element with attributes
+[source,gherkin]
+----
+When And browser page should display element with id="hello-text" having
+    | text   | Hello!         |
+    | styles | background-color=rgba(0, 0, 0, 0) |
+----
+
+[[selenium-click]]
+=== Click elements
+
+You can click on elements such as buttons or links. The element must be identified by an attribute (e.g. id, name, style)
+with a given value.
+
+.@When("^(?:User|user) clicks (?:element|button|link) with {attribute}="{value}"$")
+[source,gherkin]
+----
+When User clicks (element|button|link) with {attribute}="{value}"
+----
+
+.Click button by id
+[source,gherkin]
+----
+When User clicks button with id="submit"
+----
+
+[[selenium-forms]]
+=== Form controls
+
+Filling out a user form on a web page is a very common use case in UI testing. Citrus is able to enter text into input fields,
+select items from a drop down list and check/uncheck checkboxes.
+
+==== Input fields
+
+.@When("^(?:User|user) enters text "{input}" to (?:element|input|textfield) with {attribute}="{value}"$")
+[source,gherkin]
+----
+When User enters text "{input}" to (element|input|textfield) with {attribute}="{value}"
+----
+
+.Enter text in input field
+[source,gherkin]
+----
+When User enters text "Christoph" to input with id="name"
+----
+
+==== Checkboxes
+
+.@When("^(?:User|user) (checks|unchecks) checkbox with {attribute}="{value}"$")
+[source,gherkin]
+----
+When User (checks|unchecks) checkbox with {attribute}="{value}"
+----
+
+.Check checkbox
+[source,gherkin]
+----
+When User checks checkbox with id="show-details"
+----
+
+==== Dropdowns
+
+.@When("^(?:User|user) selects option "{option}" on (?:element|dropdown) with {attribute}="{value}"$")
+[source,gherkin]
+----
+When User selects option "{option}" with {attribute}="{value}"
+----
+
+.Check checkbox
+[source,gherkin]
+----
+When User selects option "21-30" on dropdown with id="age"
+----
+
+[[selenium-alert]]
+=== Alert dialogs
+
+Web pages can open alert dialogs that need to be accepted or dismissed.
+
+.@When("^(?:User|user) (accepts|dismisses) alert$")
+[source,gherkin]
+----
+When User (accepts|dismisses) alert
+----
+
+You can also verify the alert text displayed to the user.
+
+.@When("^(?:Browser|browser) page should display alert with text "{text}"$")
+[source,gherkin]
+----
+When Browser page should display alert with text "{text}"
+----
+
+.Verify alert with text
+[source,gherkin]
+----
+When Browser page should display alert with text "WARNING!"
+----
+
+IMPORTANT: The alert text verification implicitly accepts the alert dialog after validation.
+
+[[selenium-pages]]
+=== Page objects
+
+Selenium provides a good way to encapsulate web page capabilities in form of page objects. These object usually defines elements
+on a web page and perform predefined operations on that page.
+
+.Page object
+[source,java]
+----
+public class UserFormPage implements WebPage {
+
+    @FindBy(id = "userForm")
+    private WebElement form;
+
+    @FindBy(id = "username")
+    private WebElement userName;
+
+    /**
+     * Sets the user name.
+     * @param value
+     */
+    public void setUserName(String value) {
+        userName.clear();
+        userName.sendKeys(value);
+    }
+
+    /**
+     * Submits the form.
+     */
+    public void submit() {
+        form.submit();
+    }
+}
+----
+
+The page object above defines a `form` element as well as a `username` input text field. The page identifies the elements
+with `@FindBy` annotations. In addition, the page defines operations such as `setUserName` and `submit`.
+
+Citrus is able to load the page objects by its name in the current configuration (e.g. Spring application context).
+
+.@Given("^(?:Browser|browser) page "{name}"$")
+[source,gherkin]
+----
+Given Browser page "{name}"
+----
+
+The step loads the page object that has been added to the configuration with the given name.
+
+You can also instantiate new page objects by its types as follows:
+
+.@Given("^(?:Browser|browser) page "{name}" of type {type}$")
+[source,gherkin]
+----
+Given Browser page "{name}" of type {type}
+----
+
+.Instantiate UserForm page
+[source,gherkin]
+----
+Given Browser page "userForm" of type org.sample.UserFormPage
+----
+
+This loads a new page object of type `org.sample.UserFormPage`. Please make sure that the given class is available on the test
+classpath and that the class provides a default constructor.
+
+You can instantiate many web page objects in a single step.
+
+.Instantiate many page objects
+[source,gherkin]
+----
+Given Browser page types
+  | indexPage | org.sample.IndexPage     |
+  | userForm  | org.sample.UserFormPage  |
+  | orderForm | org.sample.OrderFormPage |
+----
+
+Once the page objects are loaded you can perform operations.
+
+.@Given("^(?:Browser|browser) page {name} performs {operation}$")
+[source,gherkin]
+----
+Given Browser page {name} performs {operation}
+----
+
+.Call submit operation on userForm
+[source,gherkin]
+----
+Given Browser page userForm performs submit
+----
+
+The step uses the given page object `userForm` and performs the `submit` operation. This simply calls the `submit()` method
+on the page object.
+
+.Page object
+[source,java]
+----
+public class UserFormPage implements WebPage {
+
+    @FindBy(id = "userForm")
+    private WebElement form;
+
+    /**
+     * Submits the form.
+     */
+    public void submit() {
+        form.submit();
+    }
+}
+----
+
+In case the operation requires parameters you can set those on the operation call.
+
+.Call setUserName operation with arguments
+[source,gherkin]
+----
+Given Browser page userForm performs setUserName with arguments
+  | Christoph |
+----
+
+The `setUserName` operation on the page object requires the username value as a parameter. This value is set as `Christoph` in
+the step above.
+
+.Page object
+[source,java]
+----
+public class UserFormPage implements WebPage {
+
+    @FindBy(id = "username")
+    private WebElement userName;
+
+    /**
+     * Sets the user name.
+     * @param value
+     */
+    public void setUserName(String value) {
+        userName.clear();
+        userName.sendKeys(value);
+    }
+}
+----
+
+Each page operation can use the current `TestContext` as argument, too. This context will be automatically injected by Citrus
+when the operation is called.
+
+.Use test context in page objects
+[source,java]
+----
+public class UserFormPage implements WebPage {
+
+    @FindBy(id = "username")
+    private WebElement userName;
+
+    /**
+     * Sets the user name.
+     * @param value
+     * @param context
+     */
+    public void setUserName(String value, TestContext context) {
+        userName.clear();
+        userName.sendKeys(value);
+
+        context.setVariable("username", value);
+    }
+}
+----
+
+The page operation `setUserName` uses the `TestContext` as additional method argument and is able to set a new test variable.
+All subsequent steps in the test are able to access this new variable with `${username}` then.
+
+[[selenium-page-validators]]
+=== Page validator
+
+The previous section has introduced the concept of page objects and how to perform operations on the given page. You can also
+use page objects to verify the page contents.
+
+.Page validator
+[source,java]
+----
+public class UserFormPageValidator implements PageValidator<UserFormPage> {
+
+    @Override
+    public void validate(UserFormPage webPage, SeleniumBrowser browser, TestContext context) {
+        Assert.assertNotNull(webPage.userName);
+        Assert.assertTrue(StringUtils.hasText(webPage.userName.getAttribute("value")));
+        Assert.assertNotNull(webPage.form);
+    }
+}
+----
+
+The page validator implements the `PageValidator<>` interface and implements a `validate` method. The validation is provided
+with the actual page object, the browser instance and the current test context.
+
+The validator should verify that the current state on the page is as expected.
+
+Citrus is able to load the page validator by its name in the current configuration (e.g. Spring application context).
+
+.@Given("^(?:Browser|browser) page validator "{name}"$")
+[source,gherkin]
+----
+Given Browser page validator "{name}"
+----
+
+The step loads the page validator that has been added to the configuration with the given name.
+
+You can also instantiate new page validator objects by its types as follows:
+
+.@Given("^(?:Browser|browser) page validator "{name}" of type {type}$")
+[source,gherkin]
+----
+Given Browser page validator "{name}" of type {type}
+----
+
+.Create page validator
+[source,gherkin]
+----
+Given Browser page validator "userFormValidator" of type org.sample.UserFormPageValidator
+----
+
+This loads a new page validator of type `org.sample.UserFormPageValidator`. Please make sure that the given class is available on the test
+classpath and that the class provides a default constructor.
+
+You can instantiate many web page validator objects in a single step.
+
+.Instantiate many page validator objects
+[source,gherkin]
+----
+Given Browser page validator types
+  | indexPageValidator | org.sample.IndexPageValidator     |
+  | userFormValidator  | org.sample.UserFormPageValidator  |
+  | orderFormValidator | org.sample.OrderFormPageValidator |
+----
+
+Once the page validator objects are loaded you can perform its validations.
+
+.@Given("^(?:Browser|browser) page {name} should validate with {validator}$")
+[source,gherkin]
+----
+Given Browser page {name} should validate with {validator}
+----
+
+.Validate userForm page with userFormValidator
+[source,gherkin]
+----
+Given Browser page userForm should validate with userFormValidator
+----
+
+The step calls the `validate` method on the page validator `userFormValidator` and passes the `userForm` page object as
+argument.
+
+.Page validator
+[source,java]
+----
+public class UserFormPageValidator implements PageValidator<UserFormPage> {
+
+    @Override
+    public void validate(UserFormPage webPage, SeleniumBrowser browser, TestContext context) {
+        Assert.assertNotNull(webPage.userName);
+        Assert.assertTrue(StringUtils.hasText(webPage.userName.getAttribute("value")));
+        Assert.assertNotNull(webPage.form);
+    }
+}
+----
+
+The validator accesses the elements and operations provided in the page object and makes sure the state is as expected.
+
+TIP: The page object itself can also implement the page validator interface. This way you can combine the concept of
+page objects and validator in a single class. The step to verify the page is then able to just use the page object name.
+
+.Validate userForm page with implicit validator
+[source,gherkin]
+----
+Given Browser page userForm should validate
+----
+
+.Page object implementing validator
+[source,java]
+----
+public class UserFormPage implements WebPage, PageValidator<UserFormPage> {
+
+    @FindBy(id = "userForm")
+    private WebElement form;
+
+    @FindBy(id = "username")
+    private WebElement userName;
+
+    [...]
+
+    @Override
+    public void validate(UserFormPage webPage, SeleniumBrowser browser, TestContext context) {
+        Assert.assertNotNull(userName);
+        Assert.assertTrue(StringUtils.hasText(userName.getAttribute("value")));
+        Assert.assertNotNull(form);
+    }
+}
+----

@@ -1,0 +1,177 @@
+[[tools-cucumber-steps-jdbc]]
+== JDBC steps
+
+Citrus provides steps that allow executing SQL actions on relational databases. This includes updates and queries.
+In case of a database query you are able to verify the result set with expected values.
+
+You can find examples of JDBC steps in xref:../../examples/jdbc/jdbc.feature[examples/jdbc].
+
+[[jdbc-datasource]]
+=== Connection configuration
+
+Before running any SQL statement you need to configure a datasource that allows connecting to the
+database.
+
+.@Given("^(?:D|d)atabase connection$")
+[source,gherkin]
+----
+Given Database connection
+| {property} | {value} |
+----
+
+The step configures a new database connection and uses a data table to define connection properties such as connection
+URL, username and password.
+
+.Specify connection properties
+[source,gherkin]
+----
+Given Database connection
+| driver    | org.postgresql.Driver |
+| url       | jdbc:postgresql://localhost:5432/testdb |
+| username  | test |
+| password  | secret |
+----
+
+This defines the connection parameters so the test is able to connect to the database.
+
+In addition to that you can also reference an existing datasource that has been added to the
+framework configuration.
+
+.@Given("^(?:D|d)ata source: {name}$")
+[source,gherkin]
+----
+Given Data source: {name}
+----
+
+The name of the datasource should reference a configured component in the test project. You can add components as Spring beans
+for instance.
+
+[[jdbc-update]]
+=== SQL update
+
+The test is able to run SQL updates (UPDATE, INSERT, DELETE) on the database.
+
+.@When("^(?:execute |perform )?SQL update: {statement}$")
+[source,gherkin]
+----
+When execute SQL update: {statement}
+----
+
+The step executes the given SQL statement using the configured database connection. For multiline statements please use:
+
+.@When("^(?:execute |perform )?SQL update$")
+[source,gherkin]
+----
+When execute SQL update
+"""
+{statement}
+"""
+----
+
+You can also run multiple statements in a single step by using a data table.
+
+.@When("^(?:execute |perform )?SQL updates$")
+[source,gherkin]
+----
+When execute SQL updates
+| {statement_1} |
+| {statement_2} |
+...
+| {statement_x} |
+----
+
+[[jdbc-query]]
+=== SQL query
+
+The SQL query obtains data from the database in form of result sets. The Citrus test is able to verify the result sets with an expected
+set of rows and column values returned.
+
+.@Given("^SQL query: {statement}$")
+[source,gherkin]
+----
+Given SQL query: {statement}
+----
+
+This step defines the query to execute. Multiline SQL query statements are supported, too.
+
+.@Given("^SQL query$")
+[source,gherkin]
+----
+Given SQL query
+"""
+{statement}
+"""
+----
+
+You can also run multiple queries in one step. As usual the step uses a data table.
+
+.@Given("^SQL query statements$")
+[source,gherkin]
+----
+When SQL query statements
+| {statement_1} |
+| {statement_2} |
+...
+| {statement_x} |
+----
+
+In a next step you can provide the expected outcome in form of column name and value.
+
+==== Verify SQL result set
+
+.@Then("^verify column {name}={value}$")
+[source,gherkin]
+----
+Then verify column {name}={value}
+----
+
+This step executes the query and verifies the column with given name to match the expected value.
+
+You can use multiple verifications on several columns with a data table.
+
+.@Then("^verify columns$")
+[source,gherkin]
+----
+Then verify columns
+| {column_1} | {value_1_1} | {value_1_2} |
+| {column_2} | {value_2_1} | {value_2_2} |
+...
+| {column_x} | {value_x_x} | {value_x_x} |
+----
+
+The data table is able to verify a matrix of rows and columns. Each column can have multiple row values.
+
+.Validate multi row result sets
+[source,gherkin]
+----
+Given SQL query: SELECT ID, TASK, COMPLETED FROM todo ORDER BY id
+Then verify columns
+| ID        | 1                  | 2             | 3          | 4            | @ignore@               |
+| TASK      | Learn some Camel K! | Get some milk | Do laundry | Wash the dog | Test Camel with Citrus! |
+| COMPLETED | 0                  | 0             | 0          |            0 | 0                      |
+----
+
+=== Result set verification script
+
+For more complex result set validation you can use a Groovy result set verification script.
+
+.@Then("^verify result set$")
+[source,gherkin]
+----
+Then verify result set
+"""
+<<Groovy>>
+"""
+----
+
+The Groovy script can work with the complete result set and is quite powerful.
+
+[source,gherkin]
+----
+Given SQL query: SELECT TASK FROM todo
+Then verify result set
+"""
+assert rows.size == 1
+assert rows[0].TASK == 'Learn some Camel K!'
+"""
+----

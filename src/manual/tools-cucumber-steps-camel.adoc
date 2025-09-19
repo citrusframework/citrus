@@ -1,0 +1,325 @@
+[[tools-cucumber-steps-camel]]
+== Apache Camel steps
+
+Apache Camel is a very popular enterprise integration library that provides a huge set of ready to use components and
+endpoints for you to connect with different messaging transports. Also, many data formats are supported in Camel so you will be able
+to incorporate with almost any software interface exchanging data over the wire.
+
+Citrus adds steps to use Apache Camel as part of a test. You are able to send and receive messages with Camel components and make
+use of the enterprise integration patterns and data formats implemented in Apache Camel.
+
+[[camel-context]]
+=== Create Camel context
+
+The Camel context is a central place to add routes and manage Camel capabilities and services. You can start a new default
+(empty) Camel context using the following step.
+
+.@Given("^(?:Default|New) Camel context$")
+[source,gherkin]
+----
+Given Default Camel context
+----
+
+This will setup and start a new Camel context as part og the current test scenario. You can now create and add routes to this
+context. In case you have special configuration and/or some default routes that you need to initialize as part of the
+context you can provide a Camel Spring bean configuration in the Camel context step.
+
+.@Given("^New Spring Camel context$")
+[source,gherkin]
+----
+Given New Spring Camel context
+"""
+<beans xmlns="http://www.springframework.org/schema/beans"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                          http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+  <camelContext id="helloContext" xmlns="http://camel.apache.org/schema/spring">
+    <route id="helloRoute">
+      <from uri="direct:hello"/>
+      <to uri="log:org.citrusframework.camel?level=INFO"/>
+      <split>
+        <tokenize token=" "/>
+        <to uri="seda:tokens"/>
+      </split>
+    </route>
+  </camelContext>
+</beans>
+"""
+----
+
+[[camel-routes-create]]
+=== Create Camel routes
+
+In Apache Camel you need to create routes in order to start producing/consuming data from endpoints. The routes can be defined
+in XML or Groovy.
+
+.@Given("^Camel route {name}.xml")
+[source,gherkin]
+----
+Given Camel route hello.xml
+"""
+<route>
+  <from uri="direct:hello"/>
+  <to uri="log:org.citrusframework.camel?level=INFO"/>
+  <split>
+    <tokenize token=" "/>
+    <to uri="seda:tokens"/>
+  </split>
+</route>
+"""
+----
+
+In addition to XML route definitions Citrus also supports the Groovy DSL.
+
+.@Given("^Camel route {name}.groovy")
+[source,gherkin]
+----
+Given Camel route hello.groovy
+"""
+from("direct:hello")
+ .to("log:org.citrusframework.camel?level=${logLevel}")
+ .split(body().tokenize(" "))
+   .to("seda:tokens")
+ .end()
+"""
+----
+
+The above steps create the Camel routes and automatically starts them in the current context. The given routes start
+to consume messages from the endpoint `direct:hello`.
+
+You can also load the Camel route from a file resource.
+
+.@Given("^load Camel route path/to/{name}.{language}")
+[source,gherkin]
+----
+Given load Camel route hello.groovy
+----
+
+Currently, the languages `xml` and `groovy` are supported.
+
+[[camel-routes-manage]]
+=== Start/stop Camel routes
+
+We are able to explicitly start and stop routes in the current context.
+
+.@Then("^start Camel route {name}$")
+[source,gherkin]
+----
+Then start Camel route {name}
+----
+
+The given name references a route in the current Camel context. This starts the route and
+consumes messages from the enpoint URI.
+
+.@Then("^stop Camel route {name}$")
+[source,gherkin]
+----
+Then stop Camel route {name}
+----
+
+After stopping a route the route will not consume any messages on the given endpoint URI.
+
+In case a Camel route is not needed anymore you can also remove it from the current Camel context.
+
+.@Then("^remove Camel route {name}$")
+[source,gherkin]
+----
+Then remove Camel route {name}
+----
+
+[[camel-send]]
+=== Send messages via Camel
+
+We can send exchanges using any Camel endpoint URI. The endpoint URI can point to an external
+component or to a route in the current Camel context and trigger its processing logic. The exchange body
+is given as single or multiline body content.
+
+.@When("^send Camel exchange to\\(\"{endpoint_uri}\"\\) with body: {body}$")
+[source,gherkin]
+----
+When send Camel exchange to("direct:hello") with body: Hello Camel!
+----
+
+The step sends an exchange with the body `Hello Camel!`. You can also use
+multiline body content with the following step:
+
+.@When("^send Camel exchange to\\(\"{endpoint_uri}\"\\) with body$")
+[source,gherkin]
+----
+When send Camel exchange to("direct:hello") with body
+"""
+Hello Camel!
+
+This is a multiline content!
+"""
+----
+
+In addition to a body content the Camel exchange also defines a set of message headers. You can use a data table to specify message headers
+when sending a message.
+
+.@When("^send Camel exchange to\\(\"{endpoint_uri}\"\\) with body and headers: {body}$")
+[source,gherkin]
+----
+When send Camel exchange to("direct:hello") with body and headers Hello Camel!
+    | id        | 1234     |
+    | operation | sayHello |
+----
+
+[[camel-receive]]
+=== Receive messages via Camel
+
+The Citrus test is able to receive messages from a Camel endpoint URI in order to verify
+the message content (header and body) with an expected control message.
+
+Once the message
+is received Citrus makes use of the powerful message validation capabilities of Citrus to make sure
+that the content is as expected.
+
+.@When("^receive Camel exchange from\\(\"{endpoint_uri}\"\\) with body: {body}$")
+[source,gherkin]
+----
+When receive Camel exchange from("seda:tokens") with body: Hello
+----
+
+The step receives an exchange from the endpoint URI `seda:tokens` and
+verifies the body to be equal to `Hello`. See the next example on how
+to validate a multiline message body content.
+
+.@When("^receive Camel exchange from\\(\"{endpoint_uri}\"\\) with body$")
+[source,gherkin]
+----
+When receive Camel exchange from("seda:tokens") with body
+"""
+{
+  "message": "Hello Camel!"
+}
+"""
+----
+
+We can also verify a set of message headers that must be present on the received exchange.
+Once again we use a data table to define the message headers. This time we provide expected message
+header values.
+
+.@When("^receive Camel exchange from\\(\"{endpoint_uri}\"\\) with body and headers: {body}$")
+[source,gherkin]
+----
+When receive Camel exchange from("seda:tokens") with body and headers: Hello
+    | id        | 1234     |
+    | operation | sayHello |
+----
+
+[[camel-exchange]]
+=== Define Camel exchanges
+
+In the previous steps we have seen how to send and receive messages to anf from
+Camel endpoint URIs. We have used the exchange body and header in a single step so far.
+
+In some cases it might be a better option to use multiple steps for defining the complete exchange
+data upfront. The actual send/receive operation then takes place in a separate step.
+
+The following examples should clarify the usage.
+
+@Given("^Camel exchange message header {name}=\"{value}\"$")
+[source,gherkin]
+----
+Camel exchange message header {name}="{value}"
+----
+
+This sets a message header on the exchange. We can also use a data table to set multiple headers
+in one single step:
+
+.@Given("^Camel exchange message headers$")
+[source,gherkin]
+----
+Camel exchange message headers
+    | id        | 1234     |
+    | operation | sayHello |
+----
+
+Then we can also set the body in another step.
+
+.@Given("^Camel exchange body$")
+[source,gherkin]
+----
+Camel exchange body: Hello Camel!
+----
+
+Multiline body content is also supported.
+
+.@Given("^Camel exchange body$")
+[source,gherkin]
+----
+Camel exchange body
+"""
+{
+  "message": "Hello Camel!"
+}
+"""
+----
+
+When the body is getting too big it may be a better idea to load the content from an external file resource:
+
+.@Given("^load Camel exchange body {file}$")
+[source,gherkin]
+----
+Given load Camel exchange body {file}
+----
+
+This step loads the body content from the given file resource.
+
+Now that we have specified the exchange headers and body content we can send or receive that specific
+echange in a separate step.
+
+.@When("^send Camel exchange to\\(\"{endpoint_uri}\"\\)$")
+[source,gherkin]
+----
+send Camel exchange to("{endpoint_uri}")
+----
+
+.@When("^receive Camel exchange from\\(\"{endpoint_uri}\"\\)$")
+[source,gherkin]
+----
+receive Camel exchange from("{endpoint_uri}")
+----
+
+In the previous section we have covered a 2nd approach to send and receive messages
+with Apache Camel. You specify the exchange in multiple steps first and then send/receive
+the exchange to/from and endpoint URI in a separate step.
+
+[[camel-settings]]
+=== Basic Camel settings
+
+.@Given("^Camel consumer timeout is {time}(?: ms| milliseconds)$")
+[source,gherkin]
+----
+Given Camel consumer timeout is {time} milliseconds
+----
+
+Sets the default timeout for all Camel components that consume data from messaging transports. After that time the test
+will fail with a timeout exception when no message has been received.
+
+[[camel-resources]]
+=== Manage Camel resources
+
+The Apache Camel steps are able to create resources such as routes. By default these resources get removed automatically after the test scenario.
+
+The auto removal of Camel resources can be turned off with the following step.
+
+.@Given("^Disable auto removal of Camel resources$")
+[source,gherkin]
+----
+Given Disable auto removal of Camel resources
+----
+
+Usually this step is a `Background` step for all scenarios in a feature file. This way multiple scenarios can work on the very same Camel resources and share
+integrations.
+
+There is also a separate step to explicitly enable the auto removal.
+
+.@Given("^Enable auto removal of Camel resources$")
+[source,gherkin]
+----
+Given Enable auto removal of Camel resources
+----
+
+By default, all Camel resources are automatically removed after each scenario.
