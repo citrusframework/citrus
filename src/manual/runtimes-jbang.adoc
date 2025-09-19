@@ -261,13 +261,13 @@ Feature: EchoTest
 .Run my-test.feature
 [source,shell]
 ----
-jbang --deps org.citrusframework.yaks:yaks-standard:0.20.0 citrus run my-test.feature
+jbang --deps org.citrusframework:citrus-cucumber-all:4.9.0-SNAPSHOT citrus run my-test.feature
 ----
 
-NOTE: Many of the predefined Cucumber steps (e.g. `Then print '<message>'`) in Citrus are provided in a separate Citrus child project called https://github.com/citrusframework/yaks[YAKS].
+NOTE: Many of the predefined Cucumber steps (e.g. `Then print '<message>'`) in Citrus are provided in separate Citrus modules.
 You need to add additional project dependencies for that steps to be loaded as part of the JBang script.
 The `--deps` option adds dependencies using Maven artifact coordinates.
-You may add the additional modules to the `jbang.properties` as described in the next section.
+You may also add the additional modules to the `jbang.properties` as described in the next section.
 
 [[runtime-jbang-dependencies]]
 === Additional JBang dependencies
@@ -304,8 +304,7 @@ The file above adds the modules `citrus-camel`, `citrus-testcontainers` and `cit
 
 The `jbang.properties` file may be located right next to the test source file or in your user home directory for global settings.
 
-IMPORTANT: In case you want to run Cucumber BDD Gherkin feature files and use the predefined steps included in the https://github.com/citrusframework/yaks[YAKS] project,
-you need to add this YAKS runtime dependency accordingly: `org.citrusframework.yaks:yaks-standard:0.20.0`
+IMPORTANT: In case you want to run Cucumber BDD Gherkin feature files and use the predefined Citrus steps, you need to add this dependency accordingly: `org.citrusframework:citrus-cucumber-all:4.9.0-SNAPSHOT`
 
 [[runtime-jbang-clipboard]]
 === Run from clipboard

@@ -1,0 +1,305 @@
+[[tools-cucumber-steps-jms]]
+== JMS steps
+
+JMS is well-known as transport for point-to-point and publish/subscribe messaging. Users can produce and consume messages on
+queues and topics on a message broker.
+
+Citrus has support for JMS related messaging on both producer and consumer.
+
+[[jms-connection-factory]]
+=== Connection factory
+
+The JMS standard requires clients to open connections over a connection factory. The connection factory is a vendor specific
+implementation and receives a set of properties such as connection URL, username and password.
+
+.@Given("^(?:JMS|jms) connection factory$")
+[source,gherkin]
+----
+Given JMS connection factory
+| {property} | {value} |
+----
+
+The configuration step receives a data table that defines the connection settings.
+
+.Connection factory settings
+[source,gherkin]
+----
+Given JMS connection factory
+| type       | org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory |
+| brokerUrl  | tcp://localhost:61616 |
+| username   | ${activemq.user}      |
+| password  | ${activemq.password}  |
+----
+
+The connection factory type is vendor specific and depends on what kind of message broker you are using in your environment. Please
+make sure to add the respective client library as a project dependency in the Citrus configuration.
+
+Sensitive values such as `username` and `password` can be set with a test variable placeholder. The variable value can
+be set by a secret in Kubernetes/Openshift. This ensures to not share sensitive data in the public.
+
+As an alternative to defining the connection factory as part of the test steps you can load a predefined connection factory
+component from the configuration.
+
+.@Given("^(?:JMS|jms) connection factory {name}$")
+[source,gherkin]
+----
+Given JMS connection factory {name}
+----
+
+The step references a connection factory component that has been added to the framework configuration (e.g. as Spring bean).
+This way you can share the connection factory in multiple tests.
+
+[[jms-endpoint]]
+=== Destination and endpoint configuration
+
+In addition to the connection factory the test needs to specify the JMS destination (queue or topic) to use.
+
+.@Given("^(?:JMS|jms) destination: {name}$")
+[source,gherkin]
+----
+Given JMS destination: {name}
+----
+
+This sets the destination name for the next steps. As an alternative to that you can also reference a predefined endpoint
+component from the configuration.
+
+.@Given("^(?:JMS|jms) endpoint \"{name}\"$")
+[source,gherkin]
+----
+Given JMS endpoint {name}
+----
+
+The step tries to resolve the JMS endpoint with given `{name}` in the available configuration. The endpoint has a destination set
+and references a connection factory on its own.
+
+So now the test is ready to produce and consume messages from JMS destinations.
+
+[[jms-send]]
+=== Send JMS messages
+
+A test can publish messages on a JMS destination. The message consists of message headers and a body content. Before sending a message
+the tests needs to specify the message content.
+
+==== Message headers
+
+The message headers are key value pairs that are sent as part of the message. You can add a new header with the following step:
+
+.@Given("^(?:JMS|jms) message header {name}(?:=| is )\"{value}\"$")
+[source,gherkin]
+----
+Given JMS message header {name}="{value}"
+----
+
+When using a data table you can set multiple headers in one step.
+
+.@Given("^(?:JMS|jms) message headers$")
+[source,gherkin]
+----
+Given JMS message headers
+| {header_1} | {value_1} |
+| {header_2} | {value_2} |
+...
+| {header_x} | {value_x} |
+----
+
+==== Message body
+
+.@Given("^(?:JMS|jms) message body: {body}$")
+[source,gherkin]
+----
+Given JMS message body: {body}
+----
+
+This step can set a single line body content. Of course you can also work with multiline body content.
+
+.@Given("^(?:JMS|jms) message body$")
+[source,gherkin]
+----
+Given JMS message body
+"""
+{body}
+"""
+----
+
+When the body is getting too big it may be a better idea to load the content from an external file resource:
+
+.@Given("^load (?:JMS|jms) message body {file}$")
+[source,gherkin]
+----
+Given load JMS message body {file}
+----
+
+This step loads the body content from the given file resource.
+
+Now another step can send the message as it has been specified in the previous steps.
+
+.@When("^send (?:JMS|jms) message$")
+[source,gherkin]
+----
+When send JMS message
+----
+
+This sends the message to the previously configured JMS destination. You can overwrite this destination in the send step.
+
+.@When("^send (?:JMS|jms) message to destination {destination}$")
+[source,gherkin]
+----
+When send JMS message to destination {destination}
+----
+
+The approach described clearly separates message specification and send operation as all of it is done in separate steps.
+As an alternative you can also specify the message content in one step.
+
+.@When("^send (?:JMS|jms) message with body: {body}$")
+[source,gherkin]
+----
+When send JMS message with body: {body}
+----
+
+You can also add some message headers to this step.
+
+.@When("^send (?:JMS|jms) message with body and headers: {body}$")
+[source,gherkin]
+----
+When send JMS message with body and headers: {body}
+| {header_1} | {value_1} |
+| {header_2} | {value_2} |
+...
+| {header_x} | {value_x} |
+----
+
+The step combines message header and body specification with the actual send operation.
+
+[[jms-receive]]
+=== Receive JMS messages
+
+Similar to sending messages to a JMS destination the test can also consume messages from a queue or topic. When the message
+has been received a validation mechanism makes sure that the message content received matches the expectations.
+
+Users are able to provide expected message headers and body content in order to verify the received message.
+
+==== Message headers
+
+The expected message headers need to be set before receiving the message from the destination.
+
+.@Given("^(?:JMS|jms) message header {name}(?:=| is )\"{value}\"$")
+[source,gherkin]
+----
+Given JMS message header {name}="{value}"
+----
+
+When using a data table you can expect multiple headers in one step.
+
+.@Given("^(?:JMS|jms) message headers$")
+[source,gherkin]
+----
+Given JMS message headers
+| {header_1} | {value_1} |
+| {header_2} | {value_2} |
+...
+| {header_x} | {value_x} |
+----
+
+==== Message body
+
+In addition to verify message headers you can also verify the body content. Once again the user specifies the expected message
+body before the message is received.
+
+.@Given("^(?:JMS|jms) message body: {body}$")
+[source,gherkin]
+----
+Given JMS message body: {body}
+----
+
+This step can expect a single line body content. Of course you can also work with multiline body content.
+
+.@Given("^(?:JMS|jms) message body$")
+[source,gherkin]
+----
+Given JMS message body
+"""
+{body}
+"""
+----
+
+When the body is getting too big it may be a better idea to load the content from an external file resource:
+
+.@Given("^load (?:JMS|jms) message body {file}$")
+[source,gherkin]
+----
+Given load JMS message body {file}
+----
+
+This step loads the body content from the given file resource.
+
+With the steps above the test has specified the expected message content. With that in place another step can receive the message
+and perform the validation.
+
+.@Then("^receive (?:JMS|jms) message$")
+[source,gherkin]
+----
+Then receive JMS message
+----
+
+The step uses the previously defined JMS destination to consume messages from it. You can use another destination in the step, too.
+
+.@Then("^receive (?:JMS|jms) message from destination {destination}$")
+[source,gherkin]
+----
+Then receive JMS message from destination {destination}
+----
+
+With this approach you have a clean separation of the expected message content specification and the actual receive operation.
+Of course you can also combine everything in one single step.
+
+.@Then(?:receive|expect|verify) (?:JMS|jms) message with body: {body}$")
+[source,gherkin]
+----
+Then receive JMS message with body: {body}
+----
+
+You can also add some message headers to this step.
+
+.@Then(?:receive|expect|verify) (?:JMS|jms) message with body and headers: {body}$")
+[source,gherkin]
+----
+Then receive JMS message with body and headers: {body}
+| {header_1} | {value_1} |
+| {header_2} | {value_2} |
+...
+| {header_x} | {value_x} |
+----
+
+The step combines message header and body specification with the actual receive operation.
+
+==== Consumer timeout
+
+The receive operation takes the first message available on the destination and performs the validation. In case there is no
+message available the consumer will wait for a given amount of time before a timeout will fail the test. You can adjust the timeout on
+the JMS consumer.
+
+.@Given("^(?:JMS|jms) consumer timeout is {time}(?: ms| milliseconds)$")
+[source,gherkin]
+----
+Given JMS consumer timeout is {time} milliseconds
+----
+
+==== Message selectors
+
+The JMS standard provides a concept of message selectors so consumers can specify which message they want to consume from a destination.
+The consumer usually evaluates the selector expression on the message headers.
+
+.@Given("^(?:JMS|jms) selector: {expression}$")
+[source,gherkin]
+----
+Given JMS selector: {expression}
+----
+
+The selector expression defines a key and value that the message must match. The first message to match the selector on the destination
+it received by the consumer.
+
+.Use message selector
+[source,gherkin]
+----
+Given JMS selector: key='value'
+----

@@ -1,0 +1,26 @@
+[[tools-cucumber-steps]]
+= Cucumber Steps
+
+Citrus is able to use the Cucumber runtime to execute BDD feature files as tests.
+Read more about the section about xref:runtimes-cucumber[Cucumber integration with Citrus].
+
+Cucumber feature files follow the Gherkin Given-When-Then syntax where each line in a feature file is backed by a step implementation.
+The step implementation represents the actual runtime logic executed with the feature step.
+
+Citrus provides a set of default ready-to-use step implementations that you can just add to your feature file.
+The predefined steps leverage Citrus endpoints and test actions to perform integration testing with proper message exchange and validation.
+
+See the following step implementations that enable you to cover various areas of messaging and integration testing.
+
+include::tools-cucumber-steps-core.adoc[]
+include::tools-cucumber-steps-camel.adoc[]
+include::tools-cucumber-steps-groovy.adoc[]
+include::tools-cucumber-steps-http.adoc[]
+include::tools-cucumber-steps-jdbc.adoc[]
+include::tools-cucumber-steps-jms.adoc[]
+include::tools-cucumber-steps-kafka.adoc[]
+include::tools-cucumber-steps-kubernetes.adoc[]
+include::tools-cucumber-steps-knative.adoc[]
+include::tools-cucumber-steps-openapi.adoc[]
+include::tools-cucumber-steps-selenium.adoc[]
+include::tools-cucumber-steps-testcontainers.adoc[]

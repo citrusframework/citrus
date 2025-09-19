@@ -57,7 +57,6 @@ include::endpoint-ssh.adoc[]
 include::endpoint-rmi.adoc[]
 include::endpoint-jmx.adoc[]
 include::endpoint-zookeeper.adoc[]
-include::endpoint-restdocs.adoc[]
 include::endpoint-component.adoc[]
 include::endpoint-adapter.adoc[]
 
@@ -76,11 +75,12 @@ include::data-dictionary.adoc[]
 include::test-actors.adoc[]
 include::test-suite.adoc[]
 include::meta-info.adoc[]
-include::message-tracing.adoc[]
 include::reporting.adoc[]
 
 include::configuration.adoc[]
 include::spring-support.adoc[]
+
+include::tools.adoc[]
 
 include::samples.adoc[]
 

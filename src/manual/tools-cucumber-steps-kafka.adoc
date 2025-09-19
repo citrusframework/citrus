@@ -1,0 +1,324 @@
+[[tools-cucumber-steps-kafka]]
+== Kafka steps
+
+Apache Kafka is a powerful and widely used event streaming platform. Users are able to publish events and subscribe to
+event streams.
+
+The following sections describe the support for Kafka related event streaming in Citrus.
+
+[[kafka-connection]]
+=== Connection
+
+First of all the test needs to connect to Kafka bootstrap servers. The connection provides several parameters that you can
+set with the following step.
+
+.@Given("^(?:Kafka|kafka) connection")
+[source,gherkin]
+----
+Given Kafka connection
+| {property} | {value} |
+----
+
+The configuration step receives a data table that defines the connection settings.
+
+.Connection settings
+[source,gherkin]
+----
+Given Kafka connection
+| url           | localhost:9092 |
+| consumerGroup | citrus_group     |
+| topic         | citrus_test      |
+----
+
+The most important part of the connection settings is the `url` that points to one or more Kafka bootstrap servers.
+
+In addition to the connection settings there is a set of producer and consumer properties that you can set in order to configure
+the behavior of producers and consumers connecting with Kafka.
+
+.@Given("^(?:Kafka|kafka) producer configuration$")
+[source,gherkin]
+----
+Given Kafka producer configuration
+| {property} | {value} |
+----
+
+.@Given("^(?:Kafka|kafka) consumer configuration$")
+[source,gherkin]
+----
+Given Kafka consumer configuration
+| {property} | {value} |
+----
+
+The available properties to set here are described in the Apache Kafka documentation. See the following example how to set producer and
+consumer properties.
+
+[source,gherkin]
+----
+Given Kafka producer configuration
+| client.id          | citrus_producer |
+| request.timeout.ms | 5000 |
+
+Given Kafka consumer configuration
+| client.id          | citrus_consumer |
+| max.poll.records   | 1 |
+----
+
+[[kafka-endpoint]]
+=== Topic and endpoint configuration
+
+In addition to the connection the test needs to specify the Kafka topic to use.
+
+.@Given("^(?:Kafka|kafka) topic: {name}$")
+[source,gherkin]
+----
+Given Kafka topic: {name}
+----
+
+This sets the topic name for the next steps. As an alternative to that you can also reference a predefined endpoint
+component from the configuration.
+
+.@Given("^(?:Kafka|kafka) endpoint \"{name}\"$")
+[source,gherkin]
+----
+Given Kafka endpoint {name}
+----
+
+The step tries to resolve the Kafka endpoint with given `{name}` in the available configuration. The endpoint can reference
+a topic set and connection settings on its own.
+
+So now the test is ready to produce and consume events from Kafka topics.
+
+[[kafka-send]]
+=== Send Kafka events
+
+A test can publish events on a Kafka topic. The event consists of message headers and a body content. Before sending an event
+the tests needs to specify the message content.
+
+==== Message key
+
+Each event on a Kafka event stream has a message key set. You can set this key in a separate step before sending the event.
+
+.@Given("^(?:Kafka|kafka) message key: {key}$")
+[source,gherkin]
+----
+Given Kafka message key: {key}$")
+----
+
+This specifies the message key for the next event that is published.
+
+==== Message headers
+
+The message headers are key value pairs that are sent as part of the message. You can add a new header with the following step:
+
+.@Given("^(?:Kafka|kafka) message header {name}(?:=| is )\"{value}\"$")
+[source,gherkin]
+----
+Given Kafka message header {name}="{value}"
+----
+
+When using a data table you can set multiple headers in one step.
+
+.@Given("^(?:Kafka|kafka) message headers$")
+[source,gherkin]
+----
+Given Kafka message headers
+| {header_1} | {value_1} |
+| {header_2} | {value_2} |
+...
+| {header_x} | {value_x} |
+----
+
+==== Message body
+
+.@Given("^(?:Kafka|kafka) message body: {body}$")
+[source,gherkin]
+----
+Given Kafka message body: {body}
+----
+
+This step can set a single line body content. Of course you can also work with multiline body content.
+
+.@Given("^(?:Kafka|kafka) message body$")
+[source,gherkin]
+----
+Given Kafka message body
+"""
+{body}
+"""
+----
+
+When the body is getting too big it may be a better idea to load the content from an external file resource:
+
+.@Given("^load (?:Kafka|kafka) message body {file}$")
+[source,gherkin]
+----
+Given load Kafka message body {file}
+----
+
+This step loads the body content from the given file resource.
+
+Now another step can publish the message as it has been specified in the previous steps.
+
+.@When("^send (?:Kafka|kafka) message$")
+[source,gherkin]
+----
+When send Kafka message
+----
+
+This publishes the message to the previously configured Kafka topic. You can overwrite this topic in the publish step.
+
+.@When("^send (?:Kafka|kafka) message to topic {topic}$")
+[source,gherkin]
+----
+When send Kafka message to topic {topic}
+----
+
+The approach described clearly separates message specification and send operation as all of it is done in separate steps.
+As an alternative you can also specify the message content in one step.
+
+.@When("^send (?:Kafka|kafka) message with body: {body}$")
+[source,gherkin]
+----
+When send Kafka message with body: {body}
+----
+
+You can also add some message headers to this step.
+
+.@When("^send (?:Kafka|kafka) message with body and headers: {body}$")
+[source,gherkin]
+----
+When send Kafka message with body and headers: {body}
+| {header_1} | {value_1} |
+| {header_2} | {value_2} |
+...
+| {header_x} | {value_x} |
+----
+
+The step combines message header and body specification with the actual send operation.
+
+[[kafka-receive]]
+=== Receive Kafka events
+
+Similar to publishing events to a Kafka topic the test can also consume events from an event stream. When the event
+has been received a validation mechanism makes sure that the message content received matches the expectations.
+
+Users are able to provide expected message headers and body content in order to verify the received event.
+
+==== Message headers
+
+The expected message headers need to be set before receiving the event from the topic.
+
+.@Given("^(?:Kafka|kafka) message header {name}(?:=| is )\"{value}\"$")
+[source,gherkin]
+----
+Given Kafka message header {name}="{value}"
+----
+
+When using a data table you can expect multiple headers in one step.
+
+.@Given("^(?:Kafka|kafka) message headers$")
+[source,gherkin]
+----
+Given Kafka message headers
+| {header_1} | {value_1} |
+| {header_2} | {value_2} |
+...
+| {header_x} | {value_x} |
+----
+
+==== Message body
+
+In addition to verify message headers you can also verify the body content. Once again the user specifies the expected message
+body before the message is received.
+
+.@Given("^(?:Kafka|kafka) message body: {body}$")
+[source,gherkin]
+----
+Given Kafka message body: {body}
+----
+
+This step can expect a single line body content. Of course, you can also work with multiline body content.
+
+.@Given("^(?:Kafka|kafka) message body$")
+[source,gherkin]
+----
+Given Kafka message body
+"""
+{body}
+"""
+----
+
+When the body is getting too big it may be a better idea to load the content from an external file resource:
+
+.@Given("^load (?:Kafka|kafka) message body {file}$")
+[source,gherkin]
+----
+Given load Kafka message body {file}
+----
+
+This step loads the body content from the given file resource.
+
+With the steps above the test has specified the expected message content. With that in place another step can receive the message
+and perform the validation.
+
+.@Then("^receive (?:Kafka|kafka) message$")
+[source,gherkin]
+----
+Then receive Kafka message
+----
+
+The step uses the previously defined Kafka topic to consume events from it. You can use another topic in the step, too.
+
+.@Then("^receive (?:Kafka|kafka) message from topic {topic}$")
+[source,gherkin]
+----
+Then receive Kafka message from topic {topic}
+----
+
+With this approach you have a clean separation of the expected message content specification and the actual receive operation.
+Of course you can also combine everything in one single step.
+
+.@Then(?:receive|expect|verify) (?:Kafka|kafka) message with body: {body}$")
+[source,gherkin]
+----
+Then receive Kafka message with body: {body}
+----
+
+You can also add some message headers to this step.
+
+.@Then(?:receive|expect|verify) (?:Kafka|kafka) message with body and headers: {body}$")
+[source,gherkin]
+----
+Then receive Kafka message with body and headers: {body}
+| {header_1} | {value_1} |
+| {header_2} | {value_2} |
+...
+| {header_x} | {value_x} |
+----
+
+The step combines message header and body specification with the actual receive operation.
+
+==== Consumer timeout
+
+The receive operation takes the first event available on the topic and performs the validation. In case there is no
+event available the consumer will wait for a given amount of time before a timeout will fail the test. You can adjust the timeout on
+the Kafka consumer.
+
+.@Given("^(?:Kafka|kafka) consumer timeout is {time}(?: ms| milliseconds)$")
+[source,gherkin]
+----
+Given Kafka consumer timeout is {time} milliseconds
+----
+
+[[kafka-special-config]]
+=== Special configuration
+
+The Kafka standard provides a set of special configuration that you can set as part of the test.
+
+.@Given("^(?:Kafka|kafka) topic partition: {partition}$")
+[source,gherkin]
+----
+Given Kafka topic partition: {partition}
+----
+
+This set the topic partition for all further steps publishing or consuming events from that topic.

@@ -1,0 +1,658 @@
+[[tools-cucumber-steps-kubernetes]]
+== Kubernetes steps
+
+Kubernetes is a famous container management platform that allows automation
+of deployment, scaling and management of containerized applications.
+
+Citrus uses the Kubernetes client API and is able to create Kubernetes resources
+(e.g. secrets, services, deployments and so on) as part of the test.
+
+[[k8s-api-version]]
+=== API version
+
+The default Kubernetes API version used to create and manage resources is `v1`. You can overwrite this
+version with an environment variable set on the Citrus configuration.
+
+.Overwrite Kubernetes API version
+[source,bash]
+----
+CITRUS_KUBERNETES_API_VERSION=v1
+----
+
+This sets the Kubernetes API version for all operations.
+
+[[k8s-client]]
+=== Client configuration
+
+.@Given("^Kubernetes timeout is {time}(?: ms| milliseconds)$")
+[source,gherkin]
+----
+Given("^Kubernetes timeout is {time} milliseconds
+----
+
+This sets the timeout for all Kubernetes client operations.
+
+[[k8s-namespace]]
+=== Set namespace
+
+Kubernetes uses the concept of namespaces to separate workloads on the cluster. You
+can connect to a specific namespace with the follwing step.
+
+.@Given("^Kubernetes namespace {name}$")
+[source,gherkin]
+----
+Given Kubernetes namespace {name}
+----
+
+[[k8s-pod-state]]
+=== Verify pod state
+
+A Kubernetes pod has a state and is in a phase (e.g. running, stopped). You can verify the state with an expectation.
+
+.@Given("^Kubernetes pod {name} is running/stopped$")
+[source,gherkin]
+----
+Given Kubernetes pod {name} is running
+----
+
+Checks that the Kubernetes pod with given `{name}` is in state running and that the number of replicas is > 0. The step polls
+the state of the pod for a given amount of attempts with a given delay between attempts. You can adjust the polling settings with:
+
+.@Given Kubernetes resource polling configuration
+[source,gherkin]
+----
+Given Kubernetes resource polling configuration
+    | maxAttempts          | 10   |
+    | delayBetweenAttempts | 1000 |
+----
+
+Instead of identifying the pod by its name you can also filter the pod with a label expression. The expression
+is a label key and value that identifies the pod in the current namespace.
+
+.@Given("^Kubernetes pod labeled with {label}={value} is running/stopped$")
+[source,gherkin]
+----
+Given Kubernetes pod labeled with {label}={value} is running
+----
+
+[[k8s-watch-logs]]
+=== Watch Kubernetes pod logs
+
+.@Given("^Kubernetes pod {name} should print (.*)$")
+[source,gherkin]
+----
+Given Kubernetes pod {name} should print {log-message}
+----
+
+Watches the log output of a Kubernetes pod and waits for given `{log-message}` to be present in the logs. The step polls the
+logs for a given amount of time. You can adjust the polling configuration with:
+
+.@Given Kubernetes resource polling configuration
+[source,gherkin]
+----
+Given Kubernetes resource polling configuration
+    | maxAttempts          | 10   |
+    | delayBetweenAttempts | 1000 |
+----
+
+You can also wait for a log message to *not* be present in the output. Just use this step:
+
+.@Given("^Kubernetes pod {name} should not print (.*)$")
+[source,gherkin]
+----
+Given Kubernetes pod {name} should not print {log-message}
+----
+
+[[k8s-service]]
+=== Kubernetes services
+
+One of the most important features in the Citrus Kubernetes support is the management of
+services and in particular the automatic deployment of simulated services in Kubernetes.
+
+The user is able to start a local Http server instance and create a service in Kubernetes out of it.
+This way the test is able to simulate services in Kubernetes and receive and verify incoming requests
+as part of the test.
+
+First of all we define a new service within the test.
+
+.@Given("^Kubernetes service \"{name}\"$")
+[source,gherkin]
+----
+Given Kubernetes service "{name}"
+----
+
+This initializes a new Http server that will be used as Kubernetes service. The server is listening on
+a default port `8080`. You can use another port.
+
+.@Given("^Kubernetes service port {port}$")
+[source,gherkin]
+----
+Given Kubernetes service port {port}
+----
+
+In the following the test is able to create a new Kubernetes service with that Http server.
+
+.@Given("^create Kubernetes service {name}$")
+[source,gherkin]
+----
+Given create Kubernetes service {name}
+----
+
+The step creates the service in the Kubernetes namespace and exposes the given service port as target port.
+Clients are now able to connect to that new service. Each requests on the service will reside in a request
+in the test pod. The test is able to receive the request and verify its content as usual.
+
+This way we can easily simulate Kubernetes services in the current namespace.
+
+In case you need to use another target port you can adjust the port as follows.
+
+.@Given("^create Kubernetes service {name} with target port {port}$")
+[source,gherkin]
+----
+Given create Kubernetes service {name} with target port {port}
+----
+
+This exposes the service with the given target port.
+
+In case you do not need the service anymore you can delete it with this step:
+
+.@Given("^delete Kubernetes service {name}$")
+[source,gherkin]
+----
+Given delete Kubernetes service {name}
+----
+
+[[k8s-secrets]]
+=== Secrets
+
+Secrets are resources that hold sensitive data. Other resources on the cluster can mount
+the secret content and access it.
+
+You can create secrets in the current namespace in multiple ways.
+
+.@Given("^create Kubernetes secret {name}$")
+[source,gherkin]
+----
+Given create Kubernetes secret {name}
+| {property} | {value} |
+----
+
+The step receives a secret name and a data table holding the property keys and values. These properties
+build the content of the secret.
+
+Instead of listing all properties in the test itself you can load the secret from an external property file.
+
+.@Given("^load Kubernetes secret from file {file}.properties$")
+[source,gherkin]
+----
+Given load Kubernetes secret from file {file}.properties
+----
+
+The step loads the property file and creates the secret from the file content. The file name is used
+as the name fo the secret.
+
+In case you want to clean up the secret you can delete it with:
+
+.@Given("^delete Kubernetes secret {name}$")
+[source,gherkin]
+----
+Given delete Kubernetes secret {name}
+----
+
+Sometimes secrets need to have labels and/or annotations that mark the secret with important metadata.
+You can add labels/annotations on the Kubernetes resource with these steps:
+
+.@Then("^create label {label}={value} on Kubernetes secret {name}$")
+[source,gherkin]
+----
+Then create label app=citrus on Kubernetes secret my-secret
+----
+
+.@Then("^create annotation {annotation}={value} on Kubernetes secret {name}$")
+[source,gherkin]
+----
+Then create annotation app=citrus on Kubernetes secret my-secret
+----
+
+Or use multiple labels/annotations in one single step:
+
+.@Then("^create labels on Kubernetes secret {name}$")
+[source,gherkin]
+----
+Then create labels on Kubernetes secret my-secret
+    | app      | citrus |
+    | owned-by | odo  |
+----
+
+.@Then("^create annotations on Kubernetes secret {name}$")
+[source,gherkin]
+----
+Then create annotations on Kubernetes secret my-secret
+    | app      | citrus |
+    | owned-by | odo  |
+----
+
+[[k8s-resources]]
+=== Pods, deployments and other resources
+
+In the previous sections the test has creates services and secrets as Kubernetes resources. In addition to
+that the test is able to apply any resource as a YAML file on the Kubernetes cluster.
+
+.@Given("^create Kubernetes resource$")
+[source,gherkin]
+----
+Given create Kubernetes resource
+"""
+<<YAML>>
+"""
+----
+
+With this step you can apply any Kubernetes resource as a YAML file.
+
+.Apply Kubernetes resource
+[source,gherkin]
+----
+Given create Kubernetes resource
+"""
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  labels:
+    name: my-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    ports:
+    - containerPort: 80
+"""
+----
+
+The step above creates a new pod resource with the given specification. Instead of
+adding the resource specification in the test itself you can also load an external YAML file.
+
+.@Given("^load Kubernetes resource {file_path}$")
+[source,gherkin]
+----
+Given load Kubernetes resource {file_path}
+----
+
+.Load pod.yaml
+[source,gherkin]
+----
+Given load Kubernetes resource pod.yaml
+----
+
+.pod.yaml
+[source,gherkin]
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  labels:
+    name: my-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    ports:
+    - containerPort: 80
+----
+
+In case you need to delete a resource you can do so by specifying the minimal resource
+as a YAML specification.
+
+.@Given("^delete Kubernetes resource$")
+[source,gherkin]
+----
+Given delete Kubernetes resource
+"""
+<<YAML>>
+"""
+----
+
+.Delete resource
+[source,gherkin]
+----
+Given delete Kubernetes resource
+"""
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+"""
+----
+
+You can also provide the external YAML file when deleting a resource. The step will
+automatically extract the resource kind and name from the file content.
+
+.@Given("^delete Kubernetes resource {file_path}$")
+[source,gherkin]
+----
+Given delete Kubernetes resource {file_path}
+----
+
+.Delete resource from file
+[source,gherkin]
+----
+Given delete Kubernetes resource pod.yaml
+----
+
+[[k8s-crd]]
+=== Custom resources
+
+In the previous sections the test has created Kubernetes resources (pods, services, secrets, deployments, ...). The user can
+also define custom resources in order to extend Kubernetes. Citrus is also able to manage these custom resources.
+
+.@Given("^create Kubernetes custom resource in {crd}$")
+[source,gherkin]
+----
+Given create Kubernetes custom resource in {crd}
+"""
+<<YAML>>
+"""
+----
+
+The user has to provide a YAML specification of the custom resource.
+
+.Create custom resource
+[source,gherkin]
+----
+Given create Kubernetes custom resource in brokers.eventing.knative.dev
+"""
+apiVersion: eventing.knative.dev/v1
+kind: Broker
+metadata:
+  name: my-broker
+"""
+----
+
+The step needs to know the `{crd}` (Custom Resource Definition) of the custom resource. In the example above the test
+creates a new resource of kind `Broker` in the custom resource definition `brokers.eventing.knative.dev`.
+
+Of course, you can also load the custom resource from external file resource.
+
+.@Given("^load Kubernetes custom resource {file_path} in {crd}$")
+[source,gherkin]
+----
+Given load Kubernetes custom resource {file_path} in {crd}
+----
+
+.Load custom resource from file
+[source,gherkin]
+----
+Given load Kubernetes custom resource broker.yaml in brokers.eventing.knative.dev
+----
+
+Once again the step needs to have the CRD type and the YAML specification as a file resource.
+
+IMPORTANT: You need to make sure that the Citrus runtime and the user that connects to the Kubernetes cluster has proper permissions to manage the custom resource.
+The proper roles and role bindings need to apply to the user as well as a service account.
+
+Prior to using the custom resource in a Citrus test you need to grant role permissions to the Citrus runtime.
+Otherwise, the test is not allowed to create the custom resource due to security constraints on the cluster.
+
+The Citrus runtime uses a service account `citrus-viewer` to run the test.
+The service account needs to have proper roles and permissions for managing the custom resource.
+
+Assume that there is a CRD `foos.citrus.dev` and you want to manage the resources in your test:
+
+.crd-foo.yaml
+[source,yaml]
+----
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    app: "citrus"
+  creationTimestamp: null
+  name: foos.citrus.dev
+spec:
+  group: citrus.dev
+  names:
+    kind: Foo
+    listKind: FooList
+    plural: foos
+    singular: foo
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        description: Foo resource schema
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec defines the desired state of Test
+            properties:
+              message:
+                type: string
+            required:
+              - message
+            type: object
+          status:
+            description: Status defines the observed state of Foo
+            properties:
+              conditions:
+                items:
+                  description: Condition describes the state of a resource at a certain point.
+                  properties:
+                    message:
+                      description: A human readable message indicating details about the transition.
+                      type: string
+                    reason:
+                      description: The reason for the condition's last transition.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type of condition.
+                      type: string
+                  required:
+                    - status
+                    - type
+                  type: object
+                type: array
+              version:
+                type: string
+            type: object
+        type: object
+    subresources:
+      status: {}
+----
+
+The role to manage the new CRD `foos.citrus.dev` would be:
+
+.role-foo.yaml
+[source,yaml]
+----
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: foo-operator
+  labels:
+    app: "citrus"
+    citrus.citrusframework.org/append-to-viewer: "true"
+rules:
+- apiGroups:
+    - citrus.dev
+  resources:
+    - foos
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - update
+----
+
+The role `foo-operator` is granted to create/delete/get/list/update custom resources of type `foos.citrus.dev`.
+
+You also need a role binding to the `citrus-viewer` service account:
+
+.role-pipe-foo.yaml
+[source,yaml]
+----
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: citrus-foo-permission
+  labels:
+    app: "citrus"
+subjects:
+- kind: ServiceAccount
+  name: citrus-viewer
+roleRef:
+  kind: Role
+  name: foo-operator
+  apiGroup: rbac.authorization.k8s.io
+----
+
+NOTE: You can use the usual Kubernetes tools to create the role and role bindings for the user and a service account.
+
+IMPORTANT: This role setup must be done by a cluster administrator.
+
+In case you need to delete a custom resource from Kubernetes the user has to provide a minimal
+YAML specification that identifies the resource.
+
+.@Then("^delete Kubernetes custom resource in {crd}$")
+[source,gherkin]
+----
+Then delete Kubernetes custom resource in {crd}
+"""
+<<YAML>>
+"""
+----
+
+.Delete custom resource
+[source,gherkin]
+----
+Then delete Kubernetes custom resource in {crd}
+"""
+apiVersion: eventing.knative.dev/v1
+kind: Broker
+metadata:
+  name: my-broker
+"""
+----
+
+As an alternative to that you can use an external file resource that holds
+the minimal YAML specification.
+
+.@Then("^delete Kubernetes custom resource {file_path} in {crd}$")
+[source,gherkin]
+----
+Then delete Kubernetes custom resource {file_path} in {crd}
+----
+
+.Delete custom resource from file
+[source,gherkin]
+----
+Then delete Kubernetes custom resource broker.yaml in brokers.eventing.knative.dev
+----
+
+[[k8s-crd-condition]]
+=== Verify custom resource conditions
+
+Custom resources often define a status and describe multiple conditions (e.g. ready, available, completed).
+You can verify the condition on a custom resource.
+
+.@Given("^wait for condition={condition} on Kubernetes custom resource {name} in {type}$")
+[source,gherkin]
+----
+Given wait for condition={condition} on Kubernetes custom resource {name} in {type}
+----
+
+The step verifies that the given Kubernetes resource with name `{name}` describes a status condition `{condition}`. The step polls
+the state of the resource for a given amount of attempts with a given delay between attempts. You can adjust the polling settings with:
+
+.@Given Kubernetes resource polling configuration
+[source,gherkin]
+----
+Given Kubernetes resource polling configuration
+    | maxAttempts          | 10   |
+    | delayBetweenAttempts | 1000 |
+----
+
+Assume you have a custom resource like this:
+
+.foo-crd.yaml
+[source,yaml]
+----
+apiVersion: citrus.dev/v1
+kind: Foo
+metadata:
+  name: my-foo-resource
+spec:
+  message: Hello
+status:
+  conditions:
+  - type: Initialized
+    status: true
+  - type: Ready
+    status: true
+----
+
+The custom resource defines a status with multiple conditions. You can wait for a condition in the test.
+
+.Wait for condition=Ready
+[source,gherkin]
+----
+Given wait for condition=Ready on Kubernetes custom resource foo/my-foo-resource in foos.citrus.dev/v1
+----
+
+The expected condition is `Ready` for the resource named `my-foo-resource`. The resource name can use a prefix that represents
+the kind information `foo/`. The kind helps to identify the custom resource. Also, the step defines the resource type `foos.citrus.dev` and
+version `v1`. This is required to identify the custom resource on the cluster.
+
+Instead of identifying the resource by its name you can also filter the resources with a label expression. The expression
+is a label key and value that identifies the resource in the current namespace.
+
+.@Given("^wait for condition={condition} on Kubernetes custom resource in {type} labeled with {key}={value}$")
+[source,gherkin]
+----
+Given wait for condition={condition} on Kubernetes custom resource in {type} labeled with {key}={value}
+----
+
+This will get all resources of type `{type}` and filter by given label `{key}={value}`. Then the given condition is verified
+on the resource.
+
+[[k8s-autoremove]]
+=== Cleanup Kubernetes resources
+
+The described steps are able to create Kubernetes resources on the current Kubernetes namespace.
+By default these resources get removed automatically after the test scenario.
+
+The auto removal of Kubernetes resources can be turned off with the following step.
+
+.@Given("^Disable auto removal of Kubernetes resources$")
+[source,gherkin]
+----
+Given Disable auto removal of Kubernetes resources
+----
+
+Usually this step is a `Background` step for all scenarios in a feature file. This way multiple scenarios can work on
+the very same Kubernetes resources.
+
+There is also a separate step to explicitly enable the auto removal.
+
+.@Given("^Enable auto removal of Kubernetes resources$")
+[source,gherkin]
+----
+Given Enable auto removal of Kubernetes resources
+----
+
+By default, all Kubernetes resources are automatically removed after each scenario.
+

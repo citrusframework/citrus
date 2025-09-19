@@ -1,0 +1,398 @@
+[[tools-cucumber-steps-openapi]]
+== OpenAPI steps
+
+OpenAPI documents specify RESTful Http services in a standardized, language-agnostic way. The specifications describe
+resources, path items, operations, security schemes and many more components. All these components specified are part
+of a REST Http service.
+
+Citrus as a framework is able to use this information in an OpenAPI document in order to generate proper request and response
+data for your test.
+
+You can find examples of how to use OpenAPI specifications in xref:../../examples/openapi[examples/openapi].
+
+[source,gherkin]
+----
+Feature: Petstore API V3
+
+  Background:
+    Given OpenAPI specification: http://localhost:8080/petstore/v3/openapi.json
+
+  Scenario: getPet
+    When invoke operation: getPetById
+    Then verify operation result: 200 OK
+
+  Scenario: petNotFound
+    Given variable petId is "0"
+    When invoke operation: getPetById
+    Then verify operation result: 404 NOT_FOUND
+
+  Scenario: addPet
+    When invoke operation: addPet
+    Then verify operation result: 201 CREATED
+
+  Scenario: updatePet
+    When invoke operation: updatePet
+    Then verify operation result: 200 OK
+
+  Scenario: deletePet
+    When invoke operation: deletePet
+    Then verify operation result: 204 NO_CONTENT
+----
+
+[[openapi-load]]
+=== Load OpenAPI specifications
+
+The test is able to load OpenAPI specifications via Http URL or the local file system. When loaded into the test steps can make
+use of all available operations in the specification.
+
+.@Given("^OpenAPI (?:specification|resource): {url}$")
+[source,gherkin]
+----
+Given OpenAPI specification {url}
+----
+
+The given url can point to a local file on the file system or to a Http endpoint. The step loads the OpenAPI specification so
+all operations are ready to be used.
+
+[[openapi-invoke-operations]]
+=== Invoke operations
+
+You can invoke operations as a client by referencing the operation name given in the specification. Citrus loads the operation from
+the specification and automatically generates proper request/response data for you.
+
+The rules in the OpenAPI specification define how to generate proper test data with randomized values.
+
+.@When("^(?:I|i)nvoke operation: {id}$")
+[source,gherkin]
+----
+When invoke operation: {id}
+----
+
+The step obtains the operation with the given `{id}` and invokes it on the Http URL that is given in the specification. In case the server URL
+is missing in the specification the step uses the base URL of the OpenAPI endpoint where the document has been loaded from.
+
+The step uses the specification rules for the operation to generate a proper request for you. Request parameters, headers and body content are
+automatically generated. In case the operation defines a request body the step will also generate it with randomized values.
+
+.Generated body example with randomized values
+[source,json]
+----
+{
+  "id": 26866048,
+  "name": "mGNTgkfxgg",
+  "photoUrls": [
+    "XHAGIyFcyh"
+  ],
+  "category": {
+    "name": "konwOUYwMo",
+    "id": 18676332
+  },
+  "tags": [
+    {
+      "name": "KDnoWCfUBn",
+      "id": 31444049
+    }
+  ],
+  "status": "sold"
+}
+----
+
+The generated request should be valid according to the rules in the OpenAPI specification. You can overwrite the
+randomized values with test variables and xref:openapi-dictionaries[inbound/outbound data dictionaries] in order to have
+more human-readable test data.
+
+Now that the test has sent the request you can verify the operation result in a next step.
+
+[[openapi-verify-result]]
+=== Verify operation result
+
+The test is able to verify the response status code returned by the server.
+
+.@Then("^(?:V|v)erify operation result: {status_code}(?: {reason_phrase})?$")
+[source,gherkin]
+----
+Then verify operation result: {status_code} {reason_phrase}
+----
+
+The step expects a `{status_code}` (e.g. 200, 404, 500) and optionally gives the `{reason_phrase}` (e.g. OK, NOT_FOUND, INTERNAL_SERVER_ERROR).
+Thee reason phrase is optional and is only for better readability reasons.
+
+The operation defines a set of responses in the OpenAPI specification. The step tries to find the response with the given `{status_code}`
+and reads the given rules such as response body, headers etc. Based on the response definition in the OpenAPI specification the
+step automatically verifies the server reponse and makes sure that the response matches the given rules.
+
+In particular the step generates an expected response body (if any is specified) and compares the actual response with the generated one.
+
+.Generated response body example with validations
+[source,json]
+----
+{
+  "id": "@isNumber()@",
+  "name": "@notEmpty()@",
+  "photoUrls": "@ignore@",
+  "category": {
+    "id": "@isNumber()@",
+    "name": "@notEmpty()@"
+  },
+  "tags": "@ignore@",
+  "status": "@matches(available|pending|sold)@"
+}
+----
+
+The generated response makes use of Citrus validation matchers based on the rules in the specification. Id values are validated with `@isNumber()@`, String values
+should not be empty `@notEmpty()@` and enumeration values are checked with `@matches(value_1|value_2|...|value_x)@`.
+
+The received response must match all these validation matchers. In addition to that a Json schema validation is performed on the response.
+
+[[openapi-verify-request]]
+=== Verify operation requests
+
+On the server side your test is able to verify incoming requests based on the rules in the specification. The test references a given operation
+by its name in the specification and generates proper verification steps on the request content. Based on the specification the
+incoming request must follow the rules and schemas attached to the OpenAPI operation.
+
+.@Then("^(?:receive|expect|verify) operation: {id}$")
+[source,gherkin]
+----
+Then expect operation {id}
+----
+
+The step expects a request matching the operation with the given `{id}`. The step loads the operation from the specification and autoamtically
+verifies that the incoming request matches the specified request.
+
+In fact the step generates a request body (if any is specified on the operation) with validation expressions and compares the
+incoming request with the generated template. In case the incoming request does not match the generated validation rules
+the test will fail accordingly.
+
+.Generated request body example with validations
+[source,json]
+----
+{
+  "id": "@isNumber()@",
+  "name": "@notEmpty()@",
+  "photoUrls": "@ignore@",
+  "category": {
+    "id": "@isNumber()@",
+    "name": "@notEmpty()@"
+  },
+  "tags": "@ignore@",
+  "status": "@matches(available|pending|sold)@"
+}
+----
+
+The generated request uses Citrus validation matchers based on the rules in the OpenAPI specification. Identifiers are validated with `@isNumber()@`, String values
+should not be empty `@notEmpty()@` and enumeration values are checked with `@matches(value_1|value_2|...|value_x)@`.
+
+This way you can make sure that the incoming request matches the rules defined in the OpenAPI specification. In addition to the
+message request body verification the step will automatically verify `Content-Type` headers, path parameters, query parameters and the general
+request path used.
+
+[[openapi-send-response]]
+=== Send operation response
+
+When the OpenAPI step has received and verified a request it is time to respond with proper message content. The given operation
+in the OpenAPI specification is able to define multiple response messages that are valid. In the test the user picks one of
+these response messages and the step generates the message content based on the specification.
+
+The step will generate proper test data with randomized values as response body.
+
+.@Then("^send operation result: {status} {reason_phrase}$")
+[source,gherkin]
+----
+Then send operation result: 201 CREATED
+----
+
+The step obtains the operation response with the status `201` and generates the response data. The response is able to define `Content-Type` headers
+and response body content.
+
+.Generated response body example with randomized values
+[source,json]
+----
+{
+  "id": 26866048,
+  "name": "mGNTgkfxgg",
+  "photoUrls": [
+    "XHAGIyFcyh"
+  ],
+  "category": {
+    "name": "konwOUYwMo",
+    "id": 18676332
+  },
+  "tags": [
+    {
+      "name": "KDnoWCfUBn",
+      "id": 31444049
+    }
+  ],
+  "status": "sold"
+}
+----
+
+The generated response should be valid according to the rules in the OpenAPI specification. You can overwrite the
+randomized values with test variables and xref:openapi-dictionaries[inbound/outbound data dictionaries] in order to have
+more human-readable test data.
+
+[[openapi-test-data]]
+=== Generate test data
+
+The Citrus OpenAPI steps use the information in the specification to generate proper message content for requests and responses. The generated test
+data follows the schemas attached to the operations and response definitions. By default, the steps include optional fields when generating
+and validating message contents.
+
+You can disable the optional fields in generation and validation accordingly:
+
+.@Given("^Disable OpenAPI generate optional fields$")
+[source,gherkin]
+----
+Given Disable OpenAPI generate optional fields
+----
+
+.@Given("^Disable OpenAPI validate optional fields$")
+[source,gherkin]
+----
+Given Disable OpenAPI validate optional fields
+----
+
+With this setting the OpenAPI steps will exclude optional fields from both test data generation and message content validation.
+
+[[openapi-dictionaries]]
+=== Inbound/outbound data dictionaries
+
+Data dictionaries are a good way to make generated randomized values more human-readable. By default, Citrus generates random values based
+on the specifications in the OpenAPI document. You can overwrite the basic generation rules by specifying rules in a data dictionary.
+
+==== Outbound dictionary
+
+Outbound dictionaries are used to customize generated client requests.
+
+.@Given("^OpenAPI outbound dictionary$")
+[source,gherkin]
+----
+Given OpenAPI outbound dictionary
+| {expression} | {value} |
+----
+
+The outbound dictionary holds a list of expressions that overwrite values in the generated request body.
+
+Based on the body data format (e.g. Json or XML) you can use JsonPath or XPath expressions in the dictionary.
+Citrus evaluates the given expressions on the generated request body before the request is sent to the server.
+
+.Outbound dictionary sample
+[source,gherkin]
+----
+Given OpenAPI outbound dictionary
+  | $.name          | citrus:randomEnumValue('hasso','cutie','fluffy') |
+  | $.category.name | citrus:randomEnumValue('dog', 'cat', 'fish') |
+----
+
+You can also load the dictionary rules from an external file resource.
+
+.@Given("^load OpenAPI outbound dictionary {file_path}$")
+[source,gherkin]
+----
+Given load OpenAPI outbound dictionary {file_path}
+----
+
+With this outbound data dictionary in place a generated request can look like follows:
+
+.Generated request with outbound dictionary
+[source,json]
+----
+{
+  "id": 12337393,
+  "name": "hasso",
+  "photoUrls": [
+    "aaKoEDhLYc"
+  ],
+  "category": {
+    "name": "cat",
+    "id": 23927231
+  },
+  "tags": [
+    {
+      "name": "FQxvuCbcqT",
+      "id": 58291150
+    }
+  ],
+  "status": "pending"
+}
+----
+
+You see that the request now uses more human readable values for `$.name` and `$.category.name`.
+
+The same mechanism applies for inbound messages that are verified by Citrus. The framework will generate an expected response
+data structure coming from the OpenAPI specification.
+
+==== Inbound dictionary
+
+Inbound dictionaries adjust the generated expected responses which verify incoming messages with expected validation statements.
+
+.@Given("^OpenAPI inbound dictionary$")
+[source,gherkin]
+----
+Given OpenAPI inbound dictionary
+| {expression} | {value} |
+----
+
+You can also load the dictionary rules from an external file resource.
+
+.@Given("^load OpenAPI inbound dictionary {file_path}$")
+[source,gherkin]
+----
+Given load OpenAPI inbound dictionary {file_path}
+----
+
+The inbound dictionary holds a list of expressions that overwrite values in the generated response body.
+
+Based on the body data format (e.g. Json or XML) you can use JsonPath or XPath expressions in the dictionary.
+Citrus evaluates the given expressions on the generated response body. This way you can overwrite given values in the body
+structure before the validation takes place.
+
+.Inbound dictionary sample
+[source,gherkin]
+----
+Given OpenAPI inbound dictionary
+  | $.name          | @assertThat(anyOf(is(hasso),is(cutie),is(fluffy)))@ |
+  | $.category.name | @assertThat(anyOf(is(dog),is(cat),is(fish)))@ |
+----
+
+Below is a sample Json payload that has been generated with the inbound data dictionary.
+
+.Generated response with inbound dictionary
+[source,json]
+----
+{
+  "id": "@isNumber()@",
+  "name": "@assertThat(anyOf(is(hasso),is(cutie),is(fluffy)))@",
+  "photoUrls": "@ignore@",
+  "category": {
+    "name": "@assertThat(anyOf(is(dog),is(cat),is(fish)))@",
+    "id": "@isNumber()@"
+  },
+  "tags": "@ignore@",
+  "status": "@matches(available|pending|sold)@"
+}
+----
+
+The generated response ensures that the rules defined in the OpenAPI specification do match and in addition that the received data
+meets our expectations in the dictionary.
+
+In case you need to have a more specific response validation where each field gets validated with an expected value please
+consider using the xref:tools-cucumber-steps-http[Http steps] in Citrus. Here you can provide a complete expected Http response with body and headers.
+
+[[openapi-fork-mode]]
+=== Request fork mode
+
+When the OpenAPI steps fire requests to the server the step synchronously waits for the response. All other steps are in the feature are blocked
+by the synchronous communication. In some cases this is a problem because you might want to run some steps in parallel to the synchronous communication.
+
+In these cases you can make use of the form mode when sending Http client requests.
+
+.@Given("^OpenAPI request fork mode is (enabled|disabled)$")
+[source,gherkin]
+----
+Given OpenAPI request fork mode is enabled
+----
+
+With this in place the step will not block other steps while waiting for the synchronous response from the server. The feature will continue with
+the next steps when fork mode is enabled. At a later point in time you may verify the response as usual with the separate verification step.
