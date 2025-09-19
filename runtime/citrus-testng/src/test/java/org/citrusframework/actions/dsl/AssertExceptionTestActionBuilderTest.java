@@ -27,6 +27,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.annotations.Test;
 
+import static java.lang.String.format;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -42,7 +43,7 @@ public class AssertExceptionTestActionBuilderTest extends UnitTestSupport {
         assertEquals(test.getActions().get(0).getClass(), Assert.class);
         assertEquals(test.getActions().get(0).getName(), "assert");
 
-        Assert container = (Assert)(test.getTestAction(0));
+        Assert container = (Assert) (test.getTestAction(0));
 
         assertEquals(container.getActionCount(), 1);
         assertEquals(container.getAction().getClass(), FailAction.class);
@@ -51,47 +52,55 @@ public class AssertExceptionTestActionBuilderTest extends UnitTestSupport {
 
     @Test
     public void testAssertBuilder() {
+        var expectedErrorMessage = format(
+                "Unable to extract value using expression 'foo'!%nReason: Unknown key 'foo' in Map.%nFrom object (java.util.concurrent.ConcurrentHashMap):%n{}"
+        );
+
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(assertException().exception(CitrusRuntimeException.class)
-                    .message("Unknown variable 'foo'")
-            .when(echo("${foo}")));
+                .message(expectedErrorMessage)
+                .when(echo("${foo}")));
 
         TestCase test = builder.getTestCase();
         assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Assert.class);
         assertEquals(test.getActions().get(0).getName(), "assert");
 
-        Assert container = (Assert)(test.getTestAction(0));
+        Assert container = (Assert) (test.getTestAction(0));
 
         assertEquals(container.getActionCount(), 1);
         assertEquals(container.getAction().getClass(), EchoAction.class);
         assertEquals(container.getException(), CitrusRuntimeException.class);
-        assertEquals(container.getMessage(), "Unknown variable 'foo'");
-        assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
+        assertEquals(container.getMessage(), expectedErrorMessage);
+        assertEquals(((EchoAction) (container.getAction())).getMessage(), "${foo}");
     }
 
     @Test
     public void testAssertBuilderWithAnonymousAction() {
+        var expectedErrorMessage = format(
+                "Unable to extract value using expression 'foo'!%nReason: Unknown key 'foo' in Map.%nFrom object (java.util.concurrent.ConcurrentHashMap):%n{}"
+        );
+
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(assertException().exception(CitrusRuntimeException.class)
-                    .message("Unknown variable 'foo'")
-            .when(new AbstractTestAction() {
-                @Override
-                public void doExecute(TestContext context) {
-                    context.getVariable("foo");
-                }
-            }));
+                .message(expectedErrorMessage)
+                .when(new AbstractTestAction() {
+                    @Override
+                    public void doExecute(TestContext context) {
+                        context.getVariable("foo");
+                    }
+                }));
 
         TestCase test = builder.getTestCase();
         assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Assert.class);
         assertEquals(test.getActions().get(0).getName(), "assert");
 
-        Assert container = (Assert)(test.getTestAction(0));
+        Assert container = (Assert) (test.getTestAction(0));
 
         assertEquals(container.getActionCount(), 1);
         assertTrue(container.getAction().getClass().isAnonymousClass());
         assertEquals(container.getException(), CitrusRuntimeException.class);
-        assertEquals(container.getMessage(), "Unknown variable 'foo'");
+        assertEquals(container.getMessage(), expectedErrorMessage);
     }
 }
