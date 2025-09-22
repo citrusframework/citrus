@@ -29,12 +29,13 @@
     </dependency>
     <dependency>
       <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-cucumber</artifactId>
+      <artifactId>citrus-jms</artifactId>
       <version>${project.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-jms</artifactId>
+      <artifactId>citrus-cucumber-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -62,6 +63,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.citrusframework</groupId>
+      <artifactId>citrus-cucumber</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>artemis-jakarta-server</artifactId>
       <scope>test</scope>
@@ -81,13 +88,6 @@
     <dependency>
       <groupId>org.citrusframework</groupId>
       <artifactId>citrus-validation-text</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-cucumber-core</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>

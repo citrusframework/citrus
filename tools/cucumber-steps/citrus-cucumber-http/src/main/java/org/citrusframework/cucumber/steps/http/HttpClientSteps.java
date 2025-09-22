@@ -59,7 +59,7 @@ import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.variable.dictionary.DataDictionary;
-import org.citrusframework.cucumber.util.ResourceUtils;
+import org.citrusframework.cucumber.steps.util.ResourceUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;

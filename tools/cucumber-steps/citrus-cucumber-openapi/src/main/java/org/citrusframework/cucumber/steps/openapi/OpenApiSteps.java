@@ -35,7 +35,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.variable.dictionary.AbstractDataDictionary;
 import org.citrusframework.variable.dictionary.json.JsonPathMappingDataDictionary;
 import org.citrusframework.cucumber.steps.openapi.model.OasModelHelper;
-import org.citrusframework.cucumber.util.ResourceUtils;
+import org.citrusframework.cucumber.steps.util.ResourceUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 

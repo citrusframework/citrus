@@ -37,7 +37,7 @@ import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.cucumber.steps.http.HttpServerSteps;
-import org.citrusframework.cucumber.util.ResourceUtils;
+import org.citrusframework.cucumber.steps.util.ResourceUtils;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.message.HttpMessage;

@@ -44,7 +44,7 @@ import org.citrusframework.camel.endpoint.CamelEndpointConfiguration;
 import org.citrusframework.camel.endpoint.CamelSyncEndpoint;
 import org.citrusframework.camel.endpoint.CamelSyncEndpointConfiguration;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.cucumber.util.ResourceUtils;
+import org.citrusframework.cucumber.steps.util.ResourceUtils;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;

@@ -51,7 +51,7 @@ import org.citrusframework.http.server.HttpServerBuilder;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.variable.dictionary.DataDictionary;
-import org.citrusframework.cucumber.util.ResourceUtils;
+import org.citrusframework.cucumber.steps.util.ResourceUtils;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;

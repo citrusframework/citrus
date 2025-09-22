@@ -29,12 +29,13 @@
     </dependency>
     <dependency>
       <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-cucumber</artifactId>
+      <artifactId>citrus-selenium</artifactId>
       <version>${project.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-selenium</artifactId>
+      <artifactId>citrus-cucumber-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -51,6 +52,12 @@
     </dependency>
     <dependency>
       <groupId>org.citrusframework</groupId>
+      <artifactId>citrus-cucumber</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-spring</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -58,13 +65,6 @@
     <dependency>
       <groupId>org.citrusframework</groupId>
       <artifactId>citrus-cucumber-http</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-cucumber-core</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>

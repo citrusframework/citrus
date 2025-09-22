@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package org.citrusframework.cucumber.util;
+package org.citrusframework.cucumber.steps.util;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.cucumber.VariableNames;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 
 public final class ResourceUtils {
+
+    private static final String FEATURE_PACKAGE = "FEATURE_PACKAGE";
 
     private ResourceUtils() {
         // prevent instantiation of utility class.
@@ -34,8 +35,8 @@ public final class ResourceUtils {
             return resource;
         }
 
-        if (context.getVariables().containsKey(VariableNames.FEATURE_PACKAGE.value())) {
-            String contextPath = context.getVariable(VariableNames.FEATURE_PACKAGE.value()).replace(".", "/");
+        if (context.getVariables().containsKey(FEATURE_PACKAGE)) {
+            String contextPath = context.getVariable(FEATURE_PACKAGE).replace(".", "/");
             Resource contextResource = FileUtils.getFileResource(contextPath + "/" + path, context);
             if (contextResource.exists()) {
                 return contextResource;

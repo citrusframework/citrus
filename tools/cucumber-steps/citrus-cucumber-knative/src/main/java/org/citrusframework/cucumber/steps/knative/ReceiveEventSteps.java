@@ -30,7 +30,7 @@ import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.cucumber.CucumberSettings;
+import org.citrusframework.cucumber.steps.CucumberStepsSettings;
 import org.citrusframework.cucumber.steps.kubernetes.KubernetesSteps;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.knative.KnativeSettings;
@@ -107,7 +107,7 @@ public class ReceiveEventSteps {
 
     @Given("^create Knative event consumer service ([^\\s]+)$")
     public void createService(String serviceName) {
-        if (CucumberSettings.isLocal() && context.getVariables().containsKey(KnativeVariableNames.BROKER_NAME.value()) &&
+        if (CucumberStepsSettings.isLocal() && context.getVariables().containsKey(KnativeVariableNames.BROKER_NAME.value()) &&
                 context.getReferenceResolver().isResolvable(context.getVariable(KnativeVariableNames.BROKER_NAME.value()))) {
             HttpServer brokerServer = context.getReferenceResolver().resolve(context.getVariable(KnativeVariableNames.BROKER_NAME.value()), HttpServer.class);
             context.getReferenceResolver().bind(serviceName, brokerServer);
@@ -120,7 +120,7 @@ public class ReceiveEventSteps {
 
     @Given("^create Knative event consumer service ([^\\s]+) with target port ([^\\s]+)$")
     public void createService(String serviceName, String targetPort) {
-        if (CucumberSettings.isLocal() && context.getVariables().containsKey(KnativeVariableNames.BROKER_NAME.value()) &&
+        if (CucumberStepsSettings.isLocal() && context.getVariables().containsKey(KnativeVariableNames.BROKER_NAME.value()) &&
                 context.getReferenceResolver().isResolvable(context.getVariable(KnativeVariableNames.BROKER_NAME.value()))) {
             HttpServer brokerServer = context.getReferenceResolver().resolve(context.getVariable(KnativeVariableNames.BROKER_NAME.value()), HttpServer.class);
             context.getReferenceResolver().bind(serviceName, brokerServer);

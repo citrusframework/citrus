@@ -29,12 +29,13 @@
     </dependency>
     <dependency>
       <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-cucumber</artifactId>
+      <artifactId>citrus-kafka</artifactId>
       <version>${project.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-kafka</artifactId>
+      <artifactId>citrus-cucumber-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -47,6 +48,12 @@
     <dependency>
       <groupId>io.cucumber</groupId>
       <artifactId>cucumber-junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.citrusframework</groupId>
+      <artifactId>citrus-cucumber</artifactId>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -64,13 +71,6 @@
     <dependency>
       <groupId>org.citrusframework</groupId>
       <artifactId>citrus-validation-text</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-cucumber-core</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>

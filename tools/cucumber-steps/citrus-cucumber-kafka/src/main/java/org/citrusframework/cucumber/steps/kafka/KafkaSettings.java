@@ -16,7 +16,7 @@
 
 package org.citrusframework.cucumber.steps.kafka;
 
-import org.citrusframework.cucumber.CucumberSettings;
+import org.citrusframework.cucumber.steps.CucumberStepsSettings;
 
 public class KafkaSettings {
 
@@ -64,7 +64,7 @@ public class KafkaSettings {
      */
     public static String getNamespace() {
         return System.getProperty(NAMESPACE_PROPERTY,
-                System.getenv(NAMESPACE_ENV) != null ? System.getenv(NAMESPACE_ENV) : CucumberSettings.getDefaultNamespace());
+                System.getenv(NAMESPACE_ENV) != null ? System.getenv(NAMESPACE_ENV) : CucumberStepsSettings.getDefaultNamespace());
     }
 
     /**

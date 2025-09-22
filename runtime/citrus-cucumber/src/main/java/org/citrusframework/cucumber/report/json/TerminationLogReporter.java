@@ -19,8 +19,6 @@ package org.citrusframework.cucumber.report.json;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -36,6 +34,7 @@ import io.cucumber.plugin.event.TestRunFinished;
 import io.cucumber.plugin.event.TestSourceRead;
 import io.cucumber.plugin.event.TestStepFinished;
 import org.citrusframework.cucumber.CitrusReporter;
+import org.citrusframework.cucumber.CucumberSettings;
 import org.citrusframework.cucumber.util.FeatureHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,10 +47,6 @@ public class TerminationLogReporter extends CitrusReporter {
 
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(TerminationLogReporter.class);
-
-    private static final String TERMINATION_LOG_PROPERTY = "citrus.termination.log";
-    private static final String TERMINATION_LOG_ENV = "CITRUS_TERMINATION_LOG";
-    private static final String TERMINATION_LOG_DEFAULT = "target/termination.log";
 
     private final Pattern featureNamePattern = Pattern.compile("^Feature:(.+)$", Pattern.MULTILINE);
 
@@ -120,12 +115,12 @@ public class TerminationLogReporter extends CitrusReporter {
      * Prints test results to termination log.
      */
     private void printReports(TestRunFinished event) {
-        try (Writer terminationLogWriter = Files.newBufferedWriter(getTerminationLog(),
+        try (Writer terminationLogWriter = Files.newBufferedWriter(CucumberSettings.getTerminationLog(),
                 StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
             terminationLogWriter.write(testResults.toJson());
             terminationLogWriter.flush();
         } catch (IOException e) {
-            LOG.warn(String.format("Failed to write termination logs to file '%s'", getTerminationLog()), e);
+            LOG.warn(String.format("Failed to write termination logs to file '%s'", CucumberSettings.getTerminationLog()), e);
         }
     }
 
@@ -151,13 +146,5 @@ public class TerminationLogReporter extends CitrusReporter {
                 break;
             default:
         }
-    }
-
-    /**
-     * Termination log file path.
-     */
-    public static Path getTerminationLog() {
-        return Paths.get(System.getProperty(TERMINATION_LOG_PROPERTY,
-                System.getenv(TERMINATION_LOG_ENV) != null ? System.getenv(TERMINATION_LOG_ENV) : TERMINATION_LOG_DEFAULT));
     }
 }

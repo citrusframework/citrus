@@ -30,7 +30,7 @@ import org.citrusframework.Citrus;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
-import org.citrusframework.cucumber.CucumberSettings;
+import org.citrusframework.cucumber.steps.CucumberStepsSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
@@ -69,7 +69,7 @@ public class SeleniumSteps {
         } else if (citrus.getCitrusContext().getReferenceResolver().isResolvable(browserName)) {
             browser = citrus.getCitrusContext().getReferenceResolver().resolve(browserName, SeleniumBrowser.class);
         } else {
-            if (CucumberSettings.isLocal()) {
+            if (CucumberStepsSettings.isLocal()) {
                 browser = new SeleniumBrowserBuilder()
                         .type(browserType)
                         .build();
