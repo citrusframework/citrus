@@ -198,7 +198,7 @@
     <assertj.version>3.27.3</assertj.version>
     <awaitility.version>4.3.0</awaitility.version>
     <aws-java-sdk2.version>2.34.0</aws-java-sdk2.version>
-    <bouncycastle.version>1.81</bouncycastle.version>
+    <bouncycastle.version>1.82</bouncycastle.version>
     <byte.buddy.version>1.17.7</byte.buddy.version>
     <commons.dbcp2.version>2.13.0</commons.dbcp2.version>
     <commons.cli.version>1.10.0</commons.cli.version>
