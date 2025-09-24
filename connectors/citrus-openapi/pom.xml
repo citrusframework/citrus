@@ -49,6 +49,17 @@
       <groupId>com.atlassian.oai</groupId>
       <artifactId>swagger-request-validator-core</artifactId>
     </dependency>
+
+    <!--
+        Include mail API (and API only!) so com.atlassian.oai:swagger-request-validator-core builds correctly.
+        Note that this is a legacy dependency and should not be managed globally.
+    -->
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>javax.mail-api</artifactId>
+      <version>1.6.2</version>
+    </dependency>
+
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>
