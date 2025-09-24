@@ -14,51 +14,102 @@ NOTE: The Spring Restdocs support components in Citrus are kept in a separate Ma
 </dependency>
 ----
 
-For easy configuration Citrus has created a separate namespace and schema definition for Spring Restdocs related documentation. Include this namespace into your Spring configuration in order to use the Citrus Restdocs configuration elements. The namespace URI and schema location are added to the Spring configuration XML file as follows.
-
-[source,xml]
-----
-<spring:beans xmlns:spring="http://www.springframework.org/schema/beans"
-     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xmlns="http://www.citrusframework.org/schema/cucumber/testcase"
-     xsi:schemaLocation="
-     http://www.springframework.org/schema/beans
-     http://www.springframework.org/schema/beans/spring-beans.xsd
-     http://www.citrusframework.org/schema/restdocs/config
-     http://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config.xsd">
-
-    [...]
-
-</spring:beans>
-----
-
-After that you are able to use customized Citrus XML elements in order to define the Spring beans.
-
 [[spring-restdocs-using-http]]
 == Spring Restdocs using Http
 
 First of all we concentrate on adding the Spring Restdocs feature to Http client communication. The next sample configuration uses the new Spring Restdocs components in Citrus:
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-restdocs:documentation id="restDocumentation"
-                                              output-directory="target/citrus-docs/generated-snippets"
-                                              identifier="rest-docs/{method-name}"/>
+import org.citrusframework.restdocs.http.CitrusRestDocsSupport;
+
+@BindToRegistry
+public HttpClient httpClient() {
+    return new HttpClientBuilder()
+                .requestUrl("http://localhost:11080/hello")
+                .requestMethod(RequestMethod.POST)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .interceptors(Arrays.asList(restDocumentationConfigurer, restDocumentationInterceptor))
+                .build();
+}
+
+@BindToRegistry
+public CitrusRestDocConfigurer restDocumentationConfigurer() {
+    return CitrusRestDocsSupport.restDocsConfigurer(new ManualRestDocumentation("target/citrus-docs/generated-snippets"));
+}
+
+@BindToRegistry
+public RestDocClientInterceptor restDocumentationInterceptor() {
+    return CitrusRestDocsSupport.restDocsInterceptor("rest-docs/{method-name}");
+}
 ----
 
-The above component adds a new documentation configuration. Behind the scenes the component creates a new restdocs configurer and a client interceptor. We can reference the new restdocs component in *citrus-http* client components like this:
-
-[source,xml]
+.Spring Bean
+[source,java,indent=0,role="secondary"]
 ----
-<citrus-http:client id="httpClient"
+import org.citrusframework.restdocs.http.CitrusRestDocsSupport;
+
+@Bean
+public HttpClient httpClient() {
+    return new HttpClientBuilder()
+                .requestUrl("http://localhost:11080/hello")
+                .requestMethod(RequestMethod.POST)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .interceptors(Arrays.asList(restDocumentationConfigurer, restDocumentationInterceptor))
+                .build();
+}
+
+@Bean
+public CitrusRestDocConfigurer restDocumentationConfigurer() {
+    return CitrusRestDocsSupport.restDocsConfigurer(new ManualRestDocumentation("target/citrus-docs/generated-snippets"));
+}
+
+@Bean
+public RestDocClientInterceptor restDocumentationInterceptor() {
+    return CitrusRestDocsSupport.restDocsInterceptor("rest-docs/{method-name}");
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus-restdocs="http://www.citrusframework.org/schema/restdocs/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/restdocs/config
+       http://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config.xsd">
+
+    <citrus-restdocs:documentation id="restDocumentation"
+                              output-directory="target/citrus-docs/generated-snippets"
+                              identifier="rest-docs/{method-name}"/>
+
+    <citrus-http:client id="httpClient"
           request-url="http://localhost:8080/test"
           request-method="POST"
           interceptors="restDocumentation"/>
+</beans>
 ----
 
-The Spring Restdocs documentation component acts as a client interceptor. Every time the client component is used to send and receive a message the restdocs interceptor will automatically create its API documentation. The configuration *identifier* attribute describes the output format *rest-docs/{method-name}* which results in a folder layout like this:
+NOTE: For easy configuration Citrus has created a separate namespace and schema definition for Spring XML Restdocs related documentation.
+Include this namespace into your Spring configuration in order to use the Citrus Restdocs configuration elements.
+The namespace URI and schema location are added to the Spring configuration XML file as seen in the example above.
 
-[source,xml]
+IMPORTANT: The RestDocs configurer must be added to the list of Citrus test listeners.
+This is a mandatory step in order to enable the configurer for documentation preparations before each test.
+Otherwise, we would not be able to generate proper documentation.
+Usually, when binding the bean to the Citrus registry or the Spring bean application context or when using the Spring bean XML configuration this is done automatically for you.
+
+The above component adds a new documentation configuration.
+Behind the scenes the component creates a new restdocs configurer and a client interceptor.
+We can reference the new restdocs component in *citrus-http* client components like see in the example above.
+
+The Spring Restdocs documentation component acts as a client interceptor. Every time the client component is used to send and receive a message the restdocs interceptor will automatically create its API documentation. The configuration *identifier* attribute describes the output format `rest-docs/{method-name}` which results in a folder layout like this:
+
+[source,text]
 ----
 target/citrus-docs
   |- rest-docs
@@ -77,17 +128,45 @@ target/citrus-docs
 
 ----
 
-The example above is the result of three test cases each of them performing a client Http request/response communication. Each test message exchange is documented with separate files:
+The example above is the result of three test cases each of them performing a client Http request/response communication.
+Each test message exchange is documented with separate files.
 
-.curl-request.adoc
-[source,shell]
+Let's use the HttpClient with the documentation enabled in a test like this:
+
+.Java DSL
+[source,java]
 ----
-$ curl 'http://localhost:8080/test' -i -X POST -H 'Accept: application/xml' -H 'CustomHeaderId: 123456789' -H 'Content-Type: application/xml;charset=UTF-8' -H 'Accept-Charset: utf-8' -d '<testRequestMessage>
-    <text>Hello HttpServer>/text>
-</testRequestMessage>'
+public class RestDocConfigurationIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+
+    @Test
+    @CitrusTest
+    public void testRestDocs() {
+        when(http().client(httpClient)
+                .send()
+                .post()
+                .message()
+                .body("""
+                <testRequestMessage>
+                    <text>Hello HttpServer>/text>
+                </testRequestMessage>
+                """)
+                .header("Operation", "sayHello"));
+
+        then(http().client(httpClient)
+                .receive()
+                .response(HttpStatus.OK)
+                .message()
+                .body("""
+                <testResponseMessage>
+                    <text>Hello Citrus!>/text>
+                </testResponseMessage>
+                """)
+                .header("Operation", "sayHello"));
+    }
+}
 ----
 
-The curl file represents the client request as curl command and can be seen as a sample to reproduce the request.
+The test produces the request.
 
 .http-request.adoc
 [source,http,options="nowrap"]
@@ -99,13 +178,15 @@ Content-Type: application/xml;charset=UTF-8
 Content-Length: 118
 Accept-Charset: utf-8
 Host: localhost
+Operation: sayHello
 
 <testRequestMessage>
     <text>Hello HttpServer>/text>
 </testRequestMessage>
 ----
 
-The *http-request.adoc* file represents the sent message data for the client request. The respective *http-response.adoc* represents the response that was sent to the client.
+The *http-request.adoc* file represents the send message data for the client request.
+The respective *http-response.adoc* represents the response that was sent to the client.
 
 .http-response.adoc
 [source,http,options="nowrap"]
@@ -116,31 +197,94 @@ Content-Type: application/xml;charset=UTF-8
 Accept-Charset: utf-8
 Content-Length: 122
 Server: Jetty(9.2.15.v20160210)
+Operation: sayHello
 
 <testResponseMessage>
     <text>Hello Citrus!>/text>
 </testResponseMessage>
 ----
 
-Nice work! We have automatically created snippets for the RESTful API by just adding the interceptor to the Citrus client component. Spring Restdocs components can be combined manually. See the next configuration that uses this approach.
+Nice work! We have automatically created snippets for the RESTful API by just adding the interceptor to the Citrus client component.
+Spring Restdocs components can be combined manually.
+See the next configuration that uses this approach.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-restdocs:configurer id="restDocConfigurer" output-directory="target/citrus-docs/generated-snippets"/>
-<citrus-restdocs:client-interceptor id="restDocClientInterceptor" identifier="rest-docs/{method-name}"/>
+import org.citrusframework.restdocs.http.CitrusRestDocsSupport;
 
-<util:list id="restDocInterceptors">
-    <ref bean="restDocConfigurer"/>
-    <ref bean="restDocClientInterceptor"/>
-</util:list>
+@BindToRegistry
+public HttpClient httpClient() {
+    return new HttpClientBuilder()
+                .requestUrl("http://localhost:11080/hello")
+                .requestMethod(RequestMethod.POST)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .interceptors(Arrays.asList(restDocumentationConfigurer, restDocumentationInterceptor))
+                .build();
+}
+
+@BindToRegistry
+public CitrusRestDocConfigurer restDocumentationConfigurer() {
+    return CitrusRestDocsSupport.restDocsConfigurer(new ManualRestDocumentation("target/citrus-docs/generated-snippets"));
+}
+
+@BindToRegistry
+public RestDocClientInterceptor restDocumentationInterceptor() {
+    return CitrusRestDocsSupport.restDocsInterceptor("rest-docs/{method-name}");
+}
 ----
 
-[source,xml]
+.Spring Bean
+[source,java,indent=0,role="secondary"]
 ----
-<citrus-http:client id="httpClient"
+import org.citrusframework.restdocs.http.CitrusRestDocsSupport;
+
+@Bean
+public HttpClient httpClient() {
+    return new HttpClientBuilder()
+                .requestUrl("http://localhost:11080/hello")
+                .requestMethod(RequestMethod.POST)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .interceptors(Arrays.asList(restDocumentationConfigurer, restDocumentationInterceptor))
+                .build();
+}
+
+@Bean
+public CitrusRestDocConfigurer restDocumentationConfigurer() {
+    return CitrusRestDocsSupport.restDocsConfigurer(new ManualRestDocumentation("target/citrus-docs/generated-snippets"));
+}
+
+@Bean
+public RestDocClientInterceptor restDocumentationInterceptor() {
+    return CitrusRestDocsSupport.restDocsInterceptor("rest-docs/{method-name}");
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus-restdocs="http://www.citrusframework.org/schema/restdocs/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/restdocs/config
+       http://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config.xsd">
+
+    <citrus-restdocs:configurer id="restDocConfigurer" output-directory="target/citrus-docs/generated-snippets"/>
+    <citrus-restdocs:client-interceptor id="restDocClientInterceptor" identifier="rest-docs/{method-name}"/>
+
+    <util:list id="restDocInterceptors">
+        <ref bean="restDocConfigurer"/>
+        <ref bean="restDocClientInterceptor"/>
+    </util:list>
+
+    <citrus-http:client id="httpClient"
           request-url="http://localhost:8080/test"
           request-method="POST"
           interceptors="restDocInterceptors"/>
+</beans>
 ----
 
 What exactly is the difference to the *citrus-restdocs:documentation* that we have used before? In general there is no difference. Both configurations are identical in its outcome. Why should someone use the second approach then? It is more verbose as we need to also define a list of interceptors. The answer is easy. If you want to combine the restdocs interceptors with other client interceptors in a list then you should use the manual combination approach. We can add basic authentication interceptors for instance to the list of interceptors then. The more comfortable *citrus-restdocs:documentation* component only supports exclusive restdocs interceptors.
@@ -152,22 +296,78 @@ You can use the Spring Restdocs features also for SOAP clients in Citrus. This i
 
 The concept of adding the Spring Restdocs documentation as interceptor to the client is still the same.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-restdocs:documentation id="soapDocumentation"
-                                              type="soap"
-                                              output-directory="target/citrus-docs/generated-snippets"
-                                              identifier="soap-docs/{method-name}"/>
+import org.citrusframework.restdocs.http.CitrusRestDocsSupport;
+
+@BindToRegistry
+public WebServiceClient soapClient() {
+    return new WebServiceClientBuilder()
+                .defaultUri("http://localhost:8080/test")
+                .interceptors(Arrays.asList(soapDocumentationConfigurer, soapDocumentationInterceptor))
+                .build();
+}
+
+@BindToRegistry
+public CitrusRestDocConfigurer soapDocumentationConfigurer() {
+    return CitrusRestDocsSupport.restDocsConfigurer(new ManualRestDocumentation("target/citrus-docs/generated-snippets"));
+}
+
+@BindToRegistry
+public RestDocClientInterceptor soapDocumentationInterceptor() {
+    return CitrusRestDocsSupport.restDocsInterceptor("soap-docs/{method-name}");
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+import org.citrusframework.restdocs.http.CitrusRestDocsSupport;
+
+@Bean
+public WebServiceClient soapClient() {
+    return new WebServiceClientBuilder()
+                .defaultUri("http://localhost:8080/test")
+                .interceptors(Arrays.asList(soapDocumentationConfigurer, soapDocumentationInterceptor))
+                .build();
+}
+
+@Bean
+public CitrusRestDocConfigurer soapDocumentationConfigurer() {
+    return CitrusRestDocsSupport.restDocsConfigurer(new ManualRestDocumentation("target/citrus-docs/generated-snippets"));
+}
+
+@Bean
+public RestDocClientInterceptor soapDocumentationInterceptor() {
+    return CitrusRestDocsSupport.restDocsInterceptor("soap-docs/{method-name}");
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus-restdocs="http://www.citrusframework.org/schema/restdocs/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/restdocs/config
+       http://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config.xsd">
+
+    <citrus-restdocs:documentation id="soapDocumentation"
+                              type="soap"
+                              output-directory="target/citrus-docs/generated-snippets"
+                              identifier="soap-docs/{method-name}"/>
+
+    <citrus-ws:client id="soapClient"
+                  request-url="http://localhost:8080/test"
+                  interceptors="soapDocumentation"/>
+</beans>
 ----
 
 We have added a *type* setting with value *soap* . And that is basically all we need to do. Now Citrus knows that we would like to add documentation for a SOAP client:
-
-[source,xml]
-----
-<citrus-ws:client id="soapClient"
-      request-url="http://localhost:8080/test"
-      interceptors="soapDocumentation"/>
-----
 
 Following from that the *soapClient* is enabled to generate Spring Restdocs documentation for each request/response. The generated snippets then do represent the SOAP request and response messages.
 
@@ -218,70 +418,3 @@ Server: Jetty(9.2.15.v20160210)
 ----
 
 The file names are still using *http-request* and *http-response* but the content is clearly the SOAP request/response message data.
-
-[[spring-restdocs-in-java-dsl]]
-== Spring Restdocs in Java DSL
-
-How can we use Spring Restdocs in Java DSL? Of course, we have special support in Citrus Java DSL for the Spring Restdocs configuration, too.
-
-.Java DSL
-[source,java]
-----
-import static org.citrusframework.restdocs.http.CitrusRestDocsSupport.restDocsConfigurer;
-import static org.citrusframework.restdocs.http.CitrusRestDocsSupport.restDocsInterceptor;
-
-public class RestDocConfigurationIT extends TestNGCitrusSpringSupport implements TestActionSupport {
-
-    @Autowired
-    private TestListeners testListeners;
-
-    private HttpClient httpClient;
-
-    @BeforeClass
-    public void setup() {
-        CitrusRestDocConfigurer restDocConfigurer = restDocsConfigurer(new ManualRestDocumentation("target/generated-snippets"));
-        RestDocClientInterceptor restDocInterceptor = restDocsInterceptor("rest-docs/{method-name}");
-
-        httpClient = new HttpClientBuilder()
-                                    .requestUrl("http://localhost:11080/hello")
-                                    .requestMethod(RequestMethod.POST)
-                                    .contentType(MediaType.APPLICATION_XML_VALUE)
-                                    .interceptors(Arrays.asList(restDocConfigurer, restDocInterceptor))
-                                    .build();
-
-        testListeners.addTestListener(restDocConfigurer);
-    }
-
-    @Test
-    @CitrusTest
-    public void testRestDocs() {
-        when(http().client(httpClient)
-                .send()
-                .post()
-                .message()
-                .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
-                    "<MessageId>1234567890</MessageId>" +
-                    "<CorrelationId>1000000001</CorrelationId>" +
-                    "<User>User</User>" +
-                    "<Text>Hello Citrus</Text>" +
-                "</HelloRequest>")
-                .header("Operation", "sayHello"));
-
-        then(http().client(httpClient)
-                .receive()
-                .response(HttpStatus.OK)
-                .message()
-                .body("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
-                    "<MessageId>1234567890</MessageId>" +
-                    "<CorrelationId>1000000001</CorrelationId>" +
-                    "<User>HelloService</User>" +
-                    "<Text>Hello User</Text>" +
-                "</HelloResponse>")
-                .header("Operation", "sayHello"));
-    }
-}
-----
-
-The mechanism is quite similar to the XML configuration. We add the Restdocs configurer and interceptor to the list of interceptors for the Http client. If we do this all client communication is automatically documented. The Citrus Java DSL provides some convenient configuration methods in class *CitrusRestDocsSupport* for creating the configurer and interceptor objects.
-
-NOTE: The configurer must be added to the list of test listeners. This is a mandatory step in order to enable the configurer for documentation preparations before each test. Otherwise we would not be able to generate proper documentation. If you are using the XML configuration this is done automatically for you.

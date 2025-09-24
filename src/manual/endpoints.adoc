@@ -34,11 +34,49 @@ image:figure_003.jpg[figure_003.jpg]
 This is all you need to know about Citrus endpoints. We have mentioned that the endpoints are defined in the Spring application
 context. Let's have a simple example that shows the basic idea:
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-jms:endpoint id="helloServiceEndpoint"
+@BindToRegistry
+public JmsEndpoint helloServiceEndpoint() {
+    return new JmsEndpointBuilder()
+            .destinationName("Citrus.HelloService.Request.Queue")
+            .connectionFactory(myConnectionFactory())
+            .build();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public JmsEndpoint helloServiceEndpoint() {
+    return new JmsEndpointBuilder()
+            .destinationName("Citrus.HelloService.Request.Queue")
+            .connectionFactory(myConnectionFactory())
+            .build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/jms/config
+       http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
+
+    <citrus-jms:endpoint id="helloServiceEndpoint"
         destination-name="Citrus.HelloService.Request.Queue"
         connection-factory="myConnectionFactory"/>
+</beans>
 ----
 
 This is a simple JMS endpoint component in Citrus. The endpoint XML bean definition follows a custom XML namespace and defines

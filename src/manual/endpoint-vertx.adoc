@@ -16,30 +16,6 @@ NOTE: The Vert.x components in Citrus are kept in a separate Maven module. So yo
 </dependency>
 ----
 
-Citrus provides a special Vert.x configuration schema that is used in our Spring configuration files. You have to include the citrus-vertx
-namespace in your Spring configuration XML files as follows.
-
-[source,xml]
-----
-<beans xmlns="http://www.springframework.org/schema/beans"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:citrus="http://www.citrusframework.org/schema/config"
-      xmlns:citrus-vertx="http://www.citrusframework.org/schema/vertx/config"
-      xsi:schemaLocation="
-      http://www.springframework.org/schema/beans
-      http://www.springframework.org/schema/beans/spring-beans.xsd
-      http://www.citrusframework.org/schema/config
-      http://www.citrusframework.org/schema/config/citrus-config.xsd
-      http://www.citrusframework.org/schema/vertx/config
-      http://www.citrusframework.org/schema/vertx/config/citrus-vertx-config.xsd">
-
-      [...]
-
-      </beans>
-----
-
-Now you are ready to use the Citrus Vert.x configuration elements using the citrus-vertx namespace prefix.
-
 The next sections discuss sending and receiving operations on the Vert.x event bus with Citrus.
 
 [[vert-x-endpoint]]
@@ -48,16 +24,69 @@ The next sections discuss sending and receiving operations on the Vert.x event b
 As usual Citrus uses an endpoint component in order to specify some message destination to send and receive messages to and from.
 The Vert.x endpoint component is defined as follows in your Citrus Spring configuration.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-vertx:endpoint id="simpleVertxEndpoint"
-      host="localhost"
-      port="5001"
-      pubSubDomain="false"
-      address="news-feed"/>
+@BindToRegistry
+public VertxEndpoint simpleVertxEndpoint() {
+    return new VertxEndpointBuilder()
+        .host("localhost")
+        .port(5001)
+        .pubSubDomain(false)
+        .address("news-feed")
+        .build();
+}
 
-<bean id="vertxInstanceFactory" class="org.citrusframework.vertx.factory.CachingVertxInstanceFactory"/>
+private VertxInstanceFactory vertxInstanceFactory() {
+    return new CachingVertxInstanceFactory();
+}
 ----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public VertxEndpoint simpleVertxEndpoint() {
+    return new VertxEndpointBuilder()
+        .host("localhost")
+        .port(5001)
+        .pubSubDomain(false)
+        .address("news-feed")
+        .build();
+}
+
+private VertxInstanceFactory vertxInstanceFactory() {
+    return new CachingVertxInstanceFactory();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-vertx="http://www.citrusframework.org/schema/vertx/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/vertx/config
+       http://www.citrusframework.org/schema/vertx/config/citrus-vertx-config.xsd">
+
+    <citrus-vertx:endpoint id="simpleVertxEndpoint"
+          host="localhost"
+          port="5001"
+          pub-sub-domain="false"
+          address="news-feed"/>
+
+    <bean id="vertxInstanceFactory" class="org.citrusframework.vertx.factory.CachingVertxInstanceFactory"/>
+</beans>
+----
+
+NOTE: Citrus provides a special Vert.x configuration schema that is used in our Spring Xml bean configurations.
+You have to include the `citrus-vertx` namespace in your Spring configuration XML files as seen in the example above.
 
 The endpoint holds some general information how to access the Vert.x event bus. Host and port values define the Vert.x Hazelcast
 cluster hostname and port. Citrus starts a new Vert.x instance using this cluster. So all other Vert.x instances connected to this
@@ -79,31 +108,135 @@ later on in this chapter.
 As message content you can send and receive JSON objects or simple character sequences to the event bus. Let us have a look at a
 simple sample sending action that uses the new Vert.x endpoint component:
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<send endpoint="simpleVertxEndpoint">
-  <message type="plaintext">
-    <payload>Hello from Citrus!</payload>
-  </message>
-</send>
+@CitrusTest
+public void vertxTest() {
+    then(send()
+            .endpoint(simpleVertxEndpoint)
+            .message()
+                .type(MessageType.PLAINTEXT)
+                .body("Hello from Citrus!")
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="VertxTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <send endpoint="simpleVertxEndpoint">
+        <message type="plaintext">
+            <body>
+              <data>Hello from Citrus!</data>
+            </body>
+        </message>
+      </send>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: VertxTest
+actions:
+  - send:
+      endpoint: "simpleVertxEndpoint"
+      message:
+        type: PLAINTEXT
+        body:
+          data: "Hello from Citrus!"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<testcase name="vertxTest">
+    <actions>
+        <send endpoint="simpleVertxEndpoint">
+          <message type="plaintext">
+            <payload>Hello from Citrus!</payload>
+          </message>
+        </send>
+    </actions>
+</testcase>
 ----
 
 As the Vert.x Citrus endpoint is bidirectional you can also receive messages from the event bus.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<receive endpoint="simpleVertxEndpoint">
-  <message type="plaintext">
-    <payload>Hello from Vert.x!</payload>
-  </message>
-  <header>
-    <element name="citrus_vertx_address" value="news-feed"/>
-  </header>
-</receive>
+@CitrusTest
+public void vertxTest() {
+    then(receive()
+            .endpoint(simpleVertxEndpoint)
+            .message()
+                .type(MessageType.PLAINTEXT)
+                .body("Hello from Vert.x!")
+                .header("citrus_vertx_address", "news-feed")
+    );
+}
 ----
 
-Citrus automatically adds some special message headers to the message, so you can validate the Vert.x event bus address. This completes
-the simple send and receive operations on a Vert.x event bus. Now let's move on to synchronous endpoints where Citrus waits for a reply on the event bus.
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="VertxTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <receive endpoint="simpleVertxEndpoint">
+        <message type="plaintext">
+            <body>
+              <data>Hello from Vert.x!</data>
+            </body>
+            <headers>
+              <header name="citrus_vertx_address" value="news-feed"/>
+            </headers>
+        </message>
+      </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: VertxTest
+actions:
+  - receive:
+      endpoint: "simpleVertxEndpoint"
+      message:
+        type: PLAINTEXT
+        body:
+          data: "Hello from Vert.x!"
+        headers:
+          - name: citrus_vertx_address
+            value: news-feed
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<testcase name="vertxTest">
+    <actions>
+        <receive endpoint="simpleVertxEndpoint">
+          <message type="plaintext">
+            <payload>Hello from Vert.x!</payload>
+          </message>
+          <header>
+            <element name="citrus_vertx_address" value="news-feed"/>
+          </header>
+        </receive>
+    </actions>
+</testcase>
+----
+
+Citrus automatically adds some special message headers to the message, so you can validate the Vert.x event bus address.
+This completes the simple send and receive operations on a Vert.x event bus.
+Now let's move on to synchronous endpoints where Citrus waits for a reply on the event bus.
 
 [[synchronous-vert-x-endpoint]]
 == Synchronous Vert.x endpoint
@@ -112,12 +245,60 @@ The synchronous Vert.x event bus producer sends a message and waits synchronousl
 The reply address name is generated automatically and set in the request message header attributes so the receiving counterpart in this
 communication can send its reply to that event bus address. The basic configuration for a synchronous Vert.x endpoint component looks like follows:
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-vertx:sync-endpoint id="vertxSyncEndpoint"
-      address="hello"
-      timeout="1000"
-      polling-interval="300"/>
+@BindToRegistry
+public VertxSnycEndpoint vertxSyncEndpoint() {
+    return new VertxSyncEndpointBuilder()
+        .timeout(1000)
+        .address("hello")
+        .pollingInterval(300)
+        .build();
+}
+
+private VertxInstanceFactory vertxInstanceFactory() {
+    return new CachingVertxInstanceFactory();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public VertxSnycEndpoint vertxSyncEndpoint() {
+    return new VertxSyncEndpointBuilder()
+        .timeout(1000)
+        .address("hello")
+        .pollingInterval(300)
+        .build();
+}
+
+private VertxInstanceFactory vertxInstanceFactory() {
+    return new CachingVertxInstanceFactory();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-vertx="http://www.citrusframework.org/schema/vertx/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/vertx/config
+       http://www.citrusframework.org/schema/vertx/config/citrus-vertx-config.xsd">
+
+    <citrus-vertx:sync-endpoint id="vertxSyncEndpoint"
+          address="hello"
+          timeout="1000"
+          polling-interval="300"/>
+</beans>
 ----
 
 Synchronous endpoints poll for synchronous reply messages to arrive on the event bus reply address. The poll interval is an optional
@@ -132,19 +313,88 @@ When sending a message to the synchronous Vert.x endpoint the producer will wait
 on the reply address. You can receive the reply message in your test case using the same endpoint component. So we have two actions
 on the same endpoint, first send then receive.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<send endpoint="vertxSyncEndpoint">
-  <message type="plaintext">
-    <payload>Hello from Citrus!</payload>
-  </message>
-</send>
+@CitrusTest
+public void vertxTest() {
+    when(send()
+            .endpoint(vertxSyncEndpoint)
+            .message()
+                .type(MessageType.PLAINTEXT)
+                .body("Hello from Citrus!")
+    );
 
-<receive endpoint="vertxSyncEndpoint">
-  <message type="plaintext">
-    <payload>This is the reply from Vert.x!</payload>
-  </message>
-</receive>
+    then(receive()
+            .endpoint(vertxSyncEndpoint)
+            .message()
+                .type(MessageType.PLAINTEXT)
+                .body("Hello from Vert.x!")
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="VertxTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <send endpoint="vertxSyncEndpoint">
+        <message type="plaintext">
+            <body>
+              <data>Hello from Citrus!</data>
+            </body>
+        </message>
+      </send>
+
+      <receive endpoint="vertxSyncEndpoint">
+        <message type="plaintext">
+            <body>
+              <data>Hello from Vert.x!</data>
+            </body>
+        </message>
+      </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: VertxTest
+actions:
+  - send:
+      endpoint: "vertxSyncEndpoint"
+      message:
+        type: PLAINTEXT
+        body:
+          data: "Hello from Citrus!"
+  - receive:
+      endpoint: "vertxSyncEndpoint"
+      message:
+        type: PLAINTEXT
+        body:
+          data: "Hello from Vert.x!"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<testcase name="vertxTest">
+    <actions>
+        <send endpoint="vertxSyncEndpoint">
+          <message type="plaintext">
+            <payload>Hello from Citrus!</payload>
+          </message>
+        </send>
+
+        <receive endpoint="vertxSyncEndpoint">
+          <message type="plaintext">
+            <payload>Hello from Vert.x!</payload>
+          </message>
+        </receive>
+    </actions>
+</testcase>
 ----
 
 In the last section we saw that synchronous communication is based on reply messages on temporary reply event bus address. We saw that
@@ -156,19 +406,88 @@ start the communication by receiving a message from the endpoint. Knowing this C
 Again just use the same endpoint reference in your test case. The handling of the temporary reply address is done automatically behind the scenes.
 So we have again two actions in our test case, but this time first receive then send.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<receive endpoint="vertxSyncEndpoint">
-  <message type="plaintext">
-    <payload>Hello from Vert.x!</payload>
-  </message>
-</receive>
+@CitrusTest
+public void vertxTest() {
+    when(receive()
+            .endpoint(vertxSyncEndpoint)
+            .message()
+                .type(MessageType.PLAINTEXT)
+                .body("Hello from Vert.x!")
+    );
 
-<send endpoint="vertxSyncEndpoint">
-  <message type="plaintext">
-    <payload>This is the reply from Citrus!</payload>
-  </message>
-</send>
+    then(send()
+            .endpoint(vertxSyncEndpoint)
+            .message()
+                .type(MessageType.PLAINTEXT)
+                .body("This is the reply from Citrus!")
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="VertxTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <receive endpoint="vertxSyncEndpoint">
+        <message type="plaintext">
+            <body>
+              <data>Hello from Vert.x!</data>
+            </body>
+        </message>
+      </receive>
+
+      <send endpoint="vertxSyncEndpoint">
+        <message type="plaintext">
+            <body>
+              <data>This is the reply from Citrus!</data>
+            </body>
+        </message>
+      </send>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: VertxTest
+actions:
+  - receive:
+      endpoint: "vertxSyncEndpoint"
+      message:
+        type: PLAINTEXT
+        body:
+          data: "Hello from Vert.x!"
+  - send:
+      endpoint: "vertxSyncEndpoint"
+      message:
+        type: PLAINTEXT
+        body:
+          data: "This is the reply from Citrus!"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<testcase name="vertxTest">
+    <actions>
+        <receive endpoint="vertxSyncEndpoint">
+          <message type="plaintext">
+            <payload>Hello from Vert.x!</payload>
+          </message>
+        </receive>
+
+        <send endpoint="vertxSyncEndpoint">
+          <message type="plaintext">
+            <payload>This is the reply from Citrus!</payload>
+          </message>
+        </send>
+    </actions>
+</testcase>
 ----
 
 The synchronous message endpoint for Vert.x event bus communication will handle all reply address destinations and provide those behind the scenes.
@@ -191,15 +510,61 @@ org.citrusframework.vertx.factory.SingleVertxInstanceFactory:: creates a single 
 You can also set your very custom Vert.x instance via configuration for custom Vert.x instantiation.
 
 The instance factory implementations do implement the *_VertxInstanceFactory_* interface. So you can also provide your very special implementation.
-By default Citrus looks for a bean named *vertxInstanceFactory* but you can also define your very special factory implementation onm an endpoint component.
+By default, Citrus looks for a bean named *vertxInstanceFactory* but you can also define your very special factory implementation onm an endpoint component.
 The Vert.x instance factory is set on the Vert.x endpoint as follows:
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-vertx:endpoint id="vertxHelloEndpoint"
-      address="hello"
-      vertx-factory="singleVertxInstanceFactory"/>
+@BindToRegistry
+public VertxEndpoint vertxHelloEndpoint() {
+    return new VertxEndpointBuilder()
+        .address("news-feed")
+        .vertxInstanceFactory(singleVertxInstanceFactory())
+        .build();
+}
 
-<bean id="singleVertxInstanceFactory"
-      class="org.citrusframework.vertx.factory.SingleVertxInstanceFactory"/>
+private VertxInstanceFactory singleVertxInstanceFactory() {
+    return new CachingVertxInstanceFactory();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public VertxEndpoint vertxHelloEndpoint() {
+    return new VertxEndpointBuilder()
+        .address("news-feed")
+        .vertxInstanceFactory(singleVertxInstanceFactory())
+        .build();
+}
+
+private VertxInstanceFactory singleVertxInstanceFactory() {
+    return new SingleVertxInstanceFactory();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-vertx="http://www.citrusframework.org/schema/vertx/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/vertx/config
+       http://www.citrusframework.org/schema/vertx/config/citrus-vertx-config.xsd">
+
+    <citrus-vertx:endpoint id="vertxHelloEndpoint"
+          address="news-feed"
+          vertx-factory="singleVertxInstanceFactory"/>
+
+    <bean id="singleVertxInstanceFactory"
+          class="org.citrusframework.vertx.factory.SingleVertxInstanceFactory"/>
+</beans>
 ----

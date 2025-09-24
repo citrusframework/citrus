@@ -16,29 +16,6 @@ NOTE: The RMI components in Citrus are kept in a separate Maven module. So you s
 </dependency>
 ----
 
-As usual Citrus provides a customized rmi configuration schema that is used in Spring configuration files. Simply include the citrus-rmi namespace in the configuration XML files as follows.
-
-[source,xml]
-----
-<beans xmlns="http://www.springframework.org/schema/beans"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:citrus="http://www.citrusframework.org/schema/config"
-      xmlns:citrus-rmi="http://www.citrusframework.org/schema/rmi/config"
-      xsi:schemaLocation="
-      http://www.springframework.org/schema/beans
-      http://www.springframework.org/schema/beans/spring-beans.xsd
-      http://www.citrusframework.org/schema/config
-      http://www.citrusframework.org/schema/config/citrus-config.xsd
-      http://www.citrusframework.org/schema/rmi/config
-      http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd">
-
-      [...]
-
-      </beans>
-----
-
-Now you are ready to use the customized Http configuration elements with the citrus-rmi namespace prefix.
-
 Read the next section in order to find out more about the RMI message support in Citrus.
 
 [[rmi-client]]
@@ -46,16 +23,70 @@ Read the next section in order to find out more about the RMI message support in
 
 On the client side we want to call e remote interface. We need to specify the method to call as well as all method arguments. The respective method return value is receivable within the test case for validation. Citrus provides a client component for RMI that sends out service invocation calls.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-rmi:client id="rmiClient1"
-      host="localhost"
-      port="1099"
-      binding="newsService"/>
+@BindToRegistry
+public RmiClient rmiClient1() {
+    return new RmiClientBuilder()
+        .host("localhost")
+        .port(1099)
+        .binding("newsService")
+        .build();
+}
 
-      <citrus-rmi:client id="rmiClient2"
-        server-url="rmi://localhost:1099/newsService"/>
+@BindToRegistry
+public RmiClient rmiClient2() {
+    return new RmiClientBuilder()
+        .serverUrl("rmi://localhost:1099/newsService")
+        .build();
+}
 ----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public RmiClient rmiClient1() {
+    return new RmiClientBuilder()
+        .host("localhost")
+        .port(1099)
+        .binding("newsService")
+        .build();
+}
+
+@Bean
+public RmiClient rmiClient2() {
+    return new RmiClientBuilder()
+        .serverUrl("rmi://localhost:1099/newsService")
+        .build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus-rmi="http://www.citrusframework.org/schema/rmi/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/rmi/config
+       http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd">
+
+    <citrus-rmi:client id="rmiClient1"
+          host="localhost"
+          port="1099"
+          binding="newsService"/>
+
+    <citrus-rmi:client id="rmiClient2"
+          server-url="rmi://localhost:1099/newsService"/>
+</beans>
+----
+
+NOTE: As usual, Citrus provides a customized rmi configuration schema that is used in Spring XML bean configurations.
+Simply include the `citrus-rmi` namespace in the configuration XML files as seen in the example above.
 
 The client component in the Spring application context receives host and port configuration of a valid RMI service registry. Either by specifying a proper server url or by giving host, port and binding properties. The service binding is the name of the service that we would like to address in the registry. Now we are ready to use this client referenced by its id or name in a test case for a message sending action.
 
@@ -378,15 +409,58 @@ On the server side Citrus needs to provide remote interfaces with methods callab
 
 Let us have a look at the Citrus RMI server component and how you can add it to the Spring application context.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-rmi:server id="rmiServer"
-      host="localhost"
-      port="1099"
-      interface="org.citrusframework.rmi.remote.NewsService"
-      binding="newService"
-      create-registry="true"
-      auto-start="true"/>
+@BindToRegistry
+public RmiServer rmiServer() {
+    return new RmiServerBuilder()
+        .host("localhost")
+        .port(1099)
+        .remoteInterfaces(org.citrusframework.rmi.remote.NewsService.class)
+        .binding("newsService")
+        .createRegistry(true)
+        .autoStart(true)
+        .build();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public RmiServer rmiServer() {
+    return new RmiServerBuilder()
+        .host("localhost")
+        .port(1099)
+        .remoteInterfaces(org.citrusframework.rmi.remote.NewsService.class)
+        .binding("newsService")
+        .createRegistry(true)
+        .autoStart(true)
+        .build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus-rmi="http://www.citrusframework.org/schema/rmi/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/rmi/config
+       http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd">
+
+    <citrus-rmi:server id="rmiServer"
+          host="localhost"
+          port="1099"
+          interface="org.citrusframework.rmi.remote.NewsService"
+          binding="newService"
+          create-registry="true"
+          auto-start="true"/>
+</beans>
 ----
 
 The RMI server component uses properties such as *host* and *port* to define the service registry. By default Citrus will connect to this service registry and bind its remote interfaces to it. With the attribute *create-registry* Citrus can also create the registry for you.

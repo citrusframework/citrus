@@ -14,9 +14,37 @@ NOTE: The Selenium test components in Citrus are kept in a separate Maven module
 </dependency>
 ----
 
-Citrus provides a "citrus-selenium" configuration namespace and schema definition for Selenium related components and actions. Include this namespace into your Spring configuration in order to use the Citrus Selenium configuration elements. The namespace URI and schema location are added to the Spring configuration XML file as follows.
+[[selenium-browser]]
+== Selenium browser
 
-[source,xml]
+Selenium uses browser automation in order to simulate the user interact with web applications. You can configure the Selenium browser and web driver as Spring bean.
+
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public SeleniumBrowser seleniumBrowser() {
+    return new SeleniumBrowserBuilder()
+            .type("firefox")
+            .startPage("http://citrusframework.org")
+            .build();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public SeleniumBrowser seleniumBrowser() {
+    return new SeleniumBrowserBuilder()
+            .type("firefox")
+            .startPage("http://citrusframework.org")
+            .build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -27,24 +55,13 @@ Citrus provides a "citrus-selenium" configuration namespace and schema definitio
        http://www.citrusframework.org/schema/selenium/config
        http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd">
 
-    [...]
-
+  <citrus-selenium:browser id="seleniumBrowser"
+                type="firefox"
+                start-page="http://citrusframework.org"/>
 </beans>
 ----
 
-After that you are able to use customized Citrus XML elements in order to define the Spring beans.
-
-[[selenium-browser]]
-== Selenium browser
-
-Selenium uses browser automation in order to simulate the user interact with web applications. You can configure the Selenium browser and web driver as Spring bean.
-
-[source,xml]
-----
-<citrus-selenium:browser id="seleniumBrowser"
-                type="firefox"
-                start-page="http://citrusframework.org"/>
-----
+NOTE: Citrus provides a "citrus-selenium" configuration namespace and schema definition for Selenium related Spring bean components and actions. Include this namespace into your Spring configuration in order to use the Citrus Selenium configuration elements. The namespace URI and schema location are added to the Spring configuration XML.
 
 The Selenium browser component supports different browser types for the commonly used browsers out in the wild.
 
@@ -60,28 +77,122 @@ The Selenium browser component supports different browser types for the commonly
 Html unit is the default browser type and represents a headless browser that executed without displaying the graphical user interface. In case you need a totally different browser or
 you need to customize the Selenium web driver you can use the _type="custom"_ in combination with a web driver reference:
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-selenium:browser id="mySeleniumBrowser"
+@BindToRegistry
+public SeleniumBrowser seleniumBrowser() {
+    return new SeleniumBrowserBuilder()
+            .type("custom")
+            .webDriver(operaWebDriver())
+            .build();
+}
+
+@BindToRegistry
+public OperaDriver operaWebDriver() {
+    return new OperaDriver();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public SeleniumBrowser seleniumBrowser() {
+    return new SeleniumBrowserBuilder()
+            .type("custom")
+            .webDriver(operaWebDriver())
+            .build();
+}
+
+@Bean
+public OperaDriver operaWebDriver() {
+    return new OperaDriver();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus-selenium="http://www.citrusframework.org/schema/selenium/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/selenium/config
+       http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd">
+
+  <citrus-selenium:browser id="seleniumBrowser"
                 type="custom"
                 web-driver="operaWebDriver"/>
 
-<bean id="operaWebDriver" class="org.openqa.selenium.opera.OperaDriver"/>
+  <bean id="operaWebDriver" class="org.openqa.selenium.opera.OperaDriver"/>
+</beans>
 ----
 
 Now Citrus is using the customized Selenium web driver implementation.
 
 NOTE: When using Firefox as browser you may also want to set the optional properties *firefox-profile* and *version*.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-selenium:browser id="mySeleniumBrowser"
+@BindToRegistry
+public SeleniumBrowser seleniumBrowser() {
+    return new SeleniumBrowserBuilder()
+            .type("firefox")
+            .firefoxProfile(firefoxProfile())
+            .version("FIREFOX_38")
+            .startPage("http://citrusframework.org")
+            .build();
+}
+
+@BindToRegistry
+public FirefoxProfile firefoxProfile() {
+    return new FirefoxProfile();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public SeleniumBrowser seleniumBrowser() {
+    return new SeleniumBrowserBuilder()
+            .type("firefox")
+            .firefoxProfile(firefoxProfile())
+            .version("FIREFOX_38")
+            .startPage("http://citrusframework.org")
+            .build();
+}
+
+@Bean
+public FirefoxProfile firefoxProfile() {
+    return new FirefoxProfile();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus-selenium="http://www.citrusframework.org/schema/selenium/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/selenium/config
+       http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd">
+
+  <citrus-selenium:browser id="mySeleniumBrowser"
                 type="firefox"
                 firefox-profile="firefoxProfile"
                 version="FIREFOX_38"
                 start-page="http://citrusframework.org"/>
 
-<bean id="firefoxProfile" class="org.openqa.selenium.firefox.FirefoxProfile"/>
+  <bean id="firefoxProfile" class="org.openqa.selenium.firefox.FirefoxProfile"/>
+</beans>
 ----
 
 Now Citrus is able to execute Selenium operations as a user.

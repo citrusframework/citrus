@@ -7,19 +7,60 @@ A set of functions is usually combined to a function library. The library has a 
 
 The library is built in the Spring configuration and contains a set of functions that are of public use.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus:function-library id="testLibrary" prefix="foo:">
-          <citrus:function name="randomNumber" class="org.citrusframework.functions.RandomNumberFunction"/>
-          <citrus:function name="randomString" class="org.citrusframework.functions.RandomStringFunction"/>
-          <citrus:function name="customFunction" ref="customFunctionBean"/>
-          ...
-</citrus:function-library>
+@BindToRegistry
+public FunctionLibrary testFunctionLibrary() {
+    FunctionLibrary library = new FunctionLibrary();
+    library.setName("test");
+    library.setPrefix("foo:");
+    library.getMembers().put("randomNumber", new RandomNumberFunction());
+    library.getMembers().put("randomString", new RandomStringFunction());
+    library.getMembers().put("customFunction", customFunctionBean());
+    return library;
+}
 ----
 
-As you can see the library defines one-to-many functions either referenced as normal Spring bean or by its implementing Java class name. Citrus constructs the library and you are able to use the functions in your test case with the leading library prefix just like this:
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public FunctionLibrary testFunctionLibrary() {
+    FunctionLibrary library = new FunctionLibrary();
+    library.setName("test");
+    library.setPrefix("foo:");
+    library.getMembers().put("randomNumber", new RandomNumberFunction());
+    library.getMembers().put("randomString", new RandomStringFunction());
+    library.getMembers().put("customFunction", customFunctionBean());
+    return library;
+}
+----
 
-[source,xml]
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+    <citrus:function-library id="testFunctionLibrary" prefix="foo:">
+              <citrus:function name="randomNumber" class="org.citrusframework.functions.RandomNumberFunction"/>
+              <citrus:function name="randomString" class="org.citrusframework.functions.RandomStringFunction"/>
+              <citrus:function name="customFunction" ref="customFunctionBean"/>
+              ...
+    </citrus:function-library>
+</beans>
+----
+
+As you can see the library defines one-to-many functions either referenced as normal Spring bean or by its implementing Java class name. Citrus constructs the library, and you are able to use the functions in your test case with the leading library prefix just like this:
+
+[source,text]
 ----
 foo:randomNumber()
 foo:randomString()
@@ -33,42 +74,158 @@ TIP: You can add custom function implementations and custom function libraries. 
 
 The function will combine several string tokens to a single string value. This means that you can combine a static text value with a variable value for instance. A first example should clarify the usage:
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="concatFunctionTest">
-    <variables>
-        <variable name="date" value="citrus:currentDate(yyyy-MM-dd)" />
-        <variable name="text" value="Hello Test Framework!" />
-    </variables>
-    <actions>
-        <echo>
-            <message>
-                citrus:concat('Today is: ', ${date}, ' right!?')
-            </message>
-        </echo>
-        <echo>
-            <message>
-                citrus:concat('Text is: ', ${text})
-            </message>
-        </echo>
-    </actions>
-</testcase>
+@CitrusTest
+public void concatFunctionTest() {
+    variable("date", "citrus:currentDate(yyyy-MM-dd)");
+    variable("text", "Hello Test Framework!");
+
+    then(echo().message("citrus:concat('Today is: ', ${date}, ' right!?')"));
+    then(echo().message("citrus:concat('Text is: ', ${text})"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ConcatFunctionTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+  <variables>
+    <variable name="date" value="citrus:currentDate(yyyy-MM-dd)" />
+    <variable name="text" value="Hello Test Framework!" />
+  </variables>
+  <actions>
+    <echo>
+      <message>
+        citrus:concat('Today is: ', ${date}, ' right!?')
+      </message>
+    </echo>
+    <echo>
+      <message>
+        citrus:concat('Text is: ', ${text})
+      </message>
+    </echo>
+  </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ConcatFunctionTest
+variables:
+  - name: date
+    value: "citrus:currentDate(yyyy-MM-dd)"
+  - name: text
+    value: "Hello Test Framework!"
+actions:
+  - echo:
+      message: "citrus:concat('Today is: ', ${date}, ' right!?')"
+  - echo:
+      message: "citrus:concat('Text is: ', ${text})"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+    <testcase name="concatFunctionTest">
+        <variables>
+            <variable name="date" value="citrus:currentDate(yyyy-MM-dd)" />
+            <variable name="text" value="Hello Test Framework!" />
+        </variables>
+        <actions>
+            <echo>
+                <message>
+                    citrus:concat('Today is: ', ${date}, ' right!?')
+                </message>
+            </echo>
+            <echo>
+                <message>
+                    citrus:concat('Text is: ', ${text})
+                </message>
+            </echo>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 Please do not forget to mark static text with single quote signs. There is no limitation for string tokens to be combined.
 
-[source]
+[source,text]
 ----
 citrus:concat('Text1', 'Text2', 'Text3', ${text}, 'Text5', …, 'TextN')
 ----
 
-The function can be used wherever variables can be used. For instance when validating XML elements in the receive action.
+The function can be used wherever variables can be used. For instance when validating XML elements via XPath expressions in a `receive` test action.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<message>
-    <validate path="//element/element" value="citrus:concat('Cx1x', ${generatedId})"/>
-</message>
+@CitrusTest
+public void functionsTest() {
+    when(receive()
+        .endpoint(someEndpoint)
+        .validate(validate().xpath()
+                    .expression("//element/element", "citrus:concat('Cx1x', ${generatedId})"))
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="FunctionsTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+  <actions>
+    <receive endpoint="someEndpoint">
+      <validate path="//element/element" value="citrus:concat('Cx1x', ${generatedId})"/>
+    </receive>
+  </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: FunctionsTest
+actions:
+  - receive:
+      endpoint: "soapClient"
+      message:
+        body:
+          data: {}
+        expression:
+          - path: "//element/element"
+            value: "citrus:concat('Cx1x', ${generatedId})"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="functionsTest">
+    <actions>
+      <receive endpoint="someEndpoint">
+        <message>
+            <validate path="//element/element" value="citrus:concat('Cx1x', ${generatedId})"/>
+        </message>
+      </receive>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 [[functions-substring]]
@@ -423,21 +580,71 @@ In the next sample the function is used to set a httpStatusCode variable to one 
 
 As mentioned before you can define a custom function for your very specific needs in order to easily manage a list of predefined values like this:
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus:function-library id="myCustomFunctionLibrary" prefix="custom:">
-    <citrus-function name="randomHttpStatusCode" ref="randomHttpStatusCodeFunction"/>
-</citrus:function-library>
+@BindToRegistry
+public FunctionLibrary myCustomFunctionLibrary() {
+    FunctionLibrary library = new FunctionLibrary();
+    library.setName("custom");
+    library.setPrefix("custom:");
+    library.getMembers().put("randomHttpStatusCode", randomHttpStatusCode());
+    return library;
+}
 
-<bean id="randomHttpStatusCodeFunction" class="org.citrusframework.functions.core.RandomEnumValueFunction">
-  <property name="values">
-    <list>
-      <value>200</value>
-      <value>500</value>
-      <value>401</value>
-    </list>
-  </property>
-</bean>
+private RandomEnumValueFunction randomHttpStatusCode() {
+    RandomEnumValueFunction function = new RandomEnumValueFunction();
+    function.setValues(Arrays.asList("200", "500", "401"));
+    return function;
+}
+
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public FunctionLibrary myCustomFunctionLibrary() {
+    FunctionLibrary library = new FunctionLibrary();
+    library.setName("custom");
+    library.setPrefix("custom:");
+    library.getMembers().put("randomHttpStatusCode", randomHttpStatusCode());
+    return library;
+}
+
+private RandomEnumValueFunction randomHttpStatusCode() {
+    RandomEnumValueFunction function = new RandomEnumValueFunction();
+    function.setValues(Arrays.asList("200", "500", "401"));
+    return function;
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+    <citrus:function-library id="myCustomFunctionLibrary" prefix="custom:">
+        <citrus:function name="randomHttpStatusCode" ref="randomHttpStatusCodeFunction"/>
+    </citrus:function-library>
+
+    <bean id="randomHttpStatusCodeFunction" class="org.citrusframework.functions.core.RandomEnumValueFunction">
+      <property name="values">
+        <list>
+          <value>200</value>
+          <value>500</value>
+          <value>401</value>
+        </list>
+      </property>
+    </bean>
+</beans>
 ----
 
 We have added a custom function library with a custom function definition. The custom function "randomHttpStatusCode" randomly chooses an HTTP status code each time it is called. Inside the test you can use the function like this:
@@ -578,21 +785,74 @@ This function implementation maps string keys to string values. This is very hel
 
 The following function library defines a custom function for mapping HTTP status codes to the corresponding messages:
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus:function-library id="myCustomFunctionLibrary" prefix="custom:">
-      <citrus-function name="getHttpStatusMessage" ref="getHttpStatusMessageFunction"/>
-</citrus:function-library>
+@BindToRegistry
+public FunctionLibrary myCustomFunctionLibrary() {
+    FunctionLibrary library = new FunctionLibrary();
+    library.setName("custom");
+    library.setPrefix("custom:");
+    library.getMembers().put("randomHttpStatusCode", randomHttpStatusCode());
+    return library;
+}
 
-<bean id="getHttpStatusMessageFunction" class="org.citrusframework.functions.core.MapValueFunction">
-  <property name="values">
-    <map>
-      <entry key="200" value="OK" />
-      <entry key="401" value="Unauthorized" />
-      <entry key="500" value="Internal Server Error" />
-    </map>
-  </property>
-</bean>
+private RandomEnumValueFunction randomHttpStatusCode() {
+    RandomEnumValueFunction function = new RandomEnumValueFunction();
+    function.setValues(Arrays.asList("200", "500", "401"));
+    return function;
+}
+
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public FunctionLibrary myCustomFunctionLibrary() {
+    FunctionLibrary library = new FunctionLibrary();
+    library.setName("custom");
+    library.setPrefix("custom:");
+    library.getMembers().put("getHttpStatusMessage", httpStatusMessageFunction());
+    return library;
+}
+
+private MapValueFunction httpStatusMessageFunction() {
+    MapValueFunction function = new MapValueFunction();
+    function.getValues().put("200", "OK");
+    function.getValues().put("401", "Unauthorized");
+    function.getValues().put("500", "Internal Server Error");
+    return function;
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+
+    <citrus:function-library id="myCustomFunctionLibrary" prefix="custom:">
+          <citrus-function name="getHttpStatusMessage" ref="httpStatusMessageFunction"/>
+    </citrus:function-library>
+
+    <bean id="httpStatusMessageFunction" class="org.citrusframework.functions.core.MapValueFunction">
+      <property name="values">
+        <map>
+          <entry key="200" value="OK" />
+          <entry key="401" value="Unauthorized" />
+          <entry key="500" value="Internal Server Error" />
+        </map>
+      </property>
+    </bean>
+</beans>
 ----
 
 In this example the function sets the variable httpStatusMessage to the 'Internal Server Error' string dynamically at runtime. The test only knows the HTTP status code and does not care about spelling and message locales.

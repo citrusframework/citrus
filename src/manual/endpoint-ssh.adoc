@@ -28,23 +28,6 @@ This message can be validated with the usual Citrus mechanism in a receive test 
 
 Besides simulating a full-featured SSH server, Citrus also provides SSH client functionality. This client uses the same request message pattern, which is translated into a real SSH call to an SSH server. The SSH response received is also translated into an XML message as shown above so we can validate it with known validation mechanisms in Citrus.
 
-Similar to the other Citrus modules (http, soap), a Citrus SSH server and client is configured in Citrus Spring application context. There is a dedicated *ssh* namespace available for all ssh Citrus components. The namespace declaration goes into the context top-level element as usual:
-
-[source,xml]
-----
-<beans 
-    [...]
-    xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
-    [...]
-    xsi:schemaLocation="
-        [...]
-        http://www.citrusframework.org/schema/ssh/config
-        http://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd
-        [...] ">
-   [...]
-</beans>
-----
-
 Both, SSH server and client along with their configuration options are described in the following two sections.
 
 [[ssh-client]]
@@ -54,15 +37,60 @@ A Citrus SSH client is useful for testing against a real SSH server. So Citrus i
 
 The SSH client components receive its configuration in the Spring application context as usual. We can use the special SSH module namespace for easy configuration:
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-ssh:client id="sshClient"
+@BindToRegistry
+public SshClient sshClient() {
+    return new SshClientBuilder()
+        .host("localhost")
+        .port(9072)
+        .user("roland")
+        .privateKeyPath("classpath:org/citrusframework/ssh/test_user.priv")
+        .strictHostChecking(false)
+        .build();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public SshClient sshClient() {
+    return new SshClientBuilder()
+        .host("localhost")
+        .port(9072)
+        .user("roland")
+        .privateKeyPath("classpath:org/citrusframework/ssh/test_user.priv")
+        .strictHostChecking(false)
+        .build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/ssh/config
+       http://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd">
+
+    <citrus-ssh:client id="sshClient"
            port="9072"
            user="roland"
            private-key-path="classpath:org/citrusframework/ssh/test_user.priv"
            strict-host-checking="false"
            host="localhost"/>
+</beans>
 ----
+
+NOTE: Similar to the other Citrus modules (http, soap), a Citrus SSH server and client is configured in Citrus Spring application context.
+There is a dedicated *ssh* namespace available for all ssh Citrus components.
+The namespace declaration goes into the Spring XML bean configuration top-level element as usual.
 
 The SSH client receives several attributes, these are:
 
@@ -94,7 +122,7 @@ Once defines as client component in the Spring application context test cases ca
     </payload>
   </message>
 </send>
-  
+
 <receive endpoint="sshClient">
   <message>
     <payload>
@@ -117,14 +145,55 @@ Now that we have used Citrus on the client side we can also use Citrus SSH serve
 
 Given the above SSH module namespace declaration, adding a new SSH server is quite simple:
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-ssh:server id="sshServer"
+@BindToRegistry
+public SshServer sshServer() {
+    return new SshServerBuilder()
+        .port(9072)
+        .user("roland")
+        .allowedKeyPath("classpath:org/citrusframework/ssh/test_user_pub.pem")
+        .endpointAdapter(sshEndpointAdapter())
+        .autoStart(true)
+        .build();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public SshServer sshServer() {
+    return new SshServerBuilder()
+        .port(9072)
+        .user("roland")
+        .allowedKeyPath("classpath:org/citrusframework/ssh/test_user_pub.pem")
+        .endpointAdapter(sshEndpointAdapter())
+        .autoStart(true)
+        .build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/ssh/config
+       http://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd">
+
+    <citrus-ssh:server id="sshServer"
              allowed-key-path="classpath:org/citrusframework/ssh/test_user_pub.pem"
              user="roland"
              port="9072"
              auto-start="true"
              endpoint-adapter="sshEndpointAdapter"/>
+</beans>
 ----
 
 The *endpoint-adapter* is the handler which receives the SSH request as messages (in the request format described above). Endpoint adapter implementations are fully described in link:#http-rest-server[http-server]All adapters described there are supported in SSH server module, too.

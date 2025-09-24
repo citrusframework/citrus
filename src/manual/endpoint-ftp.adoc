@@ -594,18 +594,26 @@ Listing files results in a command result that gives us the list of files on the
 
 Now that we are able to access FTP as a client we might also want to simulate the server side. Therefore Citrus offers a server component that is listening on a port for incoming FTP connections. The server has a default home directory on the local file system specified. But you can also define home directories per user. For now let us have a look at the server configuration component:
 
-.XML
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-ftp:server id="ftpServer">
-      port="2222"
-      auto-start="true"
-      auto-handle-commands="MKD,PORT,TYPE"
-      user-manager-properties="classpath:ftp.server.properties"/>
+@BindToRegistry
+public FtpServer ftpListServer() {
+    return CitrusEndpoints.ftp()
+            .server()
+            .port(2222)
+            .autoLogin(true)
+            .autoStart(true)
+            .autoHandleCommands(Stream.of(FTPCmd.MKD.getCommand(),
+                                          FTPCmd.PORT.getCommand(),
+                                          FTPCmd.TYPE.getCommand()).collect(Collectors.joining(",")))
+            .userManagerProperties(new ClassPathResource("citrus.ftp.user.properties"))
+            .build();
+}
 ----
 
-.Java
-[source,java]
+.Spring Bean
+[source,java,indent=0,role="secondary"]
 ----
 @Bean
 public FtpServer ftpListServer() {
@@ -619,6 +627,17 @@ public FtpServer ftpListServer() {
                                           FTPCmd.TYPE.getCommand()).collect(Collectors.joining(",")))
             .userManagerProperties(new ClassPathResource("citrus.ftp.user.properties"))
             .build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus-ftp:server id="ftpServer"
+      port="2222"
+      auto-start="true"
+      auto-handle-commands="MKD,PORT,TYPE"
+      user-manager-properties="classpath:ftp.server.properties"/>
 ----
 
 The ftp server configuration is quite simple. The server starts automatically and binds to a port. With `autoLogin` and `autoHandleCommands` we can specify the behavior of the server.
@@ -627,7 +646,7 @@ have to verify those commands in a test case. The server will automatically resp
 
 The user configuration is read from a *user-manager-property* file. Let us have a look at the content of this user management file:
 
-[source,xml]
+[source,properties]
 ----
 # Password is "admin"
 ftpserver.user.admin.userpassword=c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23f3eab1d80b931dd472634dfac71cd34ebc35d16ab7fb8a90c81f975113d6c7538dc69dd8de9077ec

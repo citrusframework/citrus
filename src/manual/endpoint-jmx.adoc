@@ -16,29 +16,6 @@ NOTE: The JMX components in Citrus are kept in a separate Maven module. So you s
 </dependency>
 ----
 
-As usual Citrus provides a customized jmx configuration schema that is used in Spring configuration files. Simply include the citrus-jmx namespace in the configuration XML files as follows.
-
-[source,xml]
-----
-<beans xmlns="http://www.springframework.org/schema/beans"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:citrus="http://www.citrusframework.org/schema/config"
-      xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
-      xsi:schemaLocation="
-      http://www.springframework.org/schema/beans
-      http://www.springframework.org/schema/beans/spring-beans.xsd
-      http://www.citrusframework.org/schema/config
-      http://www.citrusframework.org/schema/config/citrus-config.xsd
-      http://www.citrusframework.org/schema/jmx/config
-      http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
-
-      [...]
-
-      </beans>
-----
-
-Now you are ready to use the customized Http configuration elements with the citrus-jmx namespace prefix.
-
 Next sections describe the JMX message support in Citrus in more detail.
 
 [[jmx-client]]
@@ -46,29 +23,112 @@ Next sections describe the JMX message support in Citrus in more detail.
 
 On the client side we want to call some managed bean by either accessing managed attributes with read/write or by invoking a managed bean operation. For proper mbean server connectivity we should specify a client component for JMX that sends out mbean invocation calls.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-jmx:client id="jmxClient"
-      server-url="platform"/>
+@BindToRegistry
+public JmxClient jmxClient() {
+    return new JmxClientBuilder()
+        .serverUrl("platform")
+        .build();
+}
 ----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public JmxClient jmxClient() {
+    return new JmxClientBuilder()
+        .serverUrl("platform")
+        .build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/jmx/config
+       http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
+
+    <citrus-jmx:client id="jmxClient"
+            server-url="platform"/>
+</beans>
+----
+
+NOTE: As usual Citrus provides a customized jmx configuration schema that is used in Spring XML bean configurations.
+Simply include the `citrus-jmx` namespace in the configuration XML files as seen in the example above.
 
 The client component specifies the target managed bean server that we want to connect to. In this example we are using the JVM platform mbean server. This means we are able to access all JVM managed beans such as Memory, Threading and Logging. In addition to that we can access all custom managed beans that were exposed to the platform mbean server.
 
 In most cases you may want to access managed beans on a different JVM or application server. So we need some remote connection to the foreign mbean server.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-jmx:client id="jmxClient"
-      server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi"
-      username="user"
-      password="s!cr!t"
-      auto-reconnect="true"
-      delay-on-reconnect="5000"/>
+@BindToRegistry
+public JmxClient jmxClient() {
+    return new JmxClientBuilder()
+        .serverUrl("service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi")
+        .username("user")
+        .password("s!cr!t")
+        .autoReconnect(true)
+        .delayOnReconnect(5000L)
+        .build();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public JmxClient jmxClient() {
+    return new JmxClientBuilder()
+        .serverUrl("service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi")
+        .username("user")
+        .password("s!cr!t")
+        .autoReconnect(true)
+        .delayOnReconnect(5000L)
+        .build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/jmx/config
+       http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
+
+    <citrus-jmx:client id="jmxClient"
+          server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi"
+          username="user"
+          password="s!cr!t"
+          auto-reconnect="true"
+          delay-on-reconnect="5000"/>
+</beans>
 ----
 
 In this example above we connect to a remote mbean server via RMI using the default RMI registry *localhost:1099* and the service name *jmxrmi* . Citrus is able to handle different remote transport protocols. Just define those in the *server-url* .
 
-Now that we have setup the client component we can use it in a test case to access a managed bean.
+Now that we have set up the client component we can use it in a test case to access a managed bean.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -380,33 +440,199 @@ This completes the basic JMX managed bean access as client. Now we also want to 
 
 The server side is always a little bit more tricky because we need to simulate custom managed bean access as a server. First of all Citrus provides a server component that specifies the connection properties for clients such as transport protocols, ports and mbean object names. Let's create a new server that accepts incoming requests via RMI on a remote registry *localhost:1099* .
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-jmx:server id="jmxServer"
-      server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi">
-    <citrus-jmx:mbeans>
-        <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.HelloBean"/>
-        <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.NewsBean" objectDomain="org.citrusframework.news" objectName="name=News"/>
-    </citrus-jmx:mbeans>
-</citrus-jmx:server>
+@BindToRegistry
+public JmxServer jmxServer() {
+    return new JmxServerBuilder()
+        .serverUrl("service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi")
+        .mbeans(jmxBeans())
+        .build();
+}
+
+private List<ManagedBeanDefinition> jmxBeans() {
+    return Arrays.asList(
+        helloBean(),
+        newsBean()
+    );
+}
+
+private ManagedBeanDefinition helloBean() {
+    ManagedBeanDefinition managedBeanDefinition = new ManagedBeanDefinition();
+    managedBeanDefinition.setType(org.citrusframework.jmx.mbean.HelloBean.class);
+    return managedBeanDefinition;
+}
+
+private ManagedBeanDefinition newsBean() {
+    ManagedBeanDefinition managedBeanDefinition = new ManagedBeanDefinition();
+    managedBeanDefinition.setType(org.citrusframework.jmx.mbean.NewsBean.class);
+    managedBeanDefinition.setObjectDomain("org.citrusframework.news");
+    managedBeanDefinition.setObjectName("name=News");
+    return managedBeanDefinition;
+}
 ----
 
-As usual we define a *server-url* that controls the JMX connector access to the mbean server. In this example above we open a JMX RMI connector for clients using the registry *localhost:1099* and the service name *jmxrmi* By default Citrus will not attempt to create this registry automatically so the registry has to be present before the server start up. With the optional server property *create-registry* set to *true* you can auto create the registry when the server starts up. These properties do only apply when using a remote JMX connector server.
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public JmxServer jmxServer() {
+    return new JmxServerBuilder()
+        .serverUrl("service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi")
+        .mbeans(jmxBeans())
+        .build();
+}
+
+private List<ManagedBeanDefinition> jmxBeans() {
+    return Arrays.asList(
+        helloBean(),
+        newsBean()
+    );
+}
+
+private ManagedBeanDefinition helloBean() {
+    ManagedBeanDefinition managedBeanDefinition = new ManagedBeanDefinition();
+    managedBeanDefinition.setType(org.citrusframework.jmx.mbean.HelloBean.class);
+    return managedBeanDefinition;
+}
+
+private ManagedBeanDefinition newsBean() {
+    ManagedBeanDefinition managedBeanDefinition = new ManagedBeanDefinition();
+    managedBeanDefinition.setType(org.citrusframework.jmx.mbean.NewsBean.class);
+    managedBeanDefinition.setObjectDomain("org.citrusframework.news");
+    managedBeanDefinition.setObjectName("name=News");
+    return managedBeanDefinition;
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/jmx/config
+       http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
+
+    <citrus-jmx:server id="jmxServer"
+        server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi">
+        <citrus-jmx:mbeans>
+            <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.HelloBean"/>
+            <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.NewsBean" objectDomain="org.citrusframework.news" objectName="name=News"/>
+        </citrus-jmx:mbeans>
+    </citrus-jmx:server>
+</beans>
+----
+
+As usual, we define a *server-url* that controls the JMX connector access to the mbean server. In this example above we open a JMX RMI connector for clients using the registry *localhost:1099* and the service name *jmxrmi* By default Citrus will not attempt to create this registry automatically so the registry has to be present before the server start up. With the optional server property *create-registry* set to *true* you can auto create the registry when the server starts up. These properties do only apply when using a remote JMX connector server.
 
 Besides using the whole server-url as property we can also construct the connection by host, port, protocol and binding properties.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-jmx:server id="jmxServer"
-      host="localhost"
-      port="1099"
-      protocol="rmi"
-      binding="jmxrmi">
-    <citrus-jmx:mbeans>
-        <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.HelloBean"/>
-        <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.NewsBean" objectDomain="org.citrusframework.news" objectName="name=News"/>
-    </citrus-jmx:mbeans>
-</citrus-jmx:server>
+@BindToRegistry
+public JmxServer jmxServer() {
+    return new JmxServerBuilder()
+        .host("localhost")
+        .port(1099)
+        .protocol("rmi")
+        .binding("jmxrmi")
+        .mbeans(jmxBeans())
+        .build();
+}
+
+private List<ManagedBeanDefinition> jmxBeans() {
+    return Arrays.asList(
+        helloBean(),
+        newsBean()
+    );
+}
+
+private ManagedBeanDefinition helloBean() {
+    ManagedBeanDefinition managedBeanDefinition = new ManagedBeanDefinition();
+    managedBeanDefinition.setType(org.citrusframework.jmx.mbean.HelloBean.class);
+    return managedBeanDefinition;
+}
+
+private ManagedBeanDefinition newsBean() {
+    ManagedBeanDefinition managedBeanDefinition = new ManagedBeanDefinition();
+    managedBeanDefinition.setType(org.citrusframework.jmx.mbean.NewsBean.class);
+    managedBeanDefinition.setObjectDomain("org.citrusframework.news");
+    managedBeanDefinition.setObjectName("name=News");
+    return managedBeanDefinition;
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public JmxServer jmxServer() {
+    return new JmxServerBuilder()
+        .host("localhost")
+        .port(1099)
+        .protocol("rmi")
+        .binding("jmxrmi")
+        .mbeans(jmxBeans())
+        .build();
+}
+
+private List<ManagedBeanDefinition> jmxBeans() {
+    return Arrays.asList(
+        helloBean(),
+        newsBean()
+    );
+}
+
+private ManagedBeanDefinition helloBean() {
+    ManagedBeanDefinition managedBeanDefinition = new ManagedBeanDefinition();
+    managedBeanDefinition.setType(org.citrusframework.jmx.mbean.HelloBean.class);
+    return managedBeanDefinition;
+}
+
+private ManagedBeanDefinition newsBean() {
+    ManagedBeanDefinition managedBeanDefinition = new ManagedBeanDefinition();
+    managedBeanDefinition.setType(org.citrusframework.jmx.mbean.NewsBean.class);
+    managedBeanDefinition.setObjectDomain("org.citrusframework.news");
+    managedBeanDefinition.setObjectName("name=News");
+    return managedBeanDefinition;
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/jmx/config
+       http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
+
+    <citrus-jmx:server id="jmxServer"
+          host="localhost"
+          port="1099"
+          protocol="rmi"
+          binding="jmxrmi">
+        <citrus-jmx:mbeans>
+            <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.HelloBean"/>
+            <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.NewsBean" objectDomain="org.citrusframework.news" objectName="name=News"/>
+        </citrus-jmx:mbeans>
+    </citrus-jmx:server>
+</beans>
 ----
 
 On last thing to mention is that we could have also used *platform* as server-url in order to use the JVM platform mbean server instead.
@@ -419,28 +645,148 @@ This is how we can define the bindings of managed beans and what clients need to
 
 Right now we have to use the qualified class name of the managed bean in the definition. What happens if we do not have access to that mbean class or if there is not managed bean interface available at all? Citrus provides a generic managed bean that is able to handle any managed bean interaction. The generic bean implementation needs to know the managed operations and attributes though. So let's define a new generic managed bean on our server:
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-jmx:server id="jmxServer"
-server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi">
-    <citrus-jmx:mbeans>
-        <citrus-jmx:mbean name="fooBean" objectDomain="foo.object.domain" objectName="type=FooBean">
-            <citrus-jmx:operations>
-                <citrus-jmx:operation name="fooOperation">
-                    <citrus-jmx:parameter>
-                        <citrus-jmx:param type="java.lang.String"/>
-                        <citrus-jmx:param type="java.lang.Integer"/>
-                    </citrus-jmx:parameter>
-                </citrus-jmx:operation>
-                <citrus-jmx:operation name="barOperation"/>
-            </citrus-jmx:operations>
-            <citrus-jmx:attributes>
-                <citrus-jmx:attribute name="fooAttribute" type="java.lang.String"/>
-                <citrus-jmx:attribute name="barAttribute" type="java.lang.Boolean"/>
-            </citrus-jmx:attributes>
-        </citrus-jmx:mbean>
-    </citrus-jmx:mbeans>
-</citrus-jmx:server>
+@BindToRegistry
+public JmxServer jmxServer() {
+    return new JmxServerBuilder()
+        .serverUrl("service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi")
+        .mbeans(jmxBeans())
+        .build();
+}
+
+private List<ManagedBeanDefinition> jmxBeans() {
+    return Arrays.asList(
+        fooBean()
+    );
+}
+
+private ManagedBeanDefinition fooBean() {
+    ManagedBeanDefinition managedBeanDefinition = new ManagedBeanDefinition();
+    managedBeanDefinition.setObjectDomain("foo.object.domain");
+    managedBeanDefinition.setObjectName("type=FooBean");
+
+    ManagedBeanInvocation.Operation fooOp = new ManagedBeanInvocation.Operation();
+    fooOp.setName("fooOp");
+
+    ManagedBeanInvocation.Parameter fooOpParams = new ManagedBeanInvocation.Parameter();
+    OperationParam p1 = new OperationParam();
+    p1.setType(String.class.getName());
+    p1.setType(Integer.class.getName());
+    fooOpParams.getParameter().add(p1);
+    fooOp.setParameter(fooOpParams);
+
+    ManagedBeanInvocation.Operation barOp = new ManagedBeanInvocation.Operation();
+    barOp.setName("barOp");
+
+    managedBeanDefinition.getOperations().add(fooOp);
+    managedBeanDefinition.getOperations().add(barOp);
+
+    ManagedBeanInvocation.Attribute fooAttr = new ManagedBeanInvocation.Attribute();
+    fooAttr.setName("fooAttr");
+    fooAttr.setType(String.class.getName());
+
+    ManagedBeanInvocation.Attribute barAttr = new ManagedBeanInvocation.Attribute();
+    barAttr.setName("barAttr");
+    barAttr.setType(Boolean.class.getName());
+
+    managedBeanDefinition.getAttributes().add(fooAttr);
+    managedBeanDefinition.getAttributes().add(barAttr);
+
+    return managedBeanDefinition;
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public JmxServer jmxServer() {
+    return new JmxServerBuilder()
+        .serverUrl("service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi")
+        .mbeans(jmxBeans())
+        .build();
+}
+
+private List<ManagedBeanDefinition> jmxBeans() {
+    return Arrays.asList(
+        fooBean()
+    );
+}
+
+private ManagedBeanDefinition fooBean() {
+    ManagedBeanDefinition managedBeanDefinition = new ManagedBeanDefinition();
+    managedBeanDefinition.setObjectDomain("foo.object.domain");
+    managedBeanDefinition.setObjectName("type=FooBean");
+
+    ManagedBeanInvocation.Operation fooOp = new ManagedBeanInvocation.Operation();
+    fooOp.setName("fooOp");
+
+    ManagedBeanInvocation.Parameter fooOpParams = new ManagedBeanInvocation.Parameter();
+    OperationParam p1 = new OperationParam();
+    p1.setType(String.class.getName());
+    p1.setType(Integer.class.getName());
+    fooOpParams.getParameter().add(p1);
+    fooOp.setParameter(fooOpParams);
+
+    ManagedBeanInvocation.Operation barOp = new ManagedBeanInvocation.Operation();
+    barOp.setName("barOp");
+
+    managedBeanDefinition.getOperations().add(fooOp);
+    managedBeanDefinition.getOperations().add(barOp);
+
+    ManagedBeanInvocation.Attribute fooAttr = new ManagedBeanInvocation.Attribute();
+    fooAttr.setName("fooAttr");
+    fooAttr.setType(String.class.getName());
+
+    ManagedBeanInvocation.Attribute barAttr = new ManagedBeanInvocation.Attribute();
+    barAttr.setName("barAttr");
+    barAttr.setType(Boolean.class.getName());
+
+    managedBeanDefinition.getAttributes().add(fooAttr);
+    managedBeanDefinition.getAttributes().add(barAttr);
+
+    return managedBeanDefinition;
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/jmx/config
+       http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
+
+    <citrus-jmx:server id="jmxServer"
+        server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi">
+        <citrus-jmx:mbeans>
+            <citrus-jmx:mbean name="fooBean" objectDomain="foo.object.domain" objectName="type=FooBean">
+                <citrus-jmx:operations>
+                    <citrus-jmx:operation name="fooOp">
+                        <citrus-jmx:parameter>
+                            <citrus-jmx:param type="java.lang.String"/>
+                            <citrus-jmx:param type="java.lang.Integer"/>
+                        </citrus-jmx:parameter>
+                    </citrus-jmx:operation>
+                    <citrus-jmx:operation name="barOp"/>
+                </citrus-jmx:operations>
+                <citrus-jmx:attributes>
+                    <citrus-jmx:attribute name="fooAttr" type="java.lang.String"/>
+                    <citrus-jmx:attribute name="barAttr" type="java.lang.Boolean"/>
+                </citrus-jmx:attributes>
+            </citrus-jmx:mbean>
+        </citrus-jmx:mbeans>
+    </citrus-jmx:server>
+</beans>
 ----
 
 The generic bean definition needs to define all operations and attributes that are available for access. Up to now we are restricted to using Java base types when defining operation parameter and attribute return types. There is actually no way to define more complex return types. Nevertheless Citrus is now able to expose the managed bean for client access without having to know the actual managed bean implementation.
@@ -702,6 +1048,6 @@ actions:
 </spring:beans>
 ----
 
-The receive action expects read access to the *NewsBean* attribute *newsCount* and returns a result object of type *java.lang.Integer* . This way we can expect all attribute access to our managed beans. Write operations will have an attribute value specified.
+The `receive` action expects read access to the *NewsBean* attribute *newsCount* and returns a result object of type *java.lang.Integer* . This way we can expect all attribute access to our managed beans. Write operations will have an attribute value specified.
 
 This completes the JMX server capabilities with managed bean access on operations and attributes.

@@ -33,19 +33,60 @@ A set of validation matcher implementations is usually combined to a validation 
 
 The library is built in the Spring configuration and contains a set of validation matchers that are of public use.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus:validation matcher-library id="testMatcherLibrary" prefix="foo:">
-      <citrus:matcher name="isNumber"> class="org.citrusframework.validation.matcher.core.IsNumberValidationMatcher"/>
-      <citrus:matcher name="contains"> class="org.citrusframework.validation.matcher.core.ContainsValidationMatcher"/>
-      <citrus:matcher name="customMatcher"> ref="customMatcherBean"/>
-      ...
-      </citrus:validation matcher-library>
+@BindToRegistry
+public ValidationMatcherLibrary testMatcherLibrary() {
+    ValidationMatcherLibrary library = new ValidationMatcherLibrary();
+    library.setName("test");
+    library.setPrefix("foo:");
+    library.getMembers().put("isNumber", new IsNumberValidationMatcher());
+    library.getMembers().put("contains", new ContainsValidationMatcher());
+    library.getMembers().put("customMatcher", customMatcherBean());
+    return library;
+}
 ----
 
-As you can see the library defines one to many validation matcher members either referenced as normal Spring bean or by its implementing Java class name. Citrus constructs the library and you are able to use the validation matcher in your test case with the leading library prefix just like this:
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public ValidationMatcherLibrary testMatcherLibrary() {
+    ValidationMatcherLibrary library = new ValidationMatcherLibrary();
+    library.setName("test");
+    library.setPrefix("foo:");
+    library.getMembers().put("isNumber", new IsNumberValidationMatcher());
+    library.getMembers().put("contains", new ContainsValidationMatcher());
+    library.getMembers().put("customMatcher", customMatcherBean());
+    return library;
+}
+----
 
-[source,xml]
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+    <citrus:validation-matcher-library id="testMatcherLibrary" prefix="foo:">
+          <citrus:matcher name="isNumber" class="org.citrusframework.validation.matcher.core.IsNumberValidationMatcher"/>
+          <citrus:matcher name="contains" class="org.citrusframework.validation.matcher.core.ContainsValidationMatcher"/>
+          <citrus:matcher name="customMatcher" ref="customMatcherBean"/>
+          ...
+    </citrus:validation-matcher-library>
+</beans>
+----
+
+As you can see the library defines one to many validation matcher members either referenced as normal Spring bean or by its implementing Java class name. Citrus constructs the library, and you are able to use the validation matcher in your test case with the leading library prefix just like this:
+
+[source,text]
 ----
 @foo:isNumber()@
 @foo:contains()@
@@ -89,13 +130,15 @@ The XML validation matcher implementation is the possibly most exciting one, as 
       <CustomerDetails>
           <Id>5</Id>
           <Name>Christoph</Name>
-          <Configuration><![CDATA[
+          <Configuration>
+          <![CDATA[
             <config>
                 <premium>true</premium>
                 <last-login>2012-02-24T23:34:23</last-login>
                 <link>http://citrusframework.org/customer/5</link>
             </config>
-          ]]></Configuration>
+          ]]>
+          </Configuration>
       </CustomerDetails>
 </GetCustomerMessage>
 ----
@@ -110,11 +153,13 @@ As you can see the message payload contains some configuration as nested XML dat
             <CustomerDetails>
                 <Id>5</Id>
                 <Name>Christoph</Name>
-                <Configuration>citrus:cdataSection('@matchesXml('<config>
+                <Configuration>
+                  citrus:cdataSection(@matchesXml('<config>
                     <premium>${isPremium}</premium>
                     <last-login>@ignore@</last-login>
                     <link>http://citrusframework.org/customer/5</link>
-                  </config>')@')</Configuration>
+                  </config>')@)
+                </Configuration>
             </CustomerDetails>
         </GetCustomerMessage>
     </payload>

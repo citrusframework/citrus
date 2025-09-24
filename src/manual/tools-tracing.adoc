@@ -69,16 +69,62 @@ Received SOAP response:
 
 For this message tracing to work we need to add logging listeners to our sender and receiver components accordingly.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-ws:client id="webServiceClient"
-    request-url="http://localhost:8071"
-    message-factory="messageFactory"
-    interceptors="clientInterceptors"/>
+@BindToRegistry
+public WebServiceClient soapClient() {
+    return new WebServiceClientBuilder()
+            .defaultUri("http://localhost:8080/services/ws/todolist")
+            .interceptors(clientInterceptors())
+            .build();
+}
+
+public List<ClientInterceptor> clientInterceptors() {
+    return Arrays.asList(new LoggingClientInterceptor());
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public WebServiceClient soapClient() {
+    return new WebServiceClientBuilder()
+            .defaultUri("http://localhost:8080/services/ws/todolist")
+            .interceptors(clientInterceptors())
+            .build();
+}
+
+public List<ClientInterceptor> clientInterceptors() {
+    return Arrays.asList(new LoggingClientInterceptor());
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/ws/config
+       http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
+
+
+    <citrus-ws:client id="soapClient"
+                    request-url="http://localhost:8080/services/ws/todolist[http://localhost:8071]"
+                    interceptors="clientInterceptors"/>
 
     <util:list id="clientInterceptors">
         <bean class="org.citrusframework.ws.interceptor.LoggingClientInterceptor"/>
     </util:list>
+</beans>
 ----
 
 IMPORTANT: Be aware of adding the Spring *util* XML namespace to the application context when using the *util:list* construct.

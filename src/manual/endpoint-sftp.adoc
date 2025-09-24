@@ -42,19 +42,23 @@ Now we are ready to use the customized Citrus SFTP configuration elements with t
 
 We want to use Citrus to connect to some FTP server using secure file transfer and authentication. Citrus offers a client component doing exactly this SFTP client connection.
 
-.XML
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-sftp:client id="sftpClient"
-           strict-host-checking="false"
-           port="2222"
-           username="citrus"
-           private-key-path="classpath:ssh/citrus.priv"
-           timeout="10000"/>
+@BindToRegistry
+public SftpClient sftpClient() {
+    return CitrusEndpoints.sftp()
+            .client()
+            .strictHostChecking(false)
+            .port(2222)
+            .username("citrus")
+            .privateKeyPath("classpath:ssh/citrus.priv")
+            .build();
+}
 ----
 
-.Java
-[source, java]
+.Spring Bean
+[source,java,indent=0,role="secondary"]
 ----
 @Bean
 public SftpClient sftpClient() {
@@ -68,26 +72,54 @@ public SftpClient sftpClient() {
 }
 ----
 
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-sftp="http://www.citrusframework.org/schema/sftp/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/sftp/config
+       http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd">
+
+    <citrus-sftp:client id="sftpClient"
+           strict-host-checking="false"
+           port="2222"
+           username="citrus"
+           private-key-path="classpath:ssh/citrus.priv"
+           timeout="10000"/>
+</beans>
+----
+
 The configuration above describes a Citrus sftp client. The sftp-client connects to the server using the user credentials
 and/or the private key authentication. The client will automatically authenticate to the server when opening a new connection.
 As the Citrus stfp client supports various authentication methods, the following order is default: `publickey,password,keyboard-interactive`.
 You're able to configure the default order with the `preferred-authentications` attribute in XML or the
 `preferredAuthentications` method in Java.
 
-.XML
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-sftp:client id="sftpClient"
-           strict-host-checking="false"
-           port="2222"
-           username="citrus"
-           private-key-path="classpath:ssh/citrus.priv",
-           preferred-authentications="publickey,password,gssapi-with-mic,keyboard-interactive"
-           timeout="10000"/>
+@BindToRegistry
+public SftpClient sftpClient() {
+    return CitrusEndpoints.sftp()
+            .client()
+            .strictHostChecking(false)
+            .port(2222)
+            .username("citrus")
+            .privateKeyPath("classpath:ssh/citrus.priv")
+            .preferredAuthentications("publickey,password,gssapi-with-mic,keyboard-interactive")
+            .build();
+}
 ----
 
-.Java
-[source, java]
+.Spring Bean
+[source,java,indent=0,role="secondary"]
 ----
 @Bean
 public SftpClient sftpClient() {
@@ -100,6 +132,31 @@ public SftpClient sftpClient() {
             .preferredAuthentications("publickey,password,gssapi-with-mic,keyboard-interactive")
             .build();
 }
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-sftp="http://www.citrusframework.org/schema/sftp/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/sftp/config
+       http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd">
+
+    <citrus-sftp:client id="sftpClient"
+           strict-host-checking="false"
+           port="2222"
+           username="citrus"
+           private-key-path="classpath:ssh/citrus.priv",
+           preferred-authentications="publickey,password,gssapi-with-mic,keyboard-interactive"
+           timeout="10000"/>
+</beans>
 ----
 
 [[sftp-client-commands]]
@@ -348,19 +405,24 @@ Listing files results in a command result that gives us the list of files on the
 
 Now that we are able to access SFTP as a client we might also want to simulate the server side. Therefore Citrus offers a server component that is listening on a port for incoming SFTP connections. The server has a default home directory on the local file system specified. But you can also define home directories per user. For now let us have a look at the server configuration component:
 
-.XML
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-sftp:server id="sftpServer"
-                   port="2222"
-                   auto-start="true"
-                   user="citrus"
-                   password="admin"
-                   allowed-key-path="classpath:ssh/citrus_pub.pem"/>
+@BindToRegistry
+public SftpServer sftpServer() {
+    return CitrusEndpoints.sftp()
+            .server()
+            .port(2222)
+            .autoStart(true)
+            .user("citrus")
+            .password("admin")
+            .allowedKeyPath("classpath:ssh/citrus_pub.pem")
+            .build();
+}
 ----
 
-.Java
-[source,java]
+.Spring Bean
+[source,java,indent=0,role="secondary"]
 ----
 @Bean
 public SftpServer sftpServer() {
@@ -373,6 +435,31 @@ public SftpServer sftpServer() {
             .allowedKeyPath("classpath:ssh/citrus_pub.pem")
             .build();
 }
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-sftp="http://www.citrusframework.org/schema/sftp/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/sftp/config
+       http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd">
+
+
+    <citrus-sftp:server id="sftpServer"
+                   port="2222"
+                   auto-start="true"
+                   user="citrus"
+                   password="admin"
+                   allowed-key-path="classpath:ssh/citrus_pub.pem"/>
+</beans>
 ----
 
 The *sftpServer* is a small but fully qualified SFTP server implementation in Citrus. The server receives a `user` that defines the user account and its home directory. All commands
@@ -596,18 +683,23 @@ Now we are ready to use the customized Citrus SCP configuration elements with th
 
 We want to use Citrus to connect to some FTP server using secure file copy with SCP. Citrus offers a client component doing exactly this SCP client connection.
 
-.XML
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus-scp:client id="scpClient"
-               port="2222"
-               username="citrus"
-               password="admin"
-               private-key-path="classpath:ssh/citrus.priv"/>
+@BindToRegistry
+public ScpClient scpClient() {
+    return CitrusEndpoints.scp()
+            .client()
+            .port(2222)
+            .username("citrus")
+            .password("admin")
+            .privateKeyPath("classpath:ssh/citrus.priv")
+            .build();
+}
 ----
 
-.Java
-[source, java]
+.Spring Bean
+[source,java,indent=0,role="secondary"]
 ----
 @Bean
 public ScpClient scpClient() {
@@ -619,6 +711,30 @@ public ScpClient scpClient() {
             .privateKeyPath("classpath:ssh/citrus.priv")
             .build();
 }
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-sftp="http://www.citrusframework.org/schema/sftp/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config
+       http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/sftp/config
+       http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd">
+
+
+    <citrus-scp:client id="scpClient"
+               port="2222"
+               username="citrus"
+               password="admin"
+               private-key-path="classpath:ssh/citrus.priv"/>
+</beans>
 ----
 
 The configuration above describes a Citrus scp client. The scp-client connects to the server using the user credentials and/or the private key authentication. The client will automatically authenticate to the server when opening a new connection.

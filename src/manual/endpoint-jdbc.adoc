@@ -178,7 +178,7 @@ Citrus is able to verify the behavior of your system under test concerning start
 actions of transactions. The verification of transactions has to be enabled in the server Citrus-JDBC-Server
 configuration. For more information, please have a look at the <<jdbc-server-configuration>> section.
 
-.Verifiying transaction commit
+.Verifying transaction commit
 [source,java]
 ----
 receive(jdbcServer)

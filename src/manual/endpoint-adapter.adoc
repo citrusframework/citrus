@@ -5,15 +5,51 @@ Endpoint adapter help to customize the behavior of a Citrus server such as HTTP 
 
 You set the custom endpoint adapter directly on the server configuration as follows:
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public HttpServer helloHttpServer() {
+    return new HttpServerBuilder()
+        .port(8080)
+        .autoStart(true)
+        .endpointAdapter("emptyResponseEndpointAdapter")
+        .build();
+}
+
+@BindToRegistry
+public EmptyResponseEndpointAdapter emptyResponseEndpointAdapter() {
+    return new EmptyResponseEndpointAdapter();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public HttpServer helloHttpServer() {
+    return new HttpServerBuilder()
+        .port(8080)
+        .autoStart(true)
+        .endpointAdapter("emptyResponseEndpointAdapter")
+        .build();
+}
+
+@Bean
+public EmptyResponseEndpointAdapter emptyResponseEndpointAdapter() {
+    return new EmptyResponseEndpointAdapter();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus-http:server id="helloHttpServer"
     port="8080"
     auto-start="true"
-    endpoint-adapter="emptyResponseEndpointAdapter"
-    resource-base="src/it/resources"/>
+    endpoint-adapter="emptyResponseEndpointAdapter"/>
 
-    <citrus:empty-response-adapter id="emptyResponseEndpointAdapter"/>
+<citrus:empty-response-adapter id="emptyResponseEndpointAdapter"/>
 ----
 
 Now let us have a closer look at the provided endpoint adapter implementations.
@@ -23,7 +59,26 @@ Now let us have a closer look at the provided endpoint adapter implementations.
 
 This is the simplest endpoint adapter you can think of. It simply provides an empty success response using the HTTP response code *200* . The adapter does not need any configurations or properties as it simply responds with an empty HTTP response.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public EmptyResponseEndpointAdapter emptyResponseEndpointAdapter() {
+    return new EmptyResponseEndpointAdapter();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public EmptyResponseEndpointAdapter emptyResponseEndpointAdapter() {
+    return new EmptyResponseEndpointAdapter();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus:empty-response-adapter id="emptyResponseEndpointAdapter"/>
 ----
@@ -33,9 +88,52 @@ This is the simplest endpoint adapter you can think of. It simply provides an em
 
 The next more complex endpoint adapter will always return a static response message.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus:static-response-adapter id="endpointAdapter">
+@BindToRegistry
+public StaticResponseEndpointAdapter staticEndpointAdapter() {
+    StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
+    endpointAdapter.setMessagePayload("""
+    <HelloResponse
+        xmlns="http://citrusframework.org/schemas/samples/sayHello.xsd">
+          <MessageId>123456789</MessageId>
+          <CorrelationId>Cx1x123456789</CorrelationId>
+          <Text>Hello User</Text>
+    </HelloResponse>
+    """);
+
+    endpointAdapter.getMessageHeader().put("Operation", "sayHello");
+    endpointAdapter.getMessageHeader().put("MessageId", "123456789");
+    return endpointAdapter;
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public StaticResponseEndpointAdapter staticEndpointAdapter() {
+    StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
+    endpointAdapter.setMessagePayload("""
+    <HelloResponse
+        xmlns="http://citrusframework.org/schemas/samples/sayHello.xsd">
+          <MessageId>123456789</MessageId>
+          <CorrelationId>Cx1x123456789</CorrelationId>
+          <Text>Hello User</Text>
+    </HelloResponse>
+    """);
+
+    endpointAdapter.getMessageHeader().put("Operation", "sayHello");
+    endpointAdapter.getMessageHeader().put("MessageId", "123456789");
+    return endpointAdapter;
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus:static-response-adapter id="staticEndpointAdapter">
     <citrus:payload>
         <![CDATA[
           <HelloResponse
@@ -47,21 +145,63 @@ The next more complex endpoint adapter will always return a static response mess
         ]]>
     </citrus:payload>
     <citrus:header>
-        <citrus:element name="{http://citrusframework.org/schemas/samples}h1:Operation"
-                  value="sayHello"/>
-        <citrus:element name="{http://citrusframework.org/schemas/samples}h1:MessageId"
-                  value="123456789"/>
+        <citrus:element name="Operation" value="sayHello"/>
+        <citrus:element name="MessageId" value="123456789"/>
     </citrus:header>
  </citrus:static-response-adapter>
 ----
 
-The endpoint adapter is configured with a static message payload and static response header values. The response to the client is therefore always the same. You can add dynamic
-values by using Citrus functions such as *randomString* or *randomNumber*. Also we are able to use values of the actual request message that has triggered the
-response adapter. The request is available via the local message store. In combination with Xpath or JsonPath functions we can map values from the actual request.
+The endpoint adapter is configured with a static message payload and static response header values. The response to the client is therefore always the same.
+You can add dynamic values by using Citrus functions such as *randomString* or *randomNumber*.
+Also, we are able to use values of the actual request message that has triggered the response adapter.
+The request is available via the local message store. In combination with Xpath or JsonPath functions we can map values from the actual request.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus:static-response-adapter id="endpointAdapter">
+@BindToRegistry
+public StaticResponseEndpointAdapter staticEndpointAdapter() {
+    StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
+    endpointAdapter.setMessagePayload("""
+    <HelloResponse
+        xmlns="http://citrusframework.org/schemas/samples/sayHello.xsd">
+          <MessageId>citrus:randomNumber(10)</MessageId>
+          <CorrelationId>citrus:xpath(citrus:message(request.body()), '/hello:HelloRequest/hello:CorrelationId')</CorrelationId>
+          <Text>Hello User</Text>
+    </HelloResponse>
+    """);
+
+    endpointAdapter.getMessageHeader().put("Operation", "sayHello");
+    endpointAdapter.getMessageHeader().put("MessageId", "123456789");
+    return endpointAdapter;
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public StaticResponseEndpointAdapter staticEndpointAdapter() {
+    StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
+    endpointAdapter.setMessagePayload("""
+    <HelloResponse
+        xmlns="http://citrusframework.org/schemas/samples/sayHello.xsd">
+          <MessageId>citrus:randomNumber(10)</MessageId>
+          <CorrelationId>citrus:xpath(citrus:message(request.body()), '/hello:HelloRequest/hello:CorrelationId')</CorrelationId>
+          <Text>Hello User</Text>
+    </HelloResponse>
+    """);
+
+    endpointAdapter.getMessageHeader().put("Operation", "sayHello");
+    endpointAdapter.getMessageHeader().put("MessageId", "123456789");
+    return endpointAdapter;
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus:static-response-adapter id="staticEndpointAdapter">
     <citrus:payload>
         <![CDATA[
           <HelloResponse
@@ -73,10 +213,8 @@ response adapter. The request is available via the local message store. In combi
         ]]>
     </citrus:payload>
     <citrus:header>
-        <citrus:element name="{http://citrusframework.org/schemas/samples}h1:Operation"
-                  value="sayHello"/>
-        <citrus:element name="{http://citrusframework.org/schemas/samples}h1:MessageId"
-                  value="citrus:randomNumber(10)"/>
+        <citrus:element name="Operation" value="sayHello"/>
+        <citrus:element name="MessageId" value="citrus:randomNumber(10)"/>
     </citrus:header>
  </citrus:static-response-adapter>
 ----
@@ -85,7 +223,7 @@ The example above maps the *CorrelationId* of the *HelloRequest* message to the 
 *request* stored so we can access the payload with this message name.
 
 NOTE: XML is namespace specific so we need to use the namespace prefix *hello* in the Xpath expression. The namespace prefix should evaluate to a global namespace entry in the global
-Citrus link:#xpath-namespace[xpath-namespace].
+Citrus link:#xml-validation-namespaces[namespace].
 
 [[request-dispatching-endpoint-adapter]]
 == Request dispatching endpoint adapter
@@ -94,7 +232,70 @@ The idea behind the request dispatching endpoint adapter is that the incoming re
 
 So the request dispatching endpoint adapter is able to dynamically call several other endpoint adapters based on the incoming request message at runtime. This is very powerful. The next example uses the request dispatching endpoint adapter with a XPath mapping key extractor.
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public RequestDispatchingEndpointAdapter dispatchingEndpointAdapter() {
+    RequestDispatchingEndpointAdapter endpointAdapter = new RequestDispatchingEndpointAdapter();
+
+    XPathPayloadMappingKeyExtractor mappingKeyExtractor = new XPathPayloadMappingKeyExtractor();
+    mappingKeyExtractor.setXpathExpression("//TestMessage/Operation/*");
+    endpointAdapter.setMappingKeyExtractor(mappingKeyExtractor);
+
+    SimpleMappingStrategy mappingStrategy = new SimpleMappingStrategy();
+    mappingStrategy.setAdapterMappings("sayHello", helloEndpointAdapter());
+    endpointAdapter.setMappingStrategy(mappingStrategy);
+    return endpointAdapter;
+}
+
+@BindToRegistry
+public StaticResponseEndpointAdapter helloEndpointAdapter() {
+    StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
+    endpointAdapter.setMessagePayload("""
+    <HelloResponse
+        xmlns="http://citrusframework.org/schemas/samples/sayHello.xsd">
+        <MessageId>123456789</MessageId>
+        <Text>Hello User</Text>
+    </HelloResponse>
+    """);
+    return endpointAdapter;
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public RequestDispatchingEndpointAdapter dispatchingEndpointAdapter() {
+    RequestDispatchingEndpointAdapter endpointAdapter = new RequestDispatchingEndpointAdapter();
+
+    XPathPayloadMappingKeyExtractor mappingKeyExtractor = new XPathPayloadMappingKeyExtractor();
+    mappingKeyExtractor.setXpathExpression("//TestMessage/Operation/*");
+    endpointAdapter.setMappingKeyExtractor(mappingKeyExtractor);
+
+    SimpleMappingStrategy mappingStrategy = new SimpleMappingStrategy();
+    mappingStrategy.setAdapterMappings("sayHello", helloEndpointAdapter());
+    endpointAdapter.setMappingStrategy(mappingStrategy);
+    return endpointAdapter;
+}
+
+@Bean
+public StaticResponseEndpointAdapter helloEndpointAdapter() {
+    StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
+    endpointAdapter.setMessagePayload("""
+    <HelloResponse
+        xmlns="http://citrusframework.org/schemas/samples/sayHello.xsd">
+        <MessageId>123456789</MessageId>
+        <Text>Hello User</Text>
+    </HelloResponse>
+    """);
+    return endpointAdapter;
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus:dispatching-endpoint-adapter id="dispatchingEndpointAdapter"
          mapping-key-extractor="mappingKeyExtractor"
@@ -146,25 +347,140 @@ ContextLoadingMappingStrategy:: Same as BeanNameMappingStrategy but loads a sepa
 [[channel-endpoint-adapter]]
 == Channel endpoint adapter
 
-The channel connecting endpoint adapter is the default adapter used in all Citrus server components. Indeed this adapter also provides the most flexibility. This adapter forwards incoming requests to a channel destination. The adapter is waiting for a proper response on a reply destination synchronously. With the channel endpoint components you can read the requests on the channel and provide a proper response on the reply destination.
+The channel connecting endpoint adapter is the default adapter used in all Citrus server components.
+Indeed, this adapter also provides the most flexibility.
+This adapter forwards incoming requests to a channel destination.
+The adapter is waiting for a proper response on a reply destination synchronously.
+With the channel endpoint components you can read the requests on the channel and provide a proper response on the reply destination.
 
+This special adapter comes with the *citrus-spring-integration* module. So you have to add the module to your project as a dependency.
+The Maven module for *citrus-spring-integration* goes to the Maven POM file as normal project dependency.
+
+.Maven module dependency
 [source,xml]
 ----
-<citrus-si:channel-endpoint-adapter id="channelEndpointAdapter"
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-spring-integration</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+Now you can add the Spring integration channel endpoint adapter component to the bean registry.
+
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public ChannelEndpointAdapter channelEndpointAdapter() {
+    ChannelSyncEndpointConfiguration endpointConfiguration = new ChannelSyncEndpointConfiguration();
+    endpointConfiguration.setChannelName("inbound.channel");
+    endpointConfiguration.setTimeout(2500L);
+    return new ChannelEndpointAdapter(endpointConfiguration);
+    return endpointAdapter;
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public ChannelEndpointAdapter channelEndpointAdapter() {
+    ChannelSyncEndpointConfiguration endpointConfiguration = new ChannelSyncEndpointConfiguration();
+    endpointConfiguration.setChannelName("inbound.channel");
+    endpointConfiguration.setTimeout(2500L);
+    return new ChannelEndpointAdapter(endpointConfiguration);
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-si="http://www.citrusframework.org/schema/spring-integration/config"
+        xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/spring-integration/config
+        http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
+
+  <citrus-si:channel-endpoint-adapter id="channelEndpointAdapter"
               channel-name="inbound.channel"
               timeout="2500"/>
+
+</beans>
 ----
+
+NOTE: For the Spring XML bean configuration Citrus provides a `citrus-si` configuration namespace and schema definition for Spring integration related components and features. Include this namespace into your Spring configuration in order to use the Citrus Spring integration configuration elements. The namespace URI and schema location are added to the Spring configuration XML file.
 
 [[jms-endpoint-adapter]]
 == JMS endpoint adapter
 
-Another powerful endpoint adapter is the JMS connecting adapter implementation. This adapter forwards incoming requests to a JMS destination and waits for a proper response on a reply destination. A JMS endpoint can access the requests internally and provide a proper response on the reply destination. So this adapter is very flexible to provide proper response messages.
+Another powerful endpoint adapter is the JMS connecting adapter implementation.
+This adapter forwards incoming requests to a JMS destination and waits for a proper response on a reply destination.
+A JMS endpoint can access the requests internally and provide a proper response on the reply destination.
+So this adapter is very flexible to provide proper response messages.
 
-This special adapter comes with the *citrus-jms* module. So you have to add the module and the special XML namespace for this module to your configuration files. The Maven module for *citrus-jms* goes to the Maven POM file as normal project dependency. The *citrus-jms* namespace goes to the Spring bean XML configuration file as follows:
+This special adapter comes with the *citrus-jms* module. So you have to add the module to your project as a dependency.
+The Maven module for *citrus-jms* goes to the Maven POM file as normal project dependency.
 
-NOTE: Citrus provides a "citrus-jms" configuration namespace and schema definition for JMS related components and features. Include this namespace into your Spring configuration in order to use the Citrus JMS configuration elements. The namespace URI and schema location are added to the Spring configuration XML file as follows.
-
+.Maven module dependency
 [source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-jms</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+Now you can add the JMS endpoint adapter component to the bean registry.
+
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public JmsEndpointAdapter jmsEndpointAdapter() {
+    JmsSyncEndpointConfiguration endpointConfiguration = new JmsSyncEndpointConfiguration();
+    endpointConfiguration.setDestinationName("JMS.Queue.Requests.In");
+    endpointConfiguration.setReplyDestinationName("JMS.Queue.Requests.In");
+    endpointConfiguration.setConnectionFactory(jmsConnectionFactory());
+    endpointConfiguration.setTimeout(2500L);
+    return new JmsEndpointAdapter(endpointConfiguration);
+}
+
+@BindToRegistry
+public ActiveMQConnectionFactory jmsConnectionFactory() {
+    ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+    connectionFactory.setBrokerURL("tcp://localhost:61616");
+    return connectionFactory;
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public JmsEndpointAdapter jmsEndpointAdapter() {
+    JmsSyncEndpointConfiguration endpointConfiguration = new JmsSyncEndpointConfiguration();
+    endpointConfiguration.setDestinationName("JMS.Queue.Requests.In");
+    endpointConfiguration.setReplyDestinationName("JMS.Queue.Requests.In");
+    endpointConfiguration.setConnectionFactory(jmsConnectionFactory());
+    endpointConfiguration.setTimeout(2500L);
+    return new JmsEndpointAdapter(endpointConfiguration);
+}
+
+@Bean
+public ActiveMQConnectionFactory jmsConnectionFactory() {
+    ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+    connectionFactory.setBrokerURL("tcp://localhost:61616");
+    return connectionFactory;
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
 <beans xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -175,22 +491,16 @@ NOTE: Citrus provides a "citrus-jms" configuration namespace and schema definiti
         http://www.citrusframework.org/schema/jms/config
         http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
 
-    [...]
+    <citrus-jms:endpoint-adapter id="jmsEndpointAdapter"
+                  destination-name="JMS.Queue.Requests.In"
+                  reply-destination-name="JMS.Queue.Response.Out"
+                  connection-factory="jmsConnectionFactory"
+                  timeout="2500"/>
 
+    <bean id="jmsConnectionFactory" class="org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory">
+      <property name="brokerURL" value="tcp://localhost:61616"/>
+    </bean>
 </beans>
 ----
 
-After that you are able to use the adapter implementation in the Spring bean configuration.
-
-[source,xml]
-----
-<citrus-jms:endpoint-adapter id="jmsEndpointAdapter"
-              destination-name="JMS.Queue.Requests.In"
-              reply-destination-name="JMS.Queue.Response.Out"
-              connection-factory="jmsConnectionFactory"
-              timeout="2500"/>
-
-<bean id="jmsConnectionFactory" class="org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory">
-  <property name="brokerURL" value="tcp://localhost:61616"/>
-</bean>
-----
+NOTE: For the Spring XML bean configuration Citrus provides a `citrus-jms` configuration namespace and schema definition for JMS related components and features. Include this namespace into your Spring configuration in order to use the Citrus JMS configuration elements. The namespace URI and schema location are added to the Spring configuration XML file.

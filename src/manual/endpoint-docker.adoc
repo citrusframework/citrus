@@ -39,12 +39,31 @@ After that you are able to use customized Citrus XML elements in order to define
 
 Citrus operates with the Docker remote REST API in order to interact with the Docker daemon. The Docker client is defined as Spring bean component in the configuration as follows:
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public DockerClient dockerClient() {
+    return new DockerClientBuilder().build();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public DockerClient dockerClient() {
+    return new DockerClientBuilder().build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus-docker:client id="dockerClient"/>
 ----
 
-The Docker client component above is using all default configuration values. By default Citrus is searching the system properties as well as environment variables for default Docker settings such as:
+The Docker client component above is using all default configuration values. By default, Citrus is searching the system properties as well as environment variables for default Docker settings such as:
 
 [horizontal]
 DOCKER_HOST:: tcp://localhost:2376
@@ -54,7 +73,44 @@ DOCKER_MACHINE_NAME:: default
 
 In case these settings are not settable in your environment you can also use explicit settings in the Docker client component:
 
-[source,xml]
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public DockerClient dockerClient() {
+    return new DockerClientBuilder()
+            .url("tcp://localhost:2376")
+            .version("1.20")
+            .username("user")
+            .password("s!cr!t")
+            .email("user@foo.bar")
+            .registry("https://index.docker.io/v1/")
+            .certPath("/path/to/some/cert/directory")
+            .configPath("/path/to/some/config/directory")
+            .build();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public DockerClient dockerClient() {
+    return new DockerClientBuilder()
+            .url("tcp://localhost:2376")
+            .version("1.20")
+            .username("user")
+            .password("s!cr!t")
+            .email("user@foo.bar")
+            .registry("https://index.docker.io/v1/")
+            .certPath("/path/to/some/cert/directory")
+            .configPath("/path/to/some/config/directory")
+            .build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus-docker:client id="dockerClient"
             url="tcp://localhost:2376"
