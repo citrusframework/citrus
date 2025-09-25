@@ -249,7 +249,6 @@
     <kafka.version>3.9.1</kafka.version>
     <knative-client.version>7.4.0</knative-client.version>
     <log4j2.version>2.25.1</log4j2.version>
-    <mailapi.version>2.0.2</mailapi.version>
     <mockito.version>5.20.0</mockito.version>
     <mockftpserver.version>3.2.0</mockftpserver.version>
     <netty.version>4.2.0.Final</netty.version>
