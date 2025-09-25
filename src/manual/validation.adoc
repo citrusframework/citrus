@@ -38,8 +38,17 @@ as a bean to the Citrus context and use one of the default bean identifiers.
 
 You can add a custom message validator as a component in the context (e.g. as Spring bean in the application context).
 
-.Java DSL
+.Citrus Bean
 [source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public CustomMessageValidator customMessageValidator() {
+    return new CustomMessageValidator();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
 ----
 @Bean
 public CustomMessageValidator customMessageValidator() {
@@ -47,10 +56,18 @@ public CustomMessageValidator customMessageValidator() {
 }
 ----
 
-.XML DSL
+.Spring XML
 [source,xml,indent=0,role="secondary"]
 ----
-<bean id="customMessageValidator" class="org.citrusframework.validation.custom.CustomMessageValidator"/>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="customMessageValidator"
+          class="org.citrusframework.validation.custom.CustomMessageValidator"/>
+</beans>
 ----
 
 The listing above adds a custom message validator implementation. The message validator registry will automatically add this

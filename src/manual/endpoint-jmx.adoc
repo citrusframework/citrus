@@ -53,12 +53,12 @@ public JmxClient jmxClient() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/jmx/config
-       http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/jmx/config
+           http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
 
     <citrus-jmx:client id="jmxClient"
             server-url="platform"/>
@@ -110,12 +110,12 @@ public JmxClient jmxClient() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/jmx/config
-       http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/jmx/config
+           http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
 
     <citrus-jmx:client id="jmxClient"
           server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi"
@@ -514,12 +514,12 @@ private ManagedBeanDefinition newsBean() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/jmx/config
-       http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/jmx/config
+           http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
 
     <citrus-jmx:server id="jmxServer"
         server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi">
@@ -615,12 +615,12 @@ private ManagedBeanDefinition newsBean() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/jmx/config
-       http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/jmx/config
+           http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
 
     <citrus-jmx:server id="jmxServer"
           host="localhost"
@@ -759,12 +759,12 @@ private ManagedBeanDefinition fooBean() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/jmx/config
-       http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/jmx/config
+           http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
 
     <citrus-jmx:server id="jmxServer"
         server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi">

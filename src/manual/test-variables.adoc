@@ -53,8 +53,20 @@ Global variables are visible for all tests yet global variables are immutable, s
 This is a good opportunity to declare constant values for all tests. As these variables are global we need to add those
 to the basic Citrus context. The following example demonstrates how to add global variables in Citrus:
 
-.Java DSL
+.Citrus Bean
 [source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public GlobalVariables globalVariables() {
+    return new GlobalVariables.Builder()
+        .variable("projectName", "Citrus Integration Testing")
+        .variable("userName", "TestUser")
+        .build();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
 ----
 @Bean
 public GlobalVariables globalVariables() {
@@ -65,13 +77,20 @@ public GlobalVariables globalVariables() {
 }
 ----
 
-.XML DSL
+.Spring XML
 [source,xml,indent=0,role="secondary"]
 ----
-<citrus:global-variables>
-  <citrus:variable name="projectName" value="Citrus Integration Testing"/>
-  <citrus:variable name="userName" value="TestUser"/>
-</citrus:global-variables>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <citrus:global-variables>
+      <citrus:variable name="projectName" value="Citrus Integration Testing"/>
+      <citrus:variable name="userName" value="TestUser"/>
+    </citrus:global-variables>
+</beans>
 ----
 
 We add the Spring bean component to the application context file. The component receives a list of name-value variable
@@ -80,8 +99,21 @@ elements. You can reference the global variables in your test cases as usual.
 Another possibility to set global variables is to load those from external property files. This may give you more powerful
 global variables with user specific properties for instance. See how to load property files as global variables in this example:
 
-.Java DSL
+.Citrus Bean
 [source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public GlobalVariablesPropertyLoader propertyLoader() {
+    GlobalVariablesPropertyLoader propertyLoader = new GlobalVariablesPropertyLoader();
+
+    propertyLoader.getPropertyFiles().add("classpath:global-variable.properties");
+
+    return propertyLoader;
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
 ----
 @Bean
 public GlobalVariablesPropertyLoader propertyLoader() {
@@ -93,12 +125,19 @@ public GlobalVariablesPropertyLoader propertyLoader() {
 }
 ----
 
-.XML DSL
+.Spring XML
 [source,xml,indent=0,role="secondary"]
 ----
-<citrus:global-variables>
-  <citrus:file path="classpath:global-variable.properties"/>
-</citrus:global-variables>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <citrus:global-variables>
+      <citrus:file path="classpath:global-variable.properties"/>
+    </citrus:global-variables>
+</beans>
 ----
 
 You can use the `GlobalVariablesPropertyLoader` component and add it to the context as a Spring bean. Citrus loads the
@@ -171,7 +210,7 @@ of the complex object.
 
 Add this code to your message receiving action.
 
-.Java DSL
+.Java
 [source,java,indent=0,role="primary"]
 ----
 @CitrusTest
@@ -185,35 +224,101 @@ public void receiveMessageTest() {
     );
 
     then(
-        echo("Extracted operation from header is: ${operation}")
+        echo("Operation from header is: ${operation}")
     );
 
     then(
-        echo("Extracted version from body is: ${versionId}")
+        echo("Version from body is: ${versionId}")
     );
 }
 ----
 
-.XML DSL
+.XML
 [source,xml,indent=0,role="secondary"]
 ----
-<receive endpoint="helloService">
-    <message>
-      ...
-    </message>
-    <extract>
-      <header name="Operation" variable="operation"/>
-      <message path="/TestRequest/VersionId" variable="versionId"/>
-    </extract>
-</receive>
+<test name="ReceiveMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <receive endpoint="helloService">
+        <message>
+          <body>
+              <data>[...]</data>
+          </body>
+        </message>
+        <extract>
+          <header name="Operation"
+                  variable="operation"/>
+          <body path="/TestRequest/VersionId"
+                variable="versionId"/>
+        </extract>
+      </receive>
 
-<echo>
-  <message>Extracted operation from header is: ${operation}</message>
-</echo>
+      <echo>
+        <message>Operation from header is: ${operation}</message>
+      </echo>
 
-<echo>
-  <message>Extracted version from body is: ${versionId}</message>
-</echo>
+      <echo>
+        <message>Version from body is: ${versionId}</message>
+      </echo>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ReceiveMessageTest
+actions:
+  - receive:
+      endpoint: helloService
+      message:
+        body:
+          data: {}
+        extract:
+          header:
+            - name: "Operation"
+              variable: "operation"
+          body:
+            - path: "/TestRequest/VersionId"
+              variable: "versionId"
+  - echo:
+      message: "Operation from header is: ${operation}"
+  - echo:
+      message: "Version from body is: ${versionId}"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="ReceiveMessageTest">
+    <actions>
+        <receive endpoint="helloService">
+            <message>
+              <data>[...]</data>
+            </message>
+            <extract>
+              <header name="Operation"
+                      variable="operation"/>
+              <message path="/TestRequest/VersionId"
+                       variable="versionId"/>
+            </extract>
+        </receive>
+
+        <echo>
+          <message>Operation from header is: ${operation}</message>
+        </echo>
+
+        <echo>
+          <message>Version from body is: ${versionId}</message>
+        </echo>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 As you can see Citrus is able to extract both header and message body content into test variables. The extraction will automatically
@@ -318,19 +423,98 @@ makes life very easy when using message resource files that are reused across mu
 In case of XML message bodies you can use XPath expressions to manipulate the body content before any message processing
 takes place.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<message>
-  <payload>
-    <TestMessage>
-      <MessageId>${messageId}</MessageId>
-      <CreatedAt>?</CreatedAt>
-      <VersionId>${version}</VersionId>
-    </TestMessage>
-  </payload>
-  <element path="/TestMessage/CreatedAt" value="${date}"/>
-</message>
+@CitrusTest
+public void receiveMessageTest() {
+    receive("helloService")
+        .message()
+            .header("Operation", "sayHello")
+            .body("""
+            <TestMessage xmlns="http://citrusframework.org/schemas/test">
+              <MessageId>${messageId}</MessageId>
+              <CreatedAt>?</CreatedAt>
+              <VersionId>${version}</VersionId>
+            </TestMessage>
+            """)
+            .process(processor().path()
+                .expression("/TestMessage/CreatedAt", "${date}"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ReceiveMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <receive endpoint="helloService">
+        <message>
+          <headers>
+            <header name="Operation" value="sayHello"/>
+          </headers>
+          <body>
+            <payload>
+                <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                  <MessageId>${messageId}</MessageId>
+                  <CreatedAt>?</CreatedAt>
+                  <VersionId>${version}</VersionId>
+                </TestMessage>
+            </payload>
+          </body>
+          <expression path="/TestMessage/CreatedAt" value="${date}"/>
+        </message>
+      </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ReceiveMessageTest
+actions:
+  - receive:
+      endpoint: helloService
+      message:
+        body:
+          data: |
+            <TestMessage xmlns="http://citrusframework.org/schemas/test">
+              <MessageId>${messageId}</MessageId>
+              <CreatedAt>?</CreatedAt>
+              <VersionId>${version}</VersionId>
+            </TestMessage>
+        expressions:
+          - path: "/TestMessage/CreatedAt"
+            value: "${date}"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="ReceiveMessageTest">
+    <actions>
+        <receive endpoint="helloService">
+            <message>
+              <payload>
+                <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                  <MessageId>${messageId}</MessageId>
+                  <CreatedAt>?</CreatedAt>
+                  <VersionId>${version}</VersionId>
+                </TestMessage>
+              </payload>
+              <element path="/TestMessage/CreatedAt" value="${date}"/>
+            </message>
+        </receive>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The program listing above shows ways of setting variable values inside a message template. First you can simply place variable

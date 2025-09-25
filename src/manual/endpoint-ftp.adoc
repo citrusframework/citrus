@@ -14,29 +14,6 @@ NOTE: The FTP components in Citrus are maintained in their own Maven module. So 
 </dependency>
 ----
 
-As Citrus provides a customized FTP configuration schema for the Spring application context configuration files we have to add name to the top level *beans* element. Simply include the ftp-config namespace in the configuration XML files as follows.
-
-[source,xml]
-----
-<beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:citrus="http://www.citrusframework.org/schema/config"
-    xmlns:citrus-ftp="http://www.citrusframework.org/schema/ftp/config"
-    xsi:schemaLocation="
-    http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans.xsd
-    http://www.citrusframework.org/schema/config
-    http://www.citrusframework.org/schema/config/citrus-config.xsd
-    http://www.citrusframework.org/schema/http/config
-    http://www.citrusframework.org/schema/ftp/config/citrus-ftp-config.xsd">
-
-      [...]
-
-      </beans>
-----
-
-Now we are ready to use the customized Citrus FTP configuration elements with the citrus-ftp namespace prefix.
-
 [[ftp-client]]
 == FTP client
 
@@ -60,13 +37,29 @@ public FtpClient ftpClient() {
 .Spring XML
 [source,xml,indent=0,role="secondary"]
 ----
-<citrus-ftp:client id="ftpClient"
-      host="localhost"
-      port="2222"
-      username="admin"
-      password="admin"
-      timeout="10000"/>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-ftp="http://www.citrusframework.org/schema/ftp/config"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/http/config
+           http://www.citrusframework.org/schema/ftp/config/citrus-ftp-config.xsd">
+
+    <citrus-ftp:client id="ftpClient"
+          host="localhost"
+          port="2222"
+          username="admin"
+          password="admin"
+          timeout="10000"/>
+</beans>
 ----
+
+NOTE: Citrus provides a customized FTP configuration schema for the Spring XML application context configurations.
+Simply include the `citrus-ftp` namespace in the configuration XML files as seen in the example above.
 
 The configuration above describes a Citrus ftp client connected to a ftp server with `ftp://localhost:22222`. For authentication username and password are defined as well as the global connection timeout. The client will automatically send username and password for proper authentication to the server when opening a new connection.
 

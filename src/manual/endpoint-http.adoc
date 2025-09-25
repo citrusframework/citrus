@@ -22,31 +22,6 @@ to your project accordingly.
 </dependency>
 ----
 
-As Citrus provides a customized Http configuration schema for the Spring application context configuration files. Simply
-include the http-config namespace in the configuration XML files as follows.
-
-.Spring bean definition namespace
-[source,xml]
-----
-<beans xmlns="http://www.springframework.org/schema/beans"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xmlns:citrus="http://www.citrusframework.org/schema/config"
-   xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
-   xsi:schemaLocation="
-   http://www.springframework.org/schema/beans
-   http://www.springframework.org/schema/beans/spring-beans.xsd
-   http://www.citrusframework.org/schema/config
-   http://www.citrusframework.org/schema/config/citrus-config.xsd
-   http://www.citrusframework.org/schema/http/config
-   http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd">
-
-    [...]
-
-</beans>
-----
-
-Now we are ready to use the customized Citrus Http configuration elements with the citrus-http namespace prefix.
-
 [[http-rest-client]]
 == Http REST client
 
@@ -55,7 +30,7 @@ defines the Http server endpoint URL to connect to. You can reference this clien
 receive messages. Citrus as client waits for the response message from the server. After that the response message goes
 through the validation process as usual.
 
-.Java
+.Spring Bean
 [source,java,indent=0,role="primary"]
 ----
 @Bean
@@ -70,16 +45,32 @@ public HttpClient httpClient() {
 }
 ----
 
-.XML
+.Spring XML
 [source,xml,indent=0,role="secondary"]
 ----
-<citrus-http:client id="httpClient"
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/http/config
+           http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd">
+
+    <citrus-http:client id="httpClient"
           request-url="http://localhost:8080/hello"
           request-method="GET"
           content-type="application/xml"
           charset="UTF-8"
           timeout="60000"/>
+</beans>
 ----
+
+NOTE: Citrus provides a customized Http configuration schema for the Spring XML application context configuration files.
+Simply include the `citrus-http` namespace in the configuration XML files as seen in the example above.
 
 The *request-method* defines the Http method to use. In addition to that we can specify the content-type of the request
 we are about to send. The charset is also added to the content-type header. In case you do not want to set the charset at
@@ -208,10 +199,10 @@ to add this namespace to our test case XML first.
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:http="http://www.citrusframework.org/schema/http/testcase"
         xsi:schemaLocation="
-        http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.citrusframework.org/schema/http/testcase
-        http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.citrusframework.org/schema/http/testcase
+            http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
 
       [...]
 

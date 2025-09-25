@@ -55,12 +55,12 @@ public MailClient simpleMailClient() {
       xmlns:citrus="http://www.citrusframework.org/schema/config"
       xmlns:citrus-mail="http://www.citrusframework.org/schema/mail/config"
       xsi:schemaLocation="
-      http://www.springframework.org/schema/beans
-      http://www.springframework.org/schema/beans/spring-beans.xsd
-      http://www.citrusframework.org/schema/config
-      http://www.citrusframework.org/schema/config/citrus-config.xsd
-      http://www.citrusframework.org/schema/mail/config
-      http://www.citrusframework.org/schema/mail/config/citrus-mail-config.xsd">
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/config
+          http://www.citrusframework.org/schema/config/citrus-config.xsd
+          http://www.citrusframework.org/schema/mail/config
+          http://www.citrusframework.org/schema/mail/config/citrus-mail-config.xsd">
 
     <citrus-mail:client id="simpleMailClient"
           host="localhost"

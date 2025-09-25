@@ -51,11 +51,11 @@ public class BeanConfiguration {
               xmlns:citrus="http://www.citrusframework.org/schema/config"
               xmlns:citrus-test="http://www.citrusframework.org/schema/testcase"
               xsi:schemaLocation="http://www.springframework.org/schema/beans
-                                  http://www.springframework.org/schema/beans/spring-beans.xsd
-                                  http://www.citrusframework.org/schema/config
-                                  http://www.citrusframework.org/schema/config/citrus-config.xsd
-                                  http://www.citrusframework.org/schema/testcase
-                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                  http://www.citrusframework.org/schema/config
+                  http://www.citrusframework.org/schema/config/citrus-config.xsd
+                  http://www.citrusframework.org/schema/testcase
+                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
     <citrus:before-suite id="actionsBeforeSuite">
         <citrus:actions>
@@ -115,11 +115,11 @@ public class BeanConfiguration {
               xmlns:citrus="http://www.citrusframework.org/schema/config"
               xmlns:citrus-test="http://www.citrusframework.org/schema/testcase"
               xsi:schemaLocation="http://www.springframework.org/schema/beans
-                                  http://www.springframework.org/schema/beans/spring-beans.xsd
-                                  http://www.citrusframework.org/schema/config
-                                  http://www.citrusframework.org/schema/config/citrus-config.xsd
-                                  http://www.citrusframework.org/schema/testcase
-                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                  http://www.citrusframework.org/schema/config
+                  http://www.citrusframework.org/schema/config/citrus-config.xsd
+                  http://www.citrusframework.org/schema/testcase
+                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
     <citrus:before-suite id="actionsBeforeSuite">
         <citrus:actions>
@@ -188,11 +188,11 @@ public class BeanConfiguration {
               xmlns:citrus="http://www.citrusframework.org/schema/config"
               xmlns:citrus-test="http://www.citrusframework.org/schema/testcase"
               xsi:schemaLocation="http://www.springframework.org/schema/beans
-                                  http://www.springframework.org/schema/beans/spring-beans.xsd
-                                  http://www.citrusframework.org/schema/config
-                                  http://www.citrusframework.org/schema/config/citrus-config.xsd
-                                  http://www.citrusframework.org/schema/testcase
-                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                  http://www.citrusframework.org/schema/config
+                  http://www.citrusframework.org/schema/config/citrus-config.xsd
+                  http://www.citrusframework.org/schema/testcase
+                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
     <citrus:before-suite id="actionsBeforeSuite" suites="databaseSuite" groups="e2e">
         <citrus:actions>
@@ -261,11 +261,11 @@ public class BeanConfiguration {
               xmlns:citrus="http://www.citrusframework.org/schema/config"
               xmlns:citrus-test="http://www.citrusframework.org/schema/testcase"
               xsi:schemaLocation="http://www.springframework.org/schema/beans
-                                  http://www.springframework.org/schema/beans/spring-beans.xsd
-                                  http://www.citrusframework.org/schema/config
-                                  http://www.citrusframework.org/schema/config/citrus-config.xsd
-                                  http://www.citrusframework.org/schema/testcase
-                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                  http://www.citrusframework.org/schema/config
+                  http://www.citrusframework.org/schema/config/citrus-config.xsd
+                  http://www.citrusframework.org/schema/testcase
+                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
     <citrus:before-suite id="actionsBeforeSuite">
         <citrus:env>

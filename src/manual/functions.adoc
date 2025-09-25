@@ -44,10 +44,10 @@ public FunctionLibrary testFunctionLibrary() {
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd">
 
     <citrus:function-library id="testFunctionLibrary" prefix="foo:">
               <citrus:function name="randomNumber" class="org.citrusframework.functions.RandomNumberFunction"/>
@@ -132,9 +132,9 @@ actions:
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
           xmlns:spring="http://www.springframework.org/schema/beans"
           xsi:schemaLocation="http://www.springframework.org/schema/beans
-          http://www.springframework.org/schema/beans/spring-beans.xsd
-          http://www.citrusframework.org/schema/testcase
-          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
     <testcase name="concatFunctionTest">
         <variables>
@@ -212,9 +212,9 @@ actions:
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
           xmlns:spring="http://www.springframework.org/schema/beans"
           xsi:schemaLocation="http://www.springframework.org/schema/beans
-          http://www.springframework.org/schema/beans/spring-beans.xsd
-          http://www.citrusframework.org/schema/testcase
-          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
   <testcase name="functionsTest">
     <actions>
@@ -626,10 +626,10 @@ private RandomEnumValueFunction randomHttpStatusCode() {
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd">
 
     <citrus:function-library id="myCustomFunctionLibrary" prefix="custom:">
         <citrus:function name="randomHttpStatusCode" ref="randomHttpStatusCodeFunction"/>
@@ -1104,33 +1104,116 @@ Let's see this function in action:
 
 The function above loads the message named *myRequest* from the local memory store. This requires a send or receive action to have handled the message before in the same test case.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<send endpoint="someEndpoint">
-  <message name="myRequest">
-    <payload>Some payload</payload>
-  </message>
-</send>
+@CitrusTest
+public void messageNameTest() {
+    send("someEndpoint")
+        .message()
+        .name("myRequest")
+        .body("Some payload");
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-send("someEndpoint")
-    .message()
-    .name("myRequest")
-    .body("Some payload");
+<test name="MessageNameTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <send endpoint="someEndpoint">
+        <message name="myRequest">
+          <body>
+            <data>Some payload</data>
+          </body>
+        </message>
+      </send>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: MessageNameTest
+actions:
+  - send:
+      endpoint: someEndpoint
+      name: myRequest
+      message:
+        body:
+          data: "Some payload"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="MessageNameTest">
+    <actions>
+        <send endpoint="someEndpoint">
+          <message name="myRequest">
+            <payload>Some payload</payload>
+          </message>
+        </send>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The name of the message is important. Otherwise the message can not be found in the local message store. Note: a message can either be received or sent with a name in order to be stored
 in the local message store. The *message* function is then able to access the message by its name. In the first example the *body()* has been loaded. Of course we can also access header information.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<echo>
-    <message>citrus:message(myRequest.header('Operation'))</message>
-</echo>
+@CitrusTest
+public void messageNameTest() {
+    echo().message("citrus:message(myRequest.header('Operation'))");
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="MessageNameTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <echo message="citrus:message(myRequest.header('Operation'))"/>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: MessageNameTest
+actions:
+  - echo:
+      message: "citrus:message(myRequest.header('Operation'))"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="MessageNameTest">
+    <actions>
+        <echo>
+            <message>citrus:message(myRequest.header('Operation'))</message>
+        </echo>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The sample above loads the header *Operation* of the message.
@@ -1142,30 +1225,192 @@ In Java DSL the message store is also accessible over the TestContext.
 
 The *xpath* function evaluates a Xpath expressions on some XML source and returns the expression result as String.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<echo>
-    <message><![CDATA[citrus:xpath('<message><id>1000</id></text>Some text content</text></message>', '/message/id')]]></message>
-</echo>
+@CitrusTest
+public void xpathTest() {
+    echo()
+        .message("""
+        citrus:xpath('<message><id>1000</id></text>Some text content</text></message>', '/message/id')
+        """);
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="XpathTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <echo>
+        <message>
+        <![CDATA[
+        citrus:xpath('<message><id>1000</id></text>Some text content</text></message>', '/message/id')
+        ]]>
+        </message>
+      </echo>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: XpathTest
+actions:
+  - echo:
+      message: |
+        citrus:xpath('<message><id>1000</id></text>Some text content</text></message>', '/message/id')
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="XpathTest">
+    <actions>
+        <echo>
+            <message>
+            <![CDATA[
+            citrus:xpath('<message><id>1000</id></text>Some text content</text></message>', '/message/id')
+            ]]>
+            </message>
+        </echo>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The XML source is given as first function parameter and can be loaded in different ways. In the example above a static XML source has been used. We could load the XML content from
 external file or just use a test variable.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<echo>
-    <message><![CDATA[citrus:xpath(citrus:readFile('some/path/to/file.xml'), '/message/id')]]></message>
-</echo>
+@CitrusTest
+public void xpathTest() {
+    echo()
+        .message("""
+        citrus:xpath(citrus:readFile('some/path/to/file.xml'), '/message/id')
+        """);
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="XpathTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <echo>
+        <message>
+        <![CDATA[
+        citrus:xpath(citrus:readFile('some/path/to/file.xml'), '/message/id')
+        ]]>
+        </message>
+      </echo>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: XpathTest
+actions:
+  - echo:
+      message: |
+        citrus:xpath(citrus:readFile('some/path/to/file.xml'), '/message/id')
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="XpathTest">
+    <actions>
+        <echo>
+            <message>
+            <![CDATA[
+            citrus:xpath(citrus:readFile('some/path/to/file.xml'), '/message/id')
+            ]]>
+            </message>
+        </echo>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 Also accessing the local message store is valid here:
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<echo>
-    <message><![CDATA[citrus:xpath(citrus:message(myRequest.body()), '/message/id')]]></message>
-</echo>
+@CitrusTest
+public void xpathTest() {
+    echo()
+        .message("""
+        citrus:xpath(citrus:message(myRequest.body()), '/message/id')
+        """);
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="XpathTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <echo>
+        <message>
+        <![CDATA[
+        citrus:xpath(citrus:message(myRequest.body()), '/message/id')
+        ]]>
+        </message>
+      </echo>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: XpathTest
+actions:
+  - echo:
+      message: |
+        citrus:xpath(citrus:message(myRequest.body()), '/message/id')
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="XpathTest">
+    <actions>
+        <echo>
+            <message>
+            <![CDATA[
+            citrus:xpath(citrus:message(myRequest.body()), '/message/id')
+            ]]>
+            </message>
+        </echo>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 This combination is quite powerful as all previously exchanged messages in the test are automatically stored to the local message store. Reusing dynamic message values from other messages

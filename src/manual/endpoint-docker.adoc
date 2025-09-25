@@ -22,10 +22,10 @@ Citrus provides a "citrus-docker" configuration namespace and schema definition 
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-docker="http://www.citrusframework.org/schema/docker/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/docker/config
-       http://www.citrusframework.org/schema/docker/config/citrus-docker-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/docker/config
+           http://www.citrusframework.org/schema/docker/config/citrus-docker-config.xsd">
 
     [...]
 
@@ -128,84 +128,199 @@ Now Citrus is able to access the Docker remote API for executing commands such a
 [[docker-commands]]
 == Docker commands
 
-We have several Citrus test actions each representing a Docker command. These actions can be part of a test case where you can manage Docker containers inside the test. As a prerequisite we have to enable the Docker specific test actions in our XML test as follows:
+We have several Citrus test actions each representing a Docker command.
+These actions can be part of a test case where you can manage Docker containers inside the test.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:docker="http://www.citrusframework.org/schema/docker/testcase"
-        xsi:schemaLocation="
-        http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.citrusframework.org/schema/docker/testcase
-        http://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase.xsd">
+@CitrusTest
+public void dockerTest() {
+    when(docker().ping());
 
-    [...]
-
-</beans>
+    then(docker().version()
+        .validateCommandResult(new CommandResultCallback<Version>() {
+            @Override
+            public void doWithCommandResult(Version version, TestContext context) {
+                Assert.assertEquals(version.getApiVersion(), "1.21");
+            }
+    }));
+}
 ----
 
-We added a special docker namespace with prefix *docker:* so now we can start to add Docker test actions to the test case:
-
-.XML DSL
-[source,xml]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-<testcase name="DockerCommandIT">
+<test name="DockerTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
-          <docker:ping></docker:ping>
+      <docker>
+        <ping/>
+      </docker>
 
-          <docker:version>
-            <docker:expect>
-              <docker:result>
-                <![CDATA[
-                  {
-                    "Version":"1.8.3",
-                    "ApiVersion":"1.21",
-                    "GitCommit":"@ignore@",
-                    "GoVersion":"go1.4.2",
-                    "Os":"darwin",
-                    "Arch":"amd64",
-                    "KernelVersion":"@ignore@"
-                  }
-                ]]>
-              </docker:result>
-            </docker:expect>
-          </docker:version>
+      <docker>
+        <version/>
+      </docker>
     </actions>
-</testcase>
+</test>
 ----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: DockerTest
+actions:
+  - docker:
+      ping: {}
+
+  - docker:
+      version: {}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:docker="http://www.citrusframework.org/schema/docker/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/docker/testcase
+              http://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase.xsd">
+  <testcase name="DockerTest">
+    <actions>
+      <docker:ping></docker:ping>
+
+      <docker:version>
+        <docker:expect>
+          <docker:result>
+            <![CDATA[
+              {
+                "Version":"1.8.3",
+                "ApiVersion":"1.21",
+                "GitCommit":"@ignore@",
+                "GoVersion":"go1.4.2",
+                "Os":"darwin",
+                "Arch":"amd64",
+                "KernelVersion":"@ignore@"
+              }
+            ]]>
+          </docker:result>
+        </docker:expect>
+      </docker:version>
+    </actions>
+  </testcase>
+</spring:beans>
+----
+
+NOTE: We added a special docker namespace in Spring XML with the prefix *docker:* so now we can start to add Docker test actions to the test case:
 
 In this very simple example we first ping the Docker daemon to make sure we have connectivity up and running. After that we get the Docker version information. The second action shows an important concept when executing Docker commands in Citrus. As a tester we might be interested in validating the command result. So we can specify an optional *docker:result* which is usually in JSON data format. As usual we can use test variables here and ignore some values explicitly such as the *GitCommit* value.
 
 Based on that we can execute several Docker commands in a test case:
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="DockerCommandIT">
+@CitrusTest
+public void dockerTest() {
+    variable("imageId", "busybox");
+    variable("containerName", "citrus_box");
+
+    given(docker().pull()
+        .image("${imageId}")
+        .tag("latest"));
+
+    when(docker().create()
+        .image("${imageId}")
+        .containerName("${containerName}")
+        .cmd("top")
+        .validateCommandResult(new CommandResultCallback<CreateContainerResponse>() {
+            @Override
+            public void doWithCommandResult(CreateContainerResponse result, TestContext context) {
+                Assert.assertNull(result.getWarnings());
+                context.getVariables().put("containerId", result.getId());
+            }
+        })
+    );
+
+    then(docker().start()
+        .containerName("${containerName}")
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="DockerTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <docker>
+        <pull/>
+      </docker>
+
+      <docker>
+        <create/>
+      </docker>
+
+      <docker>
+        <start/>
+      </docker>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: DockerTest
+actions:
+  - docker:
+      pull: {}
+
+  - docker:
+      create: {}
+
+  - docker:
+      start: {}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:docker="http://www.citrusframework.org/schema/docker/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/docker/testcase
+              http://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase.xsd">
+  <testcase name="DockerTest">
     <variables>
-      <variable name="imageId" value="busybox"></variable>
-      <variable name="containerName" value="citrus_box"></variable>
+      <variable name="imageId" value="busybox"/>
+      <variable name="containerName" value="citrus_box"/>
     </variables>
 
     <actions>
-        <docker:pull image="${imageId}"
-                        tag="latest"/>
+      <docker:pull image="${imageId}"
+                    tag="latest"/>
 
-        <docker:create image="${imageId}"
-                          name="${containerName}"
-                          cmd="top">
-            <docker:expect>
-                <docker:result>
-                    <![CDATA[
-                      {"Id":"@variable(containerId)@","Warnings":null}
-                    ]]>
-                </docker:result>
-            </docker:expect>
-        </docker:create>
+      <docker:create image="${imageId}"
+                      name="${containerName}"
+                      cmd="top">
+        <docker:expect>
+            <docker:result>
+                <![CDATA[
+                  {"Id":"@variable(containerId)@","Warnings":null}
+                ]]>
+            </docker:result>
+        </docker:expect>
+      </docker:create>
 
-        <docker:start container="${containerName}"/>
+      <docker:start container="${containerName}"/>
     </actions>
 </testcase>
 ----
@@ -228,30 +343,9 @@ Citrus supports the following Docker commands with respective test actions:
 
 Some of the Docker commands can be executed both on container and image targets such as *docker:inspect* or *docker:remove* . The command action then offers both *container* and *image* attributes so the user can choose the target of the command operation to be a container or an image.
 
-Up to now we have only used the Citrus XML DSL. Of course all Docker commands are also available in Java DSL as the next example shows.
+The Java DSL Docker commands provide an optional Docker *CommandResultCallback* that is called with the unmarshalled command result object. In the example above the _Version_ model object is passed as argument to the callback. So the tester can access the command result and validate its properties with assertions.
 
-.Java DSL
-[source,java]
-----
-@CitrusTest
-public void dockerTest() {
-    docker().version()
-        .validateCommandResult(new CommandResultCallback<Version>() {
-            @Override
-            public void doWithCommandResult(Version version, TestContext context) {
-                Assert.assertEquals(version.getApiVersion(), "1.20");
-            }
-    });
-
-    docker().ping();
-
-    docker().start("my_container");
-}
-----
-
-The Java DSL Docker commands provide an optional *KubernetesCommandResultCallback* that is called with the unmarshalled command result object. In the example above the _Version_ model object is passed as argument to the callback. So the tester can access the command result and validate its properties with assertions.
-
-By default Citrus tries to find a Docker client component within the Citrus Spring application context. If not present Citrus will instantiate a default docker client with all default settings. You can also explicitly set the docker client instance when using the Java DSL Docker command actions:
+By default, Citrus tries to find a Docker client component within the Citrus Spring application context. If not present Citrus will instantiate a default docker client with all default settings. You can also explicitly set the docker client instance when using the Java DSL Docker command actions:
 
 .Java DSL
 [source,java]

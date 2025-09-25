@@ -136,9 +136,9 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
              xmlns:spring="http://www.springframework.org/schema/beans"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://www.springframework.org/schema/beans
-             http://www.springframework.org/schema/beans/spring-beans.xsd
-             http://www.citrusframework.org/schema/testcase
-             http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+                 http://www.springframework.org/schema/beans/spring-beans.xsd
+                 http://www.citrusframework.org/schema/testcase
+                 http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
     <testcase name="FlightBookingTest">
         <meta-info>
             <author>Christoph Deppisch</author>

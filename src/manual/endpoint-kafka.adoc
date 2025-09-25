@@ -30,10 +30,10 @@ to use the Citrus Kafka configuration elements. The namespace URI and schema loc
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-kafka="http://www.citrusframework.org/schema/kafka/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/kafka/config
-       http://www.citrusframework.org/schema/kafka/config/citrus-kafka-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/kafka/config
+           http://www.citrusframework.org/schema/kafka/config/citrus-kafka-config.xsd">
 
     [...]
 

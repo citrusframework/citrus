@@ -164,7 +164,8 @@ citrus init my-test.xml
 ----
 <test name="EchoTest" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase
+            http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
   <variables>
     <variable name="message" value="Citrus rocks!"/>

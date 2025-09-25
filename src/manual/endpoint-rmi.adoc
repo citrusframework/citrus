@@ -70,10 +70,10 @@ public RmiClient rmiClient2() {
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-rmi="http://www.citrusframework.org/schema/rmi/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/rmi/config
-       http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/rmi/config
+           http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd">
 
     <citrus-rmi:client id="rmiClient1"
           host="localhost"
@@ -448,10 +448,10 @@ public RmiServer rmiServer() {
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-rmi="http://www.citrusframework.org/schema/rmi/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/rmi/config
-       http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/rmi/config
+           http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd">
 
     <citrus-rmi:server id="rmiServer"
           host="localhost"

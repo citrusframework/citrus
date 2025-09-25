@@ -68,12 +68,12 @@ private VertxInstanceFactory vertxInstanceFactory() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-vertx="http://www.citrusframework.org/schema/vertx/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/vertx/config
-       http://www.citrusframework.org/schema/vertx/config/citrus-vertx-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/vertx/config
+           http://www.citrusframework.org/schema/vertx/config/citrus-vertx-config.xsd">
 
     <citrus-vertx:endpoint id="simpleVertxEndpoint"
           host="localhost"
@@ -287,12 +287,12 @@ private VertxInstanceFactory vertxInstanceFactory() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-vertx="http://www.citrusframework.org/schema/vertx/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/vertx/config
-       http://www.citrusframework.org/schema/vertx/config/citrus-vertx-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/vertx/config
+           http://www.citrusframework.org/schema/vertx/config/citrus-vertx-config.xsd">
 
     <citrus-vertx:sync-endpoint id="vertxSyncEndpoint"
           address="hello"

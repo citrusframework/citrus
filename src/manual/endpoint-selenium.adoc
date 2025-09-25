@@ -50,10 +50,10 @@ public SeleniumBrowser seleniumBrowser() {
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-selenium="http://www.citrusframework.org/schema/selenium/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/selenium/config
-       http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/selenium/config
+           http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd">
 
   <citrus-selenium:browser id="seleniumBrowser"
                 type="firefox"
@@ -118,10 +118,10 @@ public OperaDriver operaWebDriver() {
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-selenium="http://www.citrusframework.org/schema/selenium/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/selenium/config
-       http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/selenium/config
+           http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd">
 
   <citrus-selenium:browser id="seleniumBrowser"
                 type="custom"
@@ -180,10 +180,10 @@ public FirefoxProfile firefoxProfile() {
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-selenium="http://www.citrusframework.org/schema/selenium/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/selenium/config
-       http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/selenium/config
+           http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd">
 
   <citrus-selenium:browser id="mySeleniumBrowser"
                 type="firefox"
@@ -200,55 +200,135 @@ Now Citrus is able to execute Selenium operations as a user.
 [[selenium-actions]]
 == Selenium actions
 
-We have several Citrus test actions each representing a Selenium command. These actions can be part of a Citrus test case. As a prerequisite we have to enable the Selenium specific test actions in our XML test as follows:
+We have several Citrus test actions each representing a Selenium command.
+These actions can be part of a Citrus test case.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
-        xsi:schemaLocation="
-        http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.citrusframework.org/schema/selenium/testcase
-        http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+@Autowired
+private SeleniumBrowser seleniumBrowser;
 
-    [...]
+@CitrusTest
+public void seleniumTest() {
+    selenium().start(seleniumBrowser);
 
-</beans>
+    selenium().navigate("http://localhost:8080");
+
+    selenium().find().element(By.id("header")
+                .tagName("h1")
+                .enabled(true)
+                .displayed(true)
+                .text("Welcome!")
+                .style("font-size", "40px"));
+
+    selenium().click().element(By.linkText("Click Me!"));
+}
 ----
 
-We added a special selenium namespace with prefix *selenium:* so now we can start to add Selenium test actions to the test case:
-
-.XML DSL
-[source,xml]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-<testcase name="SeleniumCommandIT">
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
-      <selenium:start browser="webBrowser"/>
+      <selenium>
+        <start browser="webBrowser"/>
+      </selenium>
 
-      <selenium:navigate page="http://localhost:8080"/>
+      <selenium>
+        <navigate page="http://localhost:8080"/>
+      </selenium>
 
-      <selenium:find>
-        <selenium:element tag-name="h1" text="Welcome!">
-          <selenium:styles>
-            <selenium:style name="font-size" value="40px"/>
-          </selenium:styles>
-        </selenium:element>
-      </selenium:find>
+      <selenium>
+        <find>
+          <element tag-name="h1"/>
+          <validate text="Welcome!">
+            <styles>
+              <style name="font-size" value="40px"/>
+            </styles>
+          </validate>
+        </find>
+      </selenium>
 
-      <selenium:click>
-        <selenium:element id="ok-button"/>
-      </selenium:click>
+      <selenium>
+        <click>
+          <element id="ok-button"/>
+        </click>
+      </selenium>
     </actions>
-</testcase>
+</test>
 ----
 
-In this very simple example we first start the Selenium browser instance. After that we can continue to use Selenium commands without browser attribute explicitly set. Citrus
-knows which browser instance is currently active and will automatically use this opened browser instance. Next in this example we find some element on the displayed page by its
-tag-name and text. We also validate the element style _font-size_ to meet the expected value _40px_ in this step.
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      browser: webBrowser
+      start: {}
+  - selenium:
+      navigate:
+        page: "http://localhost:8080"
+  - selenium:
+      find:
+        element:
+          tag-name: "h1"
+        validate:
+          text: "Welcome!"
+          styles:
+            - name: "font-size"
+              value: "40px"
+  - selenium:
+      click:
+        element:
+          id: "ok-button"
+----
 
-In addition to that the example performs a click operation on the element with the id _ok-button_. Selenium supports element find operations on different properties:
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/selenium/testcase
+              http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+
+    <testcase name="SeleniumTest">
+        <actions>
+          <selenium:start browser="webBrowser"/>
+
+          <selenium:navigate page="http://localhost:8080"/>
+
+          <selenium:find>
+            <selenium:element tag-name="h1" text="Welcome!">
+              <selenium:styles>
+                <selenium:style name="font-size" value="40px"/>
+              </selenium:styles>
+            </selenium:element>
+          </selenium:find>
+
+          <selenium:click>
+            <selenium:element id="ok-button"/>
+          </selenium:click>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+NOTE: In Spring XML test cases there is special selenium namespace with prefix *selenium:* for special Selenium related test actions.
+
+In this very simple example we first start the Selenium browser instance.
+After that we can continue to use Selenium commands without browser attribute explicitly set.
+Citrus knows which browser instance is currently active and will automatically use this opened browser instance.
+Next in this example we find some element on the displayed page by its tag-name and text. We also validate the element style _font-size_ to meet the expected value _40px_ in this step.
+
+In addition to that the example performs a click operation on the element with the id _ok-button_.
+Selenium supports element find operations on different properties:
 
 [horizontal]
 id:: finds element based on the _id_ attribute
@@ -258,7 +338,8 @@ class-name:: finds element based on the css _class name_
 link-text:: finds link element based on the _link-text_
 xpath:: finds element based on XPath evaluation in the DOM
 
-Based on that we can execute several Selenium commands in a test case and validate the results such as web elements. Citrus supports the following Selenium commands with respective test actions:
+Based on that we can execute several Selenium commands in a test case and validate the results such as web elements.
+Citrus supports the following Selenium commands with respective test actions:
 
 [horizontal]
 selenium:start:: Start the browser instance
@@ -283,31 +364,6 @@ selenium:javascript:: Execute Javascript code in browser
 selenium:clear-cache:: Clear browser cache and all cookies
 selenium:stop:: Stops the browser instance
 
-Up to now we have only used the Citrus XML DSL. Of course all Selenium commands are also available in Java DSL as the next example shows.
-
-.Java DSL
-[source,java]
-----
-@Autowired
-private SeleniumBrowser seleniumBrowser;
-
-@CitrusTest
-public void seleniumTest() {
-    selenium().start(seleniumBrowser);
-
-    selenium().navigate("http://localhost:8080");
-
-    selenium().find().element(By.id("header"));
-                .tagName("h1")
-                .enabled(true)
-                .displayed(true)
-                .text("Welcome!")
-                .style("font-size", "40px");
-
-    selenium().click().element(By.linkText("Click Me!"));
-}
-----
-
 Now let's have a closer look at the different Selenium test actions supported in Citrus.
 
 [[start-stop-browser]]
@@ -316,24 +372,67 @@ Now let's have a closer look at the different Selenium test actions supported in
 You can start and stop the browser instance with a test action. This instantiates a new browser window and prepares everything for interacting with the web
 interface.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<selenium:start browser="seleniumBrowser"/>
-
-<!-- Do something in browser -->
-
-<selenium:stop browser="seleniumBrowser"/>
+@CitrusTest
+public void seleniumTest() {
+    selenium().start(seleniumBrowser);
+    // Do something in browser
+    selenium().stop(seleniumBrowser);
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-selenium().start(seleniumBrowser);
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <start browser="seleniumBrowser"/>
+      </selenium>
+      <!-- Do something in browser -->
+      <selenium>
+        <stop browser="seleniumBrowser"/>
+      </selenium>
+    </actions>
+</test>
+----
 
-// do something in browser
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      browser: seleniumBrowser
+      start: {}
+  # Do something in browser
+  - selenium:
+      browser: seleniumBrowser
+      stop: {}
+----
 
-selenium().stop(seleniumBrowser);
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/selenium/testcase
+              http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+      <selenium:start browser="seleniumBrowser"/>
+      <!-- Do something in browser -->
+      <selenium:stop browser="seleniumBrowser"/>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 After starting a browser instance Citrus will automatically use this very same browser instance in all further Selenium actions. This mechanism is based on a test variable (*selenium_browser*) that
@@ -359,40 +458,114 @@ xpath:: finds element based on XPath evaluation in the DOM
 The find element action will automatically fail in case there is no such element on the current page. In case the element is found you can add additional attributes and properties
 for further element validation:
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<selenium:find>
-  <selenium:element tag-name="h1" text="Welcome!">
-    <selenium:styles>
-      <selenium:style name="font-size" value="40px"/>
-    </selenium:styles>
-  </selenium:element>
-</selenium:find>
-
-<selenium:find>
-  <selenium:element id="ok-button" text="Ok" enabled="true" displayed="true">
-    <selenium:attributes>
-      <selenium:attribute name="type" value="submit"/>
-    </selenium:attributes>
-  </selenium:element>
-</selenium:find>
-----
-
-.Java DSL
-[source,java]
-----
-selenium().find().element(By.tagName("h1"))
+@CitrusTest
+public void seleniumTest() {
+    selenium().find().element(By.tagName("h1"))
         .text("Welcome!")
         .style("font-size", "40px");
 
-selenium().find().element(By.id("ok-button"))
+    selenium().find().element(By.id("ok-button"))
         .tagName("button")
         .enabled(true)
         .displayed(true)
         .text("Ok")
         .style("color", "red")
         .attribute("type", "submit");
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <find>
+          <element tag-name="h1"/>
+          <validate text="Welcome!">
+            <styles>
+              <style name="font-size" value="40px"/>
+            </styles>
+          </validate>
+        </find>
+      </selenium>
+
+      <selenium>
+        <find>
+          <element id="ok-button"/>
+          <validate text="Ok" enabled="true" displayed="true">
+            <attributes>
+              <attribute name="type" value="submit"/>
+            </attributes>
+          </validate>
+        </find>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      find:
+        element:
+          tag-name: "h1"
+        validate:
+          text: "Welcome!"
+          styles:
+            - name: "font-size"
+              value: "40px"
+  - selenium:
+      find:
+        element:
+          id: "ok-button"
+        validate:
+          text: "Ok"
+          displayed: true
+          enabled: true
+          attributes:
+            - name: "type"
+              value: "submit"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/selenium/testcase
+              http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:find>
+          <selenium:element tag-name="h1" text="Welcome!">
+            <selenium:styles>
+              <selenium:style name="font-size" value="40px"/>
+            </selenium:styles>
+          </selenium:element>
+        </selenium:find>
+
+        <selenium:find>
+          <selenium:element id="ok-button" text="Ok" enabled="true" displayed="true">
+            <selenium:attributes>
+              <selenium:attribute name="type" value="submit"/>
+            </selenium:attributes>
+          </selenium:element>
+        </selenium:find>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The example above finds the *h1* element by its tag name and validates the text and css style attributes. Secondly the *ok-button* is validated with expected
@@ -404,18 +577,64 @@ is failing with validation errors.
 
 The action performs a click operation on the element.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<selenium:click>
-  <selenium:element link-text="Click Me!"/>
-</selenium:click>
+@CitrusTest
+public void seleniumTest() {
+    selenium().click().element(By.linkText("Click Me!"));
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-selenium().click().element(By.linkText("Click Me!"));
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <click>
+          <element>
+            <property name="link-text" value="Click Me!"/>
+          </element>
+        </click>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      click:
+        element:
+          property:
+            name: "link-text"
+            value: "Click Me!"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/selenium/testcase
+              http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:click>
+          <selenium:element link-text="Click Me!"/>
+        </selenium:click>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 [[hover]]
@@ -423,18 +642,64 @@ selenium().click().element(By.linkText("Click Me!"));
 
 The action performs a hover operation on the element.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<selenium:hover>
-  <selenium:element link-text="Find Me!"/>
-</selenium:hover>
+@CitrusTest
+public void seleniumTest() {
+    selenium().hover().element(By.linkText("Find Me!"));
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-selenium().hover().element(By.linkText("Find Me!"));
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <hover>
+          <element>
+            <property name="link-text" value="Find Me!"/>
+          </element>
+        </hover>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      hover:
+        element:
+          property:
+            name: "link-text"
+            value: "Find Me!"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/selenium/testcase
+              http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:hover>
+          <selenium:element link-text="Find Me!"/>
+        </selenium:hover>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 [[form-input-actions]]
@@ -442,29 +707,99 @@ selenium().hover().element(By.linkText("Find Me!"));
 
 The following actions are used to access form input elements such as text fields, checkboxes and dropdown lists.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<selenium:set-input value="Citrus">
-  <selenium:element name="username"/>
-</selenium:set-input>
+@CitrusTest
+public void seleniumTest() {
+    selenium().setInput("Citrus")
+            .element(By.name("username"));
 
-<selenium:check-input checked="true">
-  <selenium:element xpath="//input[@type='checkbox']"/>
-</selenium:check-input>
+    selenium().checkInput(true)
+            .element(By.xpath("//input[@type='checkbox']"));
 
-<selenium:dropdown-select option="happy">
-  <selenium:element id="user-mood"/>
-</selenium:dropdown-select>
+    selenium().select("happy")
+            .element(By.id("user-mood"));
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-selenium().setInput("Citrus").element(By.name("username"));
-selenium().checkInput(true).element(By.xpath("//input[@type='checkbox']"));
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <set-input value="Citrus">
+          <element name="username"/>
+        </set-input>
+      </selenium>
 
-selenium().select("happy").element(By.id("user-mood"));
+      <selenium>
+        <check-input checked="true">
+          <element xpath="//input[@type='checkbox']"/>
+        </set-input>
+      </selenium>
+
+      <selenium>
+        <dropdown-select option="happy">
+          <element id="user-mood"/>
+        </dropdown-select>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      set-input:
+        value: "Citrus"
+        element:
+          name: "username"
+  - selenium:
+      check-input:
+        checked: true
+        element:
+          xpath: |
+            xpath="//input[@type='checkbox']"
+  - selenium:
+      dropdown-select:
+        option: "happy"
+        element:
+          id: "user-mood"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/selenium/testcase
+              http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:set-input value="Citrus">
+          <selenium:element name="username"/>
+        </selenium:set-input>
+
+        <selenium:check-input checked="true">
+          <selenium:element xpath="//input[@type='checkbox']"/>
+        </selenium:check-input>
+
+        <selenium:dropdown-select option="happy">
+          <selenium:element id="user-mood"/>
+        </selenium:dropdown-select>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The actions above select dropdown options and set user input on text fields and checkboxes. As usual the form elements are selected by some properties such as
@@ -475,54 +810,154 @@ ids, names or xpath expressions.
 
 The fill form action sets multiple form fields with given values and optionally submits the form afterwards.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<selenium:fill-form submit="save">
-  <selenium:fields>
-    <selenium:field id="username" value="foo_user"/>
-    <selenium:field id="password" value="${secret}"/>
-  </selenium:fields>
-</selenium:fill-form>
-----
-
-.Java DSL
-[source,java]
-----
-selenium().fillForm()
+@CitrusTest
+public void seleniumTest() {
+    selenium().fillForm()
         .field("username", "foo_user")
         .field("password", "${secret}")
         .submit("save");
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <fill-form submit="save">
+          <fields>
+            <field id="username" value="foo_user"/>
+            <field id="password" value="${secret}"/>
+          </fields>
+        </fill-form>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      fill-form:
+        submit: "save"
+        fields:
+          - id: "username"
+            value: "foo_user"
+          - id: "password"
+            value: "${secret}"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/selenium/testcase
+              http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:fill-form submit="save">
+          <selenium:fields>
+            <selenium:field id="username" value="foo_user"/>
+            <selenium:field id="password" value="${secret}"/>
+          </selenium:fields>
+        </selenium:fill-form>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The actions above set the form fields identified by its id and sets the given values. The actions supports input fields, checkboxes and drop-down select controls. Optionally the form gets submitted by clicking on the given submit button once all fields are set.
 
 The user also has the opportunity to set the form fields via Json object where each property in the Json object represents a form field.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<selenium:fill-form submit="save">
-    <selenium:json>
-      {
-        "username": "foo_user",
-        "password": "secret"
-      }
-    </selenium:json>
-</selenium:fill-form>
+@CitrusTest
+public void seleniumTest() {
+    selenium().fillForm()
+        .fromJson("""
+        {
+          "username": "foo_user",
+          "password": "secret"
+        }
+        """)
+        .submit(By.id("save"));
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-selenium().fillForm()
-        .fromJson("""
-            {
-              "username": "foo_user",
-              "password": "secret"
-            }
-        """)
-        .submit(By.id("save");
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <fill-form submit="save">
+          <json>
+          {
+            "username": "foo_user",
+            "password": "secret"
+          }
+          </json>
+        </fill-form>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      fill-form:
+        submit: "save"
+        json: |
+          {
+            "username": "foo_user",
+            "password": "secret"
+          }
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+          http://www.citrusframework.org/schema/selenium/testcase
+          http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:fill-form submit="save">
+            <selenium:json>
+              {
+                "username": "foo_user",
+                "password": "secret"
+              }
+            </selenium:json>
+        </selenium:fill-form>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 This will set the form fields `username` and `password` with the given values before submitting the form.
@@ -545,7 +980,7 @@ public class UserFormPage implements WebPage {
     private WebElement userName;
 
     /**
-     * Sets the user name.
+     * Sets the username.
      */
     public void setUserName(String value, TestContext context) {
         userName.clear();
@@ -554,7 +989,6 @@ public class UserFormPage implements WebPage {
 
     /**
      * Submits the form.
-     * @param context
      */
     public void submit(TestContext context) {
         form.submit();
@@ -566,26 +1000,84 @@ As you can see the page object is a Java POJO that implements the *WebPage* inte
 injected by Citrus and Selenium based on the *FindBy* annotation. Now the test case is able to load that page object and execute some action methods on the page such as
 _setUserName_ or _submit_.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<selenium:page type="org.citrusframework.selenium.pages.UserFormPage"
-               action="setUserName">
-  <selenium:arguments>
-    <selenium:argument>Citrus</selenium:argument>
-  </selenium:arguments>
-</selenium:page>
+@CitrusTest
+public void seleniumTest() {
+    selenium().page(UserFormPage.class)
+            .argument("Citrus")
+            .execute("setUserName");
 
-<selenium:page type="org.citrusframework.selenium.pages.UserFormPage"
-               action="submit"/>
+    selenium().page(UserFormPage.class)
+            .execute("submit");
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-selenium().page(UserFormPage.class).argument("Citrus").execute("setUserName");
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <page action="setUserName"
+              type="org.citrusframework.selenium.pages.UserFormPage">
+          <arguments>
+            <argument>Citrus</argument>
+          </arguments>
+        </page>
+      </selenium>
+      <selenium>
+        <page action="submit"
+              type="org.citrusframework.selenium.pages.UserFormPage"/>
+      </selenium>
+    </actions>
+</test>
+----
 
-selenium().page(UserFormPage.class).execute("submit");
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      page:
+        type: "org.citrusframework.selenium.pages.UserFormPage"
+        action: "setUserName"
+        argument: Citrus
+  - selenium:
+      page:
+        type: "org.citrusframework.selenium.pages.UserFormPage"
+        action: "submit"
+
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+          http://www.citrusframework.org/schema/selenium/testcase
+          http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:page action="setUserName"
+            type="org.citrusframework.selenium.pages.UserFormPage">
+          <selenium:arguments>
+            <selenium:argument>Citrus</selenium:argument>
+          </selenium:arguments>
+        </selenium:page>
+
+        <selenium:page action="submit"
+            type="org.citrusframework.selenium.pages.UserFormPage"/>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The page object class is automatically loaded and instantiated with dependency injection for all _FindBy_ annotated web elements. After that the action method is executed.
@@ -615,27 +1107,72 @@ public class UserFormValidator implements PageValidator<UserFormPage> {
 The page validator is called with the web page instance, the browser and the test context. The validator should assert page objects and web elements for
 validation purpose. In a test case we can call the validator to validate the page.
 
-.XML DSL
-[source,xml]
-----
-<bean id ="userFormValidator" class="org.citrusframework.selenium.pages.UserFormValidator"/>
-
-<selenium:page type="org.citrusframework.selenium.pages.UserFormPage"
-               action="validate"
-               validator="userFormValidator"/>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @Autowired
 private UserFormValidator userFormValidator;
 
-selenium().page(UserFormPage.class).execute("validate").validator(userFormValidator);
+@CitrusTest
+public void seleniumTest() {
+    selenium().page(UserFormPage.class)
+            .execute("validate")
+            .validator(userFormValidator);
+}
 ----
 
-Instead of using a separate validator class you can also put the validation method to the page object itself. Then page object and validation is
-done within the same class:
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <page action="validate"
+              validator="userFormValidator"
+              type="org.citrusframework.selenium.pages.UserFormPage"/>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      page:
+        type: "org.citrusframework.selenium.pages.UserFormPage"
+        action: "validate"
+        validator: "userFormValidator"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+          http://www.citrusframework.org/schema/selenium/testcase
+          http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <spring:bean id ="userFormValidator" class="org.citrusframework.selenium.pages.UserFormValidator"/>
+
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:page type="org.citrusframework.selenium.pages.UserFormPage"
+               action="validate"
+               validator="userFormValidator"/>
+    </actions>
+  </testcase>
+</spring:beans>
+----
+
+Instead of using a separate validator class you can also put the validation method to the page object itself.
+Then page object and validation is done within the same class:
 
 [source,java]
 ----
@@ -648,7 +1185,7 @@ public class UserFormPage implements WebPage, PageValidator<UserFormPage> {
     private WebElement userName;
 
     /**
-     * Sets the user name.
+     * Sets the username.
      */
     public void setUserName(String value, TestContext context) {
         userName.clear();
@@ -657,7 +1194,6 @@ public class UserFormPage implements WebPage, PageValidator<UserFormPage> {
 
     /**
      * Submits the form.
-     * @param context
      */
     public void submit(TestContext context) {
         form.submit();
@@ -672,37 +1208,69 @@ public class UserFormPage implements WebPage, PageValidator<UserFormPage> {
 }
 ----
 
-.XML DSL
-[source,xml]
-----
-<selenium:page type="org.citrusframework.selenium.pages.UserFormPage"
-               action="validate"/>
-----
-
-.Java DSL
-[source,java]
-----
-selenium().page(UserFormPage.class).execute("validate");
-----
-
 [[wait]]
 == Wait
 
 Sometimes it is required to wait for an element to appear or disappear on the current page. The wait action will wait a given time for the element status
 to be _visible_ or _hidden_.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<selenium:wait until="hidden">
-    <selenium:element id="info-dialog"/>
-</selenium:wait>
+@CitrusTest
+public void seleniumTest() {
+    selenium().waitUntil()
+            .hidden()
+            .element(By.id("info-dialog"));
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-selenium().waitUntil().hidden().element(By.id("info-dialog"));
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <wait until="hidden">
+          <element id="info-dialog"/>
+        </wait>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      wait-until:
+        condition: "hidden"
+        element:
+          id: "info-dialog"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+          http://www.citrusframework.org/schema/selenium/testcase
+          http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:wait until="hidden">
+            <selenium:element id="info-dialog"/>
+        </selenium:wait>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The example waits for the element _info-dialog_ to disappear. The time to wait is 5000 milliseconds by default. You can set the timeout on the action. Due
@@ -713,20 +1281,66 @@ to Selenium limitations the minimum wait time is 1000 milliseconds.
 
 The action navigates to a new page either by using a new relative path or a complete new Http URL.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<selenium:navigate page="http://localhost:8080"/>
+@CitrusTest
+public void seleniumTest() {
+    selenium().navigate("http://localhost:8080");
 
-<selenium:navigate page="help"/>
+    selenium().navigate("help");
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-selenium().navigate("http://localhost:8080");
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <navigate page="http://localhost:8080"/>
+      </selenium>
 
-selenium().navigate("help");
+      <selenium>
+        <navigate page="help"/>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      navigate:
+        page: "http://localhost:8080"
+  - selenium:
+      navigate:
+        page: "help"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+          http://www.citrusframework.org/schema/selenium/testcase
+          http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:navigate page="http://localhost:8080"/>
+
+        <selenium:navigate page="help"/>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The sample above describes a new page with new Http URL. The browser will navigate to this new page. All further Selenium actions are performed on this new
@@ -739,20 +1353,67 @@ Navigation is always done on the active browser window. You can manage the opene
 
 Selenium is able to manage multiple windows. So you can open, close and switch active windows in a Citrus test.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<selenium:open-window name="my_window"/>
-<selenium:switch-window name="my_window"/>
-<selenium:close-window name="my_window"/>
+@CitrusTest
+public void seleniumTest() {
+    selenium().open().window("my_window");
+    selenium().focus().window("my_window");
+    selenium().close().window("my_window");
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-selenium().open().window("my_window");
-selenium().focus().window("my_window");
-selenium().close().window("my_window");
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <open-window name="my_window"/>
+        <switch-window name="my_window"/>
+        <close-window name="my_window"/>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      open-window:
+        name: "my_window"
+  - selenium:
+      switch-window:
+        name: "my_window"
+  - selenium:
+      close-window:
+        name: "my_window"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+          http://www.citrusframework.org/schema/selenium/testcase
+          http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:open-window name="my_window"/>
+        <selenium:switch-window name="my_window"/>
+        <selenium:close-window name="my_window"/>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 When a new window is opened Selenium creates a window handle for us. This window handle is saved as test variable using a given window name. So after opening the window you can access the
@@ -768,18 +1429,60 @@ selenium_last_window:: the last window handle when switched to other window
 
 We are able to access the alert dialog on the current page. Citrus will validate the displayed dialog text and accept or dismiss of the dialog.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<selenium:alert accept="true">
-  <selenium:alert-text>Hello!</selenium:alert-text>
-</selenium:alert>
+@CitrusTest
+public void seleniumTest() {
+    selenium().alert()
+                .text("Hello!")
+                .accept();
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-selenium().alert().text("Hello!").accept();
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <alert text="Hello!" accept="true"/>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      alert:
+        accept: true
+        text: "Hello!"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+          http://www.citrusframework.org/schema/selenium/testcase
+          http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:alert accept="true">
+          <selenium:alert-text>Hello!</selenium:alert-text>
+        </selenium:alert>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The alert dialog text is validated when expected text is given on the test action. The user can decide to accept or dismiss the dialog. After that the dialog should be closed.
@@ -791,43 +1494,131 @@ In case the test action fails to find an open alert dialog the test action raise
 You can execute this action in case you want to take a screenshot of the current page. This action only works with browsers that actually display the user interface. The action will not have any effect
 when executed with Html unit web driver in headless mode.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<selenium:screenshot/>
+@CitrusTest
+public void seleniumTest() {
+    selenium().screenhsot();
 
-<selenium:screenshot output-dir="target"/>
+    selenium().screenhsot("target");
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-selenium().screenhsot();
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <screenshot/>
+      </selenium>
 
-selenium().screenhsot("target");
+      <selenium>
+        <screenshot output-dir="target"/>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      screenshot: {}
+  - selenium:
+      screenshot:
+        output-dir: "target"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+          http://www.citrusframework.org/schema/selenium/testcase
+          http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:screenshot/>
+
+        <selenium:screenshot output-dir="target"/>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The test action has an optional parameter _output-dir_ which represents the output directory where the screenshot is saved to.
 
-[[temporary-storage-(firefox)]]
+[[temporary-storage-firefox]]
 == Temporary storage (Firefox)
 
 *Important* This action only works with Firefox web driver! Other browsers are not working with the temporary download storage.
 
 The browser uses a temporary storage for downloaded files. We can access this temporary storage during a test case.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<selenium:store-file file-path="classpath:download/file.txt"/>
-<selenium:get-stored-file file-name="file.txt"/>
+@CitrusTest
+public void seleniumTest() {
+    selenium().store("classpath:download/file.txt");
+    selenium().getStored("file.txt");
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-selenium().store("classpath:download/file.txt");
-selenium().getStored("file.txt");
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <store-file file-path="classpath:download/file.txt"/>
+        <get-stored-file file-name="file.txt"/>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      store-file:
+        file-path: "classpath:download/file.txt"
+  - selenium:
+      get-stored-file:
+        file-name: "file.txt"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+          http://www.citrusframework.org/schema/selenium/testcase
+          http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:store-file file-path="classpath:download/file.txt"/>
+        <selenium:get-stored-file file-name="file.txt"/>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 As you can see the test case is able to store new files to the temporary browser storage. We have to give the file path as classpath
@@ -842,14 +1633,52 @@ Citrus will automatically create a new test variable *selenium_download_file* wh
 
 When clearing the browser cache all cookies and temporary files will be deleted.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<selenium:clear-cache/>
+@CitrusTest
+public void seleniumTest() {
+    selenium().clearCache();
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-selenium().clearCache();
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <clear-cache/>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      clear-cache: {}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+          http://www.citrusframework.org/schema/selenium/testcase
+          http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:clear-cache/>
+    </actions>
+  </testcase>
+</spring:beans>
 ----

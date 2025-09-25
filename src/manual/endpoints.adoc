@@ -66,12 +66,12 @@ public JmsEndpoint helloServiceEndpoint() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/jms/config
-       http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/jms/config
+           http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
 
     <citrus-jms:endpoint id="helloServiceEndpoint"
         destination-name="Citrus.HelloService.Request.Queue"
@@ -108,17 +108,79 @@ CSV. As XML is still a very popular message format in enterprise applications an
 this as a default format. Anyway Citrus works best on XML bodies and you will see a lot of example code in this document using
 XML. Finally let us have a look at a first example how a sending action is defined in the test.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="SendMessageTest">
-    <description>Basic send message example</description>
+@CitrusTest
+public void sendMessageTest() {
+    send("helloService")
+        .message()
+            .header("Operation", "sayHello")
+            .body("""
+            <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                <Text>Hello!</Text>
+            </TestMessage>
+            """);
+}
+----
 
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SendMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
-        <send endpoint="helloServiceEndpoint">
+      <send endpoint="helloService">
+        <message>
+          <headers>
+            <header name="Operation" value="sayHello"/>
+          </headers>
+          <body>
+            <payload>
+            <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                <Text>Hello!</Text>
+            </TestMessage>
+            </payload>
+          </body>
+        </message>
+      </send>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SendMessageTest
+actions:
+  - send:
+      endpoint: helloService
+      message:
+        body:
+          data: |
+            <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                <Text>Hello!</Text>
+            </TestMessage>
+        headers:
+          - name: Operation
+            value: sayHello
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="SendMessageTest">
+    <description>Basic send message example</description>
+    <actions>
+        <send endpoint="helloService">
             <message>
                 <payload>
-                    <TestMessage>
+                    <TestMessage xmlns="http://citrusframework.org/schemas/test">
                         <Text>Hello!</Text>
                     </TestMessage>
                 </payload>
@@ -128,7 +190,8 @@ XML. Finally let us have a look at a first example how a sending action is defin
             </header>
         </send>
     </actions>
-</testcase>
+  </testcase>
+</spring:beans>
 ----
 
 Now let's have a closer look at the sending action. The *'endpoint'* attribute might catch your attention first. This attribute
@@ -193,21 +256,89 @@ the message contents. Read more about message sending actions in link:#actions-s
 
 Now we have a look at the message receiving part inside the test. A simple example shows how it works.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<receive endpoint="helloServiceEndpoint">
-    <message>
-        <payload>
-            <TestMessage>
+@CitrusTest
+public void receiveMessageTest() {
+    receive("helloService")
+        .message()
+            .header("Operation", "sayHello")
+            .body("""
+            <TestMessage xmlns="http://citrusframework.org/schemas/test">
                 <Text>Hello!</Text>
             </TestMessage>
-        </payload>
-    </message>
-    <header>
-        <element name="Operation" value="sayHello"/>
-    </header>
-</receive>
+            """);
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ReceiveMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <receive endpoint="helloService">
+        <message>
+          <headers>
+            <header name="Operation" value="sayHello"/>
+          </headers>
+          <body>
+            <payload>
+            <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                <Text>Hello!</Text>
+            </TestMessage>
+            </payload>
+          </body>
+        </message>
+      </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ReceiveMessageTest
+actions:
+  - receive:
+      endpoint: helloService
+      message:
+        body:
+          data: |
+            <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                <Text>Hello!</Text>
+            </TestMessage>
+        headers:
+          - name: Operation
+            value: sayHello
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="ReceiveMessageTest">
+    <actions>
+        <receive endpoint="helloServiceEndpoint">
+            <message>
+                <payload>
+                    <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                        <Text>Hello!</Text>
+                    </TestMessage>
+                </payload>
+            </message>
+            <header>
+                <element name="Operation" value="sayHello"/>
+            </header>
+        </receive>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 If we recap the send action of the previous chapter we can identify some common mechanisms that apply for both sending and
@@ -253,46 +384,142 @@ that have been exchanged earlier in the test. When storing a message in the loca
 identifier key. This message name is later on used to access the message. You can define the message name in any send or
 receive action:
 
-.XML DSL
-[source,xml]
-----
-<receive endpoint="helloServiceEndpoint">
-    <message name="helloMessage">
-        <payload>
-            <TestMessage>
-                <Text>Hello!</Text>
-            </TestMessage>
-        </payload>
-    </message>
-    <header>
-        <element name="Operation" value="sayHello"/>
-    </header>
-</receive>
-----
-
-.Java DSL designer
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
-public void messagingTest() {
-    receive("helloServiceEndpoint")
+public void receiveMessageTest() {
+    receive("helloService")
         .message()
-        .name("helloMessage")
-        .body("<TestMessage>" +
-                    "<Text>Hello!</Text>" +
-                "</TestMessage>")
-        .header("Operation", "sayHello");
+            .name("helloMessage")
+            .header("Operation", "sayHello")
+            .body("""
+            <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                <Text>Hello!</Text>
+            </TestMessage>
+            """);
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ReceiveMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <receive endpoint="helloService">
+        <message name="helloMessage">
+          <headers>
+            <header name="Operation" value="sayHello"/>
+          </headers>
+          <body>
+            <payload>
+            <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                <Text>Hello!</Text>
+            </TestMessage>
+            </payload>
+          </body>
+        </message>
+      </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ReceiveMessageTest
+actions:
+  - receive:
+      endpoint: helloService
+      message:
+        name: helloMessage
+        body:
+          data: |
+            <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                <Text>Hello!</Text>
+            </TestMessage>
+        headers:
+          - name: Operation
+            value: sayHello
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="ReceiveMessageTest">
+    <actions>
+        <receive endpoint="helloService">
+            <message name="helloMessage">
+                <payload>
+                    <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                        <Text>Hello!</Text>
+                    </TestMessage>
+                </payload>
+            </message>
+            <header>
+                <element name="Operation" value="sayHello"/>
+            </header>
+        </receive>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The receive operation above set the message name to *helloMessage*. The message received is automatically stored in the local
 storage with that name. You can access the message content for instance by using a function:
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<echo>
-    <message>citrus:message(helloMessage.body())</message>
-</echo>
+@CitrusTest
+public void receiveMessageTest() {
+    echo()
+        .message("citrus:message(helloMessage.body())");
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ReceiveMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <echo message="citrus:message(helloMessage.body())"/>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ReceiveMessageTest
+actions:
+  - echo:
+      message: "citrus:message(helloMessage.body())"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="ReceiveMessageTest">
+    <actions>
+        <echo>
+            <message>citrus:message(helloMessage.body())</message>
+        </echo>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The function loads the *helloMessage* and prints the body information with the *echo* test action. In combination with Xpath

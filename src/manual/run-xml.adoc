@@ -34,7 +34,7 @@ The test logic itself is defined in the XML file like this:
       xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase
-      http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+            http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
 
   <variables>
@@ -61,7 +61,7 @@ You can set any of the supported properties on the configuration components.
       xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase
-      http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+            http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
 
   <variables>
@@ -140,7 +140,7 @@ The template is available for multiple tests that may apply the template as part
       xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase
-      http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+            http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
 
   <actions>
@@ -168,7 +168,7 @@ If this is not the case you may also reference the file resource path when apply
       xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase
-      http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+            http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
 
   <actions>
@@ -217,7 +217,7 @@ In case the test case already uses the template parameter as a value you do not 
       xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase
-      http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+            http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
 
   <variables>
@@ -247,7 +247,7 @@ The test case may also explicitly set the template parameter when applying the t
       xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase
-      http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+            http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
 
   <variables>
@@ -314,7 +314,7 @@ several times in a test, especially in combination with parallel containers (see
       xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase
-      http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+            http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
 
   <actions>

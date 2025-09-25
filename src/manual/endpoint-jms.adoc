@@ -28,10 +28,10 @@ schema location are added to the Spring configuration XML file as follows.
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/jms/config
-       http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/jms/config
+           http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
 
     [...]
 

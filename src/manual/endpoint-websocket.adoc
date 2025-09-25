@@ -74,12 +74,12 @@ public WebSocketClient helloWebSocketClient() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-websocket="http://www.citrusframework.org/schema/websocket/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/websocket/config
-       http://www.citrusframework.org/schema/websocket/config/citrus-websocket-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/websocket/config
+           http://www.citrusframework.org/schema/websocket/config/citrus-websocket-config.xsd">
 
     <citrus-websocket:client id="helloWebSocketClient"
                     url="http://localhost:8080/hello"
@@ -209,12 +209,12 @@ private WebSocketEndpoint webSocket2() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-websocket="http://www.citrusframework.org/schema/websocket/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/websocket/config
-       http://www.citrusframework.org/schema/websocket/config/citrus-websocket-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/websocket/config
+           http://www.citrusframework.org/schema/websocket/config/citrus-websocket-config.xsd">
 
     <citrus-websocket:server id="helloWebSocketServer"
             port="8080"

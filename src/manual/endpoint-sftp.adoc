@@ -14,29 +14,6 @@ NOTE: The SFTP components in Citrus are maintained in their own Maven module. So
 </dependency>
 ----
 
-As Citrus provides a customized SFTP configuration schema for the Spring application context configuration files we have to add name to the top level *beans* element. Simply include the sftp-config namespace in the configuration XML files as follows.
-
-[source,xml]
-----
-<beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:citrus="http://www.citrusframework.org/schema/config"
-    xmlns:citrus-sftp="http://www.citrusframework.org/schema/sftp/config"
-    xsi:schemaLocation="
-    http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans.xsd
-    http://www.citrusframework.org/schema/config
-    http://www.citrusframework.org/schema/config/citrus-config.xsd
-    http://www.citrusframework.org/schema/http/config
-    http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd">
-
-      [...]
-
-      </beans>
-----
-
-Now we are ready to use the customized Citrus SFTP configuration elements with the citrus-sftp namespace prefix.
-
 [[sftp-client]]
 == SFTP client
 
@@ -80,12 +57,12 @@ public SftpClient sftpClient() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-sftp="http://www.citrusframework.org/schema/sftp/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/sftp/config
-       http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/sftp/config
+           http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd">
 
     <citrus-sftp:client id="sftpClient"
            strict-host-checking="false"
@@ -95,6 +72,9 @@ public SftpClient sftpClient() {
            timeout="10000"/>
 </beans>
 ----
+
+NOTE: Citrus provides a customized SFTP configuration schema for the Spring XML application context configurations.
+Simply include the `citrus-sftp` namespace in the configuration XML files as seen in the example above.
 
 The configuration above describes a Citrus sftp client. The sftp-client connects to the server using the user credentials
 and/or the private key authentication. The client will automatically authenticate to the server when opening a new connection.
@@ -142,12 +122,12 @@ public SftpClient sftpClient() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-sftp="http://www.citrusframework.org/schema/sftp/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/sftp/config
-       http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/sftp/config
+           http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd">
 
     <citrus-sftp:client id="sftpClient"
            strict-host-checking="false"
@@ -164,46 +144,128 @@ public SftpClient sftpClient() {
 
 In a test case you are now able to use the client to push commands to the server.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<send endpoint="sftpClient">
-  <message>
-    <payload>
-      <ftp:command>
-        <ftp:signal>MKD</ftp:signal>
-        <ftp:arguments>test</ftp:arguments>
-      </ftp:command>
-    </payload>
-  </message>
-</send>
+@CitrusTest
+public void sftpTest() {
+    when(send()
+        .endpoint(sftpClient)
+        .message(FtpMessage.command(FTPCmd.MKD).arguments("test"))
+    );
 
-<receive endpoint="sftpClient">
-  <message>
-    <payload>
-      <ftp:command-result>
-        <ftp:success>true</ftp:success>
-        <ftp:reply-code>257</ftp:reply-code>
-        <ftp:reply-string>257 Pathname created</ftp:reply-string>
-      </ftp:command-result>
-    </payload>
-  </message>
-</receive>
+    CommandResult result = new CommandResult();
+    result.setSuccess(true);
+    result.setReplyCode(String.valueOf(257));
+    result.setReplyString("257 Pathname created");
+
+    then(receive()
+        .endpoint(sftpClient)
+        .message(FtpMessage.result(result))
+    );
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-send(sftpClient)
-    .message(FtpMessage.command(FTPCmd.MKD).arguments("test"));
+<test name="SftpTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+                                xmlns:ftp="http://www.citrusframework.org/schema/ftp/message">
+    <actions>
+      <send endpoint="sftpClient">
+        <message>
+          <body>
+            <payload>
+              <ftp:command>
+                <ftp:signal>MKD</ftp:signal>
+                <ftp:arguments>test</ftp:arguments>
+              </ftp:command>
+            </payload>
+          </body>
+        </message>
+      </send>
+      <receive endpoint="sftpClient">
+        <message>
+          <body>
+            <payload>
+              <ftp:command-result>
+                <ftp:success>true</ftp:success>
+                <ftp:reply-code>257</ftp:reply-code>
+                <ftp:reply-string>257 Pathname created</ftp:reply-string>
+              </ftp:command-result>
+            </payload>
+          </body>
+        </message>
+      </receive>
+    </actions>
+</test>
+----
 
-CommandResult result = new CommandResult();
-result.setSuccess(true);
-result.setReplyCode(String.valueOf(257));
-result.setReplyString("257 Pathname created");
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SftpTest
+actions:
+  - send:
+      endpoint: sftpClient
+      message:
+        body:
+          data: |
+            <ftp:command>
+              <ftp:signal>MKD</ftp:signal>
+              <ftp:arguments>test</ftp:arguments>
+            </ftp:command>
+  - receive:
+      endpoint: sftpClient
+      message:
+        body:
+          data: |
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+              <ftp:reply-code>257</ftp:reply-code>
+              <ftp:reply-string>257 Pathname created</ftp:reply-string>
+            </ftp:command-result>
+----
 
-receive(sftpClient)
-    .message(FtpMessage.result(result));
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:ftp="http://www.citrusframework.org/schema/ftp/message"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/ftp/message
+              http://www.citrusframework.org/schema/ftp/citrus-ftp-message.xsd">
+  <testcase name="SftpTest">
+    <actions>
+        <send endpoint="sftpClient">
+          <message>
+            <payload>
+              <ftp:command>
+                <ftp:signal>MKD</ftp:signal>
+                <ftp:arguments>test</ftp:arguments>
+              </ftp:command>
+            </payload>
+          </message>
+        </send>
+
+        <receive endpoint="sftpClient">
+          <message>
+            <payload>
+              <ftp:command-result>
+                <ftp:success>true</ftp:success>
+                <ftp:reply-code>257</ftp:reply-code>
+                <ftp:reply-string>257 Pathname created</ftp:reply-string>
+              </ftp:command-result>
+            </payload>
+          </message>
+        </receive>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 As you can see most of the sftp communication parameters are specified in a ftp command message. Citrus automatically converts those information to proper FTP commands and response messages.
@@ -213,46 +275,128 @@ As you can see most of the sftp communication parameters are specified in a ftp 
 
 The client is able to store files on the server using file transfer.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<send endpoint="sftpClient">
-  <message>
-    <payload>
-      <ftp:put-command>
-        <ftp:file path="test/hello.txt" type="ASCII"/>
-        <ftp:target path="/test/hello.txt"/>
-      </ftp:put-command>
-    </payload>
-  </message>
-</send>
+@CitrusTest
+public void sftpTest() {
+    when(send()
+        .endpoint(sftpClient)
+        .message(FtpMessage.put("test/hello.txt", DataType.ASCII).arguments(""))
+    );
 
-<receive endpoint="sftpClient">
-  <message>
-    <payload>
-      <ftp:put-command-result>
-        <ftp:success>true</ftp:success>
-        <ftp:reply-code>226</ftp:reply-code>
-        <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
-      </ftp:put-command-result>
-    </payload>
-  </message>
-</receive>
+    PutCommandResult result = new PutCommandResult();
+    result.setSuccess(true);
+    result.setReplyCode(String.valueOf(226));
+    result.setReplyString("@contains(Transfer complete)@");
+
+    then(receive()
+        .endpoint(sftpClient)
+        .message(FtpMessage.result(result))
+    );
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-send(sftpClient)
-        .message(FtpMessage.put("test/hello.txt", DataType.ASCII).arguments(""));
+<test name="SftpTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+                                xmlns:ftp="http://www.citrusframework.org/schema/ftp/message">
+    <actions>
+      <send endpoint="sftpClient">
+        <message>
+          <body>
+            <payload>
+              <ftp:put-command>
+                <ftp:file path="test/hello.txt" type="ASCII"/>
+                <ftp:target path="/test/hello.txt"/>
+              </ftp:put-command>
+            </payload>
+          </body>
+        </message>
+      </send>
+      <receive endpoint="sftpClient">
+        <message>
+          <body>
+            <payload>
+              <ftp:put-command-result>
+                <ftp:success>true</ftp:success>
+                <ftp:reply-code>226</ftp:reply-code>
+                <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+              </ftp:put-command-result>
+            </payload>
+          </body>
+        </message>
+      </receive>
+    </actions>
+</test>
+----
 
-PutCommandResult result = new PutCommandResult();
-        result.setSuccess(true);
-        result.setReplyCode(String.valueOf(226));
-        result.setReplyString("@contains(Transfer complete)@");
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SftpTest
+actions:
+  - send:
+      endpoint: sftpClient
+      message:
+        body:
+          data: |
+            <ftp:put-command>
+              <ftp:file path="test/hello.txt" type="ASCII"/>
+              <ftp:target path="/test/hello.txt"/>
+            </ftp:put-command>
+  - receive:
+      endpoint: sftpClient
+      message:
+        body:
+          data: |
+            <ftp:put-command-result>
+              <ftp:success>true</ftp:success>
+              <ftp:reply-code>226</ftp:reply-code>
+              <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+            </ftp:put-command-result>
+----
 
-receive(sftpClient)
-        .message(FtpMessage.result(result));
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:ftp="http://www.citrusframework.org/schema/ftp/message"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/ftp/message
+              http://www.citrusframework.org/schema/ftp/citrus-ftp-message.xsd">
+  <testcase name="SftpTest">
+    <actions>
+        <send endpoint="sftpClient">
+          <message>
+            <payload>
+              <ftp:put-command>
+                <ftp:file path="test/hello.txt" type="ASCII"/>
+                <ftp:target path="/test/hello.txt"/>
+              </ftp:put-command>
+            </payload>
+          </message>
+        </send>
+
+        <receive endpoint="sftpClient">
+          <message>
+            <payload>
+              <ftp:put-command-result>
+                <ftp:success>true</ftp:success>
+                <ftp:reply-code>226</ftp:reply-code>
+                <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+              </ftp:put-command-result>
+            </payload>
+          </message>
+        </receive>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The file store operation uses the put command as message payload when sending the file request. The file content is loaded from external file resource. You can choose the transfer type `ASCII` and `BINARY`.
@@ -263,48 +407,22 @@ When the file is stored on server side we receive a success result message with 
 
 We are able to retrieve files from a SFTP server. We need to specify the target file path that we want to get on the server user home directory.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<send endpoint="sftpClient">
-  <message>
-    <payload>
-      <ftp:get-command>
-        <ftp:file path="test/hello.txt" type="ASCII"/>
-        <ftp:target path="target/test/hello.txt"/>
-      </ftp:get-command>
-    </payload>
-  </message>
-</send>
+@CitrusTest
+public void sftpTest() {
+    when(send()
+        .endpoint(sftpClient)
+        .message(FtpMessage.get("test/hello.txt", "target/test/hello.txt", DataType.ASCII))
+    );
 
-<receive endpoint="sftpClient">
-  <message>
-    <payload>
-      <ftp:get-command-result>
-        <ftp:success>true</ftp:success>
-        <ftp:reply-code>226</ftp:reply-code>
-        <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
-        <ftp:file path="target/test/hello.txt">
-          <ftp:data>citrus:readFile('classpath:test/hello.txt')</ftp:data>
-        </ftp:file>
-      </ftp:get-command-result>
-    </payload>
-  </message>
-</receive>
-----
+    then(receive()
+        .endpoint(sftpClient)
+        .message(FtpMessage.result(getRetrieveFileCommandResult("target/test/hello.txt", new ClassPathResource("test/hello.txt"))))
+    );
+}
 
-.Java DSL
-[source,java]
-----
-send(sftpClient)
-        .message(FtpMessage.get("test/hello.txt", "target/test/hello.txt", DataType.ASCII));
-
-receive(sftpClient)
-        .message(FtpMessage.result(getRetrieveFileCommandResult("target/test/hello.txt", new ClassPathResource("test/hello.txt"))));
-----
-
-[source,java]
-----
 private GetCommandResult getRetrieveFileCommandResult(String path, Resource content) throws IOException {
     GetCommandResult result = new GetCommandResult();
     result.setSuccess(true);
@@ -320,6 +438,117 @@ private GetCommandResult getRetrieveFileCommandResult(String path, Resource cont
 }
 ----
 
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SftpTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+                                xmlns:ftp="http://www.citrusframework.org/schema/ftp/message">
+    <actions>
+      <send endpoint="sftpClient">
+        <message>
+          <body>
+            <payload>
+              <ftp:get-command>
+                <ftp:file path="test/hello.txt" type="ASCII"/>
+                <ftp:target path="target/test/hello.txt"/>
+              </ftp:get-command>
+            </payload>
+          </body>
+        </message>
+      </send>
+      <receive endpoint="sftpClient">
+        <message>
+          <body>
+            <payload>
+              <ftp:get-command-result>
+                <ftp:success>true</ftp:success>
+                <ftp:reply-code>226</ftp:reply-code>
+                <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+                <ftp:file path="target/test/hello.txt">
+                  <ftp:data>citrus:readFile('classpath:test/hello.txt')</ftp:data>
+                </ftp:file>
+              </ftp:get-command-result>
+            </payload>
+          </body>
+        </message>
+      </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SftpTest
+actions:
+  - send:
+      endpoint: sftpClient
+      message:
+        body:
+          data: |
+            <ftp:get-command>
+              <ftp:file path="test/hello.txt" type="ASCII"/>
+              <ftp:target path="target/test/hello.txt"/>
+            </ftp:get-command>
+  - receive:
+      endpoint: sftpClient
+      message:
+        body:
+          data: |
+            <ftp:get-command-result>
+              <ftp:success>true</ftp:success>
+              <ftp:reply-code>226</ftp:reply-code>
+              <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+              <ftp:file path="target/test/hello.txt">
+                <ftp:data>citrus:readFile('classpath:test/hello.txt')</ftp:data>
+              </ftp:file>
+            </ftp:get-command-result>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:ftp="http://www.citrusframework.org/schema/ftp/message"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/ftp/message
+              http://www.citrusframework.org/schema/ftp/citrus-ftp-message.xsd">
+  <testcase name="SftpTest">
+    <actions>
+        <send endpoint="sftpClient">
+          <message>
+            <payload>
+              <ftp:get-command>
+                <ftp:file path="test/hello.txt" type="ASCII"/>
+                <ftp:target path="target/test/hello.txt"/>
+              </ftp:get-command>
+            </payload>
+          </message>
+        </send>
+
+        <receive endpoint="sftpClient">
+          <message>
+            <payload>
+              <ftp:get-command-result>
+                <ftp:success>true</ftp:success>
+                <ftp:reply-code>226</ftp:reply-code>
+                <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+                <ftp:file path="target/test/hello.txt">
+                  <ftp:data>citrus:readFile('classpath:test/hello.txt')</ftp:data>
+                </ftp:file>
+              </ftp:get-command-result>
+            </payload>
+          </message>
+        </receive>
+    </actions>
+  </testcase>
+</spring:beans>
+----
+
 When file transfer is complete we are able to verify the file content in a command result. The file content is provided as data string.
 
 [[sftp-client-list]]
@@ -327,49 +556,22 @@ When file transfer is complete we are able to verify the file content in a comma
 
 Listing files on the server is possible with the list command.
 
-.XML
-[source,xml]
-----
-<send endpoint="sftpClient">
-  <message>
-    <payload>
-      <ftp:list-command>
-        <ftp:target path="test" />
-      </ftp:list-command>
-    </payload>
-  </message>
-</send>
-
-<receive endpoint="sftpClient">
-  <message>
-    <payload>
-      <ftp:list-command-result>
-        <ftp:success>true</ftp:success>
-        <ftp:reply-code>150</ftp:reply-code>
-        <ftp:reply-string>List files complete</ftp:reply-string>
-        <ftp:files>
-          <ftp:file path="."/>
-          <ftp:file path=".."/>
-          <ftp:file path="hello.txt"/>
-        </ftp:files>
-      </ftp:list-command-result>
-    </payload>
-  </message>
-</receive>
-----
-
 .Java
-[source,java]
+[source,java,indent=0,role="primary"]
 ----
-send(sftpClient)
-        .message(FtpMessage.list("test"));
+@CitrusTest
+public void sftpTest() {
+    when(send()
+        .endpoint(sftpClient)
+        .message(FtpMessage.list("test"))
+    );
 
-receive(sftpClient)
-        .message(FtpMessage.result(getListCommandResult("hello.txt")));
-----
+    then(receive()
+        .endpoint(sftpClient)
+        .message(FtpMessage.result(getListCommandResult("hello.txt")))
+    );
+}
 
-[source,java]
-----
 private ListCommandResult getListCommandResult(String ... fileNames) {
     ListCommandResult result = new ListCommandResult();
     result.setSuccess(true);
@@ -396,6 +598,120 @@ private ListCommandResult getListCommandResult(String ... fileNames) {
 
     return result;
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SftpTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+                                xmlns:ftp="http://www.citrusframework.org/schema/ftp/message">
+    <actions>
+      <send endpoint="sftpClient">
+        <message>
+          <body>
+            <payload>
+              <ftp:list-command>
+                <ftp:target path="test" />
+              </ftp:list-command>
+            </payload>
+          </body>
+        </message>
+      </send>
+      <receive endpoint="sftpClient">
+        <message>
+          <body>
+            <payload>
+              <ftp:list-command-result>
+                <ftp:success>true</ftp:success>
+                <ftp:reply-code>150</ftp:reply-code>
+                <ftp:reply-string>List files complete</ftp:reply-string>
+                <ftp:files>
+                  <ftp:file path="."/>
+                  <ftp:file path=".."/>
+                  <ftp:file path="hello.txt"/>
+                </ftp:files>
+              </ftp:list-command-result>
+            </payload>
+          </body>
+        </message>
+      </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SftpTest
+actions:
+  - send:
+      endpoint: sftpClient
+      message:
+        body:
+          data: |
+            <ftp:list-command>
+              <ftp:target path="test" />
+            </ftp:list-command>
+  - receive:
+      endpoint: sftpClient
+      message:
+        body:
+          data: |
+            <ftp:list-command-result>
+              <ftp:success>true</ftp:success>
+              <ftp:reply-code>150</ftp:reply-code>
+              <ftp:reply-string>List files complete</ftp:reply-string>
+              <ftp:files>
+                <ftp:file path="."/>
+                <ftp:file path=".."/>
+                <ftp:file path="hello.txt"/>
+              </ftp:files>
+            </ftp:list-command-result>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:ftp="http://www.citrusframework.org/schema/ftp/message"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/ftp/message
+              http://www.citrusframework.org/schema/ftp/citrus-ftp-message.xsd">
+  <testcase name="SftpTest">
+    <actions>
+        <send endpoint="sftpClient">
+          <message>
+            <payload>
+              <ftp:list-command>
+                <ftp:target path="test" />
+              </ftp:list-command>
+            </payload>
+          </message>
+        </send>
+
+        <receive endpoint="sftpClient">
+          <message>
+            <payload>
+              <ftp:list-command-result>
+                <ftp:success>true</ftp:success>
+                <ftp:reply-code>150</ftp:reply-code>
+                <ftp:reply-string>List files complete</ftp:reply-string>
+                <ftp:files>
+                  <ftp:file path="."/>
+                  <ftp:file path=".."/>
+                  <ftp:file path="hello.txt"/>
+                </ftp:files>
+              </ftp:list-command-result>
+            </payload>
+          </message>
+        </receive>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 Listing files results in a command result that gives us the list of files on the server directory. We are able to verify that list with respective file paths.
@@ -445,12 +761,12 @@ public SftpServer sftpServer() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-sftp="http://www.citrusframework.org/schema/sftp/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/sftp/config
-       http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/sftp/config
+           http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd">
 
 
     <citrus-sftp:server id="sftpServer"
@@ -477,90 +793,248 @@ success or failure response.
 Now we would like to use the server in a test case. Each operation that arrives on the server is automatically forwarded to the test case for validation. This means that we can
 verify any command on the server by using a normal receive action in our test.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<receive endpoint="sftpServer">
-  <message>
-    <payload>
-      <ftp:command>
-        <ftp:signal>MKD</ftp:signal>
-        <ftp:arguments>/test</ftp:arguments>
-      </ftp:command>
-    </payload>
-  </message>
-</receive>
+@CitrusTest
+public void sftpTest() {
+    when(receive()
+        .endpoint(sftpServer)
+        .message(FtpMessage.command(FTPCmd.MKD).arguments("test"))
+    );
 
-<send endpoint="sftpServer">
-  <message>
-    <payload>
-      <ftp:command-result>
-        <ftp:success>true</ftp:success>
-      </ftp:command-result>
-    </payload>
-  </message>
-</send>
+    then(send()
+        .endpoint(sftpServer)
+        .message(FtpMessage.success())
+    );
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-receive(sftpServer)
-    .message(FtpMessage.command(FTPCmd.MKD).arguments("test"));
-
-send(sftpServer)
-    .message(FtpMessage.success());
+<test name="SftpTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+                                xmlns:ftp="http://www.citrusframework.org/schema/ftp/message">
+    <actions>
+      <receive endpoint="sftpServer">
+        <message>
+          <body>
+            <payload>
+              <ftp:command>
+                <ftp:signal>MKD</ftp:signal>
+                <ftp:arguments>test</ftp:arguments>
+              </ftp:command>
+            </payload>
+          </body>
+        </message>
+      </receive>
+      <send endpoint="sftpServer">
+        <message>
+          <body>
+            <payload>
+              <ftp:command-result>
+                <ftp:success>true</ftp:success>
+              </ftp:command-result>
+            </payload>
+          </body>
+        </message>
+      </send>
+    </actions>
+</test>
 ----
 
-The receive action uses the command signal and argument for validation. In the sample above we receive a `MKD` signal with argument `/test` which implies a create directory command. The server respectively the
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SftpTest
+actions:
+  - receive:
+      endpoint: sftpServer
+      message:
+        body:
+          data: |
+            <ftp:command>
+              <ftp:signal>MKD</ftp:signal>
+              <ftp:arguments>test</ftp:arguments>
+            </ftp:command>
+  - send:
+      endpoint: sftpServer
+      message:
+        body:
+          data: |
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:ftp="http://www.citrusframework.org/schema/ftp/message"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/ftp/message
+              http://www.citrusframework.org/schema/ftp/citrus-ftp-message.xsd">
+  <testcase name="SftpTest">
+    <actions>
+        <receive endpoint="sftpServer">
+          <message>
+            <payload>
+              <ftp:command>
+                <ftp:signal>MKD</ftp:signal>
+                <ftp:arguments>/test</ftp:arguments>
+              </ftp:command>
+            </payload>
+          </message>
+        </receive>
+
+        <send endpoint="sftpServer">
+          <message>
+            <payload>
+              <ftp:command-result>
+                <ftp:success>true</ftp:success>
+              </ftp:command-result>
+            </payload>
+          </message>
+        </send>
+    </actions>
+  </testcase>
+</spring:beans>
+----
+
+The `receive` action uses the command signal and argument for validation. In the sample above we receive a `MKD` signal with argument `/test` which implies a create directory command. The server respectively the
 test case is now able to simulate the response for this command. We respond with a success command result. Following from that the Citrus SFTP server implementation will create that directory in the user home directory
 and respond to the client with a proper success message.
 
-Of course you can also simulate error scenarios here. Just respond in the test with a negative command result.
+Of course, you can also simulate error scenarios here. Just respond in the test with a negative command result.
 
 [[sftp-server-store]]
 === Store files
 
 Clients are able to store files on the server component. Each file store operation is executed in the user home directory when the command result is successful. In a test you can verify the `STOR` signal coming from the client.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<echo>
-  <message>Store file on server</message>
-</echo>
+@CitrusTest
+public void sftpTest() {
+    when(receive()
+        .endpoint(sftpServer)
+        .message(put("@ignore@","/test/hello.txt", DataType.ASCII))
+    );
 
-<receive endpoint="sftpServer">
-  <message>
-    <payload>
-      <ftp:put-command>
-        <ftp:signal>STOR</ftp:signal>
-        <ftp:file path="@ignore@" type="ASCII"/>
-        <ftp:target path="/test/hello.txt"/>
-      </ftp:put-command>
-    </payload>
-  </message>
-</receive>
-
-<send endpoint="sftpServer">
-  <message>
-    <payload>
-      <ftp:command-result>
-        <ftp:success>true</ftp:success>
-      </ftp:command-result>
-    </payload>
-  </message>
-</send>
+    then(send()
+        .endpoint(sftpServer)
+        .message(FtpMessage.success())
+    );
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-receive(sftpServer)
-        .message(put("@ignore@","/test/hello.txt", DataType.ASCII));
+<test name="SftpTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+                                xmlns:ftp="http://www.citrusframework.org/schema/ftp/message">
+    <actions>
+      <receive endpoint="sftpServer">
+        <message>
+          <body>
+            <payload>
+              <ftp:put-command>
+                <ftp:signal>STOR</ftp:signal>
+                <ftp:file path="@ignore@" type="ASCII"/>
+                <ftp:target path="/test/hello.txt"/>
+              </ftp:put-command>
+            </payload>
+          </body>
+        </message>
+      </receive>
+      <send endpoint="sftpServer">
+        <message>
+          <body>
+            <payload>
+              <ftp:command-result>
+                <ftp:success>true</ftp:success>
+              </ftp:command-result>
+            </payload>
+          </body>
+        </message>
+      </send>
+    </actions>
+</test>
+----
 
-send(sftpServer)
-        .message(FtpMessage.success());
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SftpTest
+actions:
+  - receive:
+      endpoint: sftpServer
+      message:
+        body:
+          data: |
+            <ftp:put-command>
+              <ftp:signal>STOR</ftp:signal>
+              <ftp:file path="@ignore@" type="ASCII"/>
+              <ftp:target path="/test/hello.txt"/>
+            </ftp:put-command>
+  - send:
+      endpoint: sftpServer
+      message:
+        body:
+          data: |
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:ftp="http://www.citrusframework.org/schema/ftp/message"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/ftp/message
+              http://www.citrusframework.org/schema/ftp/citrus-ftp-message.xsd">
+  <testcase name="SftpTest">
+    <actions>
+        <echo>
+          <message>Store file on server</message>
+        </echo>
+
+        <receive endpoint="sftpServer">
+          <message>
+            <payload>
+              <ftp:put-command>
+                <ftp:signal>STOR</ftp:signal>
+                <ftp:file path="@ignore@" type="ASCII"/>
+                <ftp:target path="/test/hello.txt"/>
+              </ftp:put-command>
+            </payload>
+          </message>
+        </receive>
+
+        <send endpoint="sftpServer">
+          <message>
+            <payload>
+              <ftp:command-result>
+                <ftp:success>true</ftp:success>
+              </ftp:command-result>
+            </payload>
+          </message>
+        </send>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 After that you should find a new file in the user home directory with the given file path. The file transfer is automatically handled by the Citrus SFTP server component.
@@ -570,44 +1044,124 @@ After that you should find a new file in the user home directory with the given 
 
 Clients should be able to get files from the server by using get/retrieve commands. In the request the client needs to give the target file path based on the user home directory.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<echo>
-  <message>Retrieve file from server</message>
-</echo>
+@CitrusTest
+public void sftpTest() {
+    when(receive()
+        .endpoint(sftpServer)
+        .message(FtpMessage.get("/test/hello.txt", "@ignore@", DataType.ASCII))
+    );
 
-<receive endpoint="sftpServer">
-  <message>
-    <payload>
-      <ftp:get-command>
-        <ftp:signal>RETR</ftp:signal>
-        <ftp:file path="/test/hello.txt" type="ASCII"/>
-        <ftp:target path="@ignore@"/>
-      </ftp:get-command>
-    </payload>
-  </message>
-</receive>
-
-<send endpoint="sftpServer">
-  <message>
-    <payload>
-      <ftp:command-result>
-        <ftp:success>true</ftp:success>
-      </ftp:command-result>
-    </payload>
-  </message>
-</send>
+    then(send()
+        .endpoint(sftpServer)
+        .message(FtpMessage.success())
+    );
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-receive(sftpServer)
-        .message(FtpMessage.get("/test/hello.txt", "@ignore@", DataType.ASCII));
+<test name="SftpTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+                                xmlns:ftp="http://www.citrusframework.org/schema/ftp/message">
+    <actions>
+      <receive endpoint="sftpServer">
+        <message>
+          <body>
+            <payload>
+              <ftp:get-command>
+                <ftp:signal>RETR</ftp:signal>
+                <ftp:file path="/test/hello.txt" type="ASCII"/>
+                <ftp:target path="@ignore@"/>
+              </ftp:get-command>
+            </payload>
+          </body>
+        </message>
+      </receive>
+      <send endpoint="sftpServer">
+        <message>
+          <body>
+            <payload>
+              <ftp:command-result>
+                <ftp:success>true</ftp:success>
+              </ftp:command-result>
+            </payload>
+          </body>
+        </message>
+      </send>
+    </actions>
+</test>
+----
 
-send(sftpServer)
-        .message(FtpMessage.success());
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SftpTest
+actions:
+  - receive:
+      endpoint: sftpServer
+      message:
+        body:
+          data: |
+            <ftp:get-command>
+              <ftp:signal>RETR</ftp:signal>
+              <ftp:file path="/test/hello.txt" type="ASCII"/>
+              <ftp:target path="@ignore@"/>
+            </ftp:get-command>
+  - send:
+      endpoint: sftpServer
+      message:
+        body:
+          data: |
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:ftp="http://www.citrusframework.org/schema/ftp/message"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/ftp/message
+              http://www.citrusframework.org/schema/ftp/citrus-ftp-message.xsd">
+  <testcase name="SftpTest">
+    <actions>
+        <echo>
+          <message>Retrieve file from server</message>
+        </echo>
+
+        <receive endpoint="sftpServer">
+          <message>
+            <payload>
+              <ftp:get-command>
+                <ftp:signal>RETR</ftp:signal>
+                <ftp:file path="/test/hello.txt" type="ASCII"/>
+                <ftp:target path="@ignore@"/>
+              </ftp:get-command>
+            </payload>
+          </message>
+        </receive>
+
+        <send endpoint="sftpServer">
+          <message>
+            <payload>
+              <ftp:command-result>
+                <ftp:success>true</ftp:success>
+              </ftp:command-result>
+            </payload>
+          </message>
+        </send>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The file request is verified with proper signal and arguments. When the server command result is positive the Citrus SFTP server will transfer the file content to the calling client.
@@ -617,39 +1171,117 @@ The file request is verified with proper signal and arguments. When the server c
 
 When clients request for listing files on the server we get a list command on the server.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<receive endpoint="sftpServer">
-  <message>
-    <payload>
-      <ftp:command>
-        <ftp:signal>LIST</ftp:signal>
-        <ftp:arguments>test</ftp:arguments>
-      </ftp:command>
-    </payload>
-  </message>
-</receive>
+@CitrusTest
+public void sftpTest() {
+    when(receive()
+        .endpoint(sftpServer)
+        .message(FtpMessage.command(FTPCmd.LIST).arguments("test"))
+    );
 
-<send endpoint="sftpServer">
-  <message>
-    <payload>
-      <ftp:command-result>
-        <ftp:success>true</ftp:success>
-      </ftp:command-result>
-    </payload>
-  </message>
-</send>
+    then(send()
+        .endpoint(sftpServer)
+        .message(FtpMessage.success())
+    );
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-receive(sftpServer)
-        .message(FtpMessage.command(FTPCmd.LIST).arguments("test"));
+<test name="SftpTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+                                xmlns:ftp="http://www.citrusframework.org/schema/ftp/message">
+    <actions>
+      <receive endpoint="sftpServer">
+        <message>
+          <body>
+            <payload>
+              <ftp:command>
+                <ftp:signal>LIST</ftp:signal>
+                <ftp:arguments>test</ftp:arguments>
+              </ftp:command>
+            </payload>
+          </body>
+        </message>
+      </receive>
+      <send endpoint="sftpServer">
+        <message>
+          <body>
+            <payload>
+              <ftp:command-result>
+                <ftp:success>true</ftp:success>
+              </ftp:command-result>
+            </payload>
+          </body>
+        </message>
+      </send>
+    </actions>
+</test>
+----
 
-send(sftpServer)
-        .message(FtpMessage.success());
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SftpTest
+actions:
+  - receive:
+      endpoint: sftpServer
+      message:
+        body:
+          data: |
+            <ftp:command>
+              <ftp:signal>LIST</ftp:signal>
+              <ftp:arguments>test</ftp:arguments>
+            </ftp:command>
+  - send:
+      endpoint: sftpServer
+      message:
+        body:
+          data: |
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:ftp="http://www.citrusframework.org/schema/ftp/message"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/ftp/message
+              http://www.citrusframework.org/schema/ftp/citrus-ftp-message.xsd">
+  <testcase name="SftpTest">
+    <actions>
+        <receive endpoint="sftpServer">
+          <message>
+            <payload>
+              <ftp:command>
+                <ftp:signal>LIST</ftp:signal>
+                <ftp:arguments>test</ftp:arguments>
+              </ftp:command>
+            </payload>
+          </message>
+        </receive>
+
+        <send endpoint="sftpServer">
+          <message>
+            <payload>
+              <ftp:command-result>
+                <ftp:success>true</ftp:success>
+              </ftp:command-result>
+            </payload>
+          </message>
+        </send>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 As you can see the list command is verified with proper signal and arguments that specifies the target folder to list the files for. When the command result is positive the
@@ -657,29 +1289,6 @@ SFTP server implementation will send back a proper list command result for that 
 
 [[scp-client]]
 == SCP client
-
-As Citrus provides a customized SCP configuration schema for the Spring application context configuration files we have to add name to the top level *beans* element. Simply include the scp-config namespace in the configuration XML files as follows.
-
-[source,xml]
-----
-<beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:citrus="http://www.citrusframework.org/schema/config"
-    xmlns:citrus-scp="http://www.citrusframework.org/schema/scp/config"
-    xsi:schemaLocation="
-    http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans.xsd
-    http://www.citrusframework.org/schema/config
-    http://www.citrusframework.org/schema/config/citrus-config.xsd
-    http://www.citrusframework.org/schema/http/config
-    http://www.citrusframework.org/schema/scp/config/citrus-scp-config.xsd">
-
-      [...]
-
-      </beans>
-----
-
-Now we are ready to use the customized Citrus SCP configuration elements with the citrus-scp namespace prefix.
 
 We want to use Citrus to connect to some FTP server using secure file copy with SCP. Citrus offers a client component doing exactly this SCP client connection.
 
@@ -718,16 +1327,12 @@ public ScpClient scpClient() {
 ----
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:citrus="http://www.citrusframework.org/schema/config"
-       xmlns:citrus-sftp="http://www.citrusframework.org/schema/sftp/config"
+       xmlns:citrus-scp="http://www.citrusframework.org/schema/scp/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/sftp/config
-       http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd">
-
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/scp/config
+           http://www.citrusframework.org/schema/scp/config/citrus-scp-config.xsd">
 
     <citrus-scp:client id="scpClient"
                port="2222"
@@ -737,6 +1342,9 @@ public ScpClient scpClient() {
 </beans>
 ----
 
+NOTE: Citrus provides a customized SCP configuration schema for the Spring XML application context configuration files.
+Simply include the `citrus-scp` namespace in the configuration XML files as seen in the example above.
+
 The configuration above describes a Citrus scp client. The scp-client connects to the server using the user credentials and/or the private key authentication. The client will automatically authenticate to the server when opening a new connection.
 
 [[scp-client-store]]
@@ -744,46 +1352,128 @@ The configuration above describes a Citrus scp client. The scp-client connects t
 
 The client is able to store files on the server using file transfer.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<send endpoint="scpClient">
-  <message>
-    <payload>
-      <ftp:put-command>
-        <ftp:file path="test/hello.txt" type="ASCII"/>
-        <ftp:target path="/test/hello.txt"/>
-      </ftp:put-command>
-    </payload>
-  </message>
-</send>
+@CitrusTest
+public void scpTest() {
+    when(send()
+        .endpoint(scpClient)
+        .message(FtpMessage.put("test/hello.txt", DataType.ASCII).arguments(""))
+    );
 
-<receive endpoint="scpClient">
-  <message>
-    <payload>
-      <ftp:put-command-result>
-        <ftp:success>true</ftp:success>
-        <ftp:reply-code>226</ftp:reply-code>
-        <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
-      </ftp:put-command-result>
-    </payload>
-  </message>
-</receive>
+    PutCommandResult result = new PutCommandResult();
+    result.setSuccess(true);
+    result.setReplyCode(String.valueOf(226));
+    result.setReplyString("@contains(Transfer complete)@");
+
+    then(receive()
+        .endpoint(scpClient)
+        .message(FtpMessage.result(result))
+    );
+}
 ----
 
-.Java DSL
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-send(scpClient)
-        .message(FtpMessage.put("test/hello.txt", DataType.ASCII).arguments(""));
+<test name="ScpTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+                                xmlns:ftp="http://www.citrusframework.org/schema/ftp/message">
+    <actions>
+      <send endpoint="scpClient">
+        <message>
+          <body>
+            <payload>
+              <ftp:put-command>
+                <ftp:file path="test/hello.txt" type="ASCII"/>
+                <ftp:target path="/test/hello.txt"/>
+              </ftp:put-command>
+            </payload>
+          </body>
+        </message>
+      </send>
+      <receive endpoint="scpClient">
+        <message>
+          <body>
+            <payload>
+              <ftp:put-command-result>
+                <ftp:success>true</ftp:success>
+                <ftp:reply-code>226</ftp:reply-code>
+                <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+              </ftp:put-command-result>
+            </payload>
+          </body>
+        </message>
+      </receive>
+    </actions>
+</test>
+----
 
-PutCommandResult result = new PutCommandResult();
-        result.setSuccess(true);
-        result.setReplyCode(String.valueOf(226));
-        result.setReplyString("@contains(Transfer complete)@");
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ScpTest
+actions:
+  - send:
+      endpoint: scpClient
+      message:
+        body:
+          data: |
+            <ftp:put-command>
+              <ftp:file path="test/hello.txt" type="ASCII"/>
+              <ftp:target path="/test/hello.txt"/>
+            </ftp:put-command>
+  - receive:
+      endpoint: scpClient
+      message:
+        body:
+          data: |
+            <ftp:put-command-result>
+              <ftp:success>true</ftp:success>
+              <ftp:reply-code>226</ftp:reply-code>
+              <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+            </ftp:put-command-result>
+----
 
-receive(scpClient)
-        .message(FtpMessage.result(result));
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:ftp="http://www.citrusframework.org/schema/ftp/message"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/ftp/message
+              http://www.citrusframework.org/schema/ftp/citrus-ftp-message.xsd">
+  <testcase name="ScpTest">
+    <actions>
+        <send endpoint="scpClient">
+          <message>
+            <payload>
+              <ftp:put-command>
+                <ftp:file path="test/hello.txt" type="ASCII"/>
+                <ftp:target path="/test/hello.txt"/>
+              </ftp:put-command>
+            </payload>
+          </message>
+        </send>
+
+        <receive endpoint="scpClient">
+          <message>
+            <payload>
+              <ftp:put-command-result>
+                <ftp:success>true</ftp:success>
+                <ftp:reply-code>226</ftp:reply-code>
+                <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+              </ftp:put-command-result>
+            </payload>
+          </message>
+        </receive>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 The file store operation uses the put command as message payload when sending the file request. The file content is loaded from external file resource. You can choose the transfer type `ASCII` and `BINARY`.
@@ -794,48 +1484,22 @@ When the file is stored on server side we receive a success result message with 
 
 We are able to retrieve files from a SFTP server. We need to specify the target file path that we want to get on the server user home directory.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<send endpoint="scpClient">
-  <message>
-    <payload>
-      <ftp:get-command>
-        <ftp:file path="test/hello.txt" type="ASCII"/>
-        <ftp:target path="target/test/hello.txt"/>
-      </ftp:get-command>
-    </payload>
-  </message>
-</send>
+@CitrusTest
+public void scpTest() {
+    when(send()
+        .endpoint(scpClient)
+        .message(FtpMessage.get("test/hello.txt", "target/test/hello.txt", DataType.ASCII))
+    );
 
-<receive endpoint="scpClient">
-  <message>
-    <payload>
-      <ftp:get-command-result>
-        <ftp:success>true</ftp:success>
-        <ftp:reply-code>226</ftp:reply-code>
-        <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
-        <ftp:file path="target/test/hello.txt">
-          <ftp:data>citrus:readFile('classpath:test/hello.txt')</ftp:data>
-        </ftp:file>
-      </ftp:get-command-result>
-    </payload>
-  </message>
-</receive>
-----
+    then(receive()
+        .endpoint(scpClient)
+        .message(FtpMessage.result(getRetrieveFileCommandResult("target/test/hello.txt", new ClassPathResource("test/hello.txt"))))
+    );
+}
 
-.Java DSL
-[source,java]
-----
-send(scpClient)
-        .message(FtpMessage.get("test/hello.txt", "target/test/hello.txt", DataType.ASCII));
-
-receive(scpClient)
-        .message(FtpMessage.result(getRetrieveFileCommandResult("target/test/hello.txt", new ClassPathResource("test/hello.txt"))));
-----
-
-[source,java]
-----
 private GetCommandResult getRetrieveFileCommandResult(String path, Resource content) throws IOException {
     GetCommandResult result = new GetCommandResult();
     result.setSuccess(true);
@@ -849,6 +1513,117 @@ private GetCommandResult getRetrieveFileCommandResult(String path, Resource cont
 
     return result;
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ScpTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+                                xmlns:ftp="http://www.citrusframework.org/schema/ftp/message">
+    <actions>
+      <send endpoint="scpClient">
+        <message>
+          <body>
+            <payload>
+              <ftp:get-command>
+                <ftp:file path="test/hello.txt" type="ASCII"/>
+                <ftp:target path="target/test/hello.txt"/>
+              </ftp:get-command>
+            </payload>
+          </body>
+        </message>
+      </send>
+      <receive endpoint="scpClient">
+        <message>
+          <body>
+            <payload>
+              <ftp:get-command-result>
+                <ftp:success>true</ftp:success>
+                <ftp:reply-code>226</ftp:reply-code>
+                <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+                <ftp:file path="target/test/hello.txt">
+                  <ftp:data>citrus:readFile('classpath:test/hello.txt')</ftp:data>
+                </ftp:file>
+              </ftp:get-command-result>
+            </payload>
+          </body>
+        </message>
+      </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ScpTest
+actions:
+  - send:
+      endpoint: scpClient
+      message:
+        body:
+          data: |
+            <ftp:get-command>
+              <ftp:file path="test/hello.txt" type="ASCII"/>
+              <ftp:target path="target/test/hello.txt"/>
+            </ftp:get-command>
+  - receive:
+      endpoint: scpClient
+      message:
+        body:
+          data: |
+            <ftp:get-command-result>
+              <ftp:success>true</ftp:success>
+              <ftp:reply-code>226</ftp:reply-code>
+              <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+              <ftp:file path="target/test/hello.txt">
+                <ftp:data>citrus:readFile('classpath:test/hello.txt')</ftp:data>
+              </ftp:file>
+            </ftp:get-command-result>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:ftp="http://www.citrusframework.org/schema/ftp/message"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/ftp/message
+              http://www.citrusframework.org/schema/ftp/citrus-ftp-message.xsd">
+  <testcase name="ScpTest">
+    <actions>
+        <send endpoint="scpClient">
+          <message>
+            <payload>
+              <ftp:get-command>
+                <ftp:file path="test/hello.txt" type="ASCII"/>
+                <ftp:target path="target/test/hello.txt"/>
+              </ftp:get-command>
+            </payload>
+          </message>
+        </send>
+
+        <receive endpoint="scpClient">
+          <message>
+            <payload>
+              <ftp:get-command-result>
+                <ftp:success>true</ftp:success>
+                <ftp:reply-code>226</ftp:reply-code>
+                <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+                <ftp:file path="target/test/hello.txt">
+                  <ftp:data>citrus:readFile('classpath:test/hello.txt')</ftp:data>
+                </ftp:file>
+              </ftp:get-command-result>
+            </payload>
+          </message>
+        </receive>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 When file transfer is complete we are able to verify the file content in a command result. The file content is provided as data string.

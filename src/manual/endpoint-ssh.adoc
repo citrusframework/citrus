@@ -74,10 +74,10 @@ public SshClient sshClient() {
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/ssh/config
-       http://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/ssh/config
+           http://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd">
 
     <citrus-ssh:client id="sshClient"
            port="9072"
@@ -182,10 +182,10 @@ public SshServer sshServer() {
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/ssh/config
-       http://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/ssh/config
+           http://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd">
 
     <citrus-ssh:server id="sshServer"
              allowed-key-path="classpath:org/citrusframework/ssh/test_user_pub.pem"

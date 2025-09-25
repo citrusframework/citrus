@@ -182,10 +182,10 @@ this namespace into your Spring configuration in order to use the Citrus Cucumbe
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xmlns="http://www.citrusframework.org/schema/cucumber/testcase"
      xsi:schemaLocation="
-     http://www.springframework.org/schema/beans
-     http://www.springframework.org/schema/beans/spring-beans.xsd
-     http://www.citrusframework.org/schema/cucumber/testcase
-     http://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase.xsd">
+         http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.citrusframework.org/schema/cucumber/testcase
+         http://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase.xsd">
 
     [...]
 
@@ -234,9 +234,9 @@ In the feature package *my.company.features* we add a new XML file `EchoSteps.xm
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns="http://www.citrusframework.org/schema/cucumber/testcase"
       xsi:schemaLocation="http://www.springframework.org/schema/beans
-                          http://www.springframework.org/schema/beans/spring-beans.xsd
-                          http://www.citrusframework.org/schema/cucumber/testcase
-                          http://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase.xsd">
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/cucumber/testcase
+              http://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase.xsd">
 
   <step given="^My name is (.*)$" parameter-names="username">
     <citrus:create-variables>

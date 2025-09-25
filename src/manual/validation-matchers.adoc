@@ -70,10 +70,10 @@ public ValidationMatcherLibrary testMatcherLibrary() {
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd">
 
     <citrus:validation-matcher-library id="testMatcherLibrary" prefix="foo:">
           <citrus:matcher name="isNumber" class="org.citrusframework.validation.matcher.core.IsNumberValidationMatcher"/>

@@ -1483,10 +1483,10 @@ The namespace URI and schema location are added to the Spring configuration XML 
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-k8s="http://www.citrusframework.org/schema/kubernetes/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/kubernetes/config
-       http://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/kubernetes/config
+           http://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config.xsd">
 
     [...]
 

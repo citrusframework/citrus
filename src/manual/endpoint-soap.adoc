@@ -51,12 +51,12 @@ public WebServiceClient soapClient() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/ws/config
-       http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/ws/config
+           http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
 
   <citrus-ws:client id="soapClient"
                        request-url="http://localhost:8090/test"
@@ -110,8 +110,8 @@ public SaajSoapMessageFactory soap12MessageFactory() {
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!-- Default SOAP Message Factory (SOAP 1.1) -->
     <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
@@ -159,12 +159,12 @@ public WebServiceClient soapClient() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/ws/config
-       http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/ws/config
+           http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
 
   <citrus-ws:client id="soapClient"
          request-url="http://localhost:8090/test"
@@ -218,12 +218,12 @@ public DynamicEndpointUriResolver dynamicEndpointResolver() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/ws/config
-       http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/ws/config
+           http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
 
   <citrus-ws:client id="soapClient"
               request-url="http://localhost:8090/test"
@@ -327,12 +327,12 @@ public List<ClientInterceptor> clientInterceptors() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/ws/config
-       http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/ws/config
+           http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
 
   <citrus-ws:client id="secureSoapClient"
                   request-url="http://localhost:8080/services/ws/todolist"
@@ -391,12 +391,12 @@ public WebServiceServer soapServer() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/ws/config
-       http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/ws/config
+           http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
 
   <citrus-ws:server id="soapServer"
              port="8080"
@@ -549,12 +549,12 @@ public EmptyResponseEndpointAdapter emptyResponseEndpointAdapter() {
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config
-       http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/ws/config
-       http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config
+           http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/ws/config
+           http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
 
   <citrus-ws:server id="soapServer"
         port="8080"
@@ -3007,32 +3007,139 @@ Server: Jetty(7.0.0.pre5)
 
 Of course, we can also expect several fault detail elements when receiving a SOAP fault.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1001"
-           fault-string="Invalid request">
-    <ws:fault-detail schema-validation="false">
-      <![CDATA[
-          <FaultDetail xmlns="http://citrusframework.org/schemas/soap">
-              <ErrorCode>TEC-1000</ErrorCode>
-              <Text>Invalid request</Text>
-          </FaultDetail>
-      ]]>
-    </ws:fault-detail>
-    <ws:fault-detail>
-      <![CDATA[
-          <ErrorDetail xmlns="http://citrusframework.org/schemas/soap">
-              <ErrorCode>TEC-1000</ErrorCode>
-          </ErrorDetail>
-      ]]>
-    </ws:fault-detail>
-    <ws:when>
-        <send endpoint="soapClient">
-            [...]
-        </send>
-    </ws:when>
-</ws:assert-fault>
+@CitrusTest
+public void soapFaultTest() {
+    then(soap()
+            .client(soapClient)
+            .assertFault()
+                .faultActor("SERVER")
+                .faultCode("{http://citrusframework.org/faults}citrus:TEC-1000")
+                .faultString("Invalid request")
+                .faultDetail("""
+                <FaultDetail xmlns="http://citrusframework.org/schemas/soap">
+                    <ErrorCode>TEC-1000</ErrorCode>
+                    <Text>Invalid request</Text>
+                </FaultDetail>
+                """)
+                .faultDetail("""
+                <ErrorDetail xmlns="http://citrusframework.org/schemas/soap">
+                    <ErrorCode>TEC-1000</ErrorCode>
+                </ErrorDetail>
+                """)
+                .when(send()
+                    .endpoint(soapClient)
+                    // [...]
+                )
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SoapFaultTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <soap server="soapServer">
+        <assert-fault fault-code="{http://citrusframework.org/faults}citrus:TEC-1000"
+                      fault-string="Invalid request">
+            <fault-detail>
+              <content>
+                <![CDATA[
+                <FaultDetail xmlns="http://citrusframework.org/schemas/soap">
+                    <ErrorCode>TEC-1000</ErrorCode>
+                    <Text>Invalid request</Text>
+                </FaultDetail>
+                ]]>
+              </content>
+              <content>
+                <![CDATA[
+                <ErrorDetail xmlns="http://citrusframework.org/schemas/soap">
+                    <ErrorCode>TEC-1000</ErrorCode>
+                </ErrorDetail>
+                ]]>
+              </content>
+            </fault-detail>
+            <when>
+              <send endpoint="soapClient">
+                [...]
+              </send>
+            </when>
+        </assert-fault>
+      </soap>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SoapFaultTest
+actions:
+  - soap:
+      client: "soapClient"
+      assertFault:
+        faultCode: "{http://citrusframework.org/faults}citrus:TEC-1000"
+        faultString: "Invalid request"
+        faultDetails:
+          - content: |
+              <FaultDetail xmlns="http://citrusframework.org/schemas/soap">
+                <ErrorCode>TEC-1000</ErrorCode>
+                <Text>Invalid request</Text>
+              </FaultDetail>
+          - content: |
+              <ErrorDetail xmlns="http://citrusframework.org/schemas/soap">
+                <ErrorCode>TEC-1000</ErrorCode>
+              </ErrorDetail>
+        when:
+          - send:
+              endpoint: soapClient
+              # [...]
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+          http://www.citrusframework.org/schema/ws/testcase
+          http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd">
+
+  <testcase name="soapFaultTest">
+    <actions>
+        <ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1001"
+                   fault-string="Invalid request">
+            <ws:fault-detail schema-validation="false">
+              <![CDATA[
+                  <FaultDetail xmlns="http://citrusframework.org/schemas/soap">
+                      <ErrorCode>TEC-1000</ErrorCode>
+                      <Text>Invalid request</Text>
+                  </FaultDetail>
+              ]]>
+            </ws:fault-detail>
+            <ws:fault-detail>
+              <![CDATA[
+                  <ErrorDetail xmlns="http://citrusframework.org/schemas/soap">
+                      <ErrorCode>TEC-1000</ErrorCode>
+                  </ErrorDetail>
+              ]]>
+            </ws:fault-detail>
+            <ws:when>
+                <send endpoint="soapClient">
+                    [...]
+                </send>
+            </ws:when>
+        </ws:assert-fault>
+    </actions>
+  </testcase>
+</spring:beans>
 ----
 
 As you can see we can individually use validation settings for each fault detail. In the example above we disabled schema validation for the first fault detail element.

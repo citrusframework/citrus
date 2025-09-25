@@ -77,12 +77,12 @@ NOTE: Citrus provides special support for JMS related features when using the Sp
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:jms="http://www.citrusframework.org/schema/jms/testcase"
         xsi:schemaLocation="
-        http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.citrusframework.org/schema/testcase
-        http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
-        http://www.citrusframework.org/schema/jms/testcase
-        http://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd">
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.citrusframework.org/schema/testcase
+            http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+            http://www.citrusframework.org/schema/jms/testcase
+            http://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd">
 
     [...]
 

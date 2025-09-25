@@ -400,10 +400,10 @@ public ChannelEndpointAdapter channelEndpointAdapter() {
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:citrus-si="http://www.citrusframework.org/schema/spring-integration/config"
         xsi:schemaLocation="
-        http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.citrusframework.org/schema/spring-integration/config
-        http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.citrusframework.org/schema/spring-integration/config
+            http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
 
   <citrus-si:channel-endpoint-adapter id="channelEndpointAdapter"
               channel-name="inbound.channel"
