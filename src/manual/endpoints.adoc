@@ -38,7 +38,7 @@ context. Let's have a simple example that shows the basic idea:
 [source,java,indent=0,role="primary"]
 ----
 @BindToRegistry
-public JmsEndpoint helloServiceEndpoint() {
+public JmsEndpoint helloEndpoint() {
     return new JmsEndpointBuilder()
             .destinationName("Citrus.HelloService.Request.Queue")
             .connectionFactory(myConnectionFactory())
@@ -50,7 +50,7 @@ public JmsEndpoint helloServiceEndpoint() {
 [source,java,indent=0,role="secondary"]
 ----
 @Bean
-public JmsEndpoint helloServiceEndpoint() {
+public JmsEndpoint helloEndpoint() {
     return new JmsEndpointBuilder()
             .destinationName("Citrus.HelloService.Request.Queue")
             .connectionFactory(myConnectionFactory())
@@ -73,7 +73,7 @@ public JmsEndpoint helloServiceEndpoint() {
            http://www.citrusframework.org/schema/jms/config
            http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
 
-    <citrus-jms:endpoint id="helloServiceEndpoint"
+    <citrus-jms:endpoint id="helloEndpoint"
         destination-name="Citrus.HelloService.Request.Queue"
         connection-factory="myConnectionFactory"/>
 </beans>
@@ -113,14 +113,16 @@ XML. Finally let us have a look at a first example how a sending action is defin
 ----
 @CitrusTest
 public void sendMessageTest() {
-    send("helloService")
+    run(send()
+        .endpoint("helloEndpoint")
         .message()
             .header("Operation", "sayHello")
             .body("""
             <TestMessage xmlns="http://citrusframework.org/schemas/test">
                 <Text>Hello!</Text>
             </TestMessage>
-            """);
+            """)
+    );
 }
 ----
 
@@ -129,7 +131,7 @@ public void sendMessageTest() {
 ----
 <test name="SendMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
-      <send endpoint="helloService">
+      <send endpoint="helloEndpoint">
         <message>
           <headers>
             <header name="Operation" value="sayHello"/>
@@ -153,7 +155,7 @@ public void sendMessageTest() {
 name: SendMessageTest
 actions:
   - send:
-      endpoint: helloService
+      endpoint: helloEndpoint
       message:
         body:
           data: |
@@ -177,7 +179,7 @@ actions:
   <testcase name="SendMessageTest">
     <description>Basic send message example</description>
     <actions>
-        <send endpoint="helloService">
+        <send endpoint="helloEndpoint">
             <message>
                 <payload>
                     <TestMessage xmlns="http://citrusframework.org/schemas/test">
@@ -196,7 +198,7 @@ actions:
 
 Now let's have a closer look at the sending action. The *'endpoint'* attribute might catch your attention first. This attribute
 references the message endpoint in Citrus configuration by its identifier. As previously mentioned the message endpoint definition
-lives in a separate configuration file and contains the actual message transport settings. In this example the *"helloServiceEndpoint"*
+lives in a separate configuration file and contains the actual message transport settings. In this example the *"helloEndpoint"*
 is referenced which is a JMS endpoint for sending out messages to a JMS queue for instance.
 
 The test case is not aware of any transport details, because it does not have to. The advantages are obvious: On the one
@@ -209,38 +211,104 @@ and therefore where the message should go to. Once again all available message e
 configuration file. Be sure to always pick the right message endpoint type in order to publish your message to the right
 destination.
 
-If you do not like the XML language you can also use pure Java code to define the same test. In Java you would also make
-use of the message endpoint definition and reference this instance. The same test as shown above in Java DSL looks like this:
+In a Java test you can choose from a set of supported runtimes.
+In fact, Citrus is able to run tests with popular Java testing frameworks such as JUnit Jupiter, JUnit4, TestNG or Cucumber.
 
-.Java DSL designer
-[source,java]
+.TestNG
+[source,java,role="primary"]
 ----
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.dsl.testng.TestNGCitrusTestDesigner;
+import org.citrusframework.testng.TestNGCitrusSupport;
 
-@Test
-public class SendMessageTestDesigner extends TestNGCitrusTestDesigner {
+public class SendMessageIT extends TestNGCitrusSupport implements TestActionSupport {
 
-    @CitrusTest(name = "SendMessageTest")
+    @Test
+    @CitrusTest
     public void sendMessageTest() {
-        description("Basic send message example");
-
-        send("helloServiceEndpoint")
+        run(send()
+            .endpoint("helloEndpoint")
             .message()
-            .body("<TestMessage>" +
-                        "<Text>Hello!</Text>" +
-                    "</TestMessage>")
-            .header("Operation", "sayHello");
+                .header("Operation", "sayHello")
+                .body("""
+                <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                    <Text>Hello!</Text>
+                </TestMessage>
+                """)
+        );
     }
 }
 ----
 
-Instead of using the XML tags for send we use methods from *TestNGCitrusTestDesigner* class. The same message endpoint is
-referenced within the send message action. The body is constructed as plain Java character sequence which is a bit verbose.
-We will see later on how we can improve this. For now it is important to understand the combination of send test action
-and a message endpoint.
+.JUnit5
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
+@CitrusSupport
+public class SendMessageIT implements TestActionSupport {
+
+    @CitrusResource
+    private TestActionRunner runner;
+
+    @Test
+    @CitrusTest
+    public void sendMessageTest() {
+        runner.run(send()
+            .endpoint("helloEndpoint")
+            .message()
+                .header("Operation", "sayHello")
+                .body("""
+                <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                    <Text>Hello!</Text>
+                </TestMessage>
+                """)
+        );
+    }
+}
+----
+
+.JUnit4
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.spring.JUnit4CitrusSupport;
+import org.junit.Test;
+
+public class SendMessageIT extends JUnit4CitrusSupport implements TestActionSupport {
+
+    @Test
+    @CitrusTest
+    public void sendMessageTest() {
+        run(send()
+            .endpoint("helloEndpoint")
+            .message()
+                .header("Operation", "sayHello")
+                .body("""
+                <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                    <Text>Hello!</Text>
+                </TestMessage>
+                """)
+        );
+    }
+}
+----
+
+You can choose your favorite Java testing framework to run the Citrus tests.
+Each framework JUnit Jupiter, JUnit4, TestNG, Cucumber may require slightly different setup.
+Please also refer to the individual framework documentation and see how it works.
+
+IMPORTANT: Please be aware of proper test case naming conventions when separating unit and integration tests.
+In Maven for example unit tests are run with the `surefire` plugin in the unit test phase.
+Maven surefire includes tests with a naming pattern (e.g. `*Test`).
+Integration tests are run with `failsafe` plugin in the Maven integration test phase and these tests follow a different naming pattern (e.g. `*IT`).
 
 TIP: It is good practice to follow naming conventions when defining names for message endpoints. The intended purpose of
 the message endpoint as well as the sending/receiving actor should be clear when choosing the name. For instance messageEndpoint1,
@@ -261,14 +329,16 @@ Now we have a look at the message receiving part inside the test. A simple examp
 ----
 @CitrusTest
 public void receiveMessageTest() {
-    receive("helloService")
+    run(receive()
+        .endpoint("helloEndpoint")
         .message()
             .header("Operation", "sayHello")
             .body("""
             <TestMessage xmlns="http://citrusframework.org/schemas/test">
                 <Text>Hello!</Text>
             </TestMessage>
-            """);
+            """)
+    );
 }
 ----
 
@@ -277,7 +347,7 @@ public void receiveMessageTest() {
 ----
 <test name="ReceiveMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
-      <receive endpoint="helloService">
+      <receive endpoint="helloEndpoint">
         <message>
           <headers>
             <header name="Operation" value="sayHello"/>
@@ -301,7 +371,7 @@ public void receiveMessageTest() {
 name: ReceiveMessageTest
 actions:
   - receive:
-      endpoint: helloService
+      endpoint: helloEndpoint
       message:
         body:
           data: |
@@ -324,7 +394,7 @@ actions:
               http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
   <testcase name="ReceiveMessageTest">
     <actions>
-        <receive endpoint="helloServiceEndpoint">
+        <receive endpoint="helloEndpoint">
             <message>
                 <payload>
                     <TestMessage xmlns="http://citrusframework.org/schemas/test">
@@ -346,24 +416,101 @@ receiving actions. The test action also uses the *endpoint* attribute for refere
 time we want to receive a message from the endpoint. Again the test is not aware of the transport details such as JMS connections,
 endpoint uri, and so on. The message endpoint component encapsulates this information.
 
-Before we go into detail on validating the received message we have a quick look at the Java DSL variation for the receive
-action. The same receive action as above looks like this in Java DSL.
+Before we go into detail on validating the received message we have a quick look at the different options to run the Java test.
+Basically you can choose from a set of popular Java testing frameworks to actually run the Citrus test.
+Citrus integrates with the famous frameworks such as JUnit Jupiter, JUnit4, TestNG or Cucumber.
 
-.Java DSL designer
-[source,java]
+.TestNG
+[source,java,role="primary"]
 ----
-@CitrusTest
-public void messagingTest() {
-    receive("helloServiceEndpoint")
-        .message()
-        .body("<TestMessage>" +
-                    "<Text>Hello!</Text>" +
-                "</TestMessage>")
-        .header("Operation", "sayHello");
+import org.testng.annotations.Test;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.testng.TestNGCitrusSupport;
+
+public class ReceiveMessageIT extends TestNGCitrusSupport implements TestActionSupport {
+
+    @Test
+    @CitrusTest
+    public void receiveMessageTest() {
+        run(receive()
+            .endpoint("helloEndpoint")
+            .message()
+                .header("Operation", "sayHello")
+                .body("""
+                <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                    <Text>Hello!</Text>
+                </TestMessage>
+                """)
+        );
+    }
 }
 ----
 
-The receive action waits for a message to arrive. The whole test execution is stopped while waiting for the message. This
+.JUnit5
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
+@CitrusSupport
+public class ReceiveMessageIT implements TestActionSupport {
+
+    @CitrusResource
+    private TestActionRunner runner;
+
+    @Test
+    @CitrusTest
+    public void receiveMessageTest() {
+        runner.run(receive()
+            .endpoint("helloEndpoint")
+            .message()
+                .header("Operation", "sayHello")
+                .body("""
+                <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                    <Text>Hello!</Text>
+                </TestMessage>
+                """)
+        );
+    }
+}
+----
+
+.JUnit4
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.spring.JUnit4CitrusSupport;
+import org.junit.Test;
+
+public class ReceiveMessageIT extends JUnit4CitrusSupport implements TestActionSupport {
+
+    @Test
+    @CitrusTest
+    public void receiveMessageTest() {
+        run(receive()
+            .endpoint("helloEndpoint")
+            .message()
+                .header("Operation", "sayHello")
+                .body("""
+                <TestMessage xmlns="http://citrusframework.org/schemas/test">
+                    <Text>Hello!</Text>
+                </TestMessage>
+                """)
+        );
+    }
+}
+----
+
+Whatever Java test framework you choose you may apply very specific configuration and setup details to run the test.
+Please also have a look into the individual Java test frameworks JUnit Jupiter, JUnit4, TestNG, Cucumber and so on to see how it works.
+
+The `receive` action waits for a message to arrive. The whole test execution is stopped while waiting for the message. This
 is important to ensure the step by step test workflow processing. Of course you can specify message timeouts so the receiver
 will only wait a given amount of time before raising a timeout error. Following from that timeout exception the test case
 fails as the message did not arrive in time. Citrus defines default timeout settings for all message receiving tasks.
@@ -389,7 +536,7 @@ receive action:
 ----
 @CitrusTest
 public void receiveMessageTest() {
-    receive("helloService")
+    receive("helloEndpoint")
         .message()
             .name("helloMessage")
             .header("Operation", "sayHello")
@@ -406,7 +553,7 @@ public void receiveMessageTest() {
 ----
 <test name="ReceiveMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
-      <receive endpoint="helloService">
+      <receive endpoint="helloEndpoint">
         <message name="helloMessage">
           <headers>
             <header name="Operation" value="sayHello"/>
@@ -430,7 +577,7 @@ public void receiveMessageTest() {
 name: ReceiveMessageTest
 actions:
   - receive:
-      endpoint: helloService
+      endpoint: helloEndpoint
       message:
         name: helloMessage
         body:
@@ -454,7 +601,7 @@ actions:
               http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
   <testcase name="ReceiveMessageTest">
     <actions>
-        <receive endpoint="helloService">
+        <receive endpoint="helloEndpoint">
             <message name="helloMessage">
                 <payload>
                     <TestMessage xmlns="http://citrusframework.org/schemas/test">

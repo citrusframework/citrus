@@ -1,39 +1,107 @@
 [[runtimes]]
 = Runtimes
 
-A Citrus test case is nothing but Java unit test leveraging well-known standard tools such as https://junit.org[JUnit],
+Every Citrus test case is nothing but a normal Java unit test.
+Citrus integrates with standard unit test frameworks such as https://junit.org[JUnit],
 https://testng.org[TestNG] or https://cucumber.io[Cucumber] as a runtime.
 
-Chances are very high that Java developers are familiar with at least one of the standard tools. Everything you can do
-with JUnit and TestNG you can do with Citrus tests as well (e.g. Maven build integration, run tests from your favorite IDE,
-include tests into a continuous build tool).
+Most Java developers are familiar with at least one of the standard tools.
+Everything you can do with JUnit or TestNG you can do with Citrus tests, too.
+For instance integrating the Citrus tests in a Maven build, running Citrus from your favorite Java IDE or including Citrus tests into a continuous build pipeline.
 
-NOTE: Why is Citrus related to unit test frameworks, although it represents a framework for integration testing? The answer to this question is quite simple: This is because Citrus wants to benefit from standard libraries such as JUnit
-and TestNG for Java test execution. Both unit testing frameworks offer various ways of execution and are widely supported
-by other tools (e.g. continuous build, build lifecycle, development IDE).
+NOTE: Why is Citrus integrating with unit test frameworks, although Citrus represents a framework for integration testing? The answer to this question is quite simple: Citrus benefits from standard libraries such as JUnit and TestNG for Java test execution. The standard unit testing frameworks provide great tooling support and are widely supported by other components (e.g. continuous build tools, Maven build lifecycle, development IDEs).
 
-You can write the Citrus test code in a Java domain specific language or in form of an link:#run-xml-tests[XML test]
-declaration file that gets loaded as part of the test. The Java domain specific language in Citrus is a set of classes
+Each runtime in Citrus supports polyglot tests with different programming languages to write tests. You can choose from a wide set of languages to write your test.
+
+The Citrus link:#run-java[Java] domain specific language (DSL) represents the most powerful way to write tests in Citrus.
+
+In addition to that you can write Citrus tests with link:#run-xml-tests[XML], link:#run-groovy[Groovy], link:#run-yaml-tests[YAML], link:#run-spring-xml-tests[Spring XML] declaration files that get loaded as part of the test runtime.
+
+The Java domain specific language in Citrus is a set of classes
 and methods to leverage the test code in form of a fluent API. Users can simply configure a test action with the different
 options using a fluent builder pattern style DSL.
 
-.Citrus Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-@CitrusTest(name = "Hello_IT")
-public void helloTest() {
+@CitrusTest
+public void helloWorldTest() {
     given(
         variable("user", "Citrus")
     );
 
     then(
-        echo().message("Hello ${user}!"
-    ));
+        echo().message("Hello ${user}!")
+    );
 }
 ----
 
-The sample above is a very simple Citrus test that creates a test variable and prints a message to the console. The Java DSL you write
-is the same for all runtimes (JUnit, TestNG, Cucumber, etc.) and should help you to also solve very complex test scenarios.
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="HelloWorldTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <variables>
+      <variable name="user" value="Citrus"/>
+    </variables>
+    <actions>
+      <echo message="Hello ${user}!"/>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: HelloWorldTest
+variables:
+  - name: user
+    value: Citrus
+actions:
+  - echo:
+      message: "Hello ${user}!"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="EchoTest">
+    <variables>
+      <variable name="user" value="Citrus"/>
+    </variables>
+    <actions>
+      <echo>
+        <message>Hello ${user}!</message>
+      </echo>
+    </actions>
+  </testcase>
+</spring:beans>
+----
+
+.Cucumber
+[source,gherkin,indent=0,role="secondary"]
+----
+Feature: EchoTest
+
+  Background:
+    Given variables
+      | user | Citrus |
+
+  Scenario: HelloWorld
+    Then print "Hello ${user}!"
+----
+
+The sample above is a very simple Citrus test that creates a test variable and prints a message to the console.
+You can see the different programming language and data formats that you can choose to write the test.
+Citrus provides lots of different test actions that are ready to solve also complex test scenarios and challenges.
+
+Each runtime supports the polyglot testing languages Java, XML, YAML, Groovy, Cucumber.
+This documentation tries to provide proper sample code for all supported test languages.
 
 The following sections have a closer look at the different runtimes for Citrus.
 

@@ -1,5 +1,5 @@
 [[run-java]]
-== Run Java tests
+== Java
 
 You can code the Citrus test as you would do with any other unit test framework (e.g. link:#runtime-junit5[JUnit Jupiter] or link:#runtime-testng[TestNG]).
 In fact Citrus builds on top of those famous unit testing frameworks because the tooling and adoption throughout the industry is very high for these libraries.
@@ -23,22 +23,68 @@ As a tester you can configure test actions in Java using a test action runner AP
 === Test action runner
 
 The test action runner is the entry to the fluent Citrus Java API.
-You can configure test actions with a builder pattern style API and immediately runs the test actions.
+You can configure test actions with a builder pattern style API and the test action runner immediately executes the test actions.
 
 See the following example to see the Java domain specific language in action.
 
-.Test action runner
-[source,java]
+.TestNG
+[source,java,role="primary"]
 ----
 import org.testng.annotations.Test;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.dsl.testng.TestNGCitrusSupport;
+import org.citrusframework.testng.TestNGCitrusSupport;
 
-@Test
-public class Service_IT extends TestNGCitrusSupport implements TestActionSupport {
+public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport {
 
-    @CitrusTest(name = "Service_IT")
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        run(echo("Before service call"));
+
+        run(echo("After service call"));
+    }
+}
+----
+
+.JUnit5
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
+@CitrusSupport
+public class ServiceIT implements TestActionSupport {
+
+    @CitrusResource
+    private TestActionRunner runner;
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        runner.run(echo("Before service call"));
+
+        runner.run(echo("After service call"));
+    }
+}
+----
+
+.JUnit4
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.spring.JUnit4CitrusSupport;
+import org.junit.Test;
+
+public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport {
+
+    @Test
+    @CitrusTest
     public void serviceTest() {
         run(echo("Before service call"));
 
@@ -59,17 +105,66 @@ NOTE: The `TestActionSupport` interface brings quite a lot of methods. In case y
 
 NOTE: For those of you who are not able to use the `TestActionSupport` or other API interfaces the *TestNGCitrusSupport* and *JUnit4CitrusSupport* base classes also provide a method called `actions()` that provides access to the test actions Java DSL API.
 
-.Test action runner
-[source,java]
+.TestNG
+[source,java,role="primary"]
 ----
 import org.testng.annotations.Test;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.dsl.testng.TestNGCitrusSupport;
+import org.citrusframework.testng.TestNGCitrusSupport;
 
-@Test
-public class Service_IT extends TestNGCitrusSupport {
+public class ServiceIT extends TestNGCitrusSupport {
 
-    @CitrusTest(name = "Service_IT")
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        run(actions().echo("Before service call"));
+
+        run(actions().echo("After service call"));
+    }
+}
+----
+
+.JUnit5
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
+@CitrusSupport
+public class ServiceIT {
+
+    @CitrusResource
+    private TestActionRunner runner;
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        runner.run(runner.actions()
+            .echo("Before service call"));
+
+        runner.run(runner.actions()
+            .echo("After service call"));
+    }
+}
+----
+
+.JUnit4
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.spring.JUnit4CitrusSupport;
+import org.junit.Test;
+
+public class ServiceIT extends JUnit4CitrusSupport {
+
+    @Test
+    @CitrusTest
     public void serviceTest() {
         run(actions().echo("Before service call"));
 
@@ -94,13 +189,80 @@ The test action runner is also available as Gherkin style runner with `given()`,
 follows the Behavior Driven Development concepts of structuring the test into the three parts: *Given* a certain context, *when* an event
 occurs, *then* an outcome should be verified.
 
-.Gherkin test action runner
-[source,java]
+.TestNG
+[source,java,role="primary"]
 ----
-@Test
-public class Service_IT extends TestNGCitrusSupport implements TestActionSupport {
+import org.testng.annotations.Test;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.testng.TestNGCitrusSupport;
 
-    @CitrusTest(name = "Service_IT")
+public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport {
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        given(
+            echo("Setup the context")
+        );
+
+        when(
+            echo("Trigger the event")
+        );
+
+        then(
+            echo("Verify the outcome")
+        );
+    }
+}
+----
+
+.JUnit5
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
+@CitrusSupport
+public class ServiceIT implements TestActionSupport {
+
+    @CitrusResource
+    private TestActionRunner runner;
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        runner.given(
+            echo("Setup the context")
+        );
+
+        runner.when(
+            echo("Trigger the event")
+        );
+
+        runner.then(
+            echo("Verify the outcome")
+        );
+    }
+}
+----
+
+.JUnit4
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.spring.JUnit4CitrusSupport;
+import org.junit.Test;
+
+public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport {
+
+    @Test
+    @CitrusTest
     public void serviceTest() {
         given(
             echo("Setup the context")
@@ -326,19 +488,74 @@ especially in combination with parallel containers (see link:#containers-paralle
 
 In general, you are able to mix Citrus Java DSL actions with custom Java code as you like.
 
-.Run custom code
-[source,java]
+.TestNG
+[source,java,role="primary"]
 ----
 import org.testng.annotations.Test;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.dsl.testng.TestNGCitrusSupport;
+import org.citrusframework.testng.TestNGCitrusSupport;
 
-@Test
-public class Service_IT extends TestNGCitrusSupport implements TestActionSupport {
+public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport {
 
     private MyService myService = new MyService();
 
-    @CitrusTest(name = "Service_IT")
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        run(echo("Before service call"));
+
+        myService.doSomething("Now calling custom service");
+
+        run(echo("After service call"));
+    }
+}
+----
+
+.JUnit5
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
+@CitrusSupport
+public class ServiceIT implements TestActionSupport {
+
+    @CitrusResource
+    private TestActionRunner runner;
+
+    private MyService myService = new MyService();
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        runner.run(echo("Before service call"));
+
+        myService.doSomething("Now calling custom service");
+
+        runner.run(echo("After service call"));
+    }
+}
+----
+
+.JUnit4
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.spring.JUnit4CitrusSupport;
+import org.junit.Test;
+
+public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport {
+
+    private MyService myService = new MyService();
+
+    @Test
+    @CitrusTest
     public void serviceTest() {
         run(echo("Before service call"));
 
@@ -353,26 +570,83 @@ The test above uses a mix of Citrus test actions and custom service calls. The t
 recommended though to wrap custom code in a test action in order to have a consistent test reporting and failure management
 in Citrus.
 
-.Test action wrapper
-[source,java]
+.TestNG
+[source,java,role="primary"]
 ----
 import org.testng.annotations.Test;
+import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.dsl.testng.TestNGCitrusSupport;
+import org.citrusframework.testng.TestNGCitrusSupport;
 
-@Test
-public class Service_IT extends TestNGCitrusSupport implements TestActionSupport {
+public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport {
 
     private MyService myService = new MyService();
 
-    @CitrusTest(name = "Service_IT")
+    @Test
+    @CitrusTest
     public void serviceTest() {
         run(echo("Before service call"));
 
         run(
-            action(context -> {
-                myService.doSomething("Now calling custom service");
-            })
+            action(context -> myService.doSomething("Now calling custom service"))
+        );
+
+        run(echo("After service call"));
+    }
+}
+----
+
+.JUnit5
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
+@CitrusSupport
+public class ServiceIT implements TestActionSupport {
+
+    @CitrusResource
+    private TestActionRunner runner;
+
+    private MyService myService = new MyService();
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        runner.run(echo("Before service call"));
+
+        runner.run(
+            action(context -> myService.doSomething("Now calling custom service"))
+        );
+
+        runner.run(echo("After service call"));
+    }
+}
+----
+
+.JUnit4
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.spring.JUnit4CitrusSupport;
+import org.junit.Test;
+
+public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport {
+
+    private MyService myService = new MyService();
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        run(echo("Before service call"));
+
+        run(
+            action(context -> myService.doSomething("Now calling custom service"))
         );
 
         run(echo("After service call"));
@@ -412,22 +686,87 @@ public class CitrusRegisterEndpoint_IT extends TestNGCitrusSupport implements Te
 With the CitrusContext you can bind objects to the registry. Each binding receives a name so others can resolve the instance
 reference for injection.
 
-.Inject endpoint in other tests
-[source,java]
+.TestNG
+[source,java,role="primary"]
 ----
-public class InjectEndpoint_IT extends TestNGCitrusSupport implements TestActionSupport {
+import org.testng.annotations.Test;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.testng.TestNGCitrusSupport;
+
+public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport {
 
     @CitrusEndpoint
     private FooEndpoint foo;
 
     @Test
     @CitrusTest
-    public void injectEndpointTest() {
-        $(send(foo)
+    public void serviceTest() {
+        run(send(foo)
                 .message()
                 .body("Hello foo!"));
 
-        $(receive(foo)
+        run(receive(foo)
+                .message()
+                .body("Hello Citrus!"));
+    }
+}
+----
+
+.JUnit5
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
+@CitrusSupport
+public class ServiceIT implements TestActionSupport {
+
+    @CitrusEndpoint
+    private FooEndpoint foo;
+
+    @CitrusResource
+    private TestActionRunner runner;
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        runner.run(send(foo)
+                .message()
+                .body("Hello foo!"));
+
+        runner.run(receive(foo)
+                .message()
+                .body("Hello Citrus!"));
+    }
+}
+----
+
+.JUnit4
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.spring.JUnit4CitrusSupport;
+import org.junit.Test;
+
+public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport {
+
+    @CitrusEndpoint
+    private FooEndpoint foo;
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        run(send(foo)
+                .message()
+                .body("Hello foo!"));
+
+        run(receive(foo)
                 .message()
                 .body("Hello Citrus!"));
     }
@@ -443,10 +782,15 @@ Test methods can use this endpoint in the following send and receive actions.
 An alternative to using the `bind()` method on the CitrusContext is to use the `@BindToRegistry` annotation.
 Methods and fields annotated will automatically register in the CitrusContext registry.
 
-.@BindToRegistry annotation
-[source,java]
+.TestNG
+[source,java,role="primary"]
 ----
-public class CitrusRegisterEndpoint_IT extends TestNGCitrusSupport implements TestActionSupport {
+import org.testng.annotations.Test;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.testng.TestNGCitrusSupport;
+
+public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport {
 
     @CitrusFramework
     private Citrus citrus;
@@ -457,6 +801,76 @@ public class CitrusRegisterEndpoint_IT extends TestNGCitrusSupport implements Te
     @BindToRegistry
     public FooEndpoint foo() {
         return new FooEndpoint();
+    }
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        // ...
+    }
+}
+----
+
+.JUnit5
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
+@CitrusSupport
+public class ServiceIT implements TestActionSupport {
+
+    @CitrusResource
+    private TestActionRunner runner;
+
+    @CitrusFramework
+    private Citrus citrus;
+
+    @BindToRegistry(name = "fooQueue")
+    private MessageQueue queue = new DefaultMessageQueue("fooQueue");
+
+    @BindToRegistry
+    public FooEndpoint foo() {
+        return new FooEndpoint();
+    }
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        // ...
+    }
+}
+----
+
+.JUnit4
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.spring.JUnit4CitrusSupport;
+import org.junit.Test;
+
+public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport {
+
+    @CitrusFramework
+    private Citrus citrus;
+
+    @BindToRegistry(name = "fooQueue")
+    private MessageQueue queue = new DefaultMessageQueue("fooQueue");
+
+    @BindToRegistry
+    public FooEndpoint foo() {
+        return new FooEndpoint();
+    }
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        // ...
     }
 }
 ----
@@ -498,23 +912,93 @@ public class MyConfig {
 
 Each test is able to use the `@CitrusConfiguration` annotation to add registry bindings, too.
 
-.@CitrusConfiguration annotation
-[source,java]
+.TestNG
+[source,java,role="primary"]
 ----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusConfiguration;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.testng.TestNGCitrusSupport;
+import org.testng.annotations.Test;
+
 @CitrusConfiguration(classes = MyConfig.class)
-public class CitrusRegisterEndpoint_IT extends TestNGCitrusSupport implements TestActionSupport {
+public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport {
 
     @CitrusEndpoint
     private FooEndpoint foo;
 
     @Test
     @CitrusTest
-    public void injectEndpointTest() {
-        $(send(foo)
+    public void serviceTest() {
+        runner.run(send(foo)
                 .message()
                 .body("Hello foo!"));
 
-        $(receive(foo)
+        runner.run(receive(foo)
+                .message()
+                .body("Hello Citrus!"));
+    }
+}
+----
+
+.JUnit5
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusConfiguration;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
+@CitrusSupport
+@CitrusConfiguration(classes = MyConfig.class)
+public class ServiceIT implements TestActionSupport {
+
+    @CitrusResource
+    private TestActionRunner runner;
+
+    @CitrusEndpoint
+    private FooEndpoint foo;
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        runner.run(send(foo)
+                .message()
+                .body("Hello foo!"));
+
+        runner.run(receive(foo)
+                .message()
+                .body("Hello Citrus!"));
+    }
+}
+----
+
+.JUnit4
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusConfiguration;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.spring.JUnit4CitrusSupport;
+import org.junit.Test;
+
+@CitrusConfiguration(classes = MyConfig.class)
+public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport {
+
+    @CitrusEndpoint
+    private FooEndpoint foo;
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        run(send(foo)
+                .message()
+                .body("Hello foo!"));
+
+        run(receive(foo)
                 .message()
                 .body("Hello Citrus!"));
     }
@@ -536,17 +1020,70 @@ deal with resource injection of different objects.
 You can access the Citrus framework instance in order to access all components and functionalities. Just use the `@CitrusFramework`
 annotation in your test class.
 
-.Citrus framework injection
-[source,java]
+.TestNG
+[source,java,role="primary"]
 ----
-public class CitrusInjection_IT extends TestNGCitrusSupport implements TestActionSupport {
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.testng.TestNGCitrusSupport;
+import org.testng.annotations.Test;
+
+public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport {
 
     @CitrusFramework
     private Citrus citrus;
 
     @Test
     @CitrusTest
-    public void injectCitrusTest() {
+    public void serviceTest() {
+        citrus.getCitrusContext().getMessageListeners().addMessageListener(new MyListener());
+    }
+}
+----
+
+.JUnit5
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
+@CitrusSupport
+public class ServiceIT implements TestActionSupport {
+
+    @CitrusResource
+    private TestActionRunner runner;
+
+    @CitrusFramework
+    private Citrus citrus;
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
+        citrus.getCitrusContext().getMessageListeners().addMessageListener(new MyListener());
+    }
+}
+----
+
+.JUnit4
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.spring.JUnit4CitrusSupport;
+import org.junit.Test;
+
+public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport {
+
+    @CitrusFramework
+    private Citrus citrus;
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
         citrus.getCitrusContext().getMessageListeners().addMessageListener(new MyListener());
     }
 }
@@ -563,16 +1100,75 @@ affect all tests.
 
 The test action runner is the entry to the fluent Java API. You can inject the runner as a method parameter.
 
-.Test action runner injection
-[source,java]
+.TestNG
+[source,java,role="primary"]
 ----
-public class RunnerInjection_IT extends JUnit4CitrusSupport implements TestActionSupport {
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.testng.TestNGCitrusSupport;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Test;
+
+public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void injectResources(@CitrusResource TestCaseRunner runner) {
+    public void serviceTest(@Optional @CitrusResource TestCaseRunner runner) {
+        runner.run(
+            createVariable("random", "citrus:randomNumber(10)")
+        );
 
-        runner.given(
+        runner.run(
+            echo("The random number is: ${random}")
+        );
+    }
+}
+----
+
+.JUnit5
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
+@CitrusSupport
+public class ServiceIT implements TestActionSupport {
+
+    @Test
+    @CitrusTest
+    public void serviceTest(@CitrusResource TestCaseRunner runner) {
+        runner.run(
+            createVariable("random", "citrus:randomNumber(10)")
+        );
+
+        runner.run(
+            echo("The random number is: ${random}")
+        );
+    }
+}
+----
+
+.JUnit4
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.spring.JUnit4CitrusSupport;
+import org.junit.Test;
+
+public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport {
+
+    @Test
+    @CitrusTest
+    public void serviceTest(@CitrusResource TestCaseRunner runner) {
+        runner.run(
             createVariable("random", "citrus:randomNumber(10)")
         );
 
@@ -612,19 +1208,74 @@ public interface TestAction {
 }
 ----
 
-In addition Citrus provides a resource injection mechanism that allows to access the current test context in a test class or test method.
+In addition to that Citrus provides a resource injection mechanism that allows to access the current test context in a test class or test method.
 
-.Inject as method parameter
-[source,java]
+.TestNG
+[source,java,role="primary"]
 ----
-public class TestContextInjection_IT extends JUnit4CitrusSupport implements TestActionSupport {
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.testng.TestNGCitrusSupport;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Test;
+
+public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void resourceInjectionIT(@CitrusResource TestContext context) {
+    public void serviceTest(@Optional @CitrusResource TestCaseRunner runner,
+                            @Optional @CitrusResource TestContext context) {
         context.setVariable("myVariable", "some value");
 
-        run(echo("${myVariable}"));
+        runner.run(echo("${myVariable}"));
+    }
+}
+----
+
+.JUnit5
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
+@CitrusSupport
+public class ServiceIT implements TestActionSupport {
+
+    @Test
+    @CitrusTest
+    public void serviceTest(@CitrusResource TestCaseRunner runner,
+                            @CitrusResource TestContext context) {
+        context.setVariable("myVariable", "some value");
+
+        runner.run(echo("${myVariable}"));
+    }
+}
+----
+
+.JUnit4
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.spring.JUnit4CitrusSupport;
+import org.junit.Test;
+
+public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport {
+
+    @Test
+    @CitrusTest
+    public void serviceTest(@CitrusResource TestCaseRunner runner,
+                            @CitrusResource TestContext context) {
+        context.setVariable("myVariable", "some value");
+
+        runner.run(echo("${myVariable}"));
     }
 }
 ----
@@ -635,24 +1286,6 @@ tells Citrus to inject this parameter with the according instance of the context
 Now you have access to the context and all its capabilities such as variable management. As an alternative you can inject
 the test context as a class member variable.
 
-.Inject as member
-[source,java]
-----
-public class TestContextInjection_IT extends JUnit4CitrusSupport implements TestActionSupport {
-
-    @CitrusResource
-    private TestContext context;
-
-    @Test
-    @CitrusTest
-    public void resourceInjectionIT() {
-        context.setVariable("myVariable", "some value");
-
-        run(echo("${myVariable}"));
-    }
-}
-----
-
 [[java-resource-injection-endpoint]]
 ==== Endpoint injection
 
@@ -662,10 +1295,17 @@ to a message transport (e.g. Http endpoint URL, JMS message broker connection, K
 Endpoints can live inside the Citrus context (e.g. in Spring application context) or you can inject the endpoint into the test class
 with given configuration.
 
-.Endpoint injection
-[source,java]
+.TestNG
+[source,java,role="primary"]
 ----
-public class EndpointInjectionJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.testng.TestNGCitrusSupport;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Test;
+
+public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport {
 
     @CitrusEndpoint
     @DirectEndpointConfig(queueName = "FOO.test.queue")
@@ -673,11 +1313,76 @@ public class EndpointInjectionJavaIT extends TestNGCitrusSpringSupport implement
 
     @Test
     @CitrusTest
-    public void injectEndpoint() {
+    public void serviceTest(@Optional @CitrusResource TestCaseRunner runner) {
+        runner.run(send(directEndpoint)
+                .message()
+                    .type(MessageType.PLAINTEXT)
+                    .body("Hello!"));
+
+        runner.run(receive(directEndpoint)
+                .message()
+                    .type(MessageType.PLAINTEXT)
+                    .body("Hello!"));
+    }
+}
+----
+
+.JUnit5
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
+@CitrusSupport
+public class ServiceIT implements TestActionSupport {
+
+    @CitrusEndpoint
+    @DirectEndpointConfig(queueName = "FOO.test.queue")
+    private Endpoint directEndpoint;
+
+    @Test
+    @CitrusTest
+    public void serviceTest(@CitrusResource TestCaseRunner runner) {
+        runner.run(send(directEndpoint)
+                .message()
+                    .type(MessageType.PLAINTEXT)
+                    .body("Hello!"));
+
+        runner.run(receive(directEndpoint)
+                .message()
+                    .type(MessageType.PLAINTEXT)
+                    .body("Hello!"));
+    }
+}
+----
+
+.JUnit4
+[source,java,role="secondary"]
+----
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.spring.JUnit4CitrusSupport;
+import org.junit.Test;
+
+public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport {
+
+    @CitrusEndpoint
+    @DirectEndpointConfig(queueName = "FOO.test.queue")
+    private Endpoint directEndpoint;
+
+    @Test
+    @CitrusTest
+    public void serviceTest() {
         run(send(directEndpoint)
                 .message()
-                .type(MessageType.PLAINTEXT)
-                .body("Hello!"));
+                    .type(MessageType.PLAINTEXT)
+                    .body("Hello!"));
 
         run(receive(directEndpoint)
                 .message()

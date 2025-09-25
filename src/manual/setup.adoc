@@ -11,7 +11,7 @@ you can run the tests with the standard unit test build integration (e.g. via ma
 This chapter describes the Citrus project setup possibilities, choose one of them that fits best to include Citrus into your project.
 
 [[setup-maven]]
-== Using Maven
+== Maven
 
 Citrus uses link:https://maven.apache.org/[Maven] internally as a project build tool and provides extended support for Maven projects.
 Maven will ease up your life as it manages project dependencies and provides extended build life cycles and conventions for
@@ -152,7 +152,7 @@ NOTE: If you need additional assistance in setting up a Citrus Maven project ple
 on https://citfrusframework.org[https://citrusframework.org/tutorials.html].
 
 [[setup-gradle]]
-== Using Gradle
+== Gradle
 
 As Citrus tests are nothing but normal JUnit or TestNG tests the integration to Gradle as build tool is as easy as adding
 the source files to a folder in your project. With the Gradle task execution for integration tests you are able to execute
@@ -188,7 +188,7 @@ Citrus stable release versions are available on Maven central. Now let's move on
 dependencies {
     testCompile group: 'org.citrusframework', name: 'citrus-base', version: '${citrus.version}'
     testCompile group: 'org.citrusframework', name: 'citrus-http', version: '${citrus.version}'
-    testCompile group: 'org.testng', name: 'testng', version: '6.11'
+    testCompile group: 'org.testng', name: 'testng', version: '${testng.version}'
     [...]
 }
 ----
