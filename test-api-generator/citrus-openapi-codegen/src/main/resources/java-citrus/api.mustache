@@ -145,6 +145,35 @@ public class {{classname}} implements GeneratedApi
 
 {{#operations}}
     {{#operation}}
+
+    {{#hasRequiredNonBodyParams}}
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public {{operationIdCamelCase}}SendActionBuilder send{{operationIdCamelCase}}()   {
+        {{#authWithParameters}}
+            {{operationIdCamelCase}}SendActionBuilder builder =  new {{operationIdCamelCase}}SendActionBuilder(this{{#requiredNonBodyParams}}, null{{/requiredNonBodyParams}});
+                {{#hasApiKeyAuth}}
+            builder.setBase64EncodeApiKey(base64EncodeApiKey);
+                {{/hasApiKeyAuth}}
+                {{#isBasicBasic}}
+            builder.setBasicAuthUsername(basicUsername);
+            builder.setBasicAuthPassword(basicPassword);
+                {{/isBasicBasic}}
+                {{#isBasicBearer}}
+            builder.setBasicAuthBearer(basicAuthBearer);
+                {{/isBasicBearer}}
+                {{#isApiKey}}
+            builder.set{{#lambda.titlecase}}{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}{{/lambda.titlecase}}(default{{#lambda.titlecase}}{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}{{/lambda.titlecase}});
+                {{/isApiKey}}
+            return builder;
+        {{/authWithParameters}}
+        {{^authWithParameters}}
+            return new {{operationIdCamelCase}}SendActionBuilder(this{{#requiredNonBodyParams}}, null{{/requiredNonBodyParams}});
+        {{/authWithParameters}}
+    }
+    {{/hasRequiredNonBodyParams}}
+
     /**
      * Builder with type safe required parameters.
      */

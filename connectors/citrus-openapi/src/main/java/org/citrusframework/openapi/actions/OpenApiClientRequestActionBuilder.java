@@ -16,13 +16,10 @@
 
 package org.citrusframework.openapi.actions;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasSchema;
+import jakarta.servlet.http.Cookie;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.context.TestContext;
@@ -40,12 +37,18 @@ import org.citrusframework.openapi.validation.OpenApiValidationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+
+import static java.util.Arrays.stream;
 import static org.citrusframework.openapi.AutoFillType.NONE;
 import static org.citrusframework.openapi.OpenApiMessageType.REQUEST;
 import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabled;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
 import static org.citrusframework.openapi.model.OasModelHelper.getRequestBodySchema;
+import static org.citrusframework.openapi.model.OasModelHelper.isArrayType;
 import static org.citrusframework.openapi.model.OasModelHelper.isOperationRequestBodyRequired;
 
 /**
@@ -207,6 +210,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
             if (operation.parameters != null) {
                 setMissingHeadersToRandomValues(openApiSpecification, context, operation);
                 setMissingQueryParametersToRandomValues(openApiSpecification, context, operation);
+                setMissingCookiesToRandomValues(openApiSpecification, context, operation);
             }
 
             String randomizedPath = path;
@@ -221,8 +225,14 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                     if (value == null) {
                         if (autoFill != NONE) {
                             // Fill the path parameter via context
-                            context.setVariable(parameter.name, createRandomValueExpression(
-                                (OasSchema) parameter.schema));
+                            context.setVariable(
+                                    parameter.name,
+                                    context.replaceDynamicContentInString(
+                                            createRandomValueExpression(
+                                                    (OasSchema) parameter.schema
+                                            )
+                                    )
+                            );
                             randomizedPath = path.replace("{"+parameter.name+"}", "${"+parameter.name+"}");
                         }
                     } else {
@@ -285,9 +295,19 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                         queryParameterValue = createRandomValueExpression(param.getName(),
                             (OasSchema) param.schema, openApiSpecification,
                             context);
+                        if (isArrayType((OasSchema) param.schema)) {
+                            String arrayString = queryParameterValue.toString();
+                            // Strip array brackets and resolve
+                            arrayString = context.replaceDynamicContentInString(arrayString.substring(1, arrayString.length() - 1));
+                            queryParameterValue = arrayString.split(",");
+                        }
                     }
                     try {
-                        getMessage().queryParam(param.getName(), queryParameterValue.toString());
+                        if (queryParameterValue instanceof String[] stringArray) {
+                            stream(stringArray).forEach(value -> getMessage().queryParam(param.getName(), value));
+                        } else {
+                            getMessage().queryParam(param.getName(), queryParameterValue.toString());
+                        }
                     } catch (Exception e) {
                         // Note that exploded object query parameter representation for example, cannot properly
                         // be randomized.
@@ -324,6 +344,46 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                     }
                     getMessage().setHeader(param.getName(), headerValue);
                 });
+        }
+
+        /**
+         * Creates all required cookies, if they have not already been specified.
+         */
+        private void setMissingCookiesToRandomValues(
+                OpenApiSpecification openApiSpecification,
+                TestContext context,
+                OasOperation operation
+        ) {
+            List<String> configuredHeaders = getHeaderBuilders()
+                    .stream()
+                    .flatMap(
+                            messageHeaderBuilder -> messageHeaderBuilder.builderHeaders(context)
+                                    .keySet()
+                                    .stream()
+                    )
+                    .toList();
+            operation.parameters.stream()
+                    .filter(param -> "cookie".equals(param.in))
+                    // Not configured manually
+                    .filter(
+                            param -> getMessage().getHeader(param.getName()) == null
+                                    && !configuredHeaders.contains(param.getName())
+                    )
+                    // Only targeted parameters
+                    .filter(param -> autoFill.shouldFill(param.required))
+                    .forEach(param -> {
+                        Object headerValue = context.getVariables()
+                                .get(param.getName());
+                        if (headerValue == null) {
+                            headerValue = createRandomValueExpression(
+                                    param.getName(),
+                                    (OasSchema) param.schema,
+                                    openApiSpecification,
+                                    context
+                            );
+                        }
+                        getMessage().cookie(new Cookie(param.getName(), headerValue.toString()));
+                    });
         }
     }
 }

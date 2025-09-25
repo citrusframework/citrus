@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * ModelApiResponse
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-07-25T13:14:37.509644+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-09-24T14:15:33.859186700+02:00[Europe/Zurich]", comments = "Generator version: 7.15.0")
 public class ModelApiResponse {
   @jakarta.annotation.Nullable
   private Integer code;

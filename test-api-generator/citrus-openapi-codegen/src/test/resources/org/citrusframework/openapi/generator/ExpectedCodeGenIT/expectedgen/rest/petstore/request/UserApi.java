@@ -38,7 +38,7 @@ import java.time.OffsetDateTime;
 import org.citrusframework.openapi.generator.rest.petstore.model.User;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-07-25T13:14:37.509644+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-09-24T14:15:33.859186700+02:00[Europe/Zurich]", comments = "Generator version: 7.15.0")
 public class UserApi implements GeneratedApi
 {
 
@@ -99,6 +99,8 @@ public class UserApi implements GeneratedApi
         return customizers;
     }
 
+
+
     /**
      * Builder with type safe required parameters.
      */
@@ -114,6 +116,8 @@ public class UserApi implements GeneratedApi
         return new CreateUserReceiveActionBuilder(this,  statusCode);
     }
 
+
+
     /**
      * Builder with type safe required parameters.
      */
@@ -127,6 +131,14 @@ public class UserApi implements GeneratedApi
 
     public CreateUsersWithListInputReceiveActionBuilder receiveCreateUsersWithListInput(@NotNull String statusCode)   {
         return new CreateUsersWithListInputReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public DeleteUserSendActionBuilder sendDeleteUser()   {
+            return new DeleteUserSendActionBuilder(this, null);
     }
 
     /**
@@ -144,6 +156,14 @@ public class UserApi implements GeneratedApi
         return new DeleteUserReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetUserByNameSendActionBuilder sendGetUserByName()   {
+            return new GetUserByNameSendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -158,6 +178,8 @@ public class UserApi implements GeneratedApi
     public GetUserByNameReceiveActionBuilder receiveGetUserByName(@NotNull String statusCode)   {
         return new GetUserByNameReceiveActionBuilder(this,  statusCode);
     }
+
+
 
     /**
      * Builder with type safe required parameters.
@@ -174,6 +196,8 @@ public class UserApi implements GeneratedApi
         return new LoginUserReceiveActionBuilder(this,  statusCode);
     }
 
+
+
     /**
      * Builder with type safe required parameters.
      */
@@ -187,6 +211,14 @@ public class UserApi implements GeneratedApi
 
     public LogoutUserReceiveActionBuilder receiveLogoutUser(@NotNull String statusCode)   {
         return new LogoutUserReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public UpdateUserSendActionBuilder sendUpdateUser()   {
+            return new UpdateUserSendActionBuilder(this, null);
     }
 
     /**

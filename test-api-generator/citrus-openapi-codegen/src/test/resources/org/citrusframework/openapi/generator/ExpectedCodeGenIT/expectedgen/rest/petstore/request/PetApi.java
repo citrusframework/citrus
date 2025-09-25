@@ -38,7 +38,7 @@ import org.citrusframework.openapi.generator.rest.petstore.model.ModelApiRespons
 import org.citrusframework.openapi.generator.rest.petstore.model.Pet;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-07-25T13:14:37.509644+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-09-24T14:15:33.859186700+02:00[Europe/Zurich]", comments = "Generator version: 7.15.0")
 public class PetApi implements GeneratedApi
 {
 
@@ -99,6 +99,8 @@ public class PetApi implements GeneratedApi
         return customizers;
     }
 
+
+
     /**
      * Builder with type safe required parameters.
      */
@@ -112,6 +114,14 @@ public class PetApi implements GeneratedApi
 
     public AddPetReceiveActionBuilder receiveAddPet(@NotNull String statusCode)   {
         return new AddPetReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public DeletePetSendActionBuilder sendDeletePet()   {
+            return new DeletePetSendActionBuilder(this, null);
     }
 
     /**
@@ -136,6 +146,8 @@ public class PetApi implements GeneratedApi
         return new DeletePetReceiveActionBuilder(this,  statusCode);
     }
 
+
+
     /**
      * Builder with type safe required parameters.
      */
@@ -151,6 +163,8 @@ public class PetApi implements GeneratedApi
         return new FindPetsByStatusReceiveActionBuilder(this,  statusCode);
     }
 
+
+
     /**
      * Builder with type safe required parameters.
      */
@@ -164,6 +178,16 @@ public class PetApi implements GeneratedApi
 
     public FindPetsByTagsReceiveActionBuilder receiveFindPetsByTags(@NotNull String statusCode)   {
         return new FindPetsByTagsReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetByIdSendActionBuilder sendGetPetById()   {
+            GetPetByIdSendActionBuilder builder =  new GetPetByIdSendActionBuilder(this, null);
+            builder.setBase64EncodeApiKey(base64EncodeApiKey);
+            return builder;
     }
 
     /**
@@ -193,6 +217,8 @@ public class PetApi implements GeneratedApi
         return new GetPetByIdReceiveActionBuilder(this,  statusCode);
     }
 
+
+
     /**
      * Builder with type safe required parameters.
      */
@@ -206,6 +232,14 @@ public class PetApi implements GeneratedApi
 
     public UpdatePetReceiveActionBuilder receiveUpdatePet(@NotNull String statusCode)   {
         return new UpdatePetReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public UpdatePetWithFormSendActionBuilder sendUpdatePetWithForm()   {
+            return new UpdatePetWithFormSendActionBuilder(this, null);
     }
 
     /**
@@ -228,6 +262,14 @@ public class PetApi implements GeneratedApi
 
     public UpdatePetWithFormReceiveActionBuilder receiveUpdatePetWithForm(@NotNull String statusCode)   {
         return new UpdatePetWithFormReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public UploadFileSendActionBuilder sendUploadFile()   {
+            return new UploadFileSendActionBuilder(this, null);
     }
 
     /**

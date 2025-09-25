@@ -520,6 +520,7 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
             .stream()
             .filter(param -> !param.isBodyParam)
             .toList());
+        customOperation.hasRequiredNonBodyParams = !customOperation.requiredNonBodyParams.isEmpty();
 
         // If we do not generate models, we do not need a string parameter constructor, as we have
         // already changed the specific model types to string, so this is already covered by the
@@ -577,6 +578,8 @@ public class CitrusJavaCodegen extends AbstractJavaCodegen {
     static class CustomCodegenOperation extends CodegenOperation {
 
         private final List<CodegenParameter> requiredNonBodyParams;
+
+        private boolean hasRequiredNonBodyParams;
 
         /**
          * List of all optional parameters plus all authentication specific parameter names.

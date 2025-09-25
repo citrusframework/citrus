@@ -424,7 +424,7 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
                 message.path(message.getPath().replace("{" + name + "}", pathParameter));
             });
             // All still undefined parameters must still exist in the context.
-            message.path(context.resolveDynamicValue(message.getPath()));
+            message.path(context.replaceDynamicContentInString(message.getPath()));
         }
 
         private void applyQueryParameters(TestContext context, HttpMessage message) {

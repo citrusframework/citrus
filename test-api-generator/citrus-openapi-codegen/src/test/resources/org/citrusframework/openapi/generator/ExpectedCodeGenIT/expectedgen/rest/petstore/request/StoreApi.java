@@ -37,7 +37,7 @@ import org.citrusframework.openapi.generator.rest.petstore.PetStoreOpenApi;
 import org.citrusframework.openapi.generator.rest.petstore.model.Order;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-07-25T13:14:37.509644+02:00[Europe/Zurich]", comments = "Generator version: 7.14.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-09-24T14:15:33.859186700+02:00[Europe/Zurich]", comments = "Generator version: 7.15.0")
 public class StoreApi implements GeneratedApi
 {
 
@@ -98,6 +98,14 @@ public class StoreApi implements GeneratedApi
         return customizers;
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public DeleteOrderSendActionBuilder sendDeleteOrder()   {
+            return new DeleteOrderSendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -120,6 +128,8 @@ public class StoreApi implements GeneratedApi
         return new DeleteOrderReceiveActionBuilder(this,  statusCode);
     }
 
+
+
     /**
      * Builder with type safe required parameters.
      */
@@ -135,6 +145,14 @@ public class StoreApi implements GeneratedApi
 
     public GetInventoryReceiveActionBuilder receiveGetInventory(@NotNull String statusCode)   {
         return new GetInventoryReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetOrderByIdSendActionBuilder sendGetOrderById()   {
+            return new GetOrderByIdSendActionBuilder(this, null);
     }
 
     /**
@@ -158,6 +176,8 @@ public class StoreApi implements GeneratedApi
     public GetOrderByIdReceiveActionBuilder receiveGetOrderById(@NotNull String statusCode)   {
         return new GetOrderByIdReceiveActionBuilder(this,  statusCode);
     }
+
+
 
     /**
      * Builder with type safe required parameters.

@@ -12,7 +12,7 @@ import org.citrusframework.openapi.generator.rest.extpetstore.ExtPetStoreOpenApi
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-09-11T09:45:43.184827600+02:00[Europe/Zurich]", comments = "Generator version: 7.15.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-09-24T14:15:35.039151600+02:00[Europe/Zurich]", comments = "Generator version: 7.15.0")
 public class ExtPetStoreNamespaceHandler extends NamespaceHandlerSupport {
 
     @Override

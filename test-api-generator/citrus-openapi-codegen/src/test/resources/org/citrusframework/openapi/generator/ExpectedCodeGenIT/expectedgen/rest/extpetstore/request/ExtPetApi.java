@@ -44,7 +44,7 @@ import java.util.UUID;
 import org.citrusframework.openapi.generator.rest.extpetstore.model.VaccinationDocumentResult;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-09-11T09:45:43.184827600+02:00[Europe/Zurich]", comments = "Generator version: 7.15.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-09-24T14:15:35.039151600+02:00[Europe/Zurich]", comments = "Generator version: 7.15.0")
 public class ExtPetApi implements GeneratedApi
 {
 
@@ -120,6 +120,14 @@ public class ExtPetApi implements GeneratedApi
         return customizers;
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GenerateVaccinationReportSendActionBuilder sendGenerateVaccinationReport()   {
+            return new GenerateVaccinationReportSendActionBuilder(this, null, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -140,6 +148,16 @@ public class ExtPetApi implements GeneratedApi
 
     public GenerateVaccinationReportReceiveActionBuilder receiveGenerateVaccinationReport(@NotNull String statusCode)   {
         return new GenerateVaccinationReportReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetByIdWithApiKeyAuthenticationSendActionBuilder sendGetPetByIdWithApiKeyAuthentication()   {
+            GetPetByIdWithApiKeyAuthenticationSendActionBuilder builder =  new GetPetByIdWithApiKeyAuthenticationSendActionBuilder(this, null, null);
+            builder.setBase64EncodeApiKey(base64EncodeApiKey);
+            return builder;
     }
 
     /**
@@ -171,6 +189,15 @@ public class ExtPetApi implements GeneratedApi
         return new GetPetByIdWithApiKeyAuthenticationReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetByIdWithBasicAuthenticationSendActionBuilder sendGetPetByIdWithBasicAuthentication()   {
+            GetPetByIdWithBasicAuthenticationSendActionBuilder builder =  new GetPetByIdWithBasicAuthenticationSendActionBuilder(this, null, null);
+            return builder;
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -195,6 +222,15 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetByIdWithBasicAuthenticationReceiveActionBuilder receiveGetPetByIdWithBasicAuthentication(@NotNull String statusCode)   {
         return new GetPetByIdWithBasicAuthenticationReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetByIdWithBearerAuthenticationSendActionBuilder sendGetPetByIdWithBearerAuthentication()   {
+            GetPetByIdWithBearerAuthenticationSendActionBuilder builder =  new GetPetByIdWithBearerAuthenticationSendActionBuilder(this, null, null);
+            return builder;
     }
 
     /**
@@ -222,6 +258,14 @@ public class ExtPetApi implements GeneratedApi
         return new GetPetByIdWithBearerAuthenticationReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetByUuidSendActionBuilder sendGetPetByUuid()   {
+            return new GetPetByUuidSendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -242,6 +286,14 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetByUuidReceiveActionBuilder receiveGetPetByUuid(@NotNull String statusCode)   {
         return new GetPetByUuidReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithCookieSendActionBuilder sendGetPetWithCookie()   {
+            return new GetPetWithCookieSendActionBuilder(this, null, null);
     }
 
     /**
@@ -266,6 +318,14 @@ public class ExtPetApi implements GeneratedApi
         return new GetPetWithCookieReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithDeepObjectTypeQuerySendActionBuilder sendGetPetWithDeepObjectTypeQuery()   {
+            return new GetPetWithDeepObjectTypeQuerySendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -286,6 +346,14 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetWithDeepObjectTypeQueryReceiveActionBuilder receiveGetPetWithDeepObjectTypeQuery(@NotNull String statusCode)   {
         return new GetPetWithDeepObjectTypeQueryReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithFormExplodedStyleCookieSendActionBuilder sendGetPetWithFormExplodedStyleCookie()   {
+            return new GetPetWithFormExplodedStyleCookieSendActionBuilder(this, null);
     }
 
     /**
@@ -310,6 +378,14 @@ public class ExtPetApi implements GeneratedApi
         return new GetPetWithFormExplodedStyleCookieReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithFormObjectStyleCookieSendActionBuilder sendGetPetWithFormObjectStyleCookie()   {
+            return new GetPetWithFormObjectStyleCookieSendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -330,6 +406,14 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetWithFormObjectStyleCookieReceiveActionBuilder receiveGetPetWithFormObjectStyleCookie(@NotNull String statusCode)   {
         return new GetPetWithFormObjectStyleCookieReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithFormStyleCookieSendActionBuilder sendGetPetWithFormStyleCookie()   {
+            return new GetPetWithFormStyleCookieSendActionBuilder(this, null);
     }
 
     /**
@@ -354,6 +438,14 @@ public class ExtPetApi implements GeneratedApi
         return new GetPetWithFormStyleCookieReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithFormStyleExplodedObjectQuerySendActionBuilder sendGetPetWithFormStyleExplodedObjectQuery()   {
+            return new GetPetWithFormStyleExplodedObjectQuerySendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -374,6 +466,14 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetWithFormStyleExplodedObjectQueryReceiveActionBuilder receiveGetPetWithFormStyleExplodedObjectQuery(@NotNull String statusCode)   {
         return new GetPetWithFormStyleExplodedObjectQueryReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithFormStyleExplodedQuerySendActionBuilder sendGetPetWithFormStyleExplodedQuery()   {
+            return new GetPetWithFormStyleExplodedQuerySendActionBuilder(this, null);
     }
 
     /**
@@ -398,6 +498,14 @@ public class ExtPetApi implements GeneratedApi
         return new GetPetWithFormStyleExplodedQueryReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithFormStyleObjectQuerySendActionBuilder sendGetPetWithFormStyleObjectQuery()   {
+            return new GetPetWithFormStyleObjectQuerySendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -418,6 +526,14 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetWithFormStyleObjectQueryReceiveActionBuilder receiveGetPetWithFormStyleObjectQuery(@NotNull String statusCode)   {
         return new GetPetWithFormStyleObjectQueryReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithFormStyleQuerySendActionBuilder sendGetPetWithFormStyleQuery()   {
+            return new GetPetWithFormStyleQuerySendActionBuilder(this, null);
     }
 
     /**
@@ -442,6 +558,14 @@ public class ExtPetApi implements GeneratedApi
         return new GetPetWithFormStyleQueryReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithLabelStyleArraySendActionBuilder sendGetPetWithLabelStyleArray()   {
+            return new GetPetWithLabelStyleArraySendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -462,6 +586,14 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetWithLabelStyleArrayReceiveActionBuilder receiveGetPetWithLabelStyleArray(@NotNull String statusCode)   {
         return new GetPetWithLabelStyleArrayReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithLabelStyleArrayExplodedSendActionBuilder sendGetPetWithLabelStyleArrayExploded()   {
+            return new GetPetWithLabelStyleArrayExplodedSendActionBuilder(this, null);
     }
 
     /**
@@ -486,6 +618,14 @@ public class ExtPetApi implements GeneratedApi
         return new GetPetWithLabelStyleArrayExplodedReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithLabelStyleObjectSendActionBuilder sendGetPetWithLabelStyleObject()   {
+            return new GetPetWithLabelStyleObjectSendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -506,6 +646,14 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetWithLabelStyleObjectReceiveActionBuilder receiveGetPetWithLabelStyleObject(@NotNull String statusCode)   {
         return new GetPetWithLabelStyleObjectReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithLabelStyleObjectExplodedSendActionBuilder sendGetPetWithLabelStyleObjectExploded()   {
+            return new GetPetWithLabelStyleObjectExplodedSendActionBuilder(this, null);
     }
 
     /**
@@ -530,6 +678,14 @@ public class ExtPetApi implements GeneratedApi
         return new GetPetWithLabelStyleObjectExplodedReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithMatrixStyleArraySendActionBuilder sendGetPetWithMatrixStyleArray()   {
+            return new GetPetWithMatrixStyleArraySendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -550,6 +706,14 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetWithMatrixStyleArrayReceiveActionBuilder receiveGetPetWithMatrixStyleArray(@NotNull String statusCode)   {
         return new GetPetWithMatrixStyleArrayReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithMatrixStyleArrayExplodedSendActionBuilder sendGetPetWithMatrixStyleArrayExploded()   {
+            return new GetPetWithMatrixStyleArrayExplodedSendActionBuilder(this, null);
     }
 
     /**
@@ -574,6 +738,14 @@ public class ExtPetApi implements GeneratedApi
         return new GetPetWithMatrixStyleArrayExplodedReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithMatrixStyleObjectSendActionBuilder sendGetPetWithMatrixStyleObject()   {
+            return new GetPetWithMatrixStyleObjectSendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -594,6 +766,14 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetWithMatrixStyleObjectReceiveActionBuilder receiveGetPetWithMatrixStyleObject(@NotNull String statusCode)   {
         return new GetPetWithMatrixStyleObjectReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithMatrixStyleObjectExplodedSendActionBuilder sendGetPetWithMatrixStyleObjectExploded()   {
+            return new GetPetWithMatrixStyleObjectExplodedSendActionBuilder(this, null);
     }
 
     /**
@@ -618,6 +798,14 @@ public class ExtPetApi implements GeneratedApi
         return new GetPetWithMatrixStyleObjectExplodedReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithParametersRequiringEncodingSendActionBuilder sendGetPetWithParametersRequiringEncoding()   {
+            return new GetPetWithParametersRequiringEncodingSendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -638,6 +826,14 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetWithParametersRequiringEncodingReceiveActionBuilder receiveGetPetWithParametersRequiringEncoding(@NotNull String statusCode)   {
         return new GetPetWithParametersRequiringEncodingReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithSimpleStyleArraySendActionBuilder sendGetPetWithSimpleStyleArray()   {
+            return new GetPetWithSimpleStyleArraySendActionBuilder(this, null);
     }
 
     /**
@@ -662,6 +858,14 @@ public class ExtPetApi implements GeneratedApi
         return new GetPetWithSimpleStyleArrayReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithSimpleStyleArrayExplodedSendActionBuilder sendGetPetWithSimpleStyleArrayExploded()   {
+            return new GetPetWithSimpleStyleArrayExplodedSendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -682,6 +886,14 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetWithSimpleStyleArrayExplodedReceiveActionBuilder receiveGetPetWithSimpleStyleArrayExploded(@NotNull String statusCode)   {
         return new GetPetWithSimpleStyleArrayExplodedReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithSimpleStyleExplodedHeaderSendActionBuilder sendGetPetWithSimpleStyleExplodedHeader()   {
+            return new GetPetWithSimpleStyleExplodedHeaderSendActionBuilder(this, null);
     }
 
     /**
@@ -706,6 +918,14 @@ public class ExtPetApi implements GeneratedApi
         return new GetPetWithSimpleStyleExplodedHeaderReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithSimpleStyleExplodedObjectHeaderSendActionBuilder sendGetPetWithSimpleStyleExplodedObjectHeader()   {
+            return new GetPetWithSimpleStyleExplodedObjectHeaderSendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -726,6 +946,14 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetWithSimpleStyleExplodedObjectHeaderReceiveActionBuilder receiveGetPetWithSimpleStyleExplodedObjectHeader(@NotNull String statusCode)   {
         return new GetPetWithSimpleStyleExplodedObjectHeaderReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithSimpleStyleHeaderSendActionBuilder sendGetPetWithSimpleStyleHeader()   {
+            return new GetPetWithSimpleStyleHeaderSendActionBuilder(this, null);
     }
 
     /**
@@ -750,6 +978,14 @@ public class ExtPetApi implements GeneratedApi
         return new GetPetWithSimpleStyleHeaderReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithSimpleStyleObjectSendActionBuilder sendGetPetWithSimpleStyleObject()   {
+            return new GetPetWithSimpleStyleObjectSendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -770,6 +1006,14 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetWithSimpleStyleObjectReceiveActionBuilder receiveGetPetWithSimpleStyleObject(@NotNull String statusCode)   {
         return new GetPetWithSimpleStyleObjectReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithSimpleStyleObjectExplodedSendActionBuilder sendGetPetWithSimpleStyleObjectExploded()   {
+            return new GetPetWithSimpleStyleObjectExplodedSendActionBuilder(this, null);
     }
 
     /**
@@ -794,6 +1038,14 @@ public class ExtPetApi implements GeneratedApi
         return new GetPetWithSimpleStyleObjectExplodedReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public GetPetWithSimpleStyleObjectHeaderSendActionBuilder sendGetPetWithSimpleStyleObjectHeader()   {
+            return new GetPetWithSimpleStyleObjectHeaderSendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -814,6 +1066,14 @@ public class ExtPetApi implements GeneratedApi
 
     public GetPetWithSimpleStyleObjectHeaderReceiveActionBuilder receiveGetPetWithSimpleStyleObjectHeader(@NotNull String statusCode)   {
         return new GetPetWithSimpleStyleObjectHeaderReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public PetWithoutOperationIdPetIdGetSendActionBuilder sendPetWithoutOperationIdPetIdGet()   {
+            return new PetWithoutOperationIdPetIdGetSendActionBuilder(this, null);
     }
 
     /**
@@ -838,6 +1098,14 @@ public class ExtPetApi implements GeneratedApi
         return new PetWithoutOperationIdPetIdGetReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public PostOwnerSendActionBuilder sendPostOwner()   {
+            return new PostOwnerSendActionBuilder(this, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -860,6 +1128,14 @@ public class ExtPetApi implements GeneratedApi
         return new PostOwnerReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public PostVaccinationDocumentSendActionBuilder sendPostVaccinationDocument()   {
+            return new PostVaccinationDocumentSendActionBuilder(this, null, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -874,6 +1150,8 @@ public class ExtPetApi implements GeneratedApi
     public PostVaccinationDocumentReceiveActionBuilder receivePostVaccinationDocument(@NotNull String statusCode)   {
         return new PostVaccinationDocumentReceiveActionBuilder(this,  statusCode);
     }
+
+
 
     /**
      * Builder with type safe required parameters.
@@ -890,6 +1168,14 @@ public class ExtPetApi implements GeneratedApi
         return new PostVaccinationFormDataReceiveActionBuilder(this,  statusCode);
     }
 
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public TagPetSendActionBuilder sendTagPet()   {
+            return new TagPetSendActionBuilder(this, null, null, null);
+    }
+
     /**
      * Builder with type safe required parameters.
      */
@@ -903,6 +1189,14 @@ public class ExtPetApi implements GeneratedApi
 
     public TagPetReceiveActionBuilder receiveTagPet(@NotNull String statusCode)   {
         return new TagPetReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public UpdatePetWithArrayQueryDataSendActionBuilder sendUpdatePetWithArrayQueryData()   {
+            return new UpdatePetWithArrayQueryDataSendActionBuilder(this, null, null, null, null, null, null);
     }
 
     /**
@@ -925,6 +1219,14 @@ public class ExtPetApi implements GeneratedApi
 
     public UpdatePetWithArrayQueryDataReceiveActionBuilder receiveUpdatePetWithArrayQueryData(@NotNull String statusCode)   {
         return new UpdatePetWithArrayQueryDataReceiveActionBuilder(this,  statusCode);
+    }
+
+
+    /**
+     * Builder with no parameters, to allow for all random value creation, if any parameters are required.
+     */
+    public UpdatePetWithFormUrlEncodedSendActionBuilder sendUpdatePetWithFormUrlEncoded()   {
+            return new UpdatePetWithFormUrlEncodedSendActionBuilder(this, null, null, null, null, null);
     }
 
     /**
