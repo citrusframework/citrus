@@ -2827,7 +2827,7 @@
 
   <xs:complexType name="WebElementType">
     <xs:sequence>
-      <xs:element name="property">
+      <xs:element name="property" minOccurs="0">
         <xs:complexType>
           <xs:attribute name="name" type="xs:string" use="required"/>
           <xs:attribute name="value" type="xs:string" use="required"/>
