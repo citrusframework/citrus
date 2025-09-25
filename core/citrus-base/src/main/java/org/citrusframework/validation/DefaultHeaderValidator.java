@@ -28,10 +28,14 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.context.ValidationStatus;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.lang.String.join;
+import static org.citrusframework.validation.context.ValidationStatus.FAILED;
+import static org.citrusframework.validation.context.ValidationStatus.PASSED;
+import static org.citrusframework.validation.matcher.ValidationMatcherUtils.isValidationMatcherExpression;
 
 /**
  * @since 2.7.6
@@ -50,9 +54,9 @@ public class DefaultHeaderValidator implements HeaderValidator {
         if (validator.isPresent()) {
             try {
                 validator.get().validateHeader(headerName, receivedValue, controlValue, context, validationContext);
-                validationContext.updateStatus(ValidationStatus.PASSED);
+                validationContext.updateStatus(PASSED);
             } catch (ValidationException e) {
-                validationContext.updateStatus(ValidationStatus.FAILED);
+                validationContext.updateStatus(FAILED);
                 throw e;
             }
             return;
@@ -64,9 +68,13 @@ public class DefaultHeaderValidator implements HeaderValidator {
                     .map(context::replaceDynamicContentInString)
                     .orElse("");
 
+            if (headerName.startsWith("citrus_http_cookie")) {
+                expectedValue = extractCookieValidationMatcherExpression(expectedValue);
+            }
+
             if (receivedValue != null) {
                 String receivedValueString = context.getTypeConverter().convertIfNecessary(receivedValue, String.class);
-                if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValue)) {
+                if (isValidationMatcherExpression(expectedValue)) {
                     ValidationMatcherUtils.resolveValidationMatcher(headerName, receivedValueString,
                             expectedValue, context);
                     return;
@@ -86,9 +94,9 @@ public class DefaultHeaderValidator implements HeaderValidator {
             }
 
             logger.debug("Validating header element: {}='{}' : OK", headerName, expectedValue);
-            validationContext.updateStatus(ValidationStatus.PASSED);
+            validationContext.updateStatus(PASSED);
         } catch (ValidationException e) {
-            validationContext.updateStatus(ValidationStatus.FAILED);
+            validationContext.updateStatus(FAILED);
             throw e;
         }
     }
@@ -98,9 +106,9 @@ public class DefaultHeaderValidator implements HeaderValidator {
         if (validator.isPresent()) {
             try {
                 validator.get().validateHeader(headerName, receivedValue, controlValue, context, validationContext);
-                validationContext.updateStatus(ValidationStatus.PASSED);
+                validationContext.updateStatus(PASSED);
             } catch (ValidationException e) {
-                validationContext.updateStatus(ValidationStatus.FAILED);
+                validationContext.updateStatus(FAILED);
                 throw e;
             }
             return;
@@ -132,23 +140,23 @@ public class DefaultHeaderValidator implements HeaderValidator {
 
                     if (!validated) {
                         throw new ValidationException(String.format("Values not equal for header element '%s', expected '%s' but was '%s'",
-                                headerName, String.join(", ", expectedValues), receivedValueString));
+                                headerName, join(", ", expectedValues), receivedValueString));
                     }
                 }
 
                 if (!expectedValuesCopy.isEmpty()) {
                     throw new ValidationException(String.format("Values not equal for header element '%s', expected '%s' but was '%s'",
-                            headerName, String.join(", ", expectedValues), String.join(", ", receivedValues)));
+                            headerName, join(", ", expectedValues), join(", ", receivedValues)));
                 }
             } else if (!expectedValues.isEmpty()) {
                 throw new ValidationException(String.format("Values not equal for header element '%s', expected '%s' but was 'null'",
-                        headerName, String.join(", ", expectedValues)));
+                        headerName, join(", ", expectedValues)));
             }
 
-            logger.debug("Validating header element: {}='{}' : OK", headerName, String.join(", ", expectedValues));
-            validationContext.updateStatus(ValidationStatus.PASSED);
+            logger.debug("Validating header element: {}='{}' : OK", headerName, join(", ", expectedValues));
+            validationContext.updateStatus(PASSED);
         } catch (ValidationException e) {
-            validationContext.updateStatus(ValidationStatus.FAILED);
+            validationContext.updateStatus(FAILED);
             throw e;
         }
     }
@@ -159,7 +167,7 @@ public class DefaultHeaderValidator implements HeaderValidator {
         while (expectedIterator.hasNext()) {
             String expectedValue = expectedIterator.next();
 
-            if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValue)) {
+            if (isValidationMatcherExpression(expectedValue)) {
                 try {
                     ValidationMatcherUtils.resolveValidationMatcher(headerName, receivedValueString, expectedValue,
                         context);
@@ -218,5 +226,29 @@ public class DefaultHeaderValidator implements HeaderValidator {
                 .filter(validator -> !(validator instanceof DefaultHeaderValidator))
                 .filter(validator -> validator.supports(headerName, Optional.ofNullable(controlValue).map(Object::getClass).orElse(null)))
                 .findFirst();
+    }
+
+    /**
+     * A cookie value includes the cookie name. When matching with a validation matcher,
+     * the cookie name must be stripped off first. For backwards compatibility, this is
+     * only done if the control value contains a validation matcher expression. This way,
+     * explicit cookie matchings that include the cookie name prefix continue to work,
+     * while validation matcher expressions (which have never supported the prefix) now
+     * behave as expected.
+     */
+    private static String extractCookieValidationMatcherExpression(String headerControlValue) {
+        if (headerControlValue == null) {
+            return null;
+        }
+
+        int index = headerControlValue.indexOf("=");
+        if (index > 0) {
+            String cookieValue = headerControlValue.substring(index + 1);
+            if (isValidationMatcherExpression(cookieValue)) {
+                headerControlValue = cookieValue;
+            }
+        }
+
+        return headerControlValue;
     }
 }

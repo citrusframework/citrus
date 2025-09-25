@@ -3688,4 +3688,116 @@ class GeneratedRestApiIT {
         }
 
     }
+
+    @Nested
+    class RandomGeneration {
+
+        @Test
+        void generatesRandomPath(@CitrusResource TestCaseRunner runner) {
+            runner.when(petApi
+                .sendGetPetById()
+                .autoFill(AutoFillType.REQUIRED)
+                .fork(true));
+
+            runner.then(http().server(httpServer)
+                .receive()
+                .get("/api/v3/pet/${petId}")
+                .message()
+                .accept("@contains('application/json')@"));
+
+            runner.then(http().server(httpServer)
+                .send()
+                .response(OK)
+                .message()
+                .body(Resources.create(
+                    "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/invalidGetPetById_response.json"))
+                .contentType(APPLICATION_JSON_VALUE));
+
+            runner.when(petApi
+                .receiveGetPetById(OK)
+                .schemaValidation(false));
+        }
+
+        @Test
+        void generatesRandomCookie(@CitrusResource TestCaseRunner runner) {
+            runner.when(extPetApi.sendGetPetWithCookie()
+                .autoFill(AutoFillType.REQUIRED)
+                .fork(true));
+
+            runner.then(http().server(httpServer)
+                .receive()
+                .get("/api/v3/ext/pet/${petId}")
+                .message()
+                .cookie(new Cookie("session_id", "@matches(session_id=.+)@"))
+                .accept("@contains('application/json')@"));
+
+            runner.then(http().server(httpServer)
+                .send()
+                .response(OK)
+                .message()
+                .body(Resources.create(
+                    "classpath:org/citrusframework/openapi/generator/GeneratedApiTest/payloads/invalidGetPetById_response.json"))
+                .contentType(APPLICATION_JSON_VALUE));
+
+            runner.when(extPetApi
+                .receiveGetPetWithCookie(OK)
+                .schemaValidation(false));
+        }
+
+        @Test
+        void generatesRandomQueryAndHeader(@CitrusResource TestCaseRunner runner) {
+
+            runner.when(extPetApi.sendUpdatePetWithArrayQueryData( )
+                .autoFill(AutoFillType.REQUIRED)
+                .fork(true));
+
+            runner.then(http().server(httpServer)
+                .receive()
+                .put("/api/v3/ext/pet/${petId}")
+                .message()
+                .queryParam("name", "@matches('.+')@")
+                .queryParam("status", "@matches('.+')@")
+//                @bbort https://github.com/citrusframework/citrus/issues/1419
+//                my expectation would be that this works in addition to the queryParam assertions. Instead, adding this validator
+//                results in skipping the above assertions and only this validator is called. Consequently, the existing validation contexts
+//                will not be handled and the whole validation fails.
+//                .validator(new MessageValidator<JsonMessageValidationContext>() {
+//
+//                        @Override
+//                        public void validateMessage(Message receivedMessage, Message controlMessage,
+//                            TestContext context, List<ValidationContext> validationContexts)
+//                            throws ValidationException {
+//                            HttpMessage receivedHttpMessage = (HttpMessage) receivedMessage;
+//                            Object tags = receivedHttpMessage.getQueryParams().get("tags");
+//                            assertThat(tags)
+//                                .isInstanceOf(List.class)
+//                                .asInstanceOf(LIST)
+//                                    .allSatisfy(element -> assertThat((String)element).matches(".+"));
+//                            Object nicknames = receivedHttpMessage.getQueryParams().get("nicknames");
+//                            assertThat(tags)
+//                                .isInstanceOf(List.class)
+//                                .asInstanceOf(LIST)
+//                                .allSatisfy(element -> assertThat((String)element).matches(".+"));
+//                        }
+//
+//                        @Override
+//                        public boolean supportsMessageType(String messageType, Message message) {
+//                            return true;
+//                        }
+//                    })
+                .accept("@contains('application/json')@"));
+
+            runner.then(http().server(httpServer)
+                .send()
+                .response(OK)
+                .message()
+                .contentType(APPLICATION_JSON_VALUE));
+
+            runner.when(extPetApi
+                .receiveUpdatePetWithArrayQueryData(OK)
+                .schemaValidation(false));
+        }
+    }
+
+
 }
