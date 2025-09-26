@@ -16,12 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
@@ -48,6 +42,14 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.lang.String.format;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -314,14 +316,14 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .endpoint(endpoint)
                 .message(messageBuilder)
                 .build();
-        try {
-            sendAction.execute(context);
-        } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unknown variable 'myText'");
-            return;
-        }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " with unknown variable error message");
+        assertThatThrownBy(() -> sendAction.execute(context))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessage(
+                        format(
+                                "Unable to extract value using expression 'myText'!%nReason: Unknown key 'myText' in Map.%nFrom object (java.util.concurrent.ConcurrentHashMap):%n{}"
+                        )
+                );
     }
 
     @Test
@@ -342,14 +344,14 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .endpoint(endpoint)
                 .message(messageBuilder)
                 .build();
-        try {
-            sendAction.execute(context);
-        } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unknown variable 'myOperation'");
-            return;
-        }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " with unknown variable error message");
+        assertThatThrownBy(() -> sendAction.execute(context))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessage(
+                        format(
+                                "Unable to extract value using expression 'myOperation'!%nReason: Unknown key 'myOperation' in Map.%nFrom object (java.util.concurrent.ConcurrentHashMap):%n{}"
+                        )
+                );
     }
 
     @Test
