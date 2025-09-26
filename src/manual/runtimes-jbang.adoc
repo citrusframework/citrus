@@ -262,7 +262,7 @@ Feature: EchoTest
 .Run my-test.feature
 [source,shell]
 ----
-jbang --deps org.citrusframework:citrus-cucumber-all:4.9.0-SNAPSHOT citrus run my-test.feature
+jbang --deps org.citrusframework:citrus-cucumber-all:4.8.1 citrus run my-test.feature
 ----
 
 NOTE: Many of the predefined Cucumber steps (e.g. `Then print '<message>'`) in Citrus are provided in separate Citrus modules.
@@ -305,7 +305,7 @@ The file above adds the modules `citrus-camel`, `citrus-testcontainers` and `cit
 
 The `jbang.properties` file may be located right next to the test source file or in your user home directory for global settings.
 
-IMPORTANT: In case you want to run Cucumber BDD Gherkin feature files and use the predefined Citrus steps, you need to add this dependency accordingly: `org.citrusframework:citrus-cucumber-all:4.9.0-SNAPSHOT`
+IMPORTANT: In case you want to run Cucumber BDD Gherkin feature files and use the predefined Citrus steps, you need to add this dependency accordingly: `org.citrusframework:citrus-cucumber-all:4.8.1`
 
 [[runtime-jbang-clipboard]]
 === Run from clipboard
