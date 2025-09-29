@@ -141,7 +141,7 @@ takes place but what about ignore statements? The plaintext message validator is
 based on their position in the text value. Given a source plaintext value:
 
 .Received text
-[source,text]
+[source,plaintext]
 ----
 Your current id is "1234567890"
 ----
@@ -152,7 +152,7 @@ application and you simply do not know the actual value at runtime.
 In this case we can use the common `@ignore@` statement in the control message payload as follows:
 
 .Control text
-[source,text]
+[source,plaintext]
 ----
 Your current id is "@ignore@"
 ----
@@ -170,7 +170,7 @@ Instead of ignoring a single word you can also specify the amount of characters 
 have Java non-word characters that you need to ignore. Let's have an example for that, too:
 
 .Received text
-[source,text]
+[source,plaintext]
 ----
 Your current id is "#12345-67890"
 ----
@@ -179,7 +179,7 @@ Given that text the simple `@ignore@` statement will fail because of the non-wor
 in the id value. This time we ignore the whole id sequence with:
 
 .Control text
-[source,text]
+[source,plaintext]
 ----
 Your current id is "@ignore(12)@"
 ----
@@ -194,7 +194,7 @@ Instead of just ignoring certain text parts we can also extract those parts into
 is ignored during validation and in addition to that the actual value is stored to a new test variable. Given the following text payload:
 
 .Received text
-[source,text]
+[source,plaintext]
 ----
 Your current id is "1234567890"
 ----
@@ -202,7 +202,7 @@ Your current id is "1234567890"
 And the expected control text:
 
 .Control text
-[source,text]
+[source,plaintext]
 ----
 Your current id is "@variable('id')@"
 ----
@@ -218,7 +218,7 @@ The ending of the variable value is defined by a non-word Java character. Dashes
 included in these values, too. So this will also work for you:
 
 .Received text
-[source,text]
+[source,plaintext]
 ----
 Today is "2017-12-24"
 ----
@@ -226,7 +226,7 @@ Today is "2017-12-24"
 And the expected control text:
 
 .Control text
-[source,text]
+[source,plaintext]
 ----
 Today is "@variable('date')@"
 ----
@@ -235,7 +235,7 @@ This results in a new variable called `date` with value `2017-12-24`. In additio
 here, too because dots and dashes are automatically included:
 
 .Received text
-[source,text]
+[source,plaintext]
 ----
 Today is "24.12.2017"
 ----

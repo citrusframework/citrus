@@ -78,7 +78,7 @@ These commands will be sent to the Zookeeper server for execution.
 
 See below all available Zookeeper commands that a Citrus client is able to execute.
 
-[source,text]
+[source,plaintext]
 ----
 info: Retrieves the current state of the client connection
 create: Creates a znode in a specified path of the ZooKeeper namespace

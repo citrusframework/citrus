@@ -75,14 +75,14 @@ actions:
 The test above calls the JBang app `myApp` with the `getUsers` command.
 The call is similar to a command line statement like this:
 
-[source,text]
+[source,plaintext]
 ----
 $ jbang myApp getUsers --username=FooUser
 ----
 
 The app `myApp` represents a JBang application that has been installed previously in JBang (for instance from a GitHub repository that holds a `jbang-catalog.json`):
 
-[source,text]
+[source,plaintext]
 ----
 $ jbang app install myApp@github-user/repository
 ----

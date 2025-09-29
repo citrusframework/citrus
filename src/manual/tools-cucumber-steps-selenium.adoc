@@ -1,15 +1,14 @@
-[[tools-cucumber-steps-selenium]]
+[[steps-tools-cucumber-steps-selenium]]
 == Selenium steps
 
 Selenium is a very popular UI testing tool that enables you to simulate user interactions on a web frontend. Selenium
 supports a wide range of browsers and is able to run with a grid of nodes in a Kubernetes environment.
 
-Citrus provides ready-to-use steps that leverage Selenium UI testing with Cloud-native BDD. Have a look at the complete
-example in xref:../../examples/selenium/selenium.feature[examples/selenium.feature].
+Citrus provides ready-to-use steps that leverage Selenium UI testing with Cloud-native BDD.
 
 The following sections guide you through the Selenium capabilities in Citrus.
 
-[[selenium-browser-type]]
+[[steps-selenium-browser-type]]
 === Browser type
 
 Selenium supports many browsers. When running a Citrus test with Selenium you need to choose which browser type to use. By
@@ -35,7 +34,7 @@ These are the supported browser types:
 
 This sets the Selenium browser type for all operations.
 
-[[selenium-browser]]
+[[steps-selenium-browser]]
 === Selenium broker
 
 Citrus creates a default browser component using the given link:#selenium-browser-type[browser type]. You can also create a
@@ -51,7 +50,7 @@ This loads the browser component with given name from the configuration (e.g. Sp
 
 You can also use the system property `citrus.selenium.browser.name` environment variable `CITRUS_SELENIUM_BROWSER_NAME`
 
-[[selenium-browser-remote]]
+[[steps-selenium-browser-remote]]
 === Remote web driver
 
 As soon as the Citrus test is run on a Kubernetes environment you must use a remote web driver. This is because the default Citrus test
@@ -82,7 +81,7 @@ Citrus automatically starts the given Selenium container image and connects the 
 
 This way you can run the UI tests in a Kubernetes environment.
 
-[[selenium-start-stop]]
+[[steps-selenium-start-stop]]
 === Start/stop browser
 
 Before you can run some user interactions with Selenium you need to start the browser.
@@ -99,7 +98,7 @@ Given start browser
 Given stop browser
 ----
 
-[[selenium-navigate]]
+[[steps-selenium-navigate]]
 === Navigate to URL
 
 See the following step that navigates to a given URL in the browser.
@@ -110,7 +109,7 @@ See the following step that navigates to a given URL in the browser.
 When User navigates to "{url}"
 ----
 
-[[selenium-verify-elements]]
+[[steps-selenium-verify-elements]]
 === Verify elements on page
 
 Selenium is able to verify web elements on the current page. You can select the element by its attributes (e.g. id, name, style)
@@ -161,7 +160,7 @@ When And browser page should display element with id="hello-text" having
     | styles | background-color=rgba(0, 0, 0, 0) |
 ----
 
-[[selenium-click]]
+[[steps-selenium-click]]
 === Click elements
 
 You can click on elements such as buttons or links. The element must be identified by an attribute (e.g. id, name, style)
@@ -179,7 +178,7 @@ When User clicks (element|button|link) with {attribute}="{value}"
 When User clicks button with id="submit"
 ----
 
-[[selenium-forms]]
+[[steps-selenium-forms]]
 === Form controls
 
 Filling out a user form on a web page is a very common use case in UI testing. Citrus is able to enter text into input fields,
@@ -227,7 +226,7 @@ When User selects option "{option}" with {attribute}="{value}"
 When User selects option "21-30" on dropdown with id="age"
 ----
 
-[[selenium-alert]]
+[[steps-selenium-alert]]
 === Alert dialogs
 
 Web pages can open alert dialogs that need to be accepted or dismissed.
@@ -254,7 +253,7 @@ When Browser page should display alert with text "WARNING!"
 
 IMPORTANT: The alert text verification implicitly accepts the alert dialog after validation.
 
-[[selenium-pages]]
+[[steps-selenium-pages]]
 === Page objects
 
 Selenium provides a good way to encapsulate web page capabilities in form of page objects. These object usually defines elements
@@ -423,7 +422,7 @@ public class UserFormPage implements WebPage {
 The page operation `setUserName` uses the `TestContext` as additional method argument and is able to set a new test variable.
 All subsequent steps in the test are able to access this new variable with `${username}` then.
 
-[[selenium-page-validators]]
+[[steps-selenium-page-validators]]
 === Page validator
 
 The previous section has introduced the concept of page objects and how to perform operations on the given page. You can also

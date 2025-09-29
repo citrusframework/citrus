@@ -302,12 +302,12 @@ or you make use of Citrus validation matchers which is more adequate in most sce
 
 Assume there are two different plain text messages living on a message channel waiting to be picked up by a consumer.
 
-[source,text]
+[source,plaintext]
 ----
 Hello, welcome!
 ----
 
-[source,text]
+[source,plaintext]
 ----
 GoodBye, see you next time!
 ----

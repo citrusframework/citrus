@@ -5,11 +5,9 @@ Knative represents the Kubernetes-based platform to manage serverless workloads.
 You are able to leverage Knative eventing features such as producing and consuming
 events.
 
-Have a look at the complete example in xref:../../examples/knative/knative-eventing.feature[examples/knative-eventing.feature].
-
 The following sections guide you through the Knative eventing capabilities in Citrus.
 
-[[knative-api-version]]
+[[steps-knative-api-version]]
 === API version
 
 The default Knative API version used to create and manage resources is `v1beta1`. You can overwrite this
@@ -23,7 +21,7 @@ CITRUS_KNATIVE_API_VERSION=v1
 
 This sets the Knative API version for all operations.
 
-[[knative-client]]
+[[steps-knative-client]]
 === Client configuration
 
 .@Given("^Knative timeout is {time}(?: ms| milliseconds)$")
@@ -34,7 +32,7 @@ Given("^Knative timeout is {time} milliseconds
 
 This sets the timeout for all Knative client operations.
 
-[[knative-namespace]]
+[[steps-knative-namespace]]
 === Set namespace
 
 Knative uses the concept of namespaces to separate workloads on the cluster. You
@@ -46,7 +44,7 @@ can connect to a specific namespace with the follwing step.
 Given Knative namespace {name}
 ----
 
-[[knative-broker]]
+[[steps-knative-broker]]
 === Knative broker
 
 Eventing deals with publish/subscribe delivery of events in Knative.
@@ -78,7 +76,7 @@ You can verify that the broker is up and running with the following step:
 Given Knative broker {name} is running
 ----
 
-[[knative-service]]
+[[steps-knative-service]]
 === Create event consumer service
 
 The Knative broker delivers events to sinks. In order to start consuming events in a test you should
@@ -90,7 +88,7 @@ create a event consumer service which acts as a sink.
 Given create Knative event consumer service {service}
 ----
 
-This step creates a new event consumer service. In particular this step creates a new xref:k8s-service[Kubernetes service].
+This step creates a new event consumer service. In particular this step creates a new xref:steps-k8s-service[Kubernetes service].
 The service instantiates a new local Http server and creates a new Kubernetes service from it. The service exposes a
 port which is `8080` by default.
 
@@ -111,7 +109,7 @@ You can choose another target port, too.
 Given create Knative event consumer service {service} with target port {port}
 ----
 
-[[knative-trigger]]
+[[steps-knative-trigger]]
 === Manage triggers
 
 Triggers are used to deliver events to services and channels. Users can create
@@ -179,7 +177,7 @@ Given delete Knative trigger {trigger}
 
 This removes the Knative trigger from the current namespace.
 
-[[knative-channels]]
+[[steps-knative-channels]]
 === Create channels
 
 Channels represent a central concept of Knative eventing. Channels are able to deliver events
@@ -199,7 +197,7 @@ Once the channel is available you can subscribe a service to the channel.
 Given subscribe service {service} to Knative channel {channel}
 ----
 
-[[knative-send-events]]
+[[steps-knative-send-events]]
 === Publish events
 
 The test is able to publish events on the Knative broker. Citrus uses the Knative Http client API
@@ -368,11 +366,11 @@ producer timeout.
 Given Knative event producer timeout is {time} milliseconds
 ----
 
-[[knative-receive-events]]
+[[steps-knative-receive-events]]
 === Receive events
 
-In order to receive events from Knative you should setup a xref:knative-service[service] or xref:knative-channels[channel]
-in combination with a xref:knative-trigger[trigger]. The trigger watches for events on the broker and forwards
+In order to receive events from Knative you should setup a xref:steps-knative-service[service] or xref:knative-channels[channel]
+in combination with a xref:steps-knative-trigger[trigger]. The trigger watches for events on the broker and forwards
 these to the service or channel.
 
 The test is able to receive events and verify its content.
@@ -513,7 +511,7 @@ timeout will fail the test. You can adjust this event consumer timeout.
 Given Knative event consumer timeout is {time} milliseconds
 ----
 
-[[knative-resources]]
+[[steps-knative-resources]]
 === Manage Knative resources
 
 The described steps are able to create Knative resources on the current Kubernetes namespace.

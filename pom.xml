@@ -1795,7 +1795,7 @@
                   <attributes>
                     <toc>left</toc>
                     <linkcss>false</linkcss>
-                    <source-highlighter>coderay</source-highlighter>
+                    <source-highlighter>highlight.js</source-highlighter>
                   </attributes>
                 </configuration>
               </execution>

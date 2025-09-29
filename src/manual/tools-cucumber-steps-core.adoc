@@ -7,7 +7,7 @@ predefined steps that you add to a feature as you write your test.
 Most of the standard steps do leverage capabilities of the underlying test framework Citrus such as creating test variables or printing messages
 to the log output.
 
-[[tools-cucumber-steps-variables]]
+[[steps-core-variables]]
 === Create variables
 
 Test variables represent the fundamental concept to own test data throughout your test. Once a variable has been created
@@ -80,7 +80,7 @@ Given load variable body from request.json
 Then log 'Sending request body: ${body}'
 ----
 
-[[tools-cucumber-steps-log]]
+[[steps-core-log]]
 === Log steps
 
 Logging a message to the output can be helpful in terms of debugging and/or to give information about the context of an operation.
@@ -110,7 +110,7 @@ Citrus provides Cloud Native BDD testing on Kubernetes!
 """
 ----
 
-[[tools-cucumber-steps-sleep]]
+[[steps-core-sleep]]
 === Sleep
 
 The `sleep` step lets the test run wait for a given amount of time (in milliseconds). During the sleep no action will be performed and the subsequent steps are postponed respectively.

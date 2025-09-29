@@ -72,7 +72,7 @@ actions:
 
 Result on the console:
 
-[source,text]
+[source,plaintext]
 ----
 Hello Test Framework
 Current time is: 05.08.2008

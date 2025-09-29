@@ -60,7 +60,7 @@ public FunctionLibrary testFunctionLibrary() {
 
 As you can see the library defines one-to-many functions either referenced as normal Spring bean or by its implementing Java class name. Citrus constructs the library, and you are able to use the functions in your test case with the leading library prefix just like this:
 
-[source,text]
+[source,plaintext]
 ----
 foo:randomNumber()
 foo:randomString()
@@ -159,7 +159,7 @@ actions:
 
 Please do not forget to mark static text with single quote signs. There is no limitation for string tokens to be combined.
 
-[source,text]
+[source,plaintext]
 ----
 citrus:concat('Text1', 'Text2', 'Text3', ${text}, 'Text5', …, 'TextN')
 ----

@@ -30,7 +30,7 @@ send a Http `GET` request to the endpoint and verify the response status code.
 All steps shown are part of the Citrus framework so you can use them out of the box. The next sections explore the Http
 capabilities in more detail.
 
-[[http-client]]
+[[steps-http-client]]
 === Http client steps
 
 As a client you can specify the server URL and send requests to it.
@@ -55,7 +55,7 @@ This step loads a Http client component by its name and uses that for further re
 
 Once you have configured the Http endpoint URL or the Http client you can start sending request messages.
 
-[[http-client-request]]
+[[steps-http-client-request]]
 === Send Http requests
 
 Sending requests via Http is as easy as choosing the Http method (GET, POST, PUT, DELETE, ...) to use.
@@ -174,7 +174,7 @@ Given HTTP request fork mode is enabled
 
 This will enable the fork mode so all client request will be non-blocking. By default the fork mode is disabled.
 
-[[http-client-request-raw]]
+[[steps-http-client-request-raw]]
 === Send raw Http request data
 
 In the previous section several steps have defined the Http request (header, parameter, body) before sending the message
@@ -204,7 +204,7 @@ Content-Type:text/plain;charset=UTF-8
 """
 ----
 
-[[http-client-response]]
+[[steps-http-client-response]]
 === Verify Http responses
 
 The time you send out a Http request you will be provided with a response from the server. Citrus is able to verify the
@@ -309,7 +309,7 @@ Given expect HTTP response body loaded from {file}
 
 This step loads the body content from the given file resource.
 
-[[http-client-response-raw]]
+[[steps-http-client-response-raw]]
 === Verify raw Http response data
 
 In the previous section several steps have defined the Http response (header, parameter, body) before verifying the message
@@ -340,7 +340,7 @@ Date: @ignore@
 """
 ----
 
-[[http-response-jsonpath]]
+[[steps-http-response-jsonpath]]
 === Verify response using JsonPath
 
 When verifying Http client responses sent by the server you can use JsonPath expressions to validate
@@ -358,7 +358,7 @@ in the Json body.
 
 The very same mechanism also applies to XML message body content. Just use a XPath expression instead of JsonPath.
 
-[[http-server]]
+[[steps-http-server]]
 === Http server steps
 
 On the server side Citrus needs to start a Http server instance on a given port and listen for incoming requests.
@@ -394,7 +394,7 @@ After the request verification has passed the server responds with a simple Http
 
 The next sections guide you through the Http server capabilities in Citrus.
 
-[[http-server-config]]
+[[steps-http-server-config]]
 === Http server configuration
 
 When the test run starts Citrus will initialize the Http server instance and listen on a port for incoming requests.
@@ -457,7 +457,7 @@ Given new HTTP server "{name}" with configuration
 | timeout | 1000 |
 ----
 
-[[http-server-request]]
+[[steps-http-server-request]]
 === Receive Http requests
 
 You can define expected incoming Http requests as part of the test.
@@ -548,7 +548,7 @@ The Http request can have parameters on the request URL. You can verify those pa
 Given expect HTTP request query parameter {name}="{value}"
 ----
 
-[[http-server-request-raw]]
+[[steps-http-server-request-raw]]
 === Receive raw Http request data
 
 In the previous section several steps have defined the expected Http request (header, parameter, body).
@@ -578,7 +578,7 @@ Content-Type:text/plain;charset=UTF-8
 """
 ----
 
-[[http-request-jsonpath]]
+[[steps-http-request-jsonpath]]
 === Verify requests using JsonPath
 
 When verifying Http client requests you can use JsonPath expressions to validate
@@ -596,7 +596,7 @@ in the Json body.
 
 The very same mechanism also applies to XML message body content. Just use a XPath expression instead of JsonPath.
 
-[[http-server-response]]
+[[steps-http-server-response]]
 === Send Http responses
 
 The time you have verified a Http request as a server you need to provided a proper response to the calling client.
@@ -678,7 +678,7 @@ Given load HTTP response body {file}
 
 This step loads the body content from the given file resource.
 
-[[http-server-response-raw]]
+[[steps-http-server-response-raw]]
 === Send raw Http response data
 
 In the previous section several steps have defined the Http response (header, parameter, body).
@@ -709,7 +709,7 @@ Date: @ignore@
 """
 ----
 
-[[http-health-checks]]
+[[steps-http-health-checks]]
 === Http health checks
 
 Often Http server provide a health endpoint so clients can check the status of the server to be up and running. The health check is supported with the following steps.
@@ -792,7 +792,7 @@ Given wait for {method} on URL {url} to return {status_code} {reason_phrase}
 
 This completes the health check capabilities in the Http steps.
 
-[[http-secure]]
+[[steps-http-secure]]
 === Https support
 
 Citrus steps support secure Http connections on both client and server.

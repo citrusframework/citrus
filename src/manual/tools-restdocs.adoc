@@ -109,7 +109,7 @@ We can reference the new restdocs component in *citrus-http* client components l
 
 The Spring Restdocs documentation component acts as a client interceptor. Every time the client component is used to send and receive a message the restdocs interceptor will automatically create its API documentation. The configuration *identifier* attribute describes the output format `rest-docs/{method-name}` which results in a folder layout like this:
 
-[source,text]
+[source,plaintext]
 ----
 target/citrus-docs
   |- rest-docs

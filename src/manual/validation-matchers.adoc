@@ -86,7 +86,7 @@ public ValidationMatcherLibrary testMatcherLibrary() {
 
 As you can see the library defines one to many validation matcher members either referenced as normal Spring bean or by its implementing Java class name. Citrus constructs the library, and you are able to use the validation matcher in your test case with the leading library prefix just like this:
 
-[source,text]
+[source,plaintext]
 ----
 @foo:isNumber()@
 @foo:contains()@
@@ -384,7 +384,7 @@ this validation matcher all new line characters are removed prior to checking fo
 
 Let's assume that we have a value with new lines that we want to validate using the matcher implementation:
 
-[source,text]
+[source,plaintext]
 ----
 <value>This
 is
@@ -409,7 +409,7 @@ This trim matcher will remove leading and trailing whitespaces before checking f
 
 Let's assume that we have a value with leading and trailing whitespaces:
 
-[source,text]
+[source,plaintext]
 ----
 <value>
 This is a value   </value>
@@ -427,7 +427,7 @@ You can now skip all leading and trailing whitespaces in your control value.
 
 Sometimes it is necessary to check equality of some value without caring for whitespaces at all. The matcher implementation will remove all whitespaces before checking for equality.
 
-[source,text]
+[source,plaintext]
 ----
 <value>   some value   </value>
 ----

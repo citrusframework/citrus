@@ -8,8 +8,6 @@ of a REST Http service.
 Citrus as a framework is able to use this information in an OpenAPI document in order to generate proper request and response
 data for your test.
 
-You can find examples of how to use OpenAPI specifications in xref:../../examples/openapi[examples/openapi].
-
 [source,gherkin]
 ----
 Feature: Petstore API V3
@@ -39,7 +37,7 @@ Feature: Petstore API V3
     Then verify operation result: 204 NO_CONTENT
 ----
 
-[[openapi-load]]
+[[steps-openapi-load]]
 === Load OpenAPI specifications
 
 The test is able to load OpenAPI specifications via Http URL or the local file system. When loaded into the test steps can make
@@ -54,7 +52,7 @@ Given OpenAPI specification {url}
 The given url can point to a local file on the file system or to a Http endpoint. The step loads the OpenAPI specification so
 all operations are ready to be used.
 
-[[openapi-invoke-operations]]
+[[steps-openapi-invoke-operations]]
 === Invoke operations
 
 You can invoke operations as a client by referencing the operation name given in the specification. Citrus loads the operation from
@@ -98,12 +96,12 @@ automatically generated. In case the operation defines a request body the step w
 ----
 
 The generated request should be valid according to the rules in the OpenAPI specification. You can overwrite the
-randomized values with test variables and xref:openapi-dictionaries[inbound/outbound data dictionaries] in order to have
+randomized values with test variables and xref:steps-openapi-dictionaries[inbound/outbound data dictionaries] in order to have
 more human-readable test data.
 
 Now that the test has sent the request you can verify the operation result in a next step.
 
-[[openapi-verify-result]]
+[[steps-openapi-verify-result]]
 === Verify operation result
 
 The test is able to verify the response status code returned by the server.
@@ -144,7 +142,7 @@ should not be empty `@notEmpty()@` and enumeration values are checked with `@mat
 
 The received response must match all these validation matchers. In addition to that a Json schema validation is performed on the response.
 
-[[openapi-verify-request]]
+[[steps-openapi-verify-request]]
 === Verify operation requests
 
 On the server side your test is able to verify incoming requests based on the rules in the specification. The test references a given operation
@@ -187,7 +185,7 @@ This way you can make sure that the incoming request matches the rules defined i
 message request body verification the step will automatically verify `Content-Type` headers, path parameters, query parameters and the general
 request path used.
 
-[[openapi-send-response]]
+[[steps-openapi-send-response]]
 === Send operation response
 
 When the OpenAPI step has received and verified a request it is time to respond with proper message content. The given operation
@@ -229,10 +227,10 @@ and response body content.
 ----
 
 The generated response should be valid according to the rules in the OpenAPI specification. You can overwrite the
-randomized values with test variables and xref:openapi-dictionaries[inbound/outbound data dictionaries] in order to have
+randomized values with test variables and xref:steps-openapi-dictionaries[inbound/outbound data dictionaries] in order to have
 more human-readable test data.
 
-[[openapi-test-data]]
+[[steps-openapi-test-data]]
 === Generate test data
 
 The Citrus OpenAPI steps use the information in the specification to generate proper message content for requests and responses. The generated test
@@ -255,7 +253,7 @@ Given Disable OpenAPI validate optional fields
 
 With this setting the OpenAPI steps will exclude optional fields from both test data generation and message content validation.
 
-[[openapi-dictionaries]]
+[[steps-openapi-dictionaries]]
 === Inbound/outbound data dictionaries
 
 Data dictionaries are a good way to make generated randomized values more human-readable. By default, Citrus generates random values based
@@ -380,7 +378,7 @@ meets our expectations in the dictionary.
 In case you need to have a more specific response validation where each field gets validated with an expected value please
 consider using the xref:tools-cucumber-steps-http[Http steps] in Citrus. Here you can provide a complete expected Http response with body and headers.
 
-[[openapi-fork-mode]]
+[[steps-openapi-fork-mode]]
 === Request fork mode
 
 When the OpenAPI steps fire requests to the server the step synchronously waits for the response. All other steps are in the feature are blocked

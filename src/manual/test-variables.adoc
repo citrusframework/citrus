@@ -543,7 +543,7 @@ being interpreted as test variable expression. You can do this by using the vari
 `//` wrapping the actual variable name like this:
 
 .Plain text message content with escapes
-[source,text]
+[source,plaintext]
 ----
 This is an escaped variable expression ${//escaped//} and should not lead to unknown variable exceptions within Citrus.
 ----
@@ -558,7 +558,7 @@ The variable syntax escaping characters `//` are automatically removed when the 
 will get the following result after processing.
 
 .Parsed plain text mesage content
-[source,text]
+[source,plaintext]
 ----
 This is an escaped variable expression ${escaped} and should not lead to unknown variable exceptions within Citrus.
 ----

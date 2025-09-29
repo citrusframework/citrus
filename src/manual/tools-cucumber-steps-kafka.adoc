@@ -6,7 +6,7 @@ event streams.
 
 The following sections describe the support for Kafka related event streaming in Citrus.
 
-[[kafka-connection]]
+[[steps-kafka-connection]]
 === Connection
 
 First of all the test needs to connect to Kafka bootstrap servers. The connection provides several parameters that you can
@@ -63,7 +63,7 @@ Given Kafka consumer configuration
 | max.poll.records   | 1 |
 ----
 
-[[kafka-endpoint]]
+[[steps-kafka-endpoint]]
 === Topic and endpoint configuration
 
 In addition to the connection the test needs to specify the Kafka topic to use.
@@ -88,7 +88,7 @@ a topic set and connection settings on its own.
 
 So now the test is ready to produce and consume events from Kafka topics.
 
-[[kafka-send]]
+[[steps-kafka-send]]
 === Send Kafka events
 
 A test can publish events on a Kafka topic. The event consists of message headers and a body content. Before sending an event
@@ -196,7 +196,7 @@ When send Kafka message with body and headers: {body}
 
 The step combines message header and body specification with the actual send operation.
 
-[[kafka-receive]]
+[[steps-kafka-receive]]
 === Receive Kafka events
 
 Similar to publishing events to a Kafka topic the test can also consume events from an event stream. When the event
@@ -300,7 +300,7 @@ The step combines message header and body specification with the actual receive 
 
 ==== Consumer timeout
 
-The receive operation takes the first event available on the topic and performs the validation. In case there is no
+The `receive` operation takes the first event available on the topic and performs the validation. In case there is no
 event available the consumer will wait for a given amount of time before a timeout will fail the test. You can adjust the timeout on
 the Kafka consumer.
 
@@ -310,7 +310,7 @@ the Kafka consumer.
 Given Kafka consumer timeout is {time} milliseconds
 ----
 
-[[kafka-special-config]]
+[[steps-kafka-special-config]]
 === Special configuration
 
 The Kafka standard provides a set of special configuration that you can set as part of the test.

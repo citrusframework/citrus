@@ -9,7 +9,7 @@ The Groovy script support is there to cover specific use cases where you hit lim
 conventional BDD steps. Of course the syntax and handling of the Groovy scripts are less human-readable and more
 developer-coherent.
 
-[[groovy-configuration-script]]
+[[steps-groovy-configuration-script]]
 === Bean configuration
 
 Many steps use Citrus components behind the scenes. The Citrus components are configurable through a Groovy domain specific language.
@@ -109,7 +109,7 @@ citrus {
 }
 ----
 
-[[groovy-endpoint-script]]
+[[steps-groovy-endpoint-script]]
 === Endpoint configuration
 
 Endpoints describe an essential part in terms of messaging integration during a test. There are multiple ways to add custom endpoints
@@ -176,7 +176,7 @@ http()
     .autoStart(true)
 ----
 
-[[groovy-action-script]]
+[[steps-groovy-action-script]]
 === Test actions
 
 Citrus provides a huge set of predefined test actions that users can add to the Gherkin feature files out of the box.
@@ -289,7 +289,7 @@ Given apply script
     """
 ----
 
-[[groovy-finally-actions]]
+[[steps-groovy-finally-actions]]
 === Finally actions
 
 Sometimes it is mandatory to cleanup test data after a scenario. It would be good to have a set of test actions that

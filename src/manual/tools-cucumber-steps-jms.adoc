@@ -1,4 +1,4 @@
-[[tools-cucumber-steps-jms]]
+[[steps-tools-cucumber-steps-jms]]
 == JMS steps
 
 JMS is well-known as transport for point-to-point and publish/subscribe messaging. Users can produce and consume messages on
@@ -6,7 +6,7 @@ queues and topics on a message broker.
 
 Citrus has support for JMS related messaging on both producer and consumer.
 
-[[jms-connection-factory]]
+[[steps-jms-connection-factory]]
 === Connection factory
 
 The JMS standard requires clients to open connections over a connection factory. The connection factory is a vendor specific
@@ -49,7 +49,7 @@ Given JMS connection factory {name}
 The step references a connection factory component that has been added to the framework configuration (e.g. as Spring bean).
 This way you can share the connection factory in multiple tests.
 
-[[jms-endpoint]]
+[[steps-jms-endpoint]]
 === Destination and endpoint configuration
 
 In addition to the connection factory the test needs to specify the JMS destination (queue or topic) to use.
@@ -74,7 +74,7 @@ and references a connection factory on its own.
 
 So now the test is ready to produce and consume messages from JMS destinations.
 
-[[jms-send]]
+[[steps-jms-send]]
 === Send JMS messages
 
 A test can publish messages on a JMS destination. The message consists of message headers and a body content. Before sending a message
@@ -170,7 +170,7 @@ When send JMS message with body and headers: {body}
 
 The step combines message header and body specification with the actual send operation.
 
-[[jms-receive]]
+[[steps-jms-receive]]
 === Receive JMS messages
 
 Similar to sending messages to a JMS destination the test can also consume messages from a queue or topic. When the message

@@ -4,9 +4,7 @@
 Citrus provides steps that allow executing SQL actions on relational databases. This includes updates and queries.
 In case of a database query you are able to verify the result set with expected values.
 
-You can find examples of JDBC steps in xref:../../examples/jdbc/jdbc.feature[examples/jdbc].
-
-[[jdbc-datasource]]
+[[steps-jdbc-datasource]]
 === Connection configuration
 
 Before running any SQL statement you need to configure a datasource that allows connecting to the
@@ -46,7 +44,7 @@ Given Data source: {name}
 The name of the datasource should reference a configured component in the test project. You can add components as Spring beans
 for instance.
 
-[[jdbc-update]]
+[[steps-jdbc-update]]
 === SQL update
 
 The test is able to run SQL updates (UPDATE, INSERT, DELETE) on the database.
@@ -80,7 +78,7 @@ When execute SQL updates
 | {statement_x} |
 ----
 
-[[jdbc-query]]
+[[steps-jdbc-query]]
 === SQL query
 
 The SQL query obtains data from the database in form of result sets. The Citrus test is able to verify the result sets with an expected

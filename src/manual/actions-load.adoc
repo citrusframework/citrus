@@ -59,7 +59,7 @@ actions:
 ----
 
 .Output
-[source,text]
+[source,plaintext]
 ----
 Current value of variable username = Mickey Mouse
 Current value of variable greeting.text = Hello Test Framework

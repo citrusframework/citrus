@@ -104,7 +104,7 @@ actions:
 
 The test output looks like follows:
 
-[source,text]
+[source,plaintext]
 ----
 Starting TimeWatcher:
 Starting TimeWatcher: time_line_id

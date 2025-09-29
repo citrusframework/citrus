@@ -7,7 +7,7 @@ of deployment, scaling and management of containerized applications.
 Citrus uses the Kubernetes client API and is able to create Kubernetes resources
 (e.g. secrets, services, deployments and so on) as part of the test.
 
-[[k8s-api-version]]
+[[steps-k8s-api-version]]
 === API version
 
 The default Kubernetes API version used to create and manage resources is `v1`. You can overwrite this
@@ -21,7 +21,7 @@ CITRUS_KUBERNETES_API_VERSION=v1
 
 This sets the Kubernetes API version for all operations.
 
-[[k8s-client]]
+[[steps-k8s-client]]
 === Client configuration
 
 .@Given("^Kubernetes timeout is {time}(?: ms| milliseconds)$")
@@ -32,7 +32,7 @@ Given("^Kubernetes timeout is {time} milliseconds
 
 This sets the timeout for all Kubernetes client operations.
 
-[[k8s-namespace]]
+[[steps-k8s-namespace]]
 === Set namespace
 
 Kubernetes uses the concept of namespaces to separate workloads on the cluster. You
@@ -44,7 +44,7 @@ can connect to a specific namespace with the follwing step.
 Given Kubernetes namespace {name}
 ----
 
-[[k8s-pod-state]]
+[[steps-k8s-pod-state]]
 === Verify pod state
 
 A Kubernetes pod has a state and is in a phase (e.g. running, stopped). You can verify the state with an expectation.
@@ -75,7 +75,7 @@ is a label key and value that identifies the pod in the current namespace.
 Given Kubernetes pod labeled with {label}={value} is running
 ----
 
-[[k8s-watch-logs]]
+[[steps-k8s-watch-logs]]
 === Watch Kubernetes pod logs
 
 .@Given("^Kubernetes pod {name} should print (.*)$")
@@ -103,7 +103,7 @@ You can also wait for a log message to *not* be present in the output. Just use 
 Given Kubernetes pod {name} should not print {log-message}
 ----
 
-[[k8s-service]]
+[[steps-k8s-service]]
 === Kubernetes services
 
 One of the most important features in the Citrus Kubernetes support is the management of
@@ -162,7 +162,7 @@ In case you do not need the service anymore you can delete it with this step:
 Given delete Kubernetes service {name}
 ----
 
-[[k8s-secrets]]
+[[steps-k8s-secrets]]
 === Secrets
 
 Secrets are resources that hold sensitive data. Other resources on the cluster can mount
@@ -232,7 +232,7 @@ Then create annotations on Kubernetes secret my-secret
     | owned-by | odo  |
 ----
 
-[[k8s-resources]]
+[[steps-k8s-resources]]
 === Pods, deployments and other resources
 
 In the previous sections the test has creates services and secrets as Kubernetes resources. In addition to
@@ -340,7 +340,7 @@ Given delete Kubernetes resource {file_path}
 Given delete Kubernetes resource pod.yaml
 ----
 
-[[k8s-crd]]
+[[steps-k8s-crd]]
 === Custom resources
 
 In the previous sections the test has created Kubernetes resources (pods, services, secrets, deployments, ...). The user can
@@ -563,7 +563,7 @@ Then delete Kubernetes custom resource {file_path} in {crd}
 Then delete Kubernetes custom resource broker.yaml in brokers.eventing.knative.dev
 ----
 
-[[k8s-crd-condition]]
+[[steps-k8s-crd-condition]]
 === Verify custom resource conditions
 
 Custom resources often define a status and describe multiple conditions (e.g. ready, available, completed).
@@ -629,7 +629,7 @@ Given wait for condition={condition} on Kubernetes custom resource in {type} lab
 This will get all resources of type `{type}` and filter by given label `{key}={value}`. Then the given condition is verified
 on the resource.
 
-[[k8s-autoremove]]
+[[steps-k8s-autoremove]]
 === Cleanup Kubernetes resources
 
 The described steps are able to create Kubernetes resources on the current Kubernetes namespace.

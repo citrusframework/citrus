@@ -650,7 +650,7 @@ to set all headers on your own. Citrus will automatically set the required Http 
 following Http request which is sent to the server:
 
 .Sample Http request
-[source,text]
+[source,plaintext]
 ----
 POST /test HTTP/1.1
 Accept: application/xml
@@ -750,7 +750,7 @@ such as Http error response codes (e.g. 404 - Not found, 500 - Internal error). 
 response message:
 
 .Sample Http response
-[source,text]
+[source,plaintext]
 ----
 HTTP/1.1 200 OK
 Content-Type: application/xml;charset=UTF-8
@@ -932,7 +932,7 @@ the key and the control data is the url encoded value.
 Form urlencoded form data content could look like this:
 
 .Form urlencoded data
-[source,text]
+[source,plaintext]
 ----
 password=s%21cr%21t&username=foo
 ----
@@ -1318,7 +1318,7 @@ As a result of the basic auth client request factory the following example reque
 has the *Authorization* header set. This is done now automatically for all requests with this Http client.
 
 .Sample request with basic authentication
-[source,text]
+[source,plaintext]
 ----
 POST /test HTTP/1.1
 Accept: application/xml
@@ -1632,7 +1632,7 @@ and some additional cookie information. The cookie is part of the message header
 as well as several other attributes. This response will result in an Http response with the _"Set-Cookie"_ header set:
 
 .Set cookie header
-[source,text]
+[source,plaintext]
 ----
 Set-Cookie:Token=5877643571;Path=/test/cookie.py;Domain=citrusframework.org;Max-Age=86400
 ----
@@ -1722,7 +1722,7 @@ http().client("echoHttpClient")
 The cookie now is only specified with name and value as the cookie now goes to the _"Cookie"_ request message header.
 
 .Cookie token
-[source,text]
+[source,plaintext]
 ----
 Cookie:Token=5877643571
 ----

@@ -239,7 +239,7 @@ actions:
 ----
 
 .Output
-[source,text]
+[source,plaintext]
 ----
 Hello Christoph!
 ----
@@ -267,7 +267,7 @@ actions:
 ----
 
 .Output
-[source,text]
+[source,plaintext]
 ----
 Hello Mickey!
 ----
@@ -349,7 +349,7 @@ The parameter values will be handled in a global context, so it is quite likely 
 We might get such print messages:
 
 .Output
-[source,text]
+[source,plaintext]
 ----
 #2 Hello Europe!
 #2 Hello Africa!
