@@ -410,14 +410,14 @@ After that you need to include the glue code package in your test class like thi
 ----
 @RunWith(Cucumber.class)
 @CucumberOptions(
-    extraGlue = { "org.citrusframework.cucumber.steps" },
+    extraGlue = { "org.citrusframework.cucumber" },
     plugin = { "pretty", "org.citrusframework.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 
 }
 ----
 
-Instead of writing the glue code on our own in step definition classes we include the glue package `org.citrusframework.cucumber.steps`
+Instead of writing the glue code on our own in step definition classes we include the glue package `org.citrusframework.cucumber`
 as extra glue. This automatically loads all predefined Citrus step definitions. Once you have done this you can use predefined
 steps without having to write any glue code in Java.
 

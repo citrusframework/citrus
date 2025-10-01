@@ -29,6 +29,13 @@ This way you are able to combine Citrus with `@QuarkusTest` annotated classes ve
 .Enable Citrus support on QuarkusTest
 [source,java]
 ----
+import io.quarkus.test.junit.QuarkusTest;
+import org.citrusframework.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.quarkus.CitrusSupport;
+import org.junit.jupiter.api.Test;
+
 @QuarkusTest
 @CitrusSupport
 public class DemoApplicationTest implements TestActionSupport {

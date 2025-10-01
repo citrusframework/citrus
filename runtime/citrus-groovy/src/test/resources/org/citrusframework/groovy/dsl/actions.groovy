@@ -16,8 +16,12 @@
 
 package org.citrusframework.groovy.dsl
 
+variables {
+    user="Citrus"
+}
+
 actions {
-    $(echo("Hello from Citrus!"))
+    $(echo('Hello from ${user}!'))
 
     $(iterate().condition('i < 5').actions(echo('Hello ${i}'), echo('ByeBye ${i}')))
 }

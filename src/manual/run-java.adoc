@@ -20,9 +20,9 @@ With the default Citrus actions provided out of the box users can accomplish ver
 As a tester you can configure test actions in Java using a test action runner API that leverages a fluent builder pattern.
 
 [[java-test-runner]]
-=== Test action runner
+=== Test action DSL
 
-The test action runner is the entry to the fluent Citrus Java API.
+The test action domain specific language is the entry to the fluent Citrus Java API.
 You can configure test actions with a builder pattern style API and the test action runner immediately executes the test actions.
 
 See the following example to see the Java domain specific language in action.
@@ -35,14 +35,14 @@ import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.TestNGCitrusSupport;
 
-public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport {
+public class HelloServiceIT extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void serviceTest() {
-        run(echo("Before service call"));
+    public void shouldSayHello() {
+        variable("user", "Citrus");
 
-        run(echo("After service call"));
+        $(echo("Hello from ${user}!"));
     }
 }
 ----
@@ -50,7 +50,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 .JUnit5
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -58,17 +58,17 @@ import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Test;
 
 @CitrusSupport
-public class ServiceIT implements TestActionSupport {
+public class HelloServiceIT implements TestActionSupport {
 
     @CitrusResource
-    private TestActionRunner runner;
+    private TestCaseRunner t;
 
     @Test
     @CitrusTest
-    public void serviceTest() {
-        runner.run(echo("Before service call"));
+    public void shouldSayHello() {
+        t.createVariable("user", "Citrus");
 
-        runner.run(echo("After service call"));
+        t.run(echo("Hello from ${user}!"));
     }
 }
 ----
@@ -81,21 +81,23 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.spring.JUnit4CitrusSupport;
 import org.junit.Test;
 
-public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport {
+public class HelloServiceIT extends JUnit4CitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void serviceTest() {
-        run(echo("Before service call"));
+    public void shouldSayHello() {
+        variable("user", "Citrus");
 
-        run(echo("After service call"));
+        $(echo("Hello from ${user}!"));
     }
 }
 ----
 
-The test action runner executes each test action immediately as you use the provided `run()` method. All actions provided in Citrus
-represent a certain functionality (e.g. send/receive messages, delay the test, access a database). Citrus ships with a wide range of
-link:#actions[test actions], but you are also able to write your own test actions and execute them during a test.
+The test action runner executes each test action immediately as you use the provided `++run++()` method.
+All actions provided in Citrus represent a certain functionality (e.g. send/receive messages, delay the test, access a database).
+Citrus ships with a wide range of link:#actions[test actions], but you are also able to write your own test actions and execute them during a test.
+
+NOTE: The `++$++()` method is a shortcut of the `++run++()` method. Please choose whatever fits best in terms of readability of the test code.
 
 The test class implements the interface `TestActionSupport` which holds all available test actions in Citrus.
 You can choose from a wide range of actions.
@@ -113,14 +115,14 @@ import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.TestNGCitrusSupport;
 
-public class ServiceIT extends TestNGCitrusSupport {
+public class HelloServiceIT extends TestNGCitrusSupport {
 
     @Test
     @CitrusTest
-    public void serviceTest() {
-        run(actions().echo("Before service call"));
+    public void shouldSayHello() {
+        variable("user", "Citrus");
 
-        run(actions().echo("After service call"));
+        $(actions().echo("Hello from ${user}!"));
     }
 }
 ----
@@ -128,7 +130,7 @@ public class ServiceIT extends TestNGCitrusSupport {
 .JUnit5
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -136,19 +138,19 @@ import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Test;
 
 @CitrusSupport
-public class ServiceIT {
+public class HelloServiceIT {
 
     @CitrusResource
-    private TestActionRunner runner;
+    private TestCaseRunner t;
 
     @Test
     @CitrusTest
-    public void serviceTest() {
-        runner.run(runner.actions()
-            .echo("Before service call"));
+    public void shouldSayHello() {
+        variable("user", "Citrus");
 
-        runner.run(runner.actions()
-            .echo("After service call"));
+        t.run(
+            t.actions().echo("Hello from ${user}!")
+        );
     }
 }
 ----
@@ -161,14 +163,14 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.spring.JUnit4CitrusSupport;
 import org.junit.Test;
 
-public class ServiceIT extends JUnit4CitrusSupport {
+public class HelloServiceIT extends JUnit4CitrusSupport {
 
     @Test
     @CitrusTest
-    public void serviceTest() {
-        run(actions().echo("Before service call"));
+    public void shouldSayHello() {
+        variable("user", "Citrus");
 
-        run(actions().echo("After service call"));
+        $(actions().echo("Hello from ${user}!"));
     }
 }
 ----
@@ -220,7 +222,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 .JUnit5
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -231,20 +233,20 @@ import org.junit.jupiter.api.Test;
 public class ServiceIT implements TestActionSupport {
 
     @CitrusResource
-    private TestActionRunner runner;
+    private TestCaseRunner t;
 
     @Test
     @CitrusTest
     public void serviceTest() {
-        runner.given(
+        t.given(
             echo("Setup the context")
         );
 
-        runner.when(
+        t.when(
             echo("Trigger the event")
         );
 
-        runner.then(
+        t.then(
             echo("Verify the outcome")
         );
     }
@@ -294,7 +296,7 @@ public void sampleTest() {
     author("Christoph");
     status(Status.FINAL);
 
-    run(echo("Hello Citrus!"));
+    $(echo("Hello Citrus!"));
 }
 ----
 
@@ -333,7 +335,7 @@ public void sampleTest() {
             .actions(echo("Do finally - regardless of any error before"))
     );
 
-    echo("Hello Test Framework");
+    $(echo("Hello Test Framework"));
 }
 ----
 
@@ -421,30 +423,30 @@ public interface TestBehavior {
     /**
      * Behavior building method.
      */
-    void apply(TestActionRunner runner);
+    void apply(TestCaseRunner t);
 
 }
 ----
 
-The behavior is provided with the test action runner and all actions in the behavior should run on that runner. Every time
+The behavior is provided with the test action runner and all actions in the behavior should run on that t. Every time
 the behavior is applied to a test the actions get executed accordingly.
 
 .Test behaviors
 [source,java]
 ----
 public class FooBehavior implements TestBehavior {
-    public void apply(TestActionRunner runner) {
-        runner.run(createVariable("foo", "test"));
+    public void apply(TestCaseRunner t) {
+        t.run(createVariable("foo", "test"));
 
-        runner.run(echo("fooBehavior"));
+        t.run(echo("fooBehavior"));
     }
 }
 
 public class BarBehavior implements TestBehavior {
-    public void apply(TestActionRunner runner) {
-        runner.run(createVariable("bar", "test"));
+    public void apply(TestCaseRunner t) {
+        t.run(createVariable("bar", "test"));
 
-        runner.run(echo("barBehavior"));
+        t.run(echo("barBehavior"));
     }
 }
 ----
@@ -457,13 +459,13 @@ a normal test case would do. You can apply the behaviors multiple times in diffe
 ----
 @CitrusTest
 public void behaviorTest() {
-    run(apply(new FooBehavior()));
+    $(apply(new FooBehavior()));
 
-    run(echo("Successfully applied bar behavior"));
+    $(echo("Successfully applied bar behavior"));
 
-    run(apply(new BarBehavior()));
+    $(apply(new BarBehavior()));
 
-    run(echo("Successfully applied bar behavior"));
+    $(echo("Successfully applied bar behavior"));
 }
 ----
 
@@ -503,11 +505,11 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
     @Test
     @CitrusTest
     public void serviceTest() {
-        run(echo("Before service call"));
+        $(echo("Before service call"));
 
         myService.doSomething("Now calling custom service");
 
-        run(echo("After service call"));
+        $(echo("After service call"));
     }
 }
 ----
@@ -515,7 +517,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 .JUnit5
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -526,18 +528,18 @@ import org.junit.jupiter.api.Test;
 public class ServiceIT implements TestActionSupport {
 
     @CitrusResource
-    private TestActionRunner runner;
+    private TestCaseRunner t;
 
     private MyService myService = new MyService();
 
     @Test
     @CitrusTest
     public void serviceTest() {
-        runner.run(echo("Before service call"));
+        t.run(echo("Before service call"));
 
         myService.doSomething("Now calling custom service");
 
-        runner.run(echo("After service call"));
+        t.run(echo("After service call"));
     }
 }
 ----
@@ -557,11 +559,11 @@ public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport 
     @Test
     @CitrusTest
     public void serviceTest() {
-        run(echo("Before service call"));
+        $(echo("Before service call"));
 
         myService.doSomething("Now calling custom service");
 
-        run(echo("After service call"));
+        $(echo("After service call"));
     }
 }
 ----
@@ -585,13 +587,13 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
     @Test
     @CitrusTest
     public void serviceTest() {
-        run(echo("Before service call"));
+        $(echo("Before service call"));
 
-        run(
+        $(
             action(context -> myService.doSomething("Now calling custom service"))
         );
 
-        run(echo("After service call"));
+        $(echo("After service call"));
     }
 }
 ----
@@ -599,7 +601,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 .JUnit5
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -610,20 +612,20 @@ import org.junit.jupiter.api.Test;
 public class ServiceIT implements TestActionSupport {
 
     @CitrusResource
-    private TestActionRunner runner;
+    private TestCaseRunner t;
 
     private MyService myService = new MyService();
 
     @Test
     @CitrusTest
     public void serviceTest() {
-        runner.run(echo("Before service call"));
+        t.run(echo("Before service call"));
 
-        runner.run(
+        t.run(
             action(context -> myService.doSomething("Now calling custom service"))
         );
 
-        runner.run(echo("After service call"));
+        t.run(echo("After service call"));
     }
 }
 ----
@@ -643,13 +645,13 @@ public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport 
     @Test
     @CitrusTest
     public void serviceTest() {
-        run(echo("Before service call"));
+        $(echo("Before service call"));
 
-        run(
+        $(
             action(context -> myService.doSomething("Now calling custom service"))
         );
 
-        run(echo("After service call"));
+        $(echo("After service call"));
     }
 }
 ----
@@ -702,11 +704,11 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
     @Test
     @CitrusTest
     public void serviceTest() {
-        run(send(foo)
+        $(send(foo)
                 .message()
                 .body("Hello foo!"));
 
-        run(receive(foo)
+        $(receive(foo)
                 .message()
                 .body("Hello Citrus!"));
     }
@@ -716,7 +718,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 .JUnit5
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -730,16 +732,16 @@ public class ServiceIT implements TestActionSupport {
     private FooEndpoint foo;
 
     @CitrusResource
-    private TestActionRunner runner;
+    private TestCaseRunner t;
 
     @Test
     @CitrusTest
     public void serviceTest() {
-        runner.run(send(foo)
+        t.run(send(foo)
                 .message()
                 .body("Hello foo!"));
 
-        runner.run(receive(foo)
+        t.run(receive(foo)
                 .message()
                 .body("Hello Citrus!"));
     }
@@ -762,11 +764,11 @@ public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport 
     @Test
     @CitrusTest
     public void serviceTest() {
-        run(send(foo)
+        $(send(foo)
                 .message()
                 .body("Hello foo!"));
 
-        run(receive(foo)
+        $(receive(foo)
                 .message()
                 .body("Hello Citrus!"));
     }
@@ -814,7 +816,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 .JUnit5
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -825,7 +827,7 @@ import org.junit.jupiter.api.Test;
 public class ServiceIT implements TestActionSupport {
 
     @CitrusResource
-    private TestActionRunner runner;
+    private TestCaseRunner t;
 
     @CitrusFramework
     private Citrus citrus;
@@ -930,11 +932,11 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
     @Test
     @CitrusTest
     public void serviceTest() {
-        runner.run(send(foo)
+        $(send(foo)
                 .message()
                 .body("Hello foo!"));
 
-        runner.run(receive(foo)
+        $(receive(foo)
                 .message()
                 .body("Hello Citrus!"));
     }
@@ -944,7 +946,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 .JUnit5
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusConfiguration;
 import org.citrusframework.annotations.CitrusResource;
@@ -957,7 +959,7 @@ import org.junit.jupiter.api.Test;
 public class ServiceIT implements TestActionSupport {
 
     @CitrusResource
-    private TestActionRunner runner;
+    private TestCaseRunner t;
 
     @CitrusEndpoint
     private FooEndpoint foo;
@@ -965,11 +967,11 @@ public class ServiceIT implements TestActionSupport {
     @Test
     @CitrusTest
     public void serviceTest() {
-        runner.run(send(foo)
+        t.run(send(foo)
                 .message()
                 .body("Hello foo!"));
 
-        runner.run(receive(foo)
+        t.run(receive(foo)
                 .message()
                 .body("Hello Citrus!"));
     }
@@ -994,11 +996,11 @@ public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport 
     @Test
     @CitrusTest
     public void serviceTest() {
-        run(send(foo)
+        $(send(foo)
                 .message()
                 .body("Hello foo!"));
 
-        run(receive(foo)
+        $(receive(foo)
                 .message()
                 .body("Hello Citrus!"));
     }
@@ -1044,7 +1046,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 .JUnit5
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -1055,7 +1057,7 @@ import org.junit.jupiter.api.Test;
 public class ServiceIT implements TestActionSupport {
 
     @CitrusResource
-    private TestActionRunner runner;
+    private TestCaseRunner t;
 
     @CitrusFramework
     private Citrus citrus;
@@ -1115,11 +1117,11 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
     @Test
     @CitrusTest
     public void serviceTest(@Optional @CitrusResource TestCaseRunner runner) {
-        runner.run(
+        t.run(
             createVariable("random", "citrus:randomNumber(10)")
         );
 
-        runner.run(
+        t.run(
             echo("The random number is: ${random}")
         );
     }
@@ -1142,11 +1144,11 @@ public class ServiceIT implements TestActionSupport {
     @Test
     @CitrusTest
     public void serviceTest(@CitrusResource TestCaseRunner runner) {
-        runner.run(
+        t.run(
             createVariable("random", "citrus:randomNumber(10)")
         );
 
-        runner.run(
+        t.run(
             echo("The random number is: ${random}")
         );
     }
@@ -1168,11 +1170,11 @@ public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport 
     @Test
     @CitrusTest
     public void serviceTest(@CitrusResource TestCaseRunner runner) {
-        runner.run(
+        t.run(
             createVariable("random", "citrus:randomNumber(10)")
         );
 
-        runner.run(
+        t.run(
             echo("The random number is: ${random}")
         );
     }
@@ -1228,7 +1230,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
                             @Optional @CitrusResource TestContext context) {
         context.setVariable("myVariable", "some value");
 
-        runner.run(echo("${myVariable}"));
+        t.run(echo("${myVariable}"));
     }
 }
 ----
@@ -1252,7 +1254,7 @@ public class ServiceIT implements TestActionSupport {
                             @CitrusResource TestContext context) {
         context.setVariable("myVariable", "some value");
 
-        runner.run(echo("${myVariable}"));
+        t.run(echo("${myVariable}"));
     }
 }
 ----
@@ -1275,7 +1277,7 @@ public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport 
                             @CitrusResource TestContext context) {
         context.setVariable("myVariable", "some value");
 
-        runner.run(echo("${myVariable}"));
+        t.run(echo("${myVariable}"));
     }
 }
 ----
@@ -1314,12 +1316,12 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
     @Test
     @CitrusTest
     public void serviceTest(@Optional @CitrusResource TestCaseRunner runner) {
-        runner.run(send(directEndpoint)
+        t.run(send(directEndpoint)
                 .message()
                     .type(MessageType.PLAINTEXT)
                     .body("Hello!"));
 
-        runner.run(receive(directEndpoint)
+        t.run(receive(directEndpoint)
                 .message()
                     .type(MessageType.PLAINTEXT)
                     .body("Hello!"));
@@ -1347,12 +1349,12 @@ public class ServiceIT implements TestActionSupport {
     @Test
     @CitrusTest
     public void serviceTest(@CitrusResource TestCaseRunner runner) {
-        runner.run(send(directEndpoint)
+        t.run(send(directEndpoint)
                 .message()
                     .type(MessageType.PLAINTEXT)
                     .body("Hello!"));
 
-        runner.run(receive(directEndpoint)
+        t.run(receive(directEndpoint)
                 .message()
                     .type(MessageType.PLAINTEXT)
                     .body("Hello!"));
@@ -1379,12 +1381,12 @@ public class ServiceIT extends JUnit4CitrusSupport implements TestActionSupport 
     @Test
     @CitrusTest
     public void serviceTest() {
-        run(send(directEndpoint)
+        $(send(directEndpoint)
                 .message()
                     .type(MessageType.PLAINTEXT)
                     .body("Hello!"));
 
-        run(receive(directEndpoint)
+        $(receive(directEndpoint)
                 .message()
                     .type(MessageType.PLAINTEXT)
                     .body("Hello!"));

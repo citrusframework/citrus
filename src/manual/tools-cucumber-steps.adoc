@@ -10,6 +10,32 @@ The step implementation represents the actual runtime logic executed with the fe
 Citrus provides a set of default ready-to-use step implementations that you can just add to your feature file.
 The predefined steps leverage Citrus endpoints and test actions to perform integration testing with proper message exchange and validation.
 
+IMPORTANT: If you want to use the predefined Citrus step implementations, please make sure to include the extra glue package as follows:
+
+.MyFeatureIT.java
+[source,java]
+----
+@RunWith(Cucumber.class)
+@CucumberOptions(
+    extraGlue = { "org.citrusframework.cucumber" },
+    plugin = { "pretty", "org.citrusframework.cucumber.CitrusReporter" } )
+public class MyFeatureIT {
+
+}
+----
+
+As an alternative you may declare the glue package in `cucumber.properties` in your project.
+
+.cucumber.properties
+[source,properties]
+----
+cucumber.object-factory=org.citrusframework.cucumber.backend.CitrusObjectFactory
+cucumber.glue=org.citrusframework.cucumber
+cucumber.plugin=pretty,org.citrusframework.cucumber.CitrusReporter
+----
+
+NOTE: The Citrus step implementations require a special Cucumber object factory `org.citrusframework.cucumber.backend.CitrusObjectFactory`.
+
 See the following step implementations that enable you to cover various areas of messaging and integration testing.
 
 include::tools-cucumber-steps-core.adoc[]

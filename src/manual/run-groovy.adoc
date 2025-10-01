@@ -36,7 +36,7 @@ status "FINAL"
 description "Sample test in Groovy"
 
 variables {
-    text: "Hello from Citrus!"
+    text="Hello from Citrus!"
 }
 
 actions {
