@@ -208,6 +208,13 @@ public class CamelJBang {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(output.getBytes(StandardCharsets.UTF_8))))) {
             String line = reader.readLine();
+            //on Fedora system, the first line contains some timestamps and not property names, in this case, skip it
+            if(line != null && !line.trim().matches("^\\w+(\\s+\\w+)*$")) {
+                line = reader.readLine();
+                if (line == null) {
+                    return properties;
+                }
+            }
 
             List<String> names = new ArrayList<>(Arrays.asList(line.trim().split("\\s+")));
 
