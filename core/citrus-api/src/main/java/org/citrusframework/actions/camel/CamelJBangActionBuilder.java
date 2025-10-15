@@ -20,6 +20,8 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReferenceResolverAwareBuilder;
 
+import java.util.List;
+
 public interface CamelJBangActionBuilder<T extends TestAction, B extends CamelJBangActionBuilder<T, B>>
         extends ReferenceResolverAwareBuilder<T, B>, TestActionBuilder<T> {
 
@@ -36,6 +38,11 @@ public interface CamelJBangActionBuilder<T extends TestAction, B extends CamelJB
      * Runs Camel integration from given source code.
      */
     CamelIntegrationRunActionBuilder<?, ?> run(String name, String sourceCode);
+
+    /**
+     * Executes custom integrations with Camel JBang.
+     */
+    CamelIntegrationCustomActionBuilder<?, ?> custom(String... integrations);
 
     /**
      * Verify that given Camel integration is running.

@@ -67,6 +67,15 @@ public class CamelJBangActionBuilder extends AbstractReferenceResolverAwareTestA
     }
 
     @Override
+    public CamelCustomIntegrationAction.Builder custom(String... commands) {
+        CamelCustomIntegrationAction.Builder builder = new CamelCustomIntegrationAction.Builder()
+                .commands(commands);
+
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
     public CamelStopIntegrationAction.Builder stop() {
         CamelStopIntegrationAction.Builder builder = new CamelStopIntegrationAction.Builder();
 
