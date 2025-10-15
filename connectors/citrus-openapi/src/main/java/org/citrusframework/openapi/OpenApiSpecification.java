@@ -287,8 +287,7 @@ public class OpenApiSpecification implements Specification {
      * @param openApiValidationPolicy the validation policy to apply to the loaded OpenApi
      * @return an OpenApiSpecification instance populated with the document and validation context
      */
-    public static OpenApiSpecification from(Resource resource,
-        OpenApiValidationPolicy openApiValidationPolicy) {
+    public static OpenApiSpecification from(Resource resource, OpenApiValidationPolicy openApiValidationPolicy) {
         OpenApiSpecification specification = new OpenApiSpecification(openApiValidationPolicy);
 
         OasDocument openApiDoc = OpenApiResourceLoader.fromFile(resource);
