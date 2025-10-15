@@ -156,6 +156,36 @@ public class CamelJBang {
     }
 
     /**
+     * Execute custom integration with JBang Camel app.
+     */
+    public ProcessAndOutput custom(String cmd, String workDir, List<String> integrations, List<String> resourcePaths, String... args) {
+        List<String> runArgs = new ArrayList<>(integrations);
+
+        if (CamelJBangSettings.getKameletsLocalDir() != null) {
+            runArgs.add("--local-kamelet-dir");
+            runArgs.add(CamelJBangSettings.getKameletsLocalDir().toString());
+        }
+
+        runArgs.addAll(resourcePaths);
+
+        runArgs.addAll(Arrays.asList(args));
+
+        if (dumpIntegrationOutput) {
+            Path workDirP = Path.of(workDir);
+            File outputFile = workDirP.resolve(String.format("i-%s-output.txt", integrations.get(0))).toFile();
+
+            if (Stream.of(args).noneMatch(it -> it.contains("--logging-color"))) {
+                // disable logging colors when writing logs to file
+                runArgs.add("--logging-color=false");
+            }
+
+            return app.runAsync(cmd, outputFile, runArgs);
+        } else {
+            return app.runAsync(cmd, runArgs);
+        }
+    }
+
+    /**
      * Stops all Camel integrations run via Came JBang.
      */
     public void stop() {
