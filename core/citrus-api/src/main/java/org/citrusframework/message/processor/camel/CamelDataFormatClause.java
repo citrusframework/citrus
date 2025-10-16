@@ -176,11 +176,6 @@ public interface CamelDataFormatClause<T extends MessageProcessor.Builder<?, ?>,
     T hl7(boolean validate);
 
     /**
-     * Uses the HL7 data format
-     */
-    T hl7(Object parser);
-
-    /**
      * Uses the iCal data format
      */
     T ical(boolean validating);
@@ -561,16 +556,6 @@ public interface CamelDataFormatClause<T extends MessageProcessor.Builder<?, ?>,
     T thrift(String instanceClassName);
 
     T thrift(String instanceClassName, String contentTypeFormat);
-
-    /**
-     * Return WellFormed HTML (an XML Document) either {@link java.lang.String} or {@link org.w3c.dom.Node}
-     */
-    T tidyMarkup(Class<?> dataObjectType);
-
-    /**
-     * Return TidyMarkup in the default format as {@link org.w3c.dom.Node}
-     */
-    T tidyMarkup();
 
     /**
      * Uses the YAML data format
