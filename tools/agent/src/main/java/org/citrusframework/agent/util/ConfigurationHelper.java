@@ -51,6 +51,7 @@ public final class ConfigurationHelper {
 
     public static TestRunConfiguration fromRequestQueryParams(MultiMap queryParams, CitrusAppConfiguration parent) {
         TestRunConfiguration options = new TestRunConfiguration();
+
         if (queryParams.contains("engine")) {
             options.setEngine(URLDecoder.decode(queryParams.get("engine"), StandardCharsets.UTF_8));
         } else {
@@ -72,13 +73,8 @@ public final class ConfigurationHelper {
             options.setTestSources(Collections.singletonList(
                     FileUtils.getTestSource(URLDecoder.decode(queryParams.get("source"), StandardCharsets.UTF_8))));
         } else {
-            if (!parent.getPackages().isEmpty()) {
-                options.setPackages(parent.getPackages());
-            }
-
-            if (!parent.getTestSources().isEmpty()) {
-                options.setTestSources(parent.getTestSources());
-            }
+            options.setPackages(parent.getPackages());
+            options.setTestSources(parent.getTestSources());
         }
 
         if (queryParams.contains("verbose")) {
@@ -87,6 +83,8 @@ public final class ConfigurationHelper {
             options.setVerbose(parent.isVerbose());
         }
 
+        boolean reset = queryParams.contains("reset") ? Boolean.parseBoolean(queryParams.get("reset")) : parent.isReset();
+        options.setReset(reset);
         options.setTestJar(parent.getTestJar());
 
         return options;
@@ -100,16 +98,12 @@ public final class ConfigurationHelper {
         }
 
         if (options.getPackages().isEmpty() && options.getTestSources().isEmpty()) {
-            if (!parent.getPackages().isEmpty()) {
-                options.setPackages(parent.getPackages());
-            }
-
-            if (!parent.getTestSources().isEmpty()) {
-                options.setTestSources(parent.getTestSources());
-            }
+            options.setPackages(parent.getPackages());
+            options.setTestSources(parent.getTestSources());
         }
 
         options.setVerbose(options.isVerbose() && parent.isVerbose());
+        options.setReset(options.isReset() && parent.isReset());
 
         options.setTestJar(parent.getTestJar());
 
@@ -133,6 +127,7 @@ public final class ConfigurationHelper {
                 .collect(Collectors.toList()));
 
         configuration.setVerbose(CitrusAgentSettings.isVerbose());
+        configuration.setReset(CitrusAgentSettings.isReset());
         configuration.addDefaultProperties(CitrusAgentSettings.getDefaultProperties());
 
         String testJarPath = CitrusAgentSettings.getTestJar();

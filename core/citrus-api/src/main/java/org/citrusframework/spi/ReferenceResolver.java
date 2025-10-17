@@ -20,10 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.citrusframework.common.ShutdownPhase;
+
 /**
  * @since 2.5
  */
-public interface ReferenceResolver extends ReferenceRegistry {
+public interface ReferenceResolver extends ReferenceRegistry, ShutdownPhase {
 
     /**
      * Resolve all references of type and given names. When no names are provided method resolves all

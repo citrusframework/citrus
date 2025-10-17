@@ -44,6 +44,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.common.template.TemplateEngine;
 import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.templ.thymeleaf.ThymeleafTemplateEngine;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.logging.log4j.LogManager;
@@ -51,7 +52,6 @@ import org.apache.logging.log4j.io.IoBuilder;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.CitrusInstanceProcessor;
-import org.citrusframework.CitrusInstanceStrategy;
 import org.citrusframework.TestResult;
 import org.citrusframework.agent.listener.AgentTestListener;
 import org.citrusframework.agent.util.ConfigurationHelper;
@@ -95,8 +95,6 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
 
     /**
      * Constructor with given application configuration and route customizations.
-     * @param configuration
-     * @param routerCustomizations
      */
     public CitrusAgentApplication(CitrusAgentConfiguration configuration, List<Consumer<Router>> routerCustomizations) {
         this.configuration = configuration;
@@ -106,13 +104,15 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
 
     @Override
     public void start() {
-        CitrusInstanceManager.mode(CitrusInstanceStrategy.SINGLETON);
         CitrusInstanceManager.addInstanceProcessor(this);
 
         Router router = Router.router(getVertx());
+        router.route().handler(CorsHandler.create().addOriginWithRegex(CitrusAgentSettings.getCorsAllowedOrigin()));
         router.route().handler(BodyHandler.create());
         router.route().handler(ctx -> {
-            logger.info("{} {}", ctx.request().method(), ctx.request().uri());
+            if (configuration.isVerbose()) {
+                logger.info("{} {}", ctx.request().method(), ctx.request().uri());
+            }
             ctx.next();
         });
         addWebEndpoint(router);
@@ -122,6 +122,12 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
         addRunEndpoints(router);
         addExecuteEndpoints(router);
         addConfigEndpoints(router);
+
+        router.get("/logs")
+            .handler(wrapThrowingHandler(ctx -> {
+                ctx.response().end(agentTestListener.getLogs());
+            }));
+
         routerCustomizations.forEach(customization -> customization.accept(router));
 
         templateEngine = ThymeleafTemplateEngine.create(getVertx());
@@ -129,6 +135,8 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
         getVertx().createHttpServer()
                 .requestHandler(router)
                 .listen(configuration.getPort())
+                .onFailure(handler ->
+                        logger.info("Failed to start server on port {} - error message is {}", configuration.getPort(), handler.getMessage()))
                 .onSuccess(unused ->
                         logger.info("Server started, listening on port {}", configuration.getPort()));
     }
@@ -136,8 +144,11 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
     @Override
     public void process(Citrus instance) {
         logger.info("Adding agent test listener");
+        instance.addTestSuiteListener(agentTestListener);
         instance.addTestListener(agentTestListener);
+        instance.addTestActionListener(agentTestListener);
         instance.addTestReporter(agentTestListener);
+        instance.addMessageListener(agentTestListener);
     }
 
     private void addWebEndpoint(Router router) {
@@ -307,10 +318,10 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
     private void addRunEndpoints(Router router) {
         router.get("/run")
                 .handler(wrapThrowingHandler(ctx ->
-                        runTestsAsync(ConfigurationHelper.fromRequestQueryParams(ctx.request().params(), configuration), ctx.response())));
+                        runTests(ConfigurationHelper.fromRequestQueryParams(ctx.request().params(), configuration), ctx.response())));
         router.post("/run")
                 .handler(wrapThrowingHandler(ctx ->
-                        runTestsAsync(ConfigurationHelper.fromRequestBody(ctx.body(), configuration), ctx.response())));
+                        runTests(ConfigurationHelper.fromRequestBody(ctx.body(), configuration), ctx.response())));
         router.put("/run")
                 .handler(wrapThrowingHandler(ctx -> {
                     remoteResultFuture = startTestsAsync(ConfigurationHelper.fromRequestBody(ctx.body(), configuration));
@@ -321,7 +332,7 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
     private void addExecuteEndpoints(Router router) {
         router.post("/execute/:name")
                 .handler(wrapThrowingHandler(ctx -> {
-                            runTestsAsync(ConfigurationHelper.fromExecutionRequest(ctx, configuration), ctx.response());
+                            runTests(ConfigurationHelper.fromExecutionRequest(ctx, configuration), ctx.response());
                         }));
         router.put("/execute/:name")
                 .handler(wrapThrowingHandler(ctx -> {
@@ -344,21 +355,23 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
         };
     }
 
-    private void runTestsAsync(TestRunConfiguration runConfiguration, HttpServerResponse response) {
-        Future.fromCompletionStage(CompletableFuture.supplyAsync(
-                        new RunJob(runService, runConfiguration, agentTestListener),
-                        executorService))
-                .onSuccess(results ->
-                        response.end(JsonSupport.render(results.asList())))
-                .onFailure(error -> {
-                        logger.error(error.getMessage());
-                        StringWriter stackTrace = new StringWriter();
-                        error.printStackTrace(new PrintWriter(stackTrace));
-                        logger.error(stackTrace.toString());
-                        response
-                            .setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code())
-                            .end(error.getMessage());
-                });
+    private void runTests(TestRunConfiguration runConfiguration, HttpServerResponse response) {
+        try {
+            if (configuration.isReset()) {
+                agentTestListener.clearLogs();
+            }
+
+            runService.run(runConfiguration);
+            response.end(JsonSupport.render(agentTestListener.getLatestResults().asList()));
+        } catch (Exception error) {
+            logger.error(error.getMessage());
+            StringWriter stackTrace = new StringWriter();
+            error.printStackTrace(new PrintWriter(stackTrace));
+            logger.error(stackTrace.toString());
+            response
+                .setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code())
+                .end(error.getMessage());
+        }
     }
 
     private Future<TestResults> startTestsAsync(TestRunConfiguration testRunConfiguration) {

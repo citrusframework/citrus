@@ -270,4 +270,9 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
     public ApplicationContext getApplicationContext() {
         return applicationContext;
     }
+
+    @Override
+    public void destroy() {
+        fallback.destroy();
+    }
 }

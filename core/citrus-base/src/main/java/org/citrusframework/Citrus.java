@@ -21,6 +21,8 @@ import org.citrusframework.container.BeforeSuite;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.report.MessageListener;
 import org.citrusframework.report.MessageListenerAware;
+import org.citrusframework.report.TestActionListener;
+import org.citrusframework.report.TestActionListenerAware;
 import org.citrusframework.report.TestListener;
 import org.citrusframework.report.TestListenerAware;
 import org.citrusframework.report.TestReporter;
@@ -34,7 +36,7 @@ import org.citrusframework.report.TestSuiteListenerAware;
  *
  * @since 2.1
  */
-public final class Citrus implements TestListenerAware, TestSuiteListenerAware, TestReporterAware, MessageListenerAware {
+public final class Citrus implements TestListenerAware, TestActionListenerAware, TestSuiteListenerAware, TestReporterAware, MessageListenerAware {
 
     private final CitrusContext citrusContext;
 
@@ -128,7 +130,6 @@ public final class Citrus implements TestListenerAware, TestSuiteListenerAware, 
 
     /**
      * Gets the Citrus version from classpath resource properties.
-     * @return
      */
     public static String getVersion() {
         return CitrusVersion.version();
@@ -145,6 +146,11 @@ public final class Citrus implements TestListenerAware, TestSuiteListenerAware, 
     }
 
     @Override
+    public void addTestActionListener(TestActionListener testListener) {
+        citrusContext.addTestActionListener(testListener);
+    }
+
+    @Override
     public void addTestReporter(TestReporter testReporter) {
         citrusContext.addTestReporter(testReporter);
     }
@@ -156,7 +162,6 @@ public final class Citrus implements TestListenerAware, TestSuiteListenerAware, 
 
     /**
      * Obtains the citrusContext.
-     * @return
      */
     public CitrusContext getCitrusContext() {
         return citrusContext;

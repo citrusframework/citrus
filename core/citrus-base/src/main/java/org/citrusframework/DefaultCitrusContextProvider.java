@@ -43,4 +43,8 @@ public class DefaultCitrusContextProvider implements CitrusContextProvider {
 
         return context;
     }
+
+    public static void reset() {
+        context = null;
+    }
 }

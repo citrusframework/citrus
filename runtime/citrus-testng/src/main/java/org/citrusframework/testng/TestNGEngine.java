@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.TestClass;
 import org.citrusframework.TestSource;
 import org.citrusframework.common.TestSourceHelper;
@@ -94,6 +95,10 @@ public class TestNGEngine extends AbstractTestEngine {
         }
 
         testng.run();
+
+        if (getConfiguration().isReset()) {
+            CitrusInstanceManager.reset();
+        }
     }
 
     private void addTestSources(XmlSuite suite, List<TestSource> testSources) {

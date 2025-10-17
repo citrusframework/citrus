@@ -19,6 +19,7 @@ package org.citrusframework.endpoint;
 import java.lang.annotation.Annotation;
 
 import org.citrusframework.annotations.CitrusEndpoint;
+import org.citrusframework.common.ShutdownPhase;
 import org.citrusframework.context.TestContext;
 
 /**
@@ -30,7 +31,7 @@ import org.citrusframework.context.TestContext;
  *
  * @since 1.4.1
  */
-public interface EndpointFactory {
+public interface EndpointFactory extends ShutdownPhase {
 
     /**
      * Finds endpoint by parsing the given endpoint uri. The test context helps to create endpoints

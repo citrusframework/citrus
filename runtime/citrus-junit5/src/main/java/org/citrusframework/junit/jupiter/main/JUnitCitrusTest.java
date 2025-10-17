@@ -90,4 +90,8 @@ public class JUnitCitrusTest {
     public static void addTest(String sourceName, TestSource testSource) {
         sources.put(sourceName, testSource);
     }
+
+    public static void reset() {
+        sources.clear();
+    }
 }

@@ -16,6 +16,9 @@
 
 package org.citrusframework.report;
 
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.CitrusVersion;
@@ -23,14 +26,13 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestResult;
 import org.citrusframework.common.Described;
+import org.citrusframework.common.ShutdownPhase;
 import org.citrusframework.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLoggerFactory;
-
-import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.time.Duration.ZERO;
@@ -48,7 +50,8 @@ import static org.citrusframework.util.StringUtils.hasText;
  * Implementation note: The disablement of the reporter is achieved by using a {@link org.slf4j.helpers.NOPLogger},
  * meaning that this class should primarily focus on logging operations and not extend beyond that functionality.
  */
-public class LoggingReporter extends AbstractTestReporter implements MessageListener, TestSuiteListener, TestListener, TestActionListener {
+public class LoggingReporter extends AbstractTestReporter implements MessageListener, TestSuiteListener,
+        TestListener, TestActionListener, ShutdownPhase {
 
     /**
      * Logger
@@ -85,10 +88,10 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
      */
     private static final Logger noOpLogger = new NOPLoggerFactory().getLogger(LoggingReporter.class.getName());
 
-    private static boolean isInitialized = false;
+    private static final AtomicBoolean initialized = new AtomicBoolean(false);
 
-    private static void initialized() {
-        LoggingReporter.isInitialized = true;
+    protected static void initialized(boolean value) {
+        LoggingReporter.initialized.set(value);
     }
 
     private static String formatDurationString(TestCase test) {
@@ -216,9 +219,8 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     @Override
     public void onStart() {
-        if (!isInitialized) {
+        if (!initialized.getAndSet(true)) {
             printBanner();
-            initialized();
         }
 
         separator();
@@ -230,6 +232,10 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     }
 
     private void printBanner() {
+        if (!CitrusSettings.isPrintBanner()) {
+            return;
+        }
+
         info("       .__  __                       ");
         info("  ____ |__|/  |________ __ __  ______");
         info("_/ ___\\|  \\   __\\_  __ \\  |  \\/  ___/");
@@ -411,5 +417,10 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     protected boolean isEnabled() {
         return logger != noOpLogger;
+    }
+
+    @Override
+    public void destroy() {
+        initialized(false);
     }
 }

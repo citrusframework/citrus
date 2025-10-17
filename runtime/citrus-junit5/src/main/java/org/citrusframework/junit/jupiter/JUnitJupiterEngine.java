@@ -102,6 +102,10 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
             }
 
             launcher.execute(request);
+
+            if (getConfiguration().isReset()) {
+                CitrusExtension.reset();
+            }
         }
 
         if (getConfiguration().isVerbose()) {
@@ -157,6 +161,11 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
                 .filter(source -> !"directory".equals(source.getType()))
                 .filter(source -> !"java".equals(source.getType()) || !TestClass.isKnownToClasspath(source.getName()))
                 .toList();
+
+        if (getConfiguration().isReset()) {
+            logger.info("Reset test sources for a fresh test run");
+            JUnitCitrusTest.reset();
+        }
 
         for (TestSource source : filtered) {
             logger.info("Adding test source {}", source.getName());

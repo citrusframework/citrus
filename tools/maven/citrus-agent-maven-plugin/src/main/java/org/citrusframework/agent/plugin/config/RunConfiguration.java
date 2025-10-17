@@ -44,6 +44,9 @@ public class RunConfiguration {
     @Parameter(property = "citrus.agent.run.verbose", defaultValue = "true")
     private boolean verbose = true;
 
+    @Parameter(property = "citrus.agent.run.reset", defaultValue = "true")
+    private boolean reset = true;
+
     @Parameter(property = "citrus.agent.run.polling.interval", defaultValue = "2000")
     private long pollingInterval;
 
@@ -133,5 +136,13 @@ public class RunConfiguration {
 
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
+    }
+
+    public boolean isReset() {
+        return reset;
+    }
+
+    public void setReset(boolean reset) {
+        this.reset = reset;
     }
 }

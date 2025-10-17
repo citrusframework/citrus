@@ -317,6 +317,13 @@ public final class CitrusSettings {
     public static final String AUTO_REMOVE_DYNAMIC_ENDPOINTS_DEFAULT = FALSE.toString();
 
     /**
+     * Flag to enable/disable Citrus banner.
+     */
+    public static final String PRINT_BANNER_PROPERTY = "citrus.print.banner";
+    public static final String PRINT_BANNER_ENV = "CITRUS_PRINT_BANNER";
+    public static final String PRINT_BANNER_DEFAULT = TRUE.toString();
+
+    /**
      * Gets set of file name patterns for Groovy test files.
      */
     public static Set<String> getGroovyTestFileNamePattern() {
@@ -520,6 +527,19 @@ public final class CitrusSettings {
                         AUTO_REMOVE_DYNAMIC_ENDPOINTS_PROPERTY,
                         AUTO_REMOVE_DYNAMIC_ENDPOINTS_ENV,
                         AUTO_REMOVE_DYNAMIC_ENDPOINTS_DEFAULT
+                )
+        );
+    }
+
+    /**
+     * Should logging reporter print the Citrus banner at the very beginning of the test suite.
+     */
+    public static boolean isPrintBanner() {
+        return parseBoolean(
+                getPropertyEnvOrDefault(
+                        PRINT_BANNER_PROPERTY,
+                        PRINT_BANNER_ENV,
+                        PRINT_BANNER_DEFAULT
                 )
         );
     }

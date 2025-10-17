@@ -31,7 +31,6 @@ import static java.util.Collections.synchronizedSet;
 
 /**
  * Multiple {@link org.citrusframework.TestResult} instances combined to a {@link TestResults}.
- *
  */
 public class TestResults {
 
@@ -45,6 +44,13 @@ public class TestResults {
      * Collected test results
      */
     private final Set<TestResult> results = synchronizedSet(new LinkedHashSet<>());
+
+    /**
+     * Clear test results.
+     */
+    public void clear() {
+        results.clear();
+    }
 
     /**
      * Provides access to results as list generated from synchronized result list.
@@ -92,7 +98,6 @@ public class TestResults {
 
     /**
      * Calculates percentage of success tests.
-     *
      * @deprecated will return {@code double} value in the future!
      */
     @Deprecated

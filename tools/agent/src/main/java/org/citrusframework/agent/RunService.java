@@ -23,7 +23,6 @@ public class RunService {
 
     /**
      * Run Citrus application with given configuration and cached Citrus instance.
-     * @param configuration
      */
     public void run(TestRunConfiguration configuration) {
         TestEngine engine = TestEngine.lookup(configuration);
