@@ -55,6 +55,10 @@ public final class CitrusAgentSettings {
     private static final String VERBOSE_ENV = AGENT_ENV_PREFIX + "VERBOSE";
     private static final String VERBOSE_DEFAULT = "true";
 
+    private static final String RESET_PROPERTY = AGENT_PROPERTY_PREFIX + "reset";
+    private static final String RESET_ENV = AGENT_ENV_PREFIX + "RESET";
+    private static final String RESET_DEFAULT = "true";
+
     private static final String INCLUDES_PROPERTY = AGENT_PROPERTY_PREFIX + "includes";
     private static final String INCLUDES_ENV = AGENT_ENV_PREFIX + "INCLUDES";
     private static final String[] INCLUDES_DEFAULT = new String[] { "^.*IT$", "^.*ITCase$", "^IT.*$" };
@@ -74,6 +78,10 @@ public final class CitrusAgentSettings {
     private static final String TEST_JAR_PROPERTY = AGENT_PROPERTY_PREFIX + "test.jar";
     private static final String TEST_JAR_ENV = AGENT_ENV_PREFIX + "TEST_JAR";
     private static final String TEST_JAR_DEFAULT = "classpath:citrus-agent-tests.jar";
+
+    private static final String CORS_ALLOWED_ORIGIN_PROPERTY = AGENT_PROPERTY_PREFIX + "cors.allowed.origin";
+    private static final String CORS_ALLOWED_ORIGIN_ENV = AGENT_ENV_PREFIX + "CORS_ALLOWED_ORIGIN";
+    private static final String CORS_ALLOWED_ORIGIN_DEFAULT = "https?://localhost:\\d+";
 
     private CitrusAgentSettings() {
         // prevent instantiation of utility class
@@ -118,6 +126,11 @@ public final class CitrusAgentSettings {
                 .orElse(VERBOSE_DEFAULT));
     }
 
+    public static boolean isReset() {
+        return Boolean.parseBoolean(Optional.ofNullable(System.getProperty(RESET_PROPERTY, System.getenv(RESET_ENV)))
+                .orElse(RESET_DEFAULT));
+    }
+
     public static String[] getPackages() {
         return Optional.ofNullable(System.getProperty(PACKAGES_PROPERTY, System.getenv(PACKAGES_ENV)))
                 .map(tokens -> tokens.replaceAll("\\s", ""))
@@ -159,4 +172,8 @@ public final class CitrusAgentSettings {
                 .orElse(TEST_JAR_DEFAULT);
     }
 
+    public static String getCorsAllowedOrigin() {
+        return Optional.ofNullable(System.getProperty(CORS_ALLOWED_ORIGIN_PROPERTY, System.getenv(CORS_ALLOWED_ORIGIN_ENV)))
+                .orElse(CORS_ALLOWED_ORIGIN_DEFAULT);
+    }
 }

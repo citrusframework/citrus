@@ -84,7 +84,6 @@ public class CitrusInstanceManager {
     /**
      * Provide access to the current Citrus instance.
      * Create new instance if it has not been initialized yet.
-     * @return
      */
     public static Citrus getOrDefault() {
         if (citrus == null) {
@@ -96,7 +95,6 @@ public class CitrusInstanceManager {
 
     /**
      * Check if there has already been an instance instantiated using this manager.
-     * @return
      */
     public static boolean hasInstance() {
         return citrus != null;
@@ -104,9 +102,13 @@ public class CitrusInstanceManager {
 
     /**
      * Removes current Citrus instance if any.
-     * @return
      */
     public static void reset() {
+        if (citrus != null) {
+            citrus.close();
+            DefaultCitrusContextProvider.reset();
+        }
+
         citrus = null;
     }
 }

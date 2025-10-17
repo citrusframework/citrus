@@ -191,6 +191,25 @@ public class DefaultEndpointFactory implements EndpointFactory {
         return componentName;
     }
 
+    @Override
+    public void destroy() {
+        endpointCache.forEach((name, endpoint) -> {
+            if (endpoint instanceof ShutdownPhase destroyable) {
+                try {
+                    logger.debug("Destroying endpoint '{}'", name);
+                    destroyable.destroy();
+                } catch (Exception e) {
+                    logger.warn("Failed to shutdown bean {}: {}", name, e.getMessage());
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(e.getMessage(), e);
+                    }
+                }
+            }
+        });
+
+        endpointCache.clear();
+    }
+
     private Map<String, EndpointComponent> getEndpointComponents(ReferenceResolver referenceResolver) {
         return referenceResolver.resolveAll(EndpointComponent.class);
     }

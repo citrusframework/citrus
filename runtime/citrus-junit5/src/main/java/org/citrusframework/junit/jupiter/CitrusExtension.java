@@ -17,6 +17,7 @@
 package org.citrusframework.junit.jupiter;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
@@ -63,8 +64,9 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
      */
     private static final String SUITE_NAME = "citrus-junit5-suite";
 
-    private static boolean beforeSuite = true;
-    private static boolean afterSuite = true;
+    private static final AtomicBoolean reset = new AtomicBoolean(false);
+    private static final AtomicBoolean beforeSuite = new AtomicBoolean(true);
+    private static final AtomicBoolean afterSuite = new AtomicBoolean(true);
 
     /**
      * {@link ExtensionContext.Namespace} in which Citrus related objects are stored keyed by test class.
@@ -87,13 +89,15 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
+        if (reset.getAndSet(false)) {
+            removeCitrus(extensionContext);
+        }
+
         if (requiresCitrus(extensionContext)) {
             setCitrus(CitrusInstanceManager.getOrDefault(), extensionContext);
         }
 
-        if (beforeSuite) {
-            beforeSuite = false;
-
+        if (beforeSuite.getAndSet(false)) {
             // Assertion: If the beforeAll callback is called for a test, the annotated tags are currently
             // included by the groups filter of surefire / failsafe or no specific filter is defined and
             // all groups / tags will run anyway.
@@ -243,6 +247,16 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
     }
 
     /**
+     * Reset Citrus extension forcing a new instance of Citrus and execution of before suite.
+     */
+    public static void reset() {
+        CitrusInstanceManager.reset();
+        beforeSuite.set(true);
+        afterSuite.set(true);
+        reset.set(true);
+    }
+
+    /**
      * Listener able to perform changes on Citrus context before/after a test.
      */
     public interface TestListener {
@@ -274,8 +288,7 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
 
         @Override
         public void close() {
-            if (afterSuite) {
-                afterSuite = false;
+            if (afterSuite.getAndSet(false)) {
                 getCitrus(extensionContext).afterSuite(suiteName, tags);
             }
         }

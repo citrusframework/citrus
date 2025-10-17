@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.TestClass;
 import org.citrusframework.TestSource;
 import org.citrusframework.main.AbstractTestEngine;
@@ -83,6 +84,10 @@ public class JUnit4TestEngine extends AbstractTestEngine {
 
             logger.info(String.format("Found %s test classes to execute", classesToRun.size()));
             run(classesToRun);
+
+            if (getConfiguration().isReset()) {
+                CitrusInstanceManager.reset();
+            }
         }
     }
 

@@ -50,9 +50,11 @@ public class TestRunConfiguration {
     /** Should test engine print verbose summary details */
     private boolean verbose = true;
 
+    /** Should test engine reset the suite state and reporters */
+    private boolean reset = true;
+
     /**
      * Gets the engine.
-     * @return
      */
     public String getEngine() {
         return engine;
@@ -60,7 +62,6 @@ public class TestRunConfiguration {
 
     /**
      * Sets the engine.
-     * @param engine
      */
     public void setEngine(String engine) {
         this.engine = engine;
@@ -68,8 +69,6 @@ public class TestRunConfiguration {
 
     /**
      * Gets the sources.
-     *
-     * @return
      */
     public List<TestSource> getTestSources() {
         return sources;
@@ -77,8 +76,6 @@ public class TestRunConfiguration {
 
     /**
      * Sets the sources.
-     *
-     * @param sources
      */
     public void setTestSources(List<TestSource> sources) {
         this.sources.addAll(sources);
@@ -86,8 +83,6 @@ public class TestRunConfiguration {
 
     /**
      * Gets the packages.
-     *
-     * @return
      */
     public List<String> getPackages() {
         return packages;
@@ -95,8 +90,6 @@ public class TestRunConfiguration {
 
     /**
      * Sets the packages.
-     *
-     * @param packages
      */
     public void setPackages(List<String> packages) {
         this.packages.addAll(packages);
@@ -104,8 +97,6 @@ public class TestRunConfiguration {
 
     /**
      * Gets the includes.
-     *
-     * @return
      */
     public String[] getIncludes() {
         return includes;
@@ -113,8 +104,6 @@ public class TestRunConfiguration {
 
     /**
      * Sets the includes.
-     *
-     * @param includes
      */
     public void setIncludes(String[] includes) {
         this.includes = includes;
@@ -122,8 +111,6 @@ public class TestRunConfiguration {
 
     /**
      * Gets the testJar.
-     *
-     * @return
      */
     public File getTestJar() {
         return testJar;
@@ -131,8 +118,6 @@ public class TestRunConfiguration {
 
     /**
      * Sets the testJar.
-     *
-     * @param testJar
      */
     public void setTestJar(File testJar) {
         this.testJar = testJar;
@@ -140,8 +125,6 @@ public class TestRunConfiguration {
 
     /**
      * Gets the defaultProperties.
-     *
-     * @return
      */
     public Map<String, String> getDefaultProperties() {
         return defaultProperties;
@@ -149,8 +132,6 @@ public class TestRunConfiguration {
 
     /**
      * Adds default properties.
-     *
-     * @param defaultProperties
      */
     public void addDefaultProperties(Map<String, String> defaultProperties) {
         this.defaultProperties = defaultProperties;
@@ -166,5 +147,13 @@ public class TestRunConfiguration {
 
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
+    }
+
+    public boolean isReset() {
+        return reset;
+    }
+
+    public void setReset(boolean reset) {
+        this.reset = reset;
     }
 }

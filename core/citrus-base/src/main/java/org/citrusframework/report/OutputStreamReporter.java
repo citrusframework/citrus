@@ -16,11 +16,15 @@
 
 package org.citrusframework.report;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.concurrent.CountDownLatch;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * @since 2.7.4
@@ -39,7 +43,7 @@ public class OutputStreamReporter extends LoggingReporter {
     /**
      * Count down for failed output stream write operations.
      */
-    private CountDownLatch failedCounter = new CountDownLatch(5);
+    private final CountDownLatch failedCounter = new CountDownLatch(5);
 
     /**
      * Default constructor using output stream.
@@ -51,7 +55,6 @@ public class OutputStreamReporter extends LoggingReporter {
 
     /**
      * Constructor using writer instances.
-     * @param logWriter
      */
     public OutputStreamReporter(Writer logWriter) {
         this.logWriter = logWriter;
@@ -80,8 +83,8 @@ public class OutputStreamReporter extends LoggingReporter {
     }
 
     /**
-     * @param level
-     * @param line
+     * Write safely to the output stream.
+     * Catches IO errors and increases failed counter to avoid endless error chains.
      */
     private synchronized void writeSafely(String level, String line) {
         if (logWriter != null && failedCounter.getCount() > 0) {
@@ -96,8 +99,6 @@ public class OutputStreamReporter extends LoggingReporter {
 
     /**
      * Gets the format.
-     *
-     * @return
      */
     public String getFormat() {
         return format;
@@ -105,8 +106,6 @@ public class OutputStreamReporter extends LoggingReporter {
 
     /**
      * Sets the format.
-     *
-     * @param format
      */
     public void setFormat(String format) {
         this.format = format;
@@ -114,8 +113,6 @@ public class OutputStreamReporter extends LoggingReporter {
 
     /**
      * Gets the logger writer.
-     *
-     * @return
      */
     public Writer getLogWriter() {
         return logWriter;
@@ -123,7 +120,6 @@ public class OutputStreamReporter extends LoggingReporter {
 
     /**
      * Sets the logger writer.
-     * @param writer
      */
     protected void setLogWriter(Writer writer) {
         this.logWriter = writer;

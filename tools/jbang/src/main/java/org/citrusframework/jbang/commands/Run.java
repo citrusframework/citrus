@@ -75,6 +75,9 @@ public class Run extends CitrusCommand {
     @Option(names = { "--verbose" }, defaultValue = "true", description = "Should the test engine print verbose test summary information.")
     private String verbose;
 
+    @Option(names = { "--reset" }, defaultValue = "true", description = "Should the test engine reset the suite state for this run.")
+    private String reset;
+
     @Option(names = { "--includes" }, arity = "0..*", description = "Includes test name pattern.")
     private String[] includes;
 
@@ -219,6 +222,10 @@ public class Run extends CitrusCommand {
 
         if (StringUtils.hasText(verbose)) {
             configuration.setVerbose(Boolean.parseBoolean(verbose));
+        }
+
+        if (StringUtils.hasText(reset)) {
+            configuration.setReset(Boolean.parseBoolean(reset));
         }
 
         if (includes != null) {

@@ -25,8 +25,6 @@ public class CitrusAgentConfiguration extends CitrusAppConfiguration {
 
     /**
      * Gets the port.
-     *
-     * @return
      */
     public int getPort() {
         return port;
@@ -34,8 +32,6 @@ public class CitrusAgentConfiguration extends CitrusAppConfiguration {
 
     /**
      * Sets the port.
-     *
-     * @param port
      */
     public void setPort(int port) {
         this.port = port;
@@ -43,7 +39,6 @@ public class CitrusAgentConfiguration extends CitrusAppConfiguration {
 
     /**
      * Applies configuration with settable properties at runtime.
-     * @param configuration
      */
     public void apply(CitrusAppConfiguration configuration) {
         setEngine(configuration.getEngine());
@@ -51,6 +46,7 @@ public class CitrusAgentConfiguration extends CitrusAppConfiguration {
         setTestSources(configuration.getTestSources());
         setIncludes(configuration.getIncludes());
         setVerbose(configuration.isVerbose());
+        setReset(configuration.isReset());
         addDefaultProperties(configuration.getDefaultProperties());
         setConfigClass(configuration.getConfigClass());
     }

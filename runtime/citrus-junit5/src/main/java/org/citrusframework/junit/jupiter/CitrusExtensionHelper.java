@@ -209,6 +209,15 @@ public final class CitrusExtensionHelper {
         extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).put(Citrus.class.getName(), citrus);
     }
 
+    /**
+     * Removes the {@link Citrus} instance on the {@code ExtensionContext}.
+     */
+    public static void removeCitrus(ExtensionContext extensionContext) {
+        if (!requiresCitrus(extensionContext)) {
+            extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).remove(Citrus.class.getName());
+        }
+    }
+
     public static Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         TestCaseRunner runner = CitrusExtensionHelper.getTestRunner(extensionContext);
         if (TestCaseRunner.class.isAssignableFrom(parameterContext.getParameter().getType())) {

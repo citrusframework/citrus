@@ -148,6 +148,17 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
             }
         });
 
+        options.add(new CliOption<>("", "reset", "Should the test engine reset the suite state for this run.") {
+            @Override
+            protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
+                if (StringUtils.hasText(value)) {
+                    configuration.setReset(Boolean.parseBoolean(value));
+                } else {
+                    throw new CitrusRuntimeException("Missing parameter value for --reset option");
+                }
+            }
+        });
+
         options.add(new CliOption<>("e", "engine", "Set test engine name used to run the tests") {
             @Override
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {

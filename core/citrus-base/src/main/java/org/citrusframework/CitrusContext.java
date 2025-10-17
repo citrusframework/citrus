@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.common.ShutdownPhase;
 import org.citrusframework.container.AfterSuite;
 import org.citrusframework.container.AfterTest;
 import org.citrusframework.container.BeforeSuite;
@@ -202,6 +203,13 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
      * Closes the context and all its components.
      */
     public void close() {
+        endpointFactory.destroy();
+        referenceResolver.destroy();
+
+        testReporters.getTestReporters().stream()
+                .filter(ShutdownPhase.class::isInstance)
+                .map(ShutdownPhase.class::cast)
+                .forEach(ShutdownPhase::destroy);
     }
 
     /**

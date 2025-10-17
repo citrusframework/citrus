@@ -20,12 +20,18 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import org.citrusframework.common.ShutdownPhase;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Simple object registry holding in memory key value store to bind and obtain object references by name.
  */
 public class SimpleReferenceResolver implements ReferenceResolver, ReferenceRegistry {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(SimpleReferenceResolver.class);
 
     private final ConcurrentHashMap<String, Object> objectStore = new ConcurrentHashMap<>();
 
@@ -88,5 +94,22 @@ public class SimpleReferenceResolver implements ReferenceResolver, ReferenceRegi
         if (value != null) {
             this.objectStore.put(name, value);
         }
+    }
+
+    @Override
+    public void destroy() {
+        this.objectStore.forEach((name, bean) -> {
+            if (bean instanceof ShutdownPhase destroyable) {
+                try {
+                    logger.debug("Destroying bean '{}'", name);
+                    destroyable.destroy();
+                } catch (Exception e) {
+                    logger.warn("Failed to shutdown bean {}: {}", name, e.getMessage());
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(e.getMessage(), e);
+                    }
+                }
+            }
+        });
     }
 }

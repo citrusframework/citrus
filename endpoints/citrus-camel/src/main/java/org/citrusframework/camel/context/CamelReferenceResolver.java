@@ -37,7 +37,6 @@ public class CamelReferenceResolver implements ReferenceResolver {
 
     /**
      * Constructor initializes with given Camel context.
-     * @param camelContext
      */
     public CamelReferenceResolver(CamelContext camelContext) {
         this.camelContext = camelContext;
@@ -159,5 +158,10 @@ public class CamelReferenceResolver implements ReferenceResolver {
      */
     public void setFallback(ReferenceResolver fallback) {
         this.fallback = fallback;
+    }
+
+    @Override
+    public void destroy() {
+        fallback.destroy();
     }
 }

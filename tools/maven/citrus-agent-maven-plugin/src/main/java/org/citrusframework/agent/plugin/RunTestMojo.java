@@ -231,6 +231,7 @@ public class RunTestMojo extends AbstractAgentMojo {
         options.setPackages(packages);
 
         options.setVerbose(getRunConfig().isVerbose());
+        options.setReset(getRunConfig().isReset());
 
         if (getRunConfig().getIncludes() != null) {
             options.setIncludes(getRunConfig().getIncludes().toArray(new String[0]));
@@ -252,6 +253,7 @@ public class RunTestMojo extends AbstractAgentMojo {
 
         options.setEngine(getRunConfig().getEngine());
         options.setVerbose(getRunConfig().isVerbose());
+        options.setReset(getRunConfig().isReset());
 
         List<TestSource> testSources = classes.stream()
                 .map(TestClass::fromString)
@@ -275,6 +277,7 @@ public class RunTestMojo extends AbstractAgentMojo {
 
         options.setEngine(getRunConfig().getEngine());
         options.setVerbose(getRunConfig().isVerbose());
+        options.setReset(getRunConfig().isReset());
 
         if (getRunConfig().getIncludes() != null) {
             options.setIncludes(getRunConfig().getIncludes().toArray(new String[0]));

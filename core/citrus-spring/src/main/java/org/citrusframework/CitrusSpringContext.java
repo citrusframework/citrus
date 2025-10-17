@@ -66,6 +66,7 @@ public class CitrusSpringContext extends CitrusContext {
      * Closing Citrus and its application context.
      */
     public void close() {
+        super.close();
         if (applicationContext instanceof ConfigurableApplicationContext configurableApplicationContext && configurableApplicationContext.isActive()) {
             configurableApplicationContext.close();
         }
