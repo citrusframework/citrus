@@ -28,8 +28,10 @@ import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.testcontainers.kafka.KafkaImplementation;
 import org.citrusframework.testcontainers.kafka.KafkaSettings;
-import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.kafka.ConfluentKafkaContainer;
+import org.testcontainers.kafka.KafkaContainer;
 
 import static org.citrusframework.testcontainers.actions.TestcontainersActionBuilder.testcontainers;
 
@@ -44,7 +46,11 @@ public class KafkaSteps {
     @CitrusResource
     private TestContext context;
 
-    private String kafkaVersion = KafkaSettings.getKafkaVersion();
+    private int port = -1;
+
+    private KafkaImplementation implementation = KafkaSettings.getImplementation();
+
+    private String kafkaVersion = KafkaSettings.getKafkaVersion(implementation);
 
     private int startupTimeout = KafkaSettings.getStartupTimeout();
 
@@ -57,12 +63,25 @@ public class KafkaSteps {
         if (citrus.getCitrusContext().getReferenceResolver().isResolvable(KafkaSettings.getContainerName(), KafkaContainer.class)) {
             Object kafkaContainer = citrus.getCitrusContext().getReferenceResolver().resolve(KafkaSettings.getContainerName());
             KafkaSettings.exposeConnectionSettings((KafkaContainer) kafkaContainer, serviceName, context);
+        } else if (citrus.getCitrusContext().getReferenceResolver().isResolvable(KafkaSettings.getContainerName(), ConfluentKafkaContainer.class)) {
+            Object kafkaContainer = citrus.getCitrusContext().getReferenceResolver().resolve(KafkaSettings.getContainerName());
+            KafkaSettings.exposeConnectionSettings((ConfluentKafkaContainer) kafkaContainer, serviceName, context);
         }
     }
 
     @Given("^Kafka container version (^\\s+)$")
     public void setKafkaVersion(String version) {
         this.kafkaVersion = version;
+    }
+
+    @Given("^Kafka container port (^\\d+)$")
+    public void setKafkaPort(int port) {
+        this.port = port;
+    }
+
+    @Given("^Kafka container implementation (DEFAULT|CONFLUENT|APACHE)$")
+    public void setImplementation(String implementation) {
+        this.implementation = KafkaImplementation.valueOf(implementation);
     }
 
     @Given("^Kafka service name (^\\s+)$")
@@ -86,6 +105,8 @@ public class KafkaSteps {
                 .kafka()
                 .start()
                 .version(kafkaVersion)
+                .port(port)
+                .implementation(implementation)
                 .serviceName(serviceName)
                 .withStartupTimeout(startupTimeout)
                 .withEnv(env)

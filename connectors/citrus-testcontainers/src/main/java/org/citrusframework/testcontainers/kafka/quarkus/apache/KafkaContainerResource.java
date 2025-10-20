@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package org.citrusframework.testcontainers.kafka.quarkus;
+package org.citrusframework.testcontainers.kafka.quarkus.apache;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import io.quarkus.test.common.QuarkusTestResourceConfigurableLifecycleManager;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.testcontainers.kafka.KafkaImplementation;
 import org.citrusframework.testcontainers.kafka.StartKafkaAction;
 import org.citrusframework.testcontainers.quarkus.ContainerLifecycleListener;
 import org.citrusframework.testcontainers.quarkus.TestcontainersResource;
-import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.kafka.KafkaContainer;
 
 public class KafkaContainerResource extends TestcontainersResource<KafkaContainer>
         implements QuarkusTestResourceConfigurableLifecycleManager<KafkaContainerSupport> {
@@ -46,11 +47,30 @@ public class KafkaContainerResource extends TestcontainersResource<KafkaContaine
             }
         }
 
-        doInit(Collections.emptyMap());
+        Map<String, String> initArgs = new HashMap<>();
+        if (!config.version().isEmpty()) {
+            initArgs.put("version", config.version());
+        }
+
+        if (config.port() > 0) {
+            initArgs.put("port",  String.valueOf(config.port()));
+        }
+        doInit(initArgs);
     }
 
     @Override
     protected void doInit(Map<String, String> initArgs) {
-        container = new StartKafkaAction.Builder().build().getContainer();
+        StartKafkaAction.Builder<KafkaContainer> builder = new StartKafkaAction.Builder<KafkaContainer>()
+                .implementation(KafkaImplementation.APACHE);
+
+        if (initArgs.containsKey("version")) {
+            builder.version(initArgs.get("version"));
+        }
+
+        if (initArgs.containsKey("port")) {
+            builder.port(Integer.parseInt(initArgs.get("port")));
+        }
+
+        container = builder.build().getContainer();
     }
 }

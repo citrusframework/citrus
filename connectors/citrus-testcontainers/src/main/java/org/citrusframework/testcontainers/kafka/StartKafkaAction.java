@@ -20,35 +20,55 @@ import org.citrusframework.actions.testcontainers.TestcontainersKafkaStartAction
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
-import org.citrusframework.testcontainers.postgresql.PostgreSQLSettings;
-import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.kafka.ConfluentKafkaContainer;
+import org.testcontainers.kafka.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
-public class StartKafkaAction extends StartTestcontainersAction<KafkaContainer> {
+public class StartKafkaAction<T extends GenericContainer<?>> extends StartTestcontainersAction<T> {
 
-    public StartKafkaAction(Builder builder) {
+    public StartKafkaAction(Builder<T> builder) {
         super(builder);
     }
 
     @Override
-    protected void exposeConnectionSettings(KafkaContainer container, TestContext context) {
+    protected void exposeConnectionSettings(T container, TestContext context) {
         KafkaSettings.exposeConnectionSettings(container, serviceName, context);
     }
 
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractBuilder<KafkaContainer, StartKafkaAction, Builder>
-            implements TestcontainersKafkaStartActionBuilder<KafkaContainer, StartKafkaAction, Builder> {
+    public static class Builder<T extends GenericContainer<?>> extends AbstractBuilder<T, StartKafkaAction<T>, Builder<T>>
+            implements TestcontainersKafkaStartActionBuilder<T, StartKafkaAction<T>, Builder<T>> {
 
-        private String kafkaVersion = KafkaSettings.getKafkaVersion();
+        private KafkaImplementation implementation = KafkaSettings.getImplementation();
+        private String kafkaVersion;
+        private int port = -1;
 
         public Builder() {
-            withStartupTimeout(PostgreSQLSettings.getStartupTimeout());
+            withStartupTimeout(KafkaSettings.getStartupTimeout());
         }
 
         @Override
-        public Builder version(String kafkaVersion) {
+        public Builder<T> implementation(String implementation) {
+           this.implementation = KafkaImplementation.valueOf(implementation);
+           return this;
+        }
+
+        public Builder<T> implementation(KafkaImplementation implementation) {
+            this.implementation = implementation;
+            return this;
+        }
+
+        @Override
+        public Builder<T> port(int port) {
+            this.port = port;
+            return this;
+        }
+
+        @Override
+        public Builder<T> version(String kafkaVersion) {
            this.kafkaVersion = kafkaVersion;
            return this;
         }
@@ -64,7 +84,11 @@ public class StartKafkaAction extends StartTestcontainersAction<KafkaContainer> 
             }
 
             if (image == null) {
-                image(KafkaSettings.getImageName());
+                image(KafkaSettings.getImageName(implementation));
+            }
+
+            if (kafkaVersion == null) {
+                version(KafkaSettings.getKafkaVersion(implementation));
             }
 
             withLabel("app", "citrus");
@@ -73,31 +97,58 @@ public class StartKafkaAction extends StartTestcontainersAction<KafkaContainer> 
             withLabel("app.kubernetes.io/part-of", TestContainersSettings.getTestName());
             withLabel("app.openshift.io/connects-to", TestContainersSettings.getTestId());
 
-            KafkaContainer kafkaContainer;
-            if (referenceResolver != null && referenceResolver.isResolvable(containerName, KafkaContainer.class)) {
-                kafkaContainer = referenceResolver.resolve(containerName, KafkaContainer.class);
+            Class<?> kafkaContainerType = switch (implementation) {
+                case DEFAULT, CONFLUENT -> ConfluentKafkaContainer.class;
+                case APACHE -> KafkaContainer.class;
+            };
+            GenericContainer<?> kafkaContainer;
+            if (referenceResolver != null && referenceResolver.isResolvable(containerName, kafkaContainerType)) {
+                kafkaContainer = (GenericContainer<?>) referenceResolver.resolve(containerName, kafkaContainerType);
             } else {
                 DockerImageName imageName;
                 if (TestContainersSettings.isRegistryMirrorEnabled()) {
                     // make sure the mirror image is declared as compatible with original image
                     imageName = DockerImageName.parse(image).withTag(kafkaVersion)
-                            .asCompatibleSubstituteFor(DockerImageName.parse("confluentinc/cp-kafka"));
+                            .asCompatibleSubstituteFor(DockerImageName.parse(image));
                 } else {
                     imageName = DockerImageName.parse(image).withTag(kafkaVersion);
                 }
 
-                kafkaContainer = new KafkaContainer(imageName)
-                        .withNetwork(network)
-                        .withNetworkAliases(serviceName)
-                        .withStartupTimeout(startupTimeout);
+                if (port > 0) {
+                    kafkaContainer = switch(implementation) {
+                        case DEFAULT, CONFLUENT -> new ConfluentKafkaContainer(imageName) {
+                            @Override
+                            public void start() {
+                                addFixedExposedPort(port, KafkaSettings.KAFKA_PORT);
+                                super.start();
+                            }
+                        };
+                        case APACHE -> new KafkaContainer(imageName) {
+                            @Override
+                            public void start() {
+                                addFixedExposedPort(port, KafkaSettings.KAFKA_PORT);
+                                super.start();
+                            }
+                        };
+                    };
+                } else {
+                    kafkaContainer = switch(implementation) {
+                        case DEFAULT, CONFLUENT -> new ConfluentKafkaContainer(imageName);
+                        case APACHE ->  new KafkaContainer(imageName);
+                    };
+                }
+
+                kafkaContainer.withNetwork(network)
+                                .withNetworkAliases(serviceName)
+                                .withStartupTimeout(startupTimeout);
             }
 
             container(kafkaContainer);
         }
 
         @Override
-        public StartKafkaAction doBuild() {
-            return new StartKafkaAction(this);
+        public StartKafkaAction<T> doBuild() {
+            return new StartKafkaAction<>(this);
         }
     }
 }

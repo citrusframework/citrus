@@ -104,6 +104,14 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             builder.version(container.getVersion());
         }
 
+        if (container.getPort() > 0) {
+            builder.port(container.getPort());
+        }
+
+        if (container.getImplementation() != null) {
+            builder.implementation(container.getImplementation());
+        }
+
         configureStartActionBuilder(builder, container);
 
         delegate = builder;
@@ -637,12 +645,34 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         @XmlAttribute
         protected String version;
 
+        @XmlAttribute
+        protected String implementation;
+
+        @XmlAttribute
+        protected int port;
+
         public String getVersion() {
             return version;
         }
 
         public void setVersion(String version) {
             this.version = version;
+        }
+
+        public String getImplementation() {
+            return implementation;
+        }
+
+        public void setImplementation(String implementation) {
+            this.implementation = implementation;
+        }
+
+        public int getPort() {
+            return port;
+        }
+
+        public void setPort(int port) {
+            this.port = port;
         }
     }
 

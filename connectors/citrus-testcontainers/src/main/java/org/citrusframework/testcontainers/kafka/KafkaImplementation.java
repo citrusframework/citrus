@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions.testcontainers;
+package org.citrusframework.testcontainers.kafka;
 
-import org.citrusframework.TestAction;
-
-public interface TestcontainersKafkaStartActionBuilder<C extends AutoCloseable, T extends TestAction, B extends TestcontainersKafkaStartActionBuilder<C, T, B>>
-        extends TestcontainersStartActionBuilderBase<C, T, B> {
-
-    /**
-     * Kafka implementation variant (usually one of Confluent or Apache).
-     */
-    B implementation(String implementation);
-
-    /**
-     * Sets a fixed port for the Kafka container.
-     */
-    B port(int port);
-
-    B version(String kafkaVersion);
+public enum KafkaImplementation {
+    DEFAULT,
+    CONFLUENT,
+    APACHE,
 }

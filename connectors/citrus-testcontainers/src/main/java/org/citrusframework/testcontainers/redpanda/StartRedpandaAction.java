@@ -82,7 +82,7 @@ public class StartRedpandaAction extends StartTestcontainersAction<RedpandaConta
                 if (TestContainersSettings.isRegistryMirrorEnabled()) {
                     // make sure the mirror image is declared as compatible with original image
                     imageName = DockerImageName.parse(image).withTag(redpandaVersion)
-                            .asCompatibleSubstituteFor(DockerImageName.parse("redpandadata/redpanda"));
+                            .asCompatibleSubstituteFor(DockerImageName.parse(RedpandaSettings.IMAGE_NAME_DEFAULT));
                 } else {
                     imageName = DockerImageName.parse(image).withTag(redpandaVersion);
                 }
