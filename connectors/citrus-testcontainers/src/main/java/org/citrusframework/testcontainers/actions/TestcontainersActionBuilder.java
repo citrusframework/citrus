@@ -41,7 +41,6 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
 
     /**
      * Fluent API action building entry method used in Java DSL.
-     * @return
      */
     public static TestcontainersActionBuilder testcontainers() {
         return new TestcontainersActionBuilder();
@@ -212,8 +211,8 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
     public class KafkaActionBuilder implements TestcontainersKafkaActionBuilder {
 
         @Override
-        public StartKafkaAction.Builder start() {
-            StartKafkaAction.Builder builder = new StartKafkaAction.Builder();
+        public StartKafkaAction.Builder<GenericContainer<?>> start() {
+            StartKafkaAction.Builder<GenericContainer<?>> builder = new StartKafkaAction.Builder<>();
             delegate = builder;
             return builder;
         }

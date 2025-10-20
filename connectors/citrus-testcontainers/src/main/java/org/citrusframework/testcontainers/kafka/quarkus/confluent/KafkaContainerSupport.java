@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.testcontainers.kafka.quarkus;
+package org.citrusframework.testcontainers.kafka.quarkus.confluent;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 import io.quarkus.test.common.QuarkusTestResource;
 import org.citrusframework.testcontainers.quarkus.ContainerLifecycleListener;
-import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.kafka.ConfluentKafkaContainer;
 
 @QuarkusTestResource(KafkaContainerResource.class)
 @Retention(RetentionPolicy.RUNTIME)
@@ -31,7 +31,17 @@ import org.testcontainers.containers.KafkaContainer;
 public @interface KafkaContainerSupport {
 
     /**
+     * Optional fixed container port.
+     */
+    int port() default -1;
+
+    /**
+     * Kafka container image version.
+     */
+    String version() default "";
+
+    /**
      * Container lifecycle listeners
      */
-    Class<? extends ContainerLifecycleListener<KafkaContainer>>[] containerLifecycleListener() default {};
+    Class<? extends ContainerLifecycleListener<ConfluentKafkaContainer>>[] containerLifecycleListener() default {};
 }

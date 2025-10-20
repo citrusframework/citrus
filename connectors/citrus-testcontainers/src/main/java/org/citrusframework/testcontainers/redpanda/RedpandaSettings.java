@@ -44,7 +44,7 @@ public class RedpandaSettings {
 
     private static final String IMAGE_NAME_PROPERTY = REDPANDA_PROPERTY_PREFIX + "image.name";
     private static final String IMAGE_NAME_ENV = REDPANDA_ENV_PREFIX + "IMAGE_NAME";
-    private static final String IMAGE_NAME_DEFAULT = "redpandadata/redpanda";
+    protected static final String IMAGE_NAME_DEFAULT = "redpandadata/redpanda";
 
     private static final String STARTUP_TIMEOUT_PROPERTY = REDPANDA_PROPERTY_PREFIX + "startup.timeout";
     private static final String STARTUP_TIMEOUT_ENV = REDPANDA_ENV_PREFIX + "STARTUP_TIMEOUT";
