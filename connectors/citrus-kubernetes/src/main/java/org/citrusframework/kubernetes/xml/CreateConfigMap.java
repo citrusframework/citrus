@@ -109,9 +109,9 @@ public class CreateConfigMap extends AbstractKubernetesAction.Builder<CreateConf
         @XmlType(name = "")
         public static class Property {
 
-            @XmlAttribute(name = "name", required = true)
+            @XmlAttribute(required = true)
             protected String name;
-            @XmlAttribute(name = "value")
+            @XmlAttribute
             protected String value;
 
             public String getName() {

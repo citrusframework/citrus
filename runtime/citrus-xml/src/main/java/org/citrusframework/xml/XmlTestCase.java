@@ -45,7 +45,6 @@ public class XmlTestCase {
 
     /**
      * Gets the test case.
-     * @return
      */
     public TestCase getTestCase() {
         return delegate;

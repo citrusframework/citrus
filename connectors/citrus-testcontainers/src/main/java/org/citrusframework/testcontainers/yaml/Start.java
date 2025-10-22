@@ -298,15 +298,15 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return env;
         }
 
-        public void setLabels(List<Label> labels) {
-            this.labels = labels;
-        }
-
         public List<Label> getLabels() {
             if (labels == null) {
                 labels = new ArrayList<>();
             }
             return labels;
+        }
+
+        public void setLabels(List<Label> labels) {
+            this.labels = labels;
         }
 
         public void setWaitFor(WaitFor waitFor) {

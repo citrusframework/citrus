@@ -28,7 +28,7 @@ import org.citrusframework.yaml.container.Iterate;
 import org.citrusframework.yaml.container.Parallel;
 import org.citrusframework.yaml.container.Repeat;
 import org.citrusframework.yaml.container.RepeatOnError;
-import org.citrusframework.yaml.container.Sequence;
+import org.citrusframework.yaml.container.Sequential;
 import org.citrusframework.yaml.container.Timer;
 import org.citrusframework.yaml.container.WaitFor;
 
@@ -136,7 +136,7 @@ public class TestActions implements Supplier<TestActionBuilder<?>> {
         this.builder = builder;
     }
 
-    public void setSequential(Sequence builder) {
+    public void setSequential(Sequential builder) {
         this.builder = builder;
     }
 

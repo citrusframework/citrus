@@ -38,7 +38,7 @@ public class Groovy implements TestActionBuilder<TestAction>, ReferenceResolverA
     private ReferenceResolver referenceResolver;
 
     public void setDescription(String value) {
-        this.description = description;
+        this.description = value;
     }
 
     public void setActor(String actor) {

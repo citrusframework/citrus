@@ -60,31 +60,27 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     private ReferenceResolver referenceResolver;
 
     @XmlElement
-    public Http setDescription(String value) {
+    public void setDescription(String value) {
         this.description = value;
-        return this;
     }
 
     @XmlAttribute(name = "actor")
-    public Http setActor(String actor) {
+    public void setActor(String actor) {
         this.actor = actor;
-        return this;
     }
 
     @XmlAttribute(name = "client")
-    public Http setHttpClient(String httpClient) {
+    public void setHttpClient(String httpClient) {
         builder = new HttpActionBuilder().client(httpClient);
-        return this;
     }
 
     @XmlAttribute(name = "server")
-    public Http setHttpServer(String httpServer) {
+    public void setHttpServer(String httpServer) {
         builder = new HttpActionBuilder().server(httpServer);
-        return this;
     }
 
     @XmlElement(name = "send-request")
-    public Http setSendRequest(ClientRequest request) {
+    public void setSendRequest(ClientRequest request) {
         HttpClientRequestActionBuilder requestBuilder;
         HttpRequest requestMessage;
         if (request.getGet() != null) {
@@ -161,11 +157,10 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
 
         builder = requestBuilder;
-        return this;
     }
 
     @XmlElement(name = "receive-response")
-    public Http setReceiveResponse(ClientResponse response) {
+    public void setReceiveResponse(ClientResponse response) {
         HttpClientResponseActionBuilder responseBuilder = asClientBuilder().receive().response().name("http:receive-response");
 
         responseBuilder.description(description);
@@ -219,11 +214,10 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
 
         builder = responseBuilder;
-        return this;
     }
 
     @XmlElement(name = "receive-request")
-    public Http setReceiveRequest(ServerRequest request) {
+    public void setReceiveRequest(ServerRequest request) {
         HttpServerRequestActionBuilder requestBuilder;
         HttpRequest requestMessage;
         if (request.getGet() != null) {
@@ -308,11 +302,10 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
 
         builder = requestBuilder;
-        return this;
     }
 
     @XmlElement(name = "send-response")
-    public Http setSendResponse(ServerResponse response) {
+    public void setSendResponse(ServerResponse response) {
         HttpServerResponseActionBuilder responseBuilder = asServerBuilder().send().response().name("http:send-response");
 
         responseBuilder.description(description);
@@ -348,7 +341,6 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
 
         builder = responseBuilder;
-        return this;
     }
 
     @Override
@@ -416,9 +408,9 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             "extract"
     })
     public static class ClientRequest {
-        @XmlAttribute(name = "uri")
+        @XmlAttribute
         protected String uri;
-        @XmlAttribute(name = "fork")
+        @XmlAttribute
         protected Boolean fork;
 
         @XmlElement(name = "GET")
@@ -881,11 +873,11 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "")
     public static class HttpResponse extends Message {
-        @XmlAttribute(name = "status")
+        @XmlAttribute
         protected String status = "200";
         @XmlAttribute(name = "reason-phrase")
         protected String reasonPhrase;
-        @XmlAttribute(name = "version")
+        @XmlAttribute
         protected String version;
         @XmlAttribute(name = "content-type")
         protected String contentType;
@@ -932,9 +924,9 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         protected String path;
         @XmlAttribute(name = "content-type")
         protected String contentType;
-        @XmlAttribute(name = "accept")
+        @XmlAttribute
         protected String accept;
-        @XmlAttribute(name = "version")
+        @XmlAttribute
         protected String version;
 
         @XmlElement(name = "param")
@@ -982,9 +974,9 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
         public static class QueryParameter {
-            @XmlAttribute(name = "name", required = true)
+            @XmlAttribute(required = true)
             protected String name;
-            @XmlAttribute(name = "value")
+            @XmlAttribute
             protected String value;
 
             public String getName() {

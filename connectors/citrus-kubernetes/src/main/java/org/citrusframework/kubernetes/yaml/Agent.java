@@ -64,11 +64,6 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
     }
 
     @Override
-    public void setReferenceResolver(ReferenceResolver referenceResolver) {
-        this.delegate.setReferenceResolver(referenceResolver);
-    }
-
-    @Override
     public Agent description(String description) {
         delegate.description(description);
         return this;
@@ -96,6 +91,11 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
     public Agent autoRemoveResources(boolean enabled) {
         this.delegate.autoRemoveResources(enabled);
         return this;
+    }
+
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.delegate.setReferenceResolver(referenceResolver);
     }
 
     @Override

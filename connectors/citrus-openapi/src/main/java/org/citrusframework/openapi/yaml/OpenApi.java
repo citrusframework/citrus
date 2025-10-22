@@ -45,6 +45,7 @@ import org.citrusframework.yaml.actions.Receive;
 import org.citrusframework.yaml.actions.Send;
 
 import static org.citrusframework.openapi.OpenApiSettings.getRequestAutoFillRandomValues;
+import static org.citrusframework.openapi.OpenApiSettings.getResponseAutoFillRandomValues;
 
 public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
@@ -80,11 +81,18 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
     public void setSendRequest(ClientRequest request) {
         OpenApiClientRequestActionBuilder requestBuilder =
-                asClientBuilder().send(request.getOperation());
+            asClientBuilder().send(request.getOperation());
 
         requestBuilder.name("openapi:send-request");
         requestBuilder.description(description);
-        requestBuilder.autoFill(request.autoFill);
+
+        if (request.getSchemaValidation() != null) {
+            requestBuilder.schemaValidation(request.getSchemaValidation());
+        }
+
+        if (request.getAutoFill() != null) {
+            requestBuilder.autoFill(request.getAutoFill());
+        }
 
         send = new Send(requestBuilder) {
             @Override
@@ -115,6 +123,10 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
         responseBuilder.name("openapi:receive-response");
         responseBuilder.description(description);
+
+        if (response.getSchemaValidation() != null) {
+            responseBuilder.schemaValidation(response.getSchemaValidation());
+        }
 
         receive = new Receive(responseBuilder) {
             @Override
@@ -156,6 +168,10 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         requestBuilder.name("openapi:receive-request");
         requestBuilder.description(description);
 
+        if (request.getSchemaValidation() != null) {
+            requestBuilder.schemaValidation(request.getSchemaValidation());
+        }
+
         receive = new Receive(requestBuilder) {
             @Override
             protected ReceiveMessageAction doBuild() {
@@ -193,6 +209,14 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
         responseBuilder.name("openapi:send-response");
         responseBuilder.description(description);
+
+        if (response.getSchemaValidation() != null) {
+            responseBuilder.schemaValidation(response.getSchemaValidation());
+        }
+
+        if (response.getAutoFill() != null) {
+            responseBuilder.autoFill(response.getAutoFill());
+        }
 
         send = new Send(responseBuilder) {
             @Override
@@ -242,12 +266,10 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
     /**
      * Converts current builder to client builder.
-     *
-     * @return
      */
     private OpenApiClientActionBuilder asClientBuilder() {
-        if (builder instanceof OpenApiClientActionBuilder openApiClientActionBuilder) {
-            return openApiClientActionBuilder;
+        if (builder instanceof OpenApiClientActionBuilder clientBuilder) {
+            return clientBuilder;
         }
 
         throw new CitrusRuntimeException(String.format("Failed to convert '%s' to openapi client action builder",
@@ -256,12 +278,10 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
     /**
      * Converts current builder to server builder.
-     *
-     * @return
      */
     private OpenApiServerActionBuilder asServerBuilder() {
-        if (builder instanceof OpenApiServerActionBuilder openApiServerActionBuilder) {
-            return openApiServerActionBuilder;
+        if (builder instanceof OpenApiServerActionBuilder serverBuilder) {
+            return serverBuilder;
         }
 
         throw new CitrusRuntimeException(String.format("Failed to convert '%s' to openapi server action builder",
@@ -272,7 +292,7 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         protected String operation;
         protected String uri;
         protected Boolean fork;
-
+        protected Boolean schemaValidation;
         protected AutoFillType autoFill = getRequestAutoFillRandomValues();
 
         protected Message.Extract extract;
@@ -299,6 +319,14 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
         public void setFork(Boolean fork) {
             this.fork = fork;
+        }
+
+        public Boolean getSchemaValidation() {
+            return schemaValidation;
+        }
+
+        public void setSchemaValidation(Boolean schemaValidation) {
+            this.schemaValidation = schemaValidation;
         }
 
         public Message.Extract getExtract() {
@@ -332,6 +360,8 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         protected String headerValidator;
 
         protected String headerValidators;
+
+        protected Boolean schemaValidation;
 
         protected Receive.Selector selector;
 
@@ -414,12 +444,24 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
+
+        public Boolean getSchemaValidation() {
+            return schemaValidation;
+        }
+
+        public void setSchemaValidation(Boolean schemaValidation) {
+            this.schemaValidation = schemaValidation;
+        }
     }
 
     public static class ServerResponse {
         protected String operation;
 
         protected String status = "200";
+
+        protected Boolean schemaValidation;
+
+        protected AutoFillType autoFill = getResponseAutoFillRandomValues();
 
         protected Message.Extract extract;
 
@@ -446,6 +488,22 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
+
+        public Boolean getSchemaValidation() {
+            return schemaValidation;
+        }
+
+        public void setSchemaValidation(Boolean schemaValidation) {
+            this.schemaValidation = schemaValidation;
+        }
+
+        public AutoFillType getAutoFill() {
+            return autoFill;
+        }
+
+        public void setAutoFill(AutoFillType autoFill) {
+            this.autoFill = autoFill;
+        }
     }
 
     public static class ClientResponse {
@@ -464,6 +522,8 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         protected String headerValidator;
 
         protected String headerValidators;
+
+        protected Boolean schemaValidation;
 
         protected Receive.Selector selector;
 
@@ -558,5 +618,14 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
+
+        public Boolean getSchemaValidation() {
+            return schemaValidation;
+        }
+
+        public void setSchemaValidation(Boolean schemaValidation) {
+            this.schemaValidation = schemaValidation;
+        }
+
     }
 }

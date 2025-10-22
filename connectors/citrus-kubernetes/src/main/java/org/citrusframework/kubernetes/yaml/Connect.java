@@ -46,11 +46,6 @@ public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetes
     }
 
     @Override
-    public void setReferenceResolver(ReferenceResolver referenceResolver) {
-        this.delegate.setReferenceResolver(referenceResolver);
-    }
-
-    @Override
     public Connect description(String description) {
         delegate.description(description);
         return this;
@@ -78,6 +73,11 @@ public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetes
     public Connect autoRemoveResources(boolean enabled) {
         this.delegate.autoRemoveResources(enabled);
         return this;
+    }
+
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.delegate.setReferenceResolver(referenceResolver);
     }
 
     @Override

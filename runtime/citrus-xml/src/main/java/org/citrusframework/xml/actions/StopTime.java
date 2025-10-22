@@ -29,21 +29,18 @@ public class StopTime implements TestActionBuilder<StopTimeAction> {
     private final StopTimeAction.Builder builder = new StopTimeAction.Builder();
 
     @XmlAttribute
-    public StopTime setId(String id) {
+    public void setId(String id) {
         builder.id(id);
-        return this;
     }
 
     @XmlAttribute
-    public StopTime setSuffix(String suffix) {
+    public void setSuffix(String suffix) {
         builder.suffix(suffix);
-        return this;
     }
 
     @XmlElement
-    public StopTime setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @Override

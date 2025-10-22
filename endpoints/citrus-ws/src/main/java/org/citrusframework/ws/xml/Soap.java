@@ -63,31 +63,27 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     private ReferenceResolver referenceResolver;
 
     @XmlElement
-    public Soap setDescription(String value) {
+    public void setDescription(String value) {
         this.description = value;
-        return this;
     }
 
-    @XmlAttribute(name = "actor")
-    public Soap setActor(String actor) {
+    @XmlAttribute
+    public void setActor(String actor) {
         this.actor = actor;
-        return this;
     }
 
     @XmlAttribute(name = "client")
-    public Soap setSoapClient(String soapClient) {
+    public void setSoapClient(String soapClient) {
         builder = new SoapActionBuilder().client(soapClient);
-        return this;
     }
 
     @XmlAttribute(name = "server")
-    public Soap setSoapServer(String soapServer) {
+    public void setSoapServer(String soapServer) {
         builder = new SoapActionBuilder().server(soapServer);
-        return this;
     }
 
     @XmlElement(name = "send-request")
-    public Soap setSendRequest(ClientRequest request) {
+    public void setSendRequest(ClientRequest request) {
         SendSoapMessageAction.Builder requestBuilder = asClientBuilder().send();
         requestBuilder.name("soap:send-request");
         requestBuilder.description(description);
@@ -147,11 +143,10 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
 
         builder = requestBuilder;
-        return this;
     }
 
     @XmlElement(name = "receive-response")
-    public Soap setReceiveResponse(ClientResponse response) {
+    public void setReceiveResponse(ClientResponse response) {
         ReceiveSoapMessageAction.Builder responseBuilder = asClientBuilder().receive();
 
         responseBuilder.name("soap:receive-response");
@@ -222,11 +217,10 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
 
         builder = responseBuilder;
-        return this;
     }
 
     @XmlElement(name = "receive-request")
-    public Soap setReceiveRequest(ServerRequest request) {
+    public void setReceiveRequest(ServerRequest request) {
         ReceiveSoapMessageAction.Builder requestBuilder = asServerBuilder().receive();
 
         requestBuilder.name("soap:receive-request");
@@ -295,11 +289,10 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
 
         builder = requestBuilder;
-        return this;
     }
 
     @XmlElement(name = "send-response")
-    public Soap setSendResponse(ServerResponse response) {
+    public void setSendResponse(ServerResponse response) {
         SendSoapMessageAction.Builder responseBuilder = asServerBuilder().send();
 
         responseBuilder.name("soap:send-response");
@@ -348,7 +341,6 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
 
         builder = responseBuilder;
-        return this;
     }
 
     @XmlElement(name = "send-fault")
@@ -528,12 +520,12 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             "extract"
     })
     public static class ClientRequest {
-        @XmlAttribute(name = "uri")
+        @XmlAttribute
         protected String uri;
-        @XmlAttribute(name = "fork")
+        @XmlAttribute
         protected Boolean fork;
 
-        @XmlElement(name = "message")
+        @XmlElement
         protected SoapRequest message;
 
         @XmlElement

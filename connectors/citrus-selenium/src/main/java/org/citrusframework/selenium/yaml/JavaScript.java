@@ -29,7 +29,6 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
 
     /**
      * Add script.
-     * @param script
      */
     public void setScript(String script) {
         this.delegate.script(script);
@@ -37,7 +36,6 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
 
     /**
      * Add script argument.
-     * @param arg
      */
     public void setArgument(Object arg) {
         this.delegate.argument(arg);
@@ -45,7 +43,6 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
 
     /**
      * Add script arguments.
-     * @param args
      */
     public void setArguments(List<Object> args) {
         this.delegate.arguments(args);
@@ -53,7 +50,6 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
 
     /**
      * Add expected error.
-     * @param error
      */
     public void setError(String error) {
         this.delegate.error(error);
@@ -61,7 +57,6 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
 
     /**
      * Add expected error.
-     * @param errors
      */
     public void setErrors(List<String> errors) {
         this.delegate.errors(errors);

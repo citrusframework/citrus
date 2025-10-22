@@ -42,51 +42,43 @@ public class Timer implements TestActionBuilder<org.citrusframework.container.Ti
     }
 
     @XmlElement
-    public Timer setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlAttribute
-    public Timer setId(String id) {
+    public void setId(String id) {
         builder.timerId(id);
-        return this;
     }
 
     @XmlAttribute
-    public Timer setDelay(long milliseconds) {
+    public void setDelay(long milliseconds) {
         builder.delay(milliseconds);
-        return this;
     }
 
     @XmlAttribute
-    public Timer setFork(boolean enabled) {
+    public void setFork(boolean enabled) {
         builder.fork(enabled);
-        return this;
     }
 
     @XmlAttribute(name = "auto-stop")
-    public Timer setAutoStop(boolean enabled) {
+    public void setAutoStop(boolean enabled) {
         builder.autoStop(enabled);
-        return this;
     }
 
     @XmlAttribute
-    public Timer setInterval(long milliseconds) {
+    public void setInterval(long milliseconds) {
         builder.interval(milliseconds);
-        return this;
     }
 
     @XmlAttribute
-    public Timer setRepeatCount(int count) {
+    public void setRepeatCount(int count) {
         builder.repeatCount(count);
-        return this;
     }
 
     @XmlElement(required = true)
-    public Timer setActions(TestActions actions) {
+    public void setActions(TestActions actions) {
         builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
-        return this;
     }
 
     @Override

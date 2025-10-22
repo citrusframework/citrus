@@ -33,27 +33,39 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
 
     private final CreateEndpointAction.Builder builder = new CreateEndpointAction.Builder();
 
-    @XmlAttribute(required = true)
-    protected String type;
-    @XmlAttribute
-    protected String uri;
-    @XmlAttribute
-    protected String name;
-    @XmlElement
-    protected Properties properties;
+    private String type;
+    private String uri;
+    private String name;
+    private Properties properties;
 
+    @XmlAttribute(required = true)
     public void setType(String type) {
         this.type = type;
     }
 
+    public String getUri() {
+        return uri;
+    }
+
+    @XmlAttribute
     public void setUri(String uri) {
         this.uri = uri;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    @XmlAttribute
     public void setName(String value) {
         this.name = value;
     }
 
+    public Properties getProperties() {
+        return properties;
+    }
+
+    @XmlElement
     public void setProperties(Properties properties) {
         this.properties = properties;
     }
@@ -78,9 +90,8 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
     }
 
     @XmlElement
-    public CreateEndpoint setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)

@@ -33,13 +33,12 @@ public class Transform implements TestActionBuilder<TransformAction> {
     private final TransformAction.Builder builder = new TransformAction.Builder();
 
     @XmlElement
-    public Transform setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlElement(required = true)
-    public Transform setSource(Source source) {
+    public void setSource(Source source) {
         if (source.file != null) {
             if (source.charset != null) {
                 builder.sourceFile(source.file, source.charset);
@@ -49,12 +48,10 @@ public class Transform implements TestActionBuilder<TransformAction> {
         }
 
         builder.source(source.value);
-
-        return this;
     }
 
-    @XmlElement(name = "xslt", required = true)
-    public Transform setXslt(Xslt xslt) {
+    @XmlElement(required = true)
+    public void setXslt(Xslt xslt) {
         if (xslt.file != null) {
             if (xslt.charset != null) {
                 builder.xsltFile(xslt.file, xslt.charset);
@@ -64,20 +61,16 @@ public class Transform implements TestActionBuilder<TransformAction> {
         }
 
         builder.xslt(xslt.value);
-
-        return this;
     }
 
     @XmlAttribute
-    public Transform setResult(String variable) {
+    public void setResult(String variable) {
         builder.result(variable);
-        return this;
     }
 
     @XmlAttribute
-    public Transform setVariable(String variable) {
+    public void setVariable(String variable) {
         builder.result(variable);
-        return this;
     }
 
     @Override
@@ -90,9 +83,9 @@ public class Transform implements TestActionBuilder<TransformAction> {
     public static class Source {
         @XmlValue
         protected String value;
-        @XmlAttribute(name = "file")
+        @XmlAttribute
         protected String file;
-        @XmlAttribute(name = "charset")
+        @XmlAttribute
         protected String charset;
 
         public String getFile() {
@@ -125,9 +118,9 @@ public class Transform implements TestActionBuilder<TransformAction> {
     public static class Xslt {
         @XmlValue
         protected String value;
-        @XmlAttribute(name = "file")
+        @XmlAttribute
         protected String file;
-        @XmlAttribute(name = "charset")
+        @XmlAttribute
         protected String charset;
 
         public String getFile() {

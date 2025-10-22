@@ -41,27 +41,23 @@ public class Async implements TestActionBuilder<org.citrusframework.container.As
     }
 
     @XmlElement
-    public Async setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlElement(required = true)
-    public Async setActions(TestActions actions) {
+    public void setActions(TestActions actions) {
         builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
-        return this;
     }
 
     @XmlElement
-    public Async setSuccess(TestActions actions) {
+    public void setSuccess(TestActions actions) {
         builder.successActions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
-        return this;
     }
 
     @XmlElement
-    public Async setError(TestActions actions) {
+    public void setError(TestActions actions) {
         builder.errorActions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
-        return this;
     }
 
     @Override

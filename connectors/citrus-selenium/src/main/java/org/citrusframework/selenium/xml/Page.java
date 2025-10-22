@@ -46,8 +46,6 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
 
     /**
      * Sets the web page by name.
-     *
-     * @param name
      */
     @XmlAttribute
     public void setName(String name) {
@@ -56,8 +54,6 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
 
     /**
      * Sets the web page type.
-     *
-     * @param pageType
      */
     @XmlAttribute
     public void setType(String pageType) {
@@ -66,8 +62,6 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
 
     /**
      * Sets the web page action.
-     *
-     * @param action
      */
     @XmlAttribute
     public void setAction(String action) {
@@ -76,8 +70,6 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
 
     /**
      * Set page validator.
-     *
-     * @param pageValidator
      */
     @XmlAttribute
     public void setValidator(String pageValidator) {
@@ -86,8 +78,6 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
 
     /**
      * Set page action method to execute.
-     *
-     * @param method
      */
     @XmlAttribute(name = "method")
     public void setExecute(String method) {
@@ -96,8 +86,6 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
 
     /**
      * Set page action argument.
-     *
-     * @param arg
      */
     @XmlAttribute
     public void setArgument(String arg) {
@@ -106,8 +94,6 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
 
     /**
      * Set page action arguments.
-     *
-     * @param args
      */
     @XmlElement(name = "arguments")
     public void setArguments(Arguments args) {

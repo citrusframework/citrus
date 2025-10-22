@@ -16,11 +16,11 @@
 
 package org.citrusframework.xml.actions;
 
+import java.util.concurrent.TimeUnit;
+
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import java.util.concurrent.TimeUnit;
-
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.SleepAction;
 
@@ -30,27 +30,23 @@ public class Sleep implements TestActionBuilder<SleepAction> {
     private final SleepAction.Builder builder = new SleepAction.Builder();
 
     @XmlElement
-    public Sleep setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlAttribute
-    public Sleep setTime(String time) {
+    public void setTime(String time) {
         builder.milliseconds(time);
-        return this;
     }
 
     @XmlAttribute
-    public Sleep setMilliseconds(String milliseconds) {
+    public void setMilliseconds(String milliseconds) {
         builder.time(milliseconds, TimeUnit.MILLISECONDS);
-        return this;
     }
 
     @XmlAttribute
-    public Sleep setSeconds(String seconds) {
+    public void setSeconds(String seconds) {
         builder.time(seconds, TimeUnit.SECONDS);
-        return this;
     }
 
     @Override

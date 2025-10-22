@@ -60,7 +60,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
     }
 
     @XmlElement(name = "localstack")
-    public void setLocalStack(LocalStack container) {
+    public void setLocalstack(LocalStack container) {
         StartLocalStackAction.Builder builder = new StartLocalStackAction.Builder();
         if (container.getVersion() != null) {
             builder.version(container.getVersion());
@@ -86,7 +86,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
     }
 
     @XmlElement(name = "mongodb")
-    public void setMongoDB(MongoDB container) {
+    public void setMongodb(MongoDB container) {
         StartMongoDBAction.Builder builder = new StartMongoDBAction.Builder();
         if (container.getVersion() != null) {
             builder.version(container.getVersion());
@@ -97,9 +97,9 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @XmlElement(name = "kafka")
+    @XmlElement
     public void setKafka(Kafka container) {
-        StartKafkaAction.Builder builder = new StartKafkaAction.Builder();
+        StartKafkaAction.Builder builder = new StartKafkaAction.Builder<>();
         if (container.getVersion() != null) {
             builder.version(container.getVersion());
         }
@@ -130,7 +130,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
     }
 
     @XmlElement(name = "postgresql")
-    public void setPostgreSQL(PostgreSQL container) {
+    public void setPostgresql(PostgreSQL container) {
         StartPostgreSQLAction.Builder builder = new StartPostgreSQLAction.Builder();
         if (container.getVersion() != null) {
             builder.version(container.getVersion());
@@ -817,9 +817,9 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         @XmlType(name = "")
         public static class Variable {
 
-            @XmlAttribute(name = "name", required = true)
+            @XmlAttribute(required = true)
             protected String name;
-            @XmlAttribute(name = "value", required = true)
+            @XmlAttribute(required = true)
             protected String value;
 
             public String getName() {
@@ -865,9 +865,9 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         @XmlType(name = "")
         public static class Label {
 
-            @XmlAttribute(name = "name", required = true)
+            @XmlAttribute(required = true)
             protected String name;
-            @XmlAttribute(name = "value", required = true)
+            @XmlAttribute(required = true)
             protected String value;
 
             public String getName() {

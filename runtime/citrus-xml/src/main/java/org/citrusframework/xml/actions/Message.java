@@ -37,9 +37,9 @@ import org.citrusframework.xml.actions.script.ScriptDefinitionType;
         "expressions"
 })
 public class Message {
-    @XmlElement(name = "headers")
+    @XmlElement
     protected Headers headers;
-    @XmlElement(name = "body")
+    @XmlElement
     protected Body body;
     @XmlElement(name = "expression")
     protected List<Expression> expressions;
@@ -47,13 +47,13 @@ public class Message {
     protected String dataDictionary;
     @XmlAttribute(name = "schema-validation")
     protected Boolean schemaValidation;
-    @XmlAttribute(name = "schema")
+    @XmlAttribute
     protected String schema;
     @XmlAttribute(name = "schema-repository")
     protected String schemaRepository;
-    @XmlAttribute(name = "name")
+    @XmlAttribute
     protected String name;
-    @XmlAttribute(name = "type")
+    @XmlAttribute
     protected String type;
 
     public Headers getHeaders() {
@@ -166,11 +166,11 @@ public class Message {
             @XmlElement
             protected Fragment fragment;
 
-            @XmlAttribute(name = "name", required = true)
+            @XmlAttribute(required = true)
             protected String name;
-            @XmlAttribute(name = "value", required = true)
+            @XmlAttribute(required = true)
             protected String value;
-            @XmlAttribute(name = "type")
+            @XmlAttribute
             protected String type;
 
             public String getName() {
@@ -224,9 +224,9 @@ public class Message {
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "")
             public static class Resource {
-                @XmlAttribute(name = "file", required = true)
+                @XmlAttribute(required = true)
                 protected String file;
-                @XmlAttribute(name = "charset")
+                @XmlAttribute
                 protected String charset;
 
                 public String getFile() {
@@ -316,9 +316,9 @@ public class Message {
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
         public static class Resource {
-            @XmlAttribute(name = "file", required = true)
+            @XmlAttribute(required = true)
             protected String file;
-            @XmlAttribute(name = "charset")
+            @XmlAttribute
             protected String charset;
 
             public String getFile() {
@@ -342,9 +342,9 @@ public class Message {
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "")
     public static class Expression {
-        @XmlAttribute(name = "path", required = true)
+        @XmlAttribute(required = true)
         protected String path;
-        @XmlAttribute(name = "value", required = true)
+        @XmlAttribute(required = true)
         protected String value;
 
         public String getPath() {
@@ -392,9 +392,9 @@ public class Message {
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
         public static class Header {
-            @XmlAttribute(name = "name", required = true)
+            @XmlAttribute(required = true)
             protected String name;
-            @XmlAttribute(name = "variable", required = true)
+            @XmlAttribute(required = true)
             protected String variable;
 
             public String getName() {
@@ -419,9 +419,9 @@ public class Message {
         public static class Expression {
             @XmlValue
             protected String value;
-            @XmlAttribute(name = "path", required = true)
+            @XmlAttribute(required = true)
             protected String path;
-            @XmlAttribute(name = "variable", required = true)
+            @XmlAttribute(required = true)
             protected String variable;
             @XmlAttribute(name = "result-type")
             protected String resultType;

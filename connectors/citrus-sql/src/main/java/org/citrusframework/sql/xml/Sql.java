@@ -53,31 +53,27 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
     protected List<Extract> extracts;
 
     @XmlElement
-    public Sql setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlAttribute(name = "datasource")
-    public Sql setDataSource(String dataSource) {
+    public void setDataSource(String dataSource) {
         builder.dataSource(dataSource);
         builder.name(String.format("sql:%s", dataSource));
-        return this;
     }
 
     @XmlElement(required = true)
-    public Sql setStatements(Statements statements) {
+    public void setStatements(Statements statements) {
         statements.getStatements().forEach(builder::statement);
 
         if (statements.file != null) {
             builder.sqlResource(statements.file);
         }
-
-        return this;
     }
 
     @XmlElement
-    public Sql setTransaction(Transaction transaction) {
+    public void setTransaction(Transaction transaction) {
         if (transaction.manager != null) {
             transactionManager = transaction.manager;
         }
@@ -89,16 +85,13 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         if (transaction.timeout != null) {
             builder.transactionTimeout(transaction.timeout);
         }
-
-        return this;
     }
 
     @XmlAttribute(name = "ignore-errors")
-    public Sql setIgnoreErrors(boolean value) {
+    public void setIgnoreErrors(boolean value) {
         if (builder instanceof ExecuteSQLAction.Builder) {
             ((ExecuteSQLAction.Builder) builder).ignoreErrors(value);
         }
-        return this;
     }
 
     public List<Validate> getValidates() {
@@ -233,9 +226,9 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
     @XmlType(name = "")
     public static class Transaction {
 
-        @XmlAttribute(name = "manager")
+        @XmlAttribute
         protected String manager;
-        @XmlAttribute(name = "timeout")
+        @XmlAttribute
         protected String timeout;
         @XmlAttribute(name = "isolation-level")
         protected String isolationLevel;
@@ -269,9 +262,9 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
     @XmlType(name = "")
     public static class Extract {
 
-        @XmlAttribute(name = "column", required = true)
+        @XmlAttribute(required = true)
         protected String column;
-        @XmlAttribute(name = "variable", required = true)
+        @XmlAttribute(required = true)
         protected String variable;
 
         public String getColumn() {
@@ -300,9 +293,9 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
 
         @XmlElement
         protected Values values;
-        @XmlAttribute(name = "column")
+        @XmlAttribute
         protected String column;
-        @XmlAttribute(name = "value")
+        @XmlAttribute
         protected String value;
         @XmlElement
         protected Script script;
@@ -362,11 +355,11 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
 
             @XmlValue
             protected String value;
-            @XmlAttribute(name = "type", required = true)
+            @XmlAttribute(required = true)
             protected String type;
-            @XmlAttribute(name = "file")
+            @XmlAttribute
             protected String file;
-            @XmlAttribute(name = "charset")
+            @XmlAttribute
             protected String charset;
 
             public String getValue() {

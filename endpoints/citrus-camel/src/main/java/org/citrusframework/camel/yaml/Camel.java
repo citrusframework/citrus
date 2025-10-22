@@ -32,7 +32,6 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
 
     private String description;
     private String actor;
-
     private String camelContext;
 
     private ReferenceResolver referenceResolver;

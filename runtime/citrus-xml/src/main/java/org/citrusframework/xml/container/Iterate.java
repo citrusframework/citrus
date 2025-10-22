@@ -42,39 +42,33 @@ public class Iterate implements TestActionBuilder<org.citrusframework.container.
     }
 
     @XmlElement
-    public Iterate setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlAttribute(name = "condition", required = true)
-    public Iterate setCondition(String condition) {
+    public void setCondition(String condition) {
         builder.condition(condition);
-        return this;
     }
 
     @XmlAttribute
-    public Iterate setIndex(String index) {
+    public void setIndex(String index) {
         builder.index(index);
-        return this;
     }
 
     @XmlAttribute
-    public Iterate setStartsWith(int value) {
+    public void setStartsWith(int value) {
         builder.startsWith(value);
-        return this;
     }
 
     @XmlAttribute
-    public Iterate setStep(int value) {
+    public void setStep(int value) {
         builder.step(value);
-        return this;
     }
 
     @XmlElement
-    public Iterate setActions(TestActions actions) {
+    public void setActions(TestActions actions) {
         builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
-        return this;
     }
 
     @Override

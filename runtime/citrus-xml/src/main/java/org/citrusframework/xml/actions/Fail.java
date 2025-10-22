@@ -29,21 +29,18 @@ public class Fail implements TestActionBuilder<FailAction> {
     private final FailAction.Builder builder = new FailAction.Builder();
 
     @XmlElement
-    public Fail setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlAttribute
-    public Fail setMessage(String message) {
+    public void setMessage(String message) {
         builder.message(message);
-        return this;
     }
 
     @XmlElement(name = "message")
-    public Fail setMessageElement(String message) {
+    public void setMessageElement(String message) {
         builder.message(message);
-        return this;
     }
 
     @Override

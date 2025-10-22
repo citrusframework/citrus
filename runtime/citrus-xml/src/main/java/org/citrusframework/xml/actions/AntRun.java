@@ -38,9 +38,8 @@ public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolve
     private ReferenceResolver referenceResolver;
 
     @XmlElement
-    public AntRun setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     /**
@@ -49,9 +48,8 @@ public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolve
      * @return
      */
     @XmlAttribute(name = "build-file")
-    public AntRun setBuildFile(String buildFilePath) {
+    public void setBuildFile(String buildFilePath) {
         builder.buildFilePath(buildFilePath);
-        return this;
     }
 
     /**
@@ -59,7 +57,7 @@ public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolve
      * @param execute
      */
     @XmlElement
-    public AntRun setExecute(Execute execute) {
+    public void setExecute(Execute execute) {
         if (execute.getTarget() != null) {
             builder.target(execute.target);
         }
@@ -67,7 +65,6 @@ public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolve
         if (execute.getTargets() != null) {
             builder.targets(execute.targets.split(","));
         }
-        return this;
     }
 
     /**
@@ -75,13 +72,12 @@ public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolve
      * @param properties
      */
     @XmlElement
-    public AntRun setProperties(Properties properties) {
+    public void setProperties(Properties properties) {
         if (properties.getFile() != null) {
             builder.propertyFile(properties.getFile());
         }
 
         properties.getProperties().forEach(prop -> builder.property(prop.getName(), prop.getValue()));
-        return this;
     }
 
     /**
@@ -89,9 +85,8 @@ public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolve
      * @param buildListener
      */
     @XmlAttribute(name = "build-listener")
-    public AntRun setBuildListener(String buildListener) {
+    public void setBuildListener(String buildListener) {
         builder.listenerName(buildListener);
-        return this;
     }
 
     @Override
@@ -167,7 +162,7 @@ public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolve
     @XmlType(name = "", propOrder = {})
     public static class Execute {
 
-        @XmlAttribute(name = "target")
+        @XmlAttribute
         protected String target;
 
         @XmlAttribute(name = "targets")

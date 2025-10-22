@@ -31,17 +31,21 @@ public class WaitUntil extends AbstractSeleniumAction.Builder<WaitUntilAction, W
         ElementAware.super.setElement(element);
     }
 
-    @Override
-    public FindElementAction.ElementActionBuilder<?, ?> getElementBuilder() {
-        return delegate;
-    }
-
     public void setTimeout(long timeout) {
         this.delegate.timeout(timeout);
     }
 
     public void setCondition(String condition) {
         this.delegate.condition(condition);
+    }
+
+    public void setUntil(String condition) {
+        this.delegate.condition(condition);
+    }
+
+    @Override
+    public FindElementAction.ElementActionBuilder<?, ?> getElementBuilder() {
+        return delegate;
     }
 
     @Override

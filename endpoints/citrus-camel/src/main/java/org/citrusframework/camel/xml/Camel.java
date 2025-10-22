@@ -50,25 +50,22 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
     private ReferenceResolver referenceResolver;
 
     @XmlElement
-    public Camel setDescription(String value) {
+    public void setDescription(String value) {
         this.description = value;
-        return this;
     }
 
     @XmlAttribute(name = "actor")
-    public Camel setActor(String actor) {
+    public void setActor(String actor) {
         this.actor = actor;
-        return this;
     }
 
     @XmlAttribute(name = "camel-context")
-    public Camel setCamelContext(String camelContext) {
+    public void setCamelContext(String camelContext) {
         this.camelContext = camelContext;
-        return this;
     }
 
     @XmlElement(name = "control-bus")
-    public Camel setControlBus(ControlBus controlBus) {
+    public void setControlBus(ControlBus controlBus) {
         CamelControlBusAction.Builder builder = new CamelControlBusAction.Builder()
                 .result(controlBus.getResult());
 
@@ -81,11 +78,10 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
         }
 
         this.builder = builder;
-        return this;
     }
 
     @XmlElement(name = "create-component")
-    public Camel setCreateComponent(Component component) {
+    public void setCreateComponent(Component component) {
         CreateCamelComponentAction.Builder builder = new CreateCamelComponentAction.Builder();
 
         builder.componentName(component.getName());
@@ -99,40 +95,36 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
         }
 
         this.builder = builder;
-        return this;
     }
 
     @XmlElement(name = "create-context")
-    public Camel setCreateContext(CamelContext createContext) {
+    public void setCreateContext(CamelContext createContext) {
         CreateCamelContextAction.Builder builder = new CreateCamelContextAction.Builder();
 
         builder.autoStart(createContext.isAutoStart());
         builder.contextName(createContext.getName());
 
         this.builder = builder;
-        return this;
     }
 
     @XmlElement(name = "start-context")
-    public Camel setStartContext(CamelContext startContext) {
+    public void setStartContext(CamelContext startContext) {
         StartCamelContextAction.Builder builder = new StartCamelContextAction.Builder();
         builder.contextName(startContext.getName());
 
         this.builder = builder;
-        return this;
     }
 
     @XmlElement(name = "stop-context")
-    public Camel setStopContext(CamelContext stopContext) {
+    public void setStopContext(CamelContext stopContext) {
         StopCamelContextAction.Builder builder = new StopCamelContextAction.Builder();
         builder.contextName(stopContext.getName());
 
         this.builder = builder;
-        return this;
     }
 
     @XmlElement(name = "create-routes")
-    public Camel setCreateRoutes(CreateRoutes createRoutes) {
+    public void setCreateRoutes(CreateRoutes createRoutes) {
         CreateCamelRouteAction.Builder builder = new CreateCamelRouteAction.Builder();
 
         if (createRoutes.routeSpec != null) {
@@ -162,11 +154,10 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
         }
 
         this.builder = builder;
-        return this;
     }
 
     @XmlElement(name = "infra")
-    public Camel setInfra(Infra infra) {
+    public void setInfra(Infra infra) {
         if (infra.getRun() != null) {
             CamelRunInfraAction.Builder builder = new CamelRunInfraAction.Builder()
                     .service(infra.getRun().getService())
@@ -182,11 +173,10 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                     .implementation(infra.getStop().getImplementation());
             this.builder = builder;
         }
-        return this;
     }
 
     @XmlElement(name = "jbang")
-    public Camel setJBang(JBang jbang) {
+    public void setJBang(JBang jbang) {
         if (jbang.getRun() != null) {
             CamelRunIntegrationAction.Builder builder = new CamelRunIntegrationAction.Builder()
                     .integrationName(jbang.getRun().getIntegration().getName());
@@ -388,37 +378,33 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                 this.builder = builder;
             }
         }
-        return this;
     }
 
     @XmlElement(name = "start-routes")
-    public Camel setStartRoutes(Routes startRoutes) {
+    public void setStartRoutes(Routes startRoutes) {
         StartCamelRouteAction.Builder builder = new StartCamelRouteAction.Builder();
 
         builder.routeIds(startRoutes.getRoutes().stream().map(Route::getId).collect(Collectors.toList()));
 
         this.builder = builder;
-        return this;
     }
 
     @XmlElement(name = "stop-routes")
-    public Camel setStopRoutes(Routes stopRoutes) {
+    public void setStopRoutes(Routes stopRoutes) {
         StopCamelRouteAction.Builder builder = new StopCamelRouteAction.Builder();
 
         builder.routeIds(stopRoutes.getRoutes().stream().map(Route::getId).collect(Collectors.toList()));
 
         this.builder = builder;
-        return this;
     }
 
     @XmlElement(name = "remove-routes")
-    public Camel setRemoveRoutes(Routes removeRoutes) {
+    public void setRemoveRoutes(Routes removeRoutes) {
         RemoveCamelRouteAction.Builder builder = new RemoveCamelRouteAction.Builder();
 
         builder.routeIds(removeRoutes.getRoutes().stream().map(Route::getId).collect(Collectors.toList()));
 
         this.builder = builder;
-        return this;
     }
 
     @Override

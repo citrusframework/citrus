@@ -29,11 +29,11 @@ public class ScriptDefinitionType {
 
     @XmlValue
     protected String value;
-    @XmlAttribute(name = "type", required = true)
+    @XmlAttribute(required = true)
     protected String type;
-    @XmlAttribute(name = "file")
+    @XmlAttribute
     protected String file;
-    @XmlAttribute(name = "charset")
+    @XmlAttribute
     protected String charset;
 
     public String getValue() {

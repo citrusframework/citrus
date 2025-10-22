@@ -33,13 +33,11 @@ public class TraceVariables implements TestActionBuilder<TraceVariablesAction> {
 
     private final TraceVariablesAction.Builder builder = new TraceVariablesAction.Builder();
 
-    @XmlElement(name = "variable")
     protected List<Variable> variables;
 
     @XmlAttribute
-    public TraceVariables setVariable(String variable) {
+    public void setVariable(String variable) {
         builder.variable(variable);
-        return this;
     }
 
     public List<Variable> getVariables() {
@@ -47,6 +45,11 @@ public class TraceVariables implements TestActionBuilder<TraceVariablesAction> {
             variables = new ArrayList<>();
         }
         return this.variables;
+    }
+
+    @XmlElement(name = "variable")
+    public void setVariables(List<Variable> variables) {
+        this.variables = variables;
     }
 
     @Override
@@ -59,7 +62,7 @@ public class TraceVariables implements TestActionBuilder<TraceVariablesAction> {
     @XmlType(name = "")
     public static class Variable {
 
-        @XmlAttribute(name = "name", required = true)
+        @XmlAttribute(required = true)
         protected String name;
 
         public String getName() {

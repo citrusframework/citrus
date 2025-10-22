@@ -45,19 +45,17 @@ public class Groovy implements TestActionBuilder<TestAction>, ReferenceResolverA
     private ReferenceResolver referenceResolver;
 
     @XmlElement
-    public Groovy setDescription(String value) {
+    public void setDescription(String value) {
         this.description = value;
-        return this;
     }
 
     @XmlAttribute(name = "actor")
-    public Groovy setActor(String actor) {
+    public void setActor(String actor) {
         this.actor = actor;
-        return this;
     }
 
     @XmlElement
-    public Groovy setScript(Script script) {
+    public void setScript(Script script) {
         GroovyAction.Builder builder = new GroovyAction.Builder();
 
         if (StringUtils.hasText(script.getValue())) {
@@ -75,11 +73,10 @@ public class Groovy implements TestActionBuilder<TestAction>, ReferenceResolverA
         builder.useScriptTemplate(script.isUseScriptTemplate());
 
         this.builder = builder;
-        return this;
     }
 
     @XmlElement
-    public Groovy setEndpoints(Endpoints endpoints) {
+    public void setEndpoints(Endpoints endpoints) {
         CreateEndpointsAction.Builder builder = new CreateEndpointsAction.Builder();
 
         if (StringUtils.hasText(endpoints.getScript().getValue())) {
@@ -91,11 +88,10 @@ public class Groovy implements TestActionBuilder<TestAction>, ReferenceResolverA
         }
 
         this.builder = builder;
-        return this;
     }
 
     @XmlElement
-    public Groovy setBeans(Beans beans) {
+    public void setBeans(Beans beans) {
         CreateBeansAction.Builder builder = new CreateBeansAction.Builder();
 
         if (StringUtils.hasText(beans.getScript().getValue())) {
@@ -107,7 +103,6 @@ public class Groovy implements TestActionBuilder<TestAction>, ReferenceResolverA
         }
 
         this.builder = builder;
-        return this;
     }
 
     @Override

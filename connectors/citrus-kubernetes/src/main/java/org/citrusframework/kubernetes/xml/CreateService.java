@@ -173,9 +173,9 @@ public class CreateService extends AbstractKubernetesAction.Builder<CreateServic
         @XmlType(name = "")
         public static class Label {
 
-            @XmlAttribute(name = "name", required = true)
+            @XmlAttribute(required = true)
             protected String name;
-            @XmlAttribute(name = "value")
+            @XmlAttribute
             protected String value;
 
             public String getName() {

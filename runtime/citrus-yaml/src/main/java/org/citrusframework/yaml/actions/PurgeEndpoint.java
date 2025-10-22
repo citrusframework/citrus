@@ -34,9 +34,8 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
 
     protected List<Endpoint> endpoints;
 
-    public PurgeEndpoint setEndpoint(String endpoint) {
+    public void setEndpoint(String endpoint) {
         builder.endpoint(endpoint);
-        return this;
     }
 
     public List<Endpoint> getEndpoints() {

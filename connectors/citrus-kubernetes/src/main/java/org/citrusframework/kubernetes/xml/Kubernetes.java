@@ -40,38 +40,34 @@ public class Kubernetes implements TestActionBuilder<KubernetesAction>, Referenc
 
     private String kubernetesClient;
     private String namespace;
+
     private boolean autoRemoveResources = KubernetesSettings.isAutoRemoveResources();
 
     private ReferenceResolver referenceResolver;
 
     @XmlElement
-    public Kubernetes setDescription(String value) {
+    public void setDescription(String value) {
         this.description = description;
-        return this;
     }
 
     @XmlAttribute
-    public Kubernetes setActor(String actor) {
+    public void setActor(String actor) {
         this.actor = actor;
-        return this;
     }
 
     @XmlAttribute
-    public Kubernetes setNamespace(String namespace) {
+    public void setNamespace(String namespace) {
         this.namespace = namespace;
-        return this;
     }
 
     @XmlAttribute(name = "auto-remove")
-    public Kubernetes setAutoRemove(boolean autoRemoveResources) {
+    public void setAutoRemove(boolean autoRemoveResources) {
         this.autoRemoveResources = autoRemoveResources;
-        return this;
     }
 
     @XmlAttribute
-    public Kubernetes setClient(String client) {
+    public void setClient(String client) {
         this.kubernetesClient = client;
-        return this;
     }
 
     @XmlElement

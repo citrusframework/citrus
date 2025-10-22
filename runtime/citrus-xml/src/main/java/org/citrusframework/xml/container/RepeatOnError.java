@@ -19,8 +19,8 @@ package org.citrusframework.xml.container;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.container.RepeatOnErrorUntilTrue;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.xml.TestActions;
@@ -33,7 +33,7 @@ public class RepeatOnError implements TestActionBuilder<org.citrusframework.cont
     private ReferenceResolver referenceResolver;
 
     @Override
-    public org.citrusframework.container.RepeatOnErrorUntilTrue build() {
+    public RepeatOnErrorUntilTrue build() {
         builder.getActions().stream()
                 .filter(action -> action instanceof ReferenceResolverAware)
                 .forEach(action -> ((ReferenceResolverAware) action).setReferenceResolver(referenceResolver));
@@ -42,44 +42,38 @@ public class RepeatOnError implements TestActionBuilder<org.citrusframework.cont
     }
 
     @XmlElement
-    public RepeatOnError setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
-    @XmlAttribute(name = "until", required = true)
-    public RepeatOnError setUntil(String condition) {
+    @XmlAttribute(required = true)
+    public void setUntil(String condition) {
         builder.until(condition);
-        return this;
     }
 
     @XmlAttribute
-    public RepeatOnError setAutoSleep(long milliseconds) {
+    public void setAutoSleep(long milliseconds) {
         builder.autoSleep(milliseconds);
-        return this;
     }
 
     @XmlAttribute(name = "auto-sleep")
-    public RepeatOnError setAutoSleepSnakeCase(long milliseconds) {
-        return setAutoSleep(milliseconds);
+    public void setAutoSleepSnakeCase(long milliseconds) {
+        setAutoSleep(milliseconds);
     }
 
     @XmlAttribute
-    public RepeatOnError setIndex(String index) {
+    public void setIndex(String index) {
         builder.index(index);
-        return this;
     }
 
     @XmlAttribute
-    public RepeatOnError setStartsWith(int value) {
+    public void setStartsWith(int value) {
         builder.startsWith(value);
-        return this;
     }
 
     @XmlElement
-    public RepeatOnError setActions(TestActions actions) {
+    public void setActions(TestActions actions) {
         builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
-        return this;
     }
 
     @Override

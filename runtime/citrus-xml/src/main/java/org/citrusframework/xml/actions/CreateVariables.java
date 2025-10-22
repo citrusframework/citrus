@@ -38,7 +38,6 @@ public class CreateVariables implements TestActionBuilder<CreateVariablesAction>
 
     private final CreateVariablesAction.Builder builder = new CreateVariablesAction.Builder();
 
-    @XmlElement(name = "variable", required = true)
     protected List<Variable> variables = new ArrayList<>();
 
     @Override
@@ -70,14 +69,21 @@ public class CreateVariables implements TestActionBuilder<CreateVariablesAction>
     }
 
     @XmlElement
-    public CreateVariables setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
-    public CreateVariables setVariables(List<Variable> variables) {
+    @XmlElement(name = "variable", required = true)
+    public void setVariables(List<Variable> variables) {
         this.variables = variables;
-        return this;
+    }
+
+    public List<Variable> getVariables() {
+        if (variables == null) {
+            variables = new ArrayList<>();
+        }
+
+        return variables;
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)

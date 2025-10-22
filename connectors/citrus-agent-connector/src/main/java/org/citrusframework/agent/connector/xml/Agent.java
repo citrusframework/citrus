@@ -49,18 +49,17 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
     }
 
     @XmlElement
-    public Agent setConnect(Connect connect) {
+    public void setConnect(Connect connect) {
         AgentConnectAction.Builder builder = new AgentConnectAction.Builder();
 
         builder.url(connect.getUrl());
         builder.port(connect.getPort());
 
         delegate = builder;
-        return this;
     }
 
     @XmlElement
-    public Agent setRun(Run run) {
+    public void setRun(Run run) {
         AgentRunAction.Builder builder = new AgentRunAction.Builder();
         if (run.getSource() != null) {
             if (run.getSource().getCode() != null) {
@@ -84,7 +83,6 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
         }
 
         delegate = builder;
-        return this;
     }
 
     @Override
@@ -134,7 +132,7 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
     })
     public static class Run {
 
-        @XmlElement(name = "source")
+        @XmlElement
         private Source source;
 
         @XmlElement

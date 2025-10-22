@@ -41,15 +41,13 @@ public class Parallel implements TestActionBuilder<org.citrusframework.container
     }
 
     @XmlElement
-    public Parallel setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlElement
-    public Parallel setActions(TestActions actions) {
+    public void setActions(TestActions actions) {
         builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
-        return this;
     }
 
     @Override

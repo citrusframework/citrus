@@ -19,18 +19,19 @@ package org.citrusframework.yaml.container;
 import java.util.List;
 
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.container.Sequence;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.TestActions;
 
-public class Sequence implements TestActionBuilder<org.citrusframework.container.Sequence>, ReferenceResolverAware {
+public class Sequential implements TestActionBuilder<Sequence>, ReferenceResolverAware {
 
-    private final org.citrusframework.container.Sequence.Builder builder = new org.citrusframework.container.Sequence.Builder();
+    private final Sequence.Builder builder = new Sequence.Builder();
 
     private ReferenceResolver referenceResolver;
 
     @Override
-    public org.citrusframework.container.Sequence build() {
+    public Sequence build() {
         builder.getActions().stream()
                 .filter(action -> action instanceof ReferenceResolverAware)
                 .forEach(action -> ((ReferenceResolverAware) action).setReferenceResolver(referenceResolver));

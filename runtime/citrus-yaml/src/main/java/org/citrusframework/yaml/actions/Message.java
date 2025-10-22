@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.yaml.actions.script.ScriptDefinitionType;
 
 public class Message {
@@ -114,7 +115,7 @@ public class Message {
     }
 
     public String getType() {
-        return Objects.requireNonNullElse(type, "xml");
+        return Objects.requireNonNullElse(type, CitrusSettings.DEFAULT_MESSAGE_TYPE);
     }
 
     public void setType(String value) {

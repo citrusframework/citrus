@@ -16,7 +16,6 @@
 
 package org.citrusframework.kubernetes.yaml;
 
-import io.fabric8.kubernetes.client.CustomResource;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
@@ -32,7 +31,7 @@ public class CreateCustomResource extends AbstractKubernetesAction.Builder<Creat
 
     public void setType(String resourceType) {
         try {
-            delegate.resourceType((Class<CustomResource<?, ?>>) Class.forName(resourceType));
+            delegate.resourceType(Class.forName(resourceType));
         } catch(ClassNotFoundException | ClassCastException e) {
             delegate.type(resourceType);
         }

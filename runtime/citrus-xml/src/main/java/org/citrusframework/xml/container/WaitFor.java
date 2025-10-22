@@ -58,35 +58,31 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
     }
 
     @XmlElement
-    public WaitFor setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlElement
-    public WaitFor setAction(TestActions action) {
+    public void setAction(TestActions action) {
         this.action = (TestActionBuilder<?>) action.getActions().get(0);
-        return this;
     }
 
     @XmlElement
-    public WaitFor setMessage(Message message) {
+    public void setMessage(Message message) {
         MessageCondition condition = new MessageCondition();
         condition.setMessageName(message.name);
         builder.condition(condition);
-        return this;
     }
 
     @XmlElement
-    public WaitFor setFile(File file) {
+    public void setFile(File file) {
         FileCondition condition = new FileCondition();
         condition.setFilePath(file.path);
         builder.condition(condition);
-        return this;
     }
 
     @XmlElement
-    public WaitFor setHttp(Http http) {
+    public void setHttp(Http http) {
         HttpCondition condition = new HttpCondition();
         condition.setUrl(http.url);
 
@@ -105,19 +101,16 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
             condition.setTimeout(timeout);
         }
         builder.condition(condition);
-        return this;
     }
 
     @XmlAttribute
-    public WaitFor setTimeout(String milliseconds) {
+    public void setTimeout(String milliseconds) {
         builder.milliseconds(milliseconds);
-        return this;
     }
 
     @XmlAttribute
-    public WaitFor setInterval(String interval) {
+    public void setInterval(String interval) {
         builder.interval(interval);
-        return this;
     }
 
     @Override
@@ -129,7 +122,7 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
     @XmlType(name = "")
     public static class File {
 
-        @XmlAttribute(name = "path", required = true)
+        @XmlAttribute(required = true)
         protected String path;
 
         public String getPath() {
@@ -146,13 +139,13 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
     @XmlType(name = "")
     public static class Http {
 
-        @XmlAttribute(name = "url")
+        @XmlAttribute
         protected String url;
-        @XmlAttribute(name = "method")
+        @XmlAttribute
         protected String method;
-        @XmlAttribute(name = "status")
+        @XmlAttribute
         protected String status;
-        @XmlAttribute(name = "timeout")
+        @XmlAttribute
         protected String timeout;
 
         public String getUrl() {
@@ -193,7 +186,7 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
     @XmlType(name = "")
     public static class Message {
 
-        @XmlAttribute(name = "name", required = true)
+        @XmlAttribute(required = true)
         protected String name;
 
         public String getName() {

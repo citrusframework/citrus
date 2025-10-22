@@ -54,11 +54,8 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     private MessageValidationContext.Builder<?, ?> messageValidationContext;
 
     protected Message message;
-    @XmlElement(name = "ignore")
     protected List<Ignore> ignores;
-    @XmlElement(name = "validate")
     protected List<Validate> validates;
-    @XmlElement(name = "namespace")
     protected List<Namespace> namespaces;
 
     public Receive() {
@@ -70,9 +67,8 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     }
 
     @XmlElement
-    public Receive setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     public List<Ignore> getIgnores() {
@@ -82,11 +78,21 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         return this.ignores;
     }
 
+    @XmlElement(name = "ignore")
+    public void setIgnores(List<Ignore> ignores) {
+        this.ignores = ignores;
+    }
+
     public List<Validate> getValidates() {
         if (validates == null) {
             validates = new ArrayList<>();
         }
         return this.validates;
+    }
+
+    @XmlElement(name = "validate")
+    public void setValidates(List<Validate> validates) {
+        this.validates = validates;
     }
 
     public List<Namespace> getNamespaces() {
@@ -96,50 +102,48 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         return this.namespaces;
     }
 
-    @XmlAttribute(name = "validator")
-    public Receive setValidator(String validator) {
+    @XmlElement(name = "namespace")
+    public void setNamespaces(List<Namespace> namespaces) {
+        this.namespaces = namespaces;
+    }
+
+    @XmlAttribute
+    public void setValidator(String validator) {
         if (StringUtils.hasText(validator)) {
             validators.add(validator);
         }
 
-        return this;
     }
-    @XmlAttribute(name = "validators")
-    public Receive setValidators(String messageValidatorExpression) {
+
+    @XmlAttribute
+    public void setValidators(String messageValidatorExpression) {
         if (StringUtils.hasText(messageValidatorExpression)) {
             Stream.of(messageValidatorExpression.split(","))
                     .map(String::trim)
                     .forEach(validators::add);
         }
-
-        return this;
     }
 
     @XmlAttribute(name = "header-validator")
-    public Receive setHeaderValidator(String headerValidator) {
+    public void setHeaderValidator(String headerValidator) {
         if (StringUtils.hasText(headerValidator)) {
             builder.getHeaderValidationContext().validator(headerValidator);
         }
-
-        return this;
     }
 
     @XmlAttribute(name = "header-validators")
-    public Receive setHeaderValidators(String headerValidatorExpression) {
+    public void setHeaderValidators(String headerValidatorExpression) {
         if (StringUtils.hasText(headerValidatorExpression)) {
             Stream.of(headerValidatorExpression.split(","))
                     .map(String::trim)
                     .forEach(builder.getHeaderValidationContext()::validator);
         }
-
-        return this;
     }
 
     @XmlElement(required = true)
-    public Receive setMessage(Message message) {
+    public void setMessage(Message message) {
         this.message = message;
         MessageSupport.configureMessage(builder, message);
-        return this;
     }
 
     private void addScriptValidationContext() {
@@ -304,37 +308,32 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     }
 
     @XmlElement
-    public Receive setExtract(Message.Extract value) {
+    public void setExtract(Message.Extract value) {
         MessageSupport.configureExtract(builder, value);
-        return this;
     }
 
     @XmlAttribute
-    public Receive setEndpoint(String value) {
+    public void setEndpoint(String value) {
         builder.endpoint(value);
-        return this;
     }
 
     @XmlAttribute
-    public Receive setActor(String value) {
+    public void setActor(String value) {
         this.actor = value;
-        return this;
     }
 
     @XmlAttribute
-    public Receive setTimeout(Integer value) {
+    public void setTimeout(Integer value) {
         builder.timeout(value);
-        return this;
     }
 
     @XmlAttribute
-    public Receive setSelect(String value) {
+    public void setSelect(String value) {
         builder.selector(value);
-        return this;
     }
 
     @XmlElement
-    public Receive setSelector(Selector selector) {
+    public void setSelector(Selector selector) {
         if (selector.selectorValue != null) {
             builder.selector(selector.selectorValue);
         }
@@ -347,8 +346,6 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
 
             builder.selector(selectorElements);
         }
-
-        return this;
     }
 
     @Override
@@ -416,9 +413,9 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
         public static class Element {
-            @XmlAttribute(name = "name", required = true)
+            @XmlAttribute(required = true)
             protected String name;
-            @XmlAttribute(name = "value", required = true)
+            @XmlAttribute(required = true)
             protected String value;
 
             public String getName() {
@@ -442,7 +439,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "")
     public static class Ignore {
-        @XmlAttribute(name = "path", required = true)
+        @XmlAttribute(required = true)
         protected String path;
 
         public String getPath() {
@@ -457,9 +454,9 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "")
     public static class Namespace {
-        @XmlAttribute(name = "prefix", required = true)
+        @XmlAttribute(required = true)
         protected String prefix;
-        @XmlAttribute(name = "value", required = true)
+        @XmlAttribute(required = true)
         protected String value;
 
         public String getPrefix() {
@@ -494,9 +491,9 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         protected List<JsonPath> jsonPaths;
         @XmlElement(name = "namespace")
         protected List<Namespace> namespaces;
-        @XmlAttribute(name = "path")
+        @XmlAttribute
         protected String path;
-        @XmlAttribute(name = "value")
+        @XmlAttribute
         protected String value;
         @XmlAttribute(name = "result-type")
         protected String resultType;
@@ -516,6 +513,10 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             return this.xpaths;
         }
 
+        public void setXpaths(List<Xpath> xpaths) {
+            this.xpaths = xpaths;
+        }
+
         public List<JsonPath> getJsonPaths() {
             if (jsonPaths == null) {
                 jsonPaths = new ArrayList<>();
@@ -523,11 +524,19 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             return this.jsonPaths;
         }
 
+        public void setJsonPaths(List<JsonPath> jsonPaths) {
+            this.jsonPaths = jsonPaths;
+        }
+
         public List<Namespace> getNamespaces() {
             if (namespaces == null) {
                 namespaces = new ArrayList<>();
             }
             return this.namespaces;
+        }
+
+        public void setNamespaces(List<Namespace> namespaces) {
+            this.namespaces = namespaces;
         }
 
         public String getPath() {
@@ -557,9 +566,9 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
         public static class JsonPath {
-            @XmlAttribute(name = "expression", required = true)
+            @XmlAttribute(required = true)
             protected String expression;
-            @XmlAttribute(name = "value", required = true)
+            @XmlAttribute(required = true)
             protected String value;
 
             public String getExpression() {
@@ -582,9 +591,9 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
         public static class Namespace {
-            @XmlAttribute(name = "prefix", required = true)
+            @XmlAttribute(required = true)
             protected String prefix;
-            @XmlAttribute(name = "value", required = true)
+            @XmlAttribute(required = true)
             protected String value;
 
             public String getPrefix() {
@@ -607,9 +616,9 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
         public static class Xpath {
-            @XmlAttribute(name = "expression", required = true)
+            @XmlAttribute(required = true)
             protected String expression;
-            @XmlAttribute(name = "value", required = true)
+            @XmlAttribute(required = true)
             protected String value;
             @XmlAttribute(name = "result-type")
             protected String resultType;

@@ -41,20 +41,18 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
     private ReferenceResolver referenceResolver;
 
     @XmlElement
-    public Plsql setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlAttribute(name = "datasource", required = true)
-    public Plsql setDataSource(String dataSource) {
+    public void setDataSource(String dataSource) {
         builder.dataSource(dataSource);
         builder.name(String.format("plsql:%s", dataSource));
-        return this;
     }
 
     @XmlElement(required = true)
-    public Plsql setStatements(Statements statements) {
+    public void setStatements(Statements statements) {
         statements.getStatements().forEach(builder::statement);
 
         if (statements.file != null) {
@@ -64,12 +62,10 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
         if (statements.script != null) {
             builder.sqlScript(statements.script);
         }
-
-        return this;
     }
 
     @XmlElement(name = "transaction")
-    public Plsql setTransaction(Transaction transaction) {
+    public void setTransaction(Transaction transaction) {
         if (transaction.manager != null) {
             transactionManager = transaction.manager;
         }
@@ -81,14 +77,11 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
         if (transaction.timeout != null) {
             builder.transactionTimeout(transaction.timeout);
         }
-
-        return this;
     }
 
     @XmlAttribute(name = "ignore-errors")
-    public Plsql setIgnoreErrors(boolean value) {
+    public void setIgnoreErrors(boolean value) {
         builder.ignoreErrors(value);
-        return this;
     }
 
     @Override
@@ -116,13 +109,13 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
     })
     public static class Statements {
 
-        @XmlElement(name = "script")
+        @XmlElement
         private String script;
 
         @XmlElement(name = "statement")
         private List<String> statements;
 
-        @XmlAttribute(name = "file")
+        @XmlAttribute
         protected String file;
 
         public String getScript() {
@@ -153,9 +146,9 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
     @XmlType(name = "")
     public static class Transaction {
 
-        @XmlAttribute(name = "manager")
+        @XmlAttribute
         protected String manager;
-        @XmlAttribute(name = "timeout")
+        @XmlAttribute
         protected String timeout;
         @XmlAttribute(name = "isolation-level")
         protected String isolationLevel;
