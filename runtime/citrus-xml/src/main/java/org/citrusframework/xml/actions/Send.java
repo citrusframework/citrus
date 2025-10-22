@@ -42,13 +42,12 @@ public class Send implements TestActionBuilder<SendMessageAction>, ReferenceReso
     }
 
     @XmlElement
-    public Send setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlElement(required = true)
-    public Send setMessage(Message message) {
+    public void setMessage(Message message) {
         MessageSupport.configureMessage(builder, message);
 
         if (message.schema != null || message.schemaRepository != null) {
@@ -59,32 +58,26 @@ public class Send implements TestActionBuilder<SendMessageAction>, ReferenceReso
         } else if (message.isSchemaValidation() != null && !message.isSchemaValidation()) {
             builder.message().schemaValidation(message.isSchemaValidation());
         }
-
-        return this;
     }
 
     @XmlElement
-    public Send setExtract(Message.Extract value) {
+    public void setExtract(Message.Extract value) {
         MessageSupport.configureExtract(builder, value);
-        return this;
     }
 
     @XmlAttribute
-    public Send setEndpoint(String value) {
+    public void setEndpoint(String value) {
         builder.endpoint(value);
-        return this;
     }
 
     @XmlAttribute
-    public Send setActor(String value) {
+    public void setActor(String value) {
         this.actor = value;
-        return this;
     }
 
-    @XmlAttribute(name = "fork")
-    public Send setFork(Boolean value) {
+    @XmlAttribute
+    public void setFork(Boolean value) {
         builder.fork(value);
-        return this;
     }
 
     @Override
@@ -100,7 +93,6 @@ public class Send implements TestActionBuilder<SendMessageAction>, ReferenceReso
 
     /**
      * Subclasses may add additional building logic here.
-     * @return
      */
     protected SendMessageAction doBuild() {
         return builder.build();

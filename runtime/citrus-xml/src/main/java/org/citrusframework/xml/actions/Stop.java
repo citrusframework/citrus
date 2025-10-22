@@ -36,35 +36,24 @@ public class Stop implements TestActionBuilder<StopServerAction>, ReferenceResol
 
     private final StopServerAction.Builder builder = new StopServerAction.Builder();
 
-    private final List<String> servers = new ArrayList<>();
-    private ReferenceResolver referenceResolver;
-
     @XmlAttribute
-    public Stop setServer(String server) {
-        this.servers.add(server);
-        return this;
+    public void setServer(String server) {
+        builder.server(server);
     }
 
     @XmlElement
-    public Stop setServers(Servers servers) {
-        servers.getServers().forEach(server -> this.servers.add(server.name));
-        return this;
+    public void setServers(Servers servers) {
+        servers.getServers().forEach(server -> builder.server(server.name));
     }
 
     @Override
     public StopServerAction build() {
-        if (referenceResolver != null) {
-            for (String server : servers) {
-                builder.server(referenceResolver.resolve(server, Server.class));
-            }
-        }
-
         return builder.build();
     }
 
     @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
-        this.referenceResolver = referenceResolver;
+        builder.setReferenceResolver(referenceResolver);
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -85,7 +74,7 @@ public class Stop implements TestActionBuilder<StopServerAction>, ReferenceResol
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
         public static class Server {
-            @XmlAttribute(name = "name", required = true)
+            @XmlAttribute(required = true)
             protected String name;
 
             public String getName() {

@@ -32,9 +32,8 @@ public class Action implements TestActionBuilder<TestAction>, ReferenceResolverA
     private ReferenceResolver referenceResolver;
 
     @XmlAttribute(required = true)
-    public Action setReference(String reference) {
+    public void setReference(String reference) {
         this.reference = reference;
-        return this;
     }
 
     @Override

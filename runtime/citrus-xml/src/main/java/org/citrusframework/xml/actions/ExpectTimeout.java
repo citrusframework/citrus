@@ -36,19 +36,17 @@ public class ExpectTimeout implements TestActionBuilder<ReceiveTimeoutAction> {
     private final ReceiveTimeoutAction.Builder builder = new ReceiveTimeoutAction.Builder();
 
     @XmlAttribute
-    public ExpectTimeout setWait(long milliseconds) {
+    public void setWait(long milliseconds) {
         builder.timeout(milliseconds);
-        return this;
     }
 
     @XmlAttribute
-    public ExpectTimeout setSelect(String value) {
+    public void setSelect(String value) {
         builder.selector(value);
-        return this;
     }
 
     @XmlElement
-    public ExpectTimeout setSelector(Selector selector) {
+    public void setSelector(Selector selector) {
         if (selector.selectorValue != null) {
             builder.selector(selector.selectorValue);
         }
@@ -61,14 +59,11 @@ public class ExpectTimeout implements TestActionBuilder<ReceiveTimeoutAction> {
 
             builder.selector(selectorElements);
         }
-
-        return this;
     }
 
     @XmlAttribute(required = true)
-    public ExpectTimeout setEndpoint(String endpointUri) {
+    public void setEndpoint(String endpointUri) {
         builder.endpoint(endpointUri);
-        return this;
     }
 
     @Override
@@ -105,9 +100,9 @@ public class ExpectTimeout implements TestActionBuilder<ReceiveTimeoutAction> {
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
         public static class Element {
-            @XmlAttribute(name = "name", required = true)
+            @XmlAttribute(required = true)
             protected String name;
-            @XmlAttribute(name = "value", required = true)
+            @XmlAttribute(required = true)
             protected String value;
 
             public String getName() {

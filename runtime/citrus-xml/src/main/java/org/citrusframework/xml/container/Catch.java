@@ -42,21 +42,18 @@ public class Catch implements TestActionBuilder<org.citrusframework.container.Ca
     }
 
     @XmlElement
-    public Catch setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlAttribute
-    public Catch setException(String type) {
+    public void setException(String type) {
         builder.exception(type);
-        return this;
     }
 
     @XmlElement(required = true)
-    public Catch setWhen(TestActions actions) {
+    public void setWhen(TestActions actions) {
         builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
-        return this;
     }
 
     @Override

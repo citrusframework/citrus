@@ -37,7 +37,6 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
 
     /**
      * Add script.
-     * @param script
      */
     @XmlElement
     public void setScript(String script) {
@@ -46,7 +45,6 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
 
     /**
      * Add script arguments.
-     * @param args
      */
     @XmlElement
     public void setArguments(Arguments args) {
@@ -55,7 +53,6 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
 
     /**
      * Add script argument.
-     * @param arg
      */
     @XmlAttribute
     public void setArgument(String arg) {
@@ -64,7 +61,6 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
 
     /**
      * Add expected error.
-     * @param error
      */
     @XmlAttribute
     public void setError(String error) {
@@ -73,7 +69,6 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
 
     /**
      * Add expected error.
-     * @param errors
      */
     @XmlElement
     public void setErrors(Errors errors) {

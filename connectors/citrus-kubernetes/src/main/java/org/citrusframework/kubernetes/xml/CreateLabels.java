@@ -106,9 +106,9 @@ public class CreateLabels extends AbstractKubernetesAction.Builder<CreateLabelsA
         @XmlType(name = "")
         public static class Label {
 
-            @XmlAttribute(name = "name", required = true)
+            @XmlAttribute(required = true)
             protected String name;
-            @XmlAttribute(name = "value")
+            @XmlAttribute
             protected String value;
 
             public String getName() {

@@ -29,6 +29,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.ReceiveMessageAction.ReceiveMessageActionBuilder;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -41,6 +42,8 @@ import org.citrusframework.openapi.actions.OpenApiClientResponseActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiServerActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiServerRequestActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiServerResponseActionBuilder;
+import org.citrusframework.openapi.actions.OpenApiSpecificationSourceAwareBuilder;
+import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.xml.actions.Message;
@@ -50,7 +53,7 @@ import org.citrusframework.xml.actions.Send;
 @XmlRootElement(name = "openapi")
 public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
-    private TestActionBuilder<?> builder;
+    private OpenApiSpecificationSourceAwareBuilder<?> builder;
 
     private Receive receive;
     private Send send;
@@ -61,37 +64,32 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
     private ReferenceResolver referenceResolver;
 
     @XmlElement
-    public OpenApi setDescription(String value) {
+    public void setDescription(String value) {
         this.description = value;
-        return this;
     }
 
     @XmlAttribute(name = "actor")
-    public OpenApi setActor(String actor) {
+    public void setActor(String actor) {
         this.actor = actor;
-        return this;
     }
 
     @XmlAttribute(name = "specification", required = true)
-    public OpenApi setSpecification(String specification) {
+    public void setSpecification(String specification) {
         builder = new OpenApiActionBuilder().specification(specification);
-        return this;
     }
 
     @XmlAttribute(name = "client")
-    public OpenApi setHttpClient(String httpClient) {
+    public void setHttpClient(String httpClient) {
         builder = ((OpenApiActionBuilder) builder).client(httpClient);
-        return this;
     }
 
     @XmlAttribute(name = "server")
-    public OpenApi setHttpServer(String httpServer) {
+    public void setHttpServer(String httpServer) {
         builder = ((OpenApiActionBuilder) builder).server(httpServer);
-        return this;
     }
 
     @XmlElement(name = "send-request")
-    public OpenApi setSendRequest(ClientRequest request) {
+    public void setSendRequest(ClientRequest request) {
         OpenApiClientRequestActionBuilder requestBuilder =
             asClientBuilder().send(request.getOperation());
 
@@ -127,13 +125,12 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         }
 
         builder = requestBuilder;
-        return this;
     }
 
     @XmlElement(name = "receive-response")
-    public OpenApi setReceiveResponse(ClientResponse response) {
+    public void setReceiveResponse(ClientResponse response) {
         OpenApiClientResponseActionBuilder responseBuilder =
-            asClientBuilder().receive(response.getOperation(), response.getStatus());
+                asClientBuilder().receive(response.getOperation(), response.getStatus());
 
         responseBuilder.name("openapi:receive-response");
         responseBuilder.description(description);
@@ -173,13 +170,12 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         }
 
         builder = responseBuilder;
-        return this;
     }
 
     @XmlElement(name = "receive-request")
-    public OpenApi setReceiveRequest(ServerRequest request) {
+    public void setReceiveRequest(ServerRequest request) {
         OpenApiServerRequestActionBuilder requestBuilder =
-            asServerBuilder().receive(request.getOperation());
+                asServerBuilder().receive(request.getOperation());
 
         requestBuilder.name("openapi:receive-request");
         requestBuilder.description(description);
@@ -217,13 +213,12 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         }
 
         builder = requestBuilder;
-        return this;
     }
 
     @XmlElement(name = "send-response")
-    public OpenApi setSendResponse(ServerResponse response) {
-        OpenApiServerResponseActionBuilder  responseBuilder =
-            asServerBuilder().send(response.getOperation(), response.getStatus());
+    public void setSendResponse(ServerResponse response) {
+        OpenApiServerResponseActionBuilder responseBuilder =
+                asServerBuilder().send(response.getOperation(), response.getStatus());
 
         responseBuilder.name("openapi:send-response");
         responseBuilder.description(description);
@@ -251,7 +246,6 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         responseBuilder.message().header(HttpMessageHeaders.HTTP_STATUS_CODE, response.getStatus());
 
         builder = responseBuilder;
-        return this;
     }
 
     @Override
@@ -272,6 +266,9 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
             receive.build();
         }
 
+        if (builder instanceof ReceiveMessageActionBuilder<?,?,?> receiveMessageActionBuilder) {
+            receiveMessageActionBuilder.validate(OpenApiMessageValidationContext.Builder.openApi(builder.getOpenApiSpecificationSource().resolve(referenceResolver)));
+        }
         return builder.build();
     }
 
@@ -282,8 +279,6 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
     /**
      * Converts current builder to client builder.
-     *
-     * @return
      */
     private OpenApiClientActionBuilder asClientBuilder() {
         if (builder instanceof OpenApiClientActionBuilder clientBuilder) {
@@ -291,13 +286,11 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         }
 
         throw new CitrusRuntimeException(String.format("Failed to convert '%s' to openapi client action builder",
-            Optional.ofNullable(builder).map(Object::getClass).map(Class::getName).orElse("null")));
+                Optional.ofNullable(builder).map(Object::getClass).map(Class::getName).orElse("null")));
     }
 
     /**
      * Converts current builder to server builder.
-     *
-     * @return
      */
     private OpenApiServerActionBuilder asServerBuilder() {
         if (builder instanceof OpenApiServerActionBuilder serverBuilder) {
@@ -305,7 +298,7 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         }
 
         throw new CitrusRuntimeException(String.format("Failed to convert '%s' to openapi server action builder",
-            Optional.ofNullable(builder).map(Object::getClass).map(Class::getName).orElse("null")));
+                Optional.ofNullable(builder).map(Object::getClass).map(Class::getName).orElse("null")));
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -372,7 +365,6 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         public void setAutoFill(AutoFillType autoFill) {
             this.autoFill = autoFill;
         }
-
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -381,7 +373,7 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         @XmlAttribute
         protected Integer timeout;
 
-        @XmlAttribute(name = "operation", required = true)
+        @XmlAttribute(required = true)
         protected String operation;
 
         @XmlAttribute
@@ -399,7 +391,7 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         @XmlAttribute(name = "header-validators")
         protected String headerValidators;
 
-        @XmlAttribute(name = "schemaValidation")
+        @XmlAttribute(name = "schema-validation")
         protected Boolean schemaValidation;
 
         @XmlElement
@@ -494,7 +486,6 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         public void setSchemaValidation(Boolean schemaValidation) {
             this.schemaValidation = schemaValidation;
         }
-
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -554,7 +545,6 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         public void setAutoFill(AutoFillType autoFill) {
             this.autoFill = autoFill;
         }
-
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)

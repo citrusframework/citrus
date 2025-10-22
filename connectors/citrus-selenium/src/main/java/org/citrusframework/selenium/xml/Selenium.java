@@ -43,27 +43,27 @@ public class Selenium implements TestActionBuilder<TestAction>, ReferenceResolve
     private ReferenceResolver referenceResolver;
 
     @XmlElement
-    public Selenium setDescription(String value) {
+    public void setDescription(String value) {
         this.description = value;
-        return this;
     }
 
     @XmlAttribute
-    public Selenium setActor(String actor) {
+    public void setActor(String actor) {
         this.actor = actor;
-        return this;
     }
 
+    /**
+     * Use a custom selenium browser.
+     */
     @XmlAttribute
-    public Selenium setBrowser(String browser) {
+    public void setBrowser(String browser) {
         this.seleniumBrowser = browser;
-        return this;
     }
 
     /**
      * Start browser instance.
      */
-    @XmlElement(name = "start")
+    @XmlElement
     public void setStart(StartBrowser builder) {
         this.builder = builder;
     }
@@ -71,7 +71,7 @@ public class Selenium implements TestActionBuilder<TestAction>, ReferenceResolve
     /**
      * Stop browser instance.
      */
-    @XmlElement(name = "stop")
+    @XmlElement
     public void setStop(StopBrowser builder) {
         this.builder = builder;
     }
@@ -79,7 +79,7 @@ public class Selenium implements TestActionBuilder<TestAction>, ReferenceResolve
     /**
      * Alert element.
      */
-    @XmlElement(name = "alert")
+    @XmlElement
     public void setAlert(Alert builder) {
         this.builder = builder;
     }
@@ -87,7 +87,7 @@ public class Selenium implements TestActionBuilder<TestAction>, ReferenceResolve
     /**
      * Navigate action.
      */
-    @XmlElement(name = "navigate")
+    @XmlElement
     public void setNavigate(Navigate builder) {
         this.builder = builder;
     }
@@ -95,7 +95,7 @@ public class Selenium implements TestActionBuilder<TestAction>, ReferenceResolve
     /**
      * Page action.
      */
-    @XmlElement(name = "page")
+    @XmlElement
     public void setPage(Page builder) {
         this.builder = builder;
     }
@@ -103,7 +103,7 @@ public class Selenium implements TestActionBuilder<TestAction>, ReferenceResolve
     /**
      * Finds element.
      */
-    @XmlElement(name = "find")
+    @XmlElement
     public void setFind(FindElement builder) {
         this.builder = builder;
     }
@@ -143,7 +143,7 @@ public class Selenium implements TestActionBuilder<TestAction>, ReferenceResolve
     /**
      * Clicks element.
      */
-    @XmlElement(name = "click")
+    @XmlElement
     public void setClick(Click builder) {
         this.builder = builder;
     }
@@ -151,7 +151,7 @@ public class Selenium implements TestActionBuilder<TestAction>, ReferenceResolve
     /**
      * Hover element.
      */
-    @XmlElement(name = "hover")
+    @XmlElement
     public void setHover(Hover builder) {
         this.builder = builder;
     }
@@ -200,7 +200,7 @@ public class Selenium implements TestActionBuilder<TestAction>, ReferenceResolve
      * Execute JavaScript.
      */
     @XmlElement(name = "javascript")
-    public void setJavascript(JavaScript builder) {
+    public void setJavaScript(JavaScript builder) {
         this.builder = builder;
     }
 

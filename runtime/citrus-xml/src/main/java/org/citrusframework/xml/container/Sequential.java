@@ -42,15 +42,13 @@ public class Sequential implements TestActionBuilder<Sequence>, ReferenceResolve
     }
 
     @XmlElement
-    public Sequential setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlElement
-    public Sequential setActions(TestActions actions) {
+    public void setActions(TestActions actions) {
         builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
-        return this;
     }
 
     @Override

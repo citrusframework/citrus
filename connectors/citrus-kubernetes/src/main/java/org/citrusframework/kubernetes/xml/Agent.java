@@ -159,7 +159,6 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
             this.registry = registry;
         }
 
-
         public String getTestJar() {
             return testJar;
         }

@@ -35,11 +35,6 @@ public class Disconnect extends AbstractKubernetesAction.Builder<AbstractKuberne
     }
 
     @Override
-    public void setReferenceResolver(ReferenceResolver referenceResolver) {
-        this.delegate.setReferenceResolver(referenceResolver);
-    }
-
-    @Override
     public Disconnect description(String description) {
         delegate.description(description);
         return this;
@@ -70,6 +65,11 @@ public class Disconnect extends AbstractKubernetesAction.Builder<AbstractKuberne
     }
 
     @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.delegate.setReferenceResolver(referenceResolver);
+    }
+
+    @Override
     public AbstractKubernetesAction doBuild() {
         if (delegate == null) {
             throw new CitrusRuntimeException("Missing Kubernetes disconnect action - please provide proper action details");
@@ -90,5 +90,4 @@ public class Disconnect extends AbstractKubernetesAction.Builder<AbstractKuberne
             return name;
         }
     }
-
 }

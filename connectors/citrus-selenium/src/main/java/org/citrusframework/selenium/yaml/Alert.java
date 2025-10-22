@@ -27,7 +27,6 @@ public class Alert extends AbstractSeleniumAction.Builder<AlertAction, Alert> {
 
     /**
      * Add alert text validation.
-     * @param text
      */
     public void setText(String text) {
         this.delegate.text(text);

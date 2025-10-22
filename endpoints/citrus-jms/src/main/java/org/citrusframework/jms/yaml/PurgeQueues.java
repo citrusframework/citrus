@@ -41,12 +41,24 @@ public class PurgeQueues implements TestActionBuilder<TestAction>, ReferenceReso
         this.description = value;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void setActor(String actor) {
         this.actor = actor;
     }
 
+    public String getActor() {
+        return actor;
+    }
+
     public void setConnectionFactory(String connectionFactory) {
         this.connectionFactory = connectionFactory;
+    }
+
+    public String getConnectionFactory() {
+        return connectionFactory;
     }
 
     public void setQueue(String queue) {

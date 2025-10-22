@@ -47,26 +47,23 @@ public class Template implements TestActionBuilder<org.citrusframework.container
     }
 
     @XmlElement
-    public Template setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlAttribute(name = "name")
-    public Template setTemplateName(String name) {
+    public void setTemplateName(String name) {
         builder.name(String.format("template:%s", name));
         builder.templateName(name);
-        return this;
     }
 
     @XmlAttribute(name = "global-context")
-    public Template setGlobalContext(boolean globalContext) {
+    public void setGlobalContext(boolean globalContext) {
         builder.globalContext(globalContext);
-        return this;
     }
 
     @XmlElement
-    public Template setParameters(Parameters parameters) {
+    public void setParameters(Parameters parameters) {
         parameters.getParameters().forEach(p -> {
             if (p.multilineValue != null) {
                 builder.parameter(p.name, p.multilineValue);
@@ -74,13 +71,11 @@ public class Template implements TestActionBuilder<org.citrusframework.container
                 builder.parameter(p.name, p.value);
             }
         });
-        return this;
     }
 
     @XmlElement
-    public Template setActions(TestActions actions) {
+    public void setActions(TestActions actions) {
         builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
-        return this;
     }
 
     @Override
@@ -109,7 +104,7 @@ public class Template implements TestActionBuilder<org.citrusframework.container
 
             @XmlElement(name = "value")
             protected String multilineValue;
-            @XmlAttribute(name = "name", required = true)
+            @XmlAttribute(required = true)
             protected String name;
             @XmlAttribute
             protected String value = "";

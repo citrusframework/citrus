@@ -54,7 +54,7 @@ public class ReceiveEvent extends AbstractKnativeAction.Builder<ReceiveEventActi
         this.delegate.timeout(timeout);
     }
 
-    @XmlElement(name = "event", required = true)
+    @XmlElement(required = true)
     public void setEvent(Event event) {
         event.getAttributes().getAttributes().forEach(
                 attr -> this.delegate.attribute(attr.getName(), attr.getValue())
@@ -158,9 +158,9 @@ public class ReceiveEvent extends AbstractKnativeAction.Builder<ReceiveEventActi
             @XmlType(name = "")
             public static class Attribute {
 
-                @XmlAttribute(name = "name", required = true)
+                @XmlAttribute(required = true)
                 protected String name;
-                @XmlAttribute(name = "value")
+                @XmlAttribute
                 protected String value;
 
                 public String getName() {

@@ -42,33 +42,28 @@ public class Repeat implements TestActionBuilder<org.citrusframework.container.R
     }
 
     @XmlElement
-    public Repeat setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlAttribute(name = "until", required = true)
-    public Repeat setUntil(String condition) {
+    public void setUntil(String condition) {
         builder.until(condition);
-        return this;
     }
 
     @XmlAttribute
-    public Repeat setIndex(String index) {
+    public void setIndex(String index) {
         builder.index(index);
-        return this;
     }
 
     @XmlAttribute
-    public Repeat setStartsWith(int value) {
+    public void setStartsWith(int value) {
         builder.startsWith(value);
-        return this;
     }
 
     @XmlElement
-    public Repeat setActions(TestActions actions) {
+    public void setActions(TestActions actions) {
         builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
-        return this;
     }
 
     @Override

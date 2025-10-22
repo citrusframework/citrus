@@ -35,70 +35,60 @@ public class JBang implements TestActionBuilder<JBangAction> {
     private final JBangAction.Builder builder = new JBangAction.Builder();
 
     @XmlElement
-    public JBang setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlAttribute
-    public JBang setApp(String name) {
+    public void setApp(String name) {
         builder.app(name);
-        return this;
     }
 
     @XmlAttribute
-    public JBang setCommand(String command) {
+    public void setCommand(String command) {
         builder.command(command);
-        return this;
     }
 
     @XmlAttribute
-    public JBang setFile(String path) {
+    public void setFile(String path) {
         builder.file(path);
-        return this;
     }
 
     @XmlAttribute
-    public JBang setArgs(String args) {
+    public void setArgs(String args) {
         builder.args(args.split(","));
-        return this;
     }
 
     @XmlAttribute(name = "exit-code")
-    public JBang setExitCode(String codes) {
+    public void setExitCode(String codes) {
         builder.exitCodes(Arrays.stream(codes.split(","))
                 .map(String::trim)
                 .map(Integer::parseInt)
                 .mapToInt(Integer::intValue).toArray());
-        return this;
     }
 
     @XmlAttribute(name = "print-output")
-    public JBang setPrintOutput(boolean enabled) {
+    public void setPrintOutput(boolean enabled) {
         builder.printOutput(enabled);
-        return this;
     }
 
     @XmlElement
-    public JBang setOutput(String expected) {
+    public void setOutput(String expected) {
         builder.verifyOutput(expected);
-        return this;
     }
 
     @XmlAttribute(name = "save-pid")
-    public JBang setSavePid(String variable) {
+    public void setSavePid(String variable) {
         builder.savePid(variable);
-        return this;
     }
 
     @XmlAttribute(name = "save-output")
-    public JBang setSaveOutput(String variable) {
+    public void setSaveOutput(String variable) {
         builder.saveOutput(variable);
-        return this;
     }
 
     @XmlElement(name = "args")
-    public JBang setArguments(Arguments arguments) {
+    public void setArguments(Arguments arguments) {
         for (Arguments.Argument argument : arguments.getArguments()) {
             if (argument.getName() != null) {
                 builder.arg(argument.getName(), argument.getValue());
@@ -107,16 +97,14 @@ public class JBang implements TestActionBuilder<JBangAction> {
             }
         }
 
-        return this;
     }
 
     @XmlElement(name = "system-properties")
-    public JBang setSystemProperties(SystemProperties systemProperties) {
+    public void setSystemProperties(SystemProperties systemProperties) {
         for (SystemProperties.SystemProperty sysProp : systemProperties.getSystemProperties()) {
             builder.systemProperty(sysProp.getName(), sysProp.getValue());
         }
 
-        return this;
     }
 
     @Override

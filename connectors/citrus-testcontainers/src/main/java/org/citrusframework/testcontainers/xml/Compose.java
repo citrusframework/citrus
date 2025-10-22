@@ -124,10 +124,10 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
         @XmlAttribute
         private String file;
 
-        @XmlAttribute
+        @XmlAttribute(name ="startup-timeout")
         private int startUpTimeout;
 
-        @XmlAttribute
+        @XmlAttribute(name = "auto-remove")
         protected boolean autoRemove = TestContainersSettings.isAutoRemoveResources();
 
         @XmlElement

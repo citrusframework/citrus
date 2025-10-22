@@ -29,21 +29,18 @@ public class Echo implements TestActionBuilder<EchoAction> {
     private final EchoAction.Builder builder = new EchoAction.Builder();
 
     @XmlElement
-    public Echo setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlAttribute
-    public Echo setMessage(String message) {
+    public void setMessage(String message) {
         builder.message(message);
-        return this;
     }
 
     @XmlElement(name = "message")
-    public Echo setMessageElement(String message) {
+    public void setMessageElement(String message) {
         builder.message(message);
-        return this;
     }
 
     @Override

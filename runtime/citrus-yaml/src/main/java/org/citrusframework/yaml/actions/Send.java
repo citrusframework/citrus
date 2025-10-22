@@ -82,7 +82,6 @@ public class Send implements TestActionBuilder<SendMessageAction>, ReferenceReso
 
     /**
      * Subclasses may add additional building logic here.
-     * @return
      */
     protected SendMessageAction doBuild() {
         return builder.build();

@@ -48,7 +48,7 @@ public class SendEvent extends AbstractKnativeAction.Builder<SendEventAction, Se
         }
     }
 
-    @XmlAttribute(name = "fork")
+    @XmlAttribute
     public void setFork(Boolean value) {
         this.delegate.fork(value);
     }
@@ -58,7 +58,7 @@ public class SendEvent extends AbstractKnativeAction.Builder<SendEventAction, Se
         this.delegate.timeout(timeout);
     }
 
-    @XmlElement(name = "event", required = true)
+    @XmlElement(required = true)
     public void setEvent(Event event) {
         event.getAttributes().getAttributes().forEach(
                 attr -> this.delegate.attribute(attr.getName(), attr.getValue())
@@ -162,9 +162,9 @@ public class SendEvent extends AbstractKnativeAction.Builder<SendEventAction, Se
             @XmlType(name = "")
             public static class Attribute {
 
-                @XmlAttribute(name = "name", required = true)
+                @XmlAttribute(required = true)
                 protected String name;
-                @XmlAttribute(name = "value")
+                @XmlAttribute
                 protected String value;
 
                 public String getName() {

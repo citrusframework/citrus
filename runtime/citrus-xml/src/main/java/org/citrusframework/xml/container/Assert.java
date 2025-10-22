@@ -42,27 +42,23 @@ public class Assert implements TestActionBuilder<org.citrusframework.container.A
     }
 
     @XmlElement
-    public Assert setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlAttribute
-    public Assert setException(String type) {
+    public void setException(String type) {
         builder.exception(type);
-        return this;
     }
 
     @XmlAttribute
-    public Assert setMessage(String message) {
+    public void setMessage(String message) {
         builder.message(message);
-        return this;
     }
 
     @XmlElement(required = true)
-    public Assert setWhen(TestActions actions) {
+    public void setWhen(TestActions actions) {
         builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
-        return this;
     }
 
     @Override

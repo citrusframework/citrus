@@ -42,21 +42,18 @@ public class Conditional implements TestActionBuilder<org.citrusframework.contai
     }
 
     @XmlElement
-    public Conditional setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
     @XmlAttribute(name = "when", required = true)
-    public Conditional setWhen(String expression) {
+    public void setWhen(String expression) {
         builder.when(expression);
-        return this;
     }
 
     @XmlElement
-    public Conditional setActions(TestActions actions) {
+    public void setActions(TestActions actions) {
         builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
-        return this;
     }
 
     @Override

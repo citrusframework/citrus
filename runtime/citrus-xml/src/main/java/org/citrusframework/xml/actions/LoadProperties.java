@@ -32,9 +32,8 @@ public class LoadProperties implements TestActionBuilder<LoadPropertiesAction> {
     private final LoadPropertiesAction.Builder builder = new LoadPropertiesAction.Builder();
 
     @XmlElement
-    public LoadProperties setProperties(Properties properties) {
+    public void setProperties(Properties properties) {
         builder.filePath(properties.file);
-        return this;
     }
 
     @Override

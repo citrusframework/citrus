@@ -535,11 +535,11 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         protected String validators;
         protected String headerValidator;
         protected String headerValidators;
-
-        protected Receive.Selector selector;
-
         protected String attachmentValidator;
         protected SoapRequest message;
+        protected Receive.Selector selector;
+        protected List<Receive.Validate> validates;
+        protected Message.Extract extract;
 
         public SoapRequest getMessage() {
             return message;
@@ -556,10 +556,6 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         public void setAttachmentValidator(String attachmentValidator) {
             this.attachmentValidator = attachmentValidator;
         }
-
-        protected List<Receive.Validate> validates;
-
-        protected Message.Extract extract;
 
         public Integer getTimeout() {
             return timeout;
@@ -635,9 +631,8 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     }
 
     public static class ServerResponse {
-        protected Message.Extract extract;
-
         protected SoapResponse message;
+        protected Message.Extract extract;
 
         public SoapResponse getMessage() {
             return message;
@@ -661,9 +656,13 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         protected String select;
         protected String validator;
         protected String validators;
-
-        protected String attachmentValidator;
+        protected String headerValidator;
+        protected String headerValidators;
+        protected Receive.Selector selector;
         protected SoapResponse message;
+        protected String attachmentValidator;
+        protected List<Receive.Validate> validate;
+        protected Message.Extract extract;
 
         public SoapResponse getMessage() {
             return message;
@@ -680,15 +679,6 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         public void setAttachmentValidator(String attachmentValidator) {
             this.attachmentValidator = attachmentValidator;
         }
-
-        protected String headerValidator;
-        protected String headerValidators;
-
-        protected Receive.Selector selector;
-
-        protected List<Receive.Validate> validate;
-
-        protected Message.Extract extract;
 
         public Integer getTimeout() {
             return timeout;
@@ -838,9 +828,9 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         public static class Attachment {
             private String contentId;
             private String contentType;
+            private String charset;
             private String content;
             private String resource;
-            private String charset;
 
             public String getContentId() {
                 return contentId;
@@ -977,8 +967,8 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
 
         public void setContentType(String contentType) {
-                this.contentType = contentType;
-            }
+            this.contentType = contentType;
+        }
     }
 
     public static class SoapFault extends SoapResponse {

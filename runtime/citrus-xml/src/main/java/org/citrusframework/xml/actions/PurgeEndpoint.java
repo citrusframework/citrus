@@ -16,17 +16,17 @@
 
 package org.citrusframework.xml.actions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.PurgeEndpointAction;
 import org.citrusframework.spi.ReferenceResolver;
@@ -39,13 +39,11 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
 
     private ReferenceResolver referenceResolver;
 
-    @XmlElement(name = "endpoint")
     protected List<Endpoint> endpoints;
 
     @XmlAttribute
-    public PurgeEndpoint setEndpoint(String endpoint) {
+    public void setEndpoint(String endpoint) {
         builder.endpoint(endpoint);
-        return this;
     }
 
     public List<Endpoint> getEndpoints() {
@@ -55,26 +53,28 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
         return this.endpoints;
     }
 
+    @XmlElement(name = "endpoint")
+    public void setEndpoints(List<Endpoint> endpoints) {
+        this.endpoints = endpoints;
+    }
+
     @XmlAttribute
-    public PurgeEndpoint setTimeout(long milliseconds) {
+    public void setTimeout(long milliseconds) {
         builder.timeout(milliseconds);
-        return this;
     }
 
     @XmlAttribute
-    public PurgeEndpoint setSleep(long milliseconds) {
+    public void setSleep(long milliseconds) {
         builder.sleep(milliseconds);
-        return this;
     }
 
     @XmlAttribute
-    public PurgeEndpoint setSelect(String value) {
+    public void setSelect(String value) {
         builder.selector(value);
-        return this;
     }
 
     @XmlElement
-    public PurgeEndpoint setSelector(Selector selector) {
+    public void setSelector(Selector selector) {
         if (selector.selectorValue != null) {
             builder.selector(selector.selectorValue);
         }
@@ -87,8 +87,6 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
 
             builder.selector(selectorElements);
         }
-
-        return this;
     }
 
     @Override
@@ -107,7 +105,7 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
     @XmlType(name = "")
     public static class Endpoint {
 
-        @XmlAttribute(name = "name", required = true)
+        @XmlAttribute(required = true)
         protected String name;
 
         public String getName() {
@@ -147,9 +145,9 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
         public static class Element {
-            @XmlAttribute(name = "name", required = true)
+            @XmlAttribute(required = true)
             protected String name;
-            @XmlAttribute(name = "value", required = true)
+            @XmlAttribute(required = true)
             protected String value;
 
             public String getName() {

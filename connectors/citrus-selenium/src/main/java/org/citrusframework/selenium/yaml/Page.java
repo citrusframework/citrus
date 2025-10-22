@@ -38,7 +38,6 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
 
     /**
      * Sets the web page by name.
-     * @param name
      */
     public void setName(String name) {
         this.pageName = name;
@@ -46,7 +45,6 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
 
     /**
      * Sets the web page type.
-     * @param pageType
      */
     public void setType(String pageType) {
         this.delegate.type(pageType);
@@ -54,7 +52,6 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
 
     /**
      * Sets the web page action.
-     * @param action
      */
     public void setAction(String action) {
         this.delegate.action(action);
@@ -69,7 +66,6 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
 
     /**
      * Set page validator.
-     * @param pageValidator
      */
     public void setValidator(String pageValidator) {
         this.pageValidator = pageValidator;
@@ -77,7 +73,6 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
 
     /**
      * Set page action method to execute.
-     * @param method
      */
     public void setExecute(String method) {
         this.delegate.action(method);
@@ -85,7 +80,6 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
 
     /**
      * Set page action argument.
-     * @param arg
      */
     public void setArgument(String arg) {
         this.delegate.argument(arg);
@@ -93,7 +87,6 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
 
     /**
      * Set page action arguments.
-     * @param args
      */
     public void setArguments(List<String> args) {
         this.delegate.arguments(args);

@@ -50,45 +50,38 @@ public class Knative implements TestActionBuilder<KnativeAction>, ReferenceResol
     private ReferenceResolver referenceResolver;
 
     @XmlElement
-    public Knative setDescription(String value) {
+    public void setDescription(String value) {
         this.description = description;
-        return this;
     }
 
     @XmlAttribute
-    public Knative setActor(String actor) {
+    public void setActor(String actor) {
         this.actor = actor;
-        return this;
     }
 
     @XmlAttribute
-    public Knative setNamespace(String namespace) {
+    public void setNamespace(String namespace) {
         this.namespace = namespace;
-        return this;
     }
 
     @XmlAttribute(name = "auto-remove")
-    public Knative setAutoRemove(boolean autoRemoveResources) {
+    public void setAutoRemove(boolean autoRemoveResources) {
         this.autoRemoveResources = autoRemoveResources;
-        return this;
     }
 
     @XmlAttribute(name = "cluster-type")
-    public Knative setClusterType(String clusterType) {
+    public void setClusterType(String clusterType) {
         this.clusterType = ClusterType.valueOf(clusterType);
-        return this;
     }
 
     @XmlAttribute(name = "kubernetes-client")
-    public Knative setKubernetesClient(String client) {
+    public void setKubernetesClient(String client) {
         this.k8sClient = client;
-        return this;
     }
 
     @XmlAttribute
-    public Knative setClient(String client) {
+    public void setClient(String client) {
         this.knativeClient = client;
-        return this;
     }
 
     @XmlElement(name = "create-broker")

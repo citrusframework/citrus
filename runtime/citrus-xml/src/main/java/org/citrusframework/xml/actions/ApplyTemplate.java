@@ -37,9 +37,8 @@ public class ApplyTemplate implements TestActionBuilder<Template>, ReferenceReso
     private final Template.Builder builder = new Template.Builder();
 
     @XmlAttribute
-    public ApplyTemplate setName(String name) {
+    public void setName(String name) {
         builder.templateName(name);
-        return this;
     }
 
     @XmlAttribute
@@ -48,14 +47,13 @@ public class ApplyTemplate implements TestActionBuilder<Template>, ReferenceReso
     }
 
     @XmlAttribute
-    public ApplyTemplate setFile(String filePath) {
+    public void setFile(String filePath) {
         builder.file(filePath);
         builder.loader(new XmlTemplateLoader());
-        return this;
     }
 
     @XmlElement
-    public ApplyTemplate setParameters(Parameters parameters) {
+    public void setParameters(Parameters parameters) {
         parameters.getParameters().forEach(p -> {
             if (p.multilineValue != null) {
                 builder.parameter(p.name, p.multilineValue);
@@ -63,7 +61,6 @@ public class ApplyTemplate implements TestActionBuilder<Template>, ReferenceReso
                 builder.parameter(p.name, p.value);
             }
         });
-        return this;
     }
 
     @Override

@@ -16,7 +16,6 @@
 
 package org.citrusframework.kubernetes.xml;
 
-import io.fabric8.kubernetes.client.CustomResource;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -38,7 +37,7 @@ public class CreateCustomResource extends AbstractKubernetesAction.Builder<Creat
     @XmlAttribute
     public void setType(String resourceType) {
         try {
-            delegate.resourceType((Class<CustomResource<?, ?>>) Class.forName(resourceType));
+            delegate.resourceType(Class.forName(resourceType));
         } catch(ClassNotFoundException | ClassCastException e) {
             delegate.type(resourceType);
         }
