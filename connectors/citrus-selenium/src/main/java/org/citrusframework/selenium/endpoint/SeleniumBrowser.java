@@ -16,7 +16,15 @@
 
 package org.citrusframework.selenium.endpoint;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import com.gargoylesoftware.htmlunit.BrowserVersion;
+import org.citrusframework.common.ShutdownPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -51,13 +59,6 @@ import org.openqa.selenium.support.events.WebDriverListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import static com.gargoylesoftware.htmlunit.BrowserVersion.CHROME;
 import static com.gargoylesoftware.htmlunit.BrowserVersion.FIREFOX;
 import static com.gargoylesoftware.htmlunit.BrowserVersion.FIREFOX_ESR;
@@ -68,7 +69,7 @@ import static com.gargoylesoftware.htmlunit.BrowserVersion.INTERNET_EXPLORER;
  *
  * @since 2.7
  */
-public class SeleniumBrowser extends AbstractEndpoint implements Producer {
+public class SeleniumBrowser extends AbstractEndpoint implements Producer, ShutdownPhase {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(SeleniumBrowser.class);
@@ -88,8 +89,6 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
 
     /**
      * Default constructor using endpoint configuration.
-     *
-     * @param endpointConfiguration
      */
     public SeleniumBrowser(SeleniumBrowserConfiguration endpointConfiguration) {
         super(endpointConfiguration);
@@ -148,6 +147,11 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
         } else {
             logger.warn("Browser already stopped");
         }
+    }
+
+    @Override
+    public void destroy() {
+        stop();
     }
 
     /**
