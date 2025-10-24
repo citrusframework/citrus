@@ -84,6 +84,7 @@ public class SeleniumTestActionBuilderTest extends UnitTestSupport implements Te
         when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
 
         when(seleniumBrowser.getName()).thenReturn("mockBrowser");
+        when(referenceResolver.isResolvable("mockBrowser", SeleniumBrowser.class)).thenReturn(true);
         when(referenceResolver.resolve("mockBrowser", SeleniumBrowser.class)).thenReturn(seleniumBrowser);
 
         when(webDriver.navigate()).thenReturn(navigation);

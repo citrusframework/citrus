@@ -51,8 +51,11 @@ public abstract class AbstractSeleniumAction extends AbstractTestAction implemen
 
         SeleniumBrowser browserToUse = browser;
         if (browserToUse == null) {
-            if (context.getVariables().containsKey(SeleniumHeaders.SELENIUM_BROWSER)) {
+            if (context.getVariables().containsKey(SeleniumHeaders.SELENIUM_BROWSER) &&
+                    context.getReferenceResolver().isResolvable(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), SeleniumBrowser.class)) {
                 browserToUse = context.getReferenceResolver().resolve(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), SeleniumBrowser.class);
+            } else if (context.getReferenceResolver().isResolvable(SeleniumBrowser.class)) {
+                browserToUse = context.getReferenceResolver().resolve(SeleniumBrowser.class);
             } else {
                 throw new CitrusRuntimeException("Failed to get active browser instance, " +
                         "either set explicit browser for action or start browser instance");
@@ -68,7 +71,6 @@ public abstract class AbstractSeleniumAction extends AbstractTestAction implemen
 
     /**
      * Gets the Selenium browser.
-     * @return
      */
     public SeleniumBrowser getBrowser() {
         return browser;
