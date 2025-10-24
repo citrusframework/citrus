@@ -18,12 +18,15 @@ package org.citrusframework.actions;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +36,8 @@ import org.slf4j.LoggerFactory;
  */
 public class CreateEndpointAction extends AbstractTestAction {
 
+    /** Name of the endpoint, used to bind it to the registry */
+    private final String endpointName;
     /** The endpoint uri that defines the type and properties */
     private final String endpointUri;
 
@@ -46,12 +51,22 @@ public class CreateEndpointAction extends AbstractTestAction {
         super("create-endpoint", builder);
 
         this.endpointUri = builder.endpointUri;
+        this.endpointName = builder.endpointName;
     }
 
     @Override
     public void doExecute(TestContext context) {
-        logger.info("Creating endpoint '{}'", endpointUri);
-        context.getEndpointFactory().create(endpointUri, context);
+        logger.info("Creating endpoint {} '{}'", Optional.ofNullable(endpointName).orElse(""), endpointUri);
+        Endpoint endpoint = context.getEndpointFactory().create(endpointUri, context);
+
+        if (StringUtils.hasText(endpointName)) {
+            if (context.getReferenceResolver().isResolvable(endpointName)) {
+                logger.warn("Skip binding endpoint to bean registry, because endpoint already exists: {}", endpointName);
+            } else {
+                logger.info("Binding endpoint {} to bean registry", endpointName);
+                context.getReferenceResolver().bind(endpointName, endpoint);
+            }
+        }
     }
 
     public String getEndpointUri() {
@@ -64,6 +79,7 @@ public class CreateEndpointAction extends AbstractTestAction {
     public static final class Builder extends AbstractTestActionBuilder<CreateEndpointAction, Builder>
             implements CreateEndpointActionBuilder<CreateEndpointAction> {
 
+        private String endpointName;
         private String endpointUri;
         private String type;
         private final Map<String, String> properties = new LinkedHashMap<>();
@@ -97,6 +113,7 @@ public class CreateEndpointAction extends AbstractTestAction {
 
         @Override
         public Builder endpointName(String name) {
+            this.endpointName = name;
             return property(EndpointComponent.ENDPOINT_NAME, name);
         }
 
