@@ -16,12 +16,12 @@
 
 package org.citrusframework.actions.camel;
 
+import java.util.Map;
+
 import org.citrusframework.TestAction;
 import org.citrusframework.spi.Resource;
 
-import java.util.Map;
-
-public interface CamelJBangCustomActionBuilder<T extends TestAction, B extends CamelJBangCustomActionBuilder<T, B>>
+public interface CamelIntegrationRunCustomizedActionBuilder<T extends TestAction, B extends CamelIntegrationRunCustomizedActionBuilder<T, B>>
         extends CamelJBangActionBuilderBase<T, B> {
 
     /**

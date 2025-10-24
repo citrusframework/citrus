@@ -16,15 +16,6 @@
 
 package org.citrusframework.camel.actions;
 
-import org.citrusframework.actions.camel.CamelJBangCustomActionBuilder;
-import org.citrusframework.camel.jbang.CamelJBangSettings;
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.jbang.ProcessAndOutput;
-import org.citrusframework.spi.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -36,15 +27,24 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+import org.citrusframework.actions.camel.CamelIntegrationRunCustomizedActionBuilder;
+import org.citrusframework.camel.jbang.CamelJBangSettings;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.jbang.ProcessAndOutput;
+import org.citrusframework.spi.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.citrusframework.camel.dsl.CamelSupport.camel;
 
 /**
  * Runs given Camel (custom - parametrized) integration with Camel JBang tooling.
  */
-public class CamelCustomAction extends AbstractCamelJBangAction {
+public class CamelCustomizedRunIntegrationAction extends AbstractCamelJBangAction {
 
     /** Logger */
-    private static final Logger logger = LoggerFactory.getLogger(CamelCustomAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(CamelCustomizedRunIntegrationAction.class);
 
     /** Name of Camel integration. More values are used in case more commands have to be used before resources. */
     private final String[] commands;
@@ -75,8 +75,8 @@ public class CamelCustomAction extends AbstractCamelJBangAction {
     /**
      * Default constructor.
      */
-    public CamelCustomAction(Builder builder) {
-        super("run-integration", builder);
+    public CamelCustomizedRunIntegrationAction(Builder builder) {
+        super("run-customized-integration", builder);
 
         this.commands = builder.commands;
         this.resourceFiles = builder.resourceFiles;
@@ -164,12 +164,11 @@ public class CamelCustomAction extends AbstractCamelJBangAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelCustomAction, Builder>
-            implements CamelJBangCustomActionBuilder<CamelCustomAction, Builder> {
+    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelCustomizedRunIntegrationAction, Builder>
+            implements CamelIntegrationRunCustomizedActionBuilder<CamelCustomizedRunIntegrationAction, Builder> {
 
         private String processName;
         private String[] commands = new String[0];
-        private Resource integrationResource;
         private final List<String> resourceFiles = new ArrayList<>();
         private String workDir;
 
@@ -300,7 +299,7 @@ public class CamelCustomAction extends AbstractCamelJBangAction {
         }
 
         @Override
-        public CamelCustomAction doBuild() {
+        public CamelCustomizedRunIntegrationAction doBuild() {
             if (systemPropertiesFile != null) {
                 Properties props = new Properties();
                 try {
@@ -321,7 +320,7 @@ public class CamelCustomAction extends AbstractCamelJBangAction {
                 }
             }
 
-            return new CamelCustomAction(this);
+            return new CamelCustomizedRunIntegrationAction(this);
         }
 
     }
