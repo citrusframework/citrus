@@ -232,6 +232,62 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
             CamelStopIntegrationAction.Builder builder = new CamelStopIntegrationAction.Builder()
                     .integrationName(jbang.getStop().getIntegration());
             this.builder = builder;
+        }  else if (jbang.getCustom() != null) {
+            CamelCustomizedRunIntegrationAction.Builder builder = new CamelCustomizedRunIntegrationAction.Builder()
+                    .commands(jbang.getCustom().getCommands().toArray(new String[0]));
+
+            if (jbang.getCustom().getCommandLine() != null) {
+                builder.commands(jbang.getCustom().getCommandLine().split(" "));
+            }
+
+            builder.workDir(jbang.getCustom().getWorkDir());
+            if (jbang.getCustom().getProcessName() != null) {
+                builder.processName(jbang.getCustom().getProcessName());
+            }
+
+            builder.autoRemove(jbang.getCustom().isAutoRemove());
+            builder.waitForRunningState(jbang.getCustom().isWaitForRunningState());
+            builder.dumpIntegrationOutput(jbang.getCustom().isDumpIntegrationOutput());
+
+            if (jbang.getCustom().getArgLine() != null) {
+                builder.withArgs(jbang.getCustom().getArgLine().split(" "));
+            }
+
+            if (jbang.getCustom().getArgs() != null) {
+                builder.withArgs(jbang.getCustom().getArgs().getArgs().toArray(String[]::new));
+            }
+
+            if (jbang.getCustom().getResources() != null) {
+                jbang.getCustom().getResources().getResources().forEach(builder::addResource);
+            }
+
+            if (jbang.getCustom().getIntegration().getFile() != null) {
+                builder.addResource(jbang.getCustom().getIntegration().getFile());
+            }
+
+            if (jbang.getCustom().getIntegration().getSystemProperties() != null) {
+                if (jbang.getCustom().getIntegration().getSystemProperties().getFile() != null) {
+                    builder.withSystemProperties(Resources.create(
+                            jbang.getCustom().getIntegration().getSystemProperties().getFile()));
+                }
+
+                jbang.getCustom().getIntegration().getSystemProperties()
+                        .getProperties()
+                        .forEach(property -> builder.withSystemProperty(property.getName(), property.getValue()));
+            }
+
+            if (jbang.getCustom().getIntegration().getEnvironment() != null) {
+                if (jbang.getCustom().getIntegration().getEnvironment().getFile() != null) {
+                    builder.withEnvs(Resources.create(
+                            jbang.getCustom().getIntegration().getEnvironment().getFile()));
+                }
+
+                jbang.getCustom().getIntegration().getEnvironment()
+                        .getVariables()
+                        .forEach(variable -> builder.withEnv(variable.getName(), variable.getValue()));
+            }
+
+            this.builder = builder;
         } else if (jbang.getVerify() != null) {
             CamelVerifyIntegrationAction.Builder builder = new CamelVerifyIntegrationAction.Builder()
                     .integrationName(jbang.getVerify().getIntegration())

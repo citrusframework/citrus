@@ -24,7 +24,7 @@ import org.citrusframework.util.TestUtils;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
-public class CamelCustomIT extends TestNGCitrusSupport implements TestActionSupport {
+public class CamelCustomizedRunIntegrationIT extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
@@ -41,7 +41,7 @@ public class CamelCustomIT extends TestNGCitrusSupport implements TestActionSupp
         when(camel().jbang()
                 .custom("run", "--name", "route")
                 .processName("route")
-                .addResource(Resources.fromClasspath("route.yaml", CamelCustomIT.class))
+                .addResource(Resources.fromClasspath("route.yaml", CamelCustomizedRunIntegrationIT.class))
                 .withEnv("GREETING", "Hello Camel"));
 
         then(camel().jbang()

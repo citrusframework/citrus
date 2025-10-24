@@ -25,6 +25,7 @@ import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.AbstractCamelJBangAction;
 import org.citrusframework.camel.actions.AddCamelPluginAction;
 import org.citrusframework.camel.actions.CamelCmdSendAction;
+import org.citrusframework.camel.actions.CamelCustomizedRunIntegrationAction;
 import org.citrusframework.camel.actions.CamelKubernetesDeleteIntegrationAction;
 import org.citrusframework.camel.actions.CamelKubernetesRunIntegrationAction;
 import org.citrusframework.camel.actions.CamelKubernetesVerifyIntegrationAction;
@@ -64,6 +65,10 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
     public void setStop(StopIntegration stop) {
         this.builder = stop.getBuilder();
+    }
+
+    public void setCustom(CustomizedRunIntegration custom) {
+        this.builder = custom.getBuilder();
     }
 
     public void setVerify(VerifyIntegration verify) {
@@ -304,6 +309,209 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
         @Override
         public CamelStopIntegrationAction.Builder getBuilder() {
+            return builder;
+        }
+    }
+
+    public static class CustomizedRunIntegration implements CamelActionBuilderWrapper<CamelCustomizedRunIntegrationAction.Builder> {
+
+        private final CamelCustomizedRunIntegrationAction.Builder builder = new CamelCustomizedRunIntegrationAction.Builder();
+
+        public void setCommands(List<String> commands) {
+            builder.commands(commands.toArray(new String[0]));
+        }
+
+        public void setWorkDir(String workDir) {
+            builder.workDir(workDir);
+        }
+
+        public void setProcessName(String processName) {
+            builder.processName(processName);
+        }
+
+        public void setAutoRemove(boolean enabled) {
+            builder.autoRemove(enabled);
+        }
+
+        public void setWaitForRunningState(boolean enabled) {
+            builder.waitForRunningState(enabled);
+        }
+
+        public void setArgs(List<String> args) {
+            builder.withArgs(args.toArray(String[]::new));
+        }
+
+        public void setResources(List<String> resources) {
+            resources.forEach(builder::addResource);
+        }
+
+        public void setDumpIntegrationOutput(boolean enabled) {
+            builder.dumpIntegrationOutput(enabled);
+        }
+
+        public void setIntegration(Integration integration) {
+            builder.processName(integration.name);
+
+            if (integration.file != null) {
+                builder.addResource(integration.file);
+            }
+
+            if (integration.systemProperties != null) {
+                if (integration.systemProperties.getFile() != null) {
+                    builder.withSystemProperties(Resources.create(
+                            integration.systemProperties.getFile()));
+                }
+
+                integration.systemProperties
+                        .getProperties()
+                        .forEach(property -> builder.withSystemProperty(property.getName(), property.getValue()));
+            }
+
+            if (integration.environment != null) {
+                if (integration.environment.getFile() != null) {
+                    builder.withEnvs(Resources.create(
+                            integration.environment.getFile()));
+                }
+
+                integration.environment
+                        .getVariables()
+                        .forEach(variable -> builder.withEnv(variable.getName(), variable.getValue()));
+            }
+        }
+
+        public static class Integration {
+            private String name;
+            private String file;
+
+            protected Environment environment;
+
+            protected SystemProperties systemProperties;
+
+            public void setName(String integrationName) {
+                this.name = integrationName;
+            }
+
+            public void setFile(String file) {
+                this.file = file;
+            }
+
+            public Environment getEnvironment() {
+                return this.environment;
+            }
+
+            public void setEnvironment(Environment environment) {
+                this.environment = environment;
+            }
+
+            public SystemProperties getSystemProperties() {
+                return this.systemProperties;
+            }
+
+            public void setSystemProperties(SystemProperties systemProperties) {
+                this.systemProperties = systemProperties;
+            }
+
+            public static class Environment {
+
+                protected String file;
+
+                protected List<Environment.Variable> variables;
+
+                public List<Environment.Variable> getVariables() {
+                    if (variables == null) {
+                        variables = new ArrayList<>();
+                    }
+                    return this.variables;
+                }
+
+                public void setVariables(List<Environment.Variable> variables) {
+                    this.variables = variables;
+                }
+
+                public void setFile(String file) {
+                    this.file = file;
+                }
+
+                public String getFile() {
+                    return file;
+                }
+
+                public static class Variable {
+
+                    protected String name;
+                    protected String value;
+
+                    public String getName() {
+                        return name;
+                    }
+
+                    public void setName(String value) {
+                        this.name = value;
+                    }
+
+                    public String getValue() {
+                        return value;
+                    }
+
+                    public void setValue(String value) {
+                        this.value = value;
+                    }
+
+                }
+            }
+
+            public static class SystemProperties {
+
+                protected String file;
+
+                protected List<SystemProperties.Property> properties;
+
+                public List<SystemProperties.Property> getProperties() {
+                    if (properties == null) {
+                        properties = new ArrayList<>();
+                    }
+                    return this.properties;
+                }
+
+                public void setProperties(List<SystemProperties.Property> properties) {
+                    this.properties = properties;
+                }
+
+                public void setFile(String file) {
+                    this.file = file;
+                }
+
+                public String getFile() {
+                    return file;
+                }
+
+                public static class Property {
+
+                    protected String name;
+                    protected String value;
+
+                    public String getName() {
+                        return name;
+                    }
+
+                    public void setName(String value) {
+                        this.name = value;
+                    }
+
+                    public String getValue() {
+                        return value;
+                    }
+
+                    public void setValue(String value) {
+                        this.value = value;
+                    }
+
+                }
+            }
+        }
+
+        @Override
+        public CamelCustomizedRunIntegrationAction.Builder getBuilder() {
             return builder;
         }
     }

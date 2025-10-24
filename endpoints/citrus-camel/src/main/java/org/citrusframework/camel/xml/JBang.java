@@ -34,6 +34,7 @@ import org.citrusframework.camel.jbang.CamelJBangSettings;
         "run",
         "cmd",
         "stop",
+        "custom",
         "verify",
 })
 public class JBang {
@@ -49,6 +50,9 @@ public class JBang {
 
     @XmlElement
     protected StopIntegration stop;
+
+    @XmlElement
+    protected CustomizedRunIntegration custom;
 
     @XmlElement
     protected VerifyIntegration verify;
@@ -92,6 +96,14 @@ public class JBang {
 
     public StopIntegration getStop() {
         return stop;
+    }
+
+    public void setCustom(CustomizedRunIntegration custom) {
+        this.custom = custom;
+    }
+
+    public CustomizedRunIntegration getCustom() {
+        return custom;
     }
 
     public void setVerify(VerifyIntegration verify) {
@@ -439,6 +451,356 @@ public class JBang {
 
         public String getIntegration() {
             return integration;
+        }
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+            "commands",
+            "args",
+            "integration",
+            "resources"
+    })
+    public static class CustomizedRunIntegration {
+
+        @XmlAttribute(name = "commands")
+        protected String commandLine;
+
+        @XmlAttribute
+        protected String processName;
+
+        @XmlAttribute
+        protected String workDir;
+
+        @XmlElement(name = "command")
+        protected List<String> commands;
+
+        @XmlElement(required = true)
+        private Integration integration;
+
+        @XmlAttribute(name = "auto-remove")
+        protected boolean autoRemove;
+
+        @XmlAttribute(name = "args")
+        protected String argLine;
+
+        @XmlAttribute(name = "wait-for-running-state")
+        protected boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
+
+        @XmlAttribute(name = "dump-integration-output")
+        protected boolean dumpIntegrationOutput = CamelJBangSettings.isDumpIntegrationOutput();
+
+        @XmlElement
+        protected Args args;
+
+        @XmlElement
+        protected Resources resources;
+
+        public void setCommandLine(String commandLine) {
+            this.commandLine = commandLine;
+        }
+
+        public String getCommandLine() {
+            return commandLine;
+        }
+
+        public void setCommands(List<String> commands) {
+            this.commands = commands;
+        }
+
+        public List<String> getCommands() {
+            if (commands == null) {
+                commands = new ArrayList<>();
+            }
+
+            return commands;
+        }
+
+        public void setProcessName(String name) {
+            this.processName = name;
+        }
+
+        public String getProcessName() {
+            return processName;
+        }
+
+        public void setWorkDir(String workDir) {
+            this.workDir = workDir;
+        }
+
+        public String getWorkDir() {
+            return workDir;
+        }
+
+        public Integration getIntegration() {
+            return integration;
+        }
+
+        public void setIntegration(Integration integration) {
+            this.integration = integration;
+        }
+
+        public boolean isAutoRemove() {
+            return autoRemove;
+        }
+
+        public void setAutoRemove(boolean autoRemove) {
+            this.autoRemove = autoRemove;
+        }
+
+        public boolean isWaitForRunningState() {
+            return waitForRunningState;
+        }
+
+        public void setWaitForRunningState(boolean waitForRunningState) {
+            this.waitForRunningState = waitForRunningState;
+        }
+
+        public boolean isDumpIntegrationOutput() {
+            return dumpIntegrationOutput;
+        }
+
+        public void setDumpIntegrationOutput(boolean dumpIntegrationOutput) {
+            this.dumpIntegrationOutput = dumpIntegrationOutput;
+        }
+
+        public void setResources(Resources resources) {
+            this.resources = resources;
+        }
+
+        public Resources getResources() {
+            return resources;
+        }
+
+        public String getArgLine() {
+            return argLine;
+        }
+
+        public void setArgLine(String argLine) {
+            this.argLine = argLine;
+        }
+
+        public Args getArgs() {
+            return args;
+        }
+
+        public void setArgs(Args args) {
+            this.args = args;
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+                "args",
+        })
+        public static class Args {
+
+            @XmlElement(name = "argument")
+            protected List<String> args;
+
+            public List<String> getArgs() {
+                if (args == null) {
+                    args = new ArrayList<>();
+                }
+                return args;
+            }
+
+            public void setArgs(List<String> args) {
+                this.args = args;
+            }
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+                "resources",
+        })
+        public static class Resources {
+
+            @XmlElement(name = "resource")
+            protected List<String> resources;
+
+            public List<String> getResources() {
+                if (resources == null) {
+                    resources = new ArrayList<>();
+                }
+                return resources;
+            }
+
+            public void setResources(List<String> resources) {
+                this.resources = resources;
+            }
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+                "environment",
+                "systemProperties",
+                "source"
+        })
+        public static class Integration {
+            @XmlAttribute
+            protected String name;
+
+            @XmlAttribute
+            protected String file;
+
+            @XmlElement
+            protected String source;
+
+            @XmlElement
+            protected Environment environment;
+
+            @XmlElement(name = "system-properties")
+            protected SystemProperties systemProperties;
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setFile(String file) {
+                this.file = file;
+            }
+
+            public String getFile() {
+                return file;
+            }
+
+            public void setSource(String source) {
+                this.source = source;
+            }
+
+            public String getSource() {
+                return source;
+            }
+
+            public Environment getEnvironment() {
+                return environment;
+            }
+
+            public void setEnvironment(Environment environment) {
+                this.environment = environment;
+            }
+
+            public SystemProperties getSystemProperties() {
+                return systemProperties;
+            }
+
+            public void setSystemProperties(SystemProperties systemProperties) {
+                this.systemProperties = systemProperties;
+            }
+
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = "", propOrder = {
+                    "variables",
+            })
+            public static class Environment {
+
+                @XmlAttribute
+                protected String file;
+
+                @XmlElement(name = "variable")
+                protected List<Variable> variables;
+
+                public List<Variable> getVariables() {
+                    if (variables == null) {
+                        variables = new ArrayList<>();
+                    }
+                    return this.variables;
+                }
+
+                public void setFile(String file) {
+                    this.file = file;
+                }
+
+                public String getFile() {
+                    return file;
+                }
+
+                @XmlAccessorType(XmlAccessType.FIELD)
+                @XmlType(name = "")
+                public static class Variable {
+
+                    @XmlAttribute(name = "name", required = true)
+                    protected String name;
+                    @XmlAttribute(name = "value")
+                    protected String value;
+
+                    public String getName() {
+                        return name;
+                    }
+
+                    public void setName(String value) {
+                        this.name = value;
+                    }
+
+                    public String getValue() {
+                        return value;
+                    }
+
+                    public void setValue(String value) {
+                        this.value = value;
+                    }
+
+                }
+            }
+
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = "", propOrder = {
+                    "properties",
+            })
+            public static class SystemProperties {
+
+                @XmlAttribute
+                protected String file;
+
+                @XmlElement(name = "property")
+                protected List<Property> properties;
+
+                public List<Property> getProperties() {
+                    if (properties == null) {
+                        properties = new ArrayList<>();
+                    }
+                    return this.properties;
+                }
+
+                public void setFile(String file) {
+                    this.file = file;
+                }
+
+                public String getFile() {
+                    return file;
+                }
+
+                @XmlAccessorType(XmlAccessType.FIELD)
+                @XmlType(name = "")
+                public static class Property {
+
+                    @XmlAttribute(name = "name", required = true)
+                    protected String name;
+                    @XmlAttribute(name = "value")
+                    protected String value;
+
+                    public String getName() {
+                        return name;
+                    }
+
+                    public void setName(String value) {
+                        this.name = value;
+                    }
+
+                    public String getValue() {
+                        return value;
+                    }
+
+                    public void setValue(String value) {
+                        this.value = value;
+                    }
+
+                }
+            }
         }
     }
 

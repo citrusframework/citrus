@@ -1336,6 +1336,77 @@
                   <xs:attribute name="integration" type="xs:string"/>
                 </xs:complexType>
               </xs:element>
+              <xs:element name="custom">
+                <xs:annotation>
+                  <xs:documentation>Runs a Camel (custom parameterized) integration via JBang</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="commands" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="command" type="xs:string" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="args" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="argument" type="xs:string" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="integration">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="environment" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="variable" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:attribute name="name" use="required" type="xs:string"/>
+                                    <xs:attribute name="value" use="required" type="xs:string"/>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="file" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="system-properties" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="property" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:attribute name="name" use="required" type="xs:string"/>
+                                    <xs:attribute name="value" use="required" type="xs:string"/>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="file" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="name" type="xs:string"/>
+                        <xs:attribute name="file" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="resources" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="resource" type="xs:string" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="commands" type="xs:string"/>
+                  <xs:attribute name="workDir" type="xs:string"/>
+                  <xs:attribute name="processName" type="xs:string"/>
+                  <xs:attribute name="args" type="xs:string"/>
+                  <xs:attribute name="auto-remove" type="xs:boolean"/>
+                  <xs:attribute name="wait-for-running-state" type="xs:boolean"/>
+                  <xs:attribute name="dump-integration-output" type="xs:boolean"/>
+                </xs:complexType>
+              </xs:element>
               <xs:element name="verify">
                 <xs:annotation>
                   <xs:documentation>Verifies a Camel integration, for instance its status or the presence of a log message</xs:documentation>
