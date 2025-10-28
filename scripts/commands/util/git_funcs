@@ -47,6 +47,17 @@ git_commit() {
     fi
 }
 
+git_switch() {
+    local tag="${1:-}"
+
+    echo "==== Switch git branch"
+    if [ -n "$tag" ]; then
+        git checkout $tag
+    else
+        git switch -
+    fi
+}
+
 get_git_remote() {
   local remote=$(readopt --git-remote)
 

@@ -36,6 +36,12 @@ release-docs-major:
 release-docs-dry-run:
 	./scripts/citrus docs --release-version $(VERSION) --dry-run
 
+release-docker:
+	./scripts/citrus docker --release-version $(VERSION) --skip-tests
+
+release-docker-dry-run:
+	./scripts/citrus docker --release-version $(VERSION) --skip-tests --dry-run
+
 release:
 	./scripts/citrus release --git-remote $(RELEASE_GIT_REMOTE) --release-version $(VERSION) --skip-tests
 

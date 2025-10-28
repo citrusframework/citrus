@@ -1,0 +1,103 @@
+#!/bin/bash
+
+# ---------------------------------------------------------------------------
+# Copyright the original author or authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ---------------------------------------------------------------------------
+
+docker::description() {
+    echo "Build Docker images"
+}
+
+docker::usage() {
+    cat - <<EOT
+-n  --dry-run                 Dry run, performs the whole release build but does no tagging or pushing
+    --release-version <ver>   Version to release (e.g. "1.2.1"). One version arg is mandatory
+    --log <log-file>          Write full log to <log-file>, only print progress to screen
+-q  --quiet                   Adds quiet option to Maven options - only show errors
+EOT
+}
+
+docker::run() {
+    source "$(basedir)/commands/util/version_funcs"
+    source "$(basedir)/commands/util/git_funcs"
+
+    # Main application directory
+    local working_dir=$(appdir)
+    cd $working_dir
+
+    # Validate release versions. Release versions have the format "1.3.4"
+    local release_version=$(get_release_version "$working_dir")
+    check_error $release_version
+
+    if [ ! $(hasflag --dry-run -n) ]; then
+        # Verify that there are no modified file in git repo
+        check_git_clean "$working_dir"
+        git_switch "v$release_version"
+    fi
+
+    # Calculate common maven options
+    local maven_opts="$(extract_maven_opts)"
+
+    echo "==== Building docker image $release_version ($working_dir)"
+
+    # Write to logfile if requested
+    if [ $(readopt --log) ]; then
+        local logfile=$(readopt --log)
+        touch $logfile
+        tail -f $logfile > >(grep ^====) &
+        local tail_pid=$!
+        trap "kill $tail_pid" EXIT
+
+        exec >>$logfile 2>&1
+        sleep 1
+    fi
+
+    if [ $(hasflag --dry-run -n) ]; then
+        echo "==== Build and release dry-run"
+        ./mvnw ${maven_opts} package -pl :citrus-agent
+    else
+        echo "==== Build and release to upstream Docker repository"
+        ./mvnw ${maven_opts} install -pl :citrus-agent
+        # Switch back to main branch
+        git_switch
+    fi
+
+    echo "==== Finished Docker image release $release_version"
+}
+
+# =======================================================================
+# Helper
+
+extract_maven_opts() {
+    local profiles="docker-image"
+    local maven_opts="--batch-mode -V -e"
+
+    if [ $(hasflag --quiet -q) ]; then
+        maven_opts="$maven_opts -q"
+    fi
+
+    if [ ! $(hasflag --dry-run -n) ]; then
+        profiles="$profiles,release-central"
+    fi
+
+    if [ $(hasflag --skip-tests) ]; then
+        # Do not run any tests but compile test sources
+        maven_opts="$maven_opts -Dtest -Dit.test -DfailIfNoTests=false -Dsurefire.failIfNoSpecifiedTests=false -Dfailsafe.failIfNoSpecifiedTests=false"
+    fi
+
+    maven_opts="$maven_opts -P$profiles"
+
+    echo $maven_opts
+}
