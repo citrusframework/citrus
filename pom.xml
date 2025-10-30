@@ -220,7 +220,7 @@
     <hsqldb.version>2.7.4</hsqldb.version>
     <jackson.version>2.20.0</jackson.version>
     <jackson.version.short>2.20</jackson.version.short>
-    <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+    <jackson-databind-nullable.version>0.2.7</jackson-databind-nullable.version>
     <jakarta-activation.version>2.0.1</jakarta-activation.version>
     <jakarta-activation-api.version>2.1.3</jakarta-activation-api.version>
     <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
@@ -254,7 +254,6 @@
     <netty.version>4.2.0.Final</netty.version>
     <okhttp.version>5.1.0</okhttp.version>
     <org.openapitools.version>7.15.0</org.openapitools.version>
-    <jackson-databind-nullable.version>0.2.7</jackson-databind-nullable.version>
     <picoli-version>4.7.7</picoli-version>
     <postgresql.version>42.7.8</postgresql.version>
     <quarkus.platform.version>3.28.0</quarkus.platform.version>
