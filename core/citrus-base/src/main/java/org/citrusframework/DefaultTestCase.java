@@ -28,6 +28,8 @@ import org.citrusframework.container.AbstractActionContainer;
 import org.citrusframework.container.AfterTest;
 import org.citrusframework.container.BeforeTest;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.spi.ReferenceResolver;
@@ -435,7 +437,16 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         /* use given endpoint uris to create endpoints adhoc with the current test context */
         for (final String endpointUri : endpointUris) {
             logger.debug("Initializing endpoint '{}'", endpointUri);
-            context.getEndpointFactory().create(endpointUri, context);
+            Endpoint endpoint = context.getEndpointFactory().create(endpointUri, context);
+
+            if (endpointUri.contains(EndpointComponent.ENDPOINT_NAME + "=")) {
+                if (context.getReferenceResolver().isResolvable(endpoint.getName())) {
+                    logger.warn("Skip binding endpoint to bean registry, because endpoint already exists: {}", endpoint.getName());
+                } else {
+                    logger.info("Binding endpoint {} to bean registry", endpoint.getName());
+                    context.getReferenceResolver().bind(endpoint.getName(), endpoint);
+                }
+            }
         }
     }
 
