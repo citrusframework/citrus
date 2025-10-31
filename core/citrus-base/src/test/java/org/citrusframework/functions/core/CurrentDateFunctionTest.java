@@ -18,6 +18,7 @@ package org.citrusframework.functions.core;
 
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.TimeZone;
 
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.functions.FunctionParameterHelper;
@@ -113,6 +114,9 @@ public class CurrentDateFunctionTest extends UnitTestSupport {
         c.add(Calendar.MONTH, -1);
         c.add(Calendar.DAY_OF_YEAR, -1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '+1y-1M-1d'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
+
+        c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss','0h','UTC'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
     }
 
     @Test(expectedExceptions = {IllegalArgumentException.class})
