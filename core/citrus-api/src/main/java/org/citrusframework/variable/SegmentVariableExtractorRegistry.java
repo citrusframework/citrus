@@ -16,6 +16,15 @@
 
 package org.citrusframework.variable;
 
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.SegmentEvaluationException;
+import org.citrusframework.spi.ResourcePathTypeResolver;
+import org.citrusframework.spi.TypeResolver;
+import org.citrusframework.util.ReflectionHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -24,13 +33,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.spi.ResourcePathTypeResolver;
-import org.citrusframework.spi.TypeResolver;
-import org.citrusframework.util.ReflectionHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static java.lang.String.format;
 
 /**
  * Simple registry holding all available segment variable extractor implementations. Test context can ask this registry for
@@ -53,7 +56,6 @@ public class SegmentVariableExtractorRegistry {
      * Resolves extractor from resource path lookup with given extractor resource name. Scans classpath for extractor meta information
      * with given name and returns instance of extractor. Returns optional instead of throwing exception when no extractor
      * could be found.
-     * @return
      */
     static Collection<SegmentVariableExtractor> lookup() {
         try {
@@ -69,7 +71,8 @@ public class SegmentVariableExtractorRegistry {
     /**
      * SegmentVariableExtractors to extract values from value representations of individual segments.
      */
-    private final List<SegmentVariableExtractor> segmentValueExtractors = new ArrayList<>(List.of(MapVariableExtractor.INSTANCE, ObjectFieldValueExtractor.INSTANCE));
+    private final List<SegmentVariableExtractor> segmentValueExtractors = new ArrayList<>(List.of(
+        MapVariableExtractor.INSTANCE, ObjectFieldValueExtractor.INSTANCE));
 
     public SegmentVariableExtractorRegistry() {
         segmentValueExtractors.addAll(lookup());
@@ -77,8 +80,7 @@ public class SegmentVariableExtractorRegistry {
 
     /**
      * Obtain the segment variable extractors managed by the registry
-     *
-     * @return
+
      */
     public List<SegmentVariableExtractor> getSegmentValueExtractors() {
         return segmentValueExtractors;
@@ -87,135 +89,197 @@ public class SegmentVariableExtractorRegistry {
     /**
      * Base class for segment variable extractors that ensures that an exception is thrown upon no match.
      */
-    public static abstract class AbstractSegmentVariableExtractor implements SegmentVariableExtractor {
+    public abstract static class AbstractSegmentVariableExtractor implements SegmentVariableExtractor {
 
         @Override
         public final Object extractValue(TestContext testContext, Object object, VariableExpressionSegmentMatcher matcher) {
-            Object matchedValue = doExtractValue(testContext, object, matcher);
 
-            if (matchedValue == null) {
-                handleMatchFailure(matcher);
+            try {
+                return doExtractValue(testContext, object, matcher);
+            } catch (SegmentEvaluationException e) {
+                throw createMatchFailureException(matcher, object, e);
             }
-
-            return matchedValue;
         }
 
         /**
-         * Handles a match failure by throwing a CitrusException with an appropriate message
-         * @param matcher
+         * Builds a {@link CitrusRuntimeException} describing why a variable/segment could not be resolved.
          */
-        private void handleMatchFailure(VariableExpressionSegmentMatcher matcher) {
-            String exceptionMessage;
-            if (matcher.getTotalSegmentCount() == 1) {
-                exceptionMessage = String.format("Unknown variable '%s'" ,
-                        matcher.getVariableExpression());
-            } else {
-                if (matcher.getSegmentIndex() == 1) {
-                    exceptionMessage = String.format("Unknown variable for first segment '%s' " +
-                                    "of variable expression '%s'",
-                            matcher.getSegmentExpression(), matcher.getVariableExpression());
-                } else {
-                    exceptionMessage = String.format("Unknown segment-value for segment '%s' " +
-                                    "of variable expression '%s'",
-                            matcher.getSegmentExpression(), matcher.getVariableExpression());
-                }
+        private static CitrusRuntimeException createMatchFailureException(VariableExpressionSegmentMatcher matcher, Object object, SegmentEvaluationException cause) {
+
+            String expr    = nullSafe(matcher.getVariableExpression());
+            String segment = nullSafe(matcher.getSegmentExpression());
+            int idx        = safeIndex(matcher.getSegmentIndex());
+            int total      = safeIndex(matcher.getTotalSegmentCount());
+
+            String objectType = (object == null) ? "null" : object.getClass().getName();
+
+            StringBuilder sb = new StringBuilder(256)
+                .append("Unable to extract value using expression '").append(expr).append("'!");
+
+            if (total > 1 && idx >= 1 && idx <= total) {
+                sb.append(" — failed at segment '").append(segment)
+                    .append("' (").append(idx).append('/').append(total).append(')');
             }
-            throw new CitrusRuntimeException(exceptionMessage);
+
+            if (cause != null) {
+                sb.append(format("%nReason: %s.",
+                    cause.getMessage() == null ? "" : cause.getMessage()
+                ));
+            }
+
+            sb.append(format("%nFrom object (%s):%n%s", objectType, cause != null ? cause.getRenderedObject() : ""));
+
+            return new CitrusRuntimeException(sb.toString());
         }
 
-        protected abstract Object doExtractValue(TestContext testContext, Object object, VariableExpressionSegmentMatcher matcher);
+        protected abstract Object doExtractValue(TestContext testContext, Object object, VariableExpressionSegmentMatcher matcher) throws SegmentEvaluationException;
+
+        private static String nullSafe(String s) { return s == null ? "<null>" : s; }
+
+        private static int safeIndex(int i) { return Math.max(0, i); }
+    }
+
+
+
+    /** Minimal, safe rendering used as fallback (truncate huge payloads). */
+    protected static String renderObjectMinimal(Object object) {
+        if (object == null) return "null";
+        return String.valueOf(object);
     }
 
     /**
-     * Base class for extractors that can operate on indexed values.
+     * Base class for extractors that support an optional [index] on the segment.
      */
-    public static abstract class IndexedSegmentVariableExtractor extends AbstractSegmentVariableExtractor {
+    public abstract static class IndexedSegmentVariableExtractor extends AbstractSegmentVariableExtractor {
 
-        public final Object doExtractValue(TestContext testContext, Object object, VariableExpressionSegmentMatcher matcher) {
+        @Override
+        public final Object doExtractValue(TestContext testContext, Object object, VariableExpressionSegmentMatcher matcher)
+            throws SegmentEvaluationException {
 
             Object extractedValue = doExtractIndexedValue(testContext, object, matcher);
 
             if (matcher.getSegmentIndex() != -1) {
-                extractedValue = getIndexedElement(matcher, extractedValue);
+                extractedValue = getIndexedElement(object, matcher, extractedValue);
             }
             return extractedValue;
         }
 
         /**
-         * Get the index element from an indexed value.
-         *
-         * @param matcher
-         * @param indexedValue
-         * @return
+         * Return the element at the given index from arrays or lists. Throw SegmentEvaluationException for errors.
          */
-        private Object getIndexedElement(VariableExpressionSegmentMatcher matcher, Object indexedValue) {
-            if (indexedValue.getClass().isArray()) {
-                return  Array.get(indexedValue, matcher.getSegmentIndex());
-            } else {
-                throw new CitrusRuntimeException(
-                        String.format("Expected an instance of Array type. Cannot retrieve indexed property %s from %s ",
-                                matcher.getSegmentExpression(), indexedValue.getClass().getName()));
+        private Object getIndexedElement(Object root, VariableExpressionSegmentMatcher matcher, Object indexedValue)
+            throws SegmentEvaluationException {
+
+            int idx = matcher.getSegmentIndex();
+
+            if (indexedValue == null) {
+                throw new SegmentEvaluationException(
+                    format("Cannot index into null for segment '%s' (index %d)",
+                        matcher.getSegmentExpression(), idx),
+                    renderObjectMinimal(root));
             }
+
+            // Java array
+            if (indexedValue.getClass().isArray()) {
+                int length = Array.getLength(indexedValue);
+                if (idx < 0 || idx >= length) {
+                    throw new SegmentEvaluationException(
+                        format("Index %d out of bounds (array length %d) for segment '%s'",
+                            idx, length, matcher.getSegmentExpression()),
+                        renderObjectMinimal(root));
+                }
+                return Array.get(indexedValue, idx);
+            }
+
+            // java.util.List
+            if (indexedValue instanceof List<?> list) {
+                int length = list.size();
+                if (idx < 0 || idx >= length) {
+                    throw new SegmentEvaluationException(
+                        format("Index %d out of bounds (list size %d) for segment '%s'",
+                            idx, length, matcher.getSegmentExpression()),
+                        renderObjectMinimal(root));
+                }
+                return list.get(idx);
+            }
+
+            // Unsupported type
+            throw new SegmentEvaluationException(
+                format("Expected array or List for indexed access, but was %s (segment '%s')",
+                    indexedValue.getClass().getName(), matcher.getSegmentExpression()),
+                renderObjectMinimal(root));
         }
 
-        /**
-         * Extract the indexed value from the object
-         *
-         * @param object
-         * @param matcher
-         * @return
-         */
-        protected abstract Object doExtractIndexedValue(TestContext testContext, Object object, VariableExpressionSegmentMatcher matcher);
+        /** Implement in subclasses: extract the (possibly indexed) container value to index into. */
+        protected abstract Object doExtractIndexedValue(TestContext testContext, Object object, VariableExpressionSegmentMatcher matcher)
+            throws SegmentEvaluationException;
     }
 
     /**
-     * SegmentVariableExtractor that accesses the segment value by a {@link Field} of the parentObject
+     * Extracts a segment via a declared field on the parent object.
      */
     public static class ObjectFieldValueExtractor extends IndexedSegmentVariableExtractor {
 
-        public static ObjectFieldValueExtractor INSTANCE = new ObjectFieldValueExtractor();
-
-        private ObjectFieldValueExtractor() {
-            // singleton
-        }
+        public static final ObjectFieldValueExtractor INSTANCE = new ObjectFieldValueExtractor();
+        private ObjectFieldValueExtractor() {}
 
         @Override
-        protected Object doExtractIndexedValue(TestContext testContext, Object parentObject, VariableExpressionSegmentMatcher matcher) {
-            Field field = ReflectionHelper.findField(parentObject.getClass(), matcher.getSegmentExpression());
-            if (field == null) {
-                throw new CitrusRuntimeException(String.format("Failed to get variable - unknown field '%s' on type %s",
-                        matcher.getSegmentExpression(), parentObject.getClass().getName()));
+        protected Object doExtractIndexedValue(TestContext testContext, Object parentObject, VariableExpressionSegmentMatcher matcher)
+            throws SegmentEvaluationException {
+            try {
+                Field field = ReflectionHelper.findField(parentObject.getClass(), matcher.getSegmentExpression());
+                if (field == null) {
+                    throw new SegmentEvaluationException(
+                        format("Unknown field '%s' on type %s",
+                            matcher.getSegmentExpression(), parentObject.getClass().getName()),
+                        renderObjectMinimal(parentObject));
+                }
+                return ReflectionHelper.getField(field, parentObject);
+            } catch (SegmentEvaluationException see) {
+                throw see; // rethrow as-is
+            } catch (Exception ex) {
+                throw new SegmentEvaluationException(
+                    format("Failed to access field '%s' on type %s: %s",
+                        matcher.getSegmentExpression(), parentObject.getClass().getName(), ex.getMessage()),
+                    renderObjectMinimal(parentObject));
             }
-
-            return ReflectionHelper.getField(field, parentObject);
         }
 
         @Override
         public boolean canExtract(TestContext testContext, Object object, VariableExpressionSegmentMatcher matcher) {
+            // Objects except Strings (JSON/XML strings handled by dedicated extractors)
             return object != null && !(object instanceof String);
         }
     }
 
     /**
-     * SegmentVariableExtractor that accesses the segment value from a {@link Map}. The extractor uses the segment expression
-     * as key into the map.
+     * Extracts a segment via Map lookup using the segment expression as key.
      */
     public static class MapVariableExtractor extends IndexedSegmentVariableExtractor {
 
-        public static MapVariableExtractor INSTANCE = new MapVariableExtractor();
-
-        private MapVariableExtractor() {
-            // singleton
-        }
+        public static final MapVariableExtractor INSTANCE = new MapVariableExtractor();
+        private MapVariableExtractor() {}
 
         @Override
-        protected Object doExtractIndexedValue(TestContext testContext, Object parentObject, VariableExpressionSegmentMatcher matcher) {
+        protected Object doExtractIndexedValue(TestContext testContext, Object parentObject, VariableExpressionSegmentMatcher matcher)
+            throws SegmentEvaluationException {
 
-            Object matchedValue = null;
-            if (parentObject instanceof Map<?, ?>) {
-                matchedValue = ((Map<?, ?>) parentObject).get(matcher.getSegmentExpression());
+            if (!(parentObject instanceof Map<?, ?> map)) {
+                throw new SegmentEvaluationException(
+                    format("Expected Map for segment '%s' but was %s",
+                        matcher.getSegmentExpression(), parentObject == null ? "null" : parentObject.getClass().getName()),
+                    renderObjectMinimal(parentObject));
             }
-            return matchedValue;
+
+            String key = matcher.getSegmentExpression();
+            if (!map.containsKey(key)) {
+                throw new SegmentEvaluationException(
+                    format("Unknown key '%s' in Map", key),
+                    renderObjectMinimal(parentObject));
+            }
+
+            // Value may legitimately be null—return it as-is.
+            return map.get(key);
         }
 
         @Override
@@ -223,4 +287,5 @@ public class SegmentVariableExtractorRegistry {
             return object instanceof Map;
         }
     }
+
 }

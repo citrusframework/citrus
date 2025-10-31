@@ -64,7 +64,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.message.MessageType.JSON;
 import static org.citrusframework.message.MessageType.PLAINTEXT;
 import static org.citrusframework.message.MessageType.XHTML;
@@ -526,11 +528,14 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
                 .build();
-        try {
-            receiveAction.execute(context);
-        } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unknown variable 'myOperation'");
-        }
+
+        assertThatThrownBy(() -> receiveAction.execute(context))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessage(
+                        format(
+                                "Unable to extract value using expression 'myOperation'!%nReason: Unknown key 'myOperation' in Map.%nFrom object (java.util.concurrent.ConcurrentHashMap):%n{}"
+                        )
+                );
     }
 
     @Test
@@ -563,11 +568,14 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
                 .build();
-        try {
-            receiveAction.execute(context);
-        } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unknown variable 'myText'");
-        }
+
+        assertThatThrownBy(() -> receiveAction.execute(context))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessage(
+                        format(
+                                "Unable to extract value using expression 'myText'!%nReason: Unknown key 'myText' in Map.%nFrom object (java.util.concurrent.ConcurrentHashMap):%n{}"
+                        )
+                );
     }
 
     @Test
