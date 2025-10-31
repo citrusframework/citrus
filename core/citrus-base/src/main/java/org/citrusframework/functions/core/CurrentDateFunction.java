@@ -19,6 +19,7 @@ package org.citrusframework.functions.core;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -52,6 +53,11 @@ public class CurrentDateFunction extends AbstractDateFunction {
 
         if (parameterList != null && parameterList.size() > 1) {
             applyDateOffset(calendar, parameterList.get(1));
+        }
+
+        if (parameterList != null && parameterList.size() > 2) {
+            String tz = parameterList.get(2);
+            dateFormat.setTimeZone(TimeZone.getTimeZone(tz));
         }
 
         try {
