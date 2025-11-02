@@ -672,9 +672,11 @@ This function will definitely help you when accessing the current date. Some exa
 <echo><message>citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1m')</message></echo>
 <echo><message>citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1s')</message></echo>
 <echo><message>citrus:currentDate('yyyy-MM-dd HH:mm:ss', '-1y')</message></echo>
+<echo><message>citrus:currentDate('yyyy-MM-dd HH:mm:ss','0h','UTC')</message></echo>
+<echo><message>citrus:currentDate('yyyy-MM-dd HH:mm:ss','0h','Europe/Berlin')</message></echo>
 ----
 
-Note that the currentDate function provides two parameters. First parameter describes the date format string. The second will define a date offset string containing year, month, days, hours, minutes or seconds that will be added or subtracted to or from the actual date value.
+Note that the currentDate function provides three parameters: The first parameter describes the date format string. The second will define a date offset string containing year, month, days, hours, minutes or seconds that will be added or subtracted to or from the actual date value. The third parameter defines a timezone ID. If no timezone is defined, the system default timezone is used.
 
 Function output:
 
@@ -684,6 +686,7 @@ Function output:
 2009-09-01
 2009-09-01 12:00:00
 2009-09-01T12:00:00
+2009-09-01 11:00:00
 ----
 
 [[functions-uppercase]]
