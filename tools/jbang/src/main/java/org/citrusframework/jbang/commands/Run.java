@@ -81,6 +81,9 @@ public class Run extends CitrusCommand {
     @Option(names = { "--includes" }, arity = "0..*", description = "Includes test name pattern.")
     private String[] includes;
 
+    @Option(names = { "--work-directory" }, description = "The working directory used by the file based test engines to load file resources from.")
+    private String workDir;
+
     @Option(names = { "--property" }, arity = "0..*", description = "Default System property to set before the test run.")
     private String[] properties;
 
@@ -230,6 +233,10 @@ public class Run extends CitrusCommand {
 
         if (includes != null) {
             configuration.setIncludes(includes);
+        }
+
+        if (workDir != null) {
+            configuration.setWorkDir(workDir);
         }
 
         if (properties != null) {

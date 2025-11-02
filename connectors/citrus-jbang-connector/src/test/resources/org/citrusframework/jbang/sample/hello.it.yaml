@@ -1,0 +1,9 @@
+name: hello.it
+variables: []
+actions:
+  - createVariables:
+      variables:
+        - name: user
+          value: Citrus
+  - print:
+      message: Hello from ${user}

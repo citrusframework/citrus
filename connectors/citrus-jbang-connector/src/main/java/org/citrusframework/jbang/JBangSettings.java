@@ -18,6 +18,9 @@ package org.citrusframework.jbang;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public final class JBangSettings {
@@ -35,6 +38,14 @@ public final class JBangSettings {
     private static final String JBANG_DOWNLOAD_URL_PROPERTY = JBANG_PROPERTY_PREFIX + "download.url";
     private static final String JBANG_DOWNLOAD_URL_ENV = JBANG_ENV_PREFIX + "DOWNLOAD_URL";
     private static final String JBANG_DOWNLOAD_URL_DEFAULT = "https://jbang.dev/releases/latest/download/jbang.zip";
+
+    private static final String JBANG_AUTO_TRUST_PROPERTY = JBANG_PROPERTY_PREFIX + "auto.trust";
+    private static final String JBANG_AUTO_TRUST_ENV = JBANG_ENV_PREFIX + "AUTO_TRUST";
+    private static final String JBANG_AUTO_TRUST_DEFAULT = "true";
+
+    private static final String JBANG_CITRUS_TRUST_URL_PROPERTY = JBANG_PROPERTY_PREFIX + "trust.url";
+    private static final String JBANG_CITRUS_TRUST_URL_ENV = JBANG_ENV_PREFIX + "TRUST_URL";
+    private static final String JBANG_CITRUS_TRUST_URL_DEFAULT = "https://github.com/citrusframework/citrus/";
 
     private static final String WORK_DIR_PROPERTY = JBANG_PROPERTY_PREFIX + "work.dir";
     private static final String WORK_DIR_ENV = JBANG_ENV_PREFIX + "WORK_DIR";
@@ -54,7 +65,6 @@ public final class JBangSettings {
 
     /**
      * JBang download url.
-     * @return
      */
     public static String getJBangDownloadUrl() {
         return System.getProperty(JBANG_DOWNLOAD_URL_PROPERTY,
@@ -62,8 +72,15 @@ public final class JBangSettings {
     }
 
     /**
+     * JBang Citrus trust url.
+     */
+    public static String getCitrusTrustUrl() {
+        return System.getProperty(JBANG_CITRUS_TRUST_URL_PROPERTY,
+                System.getenv(JBANG_CITRUS_TRUST_URL_ENV) != null ? System.getenv(JBANG_CITRUS_TRUST_URL_ENV) : JBANG_CITRUS_TRUST_URL_DEFAULT);
+    }
+
+    /**
      * JBang local work dir.
-     * @return
      */
     public static Path getWorkDir() {
         String workDir = Optional.ofNullable(System.getProperty(WORK_DIR_PROPERTY, System.getenv(WORK_DIR_ENV))).orElse(WORK_DIR_DEFAULT);
@@ -78,17 +95,30 @@ public final class JBangSettings {
 
     /**
      * JBang trust URLs.
-     * @return
      */
     public static String[] getTrustUrls() {
-        return Optional.ofNullable(System.getProperty(TRUST_URLS_PROPERTY, System.getenv(TRUST_URLS_ENV)))
+        List<String> trustUrls = Optional.ofNullable(System.getProperty(TRUST_URLS_PROPERTY, System.getenv(TRUST_URLS_ENV)))
                 .map(urls -> urls.split(","))
-                .orElseGet(() -> new String[]{});
+                .map(Arrays::asList)
+                .orElseGet(ArrayList::new);
+
+        if (isAutoTrust() && !trustUrls.contains(getCitrusTrustUrl())) {
+            trustUrls.add(getCitrusTrustUrl());
+        }
+
+        return trustUrls.toArray(new String[]{});
+    }
+
+    /**
+     * When set to true the Citrus JBang URL is added automatically to the set of trust URLs.
+     */
+    public static boolean isAutoTrust() {
+        return Boolean.parseBoolean(System.getProperty(JBANG_AUTO_TRUST_PROPERTY,
+                System.getenv(JBANG_AUTO_TRUST_ENV) != null ? System.getenv(JBANG_AUTO_TRUST_ENV) : JBANG_AUTO_TRUST_DEFAULT));
     }
 
     /**
      * When set to true JBang binary is downloaded automatically when not present on host.
-     * @return
      */
     public static boolean isAutoDownload() {
         return Boolean.parseBoolean(System.getProperty(JBANG_AUTO_DOWNLOAD_PROPERTY,
@@ -97,7 +127,6 @@ public final class JBangSettings {
 
     /**
      * When set to true JBang process output will be redirected to a file in the current working directory.
-     * @return
      */
     public static boolean isDumpProcessOutput() {
         return Boolean.parseBoolean(System.getProperty(DUMP_PROCESS_OUTPUT_PROPERTY,
@@ -106,7 +135,6 @@ public final class JBangSettings {
 
     /**
      * Citrus JBang app name.
-     * @return
      */
     public static String getApp() {
         return System.getProperty(APP_PROPERTY,

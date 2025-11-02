@@ -63,6 +63,10 @@ public final class ConfigurationHelper {
                     .split(","));
         }
 
+        if (queryParams.contains("workDir")) {
+            options.setWorkDir(URLDecoder.decode(queryParams.get("workDir"), StandardCharsets.UTF_8));
+        }
+
         if (queryParams.contains("package")) {
             options.setPackages(Collections.singletonList(
                     URLDecoder.decode(queryParams.get("package"), StandardCharsets.UTF_8)));
@@ -117,6 +121,7 @@ public final class ConfigurationHelper {
 
         configuration.setEngine(CitrusAgentSettings.getTestEngine());
         configuration.setIncludes(CitrusAgentSettings.getIncludes());
+        configuration.setWorkDir(CitrusAgentSettings.getWorkDir());
         configuration.setSystemExit(CitrusAgentSettings.isSystemExit());
         configuration.setSkipTests(CitrusAgentSettings.isSkipTests());
         configuration.setConfigClass(CitrusAgentSettings.getConfigClass());

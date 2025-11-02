@@ -53,6 +53,9 @@ public class RunConfiguration {
     @Parameter(property = "citrus.agent.run.engine", defaultValue = "testng")
     private String engine;
 
+    @Parameter(property = "citrus.agent.run.work.directory")
+    private String workDir;
+
     public RunConfiguration() {
         engine = "testng";
         pollingInterval = 2000L;
@@ -128,6 +131,14 @@ public class RunConfiguration {
 
     public void setEngine(String engine) {
         this.engine = engine;
+    }
+
+    public String getWorkDir() {
+        return workDir;
+    }
+
+    public void setWorkDir(String workDir) {
+        this.workDir = workDir;
     }
 
     public boolean isVerbose() {

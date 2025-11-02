@@ -47,6 +47,9 @@ public class TestRunConfiguration {
     /** Optional test jar artifact holding tests */
     private File testJar;
 
+    /** Optional working directory for file system read */
+    private String workDir;
+
     /** Should test engine print verbose summary details */
     private boolean verbose = true;
 
@@ -155,5 +158,13 @@ public class TestRunConfiguration {
 
     public void setReset(boolean reset) {
         this.reset = reset;
+    }
+
+    public void setWorkDir(String workDir) {
+        this.workDir = workDir;
+    }
+
+    public String getWorkDir() {
+        return workDir;
     }
 }

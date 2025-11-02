@@ -35,6 +35,9 @@ public final class CitrusAgentSettings {
     private static final String TEST_ENGINE_ENV = AGENT_ENV_PREFIX + "TEST_ENGINE";
     private static final String TEST_ENGINE_DEFAULT = "junit5";
 
+    private static final String WORK_DIRECTORY_PROPERTY = AGENT_PROPERTY_PREFIX + "work.directory";
+    private static final String WORK_DIRECTORY_ENV = AGENT_ENV_PREFIX + "WORK_DIRECTORY";
+
     private static final String SERVER_PORT_PROPERTY = AGENT_PROPERTY_PREFIX + "server.port";
     private static final String SERVER_PORT_ENV = AGENT_ENV_PREFIX + "SERVER_PORT";
     private static final String SERVER_PORT_DEFAULT = "4567";
@@ -89,7 +92,6 @@ public final class CitrusAgentSettings {
 
     /**
      * Citrus agent name.
-     * @return
      */
     public static String getAgentName() {
         return System.getProperty(AGENT_NAME_PROPERTY,
@@ -99,6 +101,10 @@ public final class CitrusAgentSettings {
     public static String getTestEngine() {
         return Optional.ofNullable(System.getProperty(TEST_ENGINE_PROPERTY, System.getenv(TEST_ENGINE_ENV)))
                 .orElse(TEST_ENGINE_DEFAULT);
+    }
+
+    public static String getWorkDir() {
+        return System.getProperty(WORK_DIRECTORY_PROPERTY, System.getenv(WORK_DIRECTORY_ENV));
     }
 
     public static int getServerPort() {
