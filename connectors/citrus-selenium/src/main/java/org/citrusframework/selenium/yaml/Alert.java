@@ -20,6 +20,7 @@ import org.citrusframework.TestActor;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.AlertAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Alert extends AbstractSeleniumAction.Builder<AlertAction, Alert> {
 
@@ -28,6 +29,7 @@ public class Alert extends AbstractSeleniumAction.Builder<AlertAction, Alert> {
     /**
      * Add alert text validation.
      */
+    @SchemaProperty
     public void setText(String text) {
         this.delegate.text(text);
     }
@@ -35,6 +37,7 @@ public class Alert extends AbstractSeleniumAction.Builder<AlertAction, Alert> {
     /**
      * Accept alert dialog.
      */
+    @SchemaProperty
     public void setAccept(boolean accept) {
         if (accept) {
             this.delegate.accept();
@@ -46,6 +49,7 @@ public class Alert extends AbstractSeleniumAction.Builder<AlertAction, Alert> {
     /**
      * Dismiss alert dialog.
      */
+    @SchemaProperty
     public void setDismiss(boolean dismiss) {
         if (dismiss) {
             this.delegate.dismiss();

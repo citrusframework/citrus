@@ -23,16 +23,19 @@ import org.citrusframework.TestActor;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class FindElement extends AbstractSeleniumAction.Builder<FindElementAction, FindElement> implements ElementAware {
 
     private final FindElementAction.Builder delegate = new FindElementAction.Builder();
 
     @Override
+    @SchemaProperty
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }
 
+    @SchemaProperty
     public void setValidate(Validate validate) {
         if (validate.getText() != null) {
             delegate.text(validate.text);
@@ -95,6 +98,7 @@ public class FindElement extends AbstractSeleniumAction.Builder<FindElementActio
             return text;
         }
 
+        @SchemaProperty
         public void setText(String text) {
             this.text = text;
         }
@@ -103,6 +107,7 @@ public class FindElement extends AbstractSeleniumAction.Builder<FindElementActio
             return tagName;
         }
 
+        @SchemaProperty
         public void setTagName(String tagName) {
             this.tagName = tagName;
         }
@@ -115,6 +120,7 @@ public class FindElement extends AbstractSeleniumAction.Builder<FindElementActio
             return attributes;
         }
 
+        @SchemaProperty
         public void setAttributes(List<Attribute> attributes) {
             this.attributes = attributes;
         }
@@ -127,6 +133,7 @@ public class FindElement extends AbstractSeleniumAction.Builder<FindElementActio
             return styles;
         }
 
+        @SchemaProperty
         public void setStyles(List<Style> styles) {
             this.styles = styles;
         }
@@ -135,6 +142,7 @@ public class FindElement extends AbstractSeleniumAction.Builder<FindElementActio
             return displayed;
         }
 
+        @SchemaProperty
         public void setDisplayed(boolean displayed) {
             this.displayed = displayed;
         }
@@ -143,6 +151,7 @@ public class FindElement extends AbstractSeleniumAction.Builder<FindElementActio
             return enabled;
         }
 
+        @SchemaProperty
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
         }
@@ -152,6 +161,7 @@ public class FindElement extends AbstractSeleniumAction.Builder<FindElementActio
         private String name;
         private String value;
 
+        @SchemaProperty
         public void setName(String name) {
             this.name = name;
         }
@@ -160,6 +170,7 @@ public class FindElement extends AbstractSeleniumAction.Builder<FindElementActio
             return name;
         }
 
+        @SchemaProperty
         public void setValue(String value) {
             this.value = value;
         }
@@ -173,6 +184,7 @@ public class FindElement extends AbstractSeleniumAction.Builder<FindElementActio
         private String name;
         private String value;
 
+        @SchemaProperty
         public void setName(String name) {
             this.name = name;
         }
@@ -181,6 +193,7 @@ public class FindElement extends AbstractSeleniumAction.Builder<FindElementActio
             return name;
         }
 
+        @SchemaProperty
         public void setValue(String value) {
             this.value = value;
         }

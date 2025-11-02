@@ -26,6 +26,7 @@ import org.citrusframework.container.Wait;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.TestActions;
 
 public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware {
@@ -50,26 +51,31 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
         return builder.build();
     }
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty(description = "Waits for these test actions to complete.")
     public void setAction(TestActions action) {
         this.action = action.get();
     }
 
+    @SchemaProperty(description = "Wait for given message to exist in message store.")
     public void setMessage(Message message) {
         MessageCondition condition = new MessageCondition();
         condition.setMessageName(message.name);
         builder.condition(condition);
     }
 
+    @SchemaProperty(description = "Wait for given file path to exist.")
     public void setFile(File file) {
         FileCondition condition = new FileCondition();
         condition.setFilePath(file.path);
         builder.condition(condition);
     }
 
+    @SchemaProperty(description = "Wait for given Http endpoint to return a proper response code.")
     public void setHttp(Http http) {
         HttpCondition condition = new HttpCondition();
         condition.setUrl(http.url);
@@ -91,10 +97,12 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
         builder.condition(condition);
     }
 
+    @SchemaProperty(description = "Timeout for the wait operation.")
     public void setTimeout(String milliseconds) {
         builder.milliseconds(milliseconds);
     }
 
+    @SchemaProperty(description = "Interval in milliseconds to check for the given wait condition.")
     public void setInterval(String interval) {
         builder.interval(interval);
     }
@@ -112,6 +120,7 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
             return path;
         }
 
+        @SchemaProperty(description = "File path to evaluate.")
         public void setPath(String value) {
             this.path = value;
         }
@@ -129,6 +138,7 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
             return url;
         }
 
+        @SchemaProperty(required = true, description = "Http request URL.")
         public void setUrl(String value) {
             this.url = value;
         }
@@ -137,6 +147,7 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
             return method;
         }
 
+        @SchemaProperty(description = "The Http request method to use.")
         public void setMethod(String value) {
             this.method = value;
         }
@@ -145,6 +156,7 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
             return status;
         }
 
+        @SchemaProperty(description = "The expected Http status code.")
         public void setStatus(String value) {
             this.status = value;
         }
@@ -153,6 +165,7 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
             return timeout;
         }
 
+        @SchemaProperty(description = "Http request timeout.")
         public void setTimeout(String value) {
             this.timeout = value;
         }
@@ -167,6 +180,7 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
             return name;
         }
 
+        @SchemaProperty(required = true, description = "Message name in the message store.")
         public void setName(String value) {
             this.name = value;
         }

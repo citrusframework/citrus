@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusEndpointProperty;
@@ -59,15 +60,11 @@ public interface EndpointBuilder<T extends Endpoint> {
 
     /**
      * Builds the endpoint.
-     * @return
      */
     T build();
 
     /**
      * Builds the endpoint from given endpoint annotations.
-     * @param endpointAnnotation
-     * @param referenceResolver
-     * @return
      */
     default T build(CitrusEndpoint endpointAnnotation, ReferenceResolver referenceResolver) {
         Method nameSetter = ReflectionHelper.findMethod(this.getClass(), "name", String.class);
@@ -92,9 +89,6 @@ public interface EndpointBuilder<T extends Endpoint> {
 
     /**
      * Builds the endpoint from given endpoint properties.
-     * @param endpointProperties
-     * @param referenceResolver
-     * @return
      */
     default T build(Properties endpointProperties, ReferenceResolver referenceResolver) {
         for (Map.Entry<Object, Object> endpointProperty : endpointProperties.entrySet()) {
@@ -110,10 +104,18 @@ public interface EndpointBuilder<T extends Endpoint> {
     /**
      * Resolves all available endpoint builders from resource path lookup. Scans classpath for endpoint builder meta information
      * and instantiates those builders.
-     * @return
      */
     static Map<String, EndpointBuilder<?>> lookup() {
-        Map<String, EndpointBuilder<?>> builders = new HashMap<>(TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD));
+        Map<String, EndpointBuilder<?>> builders = new HashMap<>(TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD)
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(entry -> {
+                    if (entry.getKey().endsWith("." + TypeResolver.DEFAULT_TYPE_PROPERTY)) {
+                        return entry.getKey().substring(0, entry.getKey().lastIndexOf("." + TypeResolver.DEFAULT_TYPE_PROPERTY));
+                    } else {
+                        return entry.getKey();
+                    }
+                }, entry -> (EndpointBuilder<?>) entry.getValue())));
 
         if (logger.isDebugEnabled()) {
             builders.forEach((k, v) -> logger.debug("Found endpoint builder '{}' as {}", k, v.getClass()));
@@ -127,8 +129,6 @@ public interface EndpointBuilder<T extends Endpoint> {
      * could be found.
      * <p>
      * Given builder name is a combination of resource file name and type property separated by '.' character.
-     * @param builder
-     * @return
      */
     static Optional<EndpointBuilder<?>> lookup(String builder) {
         try {

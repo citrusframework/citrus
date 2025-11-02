@@ -21,16 +21,19 @@ import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.CheckInputAction;
 import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CheckInput extends AbstractSeleniumAction.Builder<CheckInputAction, CheckInput> implements ElementAware {
 
     private final CheckInputAction.Builder delegate = new CheckInputAction.Builder();
 
+    @SchemaProperty
     public void setChecked(boolean checked) {
         this.delegate.checked(checked);
     }
 
     @Override
+    @SchemaProperty
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

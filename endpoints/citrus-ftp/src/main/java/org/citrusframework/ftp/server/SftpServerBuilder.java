@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.citrusframework.ftp.client.SftpEndpointConfiguration;
 import org.citrusframework.server.AbstractServerBuilder;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * @since 2.5
@@ -36,151 +37,220 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
 
     /**
      * Sets the port property.
-     * @param port
-     * @return
      */
     public SftpServerBuilder port(int port) {
         endpoint.setPort(port);
         return this;
     }
 
+    @SchemaProperty(description = "The Ftp server port.")
+    public void setPort(int port) {
+        port(port);
+    }
+
     /**
      * Sets the autoConnect property.
-     * @param autoConnect
-     * @return
      */
     public SftpServerBuilder autoConnect(boolean autoConnect) {
         ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setAutoConnect(autoConnect);
         return this;
     }
 
+    @SchemaProperty(description = "When enabled the server uses automatic connect mode.")
+    public void setAutoConnect(boolean autoConnect) {
+        autoConnect(autoConnect);
+    }
+
     /**
      * Sets the autoLogin property.
-     * @param autoLogin
-     * @return
      */
     public SftpServerBuilder autoLogin(boolean autoLogin) {
         ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setAutoLogin(autoLogin);
         return this;
     }
 
+    @SchemaProperty(description = "When enabled the server uses automatic login mode.")
+    public void setAutoLogin(boolean autoLogin) {
+        autoLogin(autoLogin);
+    }
+
     /**
      * Sets the user property.
-     * @param user
-     * @return
      */
     public SftpServerBuilder user(String user) {
         endpoint.setUser(user);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the allowed user name.")
+    public void setUser(String user) {
+        user(user);
+    }
+
     /**
-     * Sets the client password.
-     * @param password
-     * @return
+     * Sets the password property.
      */
     public SftpServerBuilder password(String password) {
         endpoint.setPassword(password);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the allowed user password."
+    )
+    public void setPassword(String password) {
+        password(password);
+    }
+
     /**
      * Sets the hostKeyPath property.
-     * @param hostKeyPath
-     * @return
      */
     public SftpServerBuilder hostKeyPath(String hostKeyPath) {
         endpoint.setHostKeyPath(hostKeyPath);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the host key certificate path."
+    )
+    public void setHostKeyPath(String hostKeyPath) {
+        hostKeyPath(hostKeyPath);
+    }
+
     /**
      * Sets the userHomePath property.
-     * @param userHomePath
-     * @return
      */
     public SftpServerBuilder userHomePath(String userHomePath) {
         endpoint.setUserHomePath(userHomePath);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the user home path directory.")
+    public void setUserHomePath(String userHomePath) {
+        userHomePath(userHomePath);
+    }
+
     /**
      * Sets the allowedKeyPath property.
-     * @param allowedKeyPath
-     * @return
      */
     public SftpServerBuilder allowedKeyPath(String allowedKeyPath) {
         endpoint.setAllowedKeyPath(allowedKeyPath);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the allowed key certificate path."
+    )
+    public void setAllowedKeyPath(String allowedKeyPath) {
+        allowedKeyPath(allowedKeyPath);
+    }
+
     /**
      * Sets the polling interval.
-     * @param pollingInterval
-     * @return
      */
     public SftpServerBuilder pollingInterval(int pollingInterval) {
         endpoint.getEndpointConfiguration().setPollingInterval(pollingInterval);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the polling interval when consuming messages.")
+    public void setPollingInterval(int pollingInterval) {
+        pollingInterval(pollingInterval);
+    }
+
     /**
      * Sets the strictHostChecking property.
-     * @param strictHostChecking
-     * @return
      */
     public SftpServerBuilder strictHostChecking(boolean strictHostChecking) {
         ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setStrictHostChecking(strictHostChecking);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Enable strict host checking."
+    )
+    public void setStrictHostChecking(boolean strictHostChecking) {
+        strictHostChecking(strictHostChecking);
+    }
+
     /**
      * Sets the knownHosts property.
-     * @param knownHosts
-     * @return
      */
     public SftpServerBuilder knownHosts(String knownHosts) {
         ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setKnownHosts(knownHosts);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "List of known hosts."
+    )
+    public void setKnownHosts(String knownHosts) {
+        knownHosts(knownHosts);
+    }
+
     /**
      * Sets the privateKeyPath property.
-     * @param privateKeyPath
-     * @return
      */
     public SftpServerBuilder privateKeyPath(String privateKeyPath) {
         ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setPrivateKeyPath(privateKeyPath);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the private key certificate path."
+    )
+    public void setPrivateKeyPath(String privateKeyPath) {
+        privateKeyPath(privateKeyPath);
+    }
+
     /**
      * Sets the privateKeyPassword property.
-     * @param privateKeyPassword
-     * @return
      */
     public SftpServerBuilder privateKeyPassword(String privateKeyPassword) {
         ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setPrivateKeyPassword(privateKeyPassword);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the private key password."
+    )
+    public void setPrivateKeyPassword(String privateKeyPassword) {
+        privateKeyPassword(privateKeyPassword);
+    }
+
     /**
      * Sets the preferredAuthentications property.
-     * @param preferredAuthentications
-     * @return
      */
     public SftpServerBuilder preferredAuthentications(String preferredAuthentications) {
         ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setPreferredAuthentications(preferredAuthentications);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the preferred authentication mechanism."
+    )
+    public void setPreferredAuthentications(String preferredAuthentications) {
+        preferredAuthentications(preferredAuthentications);
+    }
+
     /**
      * Sets the sessionConfigs property.
-     * @param sessionConfigs
-     * @return
      */
     public SftpServerBuilder sessionConfigs(Map<String, String> sessionConfigs) {
         ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setSessionConfigs(sessionConfigs);
         return this;
+    }
+
+    @SchemaProperty(description = "The session configuration.")
+    public void setSessionConfigs(Map<String, String> sessionConfigs) {
+        sessionConfigs(sessionConfigs);
     }
 }

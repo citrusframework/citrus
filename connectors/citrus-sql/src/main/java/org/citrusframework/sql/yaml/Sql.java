@@ -28,6 +28,7 @@ import org.citrusframework.actions.ExecuteSQLQueryAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 import org.springframework.transaction.PlatformTransactionManager;
 
 public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestAction>, ReferenceResolverAware {
@@ -42,15 +43,18 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
 
     protected List<Extract> extract;
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty
     public void setDataSource(String dataSource) {
         builder.dataSource(dataSource);
         builder.name(String.format("sql:%s", dataSource));
     }
 
+    @SchemaProperty(required = true)
     public void setStatements(List<Statement> statements) {
         for (Statement statement : statements) {
             if (statement.statement != null) {
@@ -63,6 +67,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         }
     }
 
+    @SchemaProperty
     public void setTransaction(Transaction transaction) {
         if (transaction.manager != null) {
             transactionManager = transaction.manager;
@@ -77,6 +82,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         }
     }
 
+    @SchemaProperty
     public void setIgnoreErrors(boolean value) {
         if (builder instanceof ExecuteSQLAction.Builder) {
             ((ExecuteSQLAction.Builder) builder).ignoreErrors(value);
@@ -90,6 +96,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         return this.validate;
     }
 
+    @SchemaProperty
     public void setValidate(List<Validate> validate) {
         this.validate = validate;
     }
@@ -101,6 +108,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         return this.extract;
     }
 
+    @SchemaProperty
     public void setExtract(List<Extract> extract) {
         this.extract = extract;
     }
@@ -158,7 +166,6 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
 
     /**
      * Converts sql action builder to query action builder.
-     * @return
      */
     private ExecuteSQLQueryAction.Builder asSqlQueryBuilder() {
         if (builder instanceof ExecuteSQLQueryAction.Builder) {
@@ -201,6 +208,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
             return file;
         }
 
+        @SchemaProperty
         public void setFile(String value) {
             this.file = value;
         }
@@ -209,6 +217,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
             return statement;
         }
 
+        @SchemaProperty
         public void setStatement(String statement) {
             this.statement = statement;
         }
@@ -224,6 +233,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
             return manager;
         }
 
+        @SchemaProperty
         public void setManager(String manager) {
             this.manager = manager;
         }
@@ -232,6 +242,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
             return timeout;
         }
 
+        @SchemaProperty
         public void setTimeout(String timeout) {
             this.timeout = timeout;
         }
@@ -240,6 +251,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
             return isolationLevel;
         }
 
+        @SchemaProperty
         public void setIsolationLevel(String isolationLevel) {
             this.isolationLevel = isolationLevel;
         }
@@ -254,6 +266,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
             return column;
         }
 
+        @SchemaProperty
         public void setColumn(String value) {
             this.column = value;
         }
@@ -262,6 +275,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
             return variable;
         }
 
+        @SchemaProperty
         public void setVariable(String value) {
             this.variable = value;
         }
@@ -278,6 +292,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
             return values;
         }
 
+        @SchemaProperty
         public void setValues(List<String> value) {
             this.values = value;
         }
@@ -286,6 +301,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
             return column;
         }
 
+        @SchemaProperty
         public void setColumn(String value) {
             this.column = value;
         }
@@ -294,6 +310,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
             return value;
         }
 
+        @SchemaProperty
         public void setValue(String value) {
             this.value = value;
         }
@@ -302,6 +319,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
             return script;
         }
 
+        @SchemaProperty
         public void setScript(Script script) {
             this.script = script;
         }
@@ -317,6 +335,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
                 return value;
             }
 
+            @SchemaProperty
             public void setValue(String value) {
                 this.value = value;
             }
@@ -325,6 +344,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
                 return type;
             }
 
+            @SchemaProperty
             public void setType(String value) {
                 this.type = value;
             }
@@ -333,10 +353,12 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
                 return file;
             }
 
+            @SchemaProperty
             public void setFile(String value) {
                 this.file = value;
             }
 
+            @SchemaProperty
             public void setCharset(String charset) {
                 this.charset = charset;
             }

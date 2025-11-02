@@ -29,12 +29,15 @@ public class WebServiceEndpointsTest {
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("soap"));
         Assert.assertTrue(endpointBuilders.containsKey("soap.client"));
         Assert.assertTrue(endpointBuilders.containsKey("soap.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
+        Assert.assertTrue(EndpointBuilder.lookup("soap").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("soap").get().getClass(), SoapWebServiceEndpointBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("soap.client").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("soap.client").get().getClass(), WebServiceClientBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("soap.server").isPresent());

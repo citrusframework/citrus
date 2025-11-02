@@ -21,16 +21,19 @@ import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.selenium.actions.SetInputAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class SetInput extends AbstractSeleniumAction.Builder<SetInputAction, SetInput> implements ElementAware {
 
     private final SetInputAction.Builder delegate = new SetInputAction.Builder();
 
+    @SchemaProperty
     public void setValue(String value) {
         this.delegate.value(value);
     }
 
     @Override
+    @SchemaProperty
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

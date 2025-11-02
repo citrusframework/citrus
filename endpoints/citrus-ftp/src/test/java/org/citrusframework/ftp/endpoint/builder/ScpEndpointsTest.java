@@ -29,12 +29,15 @@ public class ScpEndpointsTest {
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("scp"));
         Assert.assertTrue(endpointBuilders.containsKey("scp.client"));
         Assert.assertTrue(endpointBuilders.containsKey("scp.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
+        Assert.assertTrue(EndpointBuilder.lookup("scp").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("scp").get().getClass(), ScpEndpointBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("scp.client").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("scp.client").get().getClass(), ScpClientBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("scp.server").isPresent());

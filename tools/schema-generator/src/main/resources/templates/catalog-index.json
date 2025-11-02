@@ -1,0 +1,10 @@
+{
+  "definitions" : [ {
+    "name" : "Citrus @version@",
+    "version" : "@version@",
+    "runtime" : "Citrus",
+    "fileName" : "citrus/@version@/index.json"
+  } ],
+  "version" : 1,
+  "name" : "Default Citrus catalog"
+}

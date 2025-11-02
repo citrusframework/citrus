@@ -23,11 +23,13 @@ import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.eventing.DeleteBrokerAction;
 import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class DeleteBroker extends AbstractKnativeAction.Builder<DeleteBrokerAction, DeleteBroker> {
 
     private final DeleteBrokerAction.Builder delegate = new DeleteBrokerAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.broker(name);
     }

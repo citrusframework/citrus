@@ -19,7 +19,9 @@ package org.citrusframework.container;
 import java.util.Optional;
 
 import org.citrusframework.AbstractTestContainerBuilder;
+import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.context.TestContext;
 
 /**
  * Helper sequence to mark actions as finally actions that should be
@@ -31,8 +33,6 @@ public class FinallySequence extends Sequence {
 
     /**
      * Default constructor.
-     *
-     * @param builder
      */
     public FinallySequence(Builder builder) {
         super(new Sequence.Builder()
@@ -41,6 +41,11 @@ public class FinallySequence extends Sequence {
             .actor(builder.getActor())
             .actions(builder.getActions().toArray(new TestActionBuilder<?>[0]))
         );
+    }
+
+    @Override
+    protected void executeAction(TestAction action, TestContext context) {
+        context.doFinally(() -> action);
     }
 
     /**

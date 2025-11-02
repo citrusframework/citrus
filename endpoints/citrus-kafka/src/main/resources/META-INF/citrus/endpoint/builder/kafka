@@ -1,3 +1,4 @@
+type=org.citrusframework.kafka.endpoint.builder.KafkaEndpointsBuilder
 async=org.citrusframework.kafka.endpoint.KafkaEndpointBuilder
 asynchronous=org.citrusframework.kafka.endpoint.KafkaEndpointBuilder
 sync=org.citrusframework.kafka.endpoint.KafkaEndpointBuilder

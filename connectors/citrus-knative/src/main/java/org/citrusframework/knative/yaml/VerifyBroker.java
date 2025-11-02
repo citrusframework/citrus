@@ -23,11 +23,13 @@ import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.eventing.VerifyBrokerAction;
 import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class VerifyBroker extends AbstractKnativeAction.Builder<VerifyBrokerAction, VerifyBroker> {
 
     private final VerifyBrokerAction.Builder delegate = new VerifyBrokerAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.broker(name);
     }

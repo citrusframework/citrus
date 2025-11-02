@@ -22,40 +22,49 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.VerifyPodAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class VerifyPod extends AbstractKubernetesAction.Builder<VerifyPodAction, VerifyPod> {
 
     private final VerifyPodAction.Builder delegate = new VerifyPodAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.podName(name);
     }
 
+    @SchemaProperty
     public void setLabels(List<Label> labels) {
         labels.forEach(label -> this.delegate.label(label.getName(), label.getValue()));
     }
 
+    @SchemaProperty
     public void setLabel(String labelExpression) {
         String[] tokens = labelExpression.split("=", 2);
         this.delegate.label(tokens[0].trim(), tokens[1].trim());
     }
 
+    @SchemaProperty
     public void setPhase(String phase) {
         this.delegate.phase(phase);
     }
 
+    @SchemaProperty
     public void setLogMessage(String message) {
         this.delegate.waitForLogMessage(message);
     }
 
+    @SchemaProperty
     public void setPrintLogs(boolean printLogs) {
         this.delegate.printLogs(printLogs);
     }
 
+    @SchemaProperty
     public void setMaxAttempts(int maxAttempts) {
         this.delegate.maxAttempts(maxAttempts);
     }
 
+    @SchemaProperty
     public void setDelayBetweenAttempts(long delayBetweenAttempts) {
         this.delegate.delayBetweenAttempts(delayBetweenAttempts);
     }
@@ -104,6 +113,7 @@ public class VerifyPod extends AbstractKubernetesAction.Builder<VerifyPodAction,
             return name;
         }
 
+        @SchemaProperty
         public void setName(String value) {
             this.name = value;
         }
@@ -112,6 +122,7 @@ public class VerifyPod extends AbstractKubernetesAction.Builder<VerifyPodAction,
             return value;
         }
 
+        @SchemaProperty
         public void setValue(String value) {
             this.value = value;
         }

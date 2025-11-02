@@ -23,11 +23,13 @@ import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.messaging.CreateChannelAction;
 import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CreateChannel extends AbstractKnativeAction.Builder<CreateChannelAction, CreateChannel> {
 
     private final CreateChannelAction.Builder delegate = new CreateChannelAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.channel(name);
     }

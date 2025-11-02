@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.TestSource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * @since 2.7.4
@@ -66,6 +68,7 @@ public class TestRunConfiguration {
     /**
      * Sets the engine.
      */
+    @SchemaProperty(required = true, description = "The test engine to use when running tests", defaultValue = "junit5")
     public void setEngine(String engine) {
         this.engine = engine;
     }
@@ -80,6 +83,8 @@ public class TestRunConfiguration {
     /**
      * Sets the sources.
      */
+    @SchemaProperty(description = "List of test sources to run. " +
+            "A test source represents a source code file in one of the supported languages (.java, .xml, .groovy, .yaml, .feature)")
     public void setTestSources(List<TestSource> sources) {
         this.sources.addAll(sources);
     }
@@ -94,6 +99,7 @@ public class TestRunConfiguration {
     /**
      * Sets the packages.
      */
+    @SchemaProperty(description = "List of package names to search for tests. All tests found in these packages are executed.")
     public void setPackages(List<String> packages) {
         this.packages.addAll(packages);
     }
@@ -108,6 +114,8 @@ public class TestRunConfiguration {
     /**
      * Sets the includes.
      */
+    @SchemaProperty(description = "Test name patterns that specify which tests to include in the test run. " +
+            "Used when scanning packages for tests.")
     public void setIncludes(String[] includes) {
         this.includes = includes;
     }
@@ -126,6 +134,12 @@ public class TestRunConfiguration {
         this.testJar = testJar;
     }
 
+    @SchemaProperty(description = "Set the test jar holding tests to execute. " +
+            "Jar file is used to perform package scans for test cases to run.")
+    public void setTestJar(String testJar) {
+        this.testJar = Resources.create(testJar).getFile();
+    }
+
     /**
      * Gets the defaultProperties.
      */
@@ -134,10 +148,18 @@ public class TestRunConfiguration {
     }
 
     /**
+     * Sets the default properties.
+     */
+    @SchemaProperty(description = "Sets default properties")
+    public void setDefaultProperties(Map<String, String> defaultProperties) {
+        this.defaultProperties = defaultProperties;
+    }
+
+    /**
      * Adds default properties.
      */
     public void addDefaultProperties(Map<String, String> defaultProperties) {
-        this.defaultProperties = defaultProperties;
+        this.defaultProperties.putAll(defaultProperties);
     }
 
     public boolean hasTests() {
@@ -148,6 +170,7 @@ public class TestRunConfiguration {
         return verbose;
     }
 
+    @SchemaProperty(description = "When enabled the test run prints verbose messages.", defaultValue = "true")
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }
@@ -156,10 +179,13 @@ public class TestRunConfiguration {
         return reset;
     }
 
+    @SchemaProperty(description = "When enabled the Citrus context instance is reset after the test.", defaultValue = "true")
     public void setReset(boolean reset) {
         this.reset = reset;
     }
 
+    @SchemaProperty(description = "Set custom working directory. " +
+            "File system based test engines may use this directory to read files from.")
     public void setWorkDir(String workDir) {
         this.workDir = workDir;
     }

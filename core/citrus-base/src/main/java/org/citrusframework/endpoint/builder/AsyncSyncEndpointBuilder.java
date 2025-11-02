@@ -29,8 +29,6 @@ public class AsyncSyncEndpointBuilder<A extends EndpointBuilder<? extends Endpoi
 
     /**
      * Default constructor setting the sync and async builder implementation.
-     * @param asyncEndpointBuilder
-     * @param syncEndpointBuilder
      */
     public AsyncSyncEndpointBuilder(A asyncEndpointBuilder, S syncEndpointBuilder) {
         this.asyncEndpointBuilder = asyncEndpointBuilder;
@@ -39,7 +37,6 @@ public class AsyncSyncEndpointBuilder<A extends EndpointBuilder<? extends Endpoi
 
     /**
      * Gets the async endpoint builder.
-     * @return
      */
     public A asynchronous() {
         return asyncEndpointBuilder;
@@ -47,7 +44,6 @@ public class AsyncSyncEndpointBuilder<A extends EndpointBuilder<? extends Endpoi
 
     /**
      * Gets the sync endpoint builder.
-     * @return
      */
     public S synchronous() {
         return syncEndpointBuilder;

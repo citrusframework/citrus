@@ -24,6 +24,10 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.testcontainers.actions.AbstractTestcontainersAction;
 import org.citrusframework.testcontainers.actions.TestcontainersAction;
+import org.citrusframework.yaml.SchemaProperty;
+
+import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.yaml.SchemaProperty.Kind.GROUP;
 
 public class Testcontainers implements TestActionBuilder<TestcontainersAction>, ReferenceResolverAware {
 
@@ -34,24 +38,27 @@ public class Testcontainers implements TestActionBuilder<TestcontainersAction>, 
 
     private ReferenceResolver referenceResolver;
 
-    public Testcontainers setDescription(String value) {
-        this.description = description;
-        return this;
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
+    public void setDescription(String value) {
+        this.description = value;
     }
 
-    public Testcontainers setActor(String actor) {
+    @SchemaProperty(advanced = true)
+    public void setActor(String actor) {
         this.actor = actor;
-        return this;
     }
 
+    @SchemaProperty(kind = GROUP, group = "testcontainers")
     public void setCompose(Compose builder) {
         this.builder = builder;
     }
 
+    @SchemaProperty(kind = GROUP, group = "testcontainers")
     public void setStart(Start builder) {
         this.builder = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "testcontainers")
     public void setStop(Stop builder) {
         this.builder = builder;
     }

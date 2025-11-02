@@ -1,3 +1,4 @@
+type=org.citrusframework.endpoint.direct.DirectEndpointsBuilder
 async=org.citrusframework.endpoint.direct.DirectEndpointBuilder
 asynchronous=org.citrusframework.endpoint.direct.DirectEndpointBuilder
 sync=org.citrusframework.endpoint.direct.DirectSyncEndpointBuilder

@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.TraceVariablesAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class TraceVariables implements TestActionBuilder<TraceVariablesAction> {
 
@@ -28,6 +29,7 @@ public class TraceVariables implements TestActionBuilder<TraceVariablesAction> {
 
     protected List<Variable> variables;
 
+    @SchemaProperty(description = "Name of the test variable to include.")
     public void setVariable(String variable) {
         builder.variable(variable);
     }
@@ -39,6 +41,7 @@ public class TraceVariables implements TestActionBuilder<TraceVariablesAction> {
         return this.variables;
     }
 
+    @SchemaProperty(description = "Test variable names to include.")
     public void setVariables(List<Variable> variables) {
         this.variables = variables;
     }
@@ -56,6 +59,8 @@ public class TraceVariables implements TestActionBuilder<TraceVariablesAction> {
         public String getName() {
             return name;
         }
+
+        @SchemaProperty(required = true)
         public void setName(String value) {
             this.name = value;
         }

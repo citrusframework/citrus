@@ -27,11 +27,13 @@ import org.citrusframework.knative.actions.eventing.SendEventAction;
 import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class SendEvent extends AbstractKnativeAction.Builder<SendEventAction, SendEvent> implements ReferenceResolverAware {
 
     private final SendEventAction.Builder delegate = new SendEventAction.Builder();
 
+    @SchemaProperty
     public void setBroker(String urlOrName) {
         if (urlOrName.startsWith("http://") || urlOrName.startsWith("https://")) {
             this.delegate.brokerUrl(urlOrName);
@@ -40,14 +42,17 @@ public class SendEvent extends AbstractKnativeAction.Builder<SendEventAction, Se
         }
     }
 
+    @SchemaProperty
     public void setFork(Boolean value) {
         this.delegate.fork(value);
     }
 
+    @SchemaProperty
     public void setTimeout(long timeout) {
         this.delegate.timeout(timeout);
     }
 
+    @SchemaProperty
     public void setEvent(Event event) {
         event.getAttributes().forEach(
                 attr -> this.delegate.attribute(attr.getName(), attr.getValue())
@@ -112,6 +117,7 @@ public class SendEvent extends AbstractKnativeAction.Builder<SendEventAction, Se
         protected List<Attribute> attributes;
         protected String data;
 
+        @SchemaProperty
         public void setAttributes(List<Attribute> attributes) {
             this.attributes = attributes;
         }
@@ -127,6 +133,7 @@ public class SendEvent extends AbstractKnativeAction.Builder<SendEventAction, Se
             return data;
         }
 
+        @SchemaProperty
         public void setData(String data) {
             this.data = data;
         }
@@ -140,6 +147,7 @@ public class SendEvent extends AbstractKnativeAction.Builder<SendEventAction, Se
                 return name;
             }
 
+            @SchemaProperty
             public void setName(String value) {
                 this.name = value;
             }
@@ -148,6 +156,7 @@ public class SendEvent extends AbstractKnativeAction.Builder<SendEventAction, Se
                 return value;
             }
 
+            @SchemaProperty
             public void setValue(String value) {
                 this.value = value;
             }

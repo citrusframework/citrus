@@ -18,6 +18,8 @@ package org.citrusframework.channel;
 
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.MessageCorrelator;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
@@ -28,7 +30,35 @@ import org.springframework.messaging.core.DestinationResolver;
 public class ChannelSyncEndpointBuilder extends AbstractEndpointBuilder<ChannelSyncEndpoint> {
 
     /** Endpoint target */
-    private ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
+    private final ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
+
+    private String messagingTemplate;
+    private String messageConverter;
+    private String correlator;
+    private String channelResolver;
+
+    @Override
+    public ChannelSyncEndpoint build() {
+        if (referenceResolver != null) {
+            if (StringUtils.hasText(messagingTemplate)) {
+                messagingTemplate(referenceResolver.resolve(messagingTemplate, MessagingTemplate.class));
+            }
+
+            if (StringUtils.hasText(messageConverter)) {
+                messageConverter(referenceResolver.resolve(messageConverter, ChannelMessageConverter.class));
+            }
+
+            if (StringUtils.hasText(correlator)) {
+                correlator(referenceResolver.resolve(correlator, MessageCorrelator.class));
+            }
+
+            if (StringUtils.hasText(channelResolver)) {
+                channelResolver(referenceResolver.resolve(channelResolver, DestinationResolver.class));
+            }
+        }
+
+        return super.build();
+    }
 
     @Override
     protected ChannelSyncEndpoint getEndpoint() {
@@ -37,18 +67,19 @@ public class ChannelSyncEndpointBuilder extends AbstractEndpointBuilder<ChannelS
 
     /**
      * Sets the channelName property.
-     * @param channelName
-     * @return
      */
     public ChannelSyncEndpointBuilder channel(String channelName) {
         endpoint.getEndpointConfiguration().setChannelName(channelName);
         return this;
     }
 
+    @SchemaProperty(description = "The Spring message channel name.")
+    public void setChannel(String channelName) {
+        channel(channelName);
+    }
+
     /**
      * Sets the channel property.
-     * @param channel
-     * @return
      */
     public ChannelSyncEndpointBuilder channel(MessageChannel channel) {
         endpoint.getEndpointConfiguration().setChannel(channel);
@@ -57,81 +88,107 @@ public class ChannelSyncEndpointBuilder extends AbstractEndpointBuilder<ChannelS
 
     /**
      * Sets the messagingTemplate property.
-     * @param messagingTemplate
-     * @return
      */
     public ChannelSyncEndpointBuilder messagingTemplate(MessagingTemplate messagingTemplate) {
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets a custom messaging template.")
+    public void setMessagingTemplate(String messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
+
     /**
      * Sets the messageConverter property.
-     * @param messageConverter
-     * @return
      */
     public ChannelSyncEndpointBuilder messageConverter(ChannelMessageConverter messageConverter) {
         endpoint.getEndpointConfiguration().setMessageConverter(messageConverter);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the message converter as a bean reference.")
+    public void setMessageConverter(String messageConverter) {
+        this.messageConverter = messageConverter;
+    }
+
     /**
      * Sets the channel resolver.
-     * @param resolver
-     * @return
      */
     public ChannelSyncEndpointBuilder channelResolver(DestinationResolver resolver) {
         endpoint.getEndpointConfiguration().setChannelResolver(resolver);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "The channel destination resolver.")
+    public void setChannelResolver(String resolver) {
+        this.channelResolver = resolver;
+    }
+
     /**
      * Sets the useObjectMessages property.
-     * @param useObjectMessages
-     * @return
      */
     public ChannelSyncEndpointBuilder useObjectMessages(boolean useObjectMessages) {
         endpoint.getEndpointConfiguration().setUseObjectMessages(useObjectMessages);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "When enabled the endpoint uses object messages.")
+    public void setUseObjectMessages(boolean useObjectMessages) {
+        useObjectMessages(useObjectMessages);
+    }
+
     /**
      * Sets the filterInternalHeaders property.
-     * @param filterInternalHeaders
-     * @return
      */
     public ChannelSyncEndpointBuilder filterInternalHeaders(boolean filterInternalHeaders) {
         endpoint.getEndpointConfiguration().setFilterInternalHeaders(filterInternalHeaders);
         return this;
     }
 
+    @SchemaProperty(
+            advanced = true,
+            description = "When enabled the endpoint removes all internal headers before sending a message.")
+    public void setFilterInternalHeaders(boolean filterInternalHeaders) {
+        filterInternalHeaders(filterInternalHeaders);
+    }
+
     /**
      * Sets the polling interval.
-     * @param pollingInterval
-     * @return
      */
     public ChannelSyncEndpointBuilder pollingInterval(int pollingInterval) {
         endpoint.getEndpointConfiguration().setPollingInterval(pollingInterval);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the polling interval.")
+    public void setPollingInterval(int pollingInterval) {
+        pollingInterval(pollingInterval);
+    }
+
     /**
      * Sets the message correlator.
-     * @param correlator
-     * @return
      */
     public ChannelSyncEndpointBuilder correlator(MessageCorrelator correlator) {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the message correlator.")
+    public void setCorrelator(String correlator) {
+        this.correlator = correlator;
+    }
+
     /**
      * Sets the default timeout.
-     * @param timeout
-     * @return
      */
     public ChannelSyncEndpointBuilder timeout(long timeout) {
         endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
+    }
+
+    @SchemaProperty(description = "Sets the receive timeout when waiting for messages.", defaultValue = "5000")
+    public void setTimeout(long timeout) {
+        timeout(timeout);
     }
 }

@@ -25,6 +25,7 @@ import org.citrusframework.TestActor;
 import org.citrusframework.jms.actions.PurgeJmsQueuesAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class PurgeQueues implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
@@ -37,6 +38,7 @@ public class PurgeQueues implements TestActionBuilder<TestAction>, ReferenceReso
 
     private ReferenceResolver referenceResolver;
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         this.description = value;
     }
@@ -45,6 +47,7 @@ public class PurgeQueues implements TestActionBuilder<TestAction>, ReferenceReso
         return description;
     }
 
+    @SchemaProperty(advanced = true)
     public void setActor(String actor) {
         this.actor = actor;
     }
@@ -53,6 +56,7 @@ public class PurgeQueues implements TestActionBuilder<TestAction>, ReferenceReso
         return actor;
     }
 
+    @SchemaProperty(required = true, description = "The JMS connection factory.")
     public void setConnectionFactory(String connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
@@ -61,18 +65,22 @@ public class PurgeQueues implements TestActionBuilder<TestAction>, ReferenceReso
         return connectionFactory;
     }
 
+    @SchemaProperty(description = "The JMS queue to purge.")
     public void setQueue(String queue) {
         builder.queue(queue);
     }
 
+    @SchemaProperty(description = "List of JMS queues to purge.")
     public void setQueues(List<String> queues) {
         builder.queueNames(queues);
     }
 
+    @SchemaProperty(description = "Request timeout while consuming messages from the queue.")
     public void setTimeout(long timeout) {
         builder.timeout(timeout);
     }
 
+    @SchemaProperty(advanced = true, description = "Time to wait between message consume attempts.")
     public void setSleep(long sleep) {
         builder.sleep(sleep);
     }

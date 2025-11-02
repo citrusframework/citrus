@@ -16,9 +16,12 @@
 
 package org.citrusframework.selenium.endpoint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.support.events.WebDriverListener;
@@ -31,6 +34,31 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
     /** Endpoint target */
     private final SeleniumBrowser endpoint = new SeleniumBrowser();
 
+    private String firefoxProfile;
+    private String webDriver;
+    private final List<String> eventListeners = new ArrayList<>();
+
+    @Override
+    public SeleniumBrowser build() {
+        if (referenceResolver != null) {
+            if (StringUtils.hasText(firefoxProfile)) {
+                profile(referenceResolver.resolve(firefoxProfile, FirefoxProfile.class));
+            }
+
+            if (StringUtils.hasText(webDriver)) {
+                webDriver(referenceResolver.resolve(webDriver, WebDriver.class));
+            }
+
+            if (!eventListeners.isEmpty()) {
+                eventListeners(eventListeners.stream()
+                        .map(listener -> referenceResolver.resolve(listener, WebDriverListener.class))
+                        .toList());
+            }
+        }
+
+        return super.build();
+    }
+
     @Override
     protected SeleniumBrowser getEndpoint() {
         return endpoint;
@@ -38,91 +66,121 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
 
     /**
      * Sets the browser type.
-     * @param type
-     * @return
      */
     public SeleniumBrowserBuilder type(String type) {
         endpoint.getEndpointConfiguration().setBrowserType(type);
         return this;
     }
 
+    @SchemaProperty(description = "The Selenium browser type.", defaultValue = "htmlunit")
+    public void setType(String type) {
+        type(type);
+    }
+
     /**
      * Sets the browser firefox profile.
-     * @param profile
-     * @return
      */
     public SeleniumBrowserBuilder profile(FirefoxProfile profile) {
         endpoint.getEndpointConfiguration().setFirefoxProfile(profile);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:firefox" ) },
+            description = "The Firefox profile."
+    )
+    public void setProfile(String profile) {
+        this.firefoxProfile = profile;
+    }
+
     /**
      * Sets the browser javascript enabled flag.
-     * @param enabled
-     * @return
      */
     public SeleniumBrowserBuilder javaScript(boolean enabled) {
         endpoint.getEndpointConfiguration().setJavaScript(enabled);
         return this;
     }
 
+    @SchemaProperty(description = "When enabled the browser supports JavaScript.")
+    public void setJavaScript(boolean enabled) {
+        javaScript(enabled);
+    }
+
     /**
      * Sets the browser remote server url.
-     * @param url
-     * @return
      */
     public SeleniumBrowserBuilder remoteServer(String url) {
         endpoint.getEndpointConfiguration().setRemoteServerUrl(url);
         return this;
     }
 
+    @SchemaProperty(description = "The remote server URL.")
+    public void setRemoteServerUrl(String url) {
+        remoteServer(url);
+    }
+
     /**
      * Sets the browser web driver.
-     * @param driver
-     * @return
      */
     public SeleniumBrowserBuilder webDriver(WebDriver driver) {
         endpoint.getEndpointConfiguration().setWebDriver(driver);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets a custom web driver as a bean reference.")
+    public void setWebDriver(String driver) {
+        this.webDriver = driver;
+    }
+
     /**
      * Sets the browser event listeners.
-     * @param listeners
-     * @return
      */
     public SeleniumBrowserBuilder eventListeners(List<WebDriverListener> listeners) {
         endpoint.getEndpointConfiguration().setEventListeners(listeners);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the list of event listeners.")
+    public void setEventListeners(List<String> listeners) {
+        this.eventListeners.addAll(listeners);
+    }
+
     /**
      * Sets the browser version.
-     * @param version
-     * @return
      */
     public SeleniumBrowserBuilder version(String version) {
         endpoint.getEndpointConfiguration().setVersion(version);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "The browser version.")
+    public void setVersion(String version) {
+        version(version);
+    }
+
     /**
      * Sets the start page url.
-     * @param url
-     * @return
      */
     public SeleniumBrowserBuilder startPage(String url) {
         endpoint.getEndpointConfiguration().setStartPageUrl(url);
         return this;
     }
 
+    @SchemaProperty(description = "The URL to the start page.")
+    public void setStartPage(String url) {
+        startPage(url);
+    }
+
     /**
      * Sets the default timeout.
-     * @param timeout
-     * @return
      */
     public SeleniumBrowserBuilder timeout(long timeout) {
         endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
+    }
+
+    @SchemaProperty(description = "The browser timeout.")
+    public void setTimeout(long timeout) {
+        timeout(timeout);
     }
 }

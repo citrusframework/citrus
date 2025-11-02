@@ -22,19 +22,23 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.CreateAnnotationsAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CreateAnnotations extends AbstractKubernetesAction.Builder<CreateAnnotationsAction, CreateAnnotations> {
 
     private final CreateAnnotationsAction.Builder delegate = new CreateAnnotationsAction.Builder();
 
+    @SchemaProperty
     public void setResource(String name) {
         this.delegate.resource(name);
     }
 
+    @SchemaProperty
     public void setType(String resourceType) {
         this.delegate.type(resourceType);
     }
 
+    @SchemaProperty
     public void setAnnotations(List<Annotation> annotations) {
         annotations.forEach(
                 annotation -> this.delegate.annotation(annotation.getName(), annotation.getValue()));
@@ -84,6 +88,7 @@ public class CreateAnnotations extends AbstractKubernetesAction.Builder<CreateAn
             return name;
         }
 
+        @SchemaProperty
         public void setName(String value) {
             this.name = value;
         }
@@ -92,6 +97,7 @@ public class CreateAnnotations extends AbstractKubernetesAction.Builder<CreateAn
             return value;
         }
 
+        @SchemaProperty
         public void setValue(String value) {
             this.value = value;
         }

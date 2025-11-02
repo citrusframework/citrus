@@ -28,12 +28,18 @@ public class KubernetesEndpointsTest {
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("kubernetes"));
+        Assert.assertTrue(endpointBuilders.containsKey("k8s"));
         Assert.assertTrue(endpointBuilders.containsKey("kubernetes.client"));
         Assert.assertTrue(endpointBuilders.containsKey("k8s.client"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
+        Assert.assertTrue(EndpointBuilder.lookup("kubernetes").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("kubernetes").get().getClass(), KubernetesEndpointBuilder.class);
+        Assert.assertTrue(EndpointBuilder.lookup("k8s").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("k8s").get().getClass(), KubernetesEndpointBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("kubernetes.client").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("kubernetes.client").get().getClass(), KubernetesClientBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("k8s.client").isPresent());

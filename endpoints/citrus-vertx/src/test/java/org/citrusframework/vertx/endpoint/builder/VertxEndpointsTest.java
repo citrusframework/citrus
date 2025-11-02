@@ -29,12 +29,15 @@ public class VertxEndpointsTest {
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("vertx"));
         Assert.assertTrue(endpointBuilders.containsKey("vertx.sync"));
         Assert.assertTrue(endpointBuilders.containsKey("vertx.async"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
+        Assert.assertTrue(EndpointBuilder.lookup("vertx").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("vertx").get().getClass(), VertxEndpointsBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("vertx.sync").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("vertx.sync").get().getClass(), VertxSyncEndpointBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("vertx.async").isPresent());

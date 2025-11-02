@@ -16,15 +16,19 @@
 
 package org.citrusframework.websocket.server;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.citrusframework.http.server.AbstractHttpServerBuilder;
 import org.citrusframework.websocket.endpoint.WebSocketEndpoint;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * @since 2.5
  */
 public class WebSocketServerBuilder extends AbstractHttpServerBuilder<WebSocketServer, WebSocketServerBuilder> {
+
+    private final List<String> webSockets = new ArrayList<>();
 
     public WebSocketServerBuilder() {
         this(new WebSocketServer());
@@ -34,13 +38,29 @@ public class WebSocketServerBuilder extends AbstractHttpServerBuilder<WebSocketS
         super(server);
     }
 
+    @Override
+    public WebSocketServer build() {
+        if (referenceResolver != null) {
+            if (!webSockets.isEmpty()) {
+                webSockets(webSockets.stream()
+                        .map(socket -> referenceResolver.resolve(socket, WebSocketEndpoint.class))
+                        .toList());
+            }
+        }
+
+        return super.build();
+    }
+
     /**
      * Sets the webSockets property.
-     * @param webSockets
-     * @return
      */
     public WebSocketServerBuilder webSockets(List<WebSocketEndpoint> webSockets) {
         getEndpoint().setWebSockets(webSockets);
         return this;
+    }
+
+    @SchemaProperty(description = "Sets the list of web sockets for this server.")
+    public void setWebSockets(List<String> webSockets) {
+        this.webSockets.addAll(webSockets);
     }
 }

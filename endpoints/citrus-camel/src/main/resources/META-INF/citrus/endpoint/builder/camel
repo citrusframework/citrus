@@ -1,3 +1,4 @@
+type=org.citrusframework.camel.endpoint.CamelEndpointsBuilder
 async=org.citrusframework.camel.endpoint.CamelEndpointBuilder
 asynchronous=org.citrusframework.camel.endpoint.CamelEndpointBuilder
 inOnly=org.citrusframework.camel.endpoint.CamelEndpointBuilder

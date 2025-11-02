@@ -18,11 +18,13 @@ package org.citrusframework.yaml.actions;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.LoadPropertiesAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class LoadProperties implements TestActionBuilder<LoadPropertiesAction> {
 
     private final LoadPropertiesAction.Builder builder = new LoadPropertiesAction.Builder();
 
+    @SchemaProperty(required = true, description = "The properties source.")
     public void setProperties(Properties properties) {
         builder.filePath(properties.file);
     }
@@ -40,6 +42,7 @@ public class LoadProperties implements TestActionBuilder<LoadPropertiesAction> {
             return file;
         }
 
+        @SchemaProperty(required = true, description = "Properties file resource.")
         public void setFile(String file) {
             this.file = file;
         }

@@ -11,3 +11,16 @@ actions:
       properties:
         queueName: "hello"
         timeout: 2000
+  - createEndpoint:
+      direct:
+        asynchronous:
+          name: sayGoodBye
+          queue: "goodbye"
+          timeout: 4000
+  - createEndpoint:
+      name: howdy
+      direct:
+        synchronous:
+          autoCreateQueue: true
+          queue: "howdy"
+          timeout: 3000

@@ -67,6 +67,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link DoFinally }
+     *
+     */
+    public DoFinally createDoFinally() {
+        return new DoFinally();
+    }
+
+    /**
      * Create an instance of {@link Repeat }
      *
      */

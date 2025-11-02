@@ -1,0 +1,19 @@
+name: DoFinallyTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - doFinally:
+      actions:
+        - echo:
+            message: Hello ${user}!
+        - echo:
+            message: ${user} rocks!
+        - createVariables:
+            variables:
+              - name: finallyRun
+                value: true
+  - createVariables:
+      variables:
+        - name: user
+          value: Citrus

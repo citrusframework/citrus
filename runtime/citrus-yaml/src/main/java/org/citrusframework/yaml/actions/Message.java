@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Objects;
 
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 import org.citrusframework.yaml.actions.script.ScriptDefinitionType;
 
 public class Message {
@@ -39,6 +41,10 @@ public class Message {
         return headerIgnoreCase;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:validation") },
+            description = "When enabled the header case is not verified."
+    )
     public void setHeaderIgnoreCase(String value) {
         this.headerIgnoreCase = value;
     }
@@ -51,6 +57,7 @@ public class Message {
         return headers;
     }
 
+    @SchemaProperty(description = "The message headers.")
     public void setHeaders(List<Header> value) {
         this.headers = value;
     }
@@ -59,6 +66,7 @@ public class Message {
         return body;
     }
 
+    @SchemaProperty(description = "The message body.")
     public void setBody(Body body) {
         this.body = body;
     }
@@ -70,6 +78,9 @@ public class Message {
         return this.expression;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:expressions") },
+            description = "List of path expressions to evaluate on the message content before processing the message.")
     public void setExpression(List<Expression> expression) {
         this.expression = expression;
     }
@@ -78,6 +89,10 @@ public class Message {
         return dataDictionary;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:dictionary") },
+            description = "Sets a data dictionary that transforms message content before it is being processed."
+    )
     public void setDataDictionary(String value) {
         this.dataDictionary = value;
     }
@@ -86,6 +101,9 @@ public class Message {
         return schemaValidation;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:schema") },
+            description = "Enables the schema validation.")
     public void setSchemaValidation(Boolean value) {
         this.schemaValidation = value;
     }
@@ -94,6 +112,9 @@ public class Message {
         return schema;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:schema") },
+            description = "The reference to a schema in the bean registry that should be used for validation.")
     public void setSchema(String value) {
         this.schema = value;
     }
@@ -102,6 +123,9 @@ public class Message {
         return schemaRepository;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:schema") },
+            description = "The schema repository holding the schema.")
     public void setSchemaRepository(String value) {
         this.schemaRepository = value;
     }
@@ -110,6 +134,7 @@ public class Message {
         return name;
     }
 
+    @SchemaProperty(description = "The message name. Named messages may be referenced in subsequent test steps.")
     public void setName(String value) {
         this.name = value;
     }
@@ -118,10 +143,13 @@ public class Message {
         return Objects.requireNonNullElse(type, CitrusSettings.DEFAULT_MESSAGE_TYPE);
     }
 
+    @SchemaProperty(advanced = true,
+            description = "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.")
     public void setType(String value) {
         this.type = value;
     }
 
+    @SchemaType(oneOf = { "value", "resource", "data" } )
     public static class Header {
         protected String data;
         protected Resource resource;
@@ -134,10 +162,12 @@ public class Message {
             return name;
         }
 
+        @SchemaProperty(description = "The message header name.")
         public void setName(String value) {
             this.name = value;
         }
 
+        @SchemaProperty(description = "The message header value as inline data.")
         public void setData(String data) {
             this.data = data;
         }
@@ -150,6 +180,7 @@ public class Message {
             return value;
         }
 
+        @SchemaProperty(description = "The message header value.")
         public void setValue(String value) {
             this.value = value;
         }
@@ -158,6 +189,16 @@ public class Message {
             return type;
         }
 
+        @SchemaProperty(description = "The header data loaded from a file resource.")
+        public void setResource(Resource resource) {
+            this.resource = resource;
+        }
+
+        public Resource getResource() {
+            return resource;
+        }
+
+        @SchemaProperty(advanced = true, description = "The message header type to create typed message headers.")
         public void setType(String type) {
             this.type = type;
         }
@@ -170,6 +211,7 @@ public class Message {
                 return file;
             }
 
+            @SchemaProperty(required = true, description = "The file resource path.")
             public void setFile(String value) {
                 this.file = value;
             }
@@ -178,29 +220,43 @@ public class Message {
                 return charset;
             }
 
+            @SchemaProperty(advanced = true, description = "Optional file resource charset used to read the file content.")
             public void setCharset(String value) {
                 this.charset = value;
             }
         }
     }
 
+    @SchemaType(oneOf = { "data", "resource", "script" } )
     public static class Body {
-        protected ScriptDefinitionType builder;
+        protected ScriptDefinitionType script;
         protected Body.Resource resource;
         protected String data;
 
+        @Deprecated
         public ScriptDefinitionType getBuilder() {
-            return builder;
+            return script;
         }
 
+        @Deprecated
         public void setBuilder(ScriptDefinitionType value) {
-            this.builder = value;
+            this.script = value;
+        }
+
+        public ScriptDefinitionType getScript() {
+            return script;
+        }
+
+        @SchemaProperty(description = "The message body set via script.")
+        public void setScript(ScriptDefinitionType value) {
+            this.script = value;
         }
 
         public Body.Resource getResource() {
             return resource;
         }
 
+        @SchemaProperty(description = "The message body loaded from a file resource.")
         public void setResource(Body.Resource value) {
             this.resource = value;
         }
@@ -209,6 +265,7 @@ public class Message {
             return data;
         }
 
+        @SchemaProperty(description = "The message body content.")
         public void setData(String value) {
             this.data = value;
         }
@@ -221,6 +278,7 @@ public class Message {
                 return file;
             }
 
+            @SchemaProperty
             public void setFile(String value) {
                 this.file = value;
             }
@@ -229,6 +287,7 @@ public class Message {
                 return charset;
             }
 
+            @SchemaProperty(advanced = true)
             public void setCharset(String value) {
                 this.charset = value;
             }
@@ -243,6 +302,7 @@ public class Message {
             return path;
         }
 
+        @SchemaProperty(required = true, description = "The path expression to evaluate.")
         public void setPath(String value) {
             this.path = value;
         }
@@ -251,6 +311,7 @@ public class Message {
             return value;
         }
 
+        @SchemaProperty(required = true, description = "The expected expression result value.")
         public void setValue(String value) {
             this.value = value;
         }
@@ -267,6 +328,7 @@ public class Message {
             return this.header;
         }
 
+        @SchemaProperty(description = "Extract elements from the message header into test variables.")
         public void setHeader(List<Header> header) {
             this.header = header;
         }
@@ -278,6 +340,7 @@ public class Message {
             return this.body;
         }
 
+        @SchemaProperty(description = "Extract elements from the message body into test variables.")
         public void setBody(List<Expression> body) {
             this.body = body;
         }
@@ -290,6 +353,7 @@ public class Message {
                 return name;
             }
 
+            @SchemaProperty(required = true, description = "The name of the message header.")
             public void setName(String value) {
                 this.name = value;
             }
@@ -298,29 +362,22 @@ public class Message {
                 return variable;
             }
 
+            @SchemaProperty(required = true, description = "The test variable name.")
             public void setVariable(String value) {
                 this.variable = value;
             }
         }
 
         public static class Expression {
-            protected String value;
             protected String path;
             protected String variable;
             protected String resultType;
-
-            public String getValue() {
-                return value;
-            }
-
-            public void setValue(String value) {
-                this.value = value;
-            }
 
             public String getPath() {
                 return path;
             }
 
+            @SchemaProperty(description = "The path expression to evaluate.")
             public void setPath(String value) {
                 this.path = value;
             }
@@ -329,6 +386,7 @@ public class Message {
                 return variable;
             }
 
+            @SchemaProperty(required = true, description = "The test variable name.")
             public void setVariable(String value) {
                 this.variable = value;
             }
@@ -337,6 +395,9 @@ public class Message {
                 return resultType;
             }
 
+            @SchemaProperty(advanced = true, description = "The expression result type. " +
+                    "By default the path expression evaluate to String values." +
+                    "With this setting you can force another expression result type.")
             public void setResultType(String value) {
                 this.resultType = value;
             }

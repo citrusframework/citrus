@@ -23,19 +23,23 @@ import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.messaging.CreateSubscriptionAction;
 import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CreateSubscription extends AbstractKnativeAction.Builder<CreateSubscriptionAction, CreateSubscription> {
 
     private final CreateSubscriptionAction.Builder delegate = new CreateSubscriptionAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.subscription(name);
     }
 
+    @SchemaProperty
     public void setChannel(String name) {
         this.delegate.channel(name);
     }
 
+    @SchemaProperty
     public void setService(String name) {
         this.delegate.service(name);
     }

@@ -34,6 +34,7 @@ import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContextBuilder;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.actions.script.ScriptDefinitionType;
 
 public class Receive implements TestActionBuilder<ReceiveMessageAction>, ReferenceResolverAware {
@@ -59,6 +60,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         this.builder = builder;
     }
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
@@ -70,6 +72,9 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         return this.ignore;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:ignore") },
+            description = "List of expressions to identify message elements that should be ignored during validation.")
     public void setIgnore(List<Ignore> ignore) {
         this.ignore = ignore;
     }
@@ -81,6 +86,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         return this.validate;
     }
 
+    @SchemaProperty(description = "Validation expressions evaluated on the message.")
     public void setValidate(List<Validate> validate) {
         this.validate = validate;
     }
@@ -92,16 +98,25 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         return this.namespace;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:xml") },
+            description = "Optional XML namespace to validate.")
     public void setNamespace(List<Namespace> namespace) {
         this.namespace = namespace;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:validator") },
+            description = "Explicit message validator.")
     public void setValidator(String validator) {
         if (StringUtils.hasText(validator)) {
             validators.add(validator);
         }
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:validator") },
+            description = "List of message validators used to validate the message.")
     public void setValidators(String messageValidatorExpression) {
         if (StringUtils.hasText(messageValidatorExpression)) {
             Stream.of(messageValidatorExpression.split(","))
@@ -110,12 +125,18 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         }
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:validator") },
+            description = "Explicit message header validator.")
     public void setHeaderValidator(String headerValidator) {
         if (StringUtils.hasText(headerValidator)) {
             builder.getHeaderValidationContext().validator(headerValidator);
         }
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:validator") },
+            description = "List of message header validators used to validate the message.")
     public void setHeaderValidators(String headerValidatorExpression) {
         if (StringUtils.hasText(headerValidatorExpression)) {
             Stream.of(headerValidatorExpression.split(","))
@@ -124,6 +145,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         }
     }
 
+    @SchemaProperty(required = true, description = "The expected message used to validate.")
     public void setMessage(Message message) {
         this.message = message;
         MessageSupport.configureMessage(builder, message);
@@ -290,26 +312,38 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         }
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:extract") },
+            description = "Extract message content to test variables after the message validation.")
     public void setExtract(Message.Extract value) {
         MessageSupport.configureExtract(builder, value);
     }
 
+    @SchemaProperty(required = true, description = "The message endpoint name or URI used to receive the message.")
     public void setEndpoint(String value) {
         builder.endpoint(value);
     }
 
+    @SchemaProperty(advanced = true)
     public void setActor(String value) {
         this.actor = value;
     }
 
+    @SchemaProperty(description = "Receive timeout.")
     public void setTimeout(Integer value) {
         builder.timeout(value);
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:selector") },
+            description = "Message select expression to selectively receive a message.")
     public void setSelect(String value) {
         builder.selector(value);
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:selector") },
+            description = "Message selector used to selectively receive a message.")
     public void setSelector(Selector selector) {
         if (selector.value != null) {
             builder.selector(selector.value);
@@ -349,7 +383,6 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
 
     /**
      * Subclasses may add additional building logic here.
-     * @return
      */
     protected ReceiveMessageAction doBuild() {
         return builder.build();
@@ -372,6 +405,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             return this.element;
         }
 
+        @SchemaProperty(advanced = true, description = "List of elements to build the selector expression.")
         public void setElement(List<Element> element) {
             this.element = element;
         }
@@ -380,6 +414,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             return value;
         }
 
+        @SchemaProperty(description = "Selector expression value.")
         public void setValue(String value) {
             this.value = value;
         }
@@ -392,6 +427,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
                 return name;
             }
 
+            @SchemaProperty(required = true, description = "Select element key name.")
             public void setName(String value) {
                 this.name = value;
             }
@@ -400,6 +436,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
                 return value;
             }
 
+            @SchemaProperty(required = true, description = "Select expression value.")
             public void setValue(String value) {
                 this.value = value;
             }
@@ -413,6 +450,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             return path;
         }
 
+        @SchemaProperty(required = true, description = "Path expression identifies the message element to ignore.")
         public void setPath(String value) {
             this.path = value;
         }
@@ -426,6 +464,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             return prefix;
         }
 
+        @SchemaProperty(required = true, description = "Expected namespace prefix.")
         public void setPrefix(String value) {
             this.prefix = value;
         }
@@ -434,6 +473,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             return value;
         }
 
+        @SchemaProperty(required = true, description = "Expected namespace value.")
         public void setValue(String value) {
             this.value = value;
         }
@@ -452,6 +492,9 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             return script;
         }
 
+        @SchemaProperty(
+                metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:script") },
+                description = "Script that builds the expected validate value.")
         public void setScript(ScriptDefinitionType value) {
             this.script = value;
         }
@@ -463,6 +506,9 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             return this.xpath;
         }
 
+        @SchemaProperty(
+                metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:xml") },
+                description = "Xpath validation expression.")
         public void setXpath(List<Xpath> xpath) {
             this.xpath = xpath;
         }
@@ -474,6 +520,9 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             return this.jsonPath;
         }
 
+        @SchemaProperty(
+                metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:jsonPath") },
+                description = "JsonPath validation expression.")
         public void setJsonPath(List<JsonPath> jsonPath) {
             this.jsonPath = jsonPath;
         }
@@ -485,6 +534,9 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             return this.namespace;
         }
 
+        @SchemaProperty(
+                metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:xml") },
+                description = "List of expected namespaces.")
         public void setNamespace(List<Namespace> namespace) {
             this.namespace = namespace;
         }
@@ -493,6 +545,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             return path;
         }
 
+        @SchemaProperty(description = "Message validation expression.")
         public void setPath(String value) {
             this.path = value;
         }
@@ -501,6 +554,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             return value;
         }
 
+        @SchemaProperty(description = "Expected message validation expression value.")
         public void setValue(String value) {
             this.value = value;
         }
@@ -509,6 +563,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             return resultType;
         }
 
+        @SchemaProperty(advanced = true, description = "Expected expression result type.")
         public void setResultType(String value) {
             this.resultType = value;
         }
@@ -521,6 +576,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
                 return expression;
             }
 
+            @SchemaProperty(required = true, description = "The Json path expression to evaluate.")
             public void setExpression(String value) {
                 this.expression = value;
             }
@@ -529,6 +585,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
                 return value;
             }
 
+            @SchemaProperty(required = true, description = "The expected result.")
             public void setValue(String value) {
                 this.value = value;
             }
@@ -542,6 +599,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
                 return prefix;
             }
 
+            @SchemaProperty(required = true, description = "The expected namespace prefix.")
             public void setPrefix(String value) {
                 this.prefix = value;
             }
@@ -550,6 +608,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
                 return value;
             }
 
+            @SchemaProperty(required = true, description = "The expected namespace value.")
             public void setValue(String value) {
                 this.value = value;
             }
@@ -564,6 +623,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
                 return expression;
             }
 
+            @SchemaProperty(required = true, description = "The Xpath expression to evaluate.")
             public void setExpression(String value) {
                 this.expression = value;
             }
@@ -572,6 +632,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
                 return value;
             }
 
+            @SchemaProperty(required = true, description = "The expected result.")
             public void setValue(String value) {
                 this.value = value;
             }
@@ -580,6 +641,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
                 return resultType;
             }
 
+            @SchemaProperty(advanced = true, description = "The expected result type.")
             public void setResultType(String value) {
                 this.resultType = value;
             }

@@ -27,6 +27,7 @@ public class CamelEndpointsTest {
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("camel"));
         Assert.assertTrue(endpointBuilders.containsKey("camel.sync"));
         Assert.assertTrue(endpointBuilders.containsKey("camel.inOnly"));
         Assert.assertTrue(endpointBuilders.containsKey("camel.async"));
@@ -35,6 +36,8 @@ public class CamelEndpointsTest {
 
     @Test
     public void shouldLookupEndpoint() {
+        Assert.assertTrue(EndpointBuilder.lookup("camel").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("camel").get().getClass(), CamelEndpointsBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("camel.sync").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("camel.sync").get().getClass(), CamelSyncEndpointBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("camel.inOut").isPresent());

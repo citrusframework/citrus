@@ -20,11 +20,13 @@ import org.citrusframework.TestActor;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.MakeScreenshotAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class MakeScreenshot extends AbstractSeleniumAction.Builder<MakeScreenshotAction, MakeScreenshot> {
 
     private final MakeScreenshotAction.Builder delegate = new MakeScreenshotAction.Builder();
 
+    @SchemaProperty
     public void setOutputDir(String outputDir) {
         this.delegate.outputDir(outputDir);
     }

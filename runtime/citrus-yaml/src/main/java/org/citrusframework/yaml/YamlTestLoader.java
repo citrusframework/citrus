@@ -26,10 +26,12 @@ import org.citrusframework.TestSource;
 import org.citrusframework.common.DefaultTestLoader;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
+import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.yaml.actions.CreateEndpoint;
 import org.citrusframework.yaml.actions.YamlTestActionBuilder;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.TypeDescription;
@@ -57,26 +59,7 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
         constructor.setPropertyUtils(new PropertyUtils() {
             @Override
             public Property getProperty(Class<?> type, String name, BeanAccess beanAccess) {
-                if (name.indexOf('-') > -1) {
-                    return super.getProperty(type, cameCase(name), beanAccess);
-                }
-
-                return super.getProperty(type, name, beanAccess);
-            }
-
-            private static String cameCase(String input) {
-                StringBuilder result = new StringBuilder();
-                for (int i = 0; i < input.length(); i++) {
-                    if (input.charAt(i) == '-') {
-                        if (i == input.length() -1) {
-                            continue;
-                        }
-                        result.append(String.valueOf(input.charAt(++i)).toUpperCase());
-                    } else {
-                        result.append(input.charAt(i));
-                    }
-                }
-                return result.toString();
+                return super.getProperty(type, camelCase(name), beanAccess);
             }
         });
 
@@ -94,9 +77,26 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
         if (!builders.isEmpty()) {
             TypeDescription actions = new TypeDescription(TestActions.class);
             for (Map.Entry<String, TestActionBuilder<?>> builder : builders.entrySet()) {
-                actions.substituteProperty(builder.getKey(), builder.getValue().getClass(), "getAction", "setAction", TestActionBuilder.class);
+                actions.substituteProperty(camelCase(builder.getKey().replaceAll("\\.", "-")),
+                        builder.getValue().getClass(), "getAction", "setAction", TestActionBuilder.class);
             }
             constructor.addTypeDescription(actions);
+        }
+
+        Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
+        if (!endpointBuilders.isEmpty()) {
+            TypeDescription createEndpoint = new TypeDescription(CreateEndpoint.class);
+            TypeDescription endpoint = new TypeDescription(YamlTestCase.Endpoint.class);
+            for (Map.Entry<String, EndpointBuilder<?>> builder : endpointBuilders.entrySet()) {
+                endpoint.substituteProperty(camelCase(builder.getKey().replaceAll("\\.", "-")),
+                        builder.getValue().getClass(), "getBuilder", "setBuilder", EndpointBuilder.class);
+
+                createEndpoint.substituteProperty(camelCase(builder.getKey().replaceAll("\\.", "-")),
+                        builder.getValue().getClass(), "getEndpoint", "setEndpoint", EndpointBuilder.class);
+            }
+
+            constructor.addTypeDescription(endpoint);
+            constructor.addTypeDescription(createEndpoint);
         }
 
         yaml = new Yaml(constructor);
@@ -104,9 +104,6 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
 
     /**
      * Constructor with context file and parent application context field.
-     * @param testClass
-     * @param testName
-     * @param packageName
      */
     public YamlTestLoader(Class<?> testClass, String testName, String packageName) {
         this();
@@ -159,5 +156,27 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
     @Override
     public void setSource(TestSource source) {
         this.source = source;
+    }
+
+    /**
+     * Convert dash style to camel case.
+     */
+    private static String camelCase(String input) {
+        if (input.indexOf('-') < 0) {
+            return input;
+        }
+
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) == '-') {
+                if (i == input.length() - 1) {
+                    continue;
+                }
+                result.append(String.valueOf(input.charAt(++i)).toUpperCase());
+            } else {
+                result.append(input.charAt(i));
+            }
+        }
+        return result.toString();
     }
 }

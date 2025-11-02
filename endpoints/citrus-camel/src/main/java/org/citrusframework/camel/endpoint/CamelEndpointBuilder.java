@@ -21,11 +21,31 @@ import org.citrusframework.camel.message.CamelMessageConverter;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CamelEndpointBuilder extends AbstractEndpointBuilder<CamelEndpoint> {
 
     /** Endpoint target */
     private final CamelEndpoint endpoint = new CamelEndpoint();
+
+    private String camelContext;
+    private String messageConverter;
+
+    @Override
+    public CamelEndpoint build() {
+        if (referenceResolver != null) {
+            if (StringUtils.hasText(camelContext)) {
+                camelContext(referenceResolver.resolve(camelContext, CamelContext.class));
+            }
+
+            if (StringUtils.hasText(messageConverter)) {
+                messageConverter(referenceResolver.resolve(messageConverter, CamelMessageConverter.class));
+            }
+        }
+
+        return super.build();
+    }
 
     @Override
     protected CamelEndpoint getEndpoint() {
@@ -34,18 +54,19 @@ public class CamelEndpointBuilder extends AbstractEndpointBuilder<CamelEndpoint>
 
     /**
      * Sets the endpointUri property.
-     * @param endpointUri
-     * @return
      */
     public CamelEndpointBuilder endpointUri(String endpointUri) {
         endpoint.getEndpointConfiguration().setEndpointUri(endpointUri);
         return this;
     }
 
+    @SchemaProperty(description = "The Camel endpoint uri.")
+    public void setEndpointUri(String endpointUri) {
+        endpointUri(endpointUri);
+    }
+
     /**
      * Sets the endpoint uri from given builder.
-     * @param builder
-     * @return
      */
     public CamelEndpointBuilder endpoint(EndpointUriBuilder builder) {
         endpoint.getEndpointConfiguration().setEndpointUri(builder.getUri());
@@ -54,8 +75,6 @@ public class CamelEndpointBuilder extends AbstractEndpointBuilder<CamelEndpoint>
 
     /**
      * Sets the endpoint property.
-     * @param camelEndpoint
-     * @return
      */
     public CamelEndpointBuilder endpoint(Endpoint camelEndpoint) {
         endpoint.getEndpointConfiguration().setEndpoint(camelEndpoint);
@@ -64,31 +83,40 @@ public class CamelEndpointBuilder extends AbstractEndpointBuilder<CamelEndpoint>
 
     /**
      * Sets the camelContext property.
-     * @param camelContext
-     * @return
      */
     public CamelEndpointBuilder camelContext(CamelContext camelContext) {
         endpoint.getEndpointConfiguration().setCamelContext(camelContext);
         return this;
     }
 
+    @SchemaProperty(description = "The Camel context to use.")
+    public void setCamelContext(String camelContext) {
+        this.camelContext = camelContext;
+    }
+
     /**
      * Sets the messageConverter property.
-     * @param messageConverter
-     * @return
      */
     public CamelEndpointBuilder messageConverter(CamelMessageConverter messageConverter) {
         endpoint.getEndpointConfiguration().setMessageConverter(messageConverter);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the message converter as a bean reference.")
+    public void setMessageConverter(String messageConverter) {
+        this.messageConverter = messageConverter;
+    }
+
     /**
      * Sets the default timeout.
-     * @param timeout
-     * @return
      */
     public CamelEndpointBuilder timeout(long timeout) {
         endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
+    }
+
+    @SchemaProperty(description = "The endpoint timeout when waiting for messages.")
+    public void setTimeout(long timeout) {
+        timeout(timeout);
     }
 }

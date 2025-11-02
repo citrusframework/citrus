@@ -20,15 +20,18 @@ import org.citrusframework.TestActor;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.OpenWindowAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class OpenWindow extends AbstractSeleniumAction.Builder<OpenWindowAction, OpenWindow> {
 
     private final OpenWindowAction.Builder delegate = new OpenWindowAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.window(name);
     }
 
+    @SchemaProperty
     public void setWindow(String windowName) {
         this.delegate.window(windowName);
     }

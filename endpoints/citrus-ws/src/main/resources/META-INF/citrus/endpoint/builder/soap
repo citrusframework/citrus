@@ -1,2 +1,3 @@
+type=org.citrusframework.ws.endpoint.builder.SoapWebServiceEndpointBuilder
 client=org.citrusframework.ws.client.WebServiceClientBuilder
 server=org.citrusframework.ws.server.WebServiceServerBuilder

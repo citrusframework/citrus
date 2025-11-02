@@ -23,19 +23,23 @@ import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReceiveTimeoutAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class ExpectTimeout implements TestActionBuilder<ReceiveTimeoutAction> {
 
     private final ReceiveTimeoutAction.Builder builder = new ReceiveTimeoutAction.Builder();
 
+    @SchemaProperty(description = "Time in milliseconds to wait for messages.")
     public void setWait(long milliseconds) {
         builder.timeout(milliseconds);
     }
 
+    @SchemaProperty(advanced = true, description = "Optional message selector expression to selectively consume messages.")
     public void setSelect(String value) {
         builder.selector(value);
     }
 
+    @SchemaProperty(advanced = true, description = "Message selector to selectively consume messages.")
     public void setSelector(Selector selector) {
         if (selector.value != null) {
             builder.selector(selector.value);
@@ -51,6 +55,7 @@ public class ExpectTimeout implements TestActionBuilder<ReceiveTimeoutAction> {
         }
     }
 
+    @SchemaProperty(required = true, description = "The message endpoint to consume messages from.")
     public void setEndpoint(String endpointUri) {
         builder.endpoint(endpointUri);
     }
@@ -71,6 +76,7 @@ public class ExpectTimeout implements TestActionBuilder<ReceiveTimeoutAction> {
             return this.elements;
         }
 
+        @SchemaProperty(advanced = true, description = "Selector elements building the selector expression.")
         public void setElements(List<Element> elements) {
             this.elements = elements;
         }
@@ -79,6 +85,7 @@ public class ExpectTimeout implements TestActionBuilder<ReceiveTimeoutAction> {
             return value;
         }
 
+        @SchemaProperty(description = "Selector expression value.")
         public void setValue(String value) {
             this.value = value;
         }
@@ -91,6 +98,7 @@ public class ExpectTimeout implements TestActionBuilder<ReceiveTimeoutAction> {
                 return name;
             }
 
+            @SchemaProperty(required = true, description = "Selector key name.")
             public void setName(String value) {
                 this.name = value;
             }
@@ -99,6 +107,7 @@ public class ExpectTimeout implements TestActionBuilder<ReceiveTimeoutAction> {
                 return value;
             }
 
+            @SchemaProperty(required = true, description = "Selector expression value that the expression must match.")
             public void setValue(String value) {
                 this.value = value;
             }

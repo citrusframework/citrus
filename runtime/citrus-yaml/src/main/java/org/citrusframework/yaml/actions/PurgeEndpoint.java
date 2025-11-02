@@ -25,6 +25,7 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.PurgeEndpointAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, ReferenceResolverAware {
 
@@ -34,6 +35,7 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
 
     protected List<Endpoint> endpoints;
 
+    @SchemaProperty(description = "The name of the endpoint to purge.")
     public void setEndpoint(String endpoint) {
         builder.endpoint(endpoint);
     }
@@ -45,22 +47,27 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
         return this.endpoints;
     }
 
+    @SchemaProperty(description = "List of endpoints to purge.")
     public void setEndpoints(List<Endpoint> endpoints) {
         this.endpoints = endpoints;
     }
 
+    @SchemaProperty(description = "Timeout when reading messages from the endpoint.")
     public void setTimeout(long milliseconds) {
         builder.timeout(milliseconds);
     }
 
+    @SchemaProperty(advanced = true, description = "Wait this time between reading attempts.")
     public void setSleep(long milliseconds) {
         builder.sleep(milliseconds);
     }
 
+    @SchemaProperty(advanced = true, description = "Message selector to purge only matching messages.")
     public void setSelect(String value) {
         builder.selector(value);
     }
 
+    @SchemaProperty(advanced = true, description = "Message selector to find matching messages that should be purged.")
     public void setSelector(Selector selector) {
         if (selector.value != null) {
             builder.selector(selector.value);
@@ -105,10 +112,12 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
         public String getName() {
             return name;
         }
+        @SchemaProperty(description = "The name of the endpoint.")
         public void setName(String value) {
             this.name = value;
         }
 
+        @SchemaProperty(description = "Reference to the endpoint in the bean registry.")
         public void setRef(String ref) {
             this.ref = ref;
         }
@@ -129,6 +138,7 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
             return this.elements;
         }
 
+        @SchemaProperty(description = "Select on given elements.")
         public void setElements(List<Element> elements) {
             this.elements = elements;
         }
@@ -137,6 +147,7 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
             return value;
         }
 
+        @SchemaProperty(description = "Selector expression value.")
         public void setValue(String value) {
             this.value = value;
         }
@@ -149,6 +160,7 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
                 return name;
             }
 
+            @SchemaProperty(required = true, description = "Key of the selector expression.")
             public void setName(String value) {
                 this.name = value;
             }
@@ -157,6 +169,7 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
                 return value;
             }
 
+            @SchemaProperty(required = true, description = "Select value of the selector expression.")
             public void setValue(String value) {
                 this.value = value;
             }

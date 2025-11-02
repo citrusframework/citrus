@@ -102,7 +102,7 @@ public interface TestLoader {
         try {
             return Optional.of(TYPE_RESOLVER.resolve(loader));
         } catch (CitrusRuntimeException e) {
-            logger.warn("Failed to resolve test loader from resource '{}/{}'", RESOURCE_PATH, loader);
+            logger.warn("Failed to resolve test loader from resource '{}/{}' - caused by: {}", RESOURCE_PATH, loader, e.getMessage());
         }
 
         return Optional.empty();

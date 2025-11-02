@@ -19,6 +19,11 @@ package org.citrusframework.message;
 public interface MessageQueue {
 
     /**
+     * Gets the name of this queue.
+     */
+    String getName();
+
+    /**
      * Send new message to queue.
      * @param message
      */

@@ -29,8 +29,6 @@ public class ClientServerEndpointBuilder<C extends EndpointBuilder<? extends End
 
     /**
      * Default constructor setting the client and server builder implementation.
-     * @param clientBuilder
-     * @param serverBuilder
      */
     public ClientServerEndpointBuilder(C clientBuilder, S serverBuilder) {
         this.clientBuilder = clientBuilder;
@@ -39,15 +37,13 @@ public class ClientServerEndpointBuilder<C extends EndpointBuilder<? extends End
 
     /**
      * Gets the client builder.
-     * @return
      */
     public C client() {
         return clientBuilder;
     }
 
     /**
-     * Gets the client builder.
-     * @return
+     * Gets the server builder.
      */
     public S server() {
         return serverBuilder;

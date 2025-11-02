@@ -21,12 +21,14 @@ import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.selenium.actions.HoverAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Hover extends AbstractSeleniumAction.Builder<HoverAction, Hover> implements ElementAware {
 
     private final HoverAction.Builder delegate = new HoverAction.Builder();
 
     @Override
+    @SchemaProperty
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

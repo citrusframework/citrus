@@ -18,15 +18,18 @@ package org.citrusframework.yaml.actions;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.EchoAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Echo implements TestActionBuilder<EchoAction> {
 
     private final EchoAction.Builder builder = new EchoAction.Builder();
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty(required = true, description = "The message to print.")
     public void setMessage(String message) {
         builder.message(message);
     }

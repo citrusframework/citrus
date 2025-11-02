@@ -120,21 +120,21 @@ public final class MessageSupport {
     }
 
     private static void configureScriptPayloadBuilder(MessageBuilderSupport.MessageActionBuilder<?, ?, ?> builder, Message message) {
-        if (message.body != null && message.body.builder != null) {
-            String scriptType = Optional.ofNullable(message.body.builder.getType()).orElse("groovy");
+        if (message.body != null && message.body.script != null) {
+            String scriptType = Optional.ofNullable(message.body.script.getType()).orElse("groovy");
 
             Optional<ScriptPayloadBuilder> scriptPayloadBuilder = ScriptPayloadBuilder.lookup(scriptType);
 
             if (scriptPayloadBuilder.isPresent()) {
-                if (message.body.builder.getValue() != null) {
-                    scriptPayloadBuilder.get().setScript(message.body.builder.getValue().trim());
+                if (message.body.script.getValue() != null) {
+                    scriptPayloadBuilder.get().setScript(message.body.script.getValue().trim());
                 }
 
-                if (message.body.builder.getFile() != null) {
-                    if (message.body.builder.getCharset() != null) {
-                        scriptPayloadBuilder.get().setFile(message.body.builder.getFile(), message.body.builder.getCharset());
+                if (message.body.script.getFile() != null) {
+                    if (message.body.script.getCharset() != null) {
+                        scriptPayloadBuilder.get().setFile(message.body.script.getFile(), message.body.script.getCharset());
                     } else {
-                        scriptPayloadBuilder.get().setFile(message.body.builder.getFile());
+                        scriptPayloadBuilder.get().setFile(message.body.script.getFile());
                     }
                 }
 

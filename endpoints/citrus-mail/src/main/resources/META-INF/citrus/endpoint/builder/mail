@@ -1,2 +1,3 @@
+type=org.citrusframework.mail.endpoint.builder.MailEndpointBuilder
 client=org.citrusframework.mail.client.MailClientBuilder
 server=org.citrusframework.mail.server.MailServerBuilder

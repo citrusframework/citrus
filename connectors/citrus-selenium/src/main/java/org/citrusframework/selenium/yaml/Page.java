@@ -26,6 +26,7 @@ import org.citrusframework.actions.selenium.PageValidator;
 import org.citrusframework.actions.selenium.WebPage;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> implements ReferenceResolverAware {
 
@@ -39,6 +40,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Sets the web page by name.
      */
+    @SchemaProperty
     public void setName(String name) {
         this.pageName = name;
     }
@@ -46,6 +48,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Sets the web page type.
      */
+    @SchemaProperty
     public void setType(String pageType) {
         this.delegate.type(pageType);
     }
@@ -53,6 +56,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Sets the web page action.
      */
+    @SchemaProperty
     public void setAction(String action) {
         this.delegate.action(action);
     }
@@ -60,6 +64,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Perform page validation.
      */
+    @SchemaProperty
     public void setValidate() {
         this.delegate.action("validate");
     }
@@ -67,6 +72,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Set page validator.
      */
+    @SchemaProperty
     public void setValidator(String pageValidator) {
         this.pageValidator = pageValidator;
     }
@@ -74,6 +80,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Set page action method to execute.
      */
+    @SchemaProperty
     public void setExecute(String method) {
         this.delegate.action(method);
     }
@@ -81,6 +88,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Set page action argument.
      */
+    @SchemaProperty
     public void setArgument(String arg) {
         this.delegate.argument(arg);
     }
@@ -88,6 +96,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Set page action arguments.
      */
+    @SchemaProperty
     public void setArguments(List<String> args) {
         this.delegate.arguments(args);
     }

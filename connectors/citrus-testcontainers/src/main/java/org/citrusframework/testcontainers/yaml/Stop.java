@@ -21,11 +21,13 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.testcontainers.actions.AbstractTestcontainersAction;
 import org.citrusframework.testcontainers.actions.StopTestcontainersAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Stop extends AbstractTestcontainersAction.Builder<StopTestcontainersAction, Stop> implements ReferenceResolverAware {
 
     private final StopTestcontainersAction.Builder delegate = new StopTestcontainersAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         delegate.containerName(name);
     }

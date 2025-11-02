@@ -24,21 +24,25 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.CreateSecretAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CreateSecret extends AbstractKubernetesAction.Builder<CreateSecretAction, CreateSecret> {
 
     private final CreateSecretAction.Builder delegate = new CreateSecretAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.secret(name);
     }
 
+    @SchemaProperty
     public void setProperties(List<Property> properties) {
         Map<String, String> props = new HashMap<>();
         properties.forEach(property -> props.put(property.getName(), property.getValue()));
         this.delegate.properties(props);
     }
 
+    @SchemaProperty
     public void setFile(String path) {
         delegate.fromFile(path);
     }
@@ -87,6 +91,7 @@ public class CreateSecret extends AbstractKubernetesAction.Builder<CreateSecretA
             return name;
         }
 
+        @SchemaProperty
         public void setName(String value) {
             this.name = value;
         }
@@ -95,6 +100,7 @@ public class CreateSecret extends AbstractKubernetesAction.Builder<CreateSecretA
             return value;
         }
 
+        @SchemaProperty
         public void setValue(String value) {
             this.value = value;
         }

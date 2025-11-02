@@ -19,6 +19,10 @@ package org.citrusframework.yaml.actions;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.CreateEndpointAction;
+import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.endpoint.direct.DirectEndpoint;
+import org.citrusframework.endpoint.direct.DirectSyncEndpoint;
+import org.citrusframework.message.MessageQueue;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -34,9 +38,25 @@ public class CreateEndpointTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getName(), "CreateEndpointTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
+        Assert.assertEquals(result.getActionCount(), 4L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CreateEndpointAction.class);
         Assert.assertEquals(((CreateEndpointAction) result.getTestAction(0)).getEndpointUri(), "direct:hello");
         Assert.assertEquals(((CreateEndpointAction) result.getTestAction(1)).getEndpointUri(), "direct?queueName=hello&timeout=2000");
+
+        Assert.assertNotNull(((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder());
+        Endpoint endpoint = ((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder().build();
+        Assert.assertEquals(endpoint.getClass(), DirectEndpoint.class);
+        Assert.assertEquals(endpoint.getName(), "sayGoodBye");
+        Assert.assertEquals(((DirectEndpoint) endpoint).getEndpointConfiguration().getQueueName(), "goodbye");
+        Assert.assertEquals(((DirectEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 4000L);
+
+        Assert.assertNotNull(((CreateEndpointAction) result.getTestAction(3)).getEndpointBuilder());
+        endpoint = ((CreateEndpointAction) result.getTestAction(3)).getEndpointBuilder().build();
+        Assert.assertEquals(endpoint.getClass(), DirectSyncEndpoint.class);
+        Assert.assertEquals(endpoint.getName(), "howdy");
+        Assert.assertEquals(((DirectSyncEndpoint) endpoint).getEndpointConfiguration().getQueueName(), "howdy");
+        Assert.assertEquals(((DirectSyncEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 3000L);
+
+        Assert.assertTrue(context.getReferenceResolver().isResolvable("howdy", MessageQueue.class));
     }
 }

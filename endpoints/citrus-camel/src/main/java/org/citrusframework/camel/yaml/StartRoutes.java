@@ -19,10 +19,12 @@ package org.citrusframework.camel.yaml;
 import java.util.List;
 
 import org.citrusframework.camel.actions.StartCamelRouteAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class StartRoutes implements CamelActionBuilderWrapper<StartCamelRouteAction.Builder> {
     private final StartCamelRouteAction.Builder builder = new StartCamelRouteAction.Builder();
 
+    @SchemaProperty(description = "The Camel route ids to start.")
     public void setRoutes(List<String> routeIds) {
         builder.routeIds(routeIds);
     }

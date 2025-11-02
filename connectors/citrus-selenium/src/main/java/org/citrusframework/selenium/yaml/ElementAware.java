@@ -17,6 +17,7 @@
 package org.citrusframework.selenium.yaml;
 
 import org.citrusframework.selenium.actions.FindElementAction;
+import org.citrusframework.yaml.SchemaProperty;
 import org.openqa.selenium.By;
 
 public interface ElementAware {
@@ -65,6 +66,7 @@ public interface ElementAware {
         private String xpath;
         private String cssSelector;
 
+        @SchemaProperty
         public void setId(String id) {
             this.id = id;
         }
@@ -73,6 +75,7 @@ public interface ElementAware {
             return id;
         }
 
+        @SchemaProperty
         public void setName(String name) {
             this.name = name;
         }
@@ -85,6 +88,7 @@ public interface ElementAware {
             return tagName;
         }
 
+        @SchemaProperty
         public void setTagName(String tagName) {
             this.tagName = tagName;
         }
@@ -93,10 +97,12 @@ public interface ElementAware {
             return className;
         }
 
+        @SchemaProperty
         public void setClassName(String className) {
             this.className = className;
         }
 
+        @SchemaProperty
         public void setLinkText(String linkText) {
             this.linkText = linkText;
         }
@@ -105,6 +111,7 @@ public interface ElementAware {
             return linkText;
         }
 
+        @SchemaProperty
         public void setPartialLinkText(String partialLinkText) {
             this.partialLinkText = partialLinkText;
         }
@@ -113,6 +120,7 @@ public interface ElementAware {
             return partialLinkText;
         }
 
+        @SchemaProperty
         public void setXpath(String xpath) {
             this.xpath = xpath;
         }
@@ -121,6 +129,7 @@ public interface ElementAware {
             return xpath;
         }
 
+        @SchemaProperty
         public void setCssSelector(String cssSelector) {
             this.cssSelector = cssSelector;
         }
@@ -129,6 +138,7 @@ public interface ElementAware {
             return cssSelector;
         }
 
+        @SchemaProperty
         public void setProperty(Property property) {
             this.property = property;
         }
@@ -141,6 +151,7 @@ public interface ElementAware {
             private String name;
             private String value;
 
+            @SchemaProperty
             public void setName(String name) {
                 this.name = name;
             }
@@ -149,6 +160,7 @@ public interface ElementAware {
                 return name;
             }
 
+            @SchemaProperty
             public void setValue(String value) {
                 this.value = value;
             }

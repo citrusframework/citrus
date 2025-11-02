@@ -17,6 +17,7 @@
     <module>restdocs</module>
     <module>test-generator</module>
     <module>docs-generator</module>
+    <module>schema-generator</module>
     <module>maven</module>
     <module>jbang</module>
     <module>agent</module>

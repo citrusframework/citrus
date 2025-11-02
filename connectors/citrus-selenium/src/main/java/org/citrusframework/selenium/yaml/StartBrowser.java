@@ -22,6 +22,7 @@ import org.citrusframework.selenium.actions.StartBrowserAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class StartBrowser extends AbstractSeleniumAction.Builder<StartBrowserAction, StartBrowser> implements ReferenceResolverAware {
 
@@ -31,10 +32,12 @@ public class StartBrowser extends AbstractSeleniumAction.Builder<StartBrowserAct
 
     private ReferenceResolver referenceResolver;
 
+    @SchemaProperty
     public void setBrowser(String browser) {
         this.seleniumBrowser = browser;
     }
 
+    @SchemaProperty
     public void setAllowAlreadyStarted(boolean allow) {
         this.delegate.allowAlreadyStarted(allow);
     }

@@ -21,6 +21,7 @@ import java.util.List;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.TestActions;
 
 public class Iterate implements TestActionBuilder<org.citrusframework.container.Iterate>, ReferenceResolverAware {
@@ -38,26 +39,32 @@ public class Iterate implements TestActionBuilder<org.citrusframework.container.
         return builder.build();
     }
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty(required = true, description = "Condition that keeps the iteration running.")
     public void setCondition(String condition) {
         builder.condition(condition);
     }
 
+    @SchemaProperty(advanced = true, description = "Test variable holding the current iteration index.")
     public void setIndex(String index) {
         builder.index(index);
     }
 
+    @SchemaProperty(advanced = true, description = "Index starts with this value.", defaultValue = "1")
     public void setStartsWith(int value) {
         builder.startsWith(value);
     }
 
+    @SchemaProperty(advanced = true, description = "The step added to the index for each iteration.", defaultValue = "1")
     public void setStep(int value) {
         builder.step(value);
     }
 
+    @SchemaProperty(required = true, description = "Sequence of test actions to execute.")
     public void setActions(List<TestActions> actions) {
         builder.actions(actions.stream().map(TestActions::get).toArray(TestActionBuilder<?>[]::new));
     }

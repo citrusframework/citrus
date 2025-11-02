@@ -22,6 +22,7 @@ import org.citrusframework.TestActor;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.JavaScriptAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction, JavaScript> {
 
@@ -30,6 +31,7 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
     /**
      * Add script.
      */
+    @SchemaProperty
     public void setScript(String script) {
         this.delegate.script(script);
     }
@@ -37,6 +39,7 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
     /**
      * Add script argument.
      */
+    @SchemaProperty
     public void setArgument(Object arg) {
         this.delegate.argument(arg);
     }
@@ -44,6 +47,7 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
     /**
      * Add script arguments.
      */
+    @SchemaProperty
     public void setArguments(List<Object> args) {
         this.delegate.arguments(args);
     }
@@ -51,6 +55,7 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
     /**
      * Add expected error.
      */
+    @SchemaProperty
     public void setError(String error) {
         this.delegate.error(error);
     }
@@ -58,6 +63,7 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
     /**
      * Add expected error.
      */
+    @SchemaProperty
     public void setErrors(List<String> errors) {
         this.delegate.errors(errors);
     }

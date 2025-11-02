@@ -36,11 +36,16 @@ import org.citrusframework.http.actions.HttpServerResponseActionBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.actions.Message;
 import org.citrusframework.yaml.actions.Receive;
 import org.citrusframework.yaml.actions.Send;
 
+import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
+
 public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAware {
+
+    private static final String HTTP_GROUP = "http";
 
     private TestActionBuilder<?> builder;
 
@@ -52,22 +57,27 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     private ReferenceResolver referenceResolver;
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         this.description = value;
     }
 
+    @SchemaProperty(advanced = true)
     public void setActor(String actor) {
         this.actor = actor;
     }
 
+    @SchemaProperty(description = "The Http client.")
     public void setClient(String httpClient) {
         builder = new HttpActionBuilder().client(httpClient);
     }
 
+    @SchemaProperty(description = "The Http server.")
     public void setServer(String httpServer) {
         builder = new HttpActionBuilder().server(httpServer);
     }
 
+    @SchemaProperty(kind = ACTION, group = HTTP_GROUP, description = "Send a Http request as a client.")
     public void setSendRequest(ClientRequest request) {
         HttpClientRequestActionBuilder requestBuilder;
         HttpRequest requestMessage;
@@ -147,6 +157,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = requestBuilder;
     }
 
+    @SchemaProperty(kind = ACTION, group = HTTP_GROUP, description = "Receive an Http response as a client.")
     public void setReceiveResponse(ClientResponse response) {
         HttpClientResponseActionBuilder responseBuilder = asClientBuilder().receive().response().name("http:receive-response");
 
@@ -203,6 +214,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = responseBuilder;
     }
 
+    @SchemaProperty(kind = ACTION, group = HTTP_GROUP, description = "Receive an Http request as a server.")
     public void setReceiveRequest(ServerRequest request) {
         HttpServerRequestActionBuilder requestBuilder;
         HttpRequest requestMessage;
@@ -290,6 +302,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = requestBuilder;
     }
 
+    @SchemaProperty(kind = ACTION, group = HTTP_GROUP, description = "Send an Http response as a server.")
     public void setSendResponse(ServerResponse response) {
         HttpServerResponseActionBuilder responseBuilder = asServerBuilder().send().response().name("http:send-response");
 
@@ -399,6 +412,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return uri;
         }
 
+        @SchemaProperty(advanced = true, description = "Http request URI.")
         public void setUri(String uri) {
             this.uri = uri;
         }
@@ -407,6 +421,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return fork;
         }
 
+        @SchemaProperty(advanced = true, description = "When enabled the send operation does not block while waiting for the response.")
         public void setFork(Boolean fork) {
             this.fork = fork;
         }
@@ -415,6 +430,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return get;
         }
 
+        @SchemaProperty(name = "GET", description = "Http GET request")
         public void setGET(HttpRequest get) {
             this.get = get;
         }
@@ -423,6 +439,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return post;
         }
 
+        @SchemaProperty(name = "POST", description = "Http POST request")
         public void setPOST(HttpRequest post) {
             this.post = post;
         }
@@ -431,6 +448,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return put;
         }
 
+        @SchemaProperty(name = "PUT", description = "Http PUT request")
         public void setPUT(HttpRequest put) {
             this.put = put;
         }
@@ -439,6 +457,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return delete;
         }
 
+        @SchemaProperty(name = "DELETE", description = "Http DELETE request")
         public void setDELETE(HttpRequest delete) {
             this.delete = delete;
         }
@@ -447,6 +466,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return head;
         }
 
+        @SchemaProperty(name = "HEAD", description = "Http HEAD request")
         public void setHEAD(HttpRequest head) {
             this.head = head;
         }
@@ -455,6 +475,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return options;
         }
 
+        @SchemaProperty(name = "OPTIONS", description = "Http OPTIONS request")
         public void setOPTIONS(HttpRequest options) {
             this.options = options;
         }
@@ -463,6 +484,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return patch;
         }
 
+        @SchemaProperty(name = "PATCH", description = "Http PATCH request")
         public void setPATCH(HttpRequest patch) {
             this.patch = patch;
         }
@@ -471,6 +493,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return trace;
         }
 
+        @SchemaProperty(name = "TRACE", description = "Http TRACE request")
         public void setTRACE(HttpRequest trace) {
             this.trace = trace;
         }
@@ -479,6 +502,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return extract;
         }
 
+        @SchemaProperty(advanced = true, description = "Extract message content to test variables.")
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
@@ -511,6 +535,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return timeout;
         }
 
+        @SchemaProperty(description = "Http request timeout.")
         public void setTimeout(Integer timeout) {
             this.timeout = timeout;
         }
@@ -519,6 +544,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return select;
         }
 
+        @SchemaProperty(advanced = true, description = "Message select expression to selectively consume messages.")
         public void setSelect(String select) {
             this.select = select;
         }
@@ -527,6 +553,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return validator;
         }
 
+        @SchemaProperty(advanced = true, description = "Explicit message validator.")
         public void setValidator(String validator) {
             this.validator = validator;
         }
@@ -535,6 +562,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return validators;
         }
 
+        @SchemaProperty(advanced = true, description = "List of message validators used to validate the message.")
         public void setValidators(String validators) {
             this.validators = validators;
         }
@@ -543,6 +571,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return headerValidator;
         }
 
+        @SchemaProperty(advanced = true, description = "Explicit message header validator.")
         public void setHeaderValidator(String headerValidator) {
             this.headerValidator = headerValidator;
         }
@@ -551,6 +580,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return headerValidators;
         }
 
+        @SchemaProperty(advanced = true, description = "List of message header validators used to validate the message.")
         public void setHeaderValidators(String headerValidators) {
             this.headerValidators = headerValidators;
         }
@@ -559,6 +589,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return get;
         }
 
+        @SchemaProperty(name = "GET", description = "Http GET request")
         public void setGET(HttpRequest get) {
             this.get = get;
         }
@@ -567,6 +598,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return post;
         }
 
+        @SchemaProperty(name = "POST", description = "Http POST request")
         public void setPOST(HttpRequest post) {
             this.post = post;
         }
@@ -575,6 +607,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return put;
         }
 
+        @SchemaProperty(name = "PUT", description = "Http PUT request")
         public void setPUT(HttpRequest put) {
             this.put = put;
         }
@@ -583,6 +616,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return delete;
         }
 
+        @SchemaProperty(name = "DELETE", description = "Http DELETE request")
         public void setDELETE(HttpRequest delete) {
             this.delete = delete;
         }
@@ -591,6 +625,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return head;
         }
 
+        @SchemaProperty(name = "HEAD", description = "Http HEAD request")
         public void setHEAD(HttpRequest head) {
             this.head = head;
         }
@@ -599,6 +634,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return options;
         }
 
+        @SchemaProperty(name = "OPTIONS", description = "Http OPTIONS request")
         public void setOPTIONS(HttpRequest options) {
             this.options = options;
         }
@@ -607,6 +643,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return patch;
         }
 
+        @SchemaProperty(name = "PATCH", description = "Http PATCH request")
         public void setPATCH(HttpRequest patch) {
             this.patch = patch;
         }
@@ -615,6 +652,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return trace;
         }
 
+        @SchemaProperty(name = "TRACE", description = "Http TRACE request")
         public void setTRACE(HttpRequest trace) {
             this.trace = trace;
         }
@@ -623,6 +661,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return selector;
         }
 
+        @SchemaProperty(advanced = true, description = "Message selector expression to selectively consume messages.")
         public void setSelector(Receive.Selector selector) {
             this.selector = selector;
         }
@@ -635,6 +674,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return validate;
         }
 
+        @SchemaProperty(description = "Validate expressions.")
         public void setValidate(List<Receive.Validate> validate) {
             this.validate = validate;
         }
@@ -643,6 +683,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return extract;
         }
 
+        @SchemaProperty(advanced = true, description = "Extract message content to test variables.")
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
@@ -656,6 +697,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return response;
         }
 
+        @SchemaProperty(description = "Http response message.")
         public void setResponse(HttpResponse response) {
             this.response = response;
         }
@@ -664,6 +706,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return extract;
         }
 
+        @SchemaProperty(advanced = true, description = "Extract message content to test variables.")
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
@@ -690,6 +733,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return timeout;
         }
 
+        @SchemaProperty(description = "Timeout while waiting for the Http response.")
         public void setTimeout(Integer timeout) {
             this.timeout = timeout;
         }
@@ -698,6 +742,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return select;
         }
 
+        @SchemaProperty(advanced = true, description = "Message selector expression to selectively consume the Http response.")
         public void setSelect(String select) {
             this.select = select;
         }
@@ -706,6 +751,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return selector;
         }
 
+        @SchemaProperty(advanced = true, description = "Message selector to selectively consume the Http response.")
         public void setSelector(Receive.Selector selector) {
             this.selector = selector;
         }
@@ -714,6 +760,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return validator;
         }
 
+        @SchemaProperty(advanced = true, description = "Explicit message validator.")
         public void setValidator(String validator) {
             this.validator = validator;
         }
@@ -722,6 +769,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return validators;
         }
 
+        @SchemaProperty(advanced = true, description = "List of message validators used to validate the message.")
         public void setValidators(String validators) {
             this.validators = validators;
         }
@@ -730,6 +778,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return headerValidator;
         }
 
+        @SchemaProperty(advanced = true, description = "Explicit message header validator.")
         public void setHeaderValidator(String headerValidator) {
             this.headerValidator = headerValidator;
         }
@@ -738,6 +787,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return headerValidators;
         }
 
+        @SchemaProperty(advanced = true, description = "List of message header validators used to validate the message.")
         public void setHeaderValidators(String headerValidators) {
             this.headerValidators = headerValidators;
         }
@@ -746,6 +796,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return response;
         }
 
+        @SchemaProperty(description = "The expected Http response.")
         public void setResponse(HttpResponse response) {
             this.response = response;
         }
@@ -758,6 +809,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return validate;
         }
 
+        @SchemaProperty(description = "Validate expressions.")
         public void setValidate(List<Receive.Validate> validate) {
             this.validate = validate;
         }
@@ -766,6 +818,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return extract;
         }
 
+        @SchemaProperty(advanced = true, description = "Extract message content to test variables.")
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
@@ -781,6 +834,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return status;
         }
 
+        @SchemaProperty(description = "The Http status code.")
         public void setStatus(String status) {
             this.status = status;
         }
@@ -789,6 +843,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return reasonPhrase;
         }
 
+        @SchemaProperty(advanced = true, description = "Http reason phrase.")
         public void setReasonPhrase(String reasonPhrase) {
             this.reasonPhrase = reasonPhrase;
         }
@@ -797,6 +852,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return version;
         }
 
+        @SchemaProperty(advanced = true, description = "Http version.")
         public void setVersion(String version) {
             this.version = version;
         }
@@ -805,6 +861,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return contentType;
         }
 
+        @SchemaProperty(description = "Http content type.")
         public void setContentType(String contentType) {
                 this.contentType = contentType;
             }
@@ -822,6 +879,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return path;
         }
 
+        @SchemaProperty(description = "Http request path.")
         public void setPath(String path) {
             this.path = path;
         }
@@ -830,6 +888,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return contentType;
         }
 
+        @SchemaProperty(description = "Http content type.")
         public void setContentType(String contentType) {
             this.contentType = contentType;
         }
@@ -838,6 +897,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return accept;
         }
 
+        @SchemaProperty(advanced = true, description = "Http accept header.")
         public void setAccept(String accept) {
             this.accept = accept;
         }
@@ -846,6 +906,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return version;
         }
 
+        @SchemaProperty(advanced = true, description = "Http version.")
         public void setVersion(String version) {
             this.version = version;
         }
@@ -857,6 +918,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return this.parameters;
         }
 
+        @SchemaProperty(advanced = true, description = "List of Http query parameters.")
         public void setParameters(List<QueryParameter> parameters) {
             this.parameters = parameters;
         }
@@ -869,6 +931,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                 return name;
             }
 
+            @SchemaProperty(required = true, description = "Http query parameter name.")
             public void setName(String name) {
                 this.name = name;
             }
@@ -877,6 +940,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                 return value;
             }
 
+            @SchemaProperty(required = true, description = "Http query parameter value.")
             public void setValue(String value) {
                 this.value = value;
             }

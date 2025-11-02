@@ -20,9 +20,12 @@ import java.util.Map;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.endpoint.EndpointBuilder;
 
 public interface CreateEndpointActionBuilder<T extends TestAction>
         extends ActionBuilder<T, CreateEndpointActionBuilder<T>>, TestActionBuilder<T> {
+
+    CreateEndpointActionBuilder<T> endpoint(EndpointBuilder<?> builder);
 
     CreateEndpointActionBuilder<T> uri(String endpointUri);
 

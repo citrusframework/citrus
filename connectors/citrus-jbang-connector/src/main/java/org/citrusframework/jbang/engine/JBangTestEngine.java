@@ -113,9 +113,7 @@ public class JBangTestEngine extends AbstractTestEngine {
             try {
                 logger.info(String.format("Running test source %s", source.getName()));
 
-                if (StringUtils.hasText(source.getFilePath())) {
-                    citrus.run(source.getFilePath(), Collections.emptyMap());
-                } else if (source.getSourceFile() instanceof Resources.ByteArrayResource) {
+                if (source.getSourceFile() instanceof Resources.ByteArrayResource) {
                     Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
                     c.setContents(new StringSelection(FileUtils.readToString(source.getSourceFile())), null);
 
@@ -123,6 +121,8 @@ public class JBangTestEngine extends AbstractTestEngine {
                             .filter(ext -> !ext.isEmpty())
                             .orElse(".yaml");
                     citrus.run("clipboard" + fileExt, Collections.emptyMap());
+                } else if (StringUtils.hasText(source.getFilePath())) {
+                    citrus.run(source.getFilePath(), Collections.emptyMap());
                 } else {
                     citrus.run(source.getSourceFile().getLocation(), Collections.emptyMap());
                 }

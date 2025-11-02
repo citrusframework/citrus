@@ -20,15 +20,18 @@ import org.citrusframework.TestActor;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.SwitchWindowAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class SwitchWindow extends AbstractSeleniumAction.Builder<SwitchWindowAction, SwitchWindow> {
 
     private final SwitchWindowAction.Builder delegate = new SwitchWindowAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.window(name);
     }
 
+    @SchemaProperty
     public void setWindow(String name) {
         this.delegate.window(name);
     }

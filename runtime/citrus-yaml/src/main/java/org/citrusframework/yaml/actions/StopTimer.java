@@ -18,15 +18,18 @@ package org.citrusframework.yaml.actions;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.StopTimerAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class StopTimer implements TestActionBuilder<StopTimerAction> {
 
     private final StopTimerAction.Builder builder = new StopTimerAction.Builder();
 
+    @SchemaProperty(required = true, description = "Name identifying the timer.")
     public void setId(String id) {
         builder.id(id);
     }
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }

@@ -18,49 +18,70 @@ package org.citrusframework.server;
 
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.EndpointAdapter;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 
 public abstract class AbstractServerBuilder<T extends AbstractServer, B extends AbstractServerBuilder<T, B>> extends AbstractEndpointBuilder<T> {
 
     private final B self;
 
+    private String endpointAdapter;
+
     protected AbstractServerBuilder() {
         this.self = (B) this;
     }
 
+    @Override
+    public T build() {
+        if (referenceResolver != null) {
+            if (StringUtils.hasText(endpointAdapter)) {
+                endpointAdapter(referenceResolver.resolve(endpointAdapter, EndpointAdapter.class));
+            }
+        }
+        return super.build();
+    }
+
     /**
      * Sets the autoStart property.
-     * @param autoStart
-     * @return
      */
     public B autoStart(boolean autoStart) {
         getEndpoint().setAutoStart(autoStart);
         return self;
     }
 
+    @SchemaProperty(description = "When enabled the server is automatically started after creation.")
+    public void setAutoStart(boolean autoStart) {
+        autoStart(autoStart);
+    }
+
     /**
      * Sets the endpoint adapter.
-     * @param endpointAdapter
-     * @return
      */
     public B endpointAdapter(EndpointAdapter endpointAdapter) {
         getEndpoint().setEndpointAdapter(endpointAdapter);
         return self;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets a custom endpoint adapter to handle requests.")
+    public void setEndpointAdapter(String endpointAdapter) {
+        this.endpointAdapter = endpointAdapter;
+    }
+
     /**
      * Sets the debug logging enabled flag.
-     * @param enabled
-     * @return
      */
     public B debugLogging(boolean enabled) {
         getEndpoint().setDebugLogging(enabled);
         return self;
     }
 
+    @SchemaProperty(advanced = true, description = "When enabled the server prints debug logging output.")
+    public void setDebugLogging(boolean enabled) {
+        debugLogging(enabled);
+    }
+
     /**
      * Sets the default timeout.
-     * @param timeout
-     * @return
      */
     public B timeout(long timeout) {
         if (getEndpoint().getEndpointConfiguration() != null) {
@@ -69,5 +90,10 @@ public abstract class AbstractServerBuilder<T extends AbstractServer, B extends 
 
         getEndpoint().setDefaultTimeout(timeout);
         return self;
+    }
+
+    @SchemaProperty(description = "The server timeout.", defaultValue = "5000")
+    public void setTimeout(long timeout) {
+        timeout(timeout);
     }
 }

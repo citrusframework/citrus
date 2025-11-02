@@ -21,12 +21,14 @@ import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.ClickAction;
 import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Click extends AbstractSeleniumAction.Builder<ClickAction, Click> implements ElementAware {
 
     private final ClickAction.Builder delegate = new ClickAction.Builder();
 
     @Override
+    @SchemaProperty
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

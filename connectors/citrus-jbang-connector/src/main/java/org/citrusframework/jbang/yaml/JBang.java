@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.jbang.actions.JBangAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class JBang implements TestActionBuilder<JBangAction> {
 
@@ -30,22 +31,27 @@ public class JBang implements TestActionBuilder<JBangAction> {
     private List<Argument> arguments;
     private List<SystemProperty> systemProperties;
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty
     public void setApp(String name) {
         builder.app(name);
     }
 
+    @SchemaProperty
     public void setCommand(String command) {
         builder.command(command);
     }
 
+    @SchemaProperty
     public void setFile(String path) {
         builder.file(path);
     }
 
+    @SchemaProperty
     public void setExitCode(String codes) {
         builder.exitCodes(Arrays.stream(codes.split(","))
                 .map(String::trim)
@@ -53,18 +59,22 @@ public class JBang implements TestActionBuilder<JBangAction> {
                 .mapToInt(Integer::intValue).toArray());
     }
 
+    @SchemaProperty
     public void setPrintOutput(boolean enabled) {
         builder.printOutput(enabled);
     }
 
+    @SchemaProperty
     public void setOutput(String expected) {
         builder.verifyOutput(expected);
     }
 
+    @SchemaProperty
     public void setSavePid(String variable) {
         builder.savePid(variable);
     }
 
+    @SchemaProperty
     public void setSaveOutput(String variable) {
         builder.saveOutput(variable);
     }
@@ -76,6 +86,7 @@ public class JBang implements TestActionBuilder<JBangAction> {
         return this.arguments;
     }
 
+    @SchemaProperty
     public void setArgs(List<Argument> arguments) {
         this.arguments = arguments;
     }
@@ -87,6 +98,7 @@ public class JBang implements TestActionBuilder<JBangAction> {
         return this.systemProperties;
     }
 
+    @SchemaProperty
     public void setSystemProperties(List<SystemProperty> systemProperties) {
         this.systemProperties = systemProperties;
     }
@@ -117,6 +129,7 @@ public class JBang implements TestActionBuilder<JBangAction> {
             return name;
         }
 
+        @SchemaProperty(required = true)
         public void setName(String name) {
             this.name = name;
         }
@@ -125,6 +138,7 @@ public class JBang implements TestActionBuilder<JBangAction> {
             return value;
         }
 
+        @SchemaProperty(required = true)
         public void setValue(String value) {
             this.value = value;
         }
@@ -139,6 +153,7 @@ public class JBang implements TestActionBuilder<JBangAction> {
             return name;
         }
 
+        @SchemaProperty(required = true)
         public void setName(String name) {
             this.name = name;
         }
@@ -147,6 +162,7 @@ public class JBang implements TestActionBuilder<JBangAction> {
             return value;
         }
 
+        @SchemaProperty(required = true)
         public void setValue(String value) {
             this.value = value;
         }

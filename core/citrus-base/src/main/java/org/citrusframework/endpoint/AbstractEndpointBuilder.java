@@ -18,29 +18,34 @@ package org.citrusframework.endpoint;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.common.Named;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * @since 2.5
  */
-public abstract class AbstractEndpointBuilder<T extends Endpoint> implements EndpointBuilder<T> {
+public abstract class AbstractEndpointBuilder<T extends Endpoint> implements EndpointBuilder<T>, ReferenceResolverAware, Named {
+
+    protected ReferenceResolver referenceResolver;
 
     /**
      * Sets the endpoint name.
-     * @param endpointName
-     * @return
      */
     public AbstractEndpointBuilder<T> name(String endpointName) {
         getEndpoint().setName(endpointName);
         return this;
     }
 
+    @SchemaProperty(description = "The name of the endpoint")
+    public void setName(String endpointName) {
+        name(endpointName);
+    }
+
     /**
      * Sets the endpoint actor.
-     * @param actor
-     * @return
      */
     public AbstractEndpointBuilder<T> actor(TestActor actor) {
         getEndpoint().setActor(actor);
@@ -49,7 +54,6 @@ public abstract class AbstractEndpointBuilder<T extends Endpoint> implements End
 
     /**
      * Initializes the endpoint.
-     * @return
      */
     public AbstractEndpointBuilder<T> initialize() {
         if (getEndpoint() instanceof InitializingPhase initializingBean) {
@@ -65,20 +69,25 @@ public abstract class AbstractEndpointBuilder<T extends Endpoint> implements End
 
     /**
      * Sets the reference resolver.
-     * @param referenceResolver
-     * @return
      */
     public AbstractEndpointBuilder<T> referenceResolver(ReferenceResolver referenceResolver) {
-        if (getEndpoint() instanceof ReferenceResolverAware) {
-            ((ReferenceResolverAware) getEndpoint()).setReferenceResolver(referenceResolver);
-        }
-
+        this.referenceResolver = referenceResolver;
         return this;
     }
 
     @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
+    }
+
+    @Override
     public T build() {
-        return getEndpoint();
+        T endpoint = getEndpoint();
+        if (endpoint instanceof ReferenceResolverAware resolverAware) {
+            resolverAware.setReferenceResolver(referenceResolver);
+        }
+
+        return endpoint;
     }
 
     @Override
@@ -88,7 +97,6 @@ public abstract class AbstractEndpointBuilder<T extends Endpoint> implements End
 
     /**
      * Gets the target endpoint instance.
-     * @return
      */
     protected abstract T getEndpoint();
 }

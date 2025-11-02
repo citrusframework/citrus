@@ -267,14 +267,8 @@ public class AssertSoapFault extends AbstractActionContainer {
 
         @Override
         public Builder when(TestActionBuilder<?> action) {
-            return actions(action);
-        }
-
-        @Override
-        public Builder actions(TestActionBuilder<?>... actions) {
-            this.action = actions[0];
-
-            if (this.action instanceof MessageBuilderSupport.MessageActionBuilder<?,?,?>) {
+            this.action = action;
+            if (action instanceof MessageBuilderSupport.MessageActionBuilder<?,?,?>) {
                 if (this.endpointUri != null) {
                     ((MessageBuilderSupport.MessageActionBuilder<?, ?, ?>) this.action).endpoint(endpointUri);
                 }
@@ -283,7 +277,12 @@ public class AssertSoapFault extends AbstractActionContainer {
                     ((MessageBuilderSupport.MessageActionBuilder<?, ?, ?>) this.action).endpoint(endpoint);
                 }
             }
-            return super.actions(actions[0]);
+            return super.actions(action);
+        }
+
+        @Override
+        public Builder actions(TestActionBuilder<?>... actions) {
+            return when(actions[0]);
         }
 
         @Override

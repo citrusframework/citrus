@@ -20,15 +20,18 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.DeleteResourceAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class DeleteResource extends AbstractKubernetesAction.Builder<DeleteResourceAction, DeleteResource> {
 
     private final DeleteResourceAction.Builder delegate = new DeleteResourceAction.Builder();
 
+    @SchemaProperty
     public void setData(String content) {
         delegate.content(content);
     }
 
+    @SchemaProperty
     public void setFile(String path) {
         delegate.resource(path);
     }

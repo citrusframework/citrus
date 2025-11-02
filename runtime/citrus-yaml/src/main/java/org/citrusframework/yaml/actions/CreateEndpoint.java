@@ -21,11 +21,14 @@ import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.CreateEndpointAction;
+import org.citrusframework.endpoint.EndpointBuilder;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
 
     private final CreateEndpointAction.Builder builder = new CreateEndpointAction.Builder();
 
+    protected EndpointBuilder<?> endpoint;
     protected String type;
     protected String uri;
     protected String name;
@@ -35,6 +38,9 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
         return type;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:generic" ) },
+            description = "The endpoint type.")
     public void setType(String type) {
         this.type = type;
     }
@@ -43,6 +49,9 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
         return uri;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:generic" ) },
+            description = "The URI with properties defining the endpoint.")
     public void setUri(String uri) {
         this.uri = uri;
     }
@@ -51,6 +60,9 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
         return name;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:generic" ) },
+            description = "The endpoint name. When set this endpoint is retrievable via this name in the bean registry.")
     public void setName(String value) {
         this.name = value;
     }
@@ -59,13 +71,28 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
         return properties;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:generic" ) },
+            description = "List of properties for this endpoint.")
     public void setProperties(Map<String, String> properties) {
         this.properties.putAll(properties);
+    }
+
+    public void setEndpoint(EndpointBuilder<?> endpointBuilder) {
+        this.endpoint = endpointBuilder;
+    }
+
+    public EndpointBuilder<?> getEndpoint() {
+        return endpoint;
     }
 
     @Override
     public CreateEndpointAction build() {
         builder.type(type);
+
+        if (endpoint != null) {
+            builder.endpoint(endpoint);
+        }
 
         if (uri != null) {
             builder.uri(uri);
@@ -80,6 +107,7 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
         return builder.build();
     }
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }

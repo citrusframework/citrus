@@ -20,6 +20,7 @@ import org.citrusframework.TestActor;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Send implements TestActionBuilder<SendMessageAction>, ReferenceResolverAware {
 
@@ -36,10 +37,12 @@ public class Send implements TestActionBuilder<SendMessageAction>, ReferenceReso
         this.builder = builder;
     }
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty(description = "The message to send.")
     public void setMessage(Message message) {
         MessageSupport.configureMessage(builder, message);
 
@@ -53,18 +56,24 @@ public class Send implements TestActionBuilder<SendMessageAction>, ReferenceReso
         }
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:extract") },
+            description = "Extract message content to test variables before the message is sent.")
     public void setExtract(Message.Extract value) {
         MessageSupport.configureExtract(builder, value);
     }
 
+    @SchemaProperty(required = true, description = "The message endpoint name or URI.")
     public void setEndpoint(String value) {
         builder.endpoint(value);
     }
 
+    @SchemaProperty(advanced = true)
     public void setActor(String value) {
         this.actor = value;
     }
 
+    @SchemaProperty(advanced = true, description = "When set the send operation does not block while waiting for the response.")
     public void setFork(Boolean value) {
         builder.fork(value);
     }

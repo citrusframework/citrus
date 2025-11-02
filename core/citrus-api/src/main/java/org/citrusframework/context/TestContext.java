@@ -38,6 +38,7 @@ import org.citrusframework.container.AfterTest;
 import org.citrusframework.container.BeforeTest;
 import org.citrusframework.container.StopTimer;
 import org.citrusframework.container.TestActionContainer;
+import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.VariableNullValueException;
@@ -964,6 +965,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
         @Override
         public List<String> getEndpointDefinitions() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public List<EndpointBuilder<?>> getEndpoints() {
             return Collections.emptyList();
         }
 

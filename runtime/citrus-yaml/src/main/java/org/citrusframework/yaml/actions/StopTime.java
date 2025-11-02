@@ -18,19 +18,23 @@ package org.citrusframework.yaml.actions;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.StopTimeAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class StopTime implements TestActionBuilder<StopTimeAction> {
 
     private final StopTimeAction.Builder builder = new StopTimeAction.Builder();
 
+    @SchemaProperty(description = "The time line identifier.")
     public void setId(String id) {
         builder.id(id);
     }
 
+    @SchemaProperty(description = "Suffix added to the value test variable.")
     public void setSuffix(String suffix) {
         builder.suffix(suffix);
     }
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }

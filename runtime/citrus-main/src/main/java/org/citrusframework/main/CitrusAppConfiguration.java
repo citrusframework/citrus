@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.yaml.SchemaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,8 +46,6 @@ public class CitrusAppConfiguration extends TestRunConfiguration {
 
     /**
      * Gets the timeToLive.
-     *
-     * @return
      */
     public long getTimeToLive() {
         return timeToLive;
@@ -54,17 +53,15 @@ public class CitrusAppConfiguration extends TestRunConfiguration {
 
     /**
      * Sets the timeToLive.
-     *
-     * @param timeToLive
      */
+    @SchemaProperty(description = "Set time to live for the Citrus application. " +
+            "When set the application terminates automatically when time is over.")
     public void setTimeToLive(long timeToLive) {
         this.timeToLive = timeToLive;
     }
 
     /**
      * Gets the configClass.
-     *
-     * @return
      */
     public String getConfigClass() {
         return configClass;
@@ -72,17 +69,14 @@ public class CitrusAppConfiguration extends TestRunConfiguration {
 
     /**
      * Sets the configClass.
-     *
-     * @param configClass
      */
+    @SchemaProperty(description = "Fully qualified configuration class name loaded as a Java bean configuration.")
     public void setConfigClass(String configClass) {
         this.configClass = configClass;
     }
 
     /**
      * Gets the skipTests.
-     *
-     * @return
      */
     public boolean isSkipTests() {
         return skipTests;
@@ -90,17 +84,14 @@ public class CitrusAppConfiguration extends TestRunConfiguration {
 
     /**
      * Sets the skipTests.
-     *
-     * @param skipTests
      */
+    @SchemaProperty(description = "When enabled no tests are run on application startup.")
     public void setSkipTests(boolean skipTests) {
         this.skipTests = skipTests;
     }
 
     /**
      * Gets the systemExit.
-     *
-     * @return
      */
     public boolean isSystemExit() {
         return systemExit;
@@ -108,9 +99,8 @@ public class CitrusAppConfiguration extends TestRunConfiguration {
 
     /**
      * Sets the systemExit.
-     *
-     * @param systemExit
      */
+    @SchemaProperty(description = "When enabled the application exits with an exit code after tests are run.")
     public void setSystemExit(boolean systemExit) {
         this.systemExit = systemExit;
     }

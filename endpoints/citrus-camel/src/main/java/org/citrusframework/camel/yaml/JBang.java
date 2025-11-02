@@ -35,14 +35,21 @@ import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
 import org.citrusframework.camel.jbang.CamelJBangSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.yaml.SchemaProperty;
+
+import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.yaml.SchemaProperty.Kind.GROUP;
 
 public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction.Builder<?, ?>> {
+
+    private static final String CAMEL_JBANG_GROUP = "camel-jbang";
 
     private AbstractCamelJBangAction.Builder<?, ?> builder;
 
     private String camelVersion;
     private String kameletsVersion;
 
+    @SchemaProperty(description = "The Apache Camel version.")
     public void setCamelVersion(String camelVersion) {
         this.camelVersion = camelVersion;
     }
@@ -51,6 +58,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
         return camelVersion;
     }
 
+    @SchemaProperty(description = "The Kamelets version.")
     public void setKameletsVersion(String kameletsVersion) {
         this.kameletsVersion = kameletsVersion;
     }
@@ -59,30 +67,37 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
         return kameletsVersion;
     }
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_JBANG_GROUP, description = "Runs a Camel integration.")
     public void setRun(RunIntegration run) {
         this.builder = run.getBuilder();
     }
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_JBANG_GROUP, description = "Stops a Camel integration.")
     public void setStop(StopIntegration stop) {
         this.builder = stop.getBuilder();
     }
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_JBANG_GROUP, description = "Runs a Camel integration with customized parameters.")
     public void setCustom(CustomizedRunIntegration custom) {
         this.builder = custom.getBuilder();
     }
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_JBANG_GROUP, description = "Verify the Camel integration status and log messages.")
     public void setVerify(VerifyIntegration verify) {
         this.builder = verify.getBuilder();
     }
 
+    @SchemaProperty(kind = GROUP, group = CAMEL_JBANG_GROUP, description = "Manage Camel JBang plugins.")
     public void setPlugin(Plugin plugin) {
         this.builder = plugin.getBuilder();
     }
 
+    @SchemaProperty(kind = GROUP, group = CAMEL_JBANG_GROUP, description = "Camel JBang cmd operations.")
     public void setCmd(Cmd cmd) {
         this.builder = cmd.getBuilder();
     }
 
+    @SchemaProperty(kind = GROUP, group = CAMEL_JBANG_GROUP, description = "Camel Kubernetes plugin related operations.")
     public void setKubernetes(Kubernetes kubernetes) {
         this.builder = kubernetes.getBuilder();
     }
@@ -103,26 +118,32 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
         private final CamelRunIntegrationAction.Builder builder = new CamelRunIntegrationAction.Builder();
 
+        @SchemaProperty(advanced = true, description = "When enabled the Camel integration is automatically stopped after the test.", defaultValue = "true")
         public void setAutoRemove(boolean enabled) {
             builder.autoRemove(enabled);
         }
 
+        @SchemaProperty(advanced = true, description = "Wait for the integration to report running state.", defaultValue = "true")
         public void setWaitForRunningState(boolean enabled) {
             builder.waitForRunningState(enabled);
         }
 
+        @SchemaProperty(advanced = true, description = "Optional command arguments.")
         public void setArgs(List<String> args) {
             builder.withArgs(args.toArray(String[]::new));
         }
 
+        @SchemaProperty(advanced = true, description = "Optional list of resources added to the Camel JBang process.")
         public void setResources(List<String> resources) {
             resources.forEach(builder::addResource);
         }
 
+        @SchemaProperty(advanced = true, description = "When enabled the integration output is saved to a log file.", defaultValue = "false")
         public void setDumpIntegrationOutput(boolean enabled) {
             builder.dumpIntegrationOutput(enabled);
         }
 
+        @SchemaProperty(description = "The Camel integration.")
         public void setIntegration(Integration integration) {
             builder.integrationName(integration.name);
 
@@ -166,14 +187,17 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
             protected SystemProperties systemProperties;
 
+            @SchemaProperty(description = "The Camel integration name.")
             public void setName(String integrationName) {
                 this.name = integrationName;
             }
 
+            @SchemaProperty(description = "Camel integration source code loaded from a file resource.")
             public void setFile(String file) {
                 this.file = file;
             }
 
+            @SchemaProperty(description = "Camel integration source code.")
             public void setSources(String sourceCode) {
                 this.sourceCode = sourceCode;
             }
@@ -182,6 +206,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return this.environment;
             }
 
+            @SchemaProperty(advanced = true, description = "Environment variables set for the Camel JBang process.")
             public void setEnvironment(Environment environment) {
                 this.environment = environment;
             }
@@ -190,6 +215,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return this.systemProperties;
             }
 
+            @SchemaProperty(advanced = true, description = "System properties set for the Camel JBang process.")
             public void setSystemProperties(SystemProperties systemProperties) {
                 this.systemProperties = systemProperties;
             }
@@ -207,10 +233,12 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                     return this.variables;
                 }
 
+                @SchemaProperty(description = "List of environment variables.")
                 public void setVariables(List<Variable> variables) {
                     this.variables = variables;
                 }
 
+                @SchemaProperty(description = "Environment variables loaded from a file resource.")
                 public void setFile(String file) {
                     this.file = file;
                 }
@@ -228,6 +256,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                         return name;
                     }
 
+                    @SchemaProperty(required = true, description = "The environment variable name.")
                     public void setName(String value) {
                         this.name = value;
                     }
@@ -236,6 +265,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                         return value;
                     }
 
+                    @SchemaProperty(required = true, description = "The environment variable value.")
                     public void setValue(String value) {
                         this.value = value;
                     }
@@ -256,10 +286,12 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                     return this.properties;
                 }
 
+                @SchemaProperty(description = "List of system properties.")
                 public void setProperties(List<Property> properties) {
                     this.properties = properties;
                 }
 
+                @SchemaProperty(description = "System properties loaded from a file resource.")
                 public void setFile(String file) {
                     this.file = file;
                 }
@@ -277,6 +309,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                         return name;
                     }
 
+                    @SchemaProperty(required = true, description = "The system property name.")
                     public void setName(String value) {
                         this.name = value;
                     }
@@ -285,6 +318,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                         return value;
                     }
 
+                    @SchemaProperty(required = true, description = "The system property value.")
                     public void setValue(String value) {
                         this.value = value;
                     }
@@ -303,6 +337,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
         private final CamelStopIntegrationAction.Builder builder = new CamelStopIntegrationAction.Builder();
 
+        @SchemaProperty(description = "Camel integration name")
         public void setIntegration(String integrationName) {
             builder.integrationName(integrationName);
         }
@@ -317,38 +352,47 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
         private final CamelCustomizedRunIntegrationAction.Builder builder = new CamelCustomizedRunIntegrationAction.Builder();
 
+        @SchemaProperty(description = "Customized Camel JBang commands.")
         public void setCommands(List<String> commands) {
             builder.commands(commands.toArray(new String[0]));
         }
 
+        @SchemaProperty(advanced = true, description = "Custom working directory for the Camel JBang process.")
         public void setWorkDir(String workDir) {
             builder.workDir(workDir);
         }
 
+        @SchemaProperty(advanced = true, description = "Custom Camel JBang process name.")
         public void setProcessName(String processName) {
             builder.processName(processName);
         }
 
+        @SchemaProperty(advanced = true, description = "When enabled the Camel integration is automatically stopped after the test.", defaultValue = "true")
         public void setAutoRemove(boolean enabled) {
             builder.autoRemove(enabled);
         }
 
+        @SchemaProperty(advanced = true, description = "Wait for the integration to report running state.", defaultValue = "true")
         public void setWaitForRunningState(boolean enabled) {
             builder.waitForRunningState(enabled);
         }
 
+        @SchemaProperty(advanced = true, description = "Optional command arguments.")
         public void setArgs(List<String> args) {
             builder.withArgs(args.toArray(String[]::new));
         }
 
+        @SchemaProperty(advanced = true, description = "Optional list of resources added to the Camel JBang process.")
         public void setResources(List<String> resources) {
             resources.forEach(builder::addResource);
         }
 
+        @SchemaProperty(advanced = true, description = "When enabled the integration output is saved to a log file.", defaultValue = "false")
         public void setDumpIntegrationOutput(boolean enabled) {
             builder.dumpIntegrationOutput(enabled);
         }
 
+        @SchemaProperty(description = "The Camel integration.")
         public void setIntegration(Integration integration) {
             builder.processName(integration.name);
 
@@ -387,10 +431,12 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
             protected SystemProperties systemProperties;
 
+            @SchemaProperty(description = "The Camel integration name.")
             public void setName(String integrationName) {
                 this.name = integrationName;
             }
 
+            @SchemaProperty(description = "Camel integration source code loaded from a file resource.")
             public void setFile(String file) {
                 this.file = file;
             }
@@ -399,6 +445,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return this.environment;
             }
 
+            @SchemaProperty(advanced = true, description = "Environment variables set for the Camel JBang process.")
             public void setEnvironment(Environment environment) {
                 this.environment = environment;
             }
@@ -407,6 +454,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return this.systemProperties;
             }
 
+            @SchemaProperty(advanced = true, description = "System properties set for the Camel JBang process.")
             public void setSystemProperties(SystemProperties systemProperties) {
                 this.systemProperties = systemProperties;
             }
@@ -424,10 +472,12 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                     return this.variables;
                 }
 
-                public void setVariables(List<Environment.Variable> variables) {
+                @SchemaProperty(description = "List of environment variables.")
+                public void setVariables(List<Variable> variables) {
                     this.variables = variables;
                 }
 
+                @SchemaProperty(description = "Environment variables loaded from a file resource.")
                 public void setFile(String file) {
                     this.file = file;
                 }
@@ -445,6 +495,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                         return name;
                     }
 
+                    @SchemaProperty(required = true, description = "The environment variable name.")
                     public void setName(String value) {
                         this.name = value;
                     }
@@ -453,6 +504,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                         return value;
                     }
 
+                    @SchemaProperty(required = true, description = "The environment variable value.")
                     public void setValue(String value) {
                         this.value = value;
                     }
@@ -473,10 +525,12 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                     return this.properties;
                 }
 
-                public void setProperties(List<SystemProperties.Property> properties) {
+                @SchemaProperty(description = "List of system properties.")
+                public void setProperties(List<Property> properties) {
                     this.properties = properties;
                 }
 
+                @SchemaProperty(description = "System properties loaded from a file resource.")
                 public void setFile(String file) {
                     this.file = file;
                 }
@@ -494,6 +548,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                         return name;
                     }
 
+                    @SchemaProperty(required = true, description = "The system property name.")
                     public void setName(String value) {
                         this.name = value;
                     }
@@ -502,6 +557,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                         return value;
                     }
 
+                    @SchemaProperty(required = true, description = "The system property value.")
                     public void setValue(String value) {
                         this.value = value;
                     }
@@ -520,30 +576,37 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
         private final CamelVerifyIntegrationAction.Builder builder = new CamelVerifyIntegrationAction.Builder();
 
+        @SchemaProperty(description = "The Camel integration name.")
         public void setIntegration(String integrationName) {
             builder.integrationName(integrationName);
         }
 
+        @SchemaProperty(description = "The expected log message to verify.")
         public void setLogMessage(String logMessage) {
             builder.waitForLogMessage(logMessage);
         }
 
+        @SchemaProperty(advanced = true, description = "The expected integration status", defaultValue = "Running")
         public void setPhase(String phase) {
             builder.isInPhase(phase);
         }
 
+        @SchemaProperty(advanced = true, description = "When enabled the Camel integration log output is added to the test log output.")
         public void setPrintLogs(boolean printLogs) {
             builder.printLogs(printLogs);
         }
 
+        @SchemaProperty(advanced = true, description = "The delay in milliseconds to wait between validation attempts.", defaultValue = "1000")
         public void setDelayBetweenAttempts(long delayBetweenAttempts) {
             builder.delayBetweenAttempts(delayBetweenAttempts);
         }
 
+        @SchemaProperty(advanced = true, description = "Maximum attempts to validate the integration.", defaultValue = "60")
         public void setMaxAttempts(int maxAttempts) {
             builder.maxAttempts(maxAttempts);
         }
 
+        @SchemaProperty(advanced = true, description = "When enabled the validation attempts stop when error state is reported.", defaultValue = "true")
         public void setStopOnErrorStatus(boolean stopOnErrorStatus) {
             builder.stopOnErrorStatus(stopOnErrorStatus);
         }
@@ -556,8 +619,11 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
     public static class Plugin implements CamelActionBuilderWrapper<AbstractCamelJBangAction.Builder<?, ?>> {
 
+        private static final String CAMEL_JBANG_PLUGIN_GROUP = "camel-jbang-plugin";
+
         private AbstractCamelJBangAction.Builder<?, ?> builder;
 
+        @SchemaProperty(kind = ACTION, group = CAMEL_JBANG_PLUGIN_GROUP, description = "Adds a plugin to the Camel Jbang installation.")
         public void setAdd(Add add) {
             AddCamelPluginAction.Builder builder = new AddCamelPluginAction.Builder();
             builder.pluginName(add.getName());
@@ -581,6 +647,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return name;
             }
 
+            @SchemaProperty(required = true, description = "The plugin name.")
             public void setName(String name) {
                 this.name = name;
             }
@@ -592,6 +659,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return this.args;
             }
 
+            @SchemaProperty(advanced = true, description = "Plugin arguments.")
             public void setArgs(List<String> args) {
                 this.args = args;
             }
@@ -600,8 +668,11 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
     public static class Cmd implements CamelActionBuilderWrapper<AbstractCamelJBangAction.Builder<?, ?>> {
 
+        private static final String CAMEL_JBANG_CMD_GROUP = "camel-jbang-cmd";
+
         private AbstractCamelJBangAction.Builder<?, ?> builder;
 
+        @SchemaProperty(kind = ACTION, group = CAMEL_JBANG_CMD_GROUP, description = "Sends a message to Camel JBang integration.")
         public void setSend(Send send) {
             CamelCmdSendAction.Builder builder = new CamelCmdSendAction.Builder();
 
@@ -657,6 +728,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             protected Map<String, String> headers;
             protected Body body;
 
+            @SchemaProperty(description = "The send timeout.")
             public void setTimeout(String timeout) {
                 this.timeout = timeout;
             }
@@ -665,6 +737,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return timeout;
             }
 
+            @SchemaProperty(description = "The message headers.")
             public void setHeaders(Map<String, String> headers) {}
 
             public Map<String, String> getHeaders() {
@@ -679,6 +752,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return integration;
             }
 
+            @SchemaProperty(description = "The Camel integration to send the message to.")
             public void setIntegration(String integration) {
                 this.integration = integration;
             }
@@ -687,6 +761,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return endpoint;
             }
 
+            @SchemaProperty(advanced = true, description = "Optional endpoint in the Camel integration.")
             public void setEndpoint(String endpoint) {
                 this.endpoint = endpoint;
             }
@@ -695,6 +770,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return uri;
             }
 
+            @SchemaProperty(advanced = true, description = "Camel endpoint URI to send message to.")
             public void setUri(String uri) {
                 this.uri = uri;
             }
@@ -706,10 +782,12 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return this.args;
             }
 
+            @SchemaProperty(advanced = true, description = "Command arguments.")
             public void setArgs(List<String> args) {
                 this.args = args;
             }
 
+            @SchemaProperty(description = "The message body.")
             public void setBody(Body body) {
                 this.body = body;
             }
@@ -722,6 +800,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return reply;
             }
 
+            @SchemaProperty(advanced = true, description = "When enabled the operation waits for a reply message from the integration.")
             public void setReply(boolean reply) {
                 this.reply = reply;
             }
@@ -736,6 +815,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                     return data;
                 }
 
+                @SchemaProperty(description = "The message body as inline data.")
                 public void setData(String data) {
                     this.data = data;
                 }
@@ -744,6 +824,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                     return file;
                 }
 
+                @SchemaProperty(description = "The message body content loaded from a file resource.")
                 public void setFile(String file) {
                     this.file = file;
                 }
@@ -753,6 +834,8 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
     public static class Kubernetes implements CamelActionBuilderWrapper<AbstractCamelJBangAction.Builder<?, ?>> {
 
+        private static final String CAMEL_JBANG_KUBERNETES_GROUP = "camel-jbang-kubernetes";
+
         private AbstractCamelJBangAction.Builder<?, ?> builder;
 
         @Override
@@ -760,6 +843,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             return builder;
         }
 
+        @SchemaProperty(kind = ACTION, group = CAMEL_JBANG_KUBERNETES_GROUP, description = "Runs a Camel integration on Kubernetes.")
         public void setRun(Run run) {
             CamelKubernetesRunIntegrationAction.Builder builder = new CamelKubernetesRunIntegrationAction.Builder();
             if (run.getIntegration().getFile() != null) {
@@ -800,6 +884,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             this.builder = builder;
         }
 
+        @SchemaProperty(kind = ACTION, group = CAMEL_JBANG_KUBERNETES_GROUP, description = "Verify the status and log messages for a Camel integration run on Kubernetes.")
         public void setVerify(Verify verify) {
             CamelKubernetesVerifyIntegrationAction.Builder builder = new CamelKubernetesVerifyIntegrationAction.Builder();
             builder.integration(verify.getIntegration())
@@ -816,6 +901,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             this.builder = builder;
         }
 
+        @SchemaProperty(kind = ACTION, group = CAMEL_JBANG_KUBERNETES_GROUP, description = "Deletes a Camel integration from Kubernetes.")
         public void setDelete(Delete delete) {
             CamelKubernetesDeleteIntegrationAction.Builder builder = new CamelKubernetesDeleteIntegrationAction.Builder();
             builder.clusterType(delete.getClusterType())
@@ -853,6 +939,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return integration;
             }
 
+            @SchemaProperty(description = "The Camel integration name.")
             public void setIntegration(Integration integration) {
                 this.integration = integration;
             }
@@ -861,6 +948,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return runtime;
             }
 
+            @SchemaProperty(advanced = true, description = "The runtime to use.", defaultValue = "quarkus")
             public void setRuntime(String runtime) {
                 this.runtime = runtime;
             }
@@ -869,6 +957,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return imageRegistry;
             }
 
+            @SchemaProperty(advanced = true, description = "The Docker image registry.")
             public void setImageRegistry(String imageRegistry) {
                 this.imageRegistry = imageRegistry;
             }
@@ -877,6 +966,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return imageBuilder;
             }
 
+            @SchemaProperty(advanced = true, description = "The Docker image builder.")
             public void setImageBuilder(String imageBuilder) {
                 this.imageBuilder = imageBuilder;
             }
@@ -885,6 +975,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return clusterType;
             }
 
+            @SchemaProperty(advanced = true, description = "The Kubernetes cluster type.")
             public void setClusterType(String clusterType) {
                 this.clusterType = clusterType;
             }
@@ -896,6 +987,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return this.buildProperties;
             }
 
+            @SchemaProperty(advanced = true, description = "List of build properties passed to the Camel JBang project build.")
             public void setBuildProperties(List<String> buildProperties) {
                 this.buildProperties = buildProperties;
             }
@@ -907,14 +999,15 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return this.properties;
             }
 
+            @SchemaProperty(description = "Properties set on the Camel JBang project export.")
             public void setProperties(List<String> properties) {
                 this.properties = properties;
             }
 
+            @SchemaProperty(description = "List of traits to set for the project export.")
             public void setTraits(List<String> traits) {
                 this.traits = traits;
             }
-
 
             public List<String> getTraits() {
                 if (traits == null) {
@@ -930,6 +1023,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return this.args;
             }
 
+            @SchemaProperty(advanced = true, description = "Camel JBang command arguments.")
             public void setArgs(List<String> args) {
                 this.args = args;
             }
@@ -938,6 +1032,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return verbose;
             }
 
+            @SchemaProperty(advanced = true, description = "When enabled the Camel JBang command print verbose log messages.", defaultValue = "false")
             public void setVerbose(boolean verbose) {
                 this.verbose = verbose;
             }
@@ -946,6 +1041,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return autoRemove;
             }
 
+            @SchemaProperty(description = "When enabled the Camel integration is automatically removed from Kubernetes after the test.", defaultValue = "true")
             public void setAutoRemove(boolean autoRemove) {
                 this.autoRemove = autoRemove;
             }
@@ -954,6 +1050,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return argLine;
             }
 
+            @SchemaProperty(advanced = true, description = "Camel JBang command arguments.")
             public void setArgLine(String argLine) {
                 this.argLine = argLine;
             }
@@ -962,6 +1059,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return waitForRunningState;
             }
 
+            @SchemaProperty(advanced = true, description = "When enabled the test waits for the Camel integration Kubernetes deployment to report proper running state.", defaultValue = "true")
             public void setWaitForRunningState(boolean enabled) {
                 this.waitForRunningState = enabled;
             }
@@ -969,6 +1067,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             public static class Integration {
                 protected String file;
 
+                @SchemaProperty(description = "The integration source code loaded as a file resource.")
                 public void setFile(String file) {
                     this.file = file;
                 }
@@ -996,6 +1095,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return integration;
             }
 
+            @SchemaProperty(description = "The Camel integration name.")
             public void setIntegration(String integration) {
                 this.integration = integration;
             }
@@ -1004,6 +1104,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return label;
             }
 
+            @SchemaProperty(description = "Identify the Camel integration via a Kubernetes label.")
             public void setLabel(String label) {
                 this.label = label;
             }
@@ -1012,6 +1113,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return namespace;
             }
 
+            @SchemaProperty(advanced = true, description = "The Kubernetes namespace.")
             public void setNamespace(String namespace) {
                 this.namespace = namespace;
             }
@@ -1020,6 +1122,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return logMessage;
             }
 
+            @SchemaProperty(description = "The expected log message to verify.")
             public void setLogMessage(String logMessage) {
                 this.logMessage = logMessage;
             }
@@ -1028,6 +1131,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return maxAttempts;
             }
 
+            @SchemaProperty(advanced = true, description = "Maximum number of validation attempts.", defaultValue = "60")
             public void setMaxAttempts(int maxAttempts) {
                 this.maxAttempts = maxAttempts;
             }
@@ -1036,6 +1140,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return delayBetweenAttempts;
             }
 
+            @SchemaProperty(advanced = true, description = "The delay in milliseconds to wait between validation attempts.", defaultValue = "1000")
             public void setDelayBetweenAttempts(long delayBetweenAttempts) {
                 this.delayBetweenAttempts = delayBetweenAttempts;
             }
@@ -1044,16 +1149,21 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return printLogs;
             }
 
+            @SchemaProperty(advanced = true, description = "When enabled the Camel integration log output is added to the test log output.")
             public void setPrintLogs(boolean printLogs) {
                 this.printLogs = printLogs;
             }
-
 
             public List<String> getArgs() {
                 if (args == null) {
                     args = new ArrayList<>();
                 }
                 return this.args;
+            }
+
+            @SchemaProperty(advanced = true, description = "Camel JBang command arguments.")
+            public void setArgs(List<String> args) {
+                this.args = args;
             }
         }
 
@@ -1068,6 +1178,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return clusterType;
             }
 
+            @SchemaProperty(advanced = true, description = "The Kubernetes cluster type.")
             public void setClusterType(String clusterType) {
                 this.clusterType = clusterType;
             }
@@ -1076,6 +1187,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return workingDir;
             }
 
+            @SchemaProperty(advanced = true, description = "The working directory that contains the Kubernetes manifest.")
             public void setWorkingDir(String workingDir) {
                 this.workingDir = workingDir;
             }
@@ -1084,6 +1196,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return namespace;
             }
 
+            @SchemaProperty(advanced = true, description = "The Kubernetes namespace.")
             public void setNamespace(String namespace) {
                 this.namespace = namespace;
             }
@@ -1092,6 +1205,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return integration;
             }
 
+            @SchemaProperty(description = "The Camel integration to delete.")
             public void setIntegration(Integration integration) {
                 this.integration = integration;
             }
@@ -1101,6 +1215,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 protected String file;
                 protected String name;
 
+                @SchemaProperty(description = "The Camel integration source code loaded from a file resource.")
                 public void setFile(String file) {
                     this.file = file;
                 }
@@ -1113,6 +1228,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                     return name;
                 }
 
+                @SchemaProperty(description = "The Camel integration name.")
                 public void setName(String name) {
                     this.name = name;
                 }

@@ -77,7 +77,6 @@ public class StopTimeAction extends AbstractTestAction {
 
     /**
      * Gets the id.
-     * @return the id
      */
     public String getId() {
         return id;
@@ -85,7 +84,6 @@ public class StopTimeAction extends AbstractTestAction {
 
     /**
      * Gets the suffix.
-     * @return
      */
     public String getSuffix() {
         return suffix;

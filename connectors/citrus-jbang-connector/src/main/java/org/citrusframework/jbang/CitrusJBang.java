@@ -155,7 +155,6 @@ public class CitrusJBang {
 
     /**
      * Provides access to the underlying JBang support. For instance to set system properties on the JBang binary.
-     * @return
      */
     public Agent agent() {
         return new Agent();
@@ -173,13 +172,13 @@ public class CitrusJBang {
         ProcessAndOutput pao = app.run("run", argsList);
 
         if (pao.getProcess().exitValue() != 0) {
+            logger.error("Failed to run JBang command:\n{}", pao.getOutput());
             throw new CitrusRuntimeException("Test run failed - process exited with exit code: " + pao.getProcess().exitValue());
         }
     }
 
     /**
      * Stops given Citrus process identified by its process id.
-     * @param pid
      */
     public void stop(Long pid) {
         ProcessHandle.of(pid).ifPresent(ph -> {

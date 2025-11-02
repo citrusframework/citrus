@@ -27,9 +27,12 @@ import java.util.stream.Collectors;
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.common.Named;
+import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.variable.VariableUtils;
 import org.citrusframework.yaml.actions.script.ScriptDefinitionType;
 
@@ -37,30 +40,31 @@ public class YamlTestCase {
 
     private final DefaultTestCase delegate = new DefaultTestCase();
 
-    /**
-     * Gets the test case.
-     * @return
-     */
     public TestCase getTestCase() {
         return delegate;
     }
 
+    @SchemaProperty(required = true, description = "The test name.")
     public void setName(String name) {
         delegate.setName(name);
     }
 
+    @SchemaProperty(description = "The test description.")
     public void setDescription(String description) {
         delegate.setDescription(description);
     }
 
+    @SchemaProperty(description = "The test author.")
     public void setAuthor(String author) {
         delegate.getMetaInfo().setAuthor(author);
     }
 
+    @SchemaProperty(description = "The test status.")
     public void setStatus(TestCaseMetaInfo.Status status) {
         delegate.getMetaInfo().setStatus(status);
     }
 
+    @SchemaProperty(description = "The test variables.")
     public void setVariables(List<Variable> variables) {
         variables.forEach(variable -> {
             if (variable.script != null) {
@@ -81,9 +85,16 @@ public class YamlTestCase {
         });
     }
 
+    @SchemaProperty(advanced = true, description = "List of endpoints for this test.")
     public void setEndpoints(List<Endpoint> endpoints) {
         endpoints.forEach(endpoint -> {
-            if (endpoint.getProperties().isEmpty()) {
+            if (endpoint.getBuilder() != null) {
+                if (StringUtils.hasText(endpoint.getName()) && endpoint.getBuilder() instanceof Named namedBuilder) {
+                    namedBuilder.setName(endpoint.getName());
+                }
+
+                delegate.getEndpoints().add(endpoint.getBuilder());
+            } else if (endpoint.getProperties().isEmpty()) {
                 delegate.getEndpointDefinitions().add(endpoint.getType());
             } else {
                 delegate.getEndpointDefinitions().add("%s?%s".formatted(endpoint.getType(),
@@ -95,10 +106,12 @@ public class YamlTestCase {
         });
     }
 
+    @SchemaProperty(description = "The test actions.")
     public void setActions(List<TestActions> actions) {
         actions.forEach(action -> delegate.addTestAction(action.get()));
     }
 
+    @SchemaProperty(advanced = true, description = "The final test actions.")
     public void setFinally(List<TestActions> actions) {
         actions.forEach(action -> delegate.addFinalAction(action.get()));
     }
@@ -109,18 +122,11 @@ public class YamlTestCase {
         protected String name;
         protected String value;
 
-        public ScriptDefinitionType getScript() {
-            return script;
-        }
-
-        public void setScript(ScriptDefinitionType value) {
-            this.script = value;
-        }
-
         public String getName() {
             return name;
         }
 
+        @SchemaProperty(required = true, description = "The test variable name.")
         public void setName(String value) {
             this.name = value;
         }
@@ -129,8 +135,20 @@ public class YamlTestCase {
             return value;
         }
 
+        @SchemaProperty(description = "The test variable value.")
         public void setValue(String value) {
             this.value = value;
+        }
+
+        public ScriptDefinitionType getScript() {
+            return script;
+        }
+
+        @SchemaProperty(
+                metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:script") },
+                description = "Script that sets the test variable value.")
+        public void setScript(ScriptDefinitionType value) {
+            this.script = value;
         }
     }
 
@@ -140,10 +158,23 @@ public class YamlTestCase {
         protected String name;
         protected final Map<String, String> properties = new HashMap<>();
 
+        private EndpointBuilder<?> builder;
+
+        public EndpointBuilder<?> getBuilder() {
+            return builder;
+        }
+
+        public void setBuilder(EndpointBuilder<?> builder) {
+            this.builder = builder;
+        }
+
         public String getType() {
             return type;
         }
 
+        @SchemaProperty(
+                metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:generic" ) },
+                description = "The endpoint type.")
         public void setType(String type) {
             this.type = type;
         }
@@ -152,6 +183,9 @@ public class YamlTestCase {
             return name;
         }
 
+        @SchemaProperty(
+                metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:generic" ) },
+                description = "The endpoint name. When set the endpoint is registered in the bean registry for later reference.")
         public void setName(String value) {
             this.name = value;
             this.properties.put(EndpointComponent.ENDPOINT_NAME, value);
@@ -161,6 +195,9 @@ public class YamlTestCase {
             return properties;
         }
 
+        @SchemaProperty(
+                metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:generic" ) },
+                description = "The endpoint properties.")
         public void setProperties(Map<String, String> properties) {
             this.properties.putAll(properties);
         }

@@ -1,3 +1,4 @@
+type=org.citrusframework.jms.endpoint.JmsEndpointsBuilder
 async=org.citrusframework.jms.endpoint.JmsEndpointBuilder
 asynchronous=org.citrusframework.jms.endpoint.JmsEndpointBuilder
 sync=org.citrusframework.jms.endpoint.JmsSyncEndpointBuilder

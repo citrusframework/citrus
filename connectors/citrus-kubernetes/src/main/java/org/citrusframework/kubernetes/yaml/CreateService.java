@@ -25,32 +25,39 @@ import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.CreateServiceAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CreateService extends AbstractKubernetesAction.Builder<CreateServiceAction, CreateService> implements ReferenceResolverAware {
 
     private final CreateServiceAction.Builder delegate = new CreateServiceAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.service(name);
     }
 
+    @SchemaProperty
     public void setServer(String serverName) {
         this.delegate.server(serverName);
     }
 
+    @SchemaProperty
     public void setAutoCreateServerBinding(boolean enabled) {
         this.delegate.autoCreateServerBinding(enabled);
     }
 
+    @SchemaProperty
     public void setPorts(List<PortMapping> portMappings) {
         portMappings.forEach(
                 mapping -> this.delegate.portMapping(mapping.getPort(), mapping.getTargetPort()));
     }
 
+    @SchemaProperty
     public void setProtocol(String protocol) {
         this.delegate.protocol(protocol);
     }
 
+    @SchemaProperty
     public void setSelector(PodSelector selector) {
         selector.getLabels().forEach(
                 label -> this.delegate.label(label.getName(), label.getValue()));
@@ -102,6 +109,7 @@ public class CreateService extends AbstractKubernetesAction.Builder<CreateServic
         protected String port;
         protected String targetPort;
 
+        @SchemaProperty
         public void setPort(String port) {
             this.port = port;
         }
@@ -110,6 +118,7 @@ public class CreateService extends AbstractKubernetesAction.Builder<CreateServic
             return port;
         }
 
+        @SchemaProperty
         public void setTargetPort(String targetPort) {
             this.targetPort = targetPort;
         }
@@ -130,6 +139,7 @@ public class CreateService extends AbstractKubernetesAction.Builder<CreateServic
             return this.labels;
         }
 
+        @SchemaProperty
         public void setLabels(List<Label> labels) {
             this.labels = labels;
         }
@@ -143,6 +153,7 @@ public class CreateService extends AbstractKubernetesAction.Builder<CreateServic
                 return name;
             }
 
+            @SchemaProperty
             public void setName(String value) {
                 this.name = value;
             }
@@ -151,6 +162,7 @@ public class CreateService extends AbstractKubernetesAction.Builder<CreateServic
                 return value;
             }
 
+            @SchemaProperty
             public void setValue(String value) {
                 this.value = value;
             }

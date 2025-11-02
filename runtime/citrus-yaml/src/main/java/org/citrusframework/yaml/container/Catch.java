@@ -21,6 +21,7 @@ import java.util.List;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.TestActions;
 
 public class Catch implements TestActionBuilder<org.citrusframework.container.Catch>, ReferenceResolverAware {
@@ -38,14 +39,17 @@ public class Catch implements TestActionBuilder<org.citrusframework.container.Ca
         return builder.build();
     }
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty(description = "The exception type to catch.")
     public void setException(String type) {
         builder.exception(type);
     }
 
+    @SchemaProperty(required = true, description = "Nested test actions that may raise an exception.")
     public void setWhen(List<TestActions> actions) {
         builder.actions(actions.stream().map(TestActions::get).toArray(TestActionBuilder<?>[]::new));
     }

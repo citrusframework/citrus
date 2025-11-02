@@ -18,15 +18,18 @@ package org.citrusframework.yaml.actions;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.TransformAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Transform implements TestActionBuilder<TransformAction> {
 
     private final TransformAction.Builder builder = new TransformAction.Builder();
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty(description = "The XML document to transform")
     public void setSource(Source source) {
         if (source.file != null) {
             if (source.charset != null) {
@@ -39,6 +42,7 @@ public class Transform implements TestActionBuilder<TransformAction> {
         builder.source(source.value);
     }
 
+    @SchemaProperty(required = true, description = "The XSLT document performing the transformation.")
     public void setXslt(Xslt xslt) {
         if (xslt.file != null) {
             if (xslt.charset != null) {
@@ -51,10 +55,12 @@ public class Transform implements TestActionBuilder<TransformAction> {
         builder.xslt(xslt.value);
     }
 
+    @SchemaProperty(description = "Set the target variable for the result.")
     public void setResult(String variable) {
         builder.result(variable);
     }
 
+    @SchemaProperty(description = "Set the target variable for the result.")
     public void setVariable(String variable) {
         builder.result(variable);
     }
@@ -73,6 +79,7 @@ public class Transform implements TestActionBuilder<TransformAction> {
             return file;
         }
 
+        @SchemaProperty(description = "The XML document file.")
         public void setFile(String file) {
             this.file = file;
         }
@@ -81,6 +88,7 @@ public class Transform implements TestActionBuilder<TransformAction> {
             return charset;
         }
 
+        @SchemaProperty(advanced = true, description = "Optional charset used when reading the file.")
         public void setCharset(String charset) {
             this.charset = charset;
         }
@@ -89,6 +97,7 @@ public class Transform implements TestActionBuilder<TransformAction> {
             return value;
         }
 
+        @SchemaProperty(description = "XML document as inline data.")
         public void setValue(String value) {
             this.value = value;
         }
@@ -103,6 +112,7 @@ public class Transform implements TestActionBuilder<TransformAction> {
             return file;
         }
 
+        @SchemaProperty(description = "The XSLT document file.")
         public void setFile(String file) {
             this.file = file;
         }
@@ -111,6 +121,7 @@ public class Transform implements TestActionBuilder<TransformAction> {
             return charset;
         }
 
+        @SchemaProperty(advanced = true, description = "Optional charset used when reading the file.")
         public void setCharset(String charset) {
             this.charset = charset;
         }
@@ -119,6 +130,7 @@ public class Transform implements TestActionBuilder<TransformAction> {
             return value;
         }
 
+        @SchemaProperty(description = "The XSLT document as inline data.")
         public void setValue(String value) {
             this.value = value;
         }

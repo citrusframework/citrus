@@ -102,7 +102,7 @@ public abstract class AbstractTestAction implements TestAction, Named, Described
 
     /**
      * Gets the actor.
-     * @return the actor the actor to get.
+     * @return the actor to get.
      */
     public TestActor getActor() {
         return actor;

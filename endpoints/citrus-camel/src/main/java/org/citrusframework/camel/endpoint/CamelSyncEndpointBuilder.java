@@ -21,6 +21,8 @@ import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.MessageCorrelator;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * @since 2.5
@@ -30,6 +32,29 @@ public class CamelSyncEndpointBuilder extends AbstractEndpointBuilder<CamelSyncE
     /** Endpoint target */
     private final CamelSyncEndpoint endpoint = new CamelSyncEndpoint();
 
+    private String camelContext;
+    private String messageConverter;
+    private String correlator;
+
+    @Override
+    public CamelSyncEndpoint build() {
+        if (referenceResolver != null) {
+            if (StringUtils.hasText(camelContext)) {
+                camelContext(referenceResolver.resolve(camelContext, CamelContext.class));
+            }
+
+            if (StringUtils.hasText(messageConverter)) {
+                messageConverter(referenceResolver.resolve(messageConverter, CamelMessageConverter.class));
+            }
+
+            if (StringUtils.hasText(correlator)) {
+                correlator(referenceResolver.resolve(correlator, MessageCorrelator.class));
+            }
+        }
+
+        return super.build();
+    }
+
     @Override
     protected CamelSyncEndpoint getEndpoint() {
         return endpoint;
@@ -37,18 +62,19 @@ public class CamelSyncEndpointBuilder extends AbstractEndpointBuilder<CamelSyncE
 
     /**
      * Sets the endpointUri property.
-     * @param endpointUri
-     * @return
      */
     public CamelSyncEndpointBuilder endpointUri(String endpointUri) {
         endpoint.getEndpointConfiguration().setEndpointUri(endpointUri);
         return this;
     }
 
+    @SchemaProperty(description = "The Camel endpoint uri.")
+    public void setEndpointUri(String endpointUri) {
+        endpointUri(endpointUri);
+    }
+
     /**
      * Sets the endpoint property.
-     * @param camelEndpoint
-     * @return
      */
     public CamelSyncEndpointBuilder endpoint(Endpoint camelEndpoint) {
         endpoint.getEndpointConfiguration().setEndpoint(camelEndpoint);
@@ -57,51 +83,66 @@ public class CamelSyncEndpointBuilder extends AbstractEndpointBuilder<CamelSyncE
 
     /**
      * Sets the camelContext property.
-     * @param camelContext
-     * @return
      */
     public CamelSyncEndpointBuilder camelContext(CamelContext camelContext) {
         endpoint.getEndpointConfiguration().setCamelContext(camelContext);
         return this;
     }
 
+    @SchemaProperty(description = "The Camel context to use.")
+    public void setCamelContext(String camelContext) {
+        this.camelContext = camelContext;
+    }
+
     /**
      * Sets the messageConverter property.
-     * @param messageConverter
-     * @return
      */
     public CamelSyncEndpointBuilder messageConverter(CamelMessageConverter messageConverter) {
         endpoint.getEndpointConfiguration().setMessageConverter(messageConverter);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the message converter as a bean reference.")
+    public void setMessageConverter(String messageConverter) {
+        this.messageConverter = messageConverter;
+    }
+
     /**
      * Sets the polling interval.
-     * @param pollingInterval
-     * @return
      */
     public CamelSyncEndpointBuilder pollingInterval(int pollingInterval) {
         endpoint.getEndpointConfiguration().setPollingInterval(pollingInterval);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the polling interval when consuming messages.")
+    public void setPollingInterval(int pollingInterval) {
+        pollingInterval(pollingInterval);
+    }
+
     /**
      * Sets the message correlator.
-     * @param correlator
-     * @return
      */
     public CamelSyncEndpointBuilder correlator(MessageCorrelator correlator) {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the message correlator.")
+    public void setCorrelator(String correlator) {
+        this.correlator = correlator;
+    }
+
     /**
      * Sets the default timeout.
-     * @param timeout
-     * @return
      */
     public CamelSyncEndpointBuilder timeout(long timeout) {
         endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
+    }
+
+    @SchemaProperty(description = "The endpoint timeout when waiting for messages.")
+    public void setTimeout(long timeout) {
+        timeout(timeout);
     }
 }

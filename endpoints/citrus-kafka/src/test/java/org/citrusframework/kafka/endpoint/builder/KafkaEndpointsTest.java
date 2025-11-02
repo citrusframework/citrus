@@ -16,24 +16,27 @@
 
 package org.citrusframework.kafka.endpoint.builder;
 
+import java.util.Map;
+
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.kafka.endpoint.KafkaEndpointBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 public class KafkaEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("kafka"));
         Assert.assertTrue(endpointBuilders.containsKey("kafka.sync"));
         Assert.assertTrue(endpointBuilders.containsKey("kafka.async"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
+        Assert.assertTrue(EndpointBuilder.lookup("kafka").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("kafka").get().getClass(), KafkaEndpointsBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("kafka.sync").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("kafka.sync").get().getClass(), KafkaEndpointBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("kafka.async").isPresent());

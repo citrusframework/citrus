@@ -15,12 +15,23 @@
  */
 package org.citrusframework.yaml.actions.script;
 
+import org.citrusframework.yaml.SchemaProperty;
+
 public class ScriptDefinitionType {
 
     protected String value;
     protected String type;
     protected String file;
     protected String charset;
+
+    @SchemaProperty(description = "The script content.")
+    public void setContent(String script) {
+        this.value = script;
+    }
+
+    public String getContent() {
+        return value;
+    }
 
     public String getValue() {
         return value;
@@ -34,6 +45,7 @@ public class ScriptDefinitionType {
         return type;
     }
 
+    @SchemaProperty(description = "The script type.", defaultValue = "groovy")
     public void setType(String value) {
         this.type = value;
     }
@@ -42,10 +54,12 @@ public class ScriptDefinitionType {
         return file;
     }
 
+    @SchemaProperty(description = "The script content loaded as a file resource.")
     public void setFile(String value) {
         this.file = value;
     }
 
+    @SchemaProperty(advanced = true, description = "The charset used to load the file resource.")
     public void setCharset(String charset) {
         this.charset = charset;
     }

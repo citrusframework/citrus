@@ -20,15 +20,18 @@ import org.citrusframework.TestActor;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.CloseWindowAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CloseWindow extends AbstractSeleniumAction.Builder<CloseWindowAction, CloseWindow> {
 
     private final CloseWindowAction.Builder delegate = new CloseWindowAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.window(name);
     }
 
+    @SchemaProperty
     public void setWindow(String name) {
         this.delegate.window(name);
     }

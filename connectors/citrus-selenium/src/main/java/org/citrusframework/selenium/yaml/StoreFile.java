@@ -20,11 +20,13 @@ import org.citrusframework.TestActor;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.StoreFileAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class StoreFile extends AbstractSeleniumAction.Builder<StoreFileAction, StoreFile> {
 
     private final StoreFileAction.Builder delegate = new StoreFileAction.Builder();
 
+    @SchemaProperty
     public void setFilePath(String filePath) {
         this.delegate.filePath(filePath);
     }

@@ -20,11 +20,13 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.DeleteServiceAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class DeleteService extends AbstractKubernetesAction.Builder<DeleteServiceAction, DeleteService> {
 
     private final DeleteServiceAction.Builder delegate = new DeleteServiceAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.service(name);
     }

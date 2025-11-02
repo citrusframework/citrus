@@ -18,6 +18,7 @@ package org.citrusframework.docker.client;
 
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * @since 2.5
@@ -41,90 +42,128 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
 
     /**
      * Sets the docker host url.
-     * @return
      */
     public DockerClientBuilder url(String host) {
         config.withDockerHost(host);
         return this;
     }
 
+    @SchemaProperty(description = "The Docker host engine URL.")
+    public void setUrl(String url) {
+        url(url);
+    }
+
     /**
      * Sets the client version.
-     * @param version
-     * @return
      */
     public DockerClientBuilder version(String version) {
         config.withApiVersion(version);
         return this;
     }
 
+    @SchemaProperty(description = "The Docker client version.")
+    public void setVersion(String version) {
+        version(version);
+    }
+
     /**
      * Sets the client username.
-     * @param username
-     * @return
      */
     public DockerClientBuilder username(String username) {
         config.withRegistryUsername(username);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "The Docker client username.")
+    public void setUsername(String username) {
+        username(username);
+    }
+
     /**
      * Sets the client password.
-     * @param password
-     * @return
      */
     public DockerClientBuilder password(String password) {
         config.withRegistryPassword(password);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "The Docker client password.")
+    public void setPassword(String password) {
+        password(password);
+    }
+
     /**
      * Sets the client email.
-     * @param email
-     * @return
      */
     public DockerClientBuilder email(String email) {
         config.withRegistryEmail(email);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "The Docker client email."
+    )
+    public void setEmail(String email) {
+        email(email);
+    }
+
     /**
      * Sets the docker registry url.
-     * @param url
-     * @return
      */
     public DockerClientBuilder registry(String url) {
         config.withRegistryUrl(url);
         return this;
     }
 
+    @SchemaProperty(description = "The Docker registry URL.")
+    public void setRegistry(String url) {
+        url(url);
+    }
+
     /**
      * Sets the TLS verification.
-     * @param verify
-     * @return
      */
     public DockerClientBuilder verifyTls(boolean verify) {
         config.withDockerTlsVerify(verify);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "When enabled the client verifies the Docker host TLS.")
+    public void setVerifyTls(boolean verify) {
+        verifyTls(verify);
+    }
+
     /**
      * Sets the client certPath.
-     * @param certPath
-     * @return
      */
     public DockerClientBuilder certPath(String certPath) {
         config.withDockerCertPath(certPath);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the path to the client certificate.")
+    public void setCertPath(String certPath) {
+        certPath(certPath);
+    }
     /**
      * Sets the client configPath.
-     * @param configPath
-     * @return
      */
     public DockerClientBuilder configPath(String configPath) {
         config.withDockerConfig(configPath);
         return this;
+    }
+
+    @SchemaProperty(advanced = true, description = "Sets the path to the client configuration file.")
+    public void setConfigPath(String configPath) {
+        configPath(configPath);
     }
 }

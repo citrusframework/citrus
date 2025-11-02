@@ -23,11 +23,13 @@ import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.eventing.DeleteTriggerAction;
 import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class DeleteTrigger extends AbstractKnativeAction.Builder<DeleteTriggerAction, DeleteTrigger> {
 
     private final DeleteTriggerAction.Builder delegate = new DeleteTriggerAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.trigger(name);
     }

@@ -7,12 +7,12 @@ actions:
       assertFault:
         faultCode: "{http://citrusframework.org/faults}FAULT-1001"
         when:
-          - soap:
-              client: "soapClient"
-              sendRequest:
-                message:
-                  body:
-                    data: <TestMessage>Hello Citrus</TestMessage>
+          soap:
+            client: "soapClient"
+            sendRequest:
+              message:
+                body:
+                  data: <TestMessage>Hello Citrus</TestMessage>
 
   - soap:
       client: "soapClient"
@@ -20,12 +20,12 @@ actions:
         faultCode: "{http://citrusframework.org/faults}FAULT-1002"
         faultString: "FaultString"
         when:
-          - soap:
-              client: "soapClient"
-              sendRequest:
-                message:
-                  body:
-                    data: <TestMessage>Hello Citrus</TestMessage>
+          soap:
+            client: "soapClient"
+            sendRequest:
+              message:
+                body:
+                  data: <TestMessage>Hello Citrus</TestMessage>
 
   - soap:
       client: "soapClient"
@@ -36,12 +36,12 @@ actions:
         faultDetails:
           - content: <ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd"><ns0:DetailId>1000</ns0:DetailId></ns0:FaultDetail>
         when:
-          - soap:
-              client: "soapClient"
-              sendRequest:
-                message:
-                  body:
-                    data: <TestMessage>Hello Citrus</TestMessage>
+          soap:
+            client: "soapClient"
+            sendRequest:
+              message:
+                body:
+                  data: <TestMessage>Hello Citrus</TestMessage>
 
   - soap:
       client: "soapClient"
@@ -52,9 +52,9 @@ actions:
         faultDetails:
           - resource: "classpath:org/citrusframework/ws/actions/test-fault-detail.xml"
         when:
-          - soap:
-              client: "soapClient"
-              sendRequest:
-                message:
-                  body:
-                    data: <TestMessage>Hello Citrus</TestMessage>
+          soap:
+            client: "soapClient"
+            sendRequest:
+              message:
+                body:
+                  data: <TestMessage>Hello Citrus</TestMessage>

@@ -124,9 +124,26 @@ public class StringUtils {
      * @param input The string to be converted. It can be null or empty.
      * @return the string in with upper case first letter
      */
-    public static String convertFirstChartToUpperCase(String input) {
+    public static String convertFirstCharToUpperCase(String input) {
         if (input != null && !input.isEmpty()) {
             String firstLetter = input.substring(0, 1).toUpperCase(Locale.ROOT);
+            return input.length() == 1 ? firstLetter : firstLetter + input.substring(1);
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * Converts the first letter of the given input string to lowercase while leaving
+     * the rest of the string unchanged. If the input string is empty or null,
+     * an empty string is returned.
+     *
+     * @param input The string to be converted. It can be null or empty.
+     * @return the string in with upper case first letter
+     */
+    public static String convertFirstCharToLowerCase(String input) {
+        if (input != null && !input.isEmpty()) {
+            String firstLetter = input.substring(0, 1).toLowerCase(Locale.ROOT);
             return input.length() == 1 ? firstLetter : firstLetter + input.substring(1);
         } else {
             return "";

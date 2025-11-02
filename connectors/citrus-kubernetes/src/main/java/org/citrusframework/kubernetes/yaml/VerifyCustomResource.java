@@ -16,20 +16,22 @@
 
 package org.citrusframework.kubernetes.yaml;
 
-import io.fabric8.kubernetes.client.CustomResource;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.VerifyCustomResourceAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class VerifyCustomResource extends AbstractKubernetesAction.Builder<VerifyCustomResourceAction, VerifyCustomResource> {
 
     private final VerifyCustomResourceAction.Builder delegate = new VerifyCustomResourceAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.resourceName(name);
     }
 
+    @SchemaProperty
     public void setType(String resourceType) {
         try {
             delegate.resourceType(Class.forName(resourceType));
@@ -38,35 +40,43 @@ public class VerifyCustomResource extends AbstractKubernetesAction.Builder<Verif
         }
     }
 
+    @SchemaProperty
     public void setKind(String kind) {
         delegate.kind(kind);
     }
 
+    @SchemaProperty
     public void setGroup(String group) {
         delegate.group(group);
     }
 
+    @SchemaProperty
     public void setVersion(String version) {
         delegate.version(version);
     }
 
+    @SchemaProperty
     public void setApiVersion(String apiVersion) {
         delegate.apiVersion(apiVersion);
     }
 
+    @SchemaProperty
     public void setCondition(String value) {
         this.delegate.condition(value);
     }
 
+    @SchemaProperty
     public void setLabel(String labelExpression) {
         String[] tokens = labelExpression.split("=", 2);
         this.delegate.label(tokens[0].trim(), tokens[1].trim());
     }
 
+    @SchemaProperty
     public void setMaxAttempts(int maxAttempts) {
         this.delegate.maxAttempts(maxAttempts);
     }
 
+    @SchemaProperty
     public void setDelayBetweenAttempts(long delayBetweenAttempts) {
         this.delegate.delayBetweenAttempts(delayBetweenAttempts);
     }

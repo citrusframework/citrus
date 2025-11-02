@@ -19,10 +19,12 @@ package org.citrusframework.camel.yaml;
 import java.util.List;
 
 import org.citrusframework.camel.actions.RemoveCamelRouteAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class RemoveRoutes implements CamelActionBuilderWrapper<RemoveCamelRouteAction.Builder> {
     private final RemoveCamelRouteAction.Builder builder = new RemoveCamelRouteAction.Builder();
 
+    @SchemaProperty(description = "The Camel route ids to remove.")
     public void setRoutes(List<String> routeIds) {
         builder.routeIds(routeIds);
     }

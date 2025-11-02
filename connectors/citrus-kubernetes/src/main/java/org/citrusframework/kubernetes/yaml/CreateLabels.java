@@ -22,19 +22,23 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.CreateLabelsAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CreateLabels extends AbstractKubernetesAction.Builder<CreateLabelsAction, CreateLabels> {
 
     private final CreateLabelsAction.Builder delegate = new CreateLabelsAction.Builder();
 
+    @SchemaProperty
     public void setResource(String name) {
         this.delegate.resource(name);
     }
 
+    @SchemaProperty
     public void setType(String resourceType) {
         this.delegate.type(resourceType);
     }
 
+    @SchemaProperty
     public void setLabels(List<Label> labels) {
         labels.forEach(label -> this.delegate.label(label.getName(), label.getValue()));
     }
@@ -83,6 +87,7 @@ public class CreateLabels extends AbstractKubernetesAction.Builder<CreateLabelsA
             return name;
         }
 
+        @SchemaProperty
         public void setName(String value) {
             this.name = value;
         }
@@ -91,6 +96,7 @@ public class CreateLabels extends AbstractKubernetesAction.Builder<CreateLabelsA
             return value;
         }
 
+        @SchemaProperty
         public void setValue(String value) {
             this.value = value;
         }
