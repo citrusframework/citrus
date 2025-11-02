@@ -20,15 +20,18 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.CreateCustomResourceAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CreateCustomResource extends AbstractKubernetesAction.Builder<CreateCustomResourceAction, CreateCustomResource> {
 
     private final CreateCustomResourceAction.Builder delegate = new CreateCustomResourceAction.Builder();
 
+    @SchemaProperty
     public void setData(String content) {
         delegate.content(content);
     }
 
+    @SchemaProperty
     public void setType(String resourceType) {
         try {
             delegate.resourceType(Class.forName(resourceType));
@@ -37,22 +40,27 @@ public class CreateCustomResource extends AbstractKubernetesAction.Builder<Creat
         }
     }
 
+    @SchemaProperty
     public void setKind(String kind) {
         delegate.kind(kind);
     }
 
+    @SchemaProperty
     public void setGroup(String group) {
         delegate.group(group);
     }
 
+    @SchemaProperty
     public void setVersion(String version) {
         delegate.version(version);
     }
 
+    @SchemaProperty
     public void setApiVersion(String apiVersion) {
         delegate.apiVersion(apiVersion);
     }
 
+    @SchemaProperty
     public void setFile(String path) {
         delegate.file(path);
     }

@@ -24,11 +24,13 @@ import org.citrusframework.kubernetes.actions.AgentConnectAction;
 import org.citrusframework.kubernetes.actions.AgentDisconnectAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAction, Agent> implements ReferenceResolverAware {
 
     private AbstractKubernetesAction.Builder<? extends AbstractKubernetesAction, ?> delegate;
 
+    @SchemaProperty
     public void setConnect(Connect connect) {
         AgentConnectAction.Builder builder = new AgentConnectAction.Builder();
 
@@ -57,6 +59,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
         this.delegate = builder;
     }
 
+    @SchemaProperty
     public void setDisconnect(Disconnect disconnect) {
         AgentDisconnectAction.Builder builder = new AgentDisconnectAction.Builder();
         builder.service(disconnect.getName());
@@ -117,6 +120,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
         protected String testJar;
         protected String localPort;
 
+        @SchemaProperty
         public void setName(String name) {
             this.name = name;
         }
@@ -129,6 +133,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
             return image;
         }
 
+        @SchemaProperty
         public void setImage(String image) {
             this.image = image;
         }
@@ -137,6 +142,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
             return registry;
         }
 
+        @SchemaProperty
         public void setRegistry(String registry) {
             this.registry = registry;
         }
@@ -145,10 +151,12 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
             return testJar;
         }
 
+        @SchemaProperty
         public void setTestJar(String testJar) {
             this.testJar = testJar;
         }
 
+        @SchemaProperty
         public void setClient(String client) {
             this.client = client;
         }
@@ -157,6 +165,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
             return client;
         }
 
+        @SchemaProperty
         public void setPort(String port) {
             this.port = port;
         }
@@ -165,6 +174,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
             return port;
         }
 
+        @SchemaProperty
         public void setLocalPort(String localPort) {
             this.localPort = localPort;
         }
@@ -178,6 +188,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
 
         protected String name;
 
+        @SchemaProperty
         public void setName(String name) {
             this.name = name;
         }

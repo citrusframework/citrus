@@ -17,10 +17,12 @@
 package org.citrusframework.camel.yaml;
 
 import org.citrusframework.camel.actions.StartCamelContextAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class StartContext implements CamelActionBuilderWrapper<StartCamelContextAction.Builder> {
     private final StartCamelContextAction.Builder builder = new StartCamelContextAction.Builder();
 
+    @SchemaProperty(description = "The Camel context name.")
     public void setName(String contextName) {
         builder.contextName(contextName);
     }

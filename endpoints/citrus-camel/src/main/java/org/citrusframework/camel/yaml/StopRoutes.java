@@ -19,10 +19,12 @@ package org.citrusframework.camel.yaml;
 import java.util.List;
 
 import org.citrusframework.camel.actions.StopCamelRouteAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class StopRoutes implements CamelActionBuilderWrapper<StopCamelRouteAction.Builder> {
     private final StopCamelRouteAction.Builder builder = new StopCamelRouteAction.Builder();
 
+    @SchemaProperty(description = "The Camel route ids to stop.")
     public void setRoutes(List<String> routeIds) {
         builder.routeIds(routeIds);
     }

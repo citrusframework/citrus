@@ -17,6 +17,8 @@
 package org.citrusframework.channel;
 
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
@@ -27,7 +29,30 @@ import org.springframework.messaging.core.DestinationResolver;
 public class ChannelEndpointBuilder extends AbstractEndpointBuilder<ChannelEndpoint> {
 
     /** Endpoint target */
-    private ChannelEndpoint endpoint = new ChannelEndpoint();
+    private final ChannelEndpoint endpoint = new ChannelEndpoint();
+
+    private String messagingTemplate;
+    private String messageConverter;
+    private String channelResolver;
+
+    @Override
+    public ChannelEndpoint build() {
+        if (referenceResolver != null) {
+            if (StringUtils.hasText(messagingTemplate)) {
+                messagingTemplate(referenceResolver.resolve(messagingTemplate, MessagingTemplate.class));
+            }
+
+            if (StringUtils.hasText(messageConverter)) {
+                messageConverter(referenceResolver.resolve(messageConverter, ChannelMessageConverter.class));
+            }
+
+            if (StringUtils.hasText(channelResolver)) {
+                channelResolver(referenceResolver.resolve(channelResolver, DestinationResolver.class));
+            }
+        }
+
+        return super.build();
+    }
 
     @Override
     protected ChannelEndpoint getEndpoint() {
@@ -36,18 +61,19 @@ public class ChannelEndpointBuilder extends AbstractEndpointBuilder<ChannelEndpo
 
     /**
      * Sets the channelName property.
-     * @param channelName
-     * @return
      */
     public ChannelEndpointBuilder channel(String channelName) {
         endpoint.getEndpointConfiguration().setChannelName(channelName);
         return this;
     }
 
+    @SchemaProperty(description = "The Spring message channel name.")
+    public void setChannel(String channelName) {
+        channel(channelName);
+    }
+
     /**
      * Sets the channel property.
-     * @param channel
-     * @return
      */
     public ChannelEndpointBuilder channel(MessageChannel channel) {
         endpoint.getEndpointConfiguration().setChannel(channel);
@@ -56,61 +82,81 @@ public class ChannelEndpointBuilder extends AbstractEndpointBuilder<ChannelEndpo
 
     /**
      * Sets the messagingTemplate property.
-     * @param messagingTemplate
-     * @return
      */
     public ChannelEndpointBuilder messagingTemplate(MessagingTemplate messagingTemplate) {
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets a custom messaging template.")
+    public void setMessagingTemplate(String messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
+
     /**
      * Sets the messageConverter property.
-     * @param messageConverter
-     * @return
      */
     public ChannelEndpointBuilder messageConverter(ChannelMessageConverter messageConverter) {
         endpoint.getEndpointConfiguration().setMessageConverter(messageConverter);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the message converter as a bean reference.")
+    public void setMessageConverter(String messageConverter) {
+        this.messageConverter = messageConverter;
+    }
+
     /**
      * Sets the channel resolver.
-     * @param resolver
-     * @return
      */
     public ChannelEndpointBuilder channelResolver(DestinationResolver resolver) {
         endpoint.getEndpointConfiguration().setChannelResolver(resolver);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "The channel destination resolver.")
+    public void setChannelResolver(String resolver) {
+        this.channelResolver = resolver;
+    }
+
     /**
      * Sets the useObjectMessages property.
-     * @param useObjectMessages
-     * @return
      */
     public ChannelEndpointBuilder useObjectMessages(boolean useObjectMessages) {
         endpoint.getEndpointConfiguration().setUseObjectMessages(useObjectMessages);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "When enabled the endpoint uses object messages.")
+    public void setUseObjectMessages(boolean useObjectMessages) {
+        useObjectMessages(useObjectMessages);
+    }
+
     /**
      * Sets the filterInternalHeaders property.
-     * @param filterInternalHeaders
-     * @return
      */
     public ChannelEndpointBuilder filterInternalHeaders(boolean filterInternalHeaders) {
         endpoint.getEndpointConfiguration().setFilterInternalHeaders(filterInternalHeaders);
         return this;
     }
 
+    @SchemaProperty(
+            advanced = true,
+            description = "When enabled the endpoint removes all internal headers before sending a message.")
+    public void setFilterInternalHeaders(boolean filterInternalHeaders) {
+        filterInternalHeaders(filterInternalHeaders);
+    }
+
     /**
      * Sets the default timeout.
-     * @param timeout
-     * @return
      */
     public ChannelEndpointBuilder timeout(long timeout) {
         endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
+    }
+
+    @SchemaProperty(description = "Sets the receive timeout when waiting for messages.", defaultValue = "5000")
+    public void setTimeout(long timeout) {
+        timeout(timeout);
     }
 }

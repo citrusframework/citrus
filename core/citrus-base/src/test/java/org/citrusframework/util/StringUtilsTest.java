@@ -167,7 +167,7 @@ public class StringUtilsTest {
     }
 
     @DataProvider
-    public Object[][] convertFirstChartToUpperCaseData() {
+    public Object[][] convertFirstCharToUpperCaseData() {
         return new Object[][]{
                 {"hello", "Hello"},
                 {"h", "H"},
@@ -181,11 +181,33 @@ public class StringUtilsTest {
         };
     }
 
-    @Test(dataProvider = "convertFirstChartToUpperCaseData")
-    public void testConvertFirstChartToUpperCase(String input, String expected) {
-        String actual = StringUtils.convertFirstChartToUpperCase(input);
+    @Test(dataProvider = "convertFirstCharToUpperCaseData")
+    public void testConvertFirstCharToUpperCase(String input, String expected) {
+        String actual = StringUtils.convertFirstCharToUpperCase(input);
         assertEquals(actual, expected,
-                "The titleCase method did not return the expected result.");
+                "The convertFirstCharToUpperCaseData method did not return the expected result.");
+    }
+
+    @DataProvider
+    public Object[][] convertFirstCharToLowerCaseData() {
+        return new Object[][]{
+                {"hello", "hello"},
+                {"H", "h"},
+                {"hello", "hello"},
+                {null, ""},
+                {"", ""},
+                {"Hello world", "hello world"},
+                {" Hello", " Hello"},
+                {"1Test", "1Test"},
+                {"!Special", "!Special"}
+        };
+    }
+
+    @Test(dataProvider = "convertFirstCharToLowerCaseData")
+    public void testConvertFirstCharToLowerCase(String input, String expected) {
+        String actual = StringUtils.convertFirstCharToLowerCase(input);
+        assertEquals(actual, expected,
+                "The convertFirstCharToLowerCaseData method did not return the expected result.");
     }
 
     @DataProvider

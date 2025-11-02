@@ -27,12 +27,15 @@ public class JmsEndpointsTest {
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("jms"));
         Assert.assertTrue(endpointBuilders.containsKey("jms.sync"));
         Assert.assertTrue(endpointBuilders.containsKey("jms.async"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
+        Assert.assertTrue(EndpointBuilder.lookup("jms").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("jms").get().getClass(), JmsEndpointsBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("jms.sync").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("jms.sync").get().getClass(), JmsSyncEndpointBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("jms.async").isPresent());

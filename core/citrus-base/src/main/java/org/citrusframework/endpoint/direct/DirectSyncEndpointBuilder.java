@@ -17,13 +17,50 @@
 package org.citrusframework.endpoint.direct;
 
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.message.MessageQueue;
+import org.citrusframework.util.PropertyUtils;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class DirectSyncEndpointBuilder extends AbstractEndpointBuilder<DirectSyncEndpoint> {
 
     /** Endpoint target */
-    private DirectSyncEndpoint endpoint = new DirectSyncEndpoint();
+    private final DirectSyncEndpoint endpoint = new DirectSyncEndpoint();
+
+    private String correlator;
+    private boolean autoCreateQueue;
+
+    @Override
+    public DirectSyncEndpoint build() {
+        if (referenceResolver != null) {
+            if (StringUtils.hasText(correlator)) {
+                correlator(referenceResolver.resolve(correlator, MessageCorrelator.class));
+            }
+
+            if (autoCreateQueue) {
+                String createdQueue = null;
+                if (StringUtils.hasText(endpoint.getEndpointConfiguration().getQueueName()) &&
+                        !referenceResolver.isResolvable(endpoint.getEndpointConfiguration().getQueueName(), MessageQueue.class)) {
+                    DefaultMessageQueue messageQueue = new DefaultMessageQueue(endpoint.getEndpointConfiguration().getQueueName());
+                    PropertyUtils.configure(endpoint.getEndpointConfiguration().getQueueName(), messageQueue, referenceResolver);
+                    referenceResolver.bind(endpoint.getEndpointConfiguration().getQueueName(), messageQueue);
+                    createdQueue = messageQueue.getName();
+                } else if (endpoint.getEndpointConfiguration().getQueue() != null &&
+                        !referenceResolver.isResolvable(endpoint.getEndpointConfiguration().getQueue().getName(), MessageQueue.class)) {
+                    referenceResolver.bind(endpoint.getEndpointConfiguration().getQueue().getName(), endpoint.getEndpointConfiguration().getQueue());
+                    createdQueue = endpoint.getEndpointConfiguration().getQueue().getName();
+                }
+
+                if (StringUtils.hasText(createdQueue)) {
+                    logger.info("Automatically created queue '{}'", createdQueue);
+                }
+            }
+        }
+
+        return super.build();
+    }
 
     @Override
     protected DirectSyncEndpoint getEndpoint() {
@@ -32,18 +69,19 @@ public class DirectSyncEndpointBuilder extends AbstractEndpointBuilder<DirectSyn
 
     /**
      * Sets the queueName property.
-     * @param queueName
-     * @return
      */
     public DirectSyncEndpointBuilder queue(String queueName) {
         endpoint.getEndpointConfiguration().setQueueName(queueName);
         return this;
     }
 
+    @SchemaProperty(description = "The queue name.")
+    public void setQueue(String queueName) {
+        queue(queueName);
+    }
+
     /**
      * Sets the queue property.
-     * @param queue
-     * @return
      */
     public DirectSyncEndpointBuilder queue(MessageQueue queue) {
         endpoint.getEndpointConfiguration().setQueue(queue);
@@ -51,32 +89,54 @@ public class DirectSyncEndpointBuilder extends AbstractEndpointBuilder<DirectSyn
     }
 
     /**
+     * When set the queue is automatically created when it does not exist in bean registry.
+     */
+    public DirectSyncEndpointBuilder autoCreateQueue(boolean autoCreate) {
+        this.autoCreateQueue = autoCreate;
+        return this;
+    }
+
+    @SchemaProperty(description = "When set the queue is automatically created when it does not exist in bean registry.")
+    public void setAutoCreateQueue(boolean autoCreate) {
+        autoCreateQueue(autoCreate);
+    }
+
+    /**
      * Sets the polling interval.
-     * @param pollingInterval
-     * @return
      */
     public DirectSyncEndpointBuilder pollingInterval(int pollingInterval) {
         endpoint.getEndpointConfiguration().setPollingInterval(pollingInterval);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the polling interval when consuming messages.")
+    public void setPollingInterval(int pollingInterval) {
+        pollingInterval(pollingInterval);
+    }
+
     /**
      * Sets the message correlator.
-     * @param correlator
-     * @return
      */
     public DirectSyncEndpointBuilder correlator(MessageCorrelator correlator) {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the message correlator.")
+    public void setCorrelator(String correlator) {
+        this.correlator = correlator;
+    }
+
     /**
      * Sets the default timeout.
-     * @param timeout
-     * @return
      */
     public DirectSyncEndpointBuilder timeout(long timeout) {
         endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
+    }
+
+    @SchemaProperty(description = "The timeout when receiving messages from the queue.")
+    public void setTimeout(long timeout) {
+        timeout(timeout);
     }
 }

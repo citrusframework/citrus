@@ -16,11 +16,13 @@
 
 package org.citrusframework.ftp.client;
 
+import java.util.Map;
+
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.ErrorHandlingStrategy;
 import org.citrusframework.message.MessageCorrelator;
-
-import java.util.Map;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * @since 2.7.5
@@ -28,7 +30,20 @@ import java.util.Map;
 public class SftpClientBuilder extends AbstractEndpointBuilder<SftpClient> {
 
     /** Endpoint target */
-    private SftpClient endpoint = new SftpClient();
+    private final SftpClient endpoint = new SftpClient();
+
+    private String correlator;
+
+    @Override
+    public SftpClient build() {
+        if (referenceResolver != null) {
+            if (StringUtils.hasText(correlator)) {
+                correlator(referenceResolver.resolve(correlator, MessageCorrelator.class));
+            }
+        }
+
+        return super.build();
+    }
 
     @Override
     protected SftpClient getEndpoint() {
@@ -37,161 +52,233 @@ public class SftpClientBuilder extends AbstractEndpointBuilder<SftpClient> {
 
     /**
      * Sets the host property.
-     * @param host
-     * @return
      */
     public SftpClientBuilder host(String host) {
         endpoint.getEndpointConfiguration().setHost(host);
         return this;
     }
 
+    @SchemaProperty(description = "The Ftp server host.")
+    public void setHost(String host) {
+        host(host);
+    }
+
     /**
      * Sets the port property.
-     * @param port
-     * @return
      */
     public SftpClientBuilder port(int port) {
         endpoint.getEndpointConfiguration().setPort(port);
         return this;
     }
 
+    @SchemaProperty(description = "The Ftp server port.")
+    public void setPort(int port) {
+        port(port);
+    }
+
     /**
      * Sets the auto read files property.
-     * @param autoReadFiles
-     * @return
      */
     public SftpClientBuilder autoReadFiles(boolean autoReadFiles) {
         endpoint.getEndpointConfiguration().setAutoReadFiles(autoReadFiles);
         return this;
     }
 
+    @SchemaProperty(description = "When enabled the client automatically reads new files.")
+    public void setAutoReadFiles(boolean autoReadFiles) {
+        autoReadFiles(autoReadFiles);
+    }
+
     /**
      * Sets the local passive mode property.
-     * @param localPassiveMode
-     * @return
      */
     public SftpClientBuilder localPassiveMode(boolean localPassiveMode) {
         endpoint.getEndpointConfiguration().setLocalPassiveMode(localPassiveMode);
         return this;
     }
 
+    @SchemaProperty(description = "SEnables the local passive mode.")
+    public void setLocalPassiveMode(boolean localPassiveMode) {
+        localPassiveMode(localPassiveMode);
+    }
+
     /**
      * Sets the client username.
-     * @param username
-     * @return
      */
     public SftpClientBuilder username(String username) {
         endpoint.getEndpointConfiguration().setUser(username);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the user name."
+    )
+    public void setUsername(String username) {
+        username(username);
+    }
+
     /**
      * Sets the client password.
-     * @param password
-     * @return
      */
     public SftpClientBuilder password(String password) {
         endpoint.getEndpointConfiguration().setPassword(password);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the user password."
+    )
+    public void setPassword(String password) {
+        password(password);
+    }
+
     /**
      * Sets the privateKeyPath property.
-     * @param privateKeyPath
-     * @return
      */
     public SftpClientBuilder privateKeyPath(String privateKeyPath) {
         endpoint.getEndpointConfiguration().setPrivateKeyPath(privateKeyPath);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the private key path."
+    )
+    public void setPrivateKeyPath(String privateKeyPath) {
+        privateKeyPath(privateKeyPath);
+    }
+
     /**
      * Sets the privateKeyPassword property.
-     * @param privateKeyPassword
-     * @return
      */
     public SftpClientBuilder privateKeyPassword(String privateKeyPassword) {
         endpoint.getEndpointConfiguration().setPrivateKeyPassword(privateKeyPassword);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the private key password."
+    )
+    public void setPrivateKeyPassword(String privateKeyPassword) {
+        privateKeyPassword(privateKeyPassword);
+    }
+
     /**
      * Sets the strictHostChecking property.
-     * @param strictHostChecking
-     * @return
      */
     public SftpClientBuilder strictHostChecking(boolean strictHostChecking) {
         endpoint.getEndpointConfiguration().setStrictHostChecking(strictHostChecking);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Enable strict host checking."
+    )
+    public void setStrictHostChecking(boolean strictHostChecking) {
+        strictHostChecking(strictHostChecking);
+    }
+
     /**
      * Sets the knownHosts property.
-     * @param knownHosts
-     * @return
      */
     public SftpClientBuilder knownHosts(String knownHosts) {
         endpoint.getEndpointConfiguration().setKnownHosts(knownHosts);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "List of known hosts."
+    )
+    public void setKnownHosts(String knownHosts) {
+        knownHosts(knownHosts);
+    }
+
     /**
      * Sets the preferred authentications property.
-     * @param preferredAuthentications
-     * @return
      */
     public SftpClientBuilder preferredAuthentications(String preferredAuthentications) {
         endpoint.getEndpointConfiguration().setPreferredAuthentications(preferredAuthentications);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the preferred authentication mechanism."
+    )
+    public void setPreferredAuthentications(String preferredAuthentications) {
+        preferredAuthentications(preferredAuthentications);
+    }
+
     /**
      * Sets the sessionConfigs property.
-     * @param sessionConfigs
-     * @return
      */
     public SftpClientBuilder sessionConfigs(Map<String, String> sessionConfigs) {
         endpoint.getEndpointConfiguration().setSessionConfigs(sessionConfigs);
         return this;
     }
 
+    @SchemaProperty(description = "The session configuration.")
+    public void setSessionConfigs(Map<String, String> sessionConfigs) {
+        sessionConfigs(sessionConfigs);
+    }
+
     /**
      * Sets the message correlator.
-     * @param correlator
-     * @return
      */
     public SftpClientBuilder correlator(MessageCorrelator correlator) {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the message correlator.")
+    public void setCorrelator(String correlator) {
+        this.correlator = correlator;
+    }
+
     /**
      * Sets the error handling strategy.
-     * @param errorStrategy
-     * @return
      */
     public SftpClientBuilder errorHandlingStrategy(ErrorHandlingStrategy errorStrategy) {
         endpoint.getEndpointConfiguration().setErrorHandlingStrategy(errorStrategy);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:errorHandler") },
+            description = "Sets the error handling strategy."
+    )
+    public void setErrorHandlingStrategy(ErrorHandlingStrategy errorStrategy) {
+        errorHandlingStrategy(errorStrategy);
+    }
+
     /**
      * Sets the polling interval.
-     * @param pollingInterval
-     * @return
      */
     public SftpClientBuilder pollingInterval(int pollingInterval) {
         endpoint.getEndpointConfiguration().setPollingInterval(pollingInterval);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the polling interval when consuming messages.")
+    public void setPollingInterval(int pollingInterval) {
+        pollingInterval(pollingInterval);
+    }
+
     /**
      * Sets the default timeout.
-     * @param timeout
-     * @return
      */
     public SftpClientBuilder timeout(long timeout) {
         endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
+    }
+
+    @SchemaProperty(description = "The endpoint timeout when waiting for messages.")
+    public void setTimeout(long timeout) {
+        timeout(timeout);
     }
 }

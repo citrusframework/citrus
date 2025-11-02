@@ -25,6 +25,9 @@ import org.citrusframework.selenium.actions.SeleniumAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
+
+import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
 
 public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceResolverAware {
 
@@ -37,10 +40,12 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
 
     private ReferenceResolver referenceResolver;
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         this.description = value;
     }
 
+    @SchemaProperty(advanced = true)
     public void setActor(String actor) {
         this.actor = actor;
     }
@@ -48,6 +53,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Use a custom selenium browser.
      */
+    @SchemaProperty
     public void setBrowser(String browser) {
         this.seleniumBrowser = browser;
     }
@@ -55,6 +61,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Start browser instance.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setStart(StartBrowser builder) {
         this.builder = builder;
     }
@@ -62,6 +69,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Stop browser instance.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setStop(StopBrowser builder) {
         this.builder = builder;
     }
@@ -69,6 +77,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Alert element.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setAlert(Alert builder) {
         this.builder = builder;
     }
@@ -76,6 +85,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Navigate action.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setNavigate(Navigate builder) {
         this.builder = builder;
     }
@@ -83,6 +93,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Page action.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setPage(Page builder) {
         this.builder = builder;
     }
@@ -90,6 +101,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Finds element.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setFind(FindElement builder) {
         this.builder = builder;
     }
@@ -97,6 +109,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Dropdown select single option action.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setDropdownSelect(DropDownSelect builder) {
         this.builder = builder;
     }
@@ -104,6 +117,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Set input action.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setSetInput(SetInput builder) {
         this.builder = builder;
     }
@@ -111,6 +125,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Fill form action.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setFillForm(FillForm builder) {
         this.builder = builder;
     }
@@ -118,6 +133,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Check input action.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setCheckInput(CheckInput builder) {
         this.builder = builder;
     }
@@ -125,6 +141,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Clicks element.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setClick(Click builder) {
         this.builder = builder;
     }
@@ -132,6 +149,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Hover element.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setHover(Hover builder) {
         this.builder = builder;
     }
@@ -139,6 +157,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Clear browser cache.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setClearCache(ClearBrowserCache builder) {
         this.builder = builder;
     }
@@ -146,6 +165,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Make screenshot.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setScreenshot(MakeScreenshot builder) {
         this.builder = builder;
     }
@@ -153,6 +173,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Store file.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setStoreFile(StoreFile builder) {
         this.builder = builder;
     }
@@ -160,6 +181,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Get stored file.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setGetStoredFile(GetStoredFile builder) {
         this.builder = builder;
     }
@@ -167,6 +189,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Wait until element meets condition.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setWaitUntil(WaitUntil builder) {
         this.builder = builder;
     }
@@ -174,6 +197,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Execute JavaScript.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setJavaScript(JavaScript builder) {
         this.builder = builder;
     }
@@ -181,6 +205,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Open window.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setOpenWindow(OpenWindow builder) {
         this.builder = builder;
     }
@@ -188,6 +213,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Close window.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setCloseWindow(CloseWindow builder) {
         this.builder = builder;
     }
@@ -195,6 +221,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Focus window.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setFocusWindow(SwitchWindow builder) {
         this.builder = builder;
     }
@@ -202,6 +229,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Switch window.
      */
+    @SchemaProperty(kind = ACTION, group = "selenium")
     public void setSwitchWindow(SwitchWindow builder) {
         this.builder = builder;
     }

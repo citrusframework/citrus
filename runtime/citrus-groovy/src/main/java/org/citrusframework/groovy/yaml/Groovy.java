@@ -27,6 +27,7 @@ import org.citrusframework.script.CreateEndpointsAction;
 import org.citrusframework.script.GroovyAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Groovy implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
@@ -37,14 +38,17 @@ public class Groovy implements TestActionBuilder<TestAction>, ReferenceResolverA
 
     private ReferenceResolver referenceResolver;
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         this.description = value;
     }
 
+    @SchemaProperty(advanced = true)
     public void setActor(String actor) {
         this.actor = actor;
     }
 
+    @SchemaProperty(required = true, description = "The Groovy script to execute.")
     public void setScript(Script script) {
         GroovyAction.Builder builder = new GroovyAction.Builder();
 
@@ -65,6 +69,7 @@ public class Groovy implements TestActionBuilder<TestAction>, ReferenceResolverA
         this.builder = builder;
     }
 
+    @SchemaProperty(advanced = true, description = "Script that creates endpoints.")
     public void setEndpoints(Script script) {
         CreateEndpointsAction.Builder builder = new CreateEndpointsAction.Builder();
 
@@ -79,6 +84,7 @@ public class Groovy implements TestActionBuilder<TestAction>, ReferenceResolverA
         this.builder = builder;
     }
 
+    @SchemaProperty(advanced = true, description = "Script that creates beans in the bean registry.")
     public void setBeans(Script script) {
         CreateBeansAction.Builder builder = new CreateBeansAction.Builder();
 

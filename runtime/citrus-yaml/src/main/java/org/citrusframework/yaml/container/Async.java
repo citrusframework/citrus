@@ -21,6 +21,7 @@ import java.util.List;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.TestActions;
 
 public class Async implements TestActionBuilder<org.citrusframework.container.Async>, ReferenceResolverAware {
@@ -38,18 +39,22 @@ public class Async implements TestActionBuilder<org.citrusframework.container.As
         return builder.build();
     }
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty(required = true, description = "Sequence of test actions to execute.")
     public void setActions(List<TestActions> actions) {
         builder.actions(actions.stream().map(TestActions::get).toArray(TestActionBuilder<?>[]::new));
     }
 
+    @SchemaProperty(advanced = true, description = "Test actions executed when async container is successful.")
     public void setSuccess(List<TestActions> actions) {
         builder.successActions(actions.stream().map(TestActions::get).toArray(TestActionBuilder<?>[]::new));
     }
 
+    @SchemaProperty(advanced = true, description = "Test actions executed when async container has failed.")
     public void setError(List<TestActions> actions) {
         builder.errorActions(actions.stream().map(TestActions::get).toArray(TestActionBuilder<?>[]::new));
     }

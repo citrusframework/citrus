@@ -16,6 +16,7 @@
 
 package org.citrusframework.agent.util;
 
+import java.io.File;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -157,7 +158,7 @@ public final class ConfigurationHelper {
 
         // Remove default parent tests and test jar from run configuration
         options.getTestSources().clear();
-        options.setTestJar(null);
+        options.setTestJar((File) null);
 
         String sourceCode = ctx.body().asString();
         String fileName = ctx.pathParam("name");

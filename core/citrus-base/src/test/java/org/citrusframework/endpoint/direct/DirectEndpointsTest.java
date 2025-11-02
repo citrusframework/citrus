@@ -27,12 +27,15 @@ public class DirectEndpointsTest {
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("direct"));
         Assert.assertTrue(endpointBuilders.containsKey("direct.sync"));
         Assert.assertTrue(endpointBuilders.containsKey("direct.async"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
+        Assert.assertTrue(EndpointBuilder.lookup("direct").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("direct").get().getClass(), DirectEndpointsBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("direct.sync").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("direct.sync").get().getClass(), DirectSyncEndpointBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("direct.async").isPresent());

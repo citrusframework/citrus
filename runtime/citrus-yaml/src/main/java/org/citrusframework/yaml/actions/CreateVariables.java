@@ -25,6 +25,7 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.CreateVariablesAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CreateVariables implements TestActionBuilder<CreateVariablesAction> {
 
@@ -56,10 +57,12 @@ public class CreateVariables implements TestActionBuilder<CreateVariablesAction>
         return builder.build();
     }
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty(required = true, description = "List of test variables.")
     public void setVariables(List<Variable> variables) {
         this.variables = variables;
     }
@@ -74,6 +77,7 @@ public class CreateVariables implements TestActionBuilder<CreateVariablesAction>
             return script;
         }
 
+        @SchemaProperty(advanced = true, description = "Script to build the variable value.")
         public void setScript(Script value) {
             this.script = value;
         }
@@ -82,6 +86,7 @@ public class CreateVariables implements TestActionBuilder<CreateVariablesAction>
             return name;
         }
 
+        @SchemaProperty(required = true, description = "The test variable name.")
         public void setName(String value) {
             this.name = value;
         }
@@ -90,6 +95,7 @@ public class CreateVariables implements TestActionBuilder<CreateVariablesAction>
             return value;
         }
 
+        @SchemaProperty(description = "The test variable value.")
         public void setValue(String value) {
             this.value = value;
         }
@@ -104,6 +110,7 @@ public class CreateVariables implements TestActionBuilder<CreateVariablesAction>
                 return value;
             }
 
+            @SchemaProperty(description = "The script content.")
             public void setValue(String value) {
                 this.value = value;
             }
@@ -112,6 +119,7 @@ public class CreateVariables implements TestActionBuilder<CreateVariablesAction>
                 return type;
             }
 
+            @SchemaProperty(advanced = true, description = "The script type.")
             public void setType(String value) {
                 this.type = value;
             }
@@ -120,6 +128,7 @@ public class CreateVariables implements TestActionBuilder<CreateVariablesAction>
                 return file;
             }
 
+            @SchemaProperty(description = "The script loaded from a file resource.")
             public void setFile(String value) {
                 this.file = value;
             }

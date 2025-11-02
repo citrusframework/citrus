@@ -2,6 +2,12 @@ name: SampleIT
 author: Christoph
 status: FINAL
 description: Sample test in YAML
+endpoints:
+  - direct:
+      asynchronous:
+        name: goodByeEndpoint
+        autoCreateQueue: true
+        queue: sayGoodBye
 variables:
   - name: message
     value: Citrus rocks!
@@ -24,3 +30,13 @@ actions:
             value: "sayHello"
         body:
           data: "Hello from Citrus!"
+  - send:
+      endpoint: "goodByeEndpoint"
+      message:
+        body:
+          data: "GoodBye from Citrus!"
+  - receive:
+      endpoint: "goodByeEndpoint"
+      message:
+        body:
+          data: "GoodBye from Citrus!"

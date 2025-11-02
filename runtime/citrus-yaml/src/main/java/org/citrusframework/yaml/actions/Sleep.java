@@ -20,11 +20,13 @@ import java.util.concurrent.TimeUnit;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.SleepAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Sleep implements TestActionBuilder<SleepAction> {
 
     private final SleepAction.Builder builder = new SleepAction.Builder();
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
@@ -33,10 +35,12 @@ public class Sleep implements TestActionBuilder<SleepAction> {
         builder.milliseconds(time);
     }
 
+    @SchemaProperty(description = "Time to sleep in milliseconds.")
     public void setMilliseconds(String milliseconds) {
         builder.time(milliseconds, TimeUnit.MILLISECONDS);
     }
 
+    @SchemaProperty(description = "Time to sleep in seconds.")
     public void setSeconds(String seconds) {
         builder.time(seconds, TimeUnit.SECONDS);
     }

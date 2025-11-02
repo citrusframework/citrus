@@ -21,6 +21,7 @@ import java.util.List;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.TestActions;
 
 public class Conditional implements TestActionBuilder<org.citrusframework.container.Conditional>, ReferenceResolverAware {
@@ -38,14 +39,17 @@ public class Conditional implements TestActionBuilder<org.citrusframework.contai
         return builder.build();
     }
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty(required = true, description = "The condition to evaluate.")
     public void setWhen(String expression) {
         builder.when(expression);
     }
 
+    @SchemaProperty(required = true, description = "Test actions that get executed when the condition matches.")
     public void setActions(List<TestActions> actions) {
         builder.actions(actions.stream().map(TestActions::get).toArray(TestActionBuilder<?>[]::new));
     }

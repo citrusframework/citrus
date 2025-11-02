@@ -23,11 +23,13 @@ import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.DeleteKnativeResourceAction;
 import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class DeleteSubscription extends AbstractKnativeAction.Builder<DeleteKnativeResourceAction, DeleteSubscription> {
 
     private final DeleteKnativeResourceAction.Builder delegate = new DeleteKnativeResourceAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.resource(name);
     }

@@ -18,18 +18,22 @@ package org.citrusframework.camel.yaml;
 
 import org.citrusframework.camel.actions.CreateCamelComponentAction;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CreateComponent implements CamelActionBuilderWrapper<CreateCamelComponentAction.Builder> {
     private final CreateCamelComponentAction.Builder builder = new CreateCamelComponentAction.Builder();
 
+    @SchemaProperty(description = "The Camel component name.")
     public void setName(String componentName) {
         builder.componentName(componentName);
     }
 
+    @SchemaProperty(description = "The Camel component script loaded from a file resource.")
     public void setFile(String file) {
         builder.component(Resources.create(file));
     }
 
+    @SchemaProperty(description = "The script that defines the Camel component.")
     public void setScript(String script) {
         builder.component(script);
     }

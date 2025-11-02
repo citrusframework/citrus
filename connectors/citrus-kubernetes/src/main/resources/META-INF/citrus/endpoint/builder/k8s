@@ -1,1 +1,2 @@
+type=org.citrusframework.kubernetes.endpoint.builder.KubernetesEndpointBuilder
 client=org.citrusframework.kubernetes.client.KubernetesClientBuilder

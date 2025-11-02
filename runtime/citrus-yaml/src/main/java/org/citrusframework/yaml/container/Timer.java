@@ -21,6 +21,7 @@ import java.util.List;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.TestActions;
 
 public class Timer implements TestActionBuilder<org.citrusframework.container.Timer>, ReferenceResolverAware {
@@ -38,34 +39,42 @@ public class Timer implements TestActionBuilder<org.citrusframework.container.Ti
         return builder.build();
     }
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty(description = "The id of the timer.")
     public void setId(String id) {
         builder.timerId(id);
     }
 
+    @SchemaProperty(advanced = true, description = "Initial delay to wait before starting the timer.")
     public void setDelay(long milliseconds) {
         builder.delay(milliseconds);
     }
 
+    @SchemaProperty(advanced = true, description = "Do not block the test while the timer is running.", defaultValue = "false")
     public void setFork(boolean enabled) {
         builder.fork(enabled);
     }
 
+    @SchemaProperty(advanced = true, description = "Automatically stop the timer when the test is finished.", defaultValue = "true")
     public void setAutoStop(boolean enabled) {
         builder.autoStop(enabled);
     }
 
+    @SchemaProperty(description = "Timer interval in milliseconds.", defaultValue = "1000")
     public void setInterval(long milliseconds) {
         builder.interval(milliseconds);
     }
 
+    @SchemaProperty(advanced = true, description = "Number of timer executions.")
     public void setRepeatCount(int count) {
         builder.repeatCount(count);
     }
 
+    @SchemaProperty(required = true, description = "Sequence of test actions to execute.")
     public void setActions(List<TestActions> actions) {
         builder.actions(actions.stream().map(TestActions::get).toArray(TestActionBuilder<?>[]::new));
     }

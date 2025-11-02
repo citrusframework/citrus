@@ -17,6 +17,7 @@
 package org.citrusframework.agent;
 
 import org.citrusframework.main.CitrusAppConfiguration;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CitrusAgentConfiguration extends CitrusAppConfiguration {
 
@@ -33,6 +34,7 @@ public class CitrusAgentConfiguration extends CitrusAppConfiguration {
     /**
      * Sets the port.
      */
+    @SchemaProperty(required = true, description = "The Http port the agent service is listening on.", defaultValue = "4567")
     public void setPort(int port) {
         this.port = port;
     }

@@ -22,6 +22,7 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.container.RepeatOnErrorUntilTrue;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.TestActions;
 
 public class RepeatOnError implements TestActionBuilder<RepeatOnErrorUntilTrue>, ReferenceResolverAware {
@@ -39,6 +40,7 @@ public class RepeatOnError implements TestActionBuilder<RepeatOnErrorUntilTrue>,
         return builder.build();
     }
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
@@ -47,22 +49,27 @@ public class RepeatOnError implements TestActionBuilder<RepeatOnErrorUntilTrue>,
         builder.condition(condition);
     }
 
+    @SchemaProperty(description = "Condition that ends the iteration.")
     public void setUntil(String condition) {
         builder.until(condition);
     }
 
+    @SchemaProperty(description = "Automatically sleep the time in milliseconds with each attempt.")
     public void setAutoSleep(long milliseconds) {
         builder.autoSleep(milliseconds);
     }
 
+    @SchemaProperty(advanced = true, description = "Test variable holding the current iteration index.")
     public void setIndex(String index) {
         builder.index(index);
     }
 
+    @SchemaProperty(advanced = true, description = "Index starts with this value.", defaultValue = "1")
     public void setStartsWith(int value) {
         builder.startsWith(value);
     }
 
+    @SchemaProperty(required = true, description = "Sequence of test actions to execute.")
     public void setActions(List<TestActions> actions) {
         builder.actions(actions.stream().map(TestActions::get).toArray(TestActionBuilder<?>[]::new));
     }

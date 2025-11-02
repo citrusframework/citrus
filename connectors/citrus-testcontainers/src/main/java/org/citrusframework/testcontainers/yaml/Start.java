@@ -39,17 +39,22 @@ import org.citrusframework.testcontainers.postgresql.StartPostgreSQLAction;
 import org.citrusframework.testcontainers.redpanda.StartRedpandaAction;
 import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
+
+import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
 
 public class Start extends AbstractTestcontainersAction.Builder<StartTestcontainersAction<?>, Start> implements ReferenceResolverAware {
 
     private StartTestcontainersAction.AbstractBuilder<?, ?, ?> delegate;
 
+    @SchemaProperty(kind = ACTION, group = "testcontainers-start")
     public void setContainer(Container container) {
         StartTestcontainersAction.Builder<?> builder = new StartTestcontainersAction.Builder<>();
         configureStartActionBuilder(builder, container);
         delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "testcontainers-start")
     public void setLocalstack(LocalStack container) {
         StartLocalStackAction.Builder builder = new StartLocalStackAction.Builder();
         if (container.getVersion() != null) {
@@ -71,6 +76,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "testcontainers-start")
     public void setMongodb(MongoDB container) {
         StartMongoDBAction.Builder builder = new StartMongoDBAction.Builder();
         if (container.getVersion() != null) {
@@ -82,6 +88,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "testcontainers-start")
     public void setKafka(Kafka container) {
         StartKafkaAction.Builder builder = new StartKafkaAction.Builder();
         if (container.getVersion() != null) {
@@ -101,6 +108,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "testcontainers-start")
     public void setRedpanda(Redpanda container) {
         StartRedpandaAction.Builder builder = new StartRedpandaAction.Builder();
         if (container.getVersion() != null) {
@@ -112,6 +120,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "testcontainers-start")
     public void setPostgresql(PostgreSQL container) {
         StartPostgreSQLAction.Builder builder = new StartPostgreSQLAction.Builder();
         if (container.getVersion() != null) {
@@ -243,6 +252,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return name;
         }
 
+        @SchemaProperty
         public void setName(String name) {
             this.name = name;
         }
@@ -251,6 +261,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return serviceName;
         }
 
+        @SchemaProperty
         public void setServiceName(String serviceName) {
             this.serviceName = serviceName;
         }
@@ -259,6 +270,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return image;
         }
 
+        @SchemaProperty
         public void setImage(String image) {
             this.image = image;
         }
@@ -267,6 +279,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return command;
         }
 
+        @SchemaProperty
         public void setCommand(String command) {
             this.command = command;
         }
@@ -275,6 +288,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return autoRemove;
         }
 
+        @SchemaProperty
         public void setAutoRemove(boolean autoRemove) {
             this.autoRemove = autoRemove;
         }
@@ -283,10 +297,12 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return startUpTimeout;
         }
 
+        @SchemaProperty
         public void setStartUpTimeout(int startUpTimeout) {
             this.startUpTimeout = startUpTimeout;
         }
 
+        @SchemaProperty
         public void setEnv(List<Variable> variables) {
             this.env = variables;
         }
@@ -305,10 +321,12 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return labels;
         }
 
+        @SchemaProperty
         public void setLabels(List<Label> labels) {
             this.labels = labels;
         }
 
+        @SchemaProperty
         public void setWaitFor(WaitFor waitFor) {
             this.waitFor = waitFor;
         }
@@ -324,6 +342,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return exposedPorts;
         }
 
+        @SchemaProperty
         public void setExposedPorts(List<Integer> exposedPorts) {
             this.exposedPorts = exposedPorts;
         }
@@ -335,6 +354,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return portBindings;
         }
 
+        @SchemaProperty
         public void setPortBindings(List<String> portBindings) {
             this.portBindings = portBindings;
         }
@@ -346,6 +366,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return volumeMounts;
         }
 
+        @SchemaProperty
         public void setVolumeMounts(List<VolumeMount> volumeMounts) {
             this.volumeMounts = volumeMounts;
         }
@@ -365,6 +386,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return autoCreateClients;
         }
 
+        @SchemaProperty
         public void setAutoCreateClients(boolean autoCreateClients) {
             this.autoCreateClients = autoCreateClients;
         }
@@ -373,6 +395,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return options;
         }
 
+        @SchemaProperty
         public void setOptions(Map<String, String> options) {
             this.options = options;
         }
@@ -381,6 +404,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return version;
         }
 
+        @SchemaProperty
         public void setVersion(String version) {
             this.version = version;
         }
@@ -392,6 +416,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return services;
         }
 
+        @SchemaProperty
         public void setServices(List<String> services) {
             this.services = services;
         }
@@ -406,6 +431,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return version;
         }
 
+        @SchemaProperty
         public void setVersion(String version) {
             this.version = version;
         }
@@ -421,6 +447,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return version;
         }
 
+        @SchemaProperty
         public void setVersion(String version) {
             this.version = version;
         }
@@ -429,6 +456,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return implementation;
         }
 
+        @SchemaProperty
         public void setImplementation(String implementation) {
             this.implementation = implementation;
         }
@@ -437,6 +465,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return port;
         }
 
+        @SchemaProperty
         public void setPort(int port) {
             this.port = port;
         }
@@ -450,6 +479,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return version;
         }
 
+        @SchemaProperty
         public void setVersion(String version) {
             this.version = version;
         }
@@ -473,6 +503,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return version;
         }
 
+        @SchemaProperty
         public void setVersion(String version) {
             this.version = version;
         }
@@ -481,6 +512,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return dataSourceName;
         }
 
+        @SchemaProperty
         public void setDataSourceName(String dataSourceName) {
             this.dataSourceName = dataSourceName;
         }
@@ -489,6 +521,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return database;
         }
 
+        @SchemaProperty
         public void setDatabase(String database) {
             this.database = database;
         }
@@ -497,6 +530,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return username;
         }
 
+        @SchemaProperty
         public void setUsername(String username) {
             this.username = username;
         }
@@ -505,6 +539,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return password;
         }
 
+        @SchemaProperty
         public void setPassword(String password) {
             this.password = password;
         }
@@ -513,6 +548,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return initScript;
         }
 
+        @SchemaProperty
         public void setInitScript(InitScript initScript) {
             this.initScript = initScript;
         }
@@ -526,6 +562,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
                 return file;
             }
 
+            @SchemaProperty
             public void setFile(String file) {
                 this.file = file;
             }
@@ -534,6 +571,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
                 return value;
             }
 
+            @SchemaProperty
             public void setValue(String value) {
                 this.value = value;
             }
@@ -553,6 +591,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return logMessage;
         }
 
+        @SchemaProperty
         public void setLogMessage(String logMessage) {
             this.logMessage = logMessage;
         }
@@ -561,6 +600,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return url;
         }
 
+        @SchemaProperty
         public void setUrl(String url) {
             this.url = url;
         }
@@ -569,6 +609,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return disabled;
         }
 
+        @SchemaProperty
         public void setDisabled(boolean disabled) {
             this.disabled = disabled;
         }
@@ -583,6 +624,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return file;
         }
 
+        @SchemaProperty
         public void setFile(String file) {
             this.file = file;
         }
@@ -591,6 +633,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return mountPath;
         }
 
+        @SchemaProperty
         public void setMountPath(String mountPath) {
             this.mountPath = mountPath;
         }
@@ -605,6 +648,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return name;
         }
 
+        @SchemaProperty
         public void setName(String value) {
             this.name = value;
         }
@@ -613,6 +657,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return value;
         }
 
+        @SchemaProperty
         public void setValue(String value) {
             this.value = value;
         }
@@ -628,6 +673,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return name;
         }
 
+        @SchemaProperty
         public void setName(String value) {
             this.name = value;
         }
@@ -636,6 +682,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return value;
         }
 
+        @SchemaProperty
         public void setValue(String value) {
             this.value = value;
         }

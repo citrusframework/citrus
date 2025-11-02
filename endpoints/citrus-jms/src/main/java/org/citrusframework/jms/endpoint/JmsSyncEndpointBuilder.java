@@ -18,11 +18,12 @@ package org.citrusframework.jms.endpoint;
 
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.Destination;
-
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.jms.message.JmsMessageConverter;
 import org.citrusframework.message.MessageCorrelator;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.destination.DestinationResolver;
 
@@ -32,7 +33,45 @@ import org.springframework.jms.support.destination.DestinationResolver;
 public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpoint> {
 
     /** Endpoint target */
-    private JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
+    private final JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
+
+    private String connectionFactory;
+    private String jmsTemplate;
+    private String messageConverter;
+    private String correlator;
+    private String destinationResolver;
+    private String destinationNameResolver;
+
+    @Override
+    public JmsSyncEndpoint build() {
+        if (referenceResolver != null) {
+            if (StringUtils.hasText(connectionFactory)) {
+                connectionFactory(referenceResolver.resolve(connectionFactory, ConnectionFactory.class));
+            }
+
+            if (StringUtils.hasText(jmsTemplate)) {
+                jmsTemplate(referenceResolver.resolve(jmsTemplate, JmsTemplate.class));
+            }
+
+            if (StringUtils.hasText(messageConverter)) {
+                messageConverter(referenceResolver.resolve(messageConverter, JmsMessageConverter.class));
+            }
+
+            if (StringUtils.hasText(correlator)) {
+                correlator(referenceResolver.resolve(correlator, MessageCorrelator.class));
+            }
+
+            if (StringUtils.hasText(destinationResolver)) {
+                destinationResolver(referenceResolver.resolve(destinationResolver, DestinationResolver.class));
+            }
+
+            if (StringUtils.hasText(destinationNameResolver)) {
+                destinationNameResolver(referenceResolver.resolve(destinationNameResolver, EndpointUriResolver.class));
+            }
+        }
+
+        return super.build();
+    }
 
     @Override
     protected JmsSyncEndpoint getEndpoint() {
@@ -41,18 +80,19 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
 
     /**
      * Sets the destinationName property.
-     * @param destinationName
-     * @return
      */
     public JmsSyncEndpointBuilder destination(String destinationName) {
         endpoint.getEndpointConfiguration().setDestinationName(destinationName);
         return this;
     }
 
+    @SchemaProperty(description = "The JMS destination name.")
+    public void setDestination(String destinationName) {
+        destination(destinationName);
+    }
+
     /**
      * Sets the destination property.
-     * @param destination
-     * @return
      */
     public JmsSyncEndpointBuilder destination(Destination destination) {
         endpoint.getEndpointConfiguration().setDestination(destination);
@@ -61,18 +101,19 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
 
     /**
      * Sets the reply destinationName property.
-     * @param destinationName
-     * @return
      */
     public JmsSyncEndpointBuilder replyDestination(String destinationName) {
         endpoint.getEndpointConfiguration().setReplyDestinationName(destinationName);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the reply destination name.")
+    public void setReplyDestination(String replyDestination) {
+        replyDestination(replyDestination);
+    }
+
     /**
      * Sets the reply destination property.
-     * @param destination
-     * @return
      */
     public JmsSyncEndpointBuilder replyDestination(Destination destination) {
         endpoint.getEndpointConfiguration().setReplyDestination(destination);
@@ -81,111 +122,146 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
 
     /**
      * Sets the connectionFactory property.
-     * @param connectionFactory
-     * @return
      */
     public JmsSyncEndpointBuilder connectionFactory(ConnectionFactory connectionFactory) {
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
         return this;
     }
 
+    @SchemaProperty(description = "The JMS connection factory.")
+    public void setConnectionFactory(String connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
     /**
      * Sets the jmsTemplate property.
-     * @param jmsTemplate
-     * @return
      */
     public JmsSyncEndpointBuilder jmsTemplate(JmsTemplate jmsTemplate) {
         endpoint.getEndpointConfiguration().setJmsTemplate(jmsTemplate);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the JMS template.")
+    public void setJmsTemplate(String jmsTemplate) {
+        this.jmsTemplate = jmsTemplate;
+    }
+
     /**
      * Sets the messageConverter property.
-     * @param messageConverter
-     * @return
      */
     public JmsSyncEndpointBuilder messageConverter(JmsMessageConverter messageConverter) {
         endpoint.getEndpointConfiguration().setMessageConverter(messageConverter);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the message converter bean reference.")
+    public void setMessageConverter(String messageConverter) {
+        this.messageConverter = messageConverter;
+    }
+
     /**
      * Sets the destination resolver.
-     * @param resolver
-     * @return
      */
     public JmsSyncEndpointBuilder destinationResolver(DestinationResolver resolver) {
         endpoint.getEndpointConfiguration().setDestinationResolver(resolver);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the destination resolver.")
+    public void setDestinationResolver(String resolver) {
+        this.destinationResolver = resolver;
+    }
+
     /**
      * Sets the destination name resolver.
-     * @param resolver
-     * @return
      */
     public JmsSyncEndpointBuilder destinationNameResolver(EndpointUriResolver resolver) {
         endpoint.getEndpointConfiguration().setDestinationNameResolver(resolver);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the destination name resolver.")
+    public void setDestinationNameResolver(String resolver) {
+        this.destinationNameResolver = resolver;
+    }
+
     /**
      * Sets the pubSubDomain property.
-     * @param pubSubDomain
-     * @return
      */
     public JmsSyncEndpointBuilder pubSubDomain(boolean pubSubDomain) {
         endpoint.getEndpointConfiguration().setPubSubDomain(pubSubDomain);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "When enabled the endpoint uses publish/subscribe mode.")
+    public void setPubSubDomain(boolean pubSubDomain) {
+        pubSubDomain(pubSubDomain);
+    }
+
     /**
      * Sets the useObjectMessages property.
-     * @param useObjectMessages
-     * @return
      */
     public JmsSyncEndpointBuilder useObjectMessages(boolean useObjectMessages) {
         endpoint.getEndpointConfiguration().setUseObjectMessages(useObjectMessages);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "When enabled the endpoint uses object messages.")
+    public void setUseObjectMessages(boolean useObjectMessages) {
+        useObjectMessages(useObjectMessages);
+    }
+
     /**
      * Sets the filterInternalHeaders property.
-     * @param filterInternalHeaders
-     * @return
      */
     public JmsSyncEndpointBuilder filterInternalHeaders(boolean filterInternalHeaders) {
         endpoint.getEndpointConfiguration().setFilterInternalHeaders(filterInternalHeaders);
         return this;
     }
 
+    @SchemaProperty(
+            advanced = true,
+            description = "When enabled the endpoint removes all internal headers before sending a message.")
+    public void setFilterInternalHeaders(boolean filterInternalHeaders) {
+        filterInternalHeaders(filterInternalHeaders);
+    }
+
     /**
      * Sets the polling interval.
-     * @param pollingInterval
-     * @return
      */
     public JmsSyncEndpointBuilder pollingInterval(int pollingInterval) {
         endpoint.getEndpointConfiguration().setPollingInterval(pollingInterval);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the polling interval.")
+    public void setPollingInterval(int pollingInterval) {
+        pollingInterval(pollingInterval);
+    }
+
     /**
      * Sets the message correlator.
-     * @param correlator
-     * @return
      */
     public JmsSyncEndpointBuilder correlator(MessageCorrelator correlator) {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the message correlator.")
+    public void setCorrelator(String correlator) {
+        this.correlator = correlator;
+    }
+
     /**
      * Sets the default timeout.
-     * @param timeout
-     * @return
      */
     public JmsSyncEndpointBuilder timeout(long timeout) {
         endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
+    }
+
+    @SchemaProperty(description = "Sets the receive timeout when the consumer waits for messages to arrive.")
+    public void setTimeout(long timeout) {
+        timeout(timeout);
     }
 }

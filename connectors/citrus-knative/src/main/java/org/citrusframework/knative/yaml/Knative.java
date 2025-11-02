@@ -28,6 +28,9 @@ import org.citrusframework.knative.actions.KnativeAction;
 import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
+
+import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
 
 public class Knative implements TestActionBuilder<KnativeAction>, ReferenceResolverAware {
 
@@ -45,78 +48,97 @@ public class Knative implements TestActionBuilder<KnativeAction>, ReferenceResol
 
     private ReferenceResolver referenceResolver;
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
-        this.description = description;
+        this.description = value;
     }
 
+    @SchemaProperty(advanced = true)
     public void setActor(String actor) {
         this.actor = actor;
     }
 
+    @SchemaProperty
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
+    @SchemaProperty
     public void setAutoRemove(boolean autoRemoveResources) {
         this.autoRemoveResources = autoRemoveResources;
     }
 
+    @SchemaProperty
     public void setClusterType(ClusterType clusterType) {
         this.clusterType = clusterType;
     }
 
+    @SchemaProperty
     public void setKubernetesClient(String client) {
         this.k8sClient = client;
     }
 
+    @SchemaProperty
     public void setClient(String client) {
         this.knativeClient = client;
     }
 
+    @SchemaProperty(kind = ACTION, group = "knative")
     public void setCreateBroker(CreateBroker builder) {
         this.builder = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "knative")
     public void setDeleteBroker(DeleteBroker builder) {
         this.builder = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "knative")
     public void setVerifyBroker(VerifyBroker builder) {
         this.builder = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "knative")
     public void setCreateTrigger(CreateTrigger builder) {
         this.builder = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "knative")
     public void setDeleteTrigger(DeleteTrigger builder) {
         this.builder = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "knative")
     public void setCreateChannel(CreateChannel builder) {
         this.builder = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "knative")
     public void setDeleteChannel(DeleteChannel builder) {
         this.builder = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "knative")
     public void setCreateSubscription(CreateSubscription builder) {
         this.builder = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "knative")
     public void setDeleteSubscription(DeleteSubscription builder) {
         this.builder = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "knative")
     public void setSendEvent(SendEvent builder) {
         this.builder = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "knative")
     public void setReceiveEvent(ReceiveEvent builder) {
         this.builder = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "knative")
     public void setDeleteResource(DeleteResource builder) {
         this.builder = builder;
     }

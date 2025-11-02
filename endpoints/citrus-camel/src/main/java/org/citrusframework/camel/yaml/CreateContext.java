@@ -17,14 +17,17 @@
 package org.citrusframework.camel.yaml;
 
 import org.citrusframework.camel.actions.CreateCamelContextAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CreateContext implements CamelActionBuilderWrapper<CreateCamelContextAction.Builder> {
     private final CreateCamelContextAction.Builder builder = new CreateCamelContextAction.Builder();
 
+    @SchemaProperty(description = "The name of the Camel context.")
     public void setName(String contextName) {
         builder.contextName(contextName);
     }
 
+    @SchemaProperty(advanced = true, description = "When enabled the context is automatically started after creation.")
     public void setAutoStart(boolean autoStart) {
         builder.autoStart(autoStart);
     }

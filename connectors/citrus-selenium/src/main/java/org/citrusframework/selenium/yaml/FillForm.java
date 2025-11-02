@@ -23,21 +23,25 @@ import org.citrusframework.TestActor;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.FillFormAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class FillForm extends AbstractSeleniumAction.Builder<FillFormAction, FillForm> {
 
     private final FillFormAction.Builder delegate = new FillFormAction.Builder();
 
+    @SchemaProperty
     public void setFields(List<Field> fields) {
         delegate.fields(fields
                 .stream()
                 .collect(Collectors.toMap(Field::getId, Field::getValue)));
     }
 
+    @SchemaProperty
     public void setJson(String json) {
         this.delegate.fromJson(json);
     }
 
+    @SchemaProperty
     public void setSubmit(String value) {
         this.delegate.submit(value);
     }
@@ -64,6 +68,7 @@ public class FillForm extends AbstractSeleniumAction.Builder<FillFormAction, Fil
         private String id;
         private String value;
 
+        @SchemaProperty
         public void setId(String id) {
             this.id = id;
         }
@@ -72,6 +77,7 @@ public class FillForm extends AbstractSeleniumAction.Builder<FillFormAction, Fil
             return id;
         }
 
+        @SchemaProperty
         public void setValue(String value) {
             this.value = value;
         }

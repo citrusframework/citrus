@@ -177,6 +177,7 @@
         <xs:element ref="tns:fail"/>
         <xs:element ref="tns:iterate"/>
         <xs:element ref="tns:sequential"/>
+        <xs:element ref="tns:finally"/>
         <xs:element ref="tns:parallel"/>
         <xs:element ref="tns:repeat"/>
         <xs:element ref="tns:repeat-on-error"/>
@@ -546,6 +547,13 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="DoFinally">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="actions" type="tns:TestActions" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="Parallel">
     <xs:sequence>
       <xs:element name="description" type="xs:string" minOccurs="0"/>
@@ -729,6 +737,7 @@
   <xs:element name="repeat-on-error" type="tns:RepeatOnError"/>
   <xs:element name="send" type="tns:Send"/>
   <xs:element name="sequential" type="tns:Sequential"/>
+  <xs:element name="finally" type="tns:DoFinally"/>
   <xs:element name="sleep" type="tns:Sleep"/>
   <xs:element name="start" type="tns:Start"/>
   <xs:element name="stop" type="tns:Stop"/>

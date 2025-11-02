@@ -50,7 +50,6 @@
   </ciManagement>
 
   <modules>
-    <module>catalog</module>
     <module>connectors</module>
     <module>core</module>
     <module>endpoints</module>
@@ -59,6 +58,7 @@
     <module>tools</module>
     <module>utils</module>
     <module>validation</module>
+    <module>catalog</module>
   </modules>
 
   <developers>
@@ -187,6 +187,7 @@
     <apache.rat.plugin.version>0.16.1</apache.rat.plugin.version>
 
     <asciidoctor.maven.plugin.version>3.2.0</asciidoctor.maven.plugin.version>
+    <exec.maven.plugin.version>3.6.2</exec.maven.plugin.version>
     <jaxb.maven.plugin.version>3.3.0</jaxb.maven.plugin.version>
 
     <activemq.artemis.version>2.42.0</activemq.artemis.version>
@@ -237,6 +238,7 @@
     <jetty.version>12.0.27</jetty.version>
     <jetty.websocket-api.version>2.0.0</jetty.websocket-api.version>
     <jsch.version>0.1.55</jsch.version>
+    <jsonschema-generator.version>4.38.0</jsonschema-generator.version>
     <json-path.version>2.9.0</json-path.version>
     <json-schema-validator.version>1.5.9</json-schema-validator.version>
     <json-smart.version>2.6.0</json-smart.version>
@@ -823,6 +825,12 @@
         <groupId>com.jayway.jsonpath</groupId>
         <artifactId>json-path</artifactId>
         <version>${json-path.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.victools</groupId>
+        <artifactId>jsonschema-generator</artifactId>
+        <version>${jsonschema-generator.version}</version>
       </dependency>
 
       <dependency>
@@ -1687,6 +1695,11 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>${maven.helper.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>${exec.maven.plugin.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>

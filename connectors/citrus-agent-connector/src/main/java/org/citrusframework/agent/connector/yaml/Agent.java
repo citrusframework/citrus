@@ -26,6 +26,9 @@ import org.citrusframework.agent.connector.actions.AbstractAgentAction;
 import org.citrusframework.agent.connector.actions.AgentConnectAction;
 import org.citrusframework.agent.connector.actions.AgentRunAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.yaml.SchemaProperty;
+
+import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
 
 public class Agent implements TestActionBuilder<AbstractAgentAction> {
 
@@ -33,10 +36,12 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
 
     private String agentName = CitrusAgentSettings.getAgentName();
 
+    @SchemaProperty
     public void setName(String name) {
         this.agentName = name;
     }
 
+    @SchemaProperty(kind = ACTION, group = "agent")
     public void setConnect(Connect connect) {
         AgentConnectAction.Builder builder = new AgentConnectAction.Builder();
 
@@ -46,6 +51,7 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
         delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "agent")
     public void setRun(Run run) {
         AgentRunAction.Builder builder = new AgentRunAction.Builder();
         if (run.getSource() != null) {
@@ -77,6 +83,7 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
             return url;
         }
 
+        @SchemaProperty
         public void setUrl(String url) {
             this.url = url;
         }
@@ -85,6 +92,7 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
             return port;
         }
 
+        @SchemaProperty
         public void setPort(int port) {
             this.port = port;
         }
@@ -99,10 +107,12 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
             return source;
         }
 
+        @SchemaProperty
         public void setSource(Source source) {
             this.source = source;
         }
 
+        @SchemaProperty
         public void setActions(List<Map<String, Object>> actions) {
             this.source = new Source();
             Map<String, Object> raw = new LinkedHashMap<>();
@@ -120,6 +130,7 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
                 return file;
             }
 
+            @SchemaProperty
             public void setFile(String file) {
                 this.file = file;
             }
@@ -128,6 +139,7 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
                 return code;
             }
 
+            @SchemaProperty
             public void setCode(String code) {
                 this.code = code;
             }

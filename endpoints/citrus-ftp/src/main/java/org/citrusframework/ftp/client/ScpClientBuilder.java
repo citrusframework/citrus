@@ -19,6 +19,8 @@ package org.citrusframework.ftp.client;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.ErrorHandlingStrategy;
 import org.citrusframework.message.MessageCorrelator;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * @since 2.7.6
@@ -26,7 +28,20 @@ import org.citrusframework.message.MessageCorrelator;
 public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
 
     /** Endpoint target */
-    private ScpClient endpoint = new ScpClient();
+    private final ScpClient endpoint = new ScpClient();
+
+    private String correlator;
+
+    @Override
+    public ScpClient build() {
+        if (referenceResolver != null) {
+            if (StringUtils.hasText(correlator)) {
+                correlator(referenceResolver.resolve(correlator, MessageCorrelator.class));
+            }
+        }
+
+        return super.build();
+    }
 
     @Override
     protected ScpClient getEndpoint() {
@@ -35,142 +50,204 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
 
     /**
      * Sets the port option property.
-     * @param option
-     * @return
      */
     public ScpClientBuilder portOption(String option) {
         endpoint.getEndpointConfiguration().setPortOption(option);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the port option.")
+    public void setPortOption(String option) {
+        portOption(option);
+    }
+
     /**
      * Sets the host property.
-     * @param host
-     * @return
      */
     public ScpClientBuilder host(String host) {
         endpoint.getEndpointConfiguration().setHost(host);
         return this;
     }
 
+    @SchemaProperty(description = "The Ftp server host.")
+    public void setHost(String host) {
+        host(host);
+    }
+
     /**
      * Sets the port property.
-     * @param port
-     * @return
      */
     public ScpClientBuilder port(int port) {
         endpoint.getEndpointConfiguration().setPort(port);
         return this;
     }
 
+    @SchemaProperty(description = "The Ftp server port.")
+    public void setPort(int port) {
+        port(port);
+    }
+
     /**
      * Sets the auto read files property.
-     *
-     * @param autoReadFiles
-     * @return
      */
     public ScpClientBuilder autoReadFiles(boolean autoReadFiles) {
         endpoint.getEndpointConfiguration().setAutoReadFiles(autoReadFiles);
         return this;
     }
 
+    @SchemaProperty(description = "When enabled the client automatically reads new files.")
+    public void setAutoReadFiles(boolean autoReadFiles) {
+        autoReadFiles(autoReadFiles);
+    }
+
     /**
      * Sets the client username.
-     * @param username
-     * @return
      */
     public ScpClientBuilder username(String username) {
         endpoint.getEndpointConfiguration().setUser(username);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the user name."
+    )
+    public void setUsername(String username) {
+        username(username);
+    }
+
     /**
      * Sets the client password.
-     * @param password
-     * @return
      */
     public ScpClientBuilder password(String password) {
         endpoint.getEndpointConfiguration().setPassword(password);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the user password."
+    )
+    public void setPassword(String password) {
+        password(password);
+    }
+
     /**
      * Sets the privateKeyPath property.
-     * @param privateKeyPath
-     * @return
      */
     public ScpClientBuilder privateKeyPath(String privateKeyPath) {
         endpoint.getEndpointConfiguration().setPrivateKeyPath(privateKeyPath);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the private key path."
+    )
+    public void setPrivateKeyPath(String privateKeyPath) {
+        privateKeyPath(privateKeyPath);
+    }
+
     /**
      * Sets the privateKeyPassword property.
-     * @param privateKeyPassword
-     * @return
      */
     public ScpClientBuilder privateKeyPassword(String privateKeyPassword) {
         endpoint.getEndpointConfiguration().setPrivateKeyPassword(privateKeyPassword);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the private key password."
+    )
+    public void setPrivateKeyPassword(String privateKeyPassword) {
+        privateKeyPassword(privateKeyPassword);
+    }
+
     /**
      * Sets the strictHostChecking property.
-     * @param strictHostChecking
-     * @return
      */
     public ScpClientBuilder strictHostChecking(boolean strictHostChecking) {
         endpoint.getEndpointConfiguration().setStrictHostChecking(strictHostChecking);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Enable strict host checking."
+    )
+    public void setStrictHostChecking(boolean strictHostChecking) {
+        strictHostChecking(strictHostChecking);
+    }
+
     /**
      * Sets the knownHosts property.
-     * @param knownHosts
-     * @return
      */
     public ScpClientBuilder knownHosts(String knownHosts) {
         endpoint.getEndpointConfiguration().setKnownHosts(knownHosts);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "List of known hosts."
+    )
+    public void setKnownHosts(String knownHosts) {
+        knownHosts(knownHosts);
+    }
+
     /**
      * Sets the message correlator.
-     * @param correlator
-     * @return
      */
     public ScpClientBuilder correlator(MessageCorrelator correlator) {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the message correlator.")
+    public void setCorrelator(String correlator) {
+        this.correlator = correlator;
+    }
+
     /**
      * Sets the error handling strategy.
-     * @param errorStrategy
-     * @return
      */
     public ScpClientBuilder errorHandlingStrategy(ErrorHandlingStrategy errorStrategy) {
         endpoint.getEndpointConfiguration().setErrorHandlingStrategy(errorStrategy);
         return this;
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:errorHandler") },
+            description = "Sets the error handling strategy."
+    )
+    public void setErrorHandlingStrategy(ErrorHandlingStrategy errorStrategy) {
+        errorHandlingStrategy(errorStrategy);
+    }
+
     /**
      * Sets the polling interval.
-     * @param pollingInterval
-     * @return
      */
     public ScpClientBuilder pollingInterval(int pollingInterval) {
         endpoint.getEndpointConfiguration().setPollingInterval(pollingInterval);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the polling interval when consuming messages.")
+    public void setPollingInterval(int pollingInterval) {
+        pollingInterval(pollingInterval);
+    }
+
     /**
      * Sets the default timeout.
-     * @param timeout
-     * @return
      */
     public ScpClientBuilder timeout(long timeout) {
         endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
+    }
+
+    @SchemaProperty(description = "The endpoint timeout when waiting for messages.")
+    public void setTimeout(long timeout) {
+        timeout(timeout);
     }
 }

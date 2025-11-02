@@ -29,12 +29,15 @@ public class MessageChannelEndpointsTest {
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("channel"));
         Assert.assertTrue(endpointBuilders.containsKey("channel.sync"));
         Assert.assertTrue(endpointBuilders.containsKey("channel.async"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
+        Assert.assertTrue(EndpointBuilder.lookup("channel").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("channel").get().getClass(), MessageChannelEndpointsBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("channel.sync").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("channel.sync").get().getClass(), ChannelSyncEndpointBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("channel.async").isPresent());

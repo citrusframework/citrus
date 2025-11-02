@@ -23,11 +23,13 @@ import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.ServiceDisconnectAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Disconnect extends AbstractKubernetesAction.Builder<AbstractKubernetesAction, Disconnect> implements ReferenceResolverAware {
 
     private AbstractKubernetesAction.Builder<? extends AbstractKubernetesAction, ?> delegate;
 
+    @SchemaProperty
     public void setService(Service service) {
         ServiceDisconnectAction.Builder builder = new ServiceDisconnectAction.Builder();
         builder.service(service.getName());
@@ -82,6 +84,7 @@ public class Disconnect extends AbstractKubernetesAction.Builder<AbstractKuberne
 
         protected String name;
 
+        @SchemaProperty
         public void setName(String name) {
             this.name = name;
         }

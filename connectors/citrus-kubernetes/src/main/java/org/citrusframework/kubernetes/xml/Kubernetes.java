@@ -47,7 +47,7 @@ public class Kubernetes implements TestActionBuilder<KubernetesAction>, Referenc
 
     @XmlElement
     public void setDescription(String value) {
-        this.description = description;
+        this.description = value;
     }
 
     @XmlAttribute

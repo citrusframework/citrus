@@ -37,6 +37,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.impl.NoStackTraceTimeoutException;
 import io.vertx.core.json.JsonObject;
@@ -107,7 +108,11 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
         CitrusInstanceManager.addInstanceProcessor(this);
 
         Router router = Router.router(getVertx());
-        router.route().handler(CorsHandler.create().addOriginWithRegex(CitrusAgentSettings.getCorsAllowedOrigin()));
+        router.route().handler(CorsHandler.create()
+                .addOriginWithRegex(CitrusAgentSettings.getCorsAllowedOrigin())
+                .allowedMethod(HttpMethod.GET)
+                .allowedMethod(HttpMethod.PUT)
+                .allowedMethod(HttpMethod.POST));
         router.route().handler(BodyHandler.create());
         router.route().handler(ctx -> {
             if (configuration.isVerbose()) {
@@ -387,6 +392,11 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
                                 .putHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString())
                                 .end(JsonSupport.render(configuration))));
         router.put("/configuration")
+                .handler(wrapThrowingHandler(ctx ->
+                        configuration.apply(JsonSupport.read(
+                                ctx.body().asString(),
+                                CitrusAppConfiguration.class))));
+        router.post("/configuration")
                 .handler(wrapThrowingHandler(ctx ->
                         configuration.apply(JsonSupport.read(
                                 ctx.body().asString(),

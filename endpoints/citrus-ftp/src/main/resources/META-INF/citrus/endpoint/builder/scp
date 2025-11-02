@@ -1,2 +1,3 @@
+type=org.citrusframework.ftp.endpoint.builder.ScpEndpointBuilder
 client=org.citrusframework.ftp.client.ScpClientBuilder
 server=org.citrusframework.ftp.server.SftpServerBuilder

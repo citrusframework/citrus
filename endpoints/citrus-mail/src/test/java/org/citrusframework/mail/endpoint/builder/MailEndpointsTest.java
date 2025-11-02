@@ -29,12 +29,15 @@ public class MailEndpointsTest {
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("mail"));
         Assert.assertTrue(endpointBuilders.containsKey("mail.client"));
         Assert.assertTrue(endpointBuilders.containsKey("mail.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
+        Assert.assertTrue(EndpointBuilder.lookup("mail").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("mail").get().getClass(), MailEndpointBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("mail.client").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("mail.client").get().getClass(), MailClientBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("mail.server").isPresent());

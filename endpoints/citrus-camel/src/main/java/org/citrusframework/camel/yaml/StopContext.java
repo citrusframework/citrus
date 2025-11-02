@@ -17,10 +17,12 @@
 package org.citrusframework.camel.yaml;
 
 import org.citrusframework.camel.actions.StopCamelContextAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class StopContext implements CamelActionBuilderWrapper<StopCamelContextAction.Builder> {
     private final StopCamelContextAction.Builder builder = new StopCamelContextAction.Builder();
 
+    @SchemaProperty(description = "The Camel context name.")
     public void setName(String contextName) {
         builder.contextName(contextName);
     }

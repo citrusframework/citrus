@@ -21,16 +21,19 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Action implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
     private String reference;
     private ReferenceResolver referenceResolver;
 
+    @SchemaProperty(description = "The reference to the test action in the bean registry.")
     public void setReference(String reference) {
         this.reference = reference;
     }
 
+    @SchemaProperty(description = "The reference to the test action in the bean registry.")
     public void setRef(String reference) {
         this.reference = reference;
     }

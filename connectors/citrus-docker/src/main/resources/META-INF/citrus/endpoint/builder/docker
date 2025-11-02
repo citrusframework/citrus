@@ -1,1 +1,2 @@
+type=org.citrusframework.docker.endpoint.builder.DockerEndpointBuilder
 client=org.citrusframework.docker.client.DockerClientBuilder

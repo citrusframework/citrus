@@ -21,24 +21,29 @@ import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.selenium.actions.WaitUntilAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class WaitUntil extends AbstractSeleniumAction.Builder<WaitUntilAction, WaitUntil> implements ElementAware {
 
     private final WaitUntilAction.Builder delegate = new WaitUntilAction.Builder();
 
     @Override
+    @SchemaProperty
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }
 
+    @SchemaProperty
     public void setTimeout(long timeout) {
         this.delegate.timeout(timeout);
     }
 
+    @SchemaProperty
     public void setCondition(String condition) {
         this.delegate.condition(condition);
     }
 
+    @SchemaProperty
     public void setUntil(String condition) {
         this.delegate.condition(condition);
     }

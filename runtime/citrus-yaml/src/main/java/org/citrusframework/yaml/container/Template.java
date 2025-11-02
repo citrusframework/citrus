@@ -21,6 +21,7 @@ import java.util.List;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.TestActions;
 
 public class Template implements TestActionBuilder<org.citrusframework.container.Template>, ReferenceResolverAware {
@@ -38,19 +39,23 @@ public class Template implements TestActionBuilder<org.citrusframework.container
         return builder.build();
     }
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty(required = true, description = "Template name.")
     public void setName(String name) {
         builder.name(String.format("template:%s", name));
         builder.templateName(name);
     }
 
+    @SchemaProperty(advanced = true, description = "Sets global scope for test variables.")
     public void setGlobalContext(boolean globalContext) {
         builder.globalContext(globalContext);
     }
 
+    @SchemaProperty(description = "Optional set of template parameters that get set as test variables.")
     public void setParameters(List<Parameter> parameters) {
         parameters.forEach(p -> {
             if (p.value != null) {
@@ -59,6 +64,7 @@ public class Template implements TestActionBuilder<org.citrusframework.container
         });
     }
 
+    @SchemaProperty(required = true, description = "Sequence of test actions to execute.")
     public void setActions(List<TestActions> actions) {
         builder.actions(actions.stream().map(TestActions::get).toArray(TestActionBuilder<?>[]::new));
     }
@@ -76,6 +82,7 @@ public class Template implements TestActionBuilder<org.citrusframework.container
             return name;
         }
 
+        @SchemaProperty(required = true, description = "Name of the parameter.")
         public void setName(String value) {
             this.name = value;
         }
@@ -84,6 +91,7 @@ public class Template implements TestActionBuilder<org.citrusframework.container
             return value;
         }
 
+        @SchemaProperty(required = true, description = "The parameter value")
         public void setValue(String value) {
             this.value = value;
         }

@@ -23,11 +23,13 @@ import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.ServiceConnectAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetesAction, Connect> implements ReferenceResolverAware {
 
     private AbstractKubernetesAction.Builder<? extends AbstractKubernetesAction, ?> delegate;
 
+    @SchemaProperty
     public void setService(Service service) {
         ServiceConnectAction.Builder builder = new ServiceConnectAction.Builder();
 
@@ -96,6 +98,7 @@ public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetes
         protected String port;
         protected String localPort;
 
+        @SchemaProperty
         public void setName(String name) {
             this.name = name;
         }
@@ -104,6 +107,7 @@ public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetes
             return name;
         }
 
+        @SchemaProperty
         public void setClient(String client) {
             this.client = client;
         }
@@ -112,6 +116,7 @@ public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetes
             return client;
         }
 
+        @SchemaProperty
         public void setPort(String port) {
             this.port = port;
         }
@@ -120,6 +125,7 @@ public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetes
             return port;
         }
 
+        @SchemaProperty
         public void setLocalPort(String localPort) {
             this.localPort = localPort;
         }

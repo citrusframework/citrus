@@ -51,7 +51,7 @@ public class Knative implements TestActionBuilder<KnativeAction>, ReferenceResol
 
     @XmlElement
     public void setDescription(String value) {
-        this.description = description;
+        this.description = value;
     }
 
     @XmlAttribute

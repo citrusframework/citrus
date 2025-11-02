@@ -29,12 +29,15 @@ public class HttpEndpointsTest {
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("http"));
         Assert.assertTrue(endpointBuilders.containsKey("http.client"));
         Assert.assertTrue(endpointBuilders.containsKey("http.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
+        Assert.assertTrue(EndpointBuilder.lookup("http").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("http").get().getClass(), HttpEndpointBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("http.client").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("http.client").get().getClass(), HttpClientBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("http.server").isPresent());

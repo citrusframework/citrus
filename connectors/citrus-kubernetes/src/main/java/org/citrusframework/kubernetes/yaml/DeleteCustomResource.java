@@ -16,20 +16,22 @@
 
 package org.citrusframework.kubernetes.yaml;
 
-import io.fabric8.kubernetes.client.CustomResource;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.DeleteCustomResourceAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class DeleteCustomResource extends AbstractKubernetesAction.Builder<DeleteCustomResourceAction, DeleteCustomResource> {
 
     private final DeleteCustomResourceAction.Builder delegate = new DeleteCustomResourceAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.resourceName(name);
     }
 
+    @SchemaProperty
     public void setType(String resourceType) {
         try {
             delegate.resourceType(Class.forName(resourceType));
@@ -38,18 +40,22 @@ public class DeleteCustomResource extends AbstractKubernetesAction.Builder<Delet
         }
     }
 
+    @SchemaProperty
     public void setKind(String kind) {
         delegate.kind(kind);
     }
 
+    @SchemaProperty
     public void setGroup(String group) {
         delegate.group(group);
     }
 
+    @SchemaProperty
     public void setVersion(String version) {
         delegate.version(version);
     }
 
+    @SchemaProperty
     public void setApiVersion(String apiVersion) {
         delegate.apiVersion(apiVersion);
     }

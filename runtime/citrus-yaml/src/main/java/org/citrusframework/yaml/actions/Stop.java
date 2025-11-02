@@ -22,15 +22,18 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.StopServerAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Stop implements TestActionBuilder<StopServerAction>, ReferenceResolverAware {
 
     private final StopServerAction.Builder builder = new StopServerAction.Builder();
 
+    @SchemaProperty
     public void setServer(String server) {
         builder.server(server);
     }
 
+    @SchemaProperty
     public void setServers(List<ServerRef> servers) {
         servers.forEach(server -> builder.server(server.name));
     }
@@ -52,6 +55,7 @@ public class Stop implements TestActionBuilder<StopServerAction>, ReferenceResol
             return name;
         }
 
+        @SchemaProperty
         public void setName(String value) {
             this.name = value;
         }

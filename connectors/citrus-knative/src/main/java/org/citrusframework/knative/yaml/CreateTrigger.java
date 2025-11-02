@@ -26,27 +26,33 @@ import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.eventing.CreateTriggerAction;
 import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CreateTrigger extends AbstractKnativeAction.Builder<CreateTriggerAction, CreateTrigger> {
 
     private final CreateTriggerAction.Builder delegate = new CreateTriggerAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.trigger(name);
     }
 
+    @SchemaProperty
     public void setBroker(String name) {
         this.delegate.broker(name);
     }
 
+    @SchemaProperty
     public void setChannel(String name) {
         this.delegate.channel(name);
     }
 
+    @SchemaProperty
     public void setService(String name) {
         this.delegate.service(name);
     }
 
+    @SchemaProperty
     public void setFilter(Filter filter) {
         filter.getAttributes().forEach(attr -> this.delegate.filter(attr.getName(), attr.getValue()));
     }
@@ -102,6 +108,7 @@ public class CreateTrigger extends AbstractKnativeAction.Builder<CreateTriggerAc
 
         protected List<Attribute> attributes;
 
+        @SchemaProperty
         public void setAttributes(List<Attribute> attributes) {
             this.attributes = attributes;
         }
@@ -122,6 +129,7 @@ public class CreateTrigger extends AbstractKnativeAction.Builder<CreateTriggerAc
                 return name;
             }
 
+            @SchemaProperty
             public void setName(String value) {
                 this.name = value;
             }
@@ -130,6 +138,7 @@ public class CreateTrigger extends AbstractKnativeAction.Builder<CreateTriggerAc
                 return value;
             }
 
+            @SchemaProperty
             public void setValue(String value) {
                 this.value = value;
             }

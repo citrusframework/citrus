@@ -22,6 +22,7 @@ import org.citrusframework.common.TestLoader;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * @since 4.0
@@ -29,9 +30,9 @@ import org.citrusframework.spi.Resources;
 public class TestSource {
 
     /** Test type, name and optional source file path */
-    private final String type;
-    private final String name;
-    private final String filePath;
+    private String type;
+    private String name;
+    private String filePath;
 
     private Resource sourceFile;
 
@@ -60,6 +61,11 @@ public class TestSource {
         return type;
     }
 
+    @SchemaProperty(description = "The test source type.")
+    public void setType(String type) {
+        this.type = type;
+    }
+
     /**
      * Gets the name.
      */
@@ -67,8 +73,18 @@ public class TestSource {
         return name;
     }
 
+    @SchemaProperty(description = "The source file name.")
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getFilePath() {
         return filePath;
+    }
+
+    @SchemaProperty(description = "The source file path.")
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     /**

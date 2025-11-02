@@ -18,15 +18,18 @@ package org.citrusframework.yaml.actions;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.FailAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Fail implements TestActionBuilder<FailAction> {
 
     private final FailAction.Builder builder = new FailAction.Builder();
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty(description = "Error message describing the failure.")
     public void setMessage(String message) {
         builder.message(message);
     }

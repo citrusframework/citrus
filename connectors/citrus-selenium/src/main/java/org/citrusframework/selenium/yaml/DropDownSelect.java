@@ -23,20 +23,24 @@ import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.DropDownSelectAction;
 import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class DropDownSelect extends AbstractSeleniumAction.Builder<DropDownSelectAction, DropDownSelect> implements ElementAware {
 
     private final DropDownSelectAction.Builder delegate = new DropDownSelectAction.Builder();
 
+    @SchemaProperty
     public void setOption(String option) {
         this.delegate.option(option);
     }
 
+    @SchemaProperty
     public void setOptions(List<String> options) {
         this.delegate.options(options);
     }
 
     @Override
+    @SchemaProperty
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

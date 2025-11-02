@@ -22,12 +22,14 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.container.Template;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.YamlTemplateLoader;
 
 public class ApplyTemplate implements TestActionBuilder<Template>, ReferenceResolverAware {
 
     private final Template.Builder builder = new Template.Builder();
 
+    @SchemaProperty(required = true, description = "The name of the template.")
     public void setName(String name) {
         builder.templateName(name);
     }
@@ -36,11 +38,13 @@ public class ApplyTemplate implements TestActionBuilder<Template>, ReferenceReso
         builder.templateName(name);
     }
 
+    @SchemaProperty(description = "Load the template from given file resource.")
     public void setFile(String filePath) {
         builder.file(filePath);
         builder.loader(new YamlTemplateLoader());
     }
 
+    @SchemaProperty(description = "Template parameters, passed to the template as test variables.")
     public void setParameters(List<Parameter> parameters) {
         parameters.forEach(p -> {
             if (p.value != null) {
@@ -68,6 +72,7 @@ public class ApplyTemplate implements TestActionBuilder<Template>, ReferenceReso
             return name;
         }
 
+        @SchemaProperty(required = true, description = "The name of the parameter.")
         public void setName(String value) {
             this.name = value;
         }
@@ -76,6 +81,7 @@ public class ApplyTemplate implements TestActionBuilder<Template>, ReferenceReso
             return value;
         }
 
+        @SchemaProperty(required = true, description = "The parameter value.")
         public void setValue(String value) {
             this.value = value;
         }

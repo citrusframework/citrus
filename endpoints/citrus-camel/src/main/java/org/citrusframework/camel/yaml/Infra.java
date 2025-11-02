@@ -20,15 +20,22 @@ import org.citrusframework.camel.actions.AbstractCamelAction;
 import org.citrusframework.camel.actions.infra.CamelRunInfraAction;
 import org.citrusframework.camel.actions.infra.CamelStopInfraAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.yaml.SchemaProperty;
+
+import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
 
 public class Infra implements CamelActionBuilderWrapper<AbstractCamelAction.Builder<?, ?>> {
 
+    private static final String CAMEL_INFRA_GROUP = "camel-infra";
+
     private AbstractCamelAction.Builder<?, ?> builder;
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_INFRA_GROUP, description = "Runs a Camel infra service.")
     public void setRun(Run run) {
         this.builder = run.getBuilder();
     }
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_INFRA_GROUP, description = "Stops a Camel infra service.")
     public void setStop(Stop stop) {
         this.builder = stop.getBuilder();
     }
@@ -46,22 +53,27 @@ public class Infra implements CamelActionBuilderWrapper<AbstractCamelAction.Buil
 
         private final CamelRunInfraAction.Builder builder = new CamelRunInfraAction.Builder();
 
+        @SchemaProperty(advanced = true, description = "The Camel catalog that holds the infra service definitions.")
         public void setCatalog(String camelCatalog) {
             builder.catalog(camelCatalog);
         }
 
+        @SchemaProperty(description = "The Camel infra service name.")
         public void setService(String serviceName) {
             builder.service(serviceName);
         }
 
+        @SchemaProperty(description = "Optional service implementation detail.")
         public void setImplementation(String implementation) {
             builder.implementation(implementation);
         }
 
+        @SchemaProperty(description = "When enabled the infra service is automatically stopped after the test.")
         public void setAutoRemove(boolean autoRemove) {
             builder.autoRemove(autoRemove);
         }
 
+        @SchemaProperty(advanced = true, description = "When enabled the service output is saved into a log file.")
         public void setDumpServiceOutput(boolean enabled) {
             builder.dumpServiceOutput(enabled);
         }
@@ -76,10 +88,12 @@ public class Infra implements CamelActionBuilderWrapper<AbstractCamelAction.Buil
 
         private final CamelStopInfraAction.Builder builder = new CamelStopInfraAction.Builder();
 
+        @SchemaProperty(description = "The Camel infra service name.")
         public void setService(String serviceName) {
             builder.service(serviceName);
         }
 
+        @SchemaProperty(description = "Optional service implementation detail.")
         public void setImplementation(String implementation) {
             builder.implementation(implementation);
         }

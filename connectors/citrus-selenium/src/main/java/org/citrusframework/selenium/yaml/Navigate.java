@@ -20,11 +20,13 @@ import org.citrusframework.TestActor;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.NavigateAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class Navigate extends AbstractSeleniumAction.Builder<NavigateAction, Navigate> {
 
     private final NavigateAction.Builder delegate = new NavigateAction.Builder();
 
+    @SchemaProperty
     public void setPage(String page) {
         this.delegate.page(page);
     }

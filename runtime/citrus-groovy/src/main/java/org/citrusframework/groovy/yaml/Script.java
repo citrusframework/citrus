@@ -16,6 +16,8 @@
 
 package org.citrusframework.groovy.yaml;
 
+import org.citrusframework.yaml.SchemaProperty;
+
 public class Script {
 
     protected String file;
@@ -30,6 +32,7 @@ public class Script {
         return file;
     }
 
+    @SchemaProperty
     public void setFile(String file) {
         this.file = file;
     }
@@ -38,10 +41,12 @@ public class Script {
         return value;
     }
 
+    @SchemaProperty
     public void setValue(String value) {
         this.value = value;
     }
 
+    @SchemaProperty
     public void setScript(String script) {
         this.value = script;
     }
@@ -50,6 +55,7 @@ public class Script {
         return template;
     }
 
+    @SchemaProperty
     public void setTemplate(String template) {
         this.template = template;
     }
@@ -58,6 +64,7 @@ public class Script {
         return useScriptTemplate;
     }
 
+    @SchemaProperty
     public void setUseScriptTemplate(boolean useScriptTemplate) {
         this.useScriptTemplate = useScriptTemplate;
     }

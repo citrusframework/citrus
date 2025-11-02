@@ -32,13 +32,17 @@ import org.citrusframework.testcontainers.compose.ComposeDownAction;
 import org.citrusframework.testcontainers.compose.ComposeUpAction;
 import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.containers.wait.strategy.WaitStrategy;
+
+import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
 
 public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestcontainersAction, Compose> implements ReferenceResolverAware {
 
     private AbstractTestcontainersAction.Builder<? extends AbstractTestcontainersAction, ?> delegate;
 
+    @SchemaProperty(kind = ACTION, group = "testcontainers-compose")
     public void setUp(Up composeUp) {
         ComposeUpAction.Builder builder = new ComposeUpAction.Builder();
 
@@ -76,6 +80,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
         delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = "testcontainers-compose")
     public void setDown(Down composeDown) {
         ComposeDownAction.Builder builder = new ComposeDownAction.Builder();
         builder.containerName(composeDown.getName());
@@ -121,6 +126,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return name;
         }
 
+        @SchemaProperty
         public void setName(String name) {
             this.name = name;
         }
@@ -129,6 +135,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return file;
         }
 
+        @SchemaProperty
         public void setFile(String file) {
             this.file = file;
         }
@@ -137,6 +144,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return autoRemove;
         }
 
+        @SchemaProperty
         public void setAutoRemove(boolean autoRemove) {
             this.autoRemove = autoRemove;
         }
@@ -145,10 +153,12 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return startUpTimeout;
         }
 
+        @SchemaProperty
         public void setStartUpTimeout(int startUpTimeout) {
             this.startUpTimeout = startUpTimeout;
         }
 
+        @SchemaProperty
         public void setExposedServices(List<ExposedService> services) {
             this.exposedServices = services;
         }
@@ -173,6 +183,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return name;
         }
 
+        @SchemaProperty
         public void setName(String value) {
             this.name = value;
         }
@@ -181,6 +192,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return port;
         }
 
+        @SchemaProperty
         public void setPort(int port) {
             this.port = port;
         }
@@ -189,6 +201,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return waitFor;
         }
 
+        @SchemaProperty
         public void setWaitFor(WaitFor waitFor) {
             this.waitFor = waitFor;
         }
@@ -205,6 +218,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
                 return logMessage;
             }
 
+            @SchemaProperty
             public void setLogMessage(String logMessage) {
                 this.logMessage = logMessage;
             }
@@ -213,6 +227,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
                 return url;
             }
 
+            @SchemaProperty
             public void setUrl(String url) {
                 this.url = url;
             }
@@ -221,6 +236,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
                 return disabled;
             }
 
+            @SchemaProperty
             public void setDisabled(boolean disabled) {
                 this.disabled = disabled;
             }
@@ -235,6 +251,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return name;
         }
 
+        @SchemaProperty(required = true)
         public void setName(String name) {
             this.name = name;
         }

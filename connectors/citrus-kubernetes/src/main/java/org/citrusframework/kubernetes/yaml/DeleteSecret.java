@@ -20,11 +20,13 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.DeleteSecretAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class DeleteSecret extends AbstractKubernetesAction.Builder<DeleteSecretAction, DeleteSecret> {
 
     private final DeleteSecretAction.Builder delegate = new DeleteSecretAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.secret(name);
     }

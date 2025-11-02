@@ -17,8 +17,10 @@
 package org.citrusframework.vertx.endpoint;
 
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.vertx.factory.VertxInstanceFactory;
 import org.citrusframework.vertx.message.VertxMessageConverter;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * @since 2.5
@@ -26,7 +28,25 @@ import org.citrusframework.vertx.message.VertxMessageConverter;
 public class VertxEndpointBuilder extends AbstractEndpointBuilder<VertxEndpoint> {
 
     /** Endpoint target */
-    private VertxEndpoint endpoint = new VertxEndpoint();
+    private final VertxEndpoint endpoint = new VertxEndpoint();
+
+    private String vertxFactory;
+    private String messageConverter;
+
+    @Override
+    public VertxEndpoint build() {
+        if (referenceResolver != null) {
+            if (StringUtils.hasText(vertxFactory)) {
+                vertxFactory(referenceResolver.resolve(vertxFactory, VertxInstanceFactory.class));
+            }
+
+            if (StringUtils.hasText(messageConverter)) {
+                messageConverter(referenceResolver.resolve(messageConverter, VertxMessageConverter.class));
+            }
+        }
+
+        return super.build();
+    }
 
     @Override
     protected VertxEndpoint getEndpoint() {
@@ -35,81 +55,105 @@ public class VertxEndpointBuilder extends AbstractEndpointBuilder<VertxEndpoint>
 
     /**
      * Sets the host property.
-     * @param host
-     * @return
      */
     public VertxEndpointBuilder host(String host) {
         endpoint.getEndpointConfiguration().setHost(host);
         return this;
     }
 
+    @SchemaProperty(description = "The Vert.x event bus host.")
+    public void setHost(String host) {
+        host(host);
+    }
+
     /**
      * Sets the port property.
-     * @param port
-     * @return
      */
     public VertxEndpointBuilder port(int port) {
         endpoint.getEndpointConfiguration().setPort(port);
         return this;
     }
 
+    @SchemaProperty(description = "The Vert.x event bus port.")
+    public void setPort(int port) {
+        port(port);
+    }
+
     /**
-     * Sets the destinationName property.
-     * @param address
-     * @return
+     * Sets the address property.
      */
     public VertxEndpointBuilder address(String address) {
         endpoint.getEndpointConfiguration().setAddress(address);
         return this;
     }
 
+    @SchemaProperty(description = "The event bus address.")
+    public void setAddress(String address) {
+        address(address);
+    }
+
     /**
      * Sets the vertxFactory property.
-     * @param vertxFactory
-     * @return
      */
     public VertxEndpointBuilder vertxFactory(VertxInstanceFactory vertxFactory) {
         endpoint.setVertxInstanceFactory(vertxFactory);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets a custom Vert.x factory.")
+    public void setVertxFactory(String vertxFactory) {
+        this.vertxFactory = vertxFactory;
+    }
+
     /**
      * Sets the messageConverter property.
-     * @param messageConverter
-     * @return
      */
     public VertxEndpointBuilder messageConverter(VertxMessageConverter messageConverter) {
         endpoint.getEndpointConfiguration().setMessageConverter(messageConverter);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the message converter as a bean reference.")
+    public void setMessageConverter(String messageConverter) {
+        this.messageConverter = messageConverter;
+    }
+
     /**
      * Sets the pubSubDomain property.
-     * @param pubSubDomain
-     * @return
      */
     public VertxEndpointBuilder pubSubDomain(boolean pubSubDomain) {
         endpoint.getEndpointConfiguration().setPubSubDomain(pubSubDomain);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "When enabled the endpoint uses publish/subscribe mode.")
+    public void setPubSubDomain(boolean pubSubDomain) {
+        pubSubDomain(pubSubDomain);
+    }
+
     /**
      * Sets the polling interval.
-     * @param pollingInterval
-     * @return
      */
     public VertxEndpointBuilder pollingInterval(int pollingInterval) {
         endpoint.getEndpointConfiguration().setPollingInterval(pollingInterval);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the polling interval when consuming messages.")
+    public void setPollingInterval(int pollingInterval) {
+        pollingInterval(pollingInterval);
+    }
+
     /**
      * Sets the default timeout.
-     * @param timeout
-     * @return
      */
     public VertxEndpointBuilder timeout(long timeout) {
         endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
+    }
+
+    @SchemaProperty(description = "The endpoint timeout when waiting for messages.")
+    public void setTimeout(long timeout) {
+        timeout(timeout);
     }
 }

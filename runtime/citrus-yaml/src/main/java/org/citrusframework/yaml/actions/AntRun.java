@@ -22,6 +22,7 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.AntRunAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolverAware {
 
@@ -29,23 +30,23 @@ public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolve
 
     private ReferenceResolver referenceResolver;
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
     /**
      * Sets the build file path.
-     * @param buildFilePath
-     * @return
      */
+    @SchemaProperty(description = "Path to the Ant build file.")
     public void setBuildFile(String buildFilePath) {
         builder.buildFilePath(buildFilePath);
     }
 
     /**
      * Build target name to call.
-     * @param execute
      */
+    @SchemaProperty(description = "The build target to call.")
     public void setExecute(Execute execute) {
         if (execute.getTarget() != null) {
             builder.target(execute.target);
@@ -58,24 +59,24 @@ public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolve
 
     /**
      * Adds build properties file.
-     * @param file
      */
+    @SchemaProperty(description = "Adds a build property file.")
     public void setPropertyFile(String file) {
         builder.propertyFile(file);
     }
 
     /**
      * Adds a build property by name and value.
-     * @param properties
      */
+    @SchemaProperty(description = "Ant build properties.")
     public void setProperties(List<Property> properties) {
         properties.forEach(prop -> builder.property(prop.getName(), prop.getValue()));
     }
 
     /**
      * Adds custom build listener implementation.
-     * @param buildListener
      */
+    @SchemaProperty(advanced = true, description = "Optional reference to a build listener.")
     public void setBuildListener(String buildListener) {
         builder.listenerName(buildListener);
     }
@@ -99,6 +100,7 @@ public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolve
             return name;
         }
 
+        @SchemaProperty
         public void setName(String name) {
             this.name = name;
         }
@@ -107,6 +109,7 @@ public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolve
             return value;
         }
 
+        @SchemaProperty
         public void setValue(String value) {
             this.value = value;
         }
@@ -121,6 +124,7 @@ public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolve
             return target;
         }
 
+        @SchemaProperty
         public void setTarget(String target) {
             this.target = target;
         }
@@ -129,6 +133,7 @@ public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolve
             return targets;
         }
 
+        @SchemaProperty
         public void setTargets(String targets) {
             this.targets = targets;
         }

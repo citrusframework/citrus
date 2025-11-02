@@ -29,12 +29,15 @@ public class SftpEndpointsTest {
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("sftp"));
         Assert.assertTrue(endpointBuilders.containsKey("sftp.client"));
         Assert.assertTrue(endpointBuilders.containsKey("sftp.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
+        Assert.assertTrue(EndpointBuilder.lookup("sftp").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("sftp").get().getClass(), SftpEndpointBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("sftp.client").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("sftp.client").get().getClass(), SftpClientBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("sftp.server").isPresent());

@@ -16,11 +16,6 @@
 
 package org.citrusframework.spi;
 
-import jakarta.annotation.Nullable;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -44,6 +39,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import jakarta.annotation.Nullable;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.lang.String.format;
 import static java.nio.file.FileSystems.newFileSystem;
@@ -377,7 +377,8 @@ public class ResourcePathTypeResolver implements TypeResolver {
                 }
             } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException e1) {
                 throw new CitrusRuntimeException(
-                    format("Failed to resolve classpath resource of type '%s'", type), e1);
+                    format("Failed to resolve classpath resource of type '%s' - caused by: %s",
+                            type, Optional.ofNullable(e1.getMessage()).orElse(e1.getClass().getName())), e1);
             }
 
             logger.warn(
@@ -387,7 +388,8 @@ public class ResourcePathTypeResolver implements TypeResolver {
             );
 
             throw new CitrusRuntimeException(
-                format("Failed to resolve classpath resource of type '%s'", type), e);
+                format("Failed to resolve classpath resource of type '%s' - caused by: %s",
+                        type, Optional.ofNullable(e.getMessage()).orElse(e.getClass().getName())), e);
         }
     }
 

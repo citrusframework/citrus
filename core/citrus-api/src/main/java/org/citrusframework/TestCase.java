@@ -23,6 +23,7 @@ import org.citrusframework.common.Described;
 import org.citrusframework.common.Named;
 import org.citrusframework.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.endpoint.EndpointBuilder;
 
 /**
  * Test case executing a list of {@link TestAction} in sequence.
@@ -124,6 +125,12 @@ public interface TestCase extends TestActionContainer, Named, Described {
      * Gets the adhoc endpoints for this test case.
      */
     List<String> getEndpointDefinitions();
+
+    /**
+     * Gets the adhoc endpoints for this test case.
+     * @return
+     */
+    List<EndpointBuilder<?>> getEndpoints();
 
     /**
      * Adds action to finally action chain.

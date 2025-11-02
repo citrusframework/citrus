@@ -24,8 +24,10 @@ import java.util.stream.Collectors;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +37,9 @@ import org.slf4j.LoggerFactory;
  * Upcoming test actions may use this endpoint to send and receive messages.
  */
 public class CreateEndpointAction extends AbstractTestAction {
+
+    /** Endpoint builder */
+    private final EndpointBuilder<?> endpointBuilder;
 
     /** Name of the endpoint, used to bind it to the registry */
     private final String endpointName;
@@ -50,21 +55,39 @@ public class CreateEndpointAction extends AbstractTestAction {
     private CreateEndpointAction(Builder builder) {
         super("create-endpoint", builder);
 
+        this.endpointBuilder = builder.endpointBuilder;
         this.endpointUri = builder.endpointUri;
         this.endpointName = builder.endpointName;
     }
 
     @Override
     public void doExecute(TestContext context) {
-        logger.info("Creating endpoint {} '{}'", Optional.ofNullable(endpointName).orElse(""), endpointUri);
-        Endpoint endpoint = context.getEndpointFactory().create(endpointUri, context);
+        Endpoint endpoint;
+        String resolvedEndpointName;
+        if (endpointBuilder != null) {
+            if (endpointBuilder instanceof ReferenceResolverAware resolverAware) {
+                resolverAware.setReferenceResolver(context.getReferenceResolver());
+            }
 
-        if (StringUtils.hasText(endpointName)) {
-            if (context.getReferenceResolver().isResolvable(endpointName)) {
-                logger.warn("Skip binding endpoint to bean registry, because endpoint already exists: {}", endpointName);
+            endpoint = endpointBuilder.build();
+            if (StringUtils.hasText(endpointName)) {
+                endpoint.setName(endpointName);
+            }
+
+            resolvedEndpointName = endpoint.getName();
+            logger.info("Creating endpoint {}", resolvedEndpointName);
+        } else {
+            resolvedEndpointName = Optional.ofNullable(endpointName).orElse("");
+            logger.info("Creating endpoint {} '{}'", resolvedEndpointName, endpointUri);
+            endpoint = context.getEndpointFactory().create(context.replaceDynamicContentInString(endpointUri), context);
+        }
+
+        if (StringUtils.hasText(resolvedEndpointName)) {
+            if (context.getReferenceResolver().isResolvable(resolvedEndpointName)) {
+                logger.warn("Skip binding endpoint to bean registry, because endpoint already exists: {}", resolvedEndpointName);
             } else {
-                logger.info("Binding endpoint {} to bean registry", endpointName);
-                context.getReferenceResolver().bind(endpointName, endpoint);
+                logger.info("Binding endpoint {} to bean registry", resolvedEndpointName);
+                context.getReferenceResolver().bind(resolvedEndpointName, endpoint);
             }
         }
     }
@@ -73,12 +96,17 @@ public class CreateEndpointAction extends AbstractTestAction {
         return endpointUri;
     }
 
+    public EndpointBuilder<?> getEndpointBuilder() {
+        return endpointBuilder;
+    }
+
     /**
      * Action builder.
      */
     public static final class Builder extends AbstractTestActionBuilder<CreateEndpointAction, Builder>
             implements CreateEndpointActionBuilder<CreateEndpointAction> {
 
+        private EndpointBuilder<?> endpointBuilder;
         private String endpointName;
         private String endpointUri;
         private String type;
@@ -97,6 +125,12 @@ public class CreateEndpointAction extends AbstractTestAction {
 
         public static Builder createEndpoint() {
             return new Builder();
+        }
+
+        @Override
+        public Builder endpoint(EndpointBuilder<?> builder) {
+            this.endpointBuilder = builder;
+            return this;
         }
 
         @Override
@@ -131,20 +165,22 @@ public class CreateEndpointAction extends AbstractTestAction {
 
         @Override
         public CreateEndpointAction build() {
-            if (endpointUri == null && type == null) {
-                throw new CitrusRuntimeException("Failed to build endpoint specification - " +
-                        "please specify an endpoint URI or a type");
-            }
+            if (endpointBuilder == null) {
+                if (endpointUri == null && type == null) {
+                    throw new CitrusRuntimeException("Failed to build endpoint specification - " +
+                            "please specify an endpoint URI or a type");
+                }
 
-            if (endpointUri == null) {
-                if (properties.isEmpty()) {
-                    endpointUri = type;
-                } else {
-                    endpointUri = "%s?%s".formatted(type,
-                            properties.entrySet()
-                                    .stream()
-                                    .map(entry -> "%s=%s".formatted(entry.getKey(), entry.getValue()))
-                                    .collect(Collectors.joining("&")));
+                if (endpointUri == null) {
+                    if (properties.isEmpty()) {
+                        endpointUri = type;
+                    } else {
+                        endpointUri = "%s?%s".formatted(type,
+                                properties.entrySet()
+                                        .stream()
+                                        .map(entry -> "%s=%s".formatted(entry.getKey(), entry.getValue()))
+                                        .collect(Collectors.joining("&")));
+                    }
                 }
             }
 

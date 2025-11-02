@@ -29,12 +29,15 @@ public class WebSocketEndpointsTest {
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("websocket"));
         Assert.assertTrue(endpointBuilders.containsKey("websocket.client"));
         Assert.assertTrue(endpointBuilders.containsKey("websocket.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
+        Assert.assertTrue(EndpointBuilder.lookup("websocket").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("websocket").get().getClass(), WebSocketEndpointBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("websocket.client").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("websocket.client").get().getClass(), WebSocketClientBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("websocket.server").isPresent());

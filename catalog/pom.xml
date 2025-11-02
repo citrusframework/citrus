@@ -18,6 +18,7 @@
     <module>citrus-core</module>
     <module>citrus-endpoint-catalog</module>
     <module>citrus-bom</module>
+    <module>citrus-catalog-schema</module>
   </modules>
 
 </project>

@@ -1,0 +1,33 @@
+{
+  "name" : "Citrus @version@",
+  "version" : "@version@",
+  "runtime" : "Citrus",
+  "catalogs" : {
+    "actions" : {
+      "name" : "actions",
+      "description" : "Aggregated Citrus catalog for test actions",
+      "version" : "@version@",
+      "file" : "citrus-catalog-aggregate-test-actions.json"
+    },
+    "containers" : {
+      "name" : "containers",
+      "description" : "Aggregated Citrus catalog for test action containers",
+      "version" : "@version@",
+      "file" : "citrus-catalog-aggregate-test-containers.json"
+    }
+  },
+  "schemas" : {
+    "citrus-yaml" : {
+      "name" : "citrus-yaml",
+      "description" : "Citrus Json schema for tests",
+      "version" : "@version@",
+      "file" : "citrus-testcase.json"
+    },
+    "citrus-xml-io" : {
+      "name" : "citrus-xml",
+      "description" : "Citrus XSD schema for tests",
+      "version" : "@version@",
+      "file" : "citrus-testcase.xsd"
+    }
+  }
+}

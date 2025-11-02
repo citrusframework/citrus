@@ -36,6 +36,7 @@ import org.citrusframework.xml.container.Assert;
 import org.citrusframework.xml.container.Async;
 import org.citrusframework.xml.container.Catch;
 import org.citrusframework.xml.container.Conditional;
+import org.citrusframework.xml.container.DoFinally;
 import org.citrusframework.xml.container.Iterate;
 import org.citrusframework.xml.container.Parallel;
 import org.citrusframework.xml.container.Repeat;
@@ -65,6 +66,7 @@ public class TestActions {
             @XmlElementRef(name = "fail", type = Fail.class, required = false),
             @XmlElementRef(name = "iterate", type = Iterate.class, required = false),
             @XmlElementRef(name = "sequential", type = Sequential.class, required = false),
+            @XmlElementRef(name = "doFinally", type = DoFinally.class, required = false),
             @XmlElementRef(name = "parallel", type = Parallel.class, required = false),
             @XmlElementRef(name = "repeat", type = Repeat.class, required = false),
             @XmlElementRef(name = "repeat-on-error", type = RepeatOnError.class, required = false),

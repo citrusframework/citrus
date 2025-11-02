@@ -22,6 +22,7 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ExecutePLSQLAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 import org.springframework.transaction.PlatformTransactionManager;
 
 public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceResolverAware {
@@ -32,15 +33,18 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
 
     private ReferenceResolver referenceResolver;
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty
     public void setDataSource(String dataSource) {
         builder.dataSource(dataSource);
         builder.name(String.format("plsql:%s", dataSource));
     }
 
+    @SchemaProperty(required = true)
     public void setStatements(List<Statement> statements) {
         for (Statement statement: statements) {
             if (statement.statement != null) {
@@ -57,6 +61,7 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
         }
     }
 
+    @SchemaProperty
     public void setTransaction(Transaction transaction) {
         if (transaction.manager != null) {
             transactionManager = transaction.manager;
@@ -71,6 +76,7 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
         }
     }
 
+    @SchemaProperty
     public void setIgnoreErrors(boolean value) {
         builder.ignoreErrors(value);
     }
@@ -105,6 +111,7 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
             return script;
         }
 
+        @SchemaProperty
         public void setScript(String script) {
             this.script = script;
         }
@@ -113,6 +120,7 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
             return file;
         }
 
+        @SchemaProperty
         public void setFile(String value) {
             this.file = value;
         }
@@ -121,6 +129,7 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
             return statement;
         }
 
+        @SchemaProperty
         public void setStatement(String statement) {
             this.statement = statement;
         }
@@ -136,6 +145,7 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
             return manager;
         }
 
+        @SchemaProperty
         public void setManager(String manager) {
             this.manager = manager;
         }
@@ -144,6 +154,7 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
             return timeout;
         }
 
+        @SchemaProperty
         public void setTimeout(String timeout) {
             this.timeout = timeout;
         }
@@ -152,6 +163,7 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
             return isolationLevel;
         }
 
+        @SchemaProperty
         public void setIsolationLevel(String isolationLevel) {
             this.isolationLevel = isolationLevel;
         }

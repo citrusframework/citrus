@@ -40,7 +40,7 @@ public class Testcontainers implements TestActionBuilder<TestcontainersAction>, 
 
     @XmlElement
     public Testcontainers setDescription(String value) {
-        this.description = description;
+        this.description = value;
         return this;
     }
 

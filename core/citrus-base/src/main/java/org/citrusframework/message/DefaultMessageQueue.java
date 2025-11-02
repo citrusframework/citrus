@@ -124,7 +124,6 @@ public class DefaultMessageQueue implements MessageQueue {
 
     /**
      * Obtains the loggingEnabled.
-     * @return
      */
     public boolean isLoggingEnabled() {
         return loggingEnabled;
@@ -132,10 +131,14 @@ public class DefaultMessageQueue implements MessageQueue {
 
     /**
      * Specifies the loggingEnabled.
-     * @param loggingEnabled
      */
     public void setLoggingEnabled(boolean loggingEnabled) {
         this.loggingEnabled = loggingEnabled;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override

@@ -29,10 +29,12 @@ import org.citrusframework.container.AfterTest;
 import org.citrusframework.container.BeforeTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +72,11 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
      * Adhoc endpoint definitions that create endpoints as part of the test.
      */
     private final List<String> endpointDefinitions = new ArrayList<>();
+
+    /**
+     * Adhoc endpoints that are port of the test.
+     */
+    private final List<EndpointBuilder<?>> endpoints = new ArrayList<>();
 
     /**
      * Meta-Info
@@ -157,7 +164,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             initializeTestParameters(parameters, context);
             initializeTestVariables(variableDefinitions, context);
             debugVariables("Test", context);
-            initializeEndpoints(endpointDefinitions, context);
+            initializeEndpoints(endpoints, endpointDefinitions, context);
 
             beforeTest(context);
         } catch (final Exception | Error e) {
@@ -433,19 +440,38 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     /**
      * Initialize endpoints with given uris in the test context.
      */
-    private void initializeEndpoints(List<String> endpointUris, TestContext context) {
+    private void initializeEndpoints(List<EndpointBuilder<?>> endpointBuilder, List<String> endpointUris, TestContext context) {
+        List<Endpoint> bindToRegistry = new ArrayList<>();
+
+        /* use given endpoint uris to create endpoints adhoc with the current test context */
+        for (final EndpointBuilder<?> builder : endpointBuilder) {
+            if (builder instanceof ReferenceResolverAware resolverAware) {
+                resolverAware.setReferenceResolver(context.getReferenceResolver());
+            }
+
+            Endpoint endpoint = builder.build();
+            if (endpoint instanceof ReferenceResolverAware resolverAware) {
+                resolverAware.setReferenceResolver(context.getReferenceResolver());
+            }
+            bindToRegistry.add(endpoint);
+        }
+
         /* use given endpoint uris to create endpoints adhoc with the current test context */
         for (final String endpointUri : endpointUris) {
             logger.debug("Initializing endpoint '{}'", endpointUri);
             Endpoint endpoint = context.getEndpointFactory().create(endpointUri, context);
 
             if (endpointUri.contains(EndpointComponent.ENDPOINT_NAME + "=")) {
-                if (context.getReferenceResolver().isResolvable(endpoint.getName())) {
-                    logger.warn("Skip binding endpoint to bean registry, because endpoint already exists: {}", endpoint.getName());
-                } else {
-                    logger.info("Binding endpoint {} to bean registry", endpoint.getName());
-                    context.getReferenceResolver().bind(endpoint.getName(), endpoint);
-                }
+                bindToRegistry.add(endpoint);
+            }
+        }
+
+        for (final Endpoint endpoint : bindToRegistry) {
+            if (context.getReferenceResolver().isResolvable(endpoint.getName())) {
+                logger.warn("Skip binding endpoint to bean registry, because endpoint already exists: {}", endpoint.getName());
+            } else {
+                logger.info("Binding endpoint {} to bean registry", endpoint.getName());
+                context.getReferenceResolver().bind(endpoint.getName(), endpoint);
             }
         }
     }
@@ -465,6 +491,11 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     @Override
     public List<String> getEndpointDefinitions() {
         return endpointDefinitions;
+    }
+
+    @Override
+    public List<EndpointBuilder<?>> getEndpoints() {
+        return endpoints;
     }
 
     /**

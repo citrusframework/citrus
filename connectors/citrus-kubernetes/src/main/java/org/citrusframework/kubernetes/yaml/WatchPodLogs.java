@@ -22,24 +22,29 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.WatchPodLogsAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class WatchPodLogs extends AbstractKubernetesAction.Builder<WatchPodLogsAction, WatchPodLogs> {
 
     private final WatchPodLogsAction.Builder delegate = new WatchPodLogsAction.Builder();
 
+    @SchemaProperty
     public void setName(String name) {
         this.delegate.podName(name);
     }
 
+    @SchemaProperty
     public void setLabels(List<Label> labels) {
         labels.forEach(label -> this.delegate.label(label.getName(), label.getValue()));
     }
 
+    @SchemaProperty
     public void setLabel(String labelExpression) {
         String[] tokens = labelExpression.split("=", 2);
         this.delegate.label(tokens[0].trim(), tokens[1].trim());
     }
 
+    @SchemaProperty
     public void setTimeout(String timeout) {
         this.delegate.milliseconds(timeout);
     }
@@ -88,6 +93,7 @@ public class WatchPodLogs extends AbstractKubernetesAction.Builder<WatchPodLogsA
             return name;
         }
 
+        @SchemaProperty
         public void setName(String value) {
             this.name = value;
         }
@@ -96,6 +102,7 @@ public class WatchPodLogs extends AbstractKubernetesAction.Builder<WatchPodLogsA
             return value;
         }
 
+        @SchemaProperty
         public void setValue(String value) {
             this.value = value;
         }

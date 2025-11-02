@@ -28,11 +28,14 @@ public class DockerEndpointsTest {
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("docker"));
         Assert.assertTrue(endpointBuilders.containsKey("docker.client"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
+        Assert.assertTrue(EndpointBuilder.lookup("docker").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("docker").get().getClass(), DockerEndpointBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("docker.client").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("docker.client").get().getClass(), DockerClientBuilder.class);
     }

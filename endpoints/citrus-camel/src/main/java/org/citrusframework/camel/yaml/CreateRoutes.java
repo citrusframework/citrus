@@ -18,22 +18,27 @@ package org.citrusframework.camel.yaml;
 
 import org.citrusframework.camel.actions.CreateCamelRouteAction;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class CreateRoutes implements CamelActionBuilderWrapper<CreateCamelRouteAction.Builder> {
     private final CreateCamelRouteAction.Builder builder = new CreateCamelRouteAction.Builder();
 
+    @SchemaProperty(advanced = true, description = "Camel route context to load multiple routes.")
     public void setRouteContext(String routeContext) {
         builder.route(routeContext);
     }
 
+    @SchemaProperty(advanced = true, description = "Route definitions loaded from a file resource")
     public void setFile(String file) {
         builder.route(Resources.create(file));
     }
 
+    @SchemaProperty(description = "Inline route definition.")
     public void setRoute(String routeSpec) {
         builder.route(routeSpec);
     }
 
+    @SchemaProperty(description = "The route id.")
     public void setId(String routeId) {
         builder.routeId(routeId);
     }

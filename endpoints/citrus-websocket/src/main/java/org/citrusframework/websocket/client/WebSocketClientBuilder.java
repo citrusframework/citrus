@@ -18,7 +18,9 @@ package org.citrusframework.websocket.client;
 
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.websocket.message.WebSocketMessageConverter;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * @since 2.5
@@ -26,7 +28,25 @@ import org.citrusframework.websocket.message.WebSocketMessageConverter;
 public class WebSocketClientBuilder extends AbstractEndpointBuilder<WebSocketClient> {
 
     /** Endpoint target */
-    private WebSocketClient endpoint = new WebSocketClient();
+    private final WebSocketClient endpoint = new WebSocketClient();
+
+    private String messageConverter;
+    private String endpointResolver;
+
+    @Override
+    public WebSocketClient build() {
+        if (referenceResolver != null) {
+            if (StringUtils.hasText(messageConverter)) {
+                messageConverter(referenceResolver.resolve(messageConverter, WebSocketMessageConverter.class));
+            }
+
+            if (StringUtils.hasText(endpointResolver)) {
+                endpointResolver(referenceResolver.resolve(endpointResolver, EndpointUriResolver.class));
+            }
+        }
+
+        return super.build();
+    }
 
     @Override
     protected WebSocketClient getEndpoint() {
@@ -35,51 +55,66 @@ public class WebSocketClientBuilder extends AbstractEndpointBuilder<WebSocketCli
 
     /**
      * Sets the requestUrl property.
-     * @param requestUrl
-     * @return
      */
     public WebSocketClientBuilder requestUrl(String requestUrl) {
         endpoint.getEndpointConfiguration().setEndpointUri(requestUrl);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the client request URL.")
+    public void setRequestUrl(String requestUrl) {
+        requestUrl(requestUrl);
+    }
+
     /**
      * Sets the message converter.
-     * @param messageConverter
-     * @return
      */
     public WebSocketClientBuilder messageConverter(WebSocketMessageConverter messageConverter) {
         endpoint.getEndpointConfiguration().setMessageConverter(messageConverter);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Bean reference to a message converter.")
+    public void setMessageConverter(String messageConverter) {
+        this.messageConverter = messageConverter;
+    }
+
     /**
      * Sets the endpoint uri resolver.
-     * @param resolver
-     * @return
      */
     public WebSocketClientBuilder endpointResolver(EndpointUriResolver resolver) {
         endpoint.getEndpointConfiguration().setEndpointUriResolver(resolver);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the endpoint URI resolver.")
+    public void setEndpointResolver(String resolver) {
+        this.endpointResolver = resolver;
+    }
+
     /**
      * Sets the polling interval.
-     * @param pollingInterval
-     * @return
      */
     public WebSocketClientBuilder pollingInterval(int pollingInterval) {
         endpoint.getEndpointConfiguration().setPollingInterval(pollingInterval);
         return this;
     }
 
+    @SchemaProperty(advanced = true, description = "Sets the polling interval when consuming messages.")
+    public void setPollingInterval(int pollingInterval) {
+        pollingInterval(pollingInterval);
+    }
+
     /**
      * Sets the default timeout.
-     * @param timeout
-     * @return
      */
     public WebSocketClientBuilder timeout(long timeout) {
         endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
+    }
+
+    @SchemaProperty(description = "The Http request timeout while waiting for a response", defaultValue = "5000")
+    public void setTimeout(long timeout) {
+        timeout(timeout);
     }
 }

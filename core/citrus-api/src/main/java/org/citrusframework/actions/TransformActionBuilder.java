@@ -27,13 +27,11 @@ public interface TransformActionBuilder<T extends TestAction>
 
     /**
      * Set the target variable for the result
-     * @param variable
      */
     TransformActionBuilder<T> result(String variable);
 
     /**
      * Set the target variable for the result
-     * @param variable
      */
     TransformActionBuilder<T> variable(String variable);
 

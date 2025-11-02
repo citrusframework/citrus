@@ -25,9 +25,14 @@ import org.citrusframework.camel.actions.AbstractCamelAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
+
+import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.yaml.SchemaProperty.Kind.GROUP;
 
 public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
+    private static final String CAMEL_GROUP = "camel";
     private CamelActionBuilderWrapper<?> delegate;
 
     private String description;
@@ -36,58 +41,72 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
 
     private ReferenceResolver referenceResolver;
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         this.description = value;
     }
 
+    @SchemaProperty(advanced = true)
     public void setActor(String actor) {
         this.actor = actor;
     }
 
+    @SchemaProperty(description = "Name of the Camel context.")
     public void setCamelContext(String camelContext) {
         this.camelContext = camelContext;
     }
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_GROUP, description = "Connects with the Camel control bus to run operations.")
     public void setControlBus(ControlBus builder) {
         this.delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_GROUP, description = "Create components in the Camel registry.")
     public void setCreateComponent(CreateComponent builder) {
         this.delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_GROUP, description = "Create a new Camel context.")
     public void setCreateContext(CreateContext builder) {
         this.delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_GROUP, description = "Starts the given Camel context.")
     public void setStartContext(StartContext builder) {
         this.delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_GROUP, description = "Stops the given Camel context.")
     public void setStopContext(StopContext builder) {
         this.delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_GROUP, description = "Create a new Camel route in the context.")
     public void setCreateRoutes(CreateRoutes builder) {
         this.delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_GROUP, description = "Start existing Camel routes in the context.")
     public void setStartRoutes(StartRoutes builder) {
         this.delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_GROUP, description = "Stop given Camel routes.")
     public void setStopRoutes(StopRoutes builder) {
         this.delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_GROUP, description = "Remove given Camel routes.")
     public void setRemoveRoutes(RemoveRoutes builder) {
         this.delegate = builder;
     }
 
+    @SchemaProperty(kind = GROUP, group = CAMEL_GROUP, description = "Manage Camel infra services.")
     public void setInfra(Infra builder) {
         this.delegate = builder;
     }
 
+    @SchemaProperty(kind = GROUP, group = CAMEL_GROUP, description = "Connect with Camel JBang to run commands.")
     public void setJbang(JBang builder) {
         this.delegate = builder;
     }

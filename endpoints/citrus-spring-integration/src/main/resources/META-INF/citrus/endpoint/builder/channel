@@ -1,3 +1,4 @@
+type=org.citrusframework.channel.endpoint.builder.MessageChannelEndpointsBuilder
 async=org.citrusframework.channel.ChannelEndpointBuilder
 asynchronous=org.citrusframework.channel.ChannelEndpointBuilder
 sync=org.citrusframework.channel.ChannelSyncEndpointBuilder

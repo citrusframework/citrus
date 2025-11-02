@@ -38,12 +38,18 @@ import org.citrusframework.ws.actions.SoapClientActionBuilder;
 import org.citrusframework.ws.actions.SoapServerActionBuilder;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapMessageHeaders;
+import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.TestActions;
 import org.citrusframework.yaml.actions.Message;
 import org.citrusframework.yaml.actions.Receive;
 import org.citrusframework.yaml.actions.Send;
 
+import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.yaml.SchemaProperty.Kind.CONTAINER;
+
 public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAware {
+
+    private static final String SOAP_GROUP = "soap";
 
     private TestActionBuilder<?> builder;
 
@@ -55,22 +61,27 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     private ReferenceResolver referenceResolver;
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         this.description = value;
     }
 
+    @SchemaProperty(advanced = true)
     public void setActor(String actor) {
         this.actor = actor;
     }
 
+    @SchemaProperty(description = "Sets the SOAP Http client.")
     public void setClient(String soapClient) {
         builder = new SoapActionBuilder().client(soapClient);
     }
 
+    @SchemaProperty(description = "Sets the SOAP Http server.")
     public void setServer(String soapServer) {
         builder = new SoapActionBuilder().server(soapServer);
     }
 
+    @SchemaProperty(kind = ACTION, group = SOAP_GROUP, description = "Sends a SOAP request as a client.")
     public void setSendRequest(ClientRequest request) {
         SendSoapMessageAction.Builder requestBuilder = asClientBuilder().send();
         requestBuilder.name("soap:send-request");
@@ -131,6 +142,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = requestBuilder;
     }
 
+    @SchemaProperty(kind = ACTION, group = SOAP_GROUP, description = "Receives a SOAP response as a client.")
     public void setReceiveResponse(ClientResponse response) {
         ReceiveSoapMessageAction.Builder responseBuilder = asClientBuilder().receive();
 
@@ -202,6 +214,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = responseBuilder;
     }
 
+    @SchemaProperty(kind = ACTION, group = SOAP_GROUP, description = "Receives a SOAP request as a server.")
     public void setReceiveRequest(ServerRequest request) {
         ReceiveSoapMessageAction.Builder requestBuilder = asServerBuilder().receive();
 
@@ -271,6 +284,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = requestBuilder;
     }
 
+    @SchemaProperty(kind = ACTION, group = SOAP_GROUP, description = "Sends a SOAP response as a server.")
     public void setSendResponse(ServerResponse response) {
         SendSoapMessageAction.Builder responseBuilder = asServerBuilder().send();
 
@@ -320,6 +334,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = responseBuilder;
     }
 
+    @SchemaProperty(kind = ACTION, group = SOAP_GROUP, description = "Sends a SOAP fault response as a server")
     public void setSendFault(ServerFaultResponse response) {
         SendSoapFaultAction.Builder responseBuilder = asServerBuilder().sendFault();
         responseBuilder.name("soap:send-fault");
@@ -386,6 +401,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = responseBuilder;
     }
 
+    @SchemaProperty(kind = CONTAINER, group = SOAP_GROUP, description = "Expects a SOAP fault response as a client.")
     public void setAssertFault(ClientAssertFault soapFault) {
         AssertSoapFault.Builder assertFault = asClientBuilder().assertFault();
 
@@ -418,8 +434,8 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             assertFault.validator(soapFault.validator);
         }
 
-        if (!soapFault.getActions().isEmpty()) {
-            assertFault.actions(soapFault.getActions().toArray(TestActionBuilder<?>[]::new));
+        if (soapFault.getAction() != null) {
+            assertFault.when(soapFault.getAction());
         }
 
         builder = assertFault;
@@ -499,6 +515,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return uri;
         }
 
+        @SchemaProperty(advanced = true, description = "Http endpoint URI overwrite.")
         public void setUri(String uri) {
             this.uri = uri;
         }
@@ -507,6 +524,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return fork;
         }
 
+        @SchemaProperty(advanced = true, description = "When enabled the send operation does not block while waiting for the response.")
         public void setFork(Boolean fork) {
             this.fork = fork;
         }
@@ -515,6 +533,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return message;
         }
 
+        @SchemaProperty(required = true, description = "The SOAP request message.")
         public void setMessage(SoapRequest message) {
             this.message = message;
         }
@@ -523,6 +542,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return extract;
         }
 
+        @SchemaProperty(advanced = true, description = "Extract message content to test variables.")
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
@@ -545,6 +565,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return message;
         }
 
+        @SchemaProperty(required = true, description = "The expected SOAP request message.")
         public void setMessage(SoapRequest message) {
             this.message = message;
         }
@@ -553,6 +574,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return attachmentValidator;
         }
 
+        @SchemaProperty(advanced = true, description = "Explicit SOAP attachment validator.")
         public void setAttachmentValidator(String attachmentValidator) {
             this.attachmentValidator = attachmentValidator;
         }
@@ -561,6 +583,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return timeout;
         }
 
+        @SchemaProperty(description = "Timeout while waiting for the incoming SOAP request.")
         public void setTimeout(Integer timeout) {
             this.timeout = timeout;
         }
@@ -569,6 +592,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return select;
         }
 
+        @SchemaProperty(advanced = true, description = "Message selector expression to selectively consume messages.")
         public void setSelect(String select) {
             this.select = select;
         }
@@ -577,6 +601,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return validator;
         }
 
+        @SchemaProperty(advanced = true, description = "Explicit message validator.")
         public void setValidator(String validator) {
             this.validator = validator;
         }
@@ -585,6 +610,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return validators;
         }
 
+        @SchemaProperty(advanced = true, description = "List of message validators used to validate the message.")
         public void setValidators(String validators) {
             this.validators = validators;
         }
@@ -593,6 +619,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return headerValidator;
         }
 
+        @SchemaProperty(advanced = true, description = "Explicit message header validator.")
         public void setHeaderValidator(String headerValidator) {
             this.headerValidator = headerValidator;
         }
@@ -601,6 +628,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return headerValidators;
         }
 
+        @SchemaProperty(advanced = true, description = "List of message header validators used to validate the message.")
         public void setHeaderValidators(String headerValidators) {
             this.headerValidators = headerValidators;
         }
@@ -609,6 +637,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return selector;
         }
 
+        @SchemaProperty(advanced = true, description = "Message selector to selectively consume messages.")
         public void setSelector(Receive.Selector selector) {
             this.selector = selector;
         }
@@ -625,6 +654,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return extract;
         }
 
+        @SchemaProperty(advanced = true, description = "Extract message content to test variables.")
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
@@ -638,6 +668,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return message;
         }
 
+        @SchemaProperty(required = true, description = "The SOAP response message to send.")
         public void setMessage(SoapResponse message) {
             this.message = message;
         }
@@ -646,6 +677,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return extract;
         }
 
+        @SchemaProperty(advanced = true, description = "Extract message content to test variables.")
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
@@ -668,6 +700,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return message;
         }
 
+        @SchemaProperty(required = true, description = "The expected SOAP response message.")
         public void setMessage(SoapResponse message) {
             this.message = message;
         }
@@ -676,6 +709,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return attachmentValidator;
         }
 
+        @SchemaProperty(advanced = true, description = "Explicit SOAP attachment validator.")
         public void setAttachmentValidator(String attachmentValidator) {
             this.attachmentValidator = attachmentValidator;
         }
@@ -684,6 +718,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return timeout;
         }
 
+        @SchemaProperty(description = "Timeout while waiting for the SOAP response message.")
         public void setTimeout(Integer timeout) {
             this.timeout = timeout;
         }
@@ -692,6 +727,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return select;
         }
 
+        @SchemaProperty(advanced = true, description = "Message selector to selectively consume messages.")
         public void setSelect(String select) {
             this.select = select;
         }
@@ -700,6 +736,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return selector;
         }
 
+        @SchemaProperty(advanced = true, description = "Message selector to selectively consume messages.")
         public void setSelector(Receive.Selector selector) {
             this.selector = selector;
         }
@@ -708,6 +745,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return validator;
         }
 
+        @SchemaProperty(advanced = true, description = "Explicit message validator.")
         public void setValidator(String validator) {
             this.validator = validator;
         }
@@ -716,6 +754,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return validators;
         }
 
+        @SchemaProperty(advanced = true, description = "List of message validators used to validate the message.")
         public void setValidators(String validators) {
             this.validators = validators;
         }
@@ -724,6 +763,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return headerValidator;
         }
 
+        @SchemaProperty(advanced = true, description = "Explicit message header validator.")
         public void setHeaderValidator(String headerValidator) {
             this.headerValidator = headerValidator;
         }
@@ -732,6 +772,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return headerValidators;
         }
 
+        @SchemaProperty(advanced = true, description = "List of message header validators used to validate the message.")
         public void setHeaderValidators(String headerValidators) {
             this.headerValidators = headerValidators;
         }
@@ -744,6 +785,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return validate;
         }
 
+        @SchemaProperty(description = "Message validation expressions.")
         public void setValidate(List<Receive.Validate> validate) {
             this.validate = validate;
         }
@@ -752,6 +794,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return extract;
         }
 
+        @SchemaProperty(advanced = true, description = "Extract message content to test variables.")
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
@@ -760,30 +803,29 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     public static class ClientAssertFault extends SoapFault {
         protected String validator;
 
-        protected List<TestActionBuilder<?>> actions;
+        protected TestActionBuilder<?> action;
 
         public String getValidator() {
             return validator;
         }
 
+        @SchemaProperty(advanced = true, description = "Explicit message validator.")
         public void setValidator(String validator) {
             this.validator = validator;
         }
 
-        public void setWhen(List<TestActions> actions) {
-            getActions().addAll(actions.stream().map(TestActions::get).toList());
+        @SchemaProperty(required = true, description = "The test action raising the SOAP fault response message.")
+        public void setWhen(TestActions action) {
+            this.action = action.get();
         }
 
+        @Deprecated
         public void setActions(List<TestActions> actions) {
-            getActions().addAll(actions.stream().map(TestActions::get).toList());
+            setWhen(actions.get(0));
         }
 
-        public List<TestActionBuilder<?>> getActions() {
-            if (actions == null) {
-                actions = new ArrayList<>();
-            }
-
-            return actions;
+        public TestActionBuilder<?> getAction() {
+            return action;
         }
     }
 
@@ -796,6 +838,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return message;
         }
 
+        @SchemaProperty(required = true, description = "The SOAP fault response message to send.")
         public void setMessage(SoapFault message) {
             this.message = message;
         }
@@ -804,6 +847,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return extract;
         }
 
+        @SchemaProperty(advanced = true, description = "Extract message content to test variables.")
         public void setExtract(Message.Extract extract) {
             this.extract = extract;
         }
@@ -821,6 +865,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return attachments;
         }
 
+        @SchemaProperty(advanced = true, description = "List of SOAP attachments for this message.")
         public void setAttachments(List<Attachment> attachments) {
             this.attachments = attachments;
         }
@@ -836,6 +881,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                 return contentId;
             }
 
+            @SchemaProperty(description = "The SOAP attachment content id.")
             public void setContentId(String contentId) {
                 this.contentId = contentId;
             }
@@ -844,6 +890,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                 return contentType;
             }
 
+            @SchemaProperty(description = "The SOAP attachment content type")
             public void setContentType(String contentType) {
                 this.contentType = contentType;
             }
@@ -852,6 +899,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                 return content;
             }
 
+            @SchemaProperty(description = "The SOAP attachment content.")
             public void setContent(String content) {
                 this.content = content;
             }
@@ -860,6 +908,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                 return charset;
             }
 
+            @SchemaProperty(advanced = true, description = "The SOAP attachment charset.")
             public void setCharset(String charset) {
                 this.charset = charset;
             }
@@ -868,6 +917,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                 return resource;
             }
 
+            @SchemaProperty(description = "The SOAP attachment content loaded from a file resource.")
             public void setResource(String resource) {
                 this.resource = resource;
             }
@@ -887,6 +937,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return path;
         }
 
+        @SchemaProperty(description = "The SOAP request path.")
         public void setPath(String path) {
             this.path = path;
         }
@@ -895,6 +946,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return contentType;
         }
 
+        @SchemaProperty(description = "The SOAP request content type.")
         public void setContentType(String contentType) {
             this.contentType = contentType;
         }
@@ -903,6 +955,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return accept;
         }
 
+        @SchemaProperty(advanced = true, description = "The SOAP request accept header.")
         public void setAccept(String accept) {
             this.accept = accept;
         }
@@ -911,6 +964,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return version;
         }
 
+        @SchemaProperty(advanced = true, description = "The SOAP version.")
         public void setVersion(String version) {
             this.version = version;
         }
@@ -919,6 +973,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return soapAction;
         }
 
+        @SchemaProperty(description = "The SOAP action.")
         public void setSoapAction(String soapAction) {
             this.soapAction = soapAction;
         }
@@ -927,6 +982,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return mtomEnabled;
         }
 
+        @SchemaProperty(advanced = true, description = "Enables SOAP MTOM.")
         public void setMtomEnabled(Boolean mtomEnabled) {
             this.mtomEnabled = mtomEnabled;
         }
@@ -942,6 +998,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return status;
         }
 
+        @SchemaProperty(description = "The SOAP response status.")
         public void setStatus(String status) {
             this.status = status;
         }
@@ -950,6 +1007,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return reasonPhrase;
         }
 
+        @SchemaProperty(advanced = true, description = "The SOAP response reason phrase.")
         public void setReasonPhrase(String reasonPhrase) {
             this.reasonPhrase = reasonPhrase;
         }
@@ -958,6 +1016,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return version;
         }
 
+        @SchemaProperty(advanced = true, description = "The SOAP version.")
         public void setVersion(String version) {
             this.version = version;
         }
@@ -966,6 +1025,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return contentType;
         }
 
+        @SchemaProperty(description = "The SOAP response content type.")
         public void setContentType(String contentType) {
             this.contentType = contentType;
         }
@@ -978,6 +1038,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
         protected List<SoapFaultDetail> faultDetails;
 
+        @SchemaProperty(description = "The SOAP fault code.")
         public void setFaultCode(String faultCode) {
             this.faultCode = faultCode;
         }
@@ -986,6 +1047,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return faultCode;
         }
 
+        @SchemaProperty(description = "The SOAP fault string.")
         public void setFaultString(String faultString) {
             this.faultString = faultString;
         }
@@ -994,6 +1056,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return faultString;
         }
 
+        @SchemaProperty(advanced = true, description = "The SOAP fault actor.")
         public void setFaultActor(String faultActor) {
             this.faultActor = faultActor;
         }
@@ -1002,6 +1065,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return faultActor;
         }
 
+        @SchemaProperty(advanced = true, description = "The SOAP fault details.")
         public void setFaultDetails(List<SoapFaultDetail> faultDetails) {
             this.faultDetails = faultDetails;
         }
@@ -1018,6 +1082,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             protected String content;
             protected String resource;
 
+            @SchemaProperty(description = "The SOAP fault detail content.")
             public void setContent(String content) {
                 this.content = content;
             }
@@ -1026,6 +1091,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                 return content;
             }
 
+            @SchemaProperty(description = "The SOAP fault detail loaded from a file resource.")
             public void setResource(String resource) {
                 this.resource = resource;
             }

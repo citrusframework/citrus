@@ -27,23 +27,28 @@ import org.citrusframework.knative.actions.eventing.ReceiveEventAction;
 import org.citrusframework.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class ReceiveEvent extends AbstractKnativeAction.Builder<ReceiveEventAction, ReceiveEvent> implements ReferenceResolverAware {
 
     private final ReceiveEventAction.Builder delegate = new ReceiveEventAction.Builder();
 
+    @SchemaProperty
     public void setService(String name) {
         this.delegate.serviceName(name);
     }
 
+    @SchemaProperty
     public void setPort(int port) {
         this.delegate.servicePort(port);
     }
 
+    @SchemaProperty
     public void setTimeout(long timeout) {
         this.delegate.timeout(timeout);
     }
 
+    @SchemaProperty
     public void setEvent(Event event) {
         event.getAttributes().forEach(
                 attr -> this.delegate.attribute(attr.getName(), attr.getValue())
@@ -109,6 +114,7 @@ public class ReceiveEvent extends AbstractKnativeAction.Builder<ReceiveEventActi
 
         protected List<Attribute> attributes;
 
+        @SchemaProperty
         public void setAttributes(List<Attribute> attributes) {
             this.attributes = attributes;
         }
@@ -124,6 +130,7 @@ public class ReceiveEvent extends AbstractKnativeAction.Builder<ReceiveEventActi
             return data;
         }
 
+        @SchemaProperty
         public void setData(String data) {
             this.data = data;
         }
@@ -137,6 +144,7 @@ public class ReceiveEvent extends AbstractKnativeAction.Builder<ReceiveEventActi
                 return name;
             }
 
+            @SchemaProperty
             public void setName(String value) {
                 this.name = value;
             }
@@ -145,6 +153,7 @@ public class ReceiveEvent extends AbstractKnativeAction.Builder<ReceiveEventActi
                 return value;
             }
 
+            @SchemaProperty
             public void setValue(String value) {
                 this.value = value;
             }

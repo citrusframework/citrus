@@ -17,6 +17,7 @@
 package org.citrusframework.camel.yaml;
 
 import org.citrusframework.camel.actions.CamelControlBusAction;
+import org.citrusframework.yaml.SchemaProperty;
 
 public class ControlBus implements CamelActionBuilderWrapper<CamelControlBusAction.Builder> {
 
@@ -24,28 +25,34 @@ public class ControlBus implements CamelActionBuilderWrapper<CamelControlBusActi
 
     private CamelControlBusAction.Builder.ControlBusRouteActionBuilder routeActionBuilder;
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         builder.description(value);
     }
 
+    @SchemaProperty(description = "The route id")
     public void setRoute(String id) {
         routeActionBuilder = builder.route(id);
     }
 
+    @SchemaProperty(description = "The control bus action to execute.")
     public void setAction(String action) {
         if (routeActionBuilder != null) {
             routeActionBuilder.action(action);
         }
     }
 
+    @SchemaProperty(description = "The expected action result.")
     public void setResult(String result) {
         builder.result(result);
     }
 
+    @SchemaProperty(description = "Runs a simple expression")
     public void setSimple(String expression) {
         builder.simple(expression);
     }
 
+    @SchemaProperty(description = "Runs another Camel language expression.")
     public void setLanguage(Language language) {
         builder.language(language.getName(), language.getExpression());
     }
@@ -60,6 +67,7 @@ public class ControlBus implements CamelActionBuilderWrapper<CamelControlBusActi
         private String name;
         private String expression;
 
+        @SchemaProperty(description = "The language name.")
         public void setName(String name) {
             this.name = name;
         }
@@ -68,6 +76,7 @@ public class ControlBus implements CamelActionBuilderWrapper<CamelControlBusActi
             return name;
         }
 
+        @SchemaProperty(description = "The language expression.")
         public void setExpression(String expression) {
             this.expression = expression;
         }
