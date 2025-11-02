@@ -237,6 +237,10 @@ public class RunTestMojo extends AbstractAgentMojo {
             options.setIncludes(getRunConfig().getIncludes().toArray(new String[0]));
         }
 
+        if (getRunConfig().getWorkDir() != null) {
+            options.setWorkDir(getRunConfig().getWorkDir());
+        }
+
         if (getRunConfig().getSystemProperties() != null) {
             options.addDefaultProperties(getRunConfig().getSystemProperties());
         }
@@ -281,6 +285,10 @@ public class RunTestMojo extends AbstractAgentMojo {
 
         if (getRunConfig().getIncludes() != null) {
             options.setIncludes(getRunConfig().getIncludes().toArray(new String[0]));
+        }
+
+        if (getRunConfig().getWorkDir() != null) {
+            options.setWorkDir(getRunConfig().getWorkDir());
         }
 
         if (getRunConfig().getSystemProperties() != null) {

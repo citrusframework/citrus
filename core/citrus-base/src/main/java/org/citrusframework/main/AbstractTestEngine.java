@@ -29,8 +29,6 @@ public abstract class AbstractTestEngine implements TestEngine {
 
     /**
      * Gets the configuration.
-     *
-     * @return
      */
     public TestRunConfiguration getConfiguration() {
         return configuration;
