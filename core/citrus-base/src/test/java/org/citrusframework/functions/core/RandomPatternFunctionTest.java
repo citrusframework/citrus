@@ -32,7 +32,7 @@ public class RandomPatternFunctionTest {
 
     @Test(expectedExceptions = InvalidFunctionUsageException.class)
     public void testExecuteWithNullParameterList() {
-        function.execute(null, context);
+        function.execute((List<String>) null, context);
     }
 
     @Test(expectedExceptions = InvalidFunctionUsageException.class)

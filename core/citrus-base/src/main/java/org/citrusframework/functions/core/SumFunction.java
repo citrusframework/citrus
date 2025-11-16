@@ -16,33 +16,16 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.NumericFunction;
+import org.citrusframework.functions.parameter.NumericParameters;
 
 /**
  * Function to sum up all numeric arguments.
- *
  */
-public class SumFunction implements Function {
+public class SumFunction implements NumericFunction {
 
-    /**
-     * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
-     * @throws InvalidFunctionUsageException
-     */
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
-        }
-
-        double result = 0.0;
-
-        for (String token : parameterList) {
-            result += Double.parseDouble(token);
-        }
-
-        return Double.valueOf(result).toString();
+    public String execute(NumericParameters params, TestContext context) {
+        return String.valueOf(params.asDoubleStream().sum());
     }
 }

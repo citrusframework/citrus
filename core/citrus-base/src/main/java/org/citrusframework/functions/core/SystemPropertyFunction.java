@@ -22,30 +22,62 @@ import java.util.Optional;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.ParameterizedFunction;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * Function returns given string argument in lower case.
- *
  */
-public class SystemPropertyFunction implements Function {
+public class SystemPropertyFunction implements ParameterizedFunction<SystemPropertyFunction.Parameters> {
 
     @Override
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Invalid function parameters - must set system property name");
-        }
+    public String execute(Parameters params, TestContext context) {
+        String propertyName = params.getPropertyName();
 
-        String propertyName = parameterList.get(0);
-
-        final Optional<String> defaultValue;
-        if (parameterList.size() > 1) {
-            defaultValue = Optional.of(parameterList.get(1));
-        } else {
-            defaultValue = Optional.empty();
-        }
-
+        final Optional<String> defaultValue = Optional.ofNullable(params.getDefaultValue());
         return Optional.ofNullable(System.getProperty(propertyName))
-                .orElseGet(() -> defaultValue.orElseThrow(() -> new CitrusRuntimeException(String.format("Failed to resolve system property '%s'", propertyName))));
+                .orElseGet(() -> defaultValue.orElseThrow(() ->
+                        new CitrusRuntimeException(String.format("Failed to resolve system property '%s'", propertyName))));
+    }
+
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
+
+    public static class Parameters implements FunctionParameters {
+        private String propertyName;
+        private String defaultValue;
+
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (parameterList == null || parameterList.isEmpty()) {
+                throw new InvalidFunctionUsageException("Function parameters must not be empty");
+            }
+
+            setPropertyName(parameterList.get(0));
+
+            if (parameterList.size() > 1) {
+                defaultValue = context.replaceDynamicContentInString(parameterList.get(1));
+            }
+        }
+
+        public String getPropertyName() {
+            return propertyName;
+        }
+
+        @SchemaProperty(required = true, description = "The system property name.")
+        public void setPropertyName(String propertyName) {
+            this.propertyName = propertyName;
+        }
+
+        public String getDefaultValue() {
+            return defaultValue;
+        }
+
+        @SchemaProperty(description = "The default value when system property is not set.")
+        public void setDefaultValue(String defaultValue) {
+            this.defaultValue = defaultValue;
+        }
     }
 }

@@ -132,6 +132,9 @@ public @interface SchemaProperty {
         PROPERTY,
         ACTION,
         CONTAINER,
+        ENDPOINT,
+        FUNCTION,
+        VALIDATION_MATCHER,
         GROUP;
 
         public String getCatalogKind() {
@@ -139,6 +142,9 @@ public @interface SchemaProperty {
                 case PROPERTY -> "";
                 case ACTION -> "testAction";
                 case CONTAINER -> "testContainer";
+                case ENDPOINT -> "testEndpoint";
+                case FUNCTION -> "testFunction";
+                case VALIDATION_MATCHER -> "testValidationMatcher";
                 case GROUP -> "testActionGroup";
             };
         }

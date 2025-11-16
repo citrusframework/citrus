@@ -16,14 +16,13 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.StringFunction;
 
 /**
  * Function to map the function's argument to a corresponding value configured using a map.
@@ -58,21 +57,14 @@ import org.citrusframework.functions.Function;
  * &lt;variable name="httpStatusCodeMessage" value="custom:mapHttpStatusCodeToMessage('500')" /&gt;
  * </pre>
  * </code>
- *
- *
  */
-public class MapValueFunction implements Function, InitializingPhase {
+public class MapValueFunction implements StringFunction, InitializingPhase {
 
     /** Mappings for key value logic in this function */
 	private Map<String, String> map;
 
 	@Override
-	public String execute(List<String> params, TestContext context) {
-		if (params.size() != 1) {
-			throw new InvalidFunctionUsageException("Expected exactly one argument but got " + params.size());
-		}
-
-		final String key = params.get(0);
+	public String execute(String key, TestContext context) {
 		final String result = map.get(key);
 
 		if (result == null) {
@@ -82,7 +74,7 @@ public class MapValueFunction implements Function, InitializingPhase {
 		return result;
 	}
 
-	@Override
+    @Override
 	public void initialize() {
 		if (map == null) {
 			throw new CitrusRuntimeException("MapValueFunction must not use an empty value map");
@@ -91,7 +83,6 @@ public class MapValueFunction implements Function, InitializingPhase {
 
 	/**
 	 * Gets the mappings for this function.
-	 * @return
 	 */
 	public Map<String, String> getMap() {
 		return map;
@@ -99,7 +90,6 @@ public class MapValueFunction implements Function, InitializingPhase {
 
 	/**
 	 * Sets the mappings for this function.
-	 * @param map
 	 */
 	public void setMap(Map<String, String> map) {
 		this.map = map;

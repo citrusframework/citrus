@@ -20,49 +20,84 @@ import java.util.List;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.ParameterizedFunction;
+import org.citrusframework.yaml.SchemaProperty;
 
 import static java.lang.Integer.parseInt;
-import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * Function implements simple substring functionality.
  * <p>
- * Function requires at least a target string and a beginIndex as function parameters. A
+ * Function requires at least a target string and a beginIndex as function parameters. An
  * optional endIndex may be given as function parameter, too. The parameter usage looks
  * like this: substring(targetString, beginIndex, [endIndex]).
  *
  */
-public class SubstringFunction implements Function {
+public class SubstringFunction implements ParameterizedFunction<SubstringFunction.Parameters> {
 
-    /**
-     * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
-     * @throws InvalidFunctionUsageException
-     */
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.size() < 2) {
-            throw new InvalidFunctionUsageException("Insufficient function parameters - parameter usage: (targetString, beginIndex, [endIndex])");
-        }
+    @Override
+    public String execute(Parameters params, TestContext context) {
+        String targetString = params.getValue();
 
-        String targetString = parameterList.get(0);
-
-        String beginIndex = parameterList.get(1);
-        String endIndex = null;
-
-        if (!hasText(beginIndex)) {
-            throw new InvalidFunctionUsageException("Invalid beginIndex - please check function parameters");
-        }
-
-        if (parameterList.size() > 2) {
-            endIndex = parameterList.get(2);
-        }
-
-        if (hasText(endIndex)) {
-            targetString = targetString.substring(parseInt(beginIndex), parseInt(endIndex));
+        if (params.getEndIndex() > 0) {
+            targetString = targetString.substring(params.getBeginIndex(), params.getEndIndex());
         } else {
-            targetString = targetString.substring(parseInt(beginIndex));
+            targetString = targetString.substring(params.getBeginIndex());
         }
 
         return targetString;
+    }
+
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
+
+    public static class Parameters implements FunctionParameters {
+
+        private String value;
+        private int beginIndex;
+        private int endIndex;
+
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (parameterList == null || parameterList.size() < 2) {
+                throw new InvalidFunctionUsageException("Insufficient function parameters - parameter usage: (targetString, beginIndex, [endIndex])");
+            }
+
+            setValue(parameterList.get(0));
+            setBeginIndex(parseInt(parameterList.get(1)));
+
+            if (parameterList.size() > 2) {
+                setEndIndex(parseInt(parameterList.get(2)));
+            }
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @SchemaProperty(required = true, description = "The value to perform substring.")
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public int getBeginIndex() {
+            return beginIndex;
+        }
+
+        @SchemaProperty(required = true, description = "The substring begin index.")
+        public void setBeginIndex(int beginIndex) {
+            this.beginIndex = beginIndex;
+        }
+
+        public int getEndIndex() {
+            return endIndex;
+        }
+
+        @SchemaProperty(description = "Optional substring end index.")
+        public void setEndIndex(int endIndex) {
+            this.endIndex = endIndex;
+        }
     }
 }

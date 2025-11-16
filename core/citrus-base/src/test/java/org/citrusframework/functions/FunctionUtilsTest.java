@@ -16,8 +16,6 @@
 
 package org.citrusframework.functions;
 
-import static org.testng.Assert.assertEquals;
-
 import java.util.Collections;
 
 import org.citrusframework.UnitTestSupport;
@@ -25,8 +23,9 @@ import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.exceptions.NoSuchFunctionException;
 import org.citrusframework.exceptions.NoSuchFunctionLibraryException;
 import org.citrusframework.functions.core.CurrentDateFunction;
-import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertEquals;
 
 public class FunctionUtilsTest extends UnitTestSupport {
 
@@ -72,7 +71,6 @@ public class FunctionUtilsTest extends UnitTestSupport {
         assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes, I like Citrus!')", context), "YES, I LIKE CITRUS!");
         assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes, I like Citrus, and this is great!')", context), "YES, I LIKE CITRUS, AND THIS IS GREAT!");
         assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes,I like Citrus!')", context), "YES,I LIKE CITRUS!");
-        assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes', 'I like Citrus!')", context), "YES");
         assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes, I like Citrus!')", context), "Hello Yes, I like Citrus!");
         assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes,I like Citrus!')", context), "Hello Yes,I like Citrus!");
         assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes,I like Citrus, and this is great!')", context), "Hello Yes,I like Citrus, and this is great!");

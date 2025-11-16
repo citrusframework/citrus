@@ -20,40 +20,71 @@ import java.util.List;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.json.JsonPathUtils;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * @since 2.6.2
  */
-public class JsonPathFunction implements Function {
+public class JsonPathFunction implements ParameterizedFunction<JsonPathFunction.Parameters> {
 
     @Override
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
-        }
+    public String execute(Parameters params, TestContext context) {
+        return JsonPathUtils.evaluateAsString(
+                context.replaceDynamicContentInString(params.getSource()), params.getExpression());
+    }
 
-        if (parameterList.size() < 2) {
-            throw new InvalidFunctionUsageException("Missing parameter for function - usage jsonPath('jsonSource', 'expression')");
-        }
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
 
-        String jsonSource;
-        String jsonPathExpression;
-        if (parameterList.size() > 2) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(parameterList.get(0));
-            for (int i = 1; i < parameterList.size() -1; i++) {
-                sb.append(", ").append(parameterList.get(i));
+    public static class Parameters implements FunctionParameters {
+        private String source;
+        private String expression;
+
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (parameterList == null || parameterList.isEmpty()) {
+                throw new InvalidFunctionUsageException("Function parameters must not be empty");
             }
 
-            jsonSource = sb.toString();
-            jsonPathExpression = parameterList.get(parameterList.size() - 1);
-        } else {
-            jsonSource = parameterList.get(0);
-            jsonPathExpression = parameterList.get(1);
+            if (parameterList.size() < 2) {
+                throw new InvalidFunctionUsageException("Missing parameter for function - usage jsonPath('jsonSource', 'expression')");
+            }
+
+            if (parameterList.size() == 2) {
+                setSource(parameterList.get(0));
+                setExpression(context.replaceDynamicContentInString(parameterList.get(1)));
+            } else {
+                StringBuilder sb = new StringBuilder();
+                sb.append(parameterList.get(0));
+                for (int i = 1; i < parameterList.size() -1; i++) {
+                    sb.append(", ").append(parameterList.get(i));
+                }
+
+                setSource(sb.toString());
+                setExpression(context.replaceDynamicContentInString(parameterList.get(parameterList.size() - 1)));
+            }
         }
 
-        return JsonPathUtils.evaluateAsString(context.replaceDynamicContentInString(jsonSource), jsonPathExpression);
+        public String getSource() {
+            return source;
+        }
+
+        @SchemaProperty(required = true, description = "The Json source.")
+        public void setSource(String source) {
+            this.source = source;
+        }
+
+        public String getExpression() {
+            return expression;
+        }
+
+        @SchemaProperty(description = "The JsonPath expression to evaluate.")
+        public void setExpression(String expression) {
+            this.expression = expression;
+        }
     }
 }

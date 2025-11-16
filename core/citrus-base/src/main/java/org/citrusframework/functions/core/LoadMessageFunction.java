@@ -16,12 +16,9 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.StringFunction;
 import org.citrusframework.message.Message;
 import org.citrusframework.util.StringUtils;
 
@@ -31,15 +28,10 @@ import org.citrusframework.util.StringUtils;
  *
  * @since 2.6.2
  */
-public class LoadMessageFunction implements Function {
+public class LoadMessageFunction implements StringFunction {
 
     @Override
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
-        }
-
-        String messageName = parameterList.get(0);
+    public String execute(String messageName, TestContext context) {
         String messageHeader = null;
         if (messageName.endsWith(".body()")) {
             messageName = messageName.substring(0, messageName.indexOf(".body()"));

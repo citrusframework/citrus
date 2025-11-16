@@ -197,7 +197,7 @@ public final class Functions {
      * @return
      */
     public static String randomString(Long numberOfLetters, boolean useNumbers, TestContext context) {
-        return randomString(numberOfLetters, RandomStringFunction.MIXED, useNumbers, context);
+        return randomString(numberOfLetters, RandomStringFunction.NotationMethod.MIXED.name(), useNumbers, context);
     }
 
     /**

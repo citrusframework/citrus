@@ -16,38 +16,17 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
-
-import static java.lang.Double.parseDouble;
+import org.citrusframework.functions.NumericFunction;
+import org.citrusframework.functions.parameter.NumericParameters;
 
 /**
  * Returns the minimum value in a set of numeric arguments.
- *
  */
-public class MinFunction implements Function {
+public class MinFunction implements NumericFunction {
 
-    /**
-     * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
-     * @throws InvalidFunctionUsageException
-     */
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
-        }
-
-        double result = 0.0;
-
-        for (int i = 0; i < parameterList.size(); i++) {
-            String token = parameterList.get(i);
-            if (i==0 || parseDouble(token) < result) {
-                result = parseDouble(token);
-            }
-        }
-
-        return Double.valueOf(result).toString();
+    @Override
+    public String execute(NumericParameters params, TestContext context) {
+        return String.valueOf(params.asDoubleStream().min().orElse(0.0D));
     }
 }

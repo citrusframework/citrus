@@ -337,7 +337,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     }
 
     /**
-     * Checks for and resolves the dynamic content in the the supplied {@code value}.
+     * Checks for and resolves the dynamic content in the supplied {@code value}.
      *
      * @param value the value, optionally containing dynamic content
      * @param <V>
@@ -382,11 +382,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     }
 
     /**
-     * Method replacing variable declarations and place holders as well as
+     * Method replacing variable declarations and placeholders as well as
      * function expressions in a string
      *
      * @param str the string to parse.
-     * @return resulting string without any variable place holders.
+     * @return resulting string without any variable placeholders.
      */
     public String replaceDynamicContentInString(String str) {
         return replaceDynamicContentInString(str, false);
@@ -396,9 +396,9 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      * Method replacing variable declarations and functions in a string, optionally
      * the variable values get surrounded with single quotes.
      *
-     * @param str           the string to parse for variable place holders.
+     * @param str           the string to parse for variable placeholders.
      * @param enableQuoting flag marking surrounding quotes should be added or not.
-     * @return resulting string without any variable place holders.
+     * @return resulting string without any variable placeholders.
      */
     public String replaceDynamicContentInString(final String str, boolean enableQuoting) {
         String result = null;

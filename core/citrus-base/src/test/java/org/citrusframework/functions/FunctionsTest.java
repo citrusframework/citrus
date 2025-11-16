@@ -102,8 +102,8 @@ public class FunctionsTest extends UnitTestSupport {
     @Test
     public void testRandomStringWithParams() {
         assertEquals(randomString(10L, false, context).length(), 10);
-        assertEquals(randomString(10L, RandomStringFunction.LOWERCASE, context).length(), 10);
-        assertEquals(randomString(10L, RandomStringFunction.UPPERCASE, false, context).length(), 10);
+        assertEquals(randomString(10L, RandomStringFunction.NotationMethod.LOWERCASE.name(), context).length(), 10);
+        assertEquals(randomString(10L, RandomStringFunction.NotationMethod.UPPERCASE.name(), false, context).length(), 10);
     }
 
     @Test

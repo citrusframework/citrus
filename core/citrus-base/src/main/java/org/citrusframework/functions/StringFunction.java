@@ -14,19 +14,28 @@
  * limitations under the License.
  */
 
-package org.citrusframework.functions.core;
-
-import java.time.Instant;
-import java.util.List;
+package org.citrusframework.functions;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.parameter.StringParameter;
 
 /**
- * Function returning the actual timestamp.
+ * Function that supports a single String typed parameter.
  */
-public class UnixTimestampFunction implements Function {
-    public String execute(List<String> parameterList, TestContext context) {
-        return Long.toString(Instant.now().getEpochSecond());
+public interface StringFunction extends ParameterizedFunction<StringParameter> {
+
+    /**
+     * Execute function with the single String parameter.
+     */
+    String execute(String param, TestContext context);
+
+    @Override
+    default String execute(StringParameter parameter, TestContext context) {
+        return execute(parameter.getValue(), context);
     }
+
+    @Override
+    default StringParameter getParameters() {
+        return new StringParameter();
+    };
 }

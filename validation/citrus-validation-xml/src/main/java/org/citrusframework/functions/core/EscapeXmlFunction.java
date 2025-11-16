@@ -17,25 +17,25 @@
 package org.citrusframework.functions.core;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
-
-import java.util.List;
+import org.citrusframework.functions.ParameterizedFunction;
+import org.citrusframework.functions.parameter.StringParameter;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeXml;
 
 /**
  * Escapes XML fragment with escaped characters for '<', '>'.
- *
  */
-public class EscapeXmlFunction implements Function {
+public class EscapeXmlFunction implements ParameterizedFunction<StringParameter> {
 
     @Override
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.size() != 1) {
-            throw new InvalidFunctionUsageException("Invalid function parameter usage! Expected single parameter but found: " + parameterList.size());
-        }
+    public String execute(StringParameter param, TestContext context) {
+        return escapeXml(param.getValue());
+    }
 
-        return escapeXml(parameterList.get(0));
+    @Override
+    public StringParameter getParameters() {
+        return new StringParameter()
+                .withAllowEmpty(false)
+                .withUseRawValue(true);
     }
 }

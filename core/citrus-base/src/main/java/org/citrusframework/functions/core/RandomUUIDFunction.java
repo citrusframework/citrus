@@ -16,11 +16,11 @@
 
 package org.citrusframework.functions.core;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.functions.Function;
-
 import java.util.List;
 import java.util.UUID;
+
+import org.citrusframework.context.TestContext;
+import org.citrusframework.functions.Function;
 
 /**
  * Creates a random Java UUID.
@@ -28,9 +28,7 @@ import java.util.UUID;
  */
 public class RandomUUIDFunction  implements Function {
 
-    /**
-      * {@inheritDoc}
-      */
+    @Override
     public String execute(List<String> parameterList, TestContext context) {
         return UUID.randomUUID().toString();
     }

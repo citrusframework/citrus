@@ -26,6 +26,9 @@ import com.github.victools.jsonschema.generator.Option;
 import org.citrusframework.dsl.schema.generator.CitrusModule;
 import org.citrusframework.dsl.schema.generator.CitrusSchemaGenerator;
 import org.citrusframework.endpoint.EndpointBuilder;
+import org.citrusframework.functions.DefaultFunctionLibrary;
+import org.citrusframework.functions.Function;
+import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
 
@@ -114,10 +117,33 @@ public class Catalog {
             String group = tokens[0];
             String name = group + StringUtils.convertFirstCharToUpperCase(tokens[1]);
             catalog.put(builder.getKey().replaceAll("\\.", "-"),
-                    new CatalogEntry("testEndpoint",
+                    new CatalogEntry(SchemaProperty.Kind.ENDPOINT.getCatalogKind(),
                             name,
                             group,
                             StringUtils.convertFirstCharToUpperCase(name),
+                            null,
+                            jsonSchema));
+        }
+
+        return catalog;
+    }
+
+    public Map<String, CatalogEntry> getFunctionsCatalog() {
+        Map<String, CatalogEntry> catalog = new LinkedHashMap<>();
+
+        Map<String, Function> functions = new DefaultFunctionLibrary().getMembers();
+        for (Map.Entry<String, Function> function : functions.entrySet()) {
+            JsonNode jsonSchema;
+            if (function.getValue() instanceof ParameterizedFunction<?> parameterizedFunction) {
+                jsonSchema = CitrusSchemaGenerator.generateSchema(parameterizedFunction.getParameters().getClass(), Option.INLINE_ALL_SCHEMAS);
+            } else {
+                jsonSchema = CitrusSchemaGenerator.generateSchema(function.getValue().getClass(), Option.INLINE_ALL_SCHEMAS);
+            }
+            catalog.put(function.getKey(),
+                    new CatalogEntry(SchemaProperty.Kind.FUNCTION.getCatalogKind(),
+                            function.getKey(),
+                            "citrus",
+                            StringUtils.convertFirstCharToUpperCase(function.getKey()),
                             null,
                             jsonSchema));
         }

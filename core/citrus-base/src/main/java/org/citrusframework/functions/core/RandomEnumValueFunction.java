@@ -16,12 +16,14 @@
 
 package org.citrusframework.functions.core;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.InvalidFunctionUsageException;
+import org.citrusframework.functions.ParameterizedFunction;
+import org.citrusframework.functions.parameter.StringParameters;
 
 /**
  * Function to choose one random value from a list of strings. The enumeration values to choose from
@@ -68,38 +70,34 @@ import java.util.Random;
  * </code>
  * You should choose which one of the two flavours to use based on the number of times you use this function - if you need it in
  * only one special case you may go with specifying the list as arguments otherwise you should define a custom function and reuse it.
- *
  */
-public class RandomEnumValueFunction implements Function {
-	private Random random = new Random(System.currentTimeMillis());
-	private List<String> values = null;
+public class RandomEnumValueFunction implements ParameterizedFunction<StringParameters> {
 
-	/**
-	 * @see Function#execute(java.util.List, org.citrusframework.context.TestContext)
-	 */
-	public String execute(List<String> params, TestContext context) {
-		if (values == null) {
-			return randomValue(params);
-		} else {
-			if (!params.isEmpty()) {
-				throw new InvalidFunctionUsageException("The enumeration values have already been set");
-			}
+	private final Random random = new Random(System.currentTimeMillis());
+	private final List<String> values = new ArrayList<>();
+
+	@Override
+	public String execute(StringParameters params, TestContext context) {
+		if (values.isEmpty()) {
+			return randomValue(params.getValues());
+		} else if (params.getValues().isEmpty()) {
 			return randomValue(values);
-		}
+		} else {
+            throw new InvalidFunctionUsageException("The enumeration values have already been set");
+        }
 	}
 
-	/**
+    @Override
+    public StringParameters getParameters() {
+        return new StringParameters()
+                .withAllowEmpty(!values.isEmpty());
+    }
+
+    /**
 	 * Pseudo-randomly choose one of the supplied values and return it.
-	 *
-	 * @param values
-	 * @return
 	 * @throws IllegalArgumentException if the values supplied are <code>null</code> or an empty list.
 	 */
 	protected String randomValue(List<String> values) {
-		if (values == null || values.isEmpty()) {
-			throw new InvalidFunctionUsageException("No values to choose from");
-		}
-
 		final int idx = random.nextInt(values.size());
 
 		return values.get(idx);
@@ -110,6 +108,6 @@ public class RandomEnumValueFunction implements Function {
 	}
 
 	public void setValues(List<String> values) {
-		this.values = values;
+		this.values.addAll(values);
 	}
 }

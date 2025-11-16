@@ -21,7 +21,8 @@ import java.util.Random;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.ParameterizedFunction;
+import org.citrusframework.yaml.SchemaProperty;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
@@ -29,49 +30,32 @@ import static java.lang.Integer.parseInt;
 /**
  * Function returning a random numeric value. Argument specifies the number of digits and
  * padding boolean flag.
- *
  */
-public class RandomNumberFunction implements Function {
+public class RandomNumberFunction implements ParameterizedFunction<RandomNumberFunction.Parameters> {
+
     /** Basic seed generating random number */
-    private static Random generator = new Random(System.currentTimeMillis());
+    private static final Random generator = new Random(System.currentTimeMillis());
 
-    /**
-     * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
-     * @throws InvalidFunctionUsageException
-     */
-    public String execute(List<String> parameterList, TestContext context) {
-        int numberLength;
-        boolean paddingOn = true;
-
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
+    @Override
+    public String execute(Parameters params, TestContext context) {
+        if (params.getLength() < 1) {
+            throw new InvalidFunctionUsageException("Invalid parameter definition. " +
+                    "Number length must be a positive non-zero integer value");
         }
 
-        if (parameterList.size() > 2) {
-            throw new InvalidFunctionUsageException("Too many parameters for function");
-        }
+        return getRandomNumber(params);
+    }
 
-        numberLength = parseInt(parameterList.get(0));
-        if (numberLength < 0) {
-            throw new InvalidFunctionUsageException("Invalid parameter definition. Number of letters must not be positive non-zero integer value");
-        }
-
-        if (parameterList.size() > 1) {
-            paddingOn = parseBoolean(parameterList.get(1));
-        }
-
-        return getRandomNumber(numberLength, paddingOn);
+    public static String getRandomNumber(Parameters params) {
+        return getRandomNumber(params.getLength(), params.isPaddingOn());
     }
 
     /**
      * Static number generator method.
-     * @param numberLength
-     * @param paddingOn
-     * @return
      */
     public static String getRandomNumber(int numberLength, boolean paddingOn) {
         if (numberLength < 1) {
-            throw new InvalidFunctionUsageException("numberLength must be greater than 0 - supplied " + numberLength);
+            throw new InvalidFunctionUsageException("Number length must be a positive non-zero integer value - supplied " + numberLength);
         }
 
         StringBuilder buffer = new StringBuilder();
@@ -84,8 +68,6 @@ public class RandomNumberFunction implements Function {
 
     /**
      * Remove leading Zero numbers.
-     * @param generated
-     * @param paddingOn
      */
     public static String checkLeadingZeros(String generated, boolean paddingOn) {
         if (paddingOn) {
@@ -98,8 +80,6 @@ public class RandomNumberFunction implements Function {
 
     /**
      * Removes leading zero numbers if present.
-     * @param generated
-     * @return
      */
     private static String removeLeadingZeros(String generated) {
         StringBuilder builder = new StringBuilder();
@@ -123,8 +103,6 @@ public class RandomNumberFunction implements Function {
 
     /**
      * Replaces first leading zero number if present.
-     * @param generated
-     * @return
      */
     private static String replaceLeadingZero(String generated) {
         if (generated.charAt(0) == '0') {
@@ -137,6 +115,52 @@ public class RandomNumberFunction implements Function {
             return replacement + generated.substring(1);
         } else {
             return generated;
+        }
+    }
+
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
+
+    public static class Parameters implements FunctionParameters {
+
+        private int length;
+        private boolean paddingOn = true;
+
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (parameterList == null || parameterList.isEmpty()) {
+                throw new InvalidFunctionUsageException("Function parameters must not be empty");
+            }
+
+            if (parameterList.size() > 2) {
+                throw new InvalidFunctionUsageException("Too many parameters for function");
+            }
+
+            setLength(parseInt(parameterList.get(0)));
+
+            if (parameterList.size() > 1) {
+                setPaddingOn(parseBoolean(parameterList.get(1)));
+            }
+        }
+
+        public int getLength() {
+            return length;
+        }
+
+        @SchemaProperty(required = true, description = "Defines the length of the generated number.")
+        public void setLength(int length) {
+            this.length = length;
+        }
+
+        public boolean isPaddingOn() {
+            return paddingOn;
+        }
+
+        @SchemaProperty(description = "When enabled the generated number is filled with zero numbers to always get the given length.")
+        public void setPaddingOn(boolean paddingOn) {
+            this.paddingOn = paddingOn;
         }
     }
 }

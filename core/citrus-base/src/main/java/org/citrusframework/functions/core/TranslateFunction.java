@@ -16,45 +16,70 @@
 
 package org.citrusframework.functions.core;
 
+import java.util.List;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
-
-import java.util.List;
+import org.citrusframework.functions.ParameterizedFunction;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * Function searches for occurrences of a given character sequence and replaces all
  * findings with given replacement string.
- *
  */
-public class TranslateFunction implements Function {
+public class TranslateFunction implements ParameterizedFunction<TranslateFunction.Parameters> {
 
-    /**
-     * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
-     * @throws InvalidFunctionUsageException
-     */
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.size() < 3) {
-            throw new InvalidFunctionUsageException("Function parameters not set correctly");
-        }
+    @Override
+    public String execute(Parameters params, TestContext context) {
+        return params.getValue().replaceAll(params.getRegex(), params.getReplacement());
+    }
 
-        String resultString = parameterList.get(0);
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
 
-        String regex = null;
-        String replacement = null;
+    public static class Parameters implements FunctionParameters {
+        private String value;
+        private String regex;
+        private String replacement;
 
-        if (parameterList.size()>1) {
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (parameterList == null || parameterList.size() < 3) {
+                throw new InvalidFunctionUsageException("Function parameters not set correctly");
+            }
+
+            value = parameterList.get(0);
             regex = parameterList.get(1);
-        }
-
-        if (parameterList.size()>2) {
             replacement = parameterList.get(2);
         }
 
-        if (regex != null && replacement != null) {
-            resultString = resultString.replaceAll(regex, replacement);
+        public String getValue() {
+            return value;
         }
 
-        return resultString;
+        @SchemaProperty(required = true, description = "The value to evaluate.")
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public String getRegex() {
+            return regex;
+        }
+
+        @SchemaProperty(required = true, description = "The regular expression to evaluate.")
+        public void setRegex(String regex) {
+            this.regex = regex;
+        }
+
+        public String getReplacement() {
+            return replacement;
+        }
+
+        @SchemaProperty(required = true, description = "The transform replacement.")
+        public void setReplacement(String replacement) {
+            this.replacement = replacement;
+        }
     }
 }

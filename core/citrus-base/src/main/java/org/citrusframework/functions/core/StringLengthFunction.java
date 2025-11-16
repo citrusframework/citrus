@@ -16,27 +16,16 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.StringFunction;
 
 /**
  * Returning the length of a given string argument.
- *
  */
-public class StringLengthFunction implements Function {
+public class StringLengthFunction implements StringFunction {
 
-    /**
-     * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
-     * @throws InvalidFunctionUsageException
-     */
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
-        }
-
-        return String.valueOf((parameterList.get(0)).length());
+    @Override
+    public String execute(String param, TestContext context) {
+        return String.valueOf(param.length());
     }
 }

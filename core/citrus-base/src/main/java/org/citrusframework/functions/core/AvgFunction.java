@@ -16,35 +16,17 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
-
-import static java.lang.Double.parseDouble;
+import org.citrusframework.functions.NumericFunction;
+import org.citrusframework.functions.parameter.NumericParameters;
 
 /**
  * Function returning the average of a set of numeric values.
- *
  */
-public class AvgFunction implements Function {
+public class AvgFunction implements NumericFunction {
 
-    /**
-     * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
-     * @throws InvalidFunctionUsageException
-     */
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
-        }
-
-        double result = 0.0;
-
-        for (String token : parameterList) {
-            result += parseDouble(token);
-        }
-
-        return Double.valueOf(result / parameterList.size()).toString();
+    @Override
+    public String execute(NumericParameters params, TestContext context) {
+        return Double.valueOf(params.asDoubleStream().sum() / params.getValues().size()).toString();
     }
 }

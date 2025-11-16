@@ -20,10 +20,11 @@ import java.util.List;
 import java.util.Locale;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.exceptions.InvalidFunctionUsageException;
+import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.kubernetes.KubernetesSettings;
+import org.citrusframework.yaml.SchemaProperty;
 
 import static org.citrusframework.kubernetes.KubernetesSupport.getNamespace;
 
@@ -32,32 +33,15 @@ import static org.citrusframework.kubernetes.KubernetesSupport.getNamespace;
  * In local mode constructs a localhost service URL with a given local service port.
  * The in-cluster mode uses the service name and the current namespace to construct a Kubernetes service URL.
  */
-public class ResolveServiceUrlFunction implements Function {
+public class ResolveServiceUrlFunction implements ParameterizedFunction<ResolveServiceUrlFunction.Parameters> {
 
     @Override
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList.isEmpty()) {
-            throw new CitrusRuntimeException("Missing service name for resolve function");
-        }
-
-        String serviceName = parameterList.get(0);
-
-        boolean secure = false;
-        int servicePort = 0;
-        if (parameterList.size() > 1) {
-            try {
-                servicePort = Integer.parseInt(parameterList.get(1));
-            } catch (IllegalArgumentException e) {
-                secure = Boolean.parseBoolean(parameterList.get(1).toLowerCase(Locale.US));
-            }
-        }
-
-        if (parameterList.size() > 2) {
-            secure = Boolean.parseBoolean(parameterList.get(2).toLowerCase(Locale.US));
-        }
+    public String execute(Parameters params, TestContext context) {
+        String serviceName = params.getServiceName();
+        int servicePort = params.getServicePort();
 
         String scheme = "http://";
-        if (secure) {
+        if (params.isSecure()) {
             scheme = "https://";
         }
 
@@ -70,6 +54,65 @@ public class ResolveServiceUrlFunction implements Function {
             return String.format("%slocalhost%s", scheme, servicePort > 0 ? ":" + servicePort : "");
         } else {
             return String.format("%s%s.%s", scheme, serviceName, getNamespace(context));
+        }
+    }
+
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
+
+    public static class Parameters implements FunctionParameters {
+        private String serviceName;
+        private int servicePort = 0;
+        private boolean secure = false;
+
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (parameterList == null || parameterList.isEmpty()) {
+                throw new InvalidFunctionUsageException("Function parameters must not be empty");
+            }
+
+            setServiceName(parameterList.get(0));
+
+            if (parameterList.size() > 1) {
+                try {
+                    setServicePort(Integer.parseInt(parameterList.get(1)));
+                } catch (IllegalArgumentException e) {
+                    setSecure(Boolean.parseBoolean(parameterList.get(1).toLowerCase(Locale.US)));
+                }
+            }
+
+            if (parameterList.size() > 2) {
+                setSecure(Boolean.parseBoolean(parameterList.get(2).toLowerCase(Locale.US)));
+            }
+        }
+
+        public String getServiceName() {
+            return serviceName;
+        }
+
+        @SchemaProperty(required = true, description = "The service name.")
+        public void setServiceName(String serviceName) {
+            this.serviceName = serviceName;
+        }
+
+        public int getServicePort() {
+            return servicePort;
+        }
+
+        @SchemaProperty(required = true, description = "The service port.")
+        public void setServicePort(int servicePort) {
+            this.servicePort = servicePort;
+        }
+
+        public boolean isSecure() {
+            return secure;
+        }
+
+        @SchemaProperty(description = "When enabled use secure Http connection.")
+        public void setSecure(boolean secure) {
+            this.secure = secure;
         }
     }
 }

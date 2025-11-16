@@ -16,11 +16,9 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.NumberFunction;
+import org.citrusframework.functions.parameter.NumberParameter;
 
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
@@ -28,21 +26,12 @@ import static java.lang.Math.abs;
 
 /**
  * Function returning the absolute value of a decimal number.
- *
  */
-public class AbsoluteFunction implements Function {
+public class AbsoluteFunction implements NumberFunction {
 
-    /**
-     * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
-     * @throws InvalidFunctionUsageException
-     */
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
-        }
-
-        String param = parameterList.get(0);
-
+    @Override
+    public String execute(NumberParameter parameter, TestContext context) {
+        String param = parameter.getValue();
         if (param.contains(".")) {
             return String.valueOf(abs(parseDouble(param)));
         } else {
