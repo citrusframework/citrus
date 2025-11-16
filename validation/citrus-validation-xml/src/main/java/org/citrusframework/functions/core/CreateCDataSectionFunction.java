@@ -16,31 +16,31 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.ParameterizedFunction;
+import org.citrusframework.functions.parameter.StringParameter;
 
 /**
  * Adds XML CDATA section tags to parameter value. This is extremely useful when having
  * CDATA sections in message payload. Citrus test case itself also uses CDATA sections and
  * nested CDATA sections are not allowed. This function adds the CDATA section tags
  * at runtime.
- *
  */
-public class CreateCDataSectionFunction implements Function {
+public class CreateCDataSectionFunction implements ParameterizedFunction<StringParameter> {
 
     /** CDATA section tags */
     private static final String CDATA_START = "<![CDATA[";
     private static final String CDATA_END = "]]>";
 
     @Override
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.size() != 1) {
-            throw new InvalidFunctionUsageException("Invalid function parameter usage - missing parameter value!");
-        }
+    public String execute(StringParameter param, TestContext context) {
+        return CDATA_START + param.getValue() + CDATA_END;
+    }
 
-        return CDATA_START + parameterList.get(0) + CDATA_END;
+    @Override
+    public StringParameter getParameters() {
+        return new StringParameter()
+                .withUseRawValue(true)
+                .withAllowEmpty(false);
     }
 }

@@ -20,32 +20,64 @@ import java.util.List;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.xml.namespace.DefaultNamespaceContext;
 import org.citrusframework.xml.xpath.XPathUtils;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * @since 2.6.2
  */
-public class XpathFunction implements Function {
+public class XpathFunction implements ParameterizedFunction<XpathFunction.Parameters> {
 
     @Override
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
-        }
-
-        if (parameterList.size() < 2) {
-            throw new InvalidFunctionUsageException("Missing parameter for function - usage xpath('xmlSource', 'expression')");
-        }
-
-        String xmlSource = parameterList.get(0);
-        String xpathExpression = parameterList.get(1);
-
+    public String execute(Parameters params, TestContext context) {
         DefaultNamespaceContext namespaceContext = new DefaultNamespaceContext();
         namespaceContext.addNamespaces(context.getNamespaceContextBuilder().getNamespaceMappings());
-        return XPathUtils.evaluateAsString(XMLUtils.parseMessagePayload(context.replaceDynamicContentInString(xmlSource)),
-                context.replaceDynamicContentInString(xpathExpression), namespaceContext);
+        return XPathUtils.evaluateAsString(XMLUtils.parseMessagePayload(context.replaceDynamicContentInString(params.getSource())),
+                params.getExpression(), namespaceContext);
+    }
+
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
+
+    public static class Parameters implements ParameterizedFunction.FunctionParameters {
+        private String source;
+        private String expression;
+
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (parameterList == null || parameterList.isEmpty()) {
+                throw new InvalidFunctionUsageException("Function parameters must not be empty");
+            }
+
+            if (parameterList.size() < 2) {
+                throw new InvalidFunctionUsageException("Missing parameter for function - usage xpath('xmlSource', 'expression')");
+            }
+
+            setSource(parameterList.get(0));
+            setExpression(context.replaceDynamicContentInString(parameterList.get(1)));
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        @SchemaProperty(required = true, description = "The XML source.")
+        public void setSource(String source) {
+            this.source = source;
+        }
+
+        public String getExpression() {
+            return expression;
+        }
+
+        @SchemaProperty(description = "The XPath expression to evaluate.")
+        public void setExpression(String expression) {
+            this.expression = expression;
+        }
     }
 }

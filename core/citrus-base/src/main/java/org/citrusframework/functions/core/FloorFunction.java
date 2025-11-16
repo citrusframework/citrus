@@ -16,31 +16,20 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.NumberFunction;
+import org.citrusframework.functions.parameter.NumberParameter;
 
-import static java.lang.Double.parseDouble;
 import static java.lang.Math.floor;
 
 /**
- * Returns the largest (closest to positive infinity) double value according to numeric argument
+ * Returns the largest (closest to positive infinity) double value according to the numeric argument
  * value.
- *
  */
-public class FloorFunction implements Function {
+public class FloorFunction implements NumberFunction {
 
-    /**
-     * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
-     * @throws InvalidFunctionUsageException
-     */
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
-        }
-
-        return String.valueOf(floor(parseDouble(parameterList.get(0))));
+    @Override
+    public String execute(NumberParameter param, TestContext context) {
+        return String.valueOf(floor(param.asDouble()));
     }
 }

@@ -16,29 +16,17 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
-
-import static java.lang.Double.parseDouble;
+import org.citrusframework.functions.NumberFunction;
+import org.citrusframework.functions.parameter.NumberParameter;
 
 /**
  * Function returns the closest integer value to a decimal argument.
- *
  */
-public class RoundFunction implements Function {
+public class RoundFunction implements NumberFunction {
 
-    /**
-     * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
-     * @throws InvalidFunctionUsageException
-     */
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
-        }
-
-        return Long.valueOf(Math.round(parseDouble(parameterList.get(0)))).toString();
+    @Override
+    public String execute(NumberParameter param, TestContext context) {
+        return Long.valueOf(Math.round(param.asDouble())).toString();
     }
 }

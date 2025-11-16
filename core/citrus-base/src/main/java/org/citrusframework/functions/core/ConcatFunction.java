@@ -16,34 +16,29 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.ParameterizedFunction;
+import org.citrusframework.functions.parameter.StringParameters;
 
 /**
  * Function concatenating multiple tokens to a single string. Tokens can be either
  * static string values or dynamic variables or functions.
- *
  */
-public class ConcatFunction implements Function {
+public class ConcatFunction implements ParameterizedFunction<StringParameters> {
 
-    /**
-     * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
-     * @throws InvalidFunctionUsageException
-     */
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
-        }
-
+    @Override
+    public String execute(StringParameters params, TestContext context) {
         StringBuilder resultString = new StringBuilder();
 
-        for (var parameter : parameterList) {
+        for (var parameter : params.getValues()) {
             resultString.append(parameter);
         }
 
         return resultString.toString();
+    }
+
+    @Override
+    public StringParameters getParameters() {
+        return new StringParameters().withAllowEmpty(false);
     }
 }

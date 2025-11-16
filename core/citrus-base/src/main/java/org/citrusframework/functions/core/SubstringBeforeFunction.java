@@ -16,34 +16,70 @@
 
 package org.citrusframework.functions.core;
 
+import java.util.List;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
-
-import java.util.List;
+import org.citrusframework.functions.ParameterizedFunction;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * Function implements substring before functionality.
- *
  */
-public class SubstringBeforeFunction implements Function {
+public class SubstringBeforeFunction implements ParameterizedFunction<SubstringBeforeFunction.Parameters> {
 
-    /**
-     * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
-     * @throws InvalidFunctionUsageException
-     */
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.size() < 2) {
-            throw new InvalidFunctionUsageException("Function parameters not set correctly");
-        }
+    @Override
+    public String execute(Parameters param, TestContext context) {
+        String resultString = param.getValue();
 
-        String resultString = parameterList.get(0);
-
-        if (parameterList.size()>1) {
-            String searchString = parameterList.get(1);
+        if (StringUtils.hasText(param.getSearchString())) {
+            String searchString = param.getSearchString();
             resultString = resultString.substring(0, resultString.indexOf(searchString));
         }
 
         return resultString;
+    }
+
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
+
+    public static class Parameters implements FunctionParameters {
+
+        private String value;
+        private String searchString;
+
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (parameterList == null || parameterList.size() < 2) {
+                throw new InvalidFunctionUsageException("Function parameters not set correctly");
+            }
+
+            setValue(parameterList.get(0));
+
+            if (parameterList.size() > 1) {
+                setSearchString(parameterList.get(1));
+            }
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @SchemaProperty(required = true, description = "The value to perform substring.")
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public String getSearchString() {
+            return searchString;
+        }
+
+        @SchemaProperty(required = true, description = "Search string used to substring before the occurrence.")
+        public void setSearchString(String searchString) {
+            this.searchString = searchString;
+        }
     }
 }

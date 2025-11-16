@@ -22,33 +22,23 @@ import java.util.Optional;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.ParameterizedFunction;
+import org.citrusframework.yaml.SchemaProperty;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 
 /**
  * Function to get environment variable settings.
- *
  */
-public class EnvironmentPropertyFunction implements Function, EnvironmentAware {
+public class EnvironmentPropertyFunction implements EnvironmentAware,
+        ParameterizedFunction<EnvironmentPropertyFunction.Parameters> {
 
     /** Spring environment */
     private Environment environment;
 
     @Override
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Invalid function parameters - must set environment property name");
-        }
-
-        String propertyName = parameterList.get(0);
-
-        final Optional<String> defaultValue;
-        if (parameterList.size() > 1) {
-            defaultValue = Optional.of(parameterList.get(1));
-        } else {
-            defaultValue = Optional.empty();
-        }
+    public String execute(Parameters params, TestContext context) {
+        String propertyName = params.getPropertyName();
 
         Optional<String> value;
         if (environment != null) {
@@ -57,6 +47,7 @@ public class EnvironmentPropertyFunction implements Function, EnvironmentAware {
             value = Optional.ofNullable(System.getenv(propertyName));
         }
 
+        final Optional<String> defaultValue = Optional.ofNullable(params.getDefaultValue());
         return value.orElseGet(() -> defaultValue.orElseThrow(() -> new CitrusRuntimeException(String.format("Failed to resolve property '%s' in environment", propertyName))));
     }
 
@@ -67,5 +58,46 @@ public class EnvironmentPropertyFunction implements Function, EnvironmentAware {
 
     public Environment getEnvironment() {
         return environment;
+    }
+
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
+
+    public static class Parameters implements FunctionParameters {
+        private String propertyName;
+        private String defaultValue;
+
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (parameterList == null || parameterList.isEmpty()) {
+                throw new InvalidFunctionUsageException("Function parameters must not be empty");
+            }
+
+            setPropertyName(parameterList.get(0));
+
+            if (parameterList.size() > 1) {
+                defaultValue = context.replaceDynamicContentInString(parameterList.get(1));
+            }
+        }
+
+        public String getPropertyName() {
+            return propertyName;
+        }
+
+        @SchemaProperty(required = true, description = "The environment property name.")
+        public void setPropertyName(String propertyName) {
+            this.propertyName = propertyName;
+        }
+
+        public String getDefaultValue() {
+            return defaultValue;
+        }
+
+        @SchemaProperty(description = "The default value when environment property is not set.")
+        public void setDefaultValue(String defaultValue) {
+            this.defaultValue = defaultValue;
+        }
     }
 }

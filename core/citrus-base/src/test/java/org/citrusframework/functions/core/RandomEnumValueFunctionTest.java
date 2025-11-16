@@ -30,8 +30,6 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Test the {@link RandomEnumValueFunction} function.
- *
- *
  */
 public class RandomEnumValueFunctionTest extends UnitTestSupport {
 	private final Random random = new Random(System.currentTimeMillis());

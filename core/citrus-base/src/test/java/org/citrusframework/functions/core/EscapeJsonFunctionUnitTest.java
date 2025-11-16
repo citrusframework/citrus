@@ -1,13 +1,14 @@
 package org.citrusframework.functions.core;
 
+import java.util.List;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.Function;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -25,6 +26,7 @@ public class EscapeJsonFunctionUnitTest {
     @BeforeTest
     public void beforeTestSetup() {
         fixture = new EscapeJsonFunction();
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

@@ -16,14 +16,10 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.List;
-
 import com.mifmif.common.regex.Generex;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
-
-import static org.citrusframework.util.StringUtils.hasText;
+import org.citrusframework.functions.StringFunction;
+import org.citrusframework.functions.parameter.StringParameter;
 
 /**
  * The RandomPatternFunction generates a random string based on a provided regular expression pattern.
@@ -33,24 +29,20 @@ import static org.citrusframework.util.StringUtils.hasText;
  * from a given regular expression. It may not support certain complex regex features or produce all
  * possible variations.
  */
-public class RandomPatternFunction implements Function {
+public class RandomPatternFunction implements StringFunction {
 
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null) {
-            throw new InvalidFunctionUsageException("Function parameters must not be null.");
-        }
-
-        String pattern = parameterList.get(0);
-
-        if (!hasText(pattern)) {
-            throw new InvalidFunctionUsageException("Pattern must not be empty.");
-        }
-
+    public String execute(String pattern, TestContext context) {
         if (!Generex.isValidPattern(pattern)) {
             throw new IllegalArgumentException(
                 "Function called with a pattern, the algorithm is not able to create a string for.");
         }
 
         return new Generex(pattern).random();
+    }
+
+    @Override
+    public StringParameter getParameters() {
+        return new StringParameter()
+                .withAllowEmpty(false);
     }
 }

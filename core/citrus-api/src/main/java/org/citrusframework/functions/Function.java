@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * General function interface.
- *
  */
 public interface Function {
 

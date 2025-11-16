@@ -23,6 +23,9 @@ import java.util.TimeZone;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.functions.ParameterizedFunction;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,33 +34,29 @@ import org.slf4j.LoggerFactory;
  * as argument. Function also supports additional date offset in order to manipulate result date value.
  *
  */
-public class CurrentDateFunction extends AbstractDateFunction {
+public class CurrentDateFunction implements ParameterizedFunction<CurrentDateFunction.Parameters> {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CurrentDateFunction.class);
 
-    /**
-     * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
-     * @throws CitrusRuntimeException
-     */
-    public String execute(List<String> parameterList, TestContext context) {
+    @Override
+    public String execute(Parameters params, TestContext context) {
         Calendar calendar = Calendar.getInstance();
 
         SimpleDateFormat dateFormat;
         String result;
-        if (parameterList != null && !parameterList.isEmpty()) {
-            dateFormat = new SimpleDateFormat(parameterList.get(0));
+        if (StringUtils.hasText(params.getDateFormat())) {
+            dateFormat = new SimpleDateFormat(params.getDateFormat());
         } else {
-            dateFormat = getDefaultDateFormat();
+            dateFormat = DateFunctionHelper.getDefaultDateFormat();
         }
 
-        if (parameterList != null && parameterList.size() > 1) {
-            applyDateOffset(calendar, parameterList.get(1));
+        if (StringUtils.hasText(params.getOffset())) {
+            DateFunctionHelper.applyDateOffset(calendar, params.getOffset());
         }
 
-        if (parameterList != null && parameterList.size() > 2) {
-            String tz = parameterList.get(2);
-            dateFormat.setTimeZone(TimeZone.getTimeZone(tz));
+        if (StringUtils.hasText(params.getTimeZone())) {
+            dateFormat.setTimeZone(TimeZone.getTimeZone(params.getTimeZone()));
         }
 
         try {
@@ -68,5 +67,58 @@ public class CurrentDateFunction extends AbstractDateFunction {
         }
 
         return result;
+    }
+
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
+
+    public static class Parameters implements FunctionParameters {
+        private String dateFormat;
+        private String offset;
+        private String timeZone;
+
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (!parameterList.isEmpty()) {
+                setDateFormat(parameterList.get(0));
+            }
+
+            if (parameterList.size() > 1) {
+                setOffset(parameterList.get(1));
+            }
+
+            if (parameterList.size() > 2) {
+                setTimeZone(parameterList.get(2));
+            }
+        }
+
+        public String getDateFormat() {
+            return dateFormat;
+        }
+
+        @SchemaProperty(description = "The date format string.")
+        public void setDateFormat(String dateFormat) {
+            this.dateFormat = dateFormat;
+        }
+
+        public String getOffset() {
+            return offset;
+        }
+
+        @SchemaProperty(description = "The date offset.")
+        public void setOffset(String offset) {
+            this.offset = offset;
+        }
+
+        public String getTimeZone() {
+            return timeZone;
+        }
+
+        @SchemaProperty(description = "The time zone.")
+        public void setTimeZone(String timeZone) {
+            this.timeZone = timeZone;
+        }
     }
 }

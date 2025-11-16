@@ -23,29 +23,63 @@ import java.util.List;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.ParameterizedFunction;
+import org.citrusframework.yaml.SchemaProperty;
 
 /**
  * Encodes a character sequence to URL encoded string using given charset.
- *
  */
-public class UrlEncodeFunction implements Function {
+public class UrlEncodeFunction implements ParameterizedFunction<UrlEncodeFunction.Parameters> {
 
     @Override
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Invalid function parameter usage! Missing parameters!");
-        }
-
-        String charset = "UTF-8";
-        if (parameterList.size() > 1) {
-            charset = parameterList.get(1);
-        }
-
+    public String execute(Parameters params, TestContext context) {
         try {
-            return URLEncoder.encode(parameterList.get(0), charset);
+            return URLEncoder.encode(params.getValue(), params.getCharset());
         } catch (UnsupportedEncodingException e) {
             throw new CitrusRuntimeException("Unsupported character encoding", e);
+        }
+    }
+
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
+
+    public static class Parameters implements ParameterizedFunction.FunctionParameters {
+
+        private String value;
+        private String charset = "UTF-8";
+
+
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (parameterList == null || parameterList.isEmpty()) {
+                throw new InvalidFunctionUsageException("Function parameters must not be empty");
+            }
+
+            setValue(parameterList.get(0));
+
+            if (parameterList.size() > 1) {
+                setCharset(parameterList.get(1));
+            }
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @SchemaProperty(required = true, description = "The value to perform substring.")
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public String getCharset() {
+            return charset;
+        }
+
+        @SchemaProperty(description = "Optional charset used to decode.", defaultValue = "UTF-8")
+        public void setCharset(String charset) {
+            this.charset = charset;
         }
     }
 }

@@ -16,25 +16,22 @@
 
 package org.citrusframework.functions.core;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.List;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.List;
-
 /**
  * Function gets the local host address. Usually some IP address (e.g. 192.168.2.100).
  * This enables us to access the localhost dynamically in tests.
- *
  */
 public class LocalHostAddressFunction implements Function {
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String execute(List<String> parameterList, TestContext context) {
         if (!parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Unexpected parameter for function.");

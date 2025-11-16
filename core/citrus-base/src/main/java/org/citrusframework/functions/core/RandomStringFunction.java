@@ -16,13 +16,15 @@
 
 package org.citrusframework.functions.core;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
+import org.citrusframework.functions.ParameterizedFunction;
+import org.citrusframework.yaml.SchemaProperty;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
@@ -31,9 +33,9 @@ import static java.lang.System.currentTimeMillis;
 /**
  * Function generating a random string containing alphabetic characters. Arguments specify
  * upper and lower case mode.
- *
  */
-public class RandomStringFunction implements Function {
+public class RandomStringFunction implements ParameterizedFunction<RandomStringFunction.Parameters> {
+
     private static final Random random = new Random(currentTimeMillis());
 
     private static final char[] ALPHABET_UPPER = { 'A', 'B', 'C', 'D', 'E', 'F', 'G',
@@ -52,57 +54,23 @@ public class RandomStringFunction implements Function {
 
     private static final char[] NUMBERS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', };
 
-    /** Mode upper case */
-    public static final String UPPERCASE = "UPPERCASE";
+    @Override
+    public String execute(Parameters params, TestContext context) {
+        return getRandomString(params);
+    }
 
-    /** Mode lower case */
-    public static final String LOWERCASE = "LOWERCASE";
-
-    /** Mode mixed (upper and lower case characters) */
-    public static final String MIXED = "MIXED";
-
-    /**
-     * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
-     * @throws InvalidFunctionUsageException
-     */
-    public String execute(List<String> parameterList, TestContext context) {
-        int numberOfLetters;
-        String notationMethod = MIXED;
-        boolean includeNumbers = false;
-        int minNumberOfLetters = -1;
-
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
-        }
-
-        if (parameterList.size() > 4) {
-            throw new InvalidFunctionUsageException("Too many parameters for function");
-        }
-
-        numberOfLetters = parseInt(parameterList.get(0));
-        if (numberOfLetters < 0) {
-            throw new InvalidFunctionUsageException("Invalid parameter definition. Number of letters must not be positive non-zero integer value");
-        }
-
-        if (parameterList.size() > 1) {
-            notationMethod = parameterList.get(1);
-        }
-
-        if (parameterList.size() > 2) {
-            includeNumbers = parseBoolean(parameterList.get(2));
-        }
-
-        if (parameterList.size() > 3) {
-            minNumberOfLetters = parseInt(parameterList.get(3));
-        }
-
-        if (notationMethod.equals(UPPERCASE)) {
-            return getRandomString(numberOfLetters, ALPHABET_UPPER, includeNumbers, minNumberOfLetters);
-        } else if (notationMethod.equals(LOWERCASE)) {
-            return getRandomString(numberOfLetters, ALPHABET_LOWER, includeNumbers, minNumberOfLetters);
+    public static String getRandomString(Parameters params) {
+        if (params.getNotationMethod().equals(NotationMethod.UPPERCASE)) {
+            return getRandomString(params, ALPHABET_UPPER);
+        } else if (params.getNotationMethod().equals(NotationMethod.LOWERCASE)) {
+            return getRandomString(params, ALPHABET_LOWER);
         } else {
-            return getRandomString(numberOfLetters, ALPHABET_MIXED, includeNumbers, minNumberOfLetters);
+            return getRandomString(params, ALPHABET_MIXED);
         }
+    }
+
+    public static String getRandomString(Parameters params, char[] alphabet) {
+        return getRandomString(params.getLength(), alphabet, params.isIncludeNumbers(), params.getMinNumberOfLetters());
     }
 
     /**
@@ -136,5 +104,87 @@ public class RandomStringFunction implements Function {
         }
 
         return builder.toString();
+    }
+
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
+
+    public enum NotationMethod {
+        MIXED, UPPERCASE, LOWERCASE
+    }
+
+    public static class Parameters implements FunctionParameters {
+
+        private int length;
+        private NotationMethod notationMethod = NotationMethod.MIXED;
+        private boolean includeNumbers = false;
+        private int minNumberOfLetters = -1;
+
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (parameterList == null || parameterList.isEmpty()) {
+                throw new InvalidFunctionUsageException("Function parameters must not be empty");
+            }
+
+            if (parameterList.size() > 4) {
+                throw new InvalidFunctionUsageException("Too many parameters for function");
+            }
+
+            setLength(parseInt(parameterList.get(0)));
+            if (getLength() < 0) {
+                throw new InvalidFunctionUsageException("Invalid parameter definition. Number of letters must not be positive non-zero integer value");
+            }
+
+            if (parameterList.size() > 1 && Arrays.stream(NotationMethod.values())
+                                                .map(NotationMethod::name)
+                                                .anyMatch(parameterList.get(1)::equals)) {
+                setNotationMethod(NotationMethod.valueOf(parameterList.get(1)));
+            }
+
+            if (parameterList.size() > 2) {
+                setIncludeNumbers(parseBoolean(parameterList.get(2)));
+            }
+
+            if (parameterList.size() > 3) {
+                setMinNumberOfLetters(parseInt(parameterList.get(3)));
+            }
+        }
+
+        public int getLength() {
+            return length;
+        }
+
+        @SchemaProperty(required = true, description = "Defines the length of the generated string.")
+        public void setLength(int length) {
+            this.length = length;
+        }
+
+        public boolean isIncludeNumbers() {
+            return includeNumbers;
+        }
+
+        public void setIncludeNumbers(boolean includeNumbers) {
+            this.includeNumbers = includeNumbers;
+        }
+
+        public int getMinNumberOfLetters() {
+            return minNumberOfLetters;
+        }
+
+        @SchemaProperty(description = "Number of letters that must be part of the generated string.")
+        public void setMinNumberOfLetters(int minNumberOfLetters) {
+            this.minNumberOfLetters = minNumberOfLetters;
+        }
+
+        public NotationMethod getNotationMethod() {
+            return notationMethod;
+        }
+
+        @SchemaProperty(description = "The notation method to use.")
+        public void setNotationMethod(NotationMethod notationMethod) {
+            this.notationMethod = notationMethod;
+        }
     }
 }

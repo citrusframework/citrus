@@ -24,6 +24,9 @@ import java.util.List;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
+import org.citrusframework.functions.ParameterizedFunction;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,41 +36,34 @@ import org.slf4j.LoggerFactory;
  *
  * @since 1.3.1
  */
-public class ChangeDateFunction extends AbstractDateFunction {
+public class ChangeDateFunction implements ParameterizedFunction<ChangeDateFunction.Parameters> {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(ChangeDateFunction.class);
 
     private final CalendarProvider calendarProvider = new CalendarProvider();
 
-    /**
-     * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
-     * @throws CitrusRuntimeException
-     */
-    public String execute(List<String> parameterList, TestContext context) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
-        }
-
+    @Override
+    public String execute(Parameters params, TestContext context) {
         Calendar calendar = calendarProvider.getInstance();
 
         SimpleDateFormat dateFormat;
         String result;
 
-        if (parameterList.size() > 2) {
-            dateFormat = new SimpleDateFormat(parameterList.get(2));
+        if (StringUtils.hasText(params.getDateFormat())) {
+            dateFormat = new SimpleDateFormat(params.getDateFormat());
         } else {
-            dateFormat = getDefaultDateFormat();
+            dateFormat = DateFunctionHelper.getDefaultDateFormat();
         }
 
         try {
-            calendar.setTime(dateFormat.parse(parameterList.get(0)));
+            calendar.setTime(dateFormat.parse(params.getValue()));
         } catch (ParseException e) {
             throw new CitrusRuntimeException(e);
         }
 
-        if (parameterList.size() > 1) {
-            applyDateOffset(calendar, parameterList.get(1));
+        if (StringUtils.hasText(params.getOffset())) {
+            DateFunctionHelper.applyDateOffset(calendar, params.getOffset());
         }
 
         try {
@@ -80,6 +76,11 @@ public class ChangeDateFunction extends AbstractDateFunction {
         return result;
     }
 
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
+
     static class CalendarProvider {
 
         private CalendarProvider () {
@@ -88,6 +89,56 @@ public class ChangeDateFunction extends AbstractDateFunction {
 
         Calendar getInstance() {
             return Calendar.getInstance();
+        }
+    }
+
+    public static class Parameters implements FunctionParameters {
+        private String value;
+        private String offset;
+        private String dateFormat;
+
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (parameterList == null || parameterList.isEmpty()) {
+                throw new InvalidFunctionUsageException("Function parameters must not be empty");
+            }
+
+            setValue(context.resolveDynamicValue(parameterList.get(0)));
+
+            if (parameterList.size() > 1) {
+                setOffset(parameterList.get(1));
+            }
+
+            if (parameterList.size() > 2) {
+                setDateFormat(parameterList.get(2));
+            }
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @SchemaProperty(required = true, description = "The value to evaluate.")
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public String getOffset() {
+            return offset;
+        }
+
+        @SchemaProperty(description = "The date offset.")
+        public void setOffset(String offset) {
+            this.offset = offset;
+        }
+
+        public String getDateFormat() {
+            return dateFormat;
+        }
+
+        @SchemaProperty(description = "The date format string.")
+        public void setDateFormat(String dateFormat) {
+            this.dateFormat = dateFormat;
         }
     }
 }

@@ -81,6 +81,9 @@ public class CitrusSchemaGenerator {
 
             String endpointCatalog = MessagePayloadUtils.prettyPrintJson(YamlSupport.json().writeValueAsString(catalog.getEndpointCatalog()));
             writeFile(workingDir, "citrus-catalog-aggregate-endpoints.json", endpointCatalog + "\n");
+
+            String functionsCatalog = MessagePayloadUtils.prettyPrintJson(YamlSupport.json().writeValueAsString(catalog.getFunctionsCatalog()));
+            writeFile(workingDir, "citrus-catalog-aggregate-functions.json", functionsCatalog + "\n");
         } catch (IOException e) {
             throw new RuntimeException("Failed to generate Citrus DSL schema", e);
         }

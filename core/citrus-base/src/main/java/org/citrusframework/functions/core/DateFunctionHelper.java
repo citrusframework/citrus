@@ -16,8 +16,6 @@
 
 package org.citrusframework.functions.core;
 
-import org.citrusframework.functions.Function;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,19 +24,19 @@ import static java.lang.Integer.parseInt;
 
 /**
  * Abstract date value handling function provides base date value manipulation helpers.
- *
  * @since 1.3.1
  */
-public abstract class AbstractDateFunction implements Function {
+public final class DateFunctionHelper {
+
+    private DateFunctionHelper() {
+        //prevent instantiation of utility class.
+    }
 
     /**
      * Adds/removes date value offset by parsing offset string for
      * year/month/day/hour/minute/second offsets.
-     *
-     * @param calendar
-     * @param offsetString
      */
-    protected void applyDateOffset(Calendar calendar, String offsetString) {
+    static void applyDateOffset(Calendar calendar, String offsetString) {
         calendar.add(Calendar.YEAR, getDateValueOffset(offsetString, 'y'));
         calendar.add(Calendar.MONTH, getDateValueOffset(offsetString, 'M'));
         calendar.add(Calendar.DAY_OF_YEAR, getDateValueOffset(offsetString, 'd'));
@@ -49,12 +47,8 @@ public abstract class AbstractDateFunction implements Function {
 
     /**
      * Parse offset string and add or subtract date offset value.
-     *
-     * @param offsetString
-     * @param c
-     * @return
      */
-    protected int getDateValueOffset(String offsetString, char c) {
+    static int getDateValueOffset(String offsetString, char c) {
         ArrayList<Character> charList = new ArrayList<>();
 
         int index = offsetString.indexOf(c);
@@ -83,9 +77,8 @@ public abstract class AbstractDateFunction implements Function {
 
     /**
      * Provides default date format.
-     * @return
      */
-    protected SimpleDateFormat getDefaultDateFormat() {
+    static SimpleDateFormat getDefaultDateFormat() {
         return new SimpleDateFormat("dd.MM.yyyy");
     }
 }
