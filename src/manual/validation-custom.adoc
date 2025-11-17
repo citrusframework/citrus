@@ -1,14 +1,13 @@
 [[validation-custom]]
 == Custom validation
 
-In a previous section you have seen how to customize the global set of available message validators in a Citrus project using
-the link:#message-validator-registry[validator registry].
+In a previous section you have seen how to customize the global set of available message validators in a Citrus project using the link:#message-validator-registry[validator registry].
 
 [[validation-custom-validator]]
 === Custom message validator
 
-You can also explicitly use a custom message validator in a receive test action. This approach skips the automatic message
-validator resolving mechanism, and the receive action uses the defined validator implementation.
+You can also explicitly use a custom message validator in a receive test action.
+This approach skips the automatic message validator resolving mechanism, and the receive action uses the defined validator implementation.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -43,17 +42,17 @@ receive("someEndpoint")
 </receive>
 ----
 
-The receive action defines the message validator to use in this specific use case. You can set a custom message validator
-implementation here.
+The receive action defines the message validator to use in this specific use case.
+You can set a custom message validator implementation here.
 
-NOTE: Be careful when overwriting default message validation behavior. Setting a specific message validator has the effect
-that your receive action may not use the other default validators. The explicit validator definition in a receive action
-is exclusive so no further message validator resolving is performed on this receive action.
+IMPORTANT: Be careful when overwriting default message validation behavior.
+Setting a specific message validator has the effect that your receive action may not use the other default validators.
+The explicit validator definition in a receive action is exclusive so no further message validator resolving is performed on this receive action.
+If you wish otherwise, take a look at the link:#validation-custom-validator-strategy[custom validator strategy]
 
-You may want to set multiple validators here in order to meet your validation requirements. For instance when setting a
-`DomXmlMessageValidator` explicitly you may not be able to use the `XpathMessageValidator` capabilities on that specific
-receive action anymore. Fortunately you can set multiple validators on a receive action that will all perform validation
-tasks on the received message.
+You may want to set multiple validators here in order to meet your validation requirements.
+For instance when setting a `DomXmlMessageValidator` explicitly you may not be able to use the `XpathMessageValidator` capabilities on that specific receive action anymore.
+Fortunately you can set multiple validators on a receive action that will all perform validation tasks on the received message.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -75,6 +74,41 @@ receive("someEndpoint")
     </message>
 </receive>
 ----
+
+[[validation-custom-validator-strategy]]
+=== Custom validator strategy (new)
+
+Historically, Citrus executed **only** the custom validators defined on a receive action.
+This meant that **default validation steps were skipped entirely** when a custom validator was present - even if the test also defined body validation, JSON validation, or other built-in mechanisms.
+
+This exclusive behavior was intentional:
+Users could provide highly specialized validation logic (e.g., custom JSON comparison), and the default validators would stay out of the way to avoid duplicate or conflicting validation.
+
+However, this behavior can be surprising when users expect default validators to *also* run alongside custom logic.
+To address this, Citrus introduces a configurable validator strategy with two modes:
+
+==== Available strategies
+
+* **`EXCLUSIVE` (default)**
+  - Only the custom validator(s) are executed.
+  - Default validators and body assertions are not applied.
+
+* **`COMBINED`**
+  - Both custom validators and the default Citrus validators run.
+  - Useful when custom validation should extend - not replace - the default behavior.
+
+==== Configuration
+
+The strategy can be globally configured using either a system property or an environment variable:
+
+* System property:
+  `citrus.custom.validator.strategy`
+* Environment variable:
+  `CITRUS_CUSTOM_VALIDATOR_STRATEGY`
+
+Default value: `EXCLUSIVE`.
+
+This allows you to switch the behavior project-wide without changing any test cases.
 
 [[validation-custom-processor]]
 === Validation processor

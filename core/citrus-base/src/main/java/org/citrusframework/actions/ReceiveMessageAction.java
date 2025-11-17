@@ -16,16 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
@@ -68,11 +58,23 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.joining;
+import static org.citrusframework.CitrusSettings.getCustomValidatorStrategy;
 import static org.citrusframework.message.MessageType.mapToMessageType;
 import static org.citrusframework.util.StringUtils.hasText;
+import static org.citrusframework.validation.CustomValidatorStrategy.EXCLUSIVE;
 
 /**
  * This action receives messages from a service destination. Action uses a {@link org.citrusframework.endpoint.Endpoint}
@@ -256,7 +258,17 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
         if (nonNull(validationProcessor)) {
             validationProcessor.validate(message, context);
-        } else {
+
+            if (EXCLUSIVE.equals(getCustomValidatorStrategy())) {
+                if (!validationContexts.isEmpty()) {
+                    logger.debug("Note that custom validator has been called exclusively! Other validators will be disregarded.");
+                }
+
+                validationContexts.clear();
+            }
+        }
+
+        if (!validationContexts.isEmpty()) {
             logger.debug("Control message:\n{}", controlMessage.print(context));
 
             if (hasText(controlMessage.getPayload(String.class))) {

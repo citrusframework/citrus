@@ -57,6 +57,12 @@
       <artifactId>groovy-xml</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>uk.org.webcompere</groupId>
+      <artifactId>system-stubs-testng</artifactId>
+      <version>2.1.8</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
 </project>
