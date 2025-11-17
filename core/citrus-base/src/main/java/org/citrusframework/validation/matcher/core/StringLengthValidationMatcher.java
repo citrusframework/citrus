@@ -16,21 +16,18 @@
 
 package org.citrusframework.validation.matcher.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.validation.matcher.ValidationMatcher;
+import org.citrusframework.validation.matcher.StringValidationMatcher;
 
 /**
  * ValidationMatcher checks string length of given field.
- *
  */
-public class StringLengthValidationMatcher implements ValidationMatcher {
+public class StringLengthValidationMatcher implements StringValidationMatcher {
 
-    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
+    public void validate(String fieldName, String value, String controlValue, TestContext context) throws ValidationException {
         try {
-            int control = Integer.parseInt(controlParameters.get(0).strip());
+            int control = Integer.parseInt(controlValue.strip());
 
             if (!(value.length() == control)) {
                 throw new ValidationException(this.getClass().getSimpleName()
@@ -41,7 +38,7 @@ public class StringLengthValidationMatcher implements ValidationMatcher {
         } catch (NumberFormatException e) {
             throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName
-                    + "'. Invalid matcher argument '" + controlParameters.get(0) + "'. Must be a number");
+                    + "'. Invalid matcher argument '" + controlValue + "'. Must be a number");
         }
     }
 }

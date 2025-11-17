@@ -16,34 +16,38 @@
 
 package org.citrusframework.validation.matcher.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.validation.matcher.ValidationMatcher;
+import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
+import org.citrusframework.validation.matcher.parameter.OptionalStringParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Creates new variables from given field. Either uses field name or control value as variable name.
- *
  * @since 2.0
  */
-public class CreateVariableValidationMatcher implements ValidationMatcher {
+public class CreateVariableValidationMatcher implements ParameterizedValidationMatcher<OptionalStringParameter> {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CreateVariableValidationMatcher.class);
 
     @Override
-    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-        String name = fieldName;
-
-        if (controlParameters != null && !controlParameters.isEmpty()) {
-            name = controlParameters.get(0);
+    public void validate(String fieldName, String value, OptionalStringParameter controlParameter, TestContext context) throws ValidationException {
+        final String name;
+        if (controlParameter.isPresent()) {
+            name = controlParameter.getValue();
+        } else {
+            name = fieldName;
         }
 
         logger.debug("Setting variable: {} to value: {}", name, value);
 
         context.setVariable(name, value);
+    }
+
+    @Override
+    public OptionalStringParameter getParameters() {
+        return new OptionalStringParameter();
     }
 }

@@ -30,6 +30,9 @@ import org.citrusframework.functions.DefaultFunctionLibrary;
 import org.citrusframework.functions.Function;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.util.StringUtils;
+import org.citrusframework.validation.matcher.DefaultValidationMatcherLibrary;
+import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
+import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.yaml.SchemaProperty;
 
 import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
@@ -144,6 +147,29 @@ public class Catalog {
                             function.getKey(),
                             "citrus",
                             StringUtils.convertFirstCharToUpperCase(function.getKey()),
+                            null,
+                            jsonSchema));
+        }
+
+        return catalog;
+    }
+
+    public Map<String, CatalogEntry> getValidationMatcherCatalog() {
+        Map<String, CatalogEntry> catalog = new LinkedHashMap<>();
+
+        Map<String, ValidationMatcher> matchers = new DefaultValidationMatcherLibrary().getMembers();
+        for (Map.Entry<String, ValidationMatcher> matcher : matchers.entrySet()) {
+            JsonNode jsonSchema;
+            if (matcher.getValue() instanceof ParameterizedValidationMatcher<?> parameterizedMatcher) {
+                jsonSchema = CitrusSchemaGenerator.generateSchema(parameterizedMatcher.getParameters().getClass(), Option.INLINE_ALL_SCHEMAS);
+            } else {
+                jsonSchema = CitrusSchemaGenerator.generateSchema(matcher.getValue().getClass(), Option.INLINE_ALL_SCHEMAS);
+            }
+            catalog.put(matcher.getKey(),
+                    new CatalogEntry(SchemaProperty.Kind.VALIDATION_MATCHER.getCatalogKind(),
+                            matcher.getKey(),
+                            "citrus",
+                            StringUtils.convertFirstCharToUpperCase(matcher.getKey()),
                             null,
                             jsonSchema));
         }

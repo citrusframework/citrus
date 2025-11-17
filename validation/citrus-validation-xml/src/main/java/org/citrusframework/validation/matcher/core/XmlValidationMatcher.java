@@ -17,7 +17,6 @@
 package org.citrusframework.validation.matcher.core;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import org.citrusframework.context.TestContext;
@@ -26,17 +25,16 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.matcher.ValidationMatcher;
+import org.citrusframework.validation.matcher.StringValidationMatcher;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Validation matcher receives a XML data and validates it against expected XML with full
+ * Validation matcher receives XML data and validates it against expected XML with full
  * XML validation support (e.g. ignoring elements, namespace support, ...).
- *
  */
-public class XmlValidationMatcher implements ValidationMatcher {
+public class XmlValidationMatcher implements StringValidationMatcher {
 
     /** CDATA section starting and ending in XML */
     private static final String CDATA_SECTION_START = "<![CDATA[";
@@ -51,8 +49,7 @@ public class XmlValidationMatcher implements ValidationMatcher {
     private static final Logger logger = LoggerFactory.getLogger(XmlValidationMatcher.class);
 
     @Override
-    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-        String control = controlParameters.get(0);
+    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         getMessageValidator(context).validateMessage(new DefaultMessage(removeCDataElements(value)), new DefaultMessage(control), context, Collections.singletonList(validationContext));
     }
@@ -60,8 +57,6 @@ public class XmlValidationMatcher implements ValidationMatcher {
     /**
      * Find proper XML message validator. Uses several strategies to lookup default XML message validator. Caches found validator for
      * future usage once the lookup is done.
-     * @param context
-     * @return
      */
     private MessageValidator<? extends ValidationContext> getMessageValidator(TestContext context) {
         if (messageValidator != null) {
@@ -94,8 +89,6 @@ public class XmlValidationMatcher implements ValidationMatcher {
 
     /**
      * Cut off CDATA elements.
-     * @param value
-     * @return
      */
     private String removeCDataElements(String value) {
         String data = value.trim();

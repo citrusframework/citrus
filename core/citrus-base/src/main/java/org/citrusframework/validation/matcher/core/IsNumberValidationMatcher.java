@@ -16,20 +16,18 @@
 
 package org.citrusframework.validation.matcher.core;
 
+import java.util.List;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 
-import java.util.List;
-
 /**
  * ValidationMatcher based on Double > Double.
- *
  */
 public class IsNumberValidationMatcher implements ValidationMatcher {
 
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-
     	Double dValue;
     	try {
     		dValue = Double.parseDouble(value);

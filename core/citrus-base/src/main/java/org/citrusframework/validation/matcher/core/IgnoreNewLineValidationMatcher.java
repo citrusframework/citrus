@@ -18,20 +18,16 @@ package org.citrusframework.validation.matcher.core;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.validation.matcher.ValidationMatcher;
-
-import java.util.List;
+import org.citrusframework.validation.matcher.StringValidationMatcher;
 
 /**
  * ValidationMatcher ignores all new line characters in value and control value.
  *
  * @since 2.7.6
  */
-public class IgnoreNewLineValidationMatcher implements ValidationMatcher {
+public class IgnoreNewLineValidationMatcher implements StringValidationMatcher {
 
-    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-        String control = controlParameters.get(0);
-
+    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
         String normalizedValue = value.replaceAll("\\r(\\n)?", "\n").replaceAll("\\n", "");
         String normalizedControl = control.replaceAll("\\r(\\n)?", "\n").replaceAll("\\n", "");
 
