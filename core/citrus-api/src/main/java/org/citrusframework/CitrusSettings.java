@@ -16,16 +16,17 @@
 
 package org.citrusframework;
 
+import org.citrusframework.common.TestLoader;
+import org.citrusframework.validation.CustomValidatorStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Stream;
-
-import org.citrusframework.common.TestLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -267,6 +268,10 @@ public final class CitrusSettings {
     public static final String PERFORM_DEFAULT_VALIDATION_ENV = "CITRUS_PERFORM_DEFAULT_VALIDATION";
     public static final String PERFORM_DEFAULT_VALIDATION_DEFAULT = Boolean.FALSE.toString();
 
+    public static final String CUSTOM_VALIDATOR_STRATEGY_PROPERTY = "citrus.custom.validator.strategy";
+    public static final String CUSTOM_VALIDATOR_STRATEGY_ENV = "CITRUS_CUSTOM_VALIDATOR_STRATEGY";
+    public static final CustomValidatorStrategy CUSTOM_VALIDATOR_STRATEGY_DEFAULT = CustomValidatorStrategy.EXCLUSIVE;
+
     /**
      * Flag to enable/disable input stream caching
      */
@@ -379,6 +384,15 @@ public final class CitrusSettings {
                 PERFORM_DEFAULT_VALIDATION_PROPERTY,
                 PERFORM_DEFAULT_VALIDATION_ENV,
                 PERFORM_DEFAULT_VALIDATION_DEFAULT));
+    }
+
+    public static CustomValidatorStrategy getCustomValidatorStrategy() {
+        var customValidatorStrategy = getPropertyEnvOrDefault(
+                CUSTOM_VALIDATOR_STRATEGY_PROPERTY,
+                CUSTOM_VALIDATOR_STRATEGY_ENV,
+                CUSTOM_VALIDATOR_STRATEGY_DEFAULT.toString());
+
+        return CustomValidatorStrategy.valueOf(customValidatorStrategy.toUpperCase());
     }
 
     /**

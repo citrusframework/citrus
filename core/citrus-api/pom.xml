@@ -22,7 +22,6 @@
     <dependency>
       <groupId>uk.org.webcompere</groupId>
       <artifactId>system-stubs-testng</artifactId>
-      <version>2.1.8</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
