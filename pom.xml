@@ -273,6 +273,7 @@
     <swagger.version>2.2.37</swagger.version>
     <swagger.parser.version>2.1.22</swagger.parser.version>
     <swagger-request-validator.version>2.46.0</swagger-request-validator.version>
+    <system-stubs.version>2.1.8</system-stubs.version>
     <testcontainers.version>1.21.3</testcontainers.version>
     <testng.version>7.11.0</testng.version>
     <!-- bound to https://mvnrepository.com/artifact/io.fabric8/kubernetes-httpclient-vertx/${k8s.client.version} -->
@@ -1354,6 +1355,13 @@
         <artifactId>maven-plugin-annotations</artifactId>
         <version>${maven.plugin.annotations.version}</version>
         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>uk.org.webcompere</groupId>
+        <artifactId>system-stubs-testng</artifactId>
+        <version>2.1.8</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
