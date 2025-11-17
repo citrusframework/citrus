@@ -16,20 +16,17 @@
 
 package org.citrusframework.validation.matcher.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.validation.matcher.ValidationMatcher;
+import org.citrusframework.validation.matcher.StringValidationMatcher;
 
 /**
  * ValidationMatcher based on String.toLowerCase().contains()
  *
  */
-public class ContainsIgnoreCaseValidationMatcher implements ValidationMatcher {
+public class ContainsIgnoreCaseValidationMatcher implements StringValidationMatcher {
 
-    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-        String control = controlParameters.get(0);
+    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
         if (!value.toLowerCase().contains(control.toLowerCase())) {
             throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName

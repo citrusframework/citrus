@@ -18,18 +18,14 @@ package org.citrusframework.validation.matcher.core;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.validation.matcher.ValidationMatcher;
-
-import java.util.List;
+import org.citrusframework.validation.matcher.StringValidationMatcher;
 
 /**
  * ValidationMatcher based on String.equalsIgnoreCase()
- *
  */
-public class EqualsIgnoreCaseValidationMatcher implements ValidationMatcher {
+public class EqualsIgnoreCaseValidationMatcher implements StringValidationMatcher {
 
-    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-        String control = controlParameters.get(0);
+    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
         if (!value.equalsIgnoreCase(control)) {
             throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName

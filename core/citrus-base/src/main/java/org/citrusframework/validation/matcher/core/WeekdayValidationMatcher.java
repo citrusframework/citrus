@@ -24,9 +24,11 @@ import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ControlExpressionParser;
-import org.citrusframework.validation.matcher.ValidationMatcher;
+import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
+import org.citrusframework.yaml.SchemaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +43,7 @@ import org.slf4j.LoggerFactory;
  *
  * @since 1.3.1
  */
-public class WeekdayValidationMatcher implements ValidationMatcher, ControlExpressionParser {
+public class WeekdayValidationMatcher implements ParameterizedValidationMatcher<WeekdayValidationMatcher.Parameters>, ControlExpressionParser {
 
     /**
      * Logger
@@ -49,18 +51,12 @@ public class WeekdayValidationMatcher implements ValidationMatcher, ControlExpre
     private static final Logger logger = LoggerFactory.getLogger(WeekdayValidationMatcher.class);
 
     @Override
-    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
+    public void validate(String fieldName, String value, Parameters controlParameters, TestContext context) throws ValidationException {
         SimpleDateFormat dateFormat;
-        String weekday = controlParameters.get(0);
-        String formatString = "dd.MM.yyyy";
-
-        if (controlParameters.size() == 2) {
-            // override the default date format
-            formatString = controlParameters.get(1);
-        }
+        Weekday weekday = controlParameters.getWeekday();
 
         try {
-            dateFormat = new SimpleDateFormat(formatString);
+            dateFormat = new SimpleDateFormat(controlParameters.getDateFormat());
         } catch (PatternSyntaxException e) {
             throw new ValidationException(this.getClass().getSimpleName() + " failed for field '" + fieldName + "' " +
                     ". Found invalid date format", e);
@@ -70,7 +66,7 @@ public class WeekdayValidationMatcher implements ValidationMatcher, ControlExpre
             Calendar cal = Calendar.getInstance();
             cal.setTime(dateFormat.parse(value));
 
-            if (cal.get(Calendar.DAY_OF_WEEK) == Weekday.valueOf(weekday).getConstantValue()) {
+            if (cal.get(Calendar.DAY_OF_WEEK) == weekday.getConstantValue()) {
                 logger.debug("Weekday validation matcher successful - All values OK");
             } else {
                 throw new ValidationException(this.getClass().getSimpleName() + " failed for field '" + fieldName + "'" +
@@ -78,7 +74,7 @@ public class WeekdayValidationMatcher implements ValidationMatcher, ControlExpre
             }
         } catch (ParseException e) {
             throw new ValidationException(this.getClass().getSimpleName() + " failed for field '" + fieldName + "'" +
-                    ". Received invalid date format for value '" + value + "', expected date format is '" + formatString + "'", e);
+                    ". Received invalid date format for value '" + value + "', expected date format is '" + controlParameters.getDateFormat() + "'", e);
         }
     }
 
@@ -98,7 +94,7 @@ public class WeekdayValidationMatcher implements ValidationMatcher, ControlExpre
     /**
      * Weekday enumeration links names to Java util Calendar constants.
      */
-    private enum Weekday {
+    public enum Weekday {
         MONDAY(Calendar.MONDAY),
         TUESDAY(Calendar.TUESDAY),
         WEDNESDAY(Calendar.WEDNESDAY),
@@ -115,6 +111,47 @@ public class WeekdayValidationMatcher implements ValidationMatcher, ControlExpre
 
         public int getConstantValue() {
             return this.constantValue;
+        }
+    }
+
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
+
+    public static class Parameters implements ControlParameters {
+        private Weekday weekday;
+        private String dateFormat = "dd.MM.yyyy";
+
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (parameterList == null || parameterList.isEmpty()) {
+                throw new InvalidFunctionUsageException("Missing validation matcher parameter - weekday is required");
+            }
+
+            setWeekday(Weekday.valueOf(parameterList.get(0).toUpperCase()));
+
+            if (parameterList.size() > 1) {
+                setDateFormat(parameterList.get(1));
+            }
+        }
+
+        public Weekday getWeekday() {
+            return weekday;
+        }
+
+        @SchemaProperty(required = true, description = "The expected weekday.")
+        public void setWeekday(Weekday weekday) {
+            this.weekday = weekday;
+        }
+
+        public String getDateFormat() {
+            return dateFormat;
+        }
+
+        @SchemaProperty(description = "The date format string.", defaultValue = "dd.MM.yyyy")
+        public void setDateFormat(String dateFormat) {
+            this.dateFormat = dateFormat;
         }
     }
 }

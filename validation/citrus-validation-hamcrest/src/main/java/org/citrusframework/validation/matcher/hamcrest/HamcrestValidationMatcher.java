@@ -39,8 +39,9 @@ import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.matcher.ControlExpressionParser;
 import org.citrusframework.validation.matcher.DefaultControlExpressionParser;
-import org.citrusframework.validation.matcher.ValidationMatcher;
+import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
 import org.citrusframework.variable.VariableUtils;
+import org.citrusframework.yaml.SchemaProperty;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
@@ -50,7 +51,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @since 2.5
  */
 @SuppressWarnings("unchecked")
-public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpressionParser {
+public class HamcrestValidationMatcher implements ParameterizedValidationMatcher<HamcrestValidationMatcher.Parameters>, ControlExpressionParser {
 
     private final List<String> matchers = Arrays.asList( "equalTo", "equalToIgnoringCase", "equalToIgnoringWhiteSpace", "is", "not", "containsString", "startsWith", "endsWith", "matchesPattern" );
 
@@ -71,16 +72,9 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
     private final List<String> iterableMatchers = Arrays.asList( "anyOf", "allOf" );
 
     @Override
-    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-        String matcherExpression;
-        String matcherValue = value;
-
-        if (controlParameters.size() > 1) {
-            matcherValue = context.replaceDynamicContentInString(controlParameters.get(0));
-            matcherExpression = controlParameters.get(1);
-        } else {
-            matcherExpression = controlParameters.get(0);
-        }
+    public void validate(String fieldName, String value, Parameters controlParameters, TestContext context) throws ValidationException {
+        String matcherExpression = controlParameters.getExpression();
+        String matcherValue = Optional.ofNullable(controlParameters.getValue()).orElse(value);
 
         String matcherName = matcherExpression.trim().substring(0, matcherExpression.trim().indexOf("("));
 
@@ -109,17 +103,51 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
         } catch (AssertionError e) {
             throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName
-                    + "'. Received value is '" + value
+                    + "'. Received value is '" + matcherValue
                     + "' and did not match '" + matcherExpression + "'.", e);
+        }
+    }
+
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
+
+    public static class Parameters implements ParameterizedValidationMatcher.ControlParameters {
+        private String expression;
+        private String value;
+
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (parameterList.size() > 1) {
+                setValue(context.replaceDynamicContentInString(parameterList.get(0)));
+                setExpression(parameterList.get(1));
+            } else {
+                setExpression(parameterList.get(0));
+            }
+        }
+
+        public String getExpression() {
+            return expression;
+        }
+
+        @SchemaProperty(required = true, description = "The Hamcrest expression to evaluate.")
+        public void setExpression(String expression) {
+            this.expression = expression;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @SchemaProperty(description = "The value to verify.")
+        public void setValue(String value) {
+            this.value = value;
         }
     }
 
     /**
      * Construct matcher by name and parameters.
-     * @param matcherName
-     * @param matcherParameter
-     * @param context
-     * @return
      */
     private Matcher<?> getMatcher(String matcherName, String[] matcherParameter, TestContext context) {
 
@@ -301,9 +329,6 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
 
     /**
      * Try to find matcher provider using different lookup strategies. Looks into reference resolver and resource path for matcher provider.
-     * @param matcherName
-     * @param context
-     * @return
      */
     private Optional<HamcrestMatcherProvider> lookupMatcherProvider(String matcherName, TestContext context) {
         // try to find matcher provider via reference
@@ -324,8 +349,6 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
 
     /**
      * Construct collection from delimited string expression.
-     * @param value
-     * @return
      */
     private List<String> getCollection(String value) {
         if (value.equals("[]")) {
@@ -346,8 +369,6 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
 
     /**
      * Construct collection from delimited string expression.
-     * @param mapString
-     * @return
      */
     private Map<String, Object> getMap(String mapString) {
         Properties props = new Properties();
@@ -382,8 +403,6 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
 
     /**
      * Checks for numeric matcher presence in expression.
-     * @param matcherExpression
-     * @return
      */
     private boolean containsNumericMatcher(String matcherExpression) {
         for (String numericMatcher : numericMatchers) {

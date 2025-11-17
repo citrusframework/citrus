@@ -16,21 +16,19 @@
 
 package org.citrusframework.validation.matcher.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.validation.matcher.ValidationMatcher;
+import org.citrusframework.validation.matcher.StringValidationMatcher;
 
 /**
  * ValidationMatcher trims leading and trailing whitespaces in value and control value.
  *
  * @since 2.7.6
  */
-public class TrimValidationMatcher implements ValidationMatcher {
+public class TrimValidationMatcher implements StringValidationMatcher {
 
-    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-        String control = controlParameters.get(0).strip();
+    public void validate(String fieldName, String value, String controlValue, TestContext context) throws ValidationException {
+        String control = controlValue.strip();
         if (!value.strip().equalsIgnoreCase(control)) {
             throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName

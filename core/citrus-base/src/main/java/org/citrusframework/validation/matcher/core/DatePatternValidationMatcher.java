@@ -16,23 +16,21 @@
 
 package org.citrusframework.validation.matcher.core;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.validation.matcher.ValidationMatcher;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.regex.PatternSyntaxException;
+
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.validation.matcher.StringValidationMatcher;
 
 /**
  * ValidationMatcher checking for valid date format.
  *
  */
-public class DatePatternValidationMatcher implements ValidationMatcher {
+public class DatePatternValidationMatcher implements StringValidationMatcher {
 
-    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-		String control = controlParameters.get(0);
+    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
     	SimpleDateFormat dateFormat;
     	try {
     		dateFormat = new SimpleDateFormat(control);

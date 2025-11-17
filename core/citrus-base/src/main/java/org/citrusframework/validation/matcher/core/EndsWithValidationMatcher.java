@@ -18,23 +18,19 @@ package org.citrusframework.validation.matcher.core;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.validation.matcher.ValidationMatcher;
-
-import java.util.List;
+import org.citrusframework.validation.matcher.StringValidationMatcher;
 
 /**
  * ValidationMatcher based on String.endsWith()
- *
  */
-public class EndsWithValidationMatcher implements ValidationMatcher {
+public class EndsWithValidationMatcher implements StringValidationMatcher {
 
-    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-        String controlValue = controlParameters.get(0);
-        if (!value.endsWith(controlValue)) {
+    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
+        if (!value.endsWith(control)) {
             throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName
                     + "'. Received value is '" + value
-                    + "', control value is '" + controlValue + "'.");
+                    + "', control value is '" + control + "'.");
         }
     }
 }

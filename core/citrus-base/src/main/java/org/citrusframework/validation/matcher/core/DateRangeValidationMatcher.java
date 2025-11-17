@@ -24,8 +24,8 @@ import java.util.List;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.validation.matcher.ValidationMatcher;
-import org.citrusframework.validation.matcher.ValidationMatcherUtils;
+import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
+import org.citrusframework.yaml.SchemaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,30 +36,26 @@ import org.slf4j.LoggerFactory;
  *
  * @since 2.5
  */
-public class DateRangeValidationMatcher implements ValidationMatcher {
+public class DateRangeValidationMatcher implements ParameterizedValidationMatcher<DateRangeValidationMatcher.Parameters> {
 
     /**
      * Logger
      */
     private static final Logger logger = LoggerFactory.getLogger(DateRangeValidationMatcher.class);
 
-    private static final String FALLBACK_DATE_PATTERN = "yyyy-MM-dd";
-
     @Override
-    public void validate(String fieldName, String value, List<String> params, TestContext context) throws ValidationException {
-        logger.debug("Validating date range for date '{}' using control data: {}", value, ValidationMatcherUtils.getParameterListAsString(params));
+    public void validate(String fieldName, String value, Parameters params, TestContext context) throws ValidationException {
+        logger.debug("Validating date range for date '{}' using control data: from: {} to: {} format: {}", value,
+                params.getDateFrom(), params.getDateTo(), params.getDateFormat());
+
         try {
+            String dateFromParam = params.getDateFrom();
+            String dateToParam = params.getDateTo();
+            String dateFormat = params.getDateFormat();
 
-            String dateFromParam = params.get(0);
-            String dateToParam = params.get(1);
-            String datePatternParam = FALLBACK_DATE_PATTERN;
-            if (params.size() == 3) {
-                datePatternParam = params.get(2);
-            }
-
-            Calendar dateFrom = toCalender(dateFromParam, datePatternParam);
-            Calendar dateTo = toCalender(dateToParam, datePatternParam);
-            Calendar dateToValidate = toCalender(value, datePatternParam);
+            Calendar dateFrom = toCalender(dateFromParam, dateFormat);
+            Calendar dateTo = toCalender(dateToParam, dateFormat);
+            Calendar dateToValidate = toCalender(value, dateFormat);
 
             if (!checkInRange(dateFrom, dateTo, dateToValidate)) {
                 String validationErr = String.format("%s failed for field '%s'. Date '%s' not in range: %s - %s",
@@ -85,7 +81,7 @@ public class DateRangeValidationMatcher implements ValidationMatcher {
     }
 
     /**
-     * Converts the supplied date to it's calendar representation. The {@code datePattern} is
+     * Converts the supplied date to its calendar representation. The {@code datePattern} is
      * used for parsing the date.
      *
      * @param date        the date to parse
@@ -110,6 +106,61 @@ public class DateRangeValidationMatcher implements ValidationMatcher {
 
     private boolean checkGreaterOrEqualTo(Calendar referenceDate, Calendar dateToCheck) {
         return referenceDate.compareTo(dateToCheck) <= 0;
+    }
+
+    @Override
+    public Parameters getParameters() {
+        return new Parameters();
+    }
+
+    public static class Parameters implements ParameterizedValidationMatcher.ControlParameters {
+        private static final String FALLBACK_DATE_PATTERN = "yyyy-MM-dd";
+
+        private String dateFrom;
+        private String dateTo;
+        private String dateFormat = FALLBACK_DATE_PATTERN;
+
+        @Override
+        public void configure(List<String> parameterList, TestContext context) {
+            if (!parameterList.isEmpty()) {
+                setDateFrom(parameterList.get(0));
+            }
+
+            if (parameterList.size() > 1) {
+                setDateTo(parameterList.get(1));
+            }
+
+            if (parameterList.size() > 2) {
+                setDateFormat(parameterList.get(2));
+            }
+        }
+
+        public String getDateFrom() {
+            return dateFrom;
+        }
+
+        @SchemaProperty(required = true, description = "The expected data range start value.")
+        public void setDateFrom(String dateFrom) {
+            this.dateFrom = dateFrom;
+        }
+
+        public String getDateTo() {
+            return dateTo;
+        }
+
+        @SchemaProperty(required = true, description = "The expected data range end value.")
+        public void setDateTo(String dateTo) {
+            this.dateTo = dateTo;
+        }
+
+        public String getDateFormat() {
+            return dateFormat;
+        }
+
+        @SchemaProperty(description = "The date format string.", defaultValue = FALLBACK_DATE_PATTERN)
+        public void setDateFormat(String dateFormat) {
+            this.dateFormat = dateFormat;
+        }
     }
 }
 

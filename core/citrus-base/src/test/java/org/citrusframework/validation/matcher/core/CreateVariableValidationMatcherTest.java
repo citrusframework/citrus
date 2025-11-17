@@ -16,11 +16,11 @@
 
 package org.citrusframework.validation.matcher.core;
 
+import java.util.List;
+
 import org.citrusframework.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 public class CreateVariableValidationMatcherTest extends UnitTestSupport {
 
@@ -43,7 +43,7 @@ public class CreateVariableValidationMatcherTest extends UnitTestSupport {
         Assert.assertEquals(context.getVariable("field"), "This is a 2nd test");
         Assert.assertEquals(context.getVariable("foo"), "Another test");
 
-        matcher.validate("field", "This is a 3rd test", null, context);
+        matcher.validate("field", "This is a 3rd test", (List<String>) null, context);
         Assert.assertEquals(context.getVariable("field"), "This is a 3rd test");
     }
 }

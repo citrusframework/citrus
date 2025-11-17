@@ -16,21 +16,18 @@
 
 package org.citrusframework.validation.matcher.core;
 
+import java.util.regex.PatternSyntaxException;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.validation.matcher.ValidationMatcher;
-
-import java.util.List;
-import java.util.regex.PatternSyntaxException;
+import org.citrusframework.validation.matcher.StringValidationMatcher;
 
 /**
  * ValidationMatcher based on String.matches()
- *
  */
-public class MatchesValidationMatcher implements ValidationMatcher {
+public class MatchesValidationMatcher implements StringValidationMatcher {
 
-    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-		String control = controlParameters.get(0);
+    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
     	boolean success;
 
     	try {
