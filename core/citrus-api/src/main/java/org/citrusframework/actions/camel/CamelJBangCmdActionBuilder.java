@@ -28,4 +28,8 @@ public interface CamelJBangCmdActionBuilder<T extends TestAction, B extends Came
      */
     CamelJBangCmdSendActionBuilder<?, ?> send();
 
+    /**
+     * Runs Camel JBang receive command.
+     */
+    CamelJBangCmdReceiveActionBuilder<?, ?> receive();
 }

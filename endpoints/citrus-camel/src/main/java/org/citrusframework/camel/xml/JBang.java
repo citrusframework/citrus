@@ -142,7 +142,8 @@ public class JBang {
     @XmlType(name = "", propOrder = {
             "args",
             "integration",
-            "resources"
+            "resources",
+            "stubs"
     })
     public static class RunIntegration {
 
@@ -155,6 +156,9 @@ public class JBang {
         @XmlAttribute(name = "args")
         protected String argLine;
 
+        @XmlAttribute
+        protected String stub;
+
         @XmlAttribute(name = "wait-for-running-state")
         protected boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
 
@@ -163,6 +167,9 @@ public class JBang {
 
         @XmlElement
         protected Args args;
+
+        @XmlElement
+        protected Stubs stubs;
 
         @XmlElement
         protected Resources resources;
@@ -223,6 +230,22 @@ public class JBang {
             this.args = args;
         }
 
+        public String getStub() {
+            return stub;
+        }
+
+        public void setStub(String stub) {
+            this.stub = stub;
+        }
+
+        public Stubs getStubs() {
+            return stubs;
+        }
+
+        public void setStubs(Stubs stubs) {
+            this.stubs = stubs;
+        }
+
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
                 "args",
@@ -241,6 +264,27 @@ public class JBang {
 
             public void setArgs(List<String> args) {
                 this.args = args;
+            }
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+                "stubs",
+        })
+        public static class Stubs {
+
+            @XmlElement(name = "stub")
+            protected List<String> stubs;
+
+            public List<String> getStubs() {
+                if (stubs == null) {
+                    stubs = new ArrayList<>();
+                }
+                return stubs;
+            }
+
+            public void setStubs(List<String> args) {
+                this.stubs = args;
             }
         }
 
@@ -929,12 +973,16 @@ public class JBang {
 
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-            "send"
+            "send",
+            "receive"
     })
     public static class Cmd {
 
         @XmlElement
         protected Send send;
+
+        @XmlElement
+        protected Receive receive;
 
         public void setSend(Send send) {
             this.send = send;
@@ -942,6 +990,14 @@ public class JBang {
 
         public Send getSend() {
             return this.send;
+        }
+
+        public void setReceive(Receive receive) {
+            this.receive = receive;
+        }
+
+        public Receive getReceive() {
+            return receive;
         }
 
         @XmlAccessorType(XmlAccessType.FIELD)
@@ -1107,6 +1163,113 @@ public class JBang {
                 public void setFile(String file) {
                     this.file = file;
                 }
+            }
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {})
+        public static class Receive {
+
+            @XmlAttribute(name = "integration")
+            protected String integration;
+            @XmlAttribute
+            protected String endpoint;
+            @XmlAttribute(name = "uri")
+            protected String uri;
+            @XmlAttribute(name = "args")
+            protected String argLine;
+            @XmlAttribute(name = "logging-color")
+            protected boolean loggingColor;
+            @XmlAttribute(name = "grep")
+            protected String grep;
+            @XmlAttribute(name = "since")
+            protected String since;
+            @XmlAttribute(name = "tail")
+            protected String tail;
+
+            @XmlAttribute(name = "max-attempts")
+            private int maxAttempts = CamelSettings.getMaxAttempts();
+            @XmlAttribute(name = "delay-between-attempts")
+            private long delayBetweenAttempts = CamelSettings.getDelayBetweenAttempts();
+
+            public String getIntegration() {
+                return integration;
+            }
+
+            public void setIntegration(String integration) {
+                this.integration = integration;
+            }
+
+            public String getEndpoint() {
+                return endpoint;
+            }
+
+            public void setEndpoint(String endpoint) {
+                this.endpoint = endpoint;
+            }
+
+            public String getUri() {
+                return uri;
+            }
+
+            public void setUri(String uri) {
+                this.uri = uri;
+            }
+
+            public String getArgLine() {
+                return argLine;
+            }
+
+            public void setArgLine(String argLine) {
+                this.argLine = argLine;
+            }
+
+            public void setLoggingColor(boolean loggingColor) {
+                this.loggingColor = loggingColor;
+            }
+
+            public boolean isLoggingColor() {
+                return loggingColor;
+            }
+
+            public void setGrep(String grep) {
+                this.grep = grep;
+            }
+
+            public String getGrep() {
+                return grep;
+            }
+
+            public void setSince(String since) {
+                this.since = since;
+            }
+
+            public String getSince() {
+                return since;
+            }
+
+            public void setTail(String tail) {
+                this.tail = tail;
+            }
+
+            public String getTail() {
+                return tail;
+            }
+
+            public int getMaxAttempts() {
+                return maxAttempts;
+            }
+
+            public void setMaxAttempts(int maxAttempts) {
+                this.maxAttempts = maxAttempts;
+            }
+
+            public long getDelayBetweenAttempts() {
+                return delayBetweenAttempts;
+            }
+
+            public void setDelayBetweenAttempts(long delayBetweenAttempts) {
+                this.delayBetweenAttempts = delayBetweenAttempts;
             }
         }
     }

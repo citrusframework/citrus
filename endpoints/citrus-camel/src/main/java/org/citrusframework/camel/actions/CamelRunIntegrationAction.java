@@ -205,6 +205,8 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
         private final Map<String, String> systemProperties = new HashMap<>();
         private Resource systemPropertiesFile;
 
+        private String stub;
+
         private boolean autoRemoveResources = CamelJBangSettings.isAutoRemoveResources();
         private boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
         private boolean dumpIntegrationOutput = CamelJBangSettings.isDumpIntegrationOutput();
@@ -323,6 +325,12 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
         }
 
         @Override
+        public Builder stub(String... components) {
+            this.stub = String.join(",", components);
+            return this;
+        }
+
+        @Override
         public CamelRunIntegrationAction doBuild() {
             if (systemPropertiesFile != null) {
                 Properties props = new Properties();
@@ -342,6 +350,10 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
                 } catch (IOException e) {
                     throw new CitrusRuntimeException("Failed to read properties file", e);
                 }
+            }
+
+            if (StringUtils.hasText(stub)) {
+                args.add("--stub=%s".formatted(stub));
             }
 
             return new CamelRunIntegrationAction(this);

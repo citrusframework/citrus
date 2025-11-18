@@ -24,6 +24,7 @@ import java.util.Map;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.AbstractCamelJBangAction;
 import org.citrusframework.camel.actions.AddCamelPluginAction;
+import org.citrusframework.camel.actions.CamelCmdReceiveAction;
 import org.citrusframework.camel.actions.CamelCmdSendAction;
 import org.citrusframework.camel.actions.CamelCustomizedRunIntegrationAction;
 import org.citrusframework.camel.actions.CamelKubernetesDeleteIntegrationAction;
@@ -131,6 +132,11 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
         @SchemaProperty(advanced = true, description = "Optional command arguments.")
         public void setArgs(List<String> args) {
             builder.withArgs(args.toArray(String[]::new));
+        }
+
+        @SchemaProperty(advanced = true, description = "Optional stubbed components.")
+        public void setStub(List<String> stub) {
+            builder.stub(stub.toArray(String[]::new));
         }
 
         @SchemaProperty(advanced = true, description = "Optional list of resources added to the Camel JBang process.")
@@ -711,6 +717,47 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             this.builder = builder;
         }
 
+        @SchemaProperty(kind = ACTION, group = CAMEL_JBANG_CMD_GROUP, description = "Receives a message from a Camel JBang integration.")
+        public void setReceive(Receive receive) {
+            CamelCmdReceiveAction.Builder builder = new CamelCmdReceiveAction.Builder();
+
+            builder.integration(receive.getIntegration());
+
+            if (receive.getEndpoint() != null) {
+                builder.endpoint(receive.getEndpoint());
+            }
+
+            if (receive.getUri() != null) {
+                builder.endpointUri(receive.getUri());
+            }
+
+            if (receive.getArgs() != null) {
+                receive.getArgs().forEach(builder::withArg);
+            }
+
+            if (receive.getGrep() != null) {
+                builder.grep(receive.getGrep());
+            }
+
+            builder.loggingColor(receive.isLoggingColor());
+
+            if (receive.getSince() != null) {
+                builder.since(receive.getSince());
+            }
+
+            if (receive.getTail() != null) {
+                builder.tail(receive.getTail());
+            }
+
+            builder.maxAttempts(receive.getMaxAttempts());
+            builder.delayBetweenAttempts(receive.getDelayBetweenAttempts());
+
+            builder.printLogs(receive.isPrintLogs());
+            builder.stopOnErrorStatus(receive.isStopOnErrorStatus());
+
+            this.builder = builder;
+        }
+
         @Override
         public AbstractCamelJBangAction.Builder<?, ?> getBuilder() {
             return builder;
@@ -828,6 +875,136 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 public void setFile(String file) {
                     this.file = file;
                 }
+            }
+        }
+
+        public static class Receive {
+
+            protected String integration;
+            protected String endpoint;
+            protected String uri;
+            protected List<String> args;
+            protected boolean loggingColor;
+
+            protected String grep;
+            protected String since;
+            protected String tail;
+
+            protected int maxAttempts = CamelSettings.getMaxAttempts();
+            protected long delayBetweenAttempts = CamelSettings.getDelayBetweenAttempts();
+
+            protected boolean printLogs = CamelSettings.isPrintLogs();
+            protected boolean stopOnErrorStatus = true;
+
+            public String getIntegration() {
+                return integration;
+            }
+
+            @SchemaProperty(description = "The Camel integration to send the message to.")
+            public void setIntegration(String integration) {
+                this.integration = integration;
+            }
+
+            public String getEndpoint() {
+                return endpoint;
+            }
+
+            @SchemaProperty(advanced = true, description = "Optional endpoint in the Camel integration.")
+            public void setEndpoint(String endpoint) {
+                this.endpoint = endpoint;
+            }
+
+            public String getUri() {
+                return uri;
+            }
+
+            @SchemaProperty(advanced = true, description = "Camel endpoint URI to send message to.")
+            public void setUri(String uri) {
+                this.uri = uri;
+            }
+
+            public List<String> getArgs() {
+                if (args == null) {
+                    args = new ArrayList<>();
+                }
+                return this.args;
+            }
+
+            @SchemaProperty(advanced = true, description = "Command arguments.")
+            public void setArgs(List<String> args) {
+                this.args = args;
+            }
+
+            public boolean isLoggingColor() {
+                return loggingColor;
+            }
+
+            @SchemaProperty(advanced = true, description = "When enabled the output uses logging color.", defaultValue = "false")
+            public void setLoggingColor(boolean loggingColor) {
+                this.loggingColor = loggingColor;
+            }
+
+            public String getGrep() {
+                return grep;
+            }
+
+            @SchemaProperty(description = "Filter messages based on this expression.")
+            public void setGrep(String grep) {
+                this.grep = grep;
+            }
+
+            public String getSince() {
+                return since;
+            }
+
+            @SchemaProperty(advanced = true, description = "Return messages newer than a relative duration.")
+            public void setSince(String since) {
+                this.since = since;
+            }
+
+            public String getTail() {
+                return tail;
+            }
+
+            @SchemaProperty(advanced = true, description = "The number of messages from the end to show.", defaultValue = "0")
+            public void setTail(String tail) {
+                this.tail = tail;
+            }
+
+            public int getMaxAttempts() {
+                return maxAttempts;
+            }
+
+            @SchemaProperty(advanced = true, description = "Maximum number of validation attempts.", defaultValue = "60")
+            public void setMaxAttempts(int maxAttempts) {
+                this.maxAttempts = maxAttempts;
+            }
+
+            public long getDelayBetweenAttempts() {
+                return delayBetweenAttempts;
+            }
+
+            @SchemaProperty(advanced = true, description = "The delay in milliseconds to wait between validation attempts.", defaultValue = "1000")
+            public void setDelayBetweenAttempts(long delayBetweenAttempts) {
+                this.delayBetweenAttempts = delayBetweenAttempts;
+            }
+
+            public boolean isPrintLogs() {
+                return printLogs;
+            }
+
+            @SchemaProperty(advanced = true, description = "When enabled the Camel integration log output is added to the test log output.")
+            public void setPrintLogs(boolean printLogs) {
+                this.printLogs = printLogs;
+            }
+
+            @SchemaProperty(advanced = true, description = "When enabled the validation attempts stop when error state is reported.", defaultValue = "true")
+            public void setStopOnErrorStatus(boolean stopOnErrorStatus) {
+                this.stopOnErrorStatus = stopOnErrorStatus;
+            }
+
+            public boolean isStopOnErrorStatus() {
+                return stopOnErrorStatus;
             }
         }
     }

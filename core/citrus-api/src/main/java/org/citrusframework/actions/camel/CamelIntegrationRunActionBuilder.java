@@ -104,4 +104,6 @@ public interface CamelIntegrationRunActionBuilder<T extends TestAction, B extend
     B autoRemove(boolean enabled);
 
     B waitForRunningState(boolean enabled);
+
+    B stub(String... components);
 }

@@ -32,6 +32,13 @@ public class CamelCmdActionBuilder extends AbstractReferenceResolverAwareTestAct
     }
 
     @Override
+    public CamelCmdReceiveAction.Builder receive() {
+        CamelCmdReceiveAction.Builder builder = new CamelCmdReceiveAction.Builder();
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
     public CamelCmdActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
         return this;
