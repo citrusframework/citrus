@@ -1144,6 +1144,25 @@
                         <xs:attribute name="args" type="xs:string"/>
                       </xs:complexType>
                     </xs:element>
+                    <xs:element name="receive">
+                      <xs:complexType>
+                        <xs:annotation>
+                          <xs:documentation>Receive a message via Camel JBang.</xs:documentation>
+                        </xs:annotation>
+                        <xs:attribute name="integration" type="xs:string"/>
+                        <xs:attribute name="endpoint" type="xs:string"/>
+                        <xs:attribute name="uri" type="xs:string"/>
+                        <xs:attribute name="logging-color" type="xs:boolean"/>
+                        <xs:attribute name="args" type="xs:string"/>
+                        <xs:attribute name="grep" type="xs:string"/>
+                        <xs:attribute name="since" type="xs:string"/>
+                        <xs:attribute name="tail" type="xs:string"/>
+                        <xs:attribute name="max-attempts" type="xs:int"/>
+                        <xs:attribute name="delay-between-attempts" type="xs:int"/>
+                        <xs:attribute name="print-logs" type="xs:boolean"/>
+                        <xs:attribute name="stop-on-error-status" type="xs:boolean"/>
+                      </xs:complexType>
+                    </xs:element>
                   </xs:choice>
                 </xs:complexType>
               </xs:element>
@@ -1329,7 +1348,15 @@
                         </xs:sequence>
                       </xs:complexType>
                     </xs:element>
+                    <xs:element name="stubs" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="stub" type="xs:string" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
                   </xs:sequence>
+                  <xs:attribute name="stub" type="xs:string"/>
                   <xs:attribute name="args" type="xs:string"/>
                   <xs:attribute name="auto-remove" type="xs:boolean"/>
                   <xs:attribute name="wait-for-running-state" type="xs:boolean"/>

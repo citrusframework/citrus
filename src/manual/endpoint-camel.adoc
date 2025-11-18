@@ -998,6 +998,8 @@ You can skip the waiting state with the `waitForRunningState=false` option.
 
 TIP: The test action has an `autoRemove` option that is enabled by default. This means that the test will automatically stop and remove the Camel integration after the test.
 
+TIP: You may choose to add the `--stub` option to the Camel JBang run command. This allows you to stub endpoints in the Camel integration route. The stubbed endpoint uses a local internal message queue instead of connecting to the real endpoint. This is very useful when an endpoint raises quite complex connection efforts. For instance, you may stub an SQL endpoint or a message broker connection endpoint such as Kafka or JMS when running the Camel integration. You may access the messages processed by the stubbed endpoint in the test with a `cmd receive` test action that is described later in this guide.
+
 === Stop Camel integrations
 
 You may want to explicitly stop the Camel integration.
@@ -1122,7 +1124,7 @@ The action provides options such as `maxAttempts` and `pollingInterval` to stop 
 
 === Send messages
 
-The Camel Jbang tooling allows you to send messages to running Camel integrations.
+The Camel JBang tooling allows you to send messages to running Camel integrations.
 You can use the `send` command to send messages to any running route.
 
 Give the following Camel integration that is running in Camel JBang:
@@ -1357,6 +1359,187 @@ actions:
 TIP: You can also use the Kamelets sources to send messages with Camel JBang. The Kamelets provide easy to use properties for comfortable connection options.
 
 Please see the Camel JBang send command help for more configuration options.
+
+.Camel JBang cmd send options
+[source,shell]
+----
+camel cmd send --help
+----
+
+=== Receive messages
+
+The Camel JBang tooling allows you to access stubbed messages in a running Camel integration.
+You can use the `receive` command to list messages that an endpoint in Camel has been processing.
+
+Give the following Camel integration that is running in Camel JBang:
+
+.echo.yaml
+[source,yaml,indent=0]
+----
+- from:
+    uri: "direct:echo"
+    steps:
+      - transform:
+          simple: "${body.toUpperCase()}"
+      - to: "kafka:inbox?brokers=localhost:9092"
+----
+
+The Camel route listens for messages on the `direct:echo` endpoint and connects with a Kafka message broker.
+With Camel JBang you can start the route with a stubbed Kafka endpoint like this:
+
+.Run Camel integration with --stub option
+[source,shell]
+----
+camel run my-route.yaml --stub=kafka
+----
+
+This makes Camel use an internal message queue instead of connecting with the Kafka message broker.
+The messages received by the stubbed Kafka component in Camel can be accessed with the `receive` command:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
+
+    @Test
+    @CitrusTest
+    public void shouldSendMessage() {
+        then(camel().jbang().cmd()
+                    .receive()
+                    .integration("my-route")
+                    .tail(1)
+                    .endpoint("kafka:inbox"));
+    }
+}
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: "CamelJBangTest"
+actions:
+  - camel:
+      jbang:
+        cmd:
+          receive:
+            integration: "my-route"
+            tail: 1
+            endpoint: "kafka:inbox"
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CamelJBangTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <actions>
+    <camel>
+      <jbang>
+        <cmd>
+          <receive integration="my-route" tail="1" endpoint="kafka:inbox"/>
+        </cmd>
+      </jbang>
+    </camel>
+  </actions>
+</test>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+The `receive` action connects with the running Camel integration called `my-route` and receives messages on the stubbed `kafka:inbox` endpoint.
+The `tail` setting defines how many messages that have been received before will be included.
+This means a setting of `tail=1` includes the last message that was processed by the stubbed endpoint.
+By default, the operation will wait only for new messages to arrive (tail=0).
+
+The test action monitors the `receive` command output and waits for messages to arrive.
+You can use the `grep` option to wait for very specific messages that match the given expression.
+Also, you can specify the `since` option that allows you to include messages that have arrived in a given time span (e.g. 5s, 2m, 1h)
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
+
+    @Test
+    @CitrusTest
+    public void shouldSendMessage() {
+        then(camel().jbang().cmd()
+                    .receive()
+                    .integration("my-route")
+                    .tail(1)
+                    .since("1h")
+                    .grep("HELLO CAMEL")
+                    .endpoint("kafka:inbox"));
+    }
+}
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: "CamelJBangTest"
+actions:
+  - camel:
+      jbang:
+        cmd:
+          receive:
+            integration: "my-route"
+            tail: 1
+            since: 1h
+            grep: HELLO CAMEL
+            endpoint: "kafka:inbox"
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CamelJBangTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <actions>
+    <camel>
+      <jbang>
+        <cmd>
+          <receive integration="my-route"
+                    tail="1"
+                    since="1h"
+                    grep="HELLO CAMEL"
+                    endpoint="kafka:inbox"/>
+        </cmd>
+      </jbang>
+    </camel>
+  </actions>
+</test>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+The `grep`, `tail` and `since` options help you to verify that a specific message has been processed on the stubbed endpoint.
+The test action polls the command output for the message and throws a timeout error in case the message does not arrive in time.
+You can use the `maxAttempts` and `delayBetweeAttempts` settings to specify the waiting and polling configuration.
+
+Please see the Camel JBang receive command help for more configuration options.
+
+.Camel JBang cmd receive options
+[source,shell]
+----
+camel cmd receive --help
+----
 
 [[camel-jbang-kubernetes]]
 == Camel JBang Kubernetes support

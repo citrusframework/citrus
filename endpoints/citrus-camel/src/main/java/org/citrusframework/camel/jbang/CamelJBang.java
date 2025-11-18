@@ -363,6 +363,14 @@ public class CamelJBang {
         return pao;
     }
 
+    public ProcessAndOutput receive(String ... args) {
+        List<String> fullArgs = new ArrayList<>();
+        fullArgs.add("receive");
+        fullArgs.addAll(Arrays.asList(args));
+
+        return app.runAsync("cmd", fullArgs);
+    }
+
     public KubernetesPlugin kubernetes() {
         return new KubernetesPlugin(app);
     }

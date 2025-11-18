@@ -1,0 +1,7 @@
+- from:
+    uri: "direct:echo"
+    steps:
+      - wireTap:
+          uri: "log:info"
+      - to:
+          uri: "kafka:info?brokers=localhost:9092"

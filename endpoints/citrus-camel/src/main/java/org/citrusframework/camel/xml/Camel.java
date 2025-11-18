@@ -197,6 +197,14 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                 builder.withArgs(jbang.getRun().getArgs().getArgs().toArray(String[]::new));
             }
 
+            if (jbang.getRun().getStub() != null) {
+                builder.stub(jbang.getRun().getStub().split(" "));
+            }
+
+            if (jbang.getRun().getStubs() != null) {
+                builder.stub(jbang.getRun().getStubs().getStubs().toArray(String[]::new));
+            }
+
             if (jbang.getRun().getResources() != null) {
                 jbang.getRun().getResources().getResources().forEach(builder::addResource);
             }
@@ -348,6 +356,40 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                 }
 
                 builder.reply(jbang.getCmd().getSend().isReply());
+
+                this.builder = builder;
+            } else if (jbang.getCmd().getReceive() != null) {
+                CamelCmdReceiveAction.Builder builder = new CamelCmdReceiveAction.Builder();
+                builder.integration(jbang.getCmd().getReceive().getIntegration());
+
+                if (jbang.getCmd().getReceive().getEndpoint() != null) {
+                    builder.endpoint(jbang.getCmd().getReceive().getEndpoint());
+                }
+
+                if (jbang.getCmd().getReceive().getUri() != null) {
+                    builder.endpointUri(jbang.getCmd().getReceive().getUri());
+                }
+
+                if (jbang.getCmd().getReceive().getArgLine() != null) {
+                    builder.withArgs(jbang.getCmd().getReceive().getArgLine().split(" "));
+                }
+
+                if (jbang.getCmd().getReceive().getGrep() != null) {
+                    builder.grep(jbang.getCmd().getReceive().getGrep());
+                }
+
+                builder.loggingColor(jbang.getCmd().getReceive().isLoggingColor());
+
+                if (jbang.getCmd().getReceive().getSince() != null) {
+                    builder.since(jbang.getCmd().getReceive().getSince());
+                }
+
+                if (jbang.getCmd().getReceive().getTail() != null) {
+                    builder.tail(jbang.getCmd().getReceive().getTail());
+                }
+
+                builder.maxAttempts(jbang.getCmd().getReceive().getMaxAttempts());
+                builder.delayBetweenAttempts(jbang.getCmd().getReceive().getDelayBetweenAttempts());
 
                 this.builder = builder;
             }

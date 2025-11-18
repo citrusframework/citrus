@@ -1,0 +1,62 @@
+name: "CamelJBangCmdReceiveTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      jbang:
+        run:
+          stub:
+            - kafka
+          integration:
+            name: "echo-events-yaml"
+            file: "classpath:org/citrusframework/camel/integration/echo-events.yaml"
+
+  - timer:
+      id: send-events
+      fork: true
+      delay: 5000
+      interval: 1000
+      actions:
+        - camel:
+            jbang:
+              cmd:
+                send:
+                  integration: "echo-events-yaml"
+                  body:
+                    data: "citrus:randomEnumValue('Hello Camel', 'Camel rocks!', 'Good Bye Camel!')"
+
+  - camel:
+      jbang:
+        cmd:
+          receive:
+            integration: "echo-events-yaml"
+            endpoint: "kafka:info"
+            tail: 1
+            grep: "Hello Camel"
+
+  - camel:
+      jbang:
+        cmd:
+          receive:
+            integration: "echo-events-yaml"
+            endpoint: "kafka:info"
+            tail: 1
+            grep: "Camel rocks!"
+
+  - camel:
+      jbang:
+        cmd:
+          receive:
+            integration: "echo-events-yaml"
+            endpoint: "kafka:info"
+            tail: 1
+            grep: "Good Bye Camel!"
+
+finally:
+  - stopTimer:
+      id: send-events
+
+  - camel:
+      jbang:
+        stop:
+          integration: "echo-events-yaml"
