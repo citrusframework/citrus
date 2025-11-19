@@ -45,6 +45,8 @@ import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.MessageValidatorRegistry;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
+import org.citrusframework.validation.context.DefaultMessageValidationContext;
+import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.ValidationStatus;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
@@ -56,15 +58,22 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
+import uk.org.webcompere.systemstubs.testng.SystemStub;
+import uk.org.webcompere.systemstubs.testng.SystemStubsListener;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.citrusframework.CitrusSettings.CUSTOM_VALIDATOR_STRATEGY_ENV;
 import static org.citrusframework.message.MessageType.JSON;
 import static org.citrusframework.message.MessageType.PLAINTEXT;
 import static org.citrusframework.message.MessageType.XHTML;
@@ -78,12 +87,14 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.expectThrows;
 
+@Listeners(SystemStubsListener.class)
 public class ReceiveMessageActionTest extends UnitTestSupport {
 
     @Mock
@@ -107,9 +118,13 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
     @Mock
     private MessageQueue mockQueue;
 
+    @SystemStub
+    private EnvironmentVariables environmentVariables;
+
     @Override
     protected TestContextFactory createTestContextFactory() {
         openMocks(this);
+
         when(validator.supportsMessageType(any(String.class), any(Message.class))).thenReturn(true);
 
         TestContextFactory factory = super.createTestContextFactory();
@@ -1170,6 +1185,124 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
+    }
+
+    @Test(
+            description = """
+                    With EXCLUSIVE message validation strategy,
+                    default validators should still be invoked, whenever NO custom validator is present.
+
+                    Requirement: https://github.com/citrusframework/citrus/issues/1419
+                    """
+    )
+    public void testReceiveMessage_shouldInvokeValidationContexts_whenNoCustomValidatorIsPresent() {
+        var testActor = new TestActor();
+        testActor.setName("TESTACTOR");
+
+        var controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        when(mockQueue.receive(15000)).thenReturn(controlMessage);
+
+        doAnswer(invocationOnMock -> {
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+            assertThat(validationContextList)
+                    .satisfiesExactly(
+                            validationContext -> assertThat(validationContext)
+                                    .isInstanceOf(HeaderValidationContext.class)
+                    );
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
+
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint("direct:mockQueue?timeout=15000")
+                .actor(testActor)
+                .build();
+
+        assertThatCode(() -> receiveAction.execute(context))
+                .doesNotThrowAnyException();
+    }
+
+    @Test(
+            description = """
+                    With EXCLUSIVE message validation strategy,
+                    default validators will be skipped, whenever a custom validator is present.
+
+                    Requirement: https://github.com/citrusframework/citrus/issues/1419
+                    """
+    )
+    public void testReceiveMessage_shouldIgnoreValidationContexts_whenCustomValidatorIsPresent_andValidationStrategyIsExclusive() {
+        var testActor = new TestActor();
+        testActor.setName("TESTACTOR");
+
+        var controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        when(mockQueue.receive(15000)).thenReturn(controlMessage);
+
+        var customValidatorInvoked = new AtomicBoolean(false);
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint("direct:mockQueue?timeout=15000")
+                .actor(testActor)
+                .validate(
+                        (message, testContext) -> customValidatorInvoked.set(true)
+                )
+                .build();
+
+        assertThatCode(() -> receiveAction.execute(context))
+                .doesNotThrowAnyException();
+
+        assertThat(customValidatorInvoked)
+                .isTrue();
+
+        verifyNoInteractions(validator);
+    }
+
+    @Test(
+            description = """
+                    With COMBINED message validation strategy,
+                    BOTH custom and default validators should be executed.
+
+                    Requirement: https://github.com/citrusframework/citrus/issues/1419
+                    """
+    )
+    public void testReceiveMessage_shouldInvokeBothCustomValidator_andValidationContexts_whenValidationStrategyIsCombined() {
+        environmentVariables.set(CUSTOM_VALIDATOR_STRATEGY_ENV, "COMBINED");
+
+        var testActor = new TestActor();
+        testActor.setName("TESTACTOR");
+
+        var controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        when(mockQueue.receive(15000)).thenReturn(controlMessage);
+
+        doAnswer(invocationOnMock -> {
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+            assertThat(validationContextList)
+                    .satisfiesExactly(
+                            validationContext -> assertThat(validationContext)
+                                    .isInstanceOf(HeaderValidationContext.class),
+                            validationContext -> assertThat(validationContext)
+                                    .isInstanceOf(DefaultMessageValidationContext.class)
+                    );
+            validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
+
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
+
+        var customValidatorInvoked = new AtomicBoolean(false);
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint("direct:mockQueue?timeout=15000")
+                .actor(testActor)
+                .getMessageBuilderSupport()
+                .body("expected body")
+                .validate(
+                        (message, testContext) -> customValidatorInvoked.set(true)
+                )
+                .build();
+
+        assertThatCode(() -> receiveAction.execute(context))
+                .doesNotThrowAnyException();
+
+        assertThat(customValidatorInvoked)
+                .isTrue();
     }
 
     public static class AssumeMessageTypeTest {
