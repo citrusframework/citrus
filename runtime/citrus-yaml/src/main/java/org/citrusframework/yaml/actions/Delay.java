@@ -17,4 +17,9 @@
 package org.citrusframework.yaml.actions;
 
 public class Delay extends Sleep {
+
+    Delay() {
+        super();
+        builder.name("delay");
+    }
 }

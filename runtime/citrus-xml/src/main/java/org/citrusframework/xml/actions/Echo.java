@@ -26,7 +26,7 @@ import org.citrusframework.actions.EchoAction;
 @XmlRootElement(name = "echo")
 public class Echo implements TestActionBuilder<EchoAction> {
 
-    private final EchoAction.Builder builder = new EchoAction.Builder();
+    protected final EchoAction.Builder builder = new EchoAction.Builder();
 
     @XmlElement
     public void setDescription(String value) {

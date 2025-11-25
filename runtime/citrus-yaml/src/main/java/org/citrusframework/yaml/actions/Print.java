@@ -17,4 +17,9 @@
 package org.citrusframework.yaml.actions;
 
 public class Print extends Echo {
+
+    Print() {
+        super();
+        builder.name("print");
+    }
 }

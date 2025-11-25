@@ -20,4 +20,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "delay")
 public class Delay extends Sleep {
+
+    public Delay() {
+        super();
+        builder.name("delay");
+    }
 }

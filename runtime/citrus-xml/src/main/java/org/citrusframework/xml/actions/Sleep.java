@@ -27,7 +27,7 @@ import org.citrusframework.actions.SleepAction;
 @XmlRootElement(name = "sleep")
 public class Sleep implements TestActionBuilder<SleepAction> {
 
-    private final SleepAction.Builder builder = new SleepAction.Builder();
+    protected final SleepAction.Builder builder = new SleepAction.Builder();
 
     @XmlElement
     public void setDescription(String value) {

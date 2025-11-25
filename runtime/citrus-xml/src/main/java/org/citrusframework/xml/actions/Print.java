@@ -20,4 +20,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "print")
 public class Print extends Echo {
+
+    public Print() {
+        super();
+        builder.name("print");
+    }
 }
