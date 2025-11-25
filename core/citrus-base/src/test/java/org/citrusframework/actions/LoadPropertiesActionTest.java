@@ -16,48 +16,50 @@
 
 package org.citrusframework.actions;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static java.lang.String.format;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 public class LoadPropertiesActionTest extends UnitTestSupport {
 
-	@Test
-	public void testLoadProperties() {
-		LoadPropertiesAction loadProperties = new LoadPropertiesAction.Builder()
-				.filePath("classpath:org/citrusframework/actions/load.properties")
-				.build();
+    @Test
+    public void testLoadProperties() {
+        LoadPropertiesAction loadProperties = new LoadPropertiesAction.Builder()
+                .filePath("classpath:org/citrusframework/actions/load.properties")
+                .build();
 
-		loadProperties.execute(context);
+        loadProperties.execute(context);
 
-		Assert.assertNotNull(context.getVariable("${myVariable}"));
-		Assert.assertEquals(context.getVariable("${myVariable}"), "test");
-		Assert.assertNotNull(context.getVariable("${user}"));
+        Assert.assertNotNull(context.getVariable("${myVariable}"));
+        Assert.assertEquals(context.getVariable("${myVariable}"), "test");
+        Assert.assertNotNull(context.getVariable("${user}"));
         Assert.assertEquals(context.getVariable("${user}"), "Citrus");
-		Assert.assertNotNull(context.getVariable("${welcomeText}"));
-		Assert.assertEquals(context.getVariable("${welcomeText}"), "Hello Citrus!");
-		Assert.assertNotNull(context.getVariable("${todayDate}"));
+        Assert.assertNotNull(context.getVariable("${welcomeText}"));
+        Assert.assertEquals(context.getVariable("${welcomeText}"), "Hello Citrus!");
+        Assert.assertNotNull(context.getVariable("${todayDate}"));
         Assert.assertEquals(context.getVariable("${todayDate}"),
                 "Today is " + new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis())) + "!");
-	}
+    }
 
-	@Test
+    @Test
     public void testUnknownVariableInLoadProperties() {
-		LoadPropertiesAction loadProperties = new LoadPropertiesAction.Builder()
-				.filePath("classpath:org/citrusframework/actions/load-error.properties")
-				.build();
+        LoadPropertiesAction loadProperties = new LoadPropertiesAction.Builder()
+                .filePath("classpath:org/citrusframework/actions/load-error.properties")
+                .build();
 
-        try {
-            loadProperties.execute(context);
-        } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unknown variable 'unknownVar'");
-            return;
-        }
-
-        Assert.fail("Missing exception for unkown variable in property file");
-	}
+        assertThatThrownBy(() -> loadProperties.execute(context))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessage(
+                        format(
+                                "Unable to extract value using expression 'unknownVar'!%nReason: Unknown key 'unknownVar' in Map.%nFrom object (java.util.concurrent.ConcurrentHashMap):%n{}"
+                        )
+                );
+    }
 }

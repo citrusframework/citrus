@@ -16,31 +16,81 @@
 
 package org.citrusframework.json;
 
-import com.jayway.jsonpath.InvalidPathException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.SegmentEvaluationException;
 import org.citrusframework.util.IsJsonPredicate;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.variable.SegmentVariableExtractorRegistry;
 import org.citrusframework.variable.VariableExpressionSegmentMatcher;
 
-public class JsonPathSegmentVariableExtractor extends SegmentVariableExtractorRegistry.AbstractSegmentVariableExtractor {
+public class JsonPathSegmentVariableExtractor extends
+    SegmentVariableExtractorRegistry.AbstractSegmentVariableExtractor {
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Override
-    public boolean canExtract(TestContext testContext, Object object, VariableExpressionSegmentMatcher matcher) {
-        return object == null  || (object instanceof  String && IsJsonPredicate.getInstance().test((String)object) && JsonPathMessageValidationContext.isJsonPathExpression(matcher.getSegmentExpression()));
+    public boolean canExtract(TestContext testContext, Object object,
+        VariableExpressionSegmentMatcher matcher) {
+        return object == null || (object instanceof String string && IsJsonPredicate.getInstance()
+            .test(string) && JsonPathMessageValidationContext.isJsonPathExpression(
+            matcher.getSegmentExpression()));
     }
 
     @Override
-    public Object doExtractValue(TestContext testContext, Object object, VariableExpressionSegmentMatcher matcher) {
-        return object == null ? null : extractJsonPath(object.toString(), matcher.getSegmentExpression());
+    public Object doExtractValue(TestContext testContext, Object object,
+        VariableExpressionSegmentMatcher matcher) throws SegmentEvaluationException {
+        try {
+            return object == null ? null
+                : extractJsonPath(object.toString(), matcher.getSegmentExpression());
+        } catch (Exception e) {
+            StringBuilder messageBuilder = new StringBuilder();
+            messageBuilder.append(e.getMessage());
+            if (e.getCause() != e) {
+                messageBuilder.append("/");
+                messageBuilder.append(e.getCause().getMessage());
+            }
+            throw new SegmentEvaluationException(messageBuilder.toString(), renderObject(object));
+        }
+    }
+
+    private static String renderObject(Object object) {
+        if (object == null) {
+            return "null";
+        }
+        try {
+            if (object instanceof CharSequence cs) {
+                String string = cs.toString();
+                if (looksLikeJson(string)) {
+                    return prettyJson(string);
+                }
+                return string;
+            }
+            if (object instanceof java.util.Map || object instanceof java.util.Collection) {
+                return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+            }
+        } catch (Exception ignore) {
+            /* fall back to toString */
+        }
+
+        return String.valueOf(object);
+    }
+
+    private static boolean looksLikeJson(String s) {
+        String t = s.stripLeading();
+        return t.startsWith("{") || t.startsWith("[");
+    }
+
+    private static String prettyJson(String json) {
+        try {
+            return MAPPER.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(MAPPER.readTree(json));
+        } catch (Exception e) {
+            return json;
+        }
     }
 
     private Object extractJsonPath(String json, String segmentExpression) {
-        try {
-            return JsonPathUtils.evaluate(json, segmentExpression);
-        } catch (InvalidPathException e) {
-            throw new CitrusRuntimeException(String.format("Unable to extract jsonPath from segmentExpression %s", segmentExpression), e);
-        }
+        return JsonPathUtils.evaluate(json, segmentExpression);
     }
 }

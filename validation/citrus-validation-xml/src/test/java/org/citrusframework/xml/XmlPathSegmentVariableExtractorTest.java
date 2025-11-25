@@ -17,6 +17,7 @@
 package org.citrusframework.xml;
 
 import org.citrusframework.UnitTestSupport;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.variable.VariableExpressionSegmentMatcher;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -24,9 +25,37 @@ import org.w3c.dom.Document;
 
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.InstanceOfAssertFactories.STRING;
+
 public class XmlPathSegmentVariableExtractorTest extends UnitTestSupport {
 
-    private static final String XML_FIXTURE = "<person><name>Peter</name></person>";
+    private static final String XML_FIXTURE = """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <name>Peter</name>
+          <married>true</married>
+          <wife>
+            <name>Linda</name>
+            <married>true</married>
+            <pets xsi:nil="true"/>
+          </wife>
+          <children>
+            <child>
+              <name>Paul</name>
+              <married>true</married>
+              <pets xsi:nil="true"/>
+            </child>
+            <child>
+              <name>Laura</name>
+              <married>false</married>
+              <pets xsi:nil="true"/>
+            </child>
+          </children>
+          <pets xsi:nil="true"/>
+        </person>
+        """;
 
     private final XpathSegmentVariableExtractor unitUnderTest = new XpathSegmentVariableExtractor();
 
@@ -76,13 +105,59 @@ public class XmlPathSegmentVariableExtractorTest extends UnitTestSupport {
 
     /**
      * Create a variable expression xpath matcher and match the first xpath
-     * @param xpath
-     * @return
      */
     private VariableExpressionSegmentMatcher matchSegmentExpressionMatcher(String xpath) {
         String variableExpression = String.format("xpath(%s)", xpath);
         VariableExpressionSegmentMatcher matcher = new VariableExpressionSegmentMatcher(variableExpression);
         Assert.assertTrue(matcher.nextMatch());
         return matcher;
+    }
+
+    @Test
+    public void testExtractNullFromXml() {
+
+        String jsonPath = "//person/pets";
+        VariableExpressionSegmentMatcher matcher = matchSegmentExpressionMatcher(jsonPath);
+
+        assertThat(unitUnderTest.canExtract(context, XML_FIXTURE, matcher)).isTrue();
+        assertThat(unitUnderTest.extractValue(context, XML_FIXTURE, matcher)).isEqualTo("");
+    }
+    @Test
+    public void failsToExtractNonExistingPath() {
+
+        String jsonPath = "//person/wife/sex";
+        VariableExpressionSegmentMatcher matcher = matchSegmentExpressionMatcher(jsonPath);
+
+        assertThatThrownBy(() -> unitUnderTest.extractValue(context, XML_FIXTURE, matcher))
+            .isInstanceOf(CitrusRuntimeException.class)
+            .extracting(Throwable::getMessage, STRING)
+            .isEqualToIgnoringWhitespace("""
+                Unable to extract value using expression 'xpath(//person/wife/sex)'
+                Reason: No result for XPath expression: '//person/wife/sex'
+                From object (java.lang.String):
+                <person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <name>Peter</name>
+                    <married>true</married>
+                    <wife>
+                     <name>Linda</name>
+                     <married>true</married>
+                     <pets xsi:nil="true"/>
+                    </wife>
+                    <children>
+                     <child>
+                       <name>Paul</name>
+                       <married>true</married>
+                       <pets xsi:nil="true"/>
+                     </child>
+                     <child>
+                       <name>Laura</name>
+                       <married>false</married>
+                       <pets xsi:nil="true"/>
+                     </child>
+                    </children>
+                    <pets xsi:nil="true"/>
+                </person>
+                """);
+
     }
 }

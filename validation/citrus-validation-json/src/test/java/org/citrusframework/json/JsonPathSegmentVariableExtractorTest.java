@@ -17,24 +17,115 @@
 package org.citrusframework.json;
 
 import org.citrusframework.UnitTestSupport;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.variable.VariableExpressionSegmentMatcher;
-import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.InstanceOfAssertFactories.STRING;
 
 public class JsonPathSegmentVariableExtractorTest extends UnitTestSupport {
 
-    public static final String JSON_FIXTURE = "{\"name\": \"Peter\"}";
+    public static final String JSON_FIXTURE = """
+        {
+            "name": "Peter",
+            "married": true,
+            "wife": {
+                "name": "Linda",
+                "married": true,
+                "pets": null
+            },
+            "children": [
+                {
+                    "name": "Paul",
+                    "married": true,
+                    "pets": null
+                },
+                {
+                    "name": "Laura",
+                    "married": false,
+                    "pets": null
+                }
+            ],
+            "pets": null
+        }""";
 
     private final JsonPathSegmentVariableExtractor unitUnderTest = new JsonPathSegmentVariableExtractor();
 
     @Test
-    public void testExtractFromJson() {
+    public void succeedToExtractExistingFromJson() {
 
         String jsonPath = "$.name";
         VariableExpressionSegmentMatcher matcher = matchSegmentExpressionMatcher(jsonPath);
 
-        Assert.assertTrue(unitUnderTest.canExtract(context, JSON_FIXTURE, matcher));
-        Assert.assertEquals(unitUnderTest.extractValue(context, JSON_FIXTURE, matcher), "Peter");
+        assertThat(unitUnderTest.canExtract(context, JSON_FIXTURE, matcher)).isTrue();
+        assertThat(unitUnderTest.extractValue(context, JSON_FIXTURE, matcher)).isEqualTo("Peter");
+    }
+
+    @Test
+    public void succeedToExtractExistingFromJsonArray() {
+
+        String jsonPath = "$.children[1].name";
+        VariableExpressionSegmentMatcher matcher = matchSegmentExpressionMatcher(jsonPath);
+
+        assertThat(unitUnderTest.canExtract(context, JSON_FIXTURE, matcher)).isTrue();
+        assertThat(unitUnderTest.extractValue(context, JSON_FIXTURE, matcher)).isEqualTo("Laura");
+    }
+
+    @Test
+    public void succeedToExtractNullFromExistingJsonArrayElement() {
+
+        String jsonPath = "$.children[1].pets";
+        VariableExpressionSegmentMatcher matcher = matchSegmentExpressionMatcher(jsonPath);
+
+        assertThat(unitUnderTest.canExtract(context, JSON_FIXTURE, matcher)).isTrue();
+        assertThat(unitUnderTest.extractValue(context, JSON_FIXTURE, matcher)).isNull();
+    }
+
+    @Test
+    public void failsToExtractNonExistingPath() {
+
+        String jsonPath = "$.wife.sex";
+        VariableExpressionSegmentMatcher matcher = matchSegmentExpressionMatcher(jsonPath);
+
+        assertThatThrownBy(() -> unitUnderTest.extractValue(context, JSON_FIXTURE, matcher))
+            .isInstanceOf(CitrusRuntimeException.class)
+            .extracting(Throwable::getMessage, STRING)
+            .isEqualToNormalizingNewlines("""
+                Unable to extract value using expression 'jsonPath($.wife.sex)'
+                Reason: Failed to evaluate JSON path expression: $.wife.sex/No results for path: $['wife']['sex']
+                From object (java.lang.String):
+                {
+                  "name" : "Peter",
+                  "married" : true,
+                  "wife" : {
+                    "name" : "Linda",
+                    "married" : true,
+                    "pets" : null
+                  },
+                  "children" : [ {
+                    "name" : "Paul",
+                    "married" : true,
+                    "pets" : null
+                  }, {
+                    "name" : "Laura",
+                    "married" : false,
+                    "pets" : null
+                  } ],
+                  "pets" : null
+                }""");
+
+    }
+
+    @Test
+    public void testExtractNullFromJson() {
+
+        String jsonPath = "$.pets";
+        VariableExpressionSegmentMatcher matcher = matchSegmentExpressionMatcher(jsonPath);
+
+        assertThat(unitUnderTest.canExtract(context, JSON_FIXTURE, matcher)).isTrue();
+        assertThat(unitUnderTest.extractValue(context, JSON_FIXTURE, matcher)).isNull();
     }
 
     @Test
@@ -44,29 +135,29 @@ public class JsonPathSegmentVariableExtractorTest extends UnitTestSupport {
         String nonJsonPath = "name";
         VariableExpressionSegmentMatcher matcher = matchSegmentExpressionMatcher(nonJsonPath);
 
-        Assert.assertFalse(unitUnderTest.canExtract(context, json, matcher));
+        assertThat(unitUnderTest.canExtract(context, json, matcher)).isFalse();
     }
 
     @Test
-    public void testExtractFromJsonExpressionFailure() {
+    public void throwOnInvalidJsonPathExpression() {
         String json = "{\"name\": \"Peter\"}";
 
         String invalidJsonPath = "$.$$$name";
         VariableExpressionSegmentMatcher matcher = matchSegmentExpressionMatcher(invalidJsonPath);
 
-        Assert.assertTrue(unitUnderTest.canExtract(context, json, matcher));
-        Assert.assertThrows(() -> unitUnderTest.extractValue(context, json, matcher));
+        assertThat(unitUnderTest.canExtract(context, json, matcher)).isTrue();
+        assertThatThrownBy(() -> unitUnderTest.extractValue(context, json, matcher)).isInstanceOf(
+            CitrusRuntimeException.class);
     }
 
     /**
-     * Create a variable expression jsonPath matcher and match the first jsonPath
-     * @param jsonPath
-     * @return
+     * Create a variable expression jsonPath matcher and match the jsonPath
      */
     private VariableExpressionSegmentMatcher matchSegmentExpressionMatcher(String jsonPath) {
         String variableExpression = String.format("jsonPath(%s)", jsonPath);
-        VariableExpressionSegmentMatcher matcher = new VariableExpressionSegmentMatcher(variableExpression);
-        Assert.assertTrue(matcher.nextMatch());
+        VariableExpressionSegmentMatcher matcher = new VariableExpressionSegmentMatcher(
+            variableExpression);
+        assertThat(matcher.nextMatch()).isTrue();
         return matcher;
     }
 }

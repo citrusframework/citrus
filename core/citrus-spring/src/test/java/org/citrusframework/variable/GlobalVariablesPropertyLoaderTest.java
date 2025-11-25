@@ -16,14 +16,17 @@
 
 package org.citrusframework.variable;
 
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+
+import static java.lang.String.format;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
 
@@ -119,14 +122,12 @@ public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
         propertyLoader.setGlobalVariables(globalVariables);
         propertyLoader.setFunctionRegistry(testContextFactory.getFunctionRegistry());
 
-        try {
-            propertyLoader.afterPropertiesSet();
-        } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(globalVariables.getVariables().isEmpty());
-            Assert.assertEquals(e.getMessage(), "Unknown variable 'unknownVar'");
-            return;
-        }
-
-        Assert.fail("Missing exception because of unknown variable in global variable property loader");
+        assertThatThrownBy(propertyLoader::afterPropertiesSet)
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessage(
+                        format(
+                                "Unable to extract value using expression 'unknownVar'!%nReason: Unknown key 'unknownVar' in Map.%nFrom object (java.util.concurrent.ConcurrentHashMap):%n{}"
+                        )
+                );
     }
 }
