@@ -240,6 +240,7 @@
     <jsch.version>0.1.55</jsch.version>
     <jsonschema-generator.version>4.38.0</jsonschema-generator.version>
     <json-path.version>2.9.0</json-path.version>
+    <json-patch.version>1.13</json-patch.version>
     <json-schema-validator.version>1.5.9</json-schema-validator.version>
     <json-smart.version>2.6.0</json-smart.version>
     <jtidy.version>r938</jtidy.version>

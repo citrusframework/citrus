@@ -17,8 +17,12 @@
 package org.citrusframework.functions;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.citrusframework.context.TestContext;
+import org.citrusframework.functions.core.JsonPatchFunction;
+import org.citrusframework.functions.core.JsonPatchFunction.Parameters;
+import org.citrusframework.functions.core.JsonPatchFunction.PatchOperation;
 import org.citrusframework.functions.core.JsonPathFunction;
 
 public final class JsonFunctions {
@@ -31,9 +35,30 @@ public final class JsonFunctions {
 
     /**
      * Runs Json path function with arguments.
-     * @return
      */
     public static String jsonPath(String content, String expression, TestContext context) {
         return new JsonPathFunction().execute(Arrays.asList(content, expression), context);
+    }
+
+
+    /**
+     * Runs JSON patch function with a single operation.
+     * Convenience overload delegating to the multi-operation variant.
+     */
+    public static String jsonPatch(String content, PatchOperation operation, TestContext context) {
+        return jsonPatch(content, List.of(operation), context);
+    }
+
+    /**
+     * Runs JSON patch function with multiple operations.
+     * Operations are applied in the given order.
+     */
+    public static String jsonPatch(String content,
+        List<PatchOperation> operations,
+        TestContext context) {
+        Parameters parameters = new Parameters();
+        parameters.setSource(content);
+        parameters.setOperations(operations);
+        return new JsonPatchFunction().execute(parameters, context);
     }
 }
