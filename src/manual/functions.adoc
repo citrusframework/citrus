@@ -1466,6 +1466,76 @@ Also accessing the local message store is valid here:
 This combination is quite powerful as all previously exchanged messages in the test are automatically stored to the local message store. Reusing dynamic message values from other messages
 becomes very easy then.
 
+[[functions-jsonpatch]]
+== jsonPatch()
+
+The *jsonPatch* function applies RFC 6902 JSON Patch operations to a JSON source and returns the modified JSON as String. It supports JSONPath notation for paths, which is automatically converted to JSON Pointer format.
+
+[source,xml]
+----
+<echo>
+    <message><![CDATA[citrus:jsonPatch('{ "message": { "id": 1000, "status": "DRAFT" } }', 'replace', '$.message.status', 'PUBLISHED')]]></message>
+</echo>
+----
+
+The first parameter is the JSON source, followed by patch operations in triplets: operation, path, and value. Valid operations are `add`, `remove`, `replace`, `move`, and `copy`.
+
+The JSON source can be loaded from a test variable:
+
+[source,xml]
+----
+<echo>
+    <message><![CDATA[citrus:jsonPatch(${jsonSource}, 'replace', '$.status', 'APPROVED')]]></message>
+</echo>
+----
+
+Multiple patch operations can be chained by adding more triplets:
+
+[source,xml]
+----
+<echo>
+    <message><![CDATA[citrus:jsonPatch(${jsonSource}, 'replace', '$.status', 'APPROVED', 'add', '$.metadata.timestamp', '2024-01-15', 'remove', '$.tempField', '')]]></message>
+</echo>
+----
+
+For the `remove` operation, the value parameter is ignored but must still be provided (use an empty string). For `move` and `copy` operations, the value parameter specifies the source path:
+
+[source,xml]
+----
+<echo>
+    <message><![CDATA[citrus:jsonPatch(${jsonSource}, 'copy', '$.backup.name', '$.name')]]></message>
+</echo>
+----
+
+Paths can be specified in JSONPath notation (e.g., `$.items[0].name`) or JSON Pointer format (e.g., `/items/0/name`). To append to an array, use the `-` index:
+
+[source,xml]
+----
+<echo>
+    <message><![CDATA[citrus:jsonPatch('{ "items": [1, 2, 3] }', 'add', '$.items/-', '4')]]></message>
+</echo>
+----
+
+Values can be plain strings or valid JSON structures:
+
+[source,xml]
+----
+<echo>
+    <message><![CDATA[citrus:jsonPatch(${jsonSource}, 'add', '$.metadata', '{"created": "2024-01-15", "author": "test"}')]]></message>
+</echo>
+----
+
+Also accessing the local message store is valid here:
+
+[source,xml]
+----
+<echo>
+    <message><![CDATA[citrus:jsonPatch(citrus:message(myRequest.body()), 'replace', '$.message.status', 'PROCESSED')]]></message>
+</echo>
+----
+
+This combination is quite powerful as all previously exchanged messages in the test are automatically stored to the local message store. Reusing dynamic message values from other messages becomes very easy, enabling dynamic modification of message content for subsequent test steps.
+
 [[functions-url-encode]]
 == urlEncode()/urlDecode()
 
