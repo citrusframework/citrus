@@ -253,7 +253,7 @@
     <log4j2.version>2.25.1</log4j2.version>
     <mockito.version>5.20.0</mockito.version>
     <mockftpserver.version>3.2.0</mockftpserver.version>
-    <netty.version>4.2.0.Final</netty.version>
+    <netty.version>4.2.5.Final</netty.version>
     <okhttp.version>5.1.0</okhttp.version>
     <org.openapitools.version>7.15.0</org.openapitools.version>
     <picoli-version>4.7.7</picoli-version>
