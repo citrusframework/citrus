@@ -19,7 +19,9 @@ package org.citrusframework.http.actions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.citrusframework.TestAction;
+import org.citrusframework.actions.ReceiveActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.SendActionBuilder;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -47,6 +49,12 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
     /** Target http client instance */
     private Endpoint httpServer;
     private String httpServerUri;
+
+    /**
+     * Default constructor.
+     */
+    public HttpServerActionBuilder() {
+    }
 
     /**
      * Default constructor.
@@ -328,6 +336,23 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
     @Override
     public TestAction build() {
         ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
+
+        if (delegate instanceof SendActionBuilder<?, ?, ?> messageActionBuilder) {
+            if (httpServer != null) {
+                messageActionBuilder.endpoint(httpServer);
+            } else if (httpServerUri != null) {
+                messageActionBuilder.endpoint(httpServerUri);
+            }
+        }
+
+        if (delegate instanceof ReceiveActionBuilder<?, ?, ?> messageActionBuilder) {
+            if (httpServer != null) {
+                messageActionBuilder.endpoint(httpServer);
+            } else if (httpServerUri != null) {
+                messageActionBuilder.endpoint(httpServerUri);
+            }
+        }
+
         return delegate.build();
     }
 }

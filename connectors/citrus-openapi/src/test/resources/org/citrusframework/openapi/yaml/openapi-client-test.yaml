@@ -13,17 +13,17 @@ actions:
       sendRequest:
         operation: getPetById
   - openapi:
-      specification: ${petstoreSpec}
       client: "httpClient"
       receiveResponse:
         operation: getPetById
         status: 200
+      specification: ${petstoreSpec}
 
   - openapi:
-      specification: ${petstoreSpec}
-      client: "httpClient"
       sendRequest:
         operation: addPet
+      specification: ${petstoreSpec}
+      client: "httpClient"
   - openapi:
       specification: ${petstoreSpec}
       client: "httpClient"

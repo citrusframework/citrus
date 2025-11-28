@@ -16,6 +16,9 @@
 
 package org.citrusframework.http.client;
 
+import java.net.URI;
+import java.util.Optional;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
 import org.citrusframework.exceptions.MessageTimeoutException;
@@ -36,9 +39,6 @@ import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import java.net.URI;
-import java.util.Optional;
 
 /**
  * Http client sends messages via Http protocol to some Http server instance, defined by a request endpoint url. Synchronous response
@@ -100,7 +100,9 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
         context.setVariable(MessageHeaders.MESSAGE_REPLY_TO + "_" + correlationKeyName, endpointUri);
 
         logger.info("Sending HTTP message to: '{}'", endpointUri);
-        logger.debug("Message to send:\n{}", httpMessage.getPayload(String.class));
+        if (logger.isDebugEnabled()) {
+            logger.debug("Message to send:\n{}", httpMessage.getPayload(String.class));
+        }
 
         RequestMethod method = getEndpointConfiguration().getRequestMethod();
         if (httpMessage.getRequestMethod() != null) {

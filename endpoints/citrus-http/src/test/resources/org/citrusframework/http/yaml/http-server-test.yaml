@@ -6,9 +6,9 @@ variables:
     value: "12345"
 actions:
   - http:
-      server: "httpServer"
       receiveRequest:
         GET: {}
+      server: "httpServer"
   - http:
       server: "httpServer"
       sendResponse: {}

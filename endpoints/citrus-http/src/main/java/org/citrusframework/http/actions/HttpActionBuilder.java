@@ -32,10 +32,17 @@ public class HttpActionBuilder extends AbstractReferenceResolverAwareTestActionB
 
 	/**
 	 * Static entrance method for the Http fluent action builder.
-	 * @return
 	 */
 	public static HttpActionBuilder http() {
 		return new HttpActionBuilder();
+	}
+
+	@Override
+	public HttpClientActionBuilder client() {
+		HttpClientActionBuilder clientActionBuilder = new HttpClientActionBuilder()
+				.withReferenceResolver(referenceResolver);
+		this.delegate = clientActionBuilder;
+		return clientActionBuilder;
 	}
 
 	@Override
@@ -52,6 +59,14 @@ public class HttpActionBuilder extends AbstractReferenceResolverAwareTestActionB
 				.withReferenceResolver(referenceResolver);
 		this.delegate = clientActionBuilder;
 		return clientActionBuilder;
+	}
+
+	@Override
+	public HttpServerActionBuilder server() {
+		HttpServerActionBuilder serverActionBuilder = new HttpServerActionBuilder()
+				.withReferenceResolver(referenceResolver);
+		this.delegate = serverActionBuilder;
+		return serverActionBuilder;
 	}
 
 	@Override

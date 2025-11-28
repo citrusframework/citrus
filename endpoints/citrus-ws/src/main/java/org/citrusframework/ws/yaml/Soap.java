@@ -23,7 +23,9 @@ import java.util.Optional;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActionContainerBuilder;
+import org.citrusframework.actions.ReceiveActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.SendActionBuilder;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -73,12 +75,26 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     @SchemaProperty(description = "Sets the SOAP Http client.")
     public void setClient(String soapClient) {
-        builder = new SoapActionBuilder().client(soapClient);
+        if (builder == null) {
+            builder = new SoapActionBuilder().client(soapClient);
+        } else if (builder instanceof SendActionBuilder<?,?,?> messageActionBuilder) {
+            messageActionBuilder.endpoint(soapClient);
+        } else if (builder instanceof ReceiveActionBuilder<?,?,?> messageActionBuilder) {
+            messageActionBuilder.endpoint(soapClient);
+        } else if (builder instanceof AssertSoapFault.Builder assertSoapFaultBuilder) {
+            assertSoapFaultBuilder.endpoint(soapClient);
+        }
     }
 
     @SchemaProperty(description = "Sets the SOAP Http server.")
     public void setServer(String soapServer) {
-        builder = new SoapActionBuilder().server(soapServer);
+        if (builder == null) {
+            builder = new SoapActionBuilder().server(soapServer);
+        } else if (builder instanceof SendActionBuilder<?,?,?> messageActionBuilder) {
+            messageActionBuilder.endpoint(soapServer);
+        } else if (builder instanceof ReceiveActionBuilder<?,?,?> messageActionBuilder) {
+            messageActionBuilder.endpoint(soapServer);
+        }
     }
 
     @SchemaProperty(kind = ACTION, group = SOAP_GROUP, description = "Sends a SOAP request as a client.")
@@ -479,9 +495,12 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     /**
      * Converts current builder to client builder.
-     * @return
      */
     private SoapClientActionBuilder asClientBuilder() {
+        if (builder == null) {
+            builder = new SoapActionBuilder().client();
+        }
+
         if (builder instanceof SoapClientActionBuilder) {
             return (SoapClientActionBuilder) builder;
         }
@@ -492,9 +511,12 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     /**
      * Converts current builder to client builder.
-     * @return
      */
     private SoapServerActionBuilder asServerBuilder() {
+        if (builder == null) {
+            builder = new SoapActionBuilder().server();
+        }
+
         if (builder instanceof SoapServerActionBuilder) {
             return (SoapServerActionBuilder) builder;
         }

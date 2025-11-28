@@ -17,6 +17,8 @@
 package org.citrusframework.ws.actions;
 
 import org.citrusframework.TestAction;
+import org.citrusframework.actions.ReceiveActionBuilder;
+import org.citrusframework.actions.SendActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
@@ -108,6 +110,23 @@ public class SoapServerActionBuilder extends AbstractReferenceResolverAwareTestA
     @Override
     public TestAction build() {
         ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
+
+        if (delegate instanceof SendActionBuilder<?, ?, ?> messageActionBuilder) {
+            if (soapServer != null) {
+                messageActionBuilder.endpoint(soapServer);
+            } else if (soapServerUri != null) {
+                messageActionBuilder.endpoint(soapServerUri);
+            }
+        }
+
+        if (delegate instanceof ReceiveActionBuilder<?, ?, ?> messageActionBuilder) {
+            if (soapServer != null) {
+                messageActionBuilder.endpoint(soapServer);
+            } else if (soapServerUri != null) {
+                messageActionBuilder.endpoint(soapServerUri);
+            }
+        }
+
         return delegate.build();
     }
 }

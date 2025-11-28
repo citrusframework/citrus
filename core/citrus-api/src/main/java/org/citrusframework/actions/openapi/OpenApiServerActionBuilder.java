@@ -21,9 +21,20 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReferenceResolverAwareBuilder;
 import org.citrusframework.actions.http.HttpReceiveRequestMessageBuilderFactory;
 import org.citrusframework.actions.http.HttpSendResponseMessageBuilderFactory;
+import org.citrusframework.endpoint.Endpoint;
 
 public interface OpenApiServerActionBuilder<T extends TestAction, B extends TestActionBuilder<T>>
         extends ReferenceResolverAwareBuilder<T, B> {
+
+    /**
+     * Sets the  Http server.
+     */
+    OpenApiServerActionBuilder<T, B> server(String server);
+
+    /**
+     * Sets the  Http server.
+     */
+    OpenApiServerActionBuilder<T, B> server(Endpoint server);
 
     /**
      * Sends Http response messages as server. Uses default Http status 200 OK.

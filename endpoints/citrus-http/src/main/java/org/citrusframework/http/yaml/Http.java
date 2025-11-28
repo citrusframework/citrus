@@ -22,7 +22,9 @@ import java.util.Optional;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.actions.ReceiveActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.SendActionBuilder;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -37,6 +39,7 @@ import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 import org.citrusframework.yaml.actions.Message;
 import org.citrusframework.yaml.actions.Receive;
 import org.citrusframework.yaml.actions.Send;
@@ -69,12 +72,24 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     @SchemaProperty(description = "The Http client.")
     public void setClient(String httpClient) {
-        builder = new HttpActionBuilder().client(httpClient);
+        if (builder == null) {
+            builder = new HttpActionBuilder().client(httpClient);
+        } else if (builder instanceof SendActionBuilder<?,?,?> messageActionBuilder) {
+            messageActionBuilder.endpoint(httpClient);
+        } else if (builder instanceof ReceiveActionBuilder<?,?,?> messageActionBuilder) {
+            messageActionBuilder.endpoint(httpClient);
+        }
     }
 
     @SchemaProperty(description = "The Http server.")
     public void setServer(String httpServer) {
-        builder = new HttpActionBuilder().server(httpServer);
+        if (builder == null) {
+            builder = new HttpActionBuilder().server(httpServer);
+        } else if (builder instanceof SendActionBuilder<?,?,?> messageActionBuilder) {
+            messageActionBuilder.endpoint(httpServer);
+        } else if (builder instanceof ReceiveActionBuilder<?,?,?> messageActionBuilder) {
+            messageActionBuilder.endpoint(httpServer);
+        }
     }
 
     @SchemaProperty(kind = ACTION, group = HTTP_GROUP, description = "Send a Http request as a client.")
@@ -369,9 +384,12 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     /**
      * Converts current builder to client builder.
-     * @return
      */
     private HttpClientActionBuilder asClientBuilder() {
+        if (builder == null) {
+            builder = new HttpActionBuilder().client();
+        }
+
         if (builder instanceof HttpClientActionBuilder) {
             return (HttpClientActionBuilder) builder;
         }
@@ -382,9 +400,12 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     /**
      * Converts current builder to server builder.
-     * @return
      */
     private HttpServerActionBuilder asServerBuilder() {
+        if (builder == null) {
+            builder = new HttpActionBuilder().server();
+        }
+
         if (builder instanceof HttpServerActionBuilder) {
             return (HttpServerActionBuilder) builder;
         }
@@ -393,6 +414,17 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                 Optional.ofNullable(builder).map(Object::getClass).map(Class::getName).orElse("null")));
     }
 
+    @SchemaType(oneOf = {
+       "GET",
+       "POST",
+       "PUT",
+       "PUT",
+       "DELETE",
+       "HEAD",
+       "OPTIONS",
+       "PATCH",
+       "TRACE"
+    })
     public static class ClientRequest {
         protected String uri;
         protected Boolean fork;
@@ -508,6 +540,17 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
     }
 
+    @SchemaType(oneOf = {
+        "GET",
+        "POST",
+        "PUT",
+        "PUT",
+        "DELETE",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "TRACE"
+    })
     public static class ServerRequest {
         protected Integer timeout;
         protected String select;
