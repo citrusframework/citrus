@@ -21,9 +21,20 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReferenceResolverAwareBuilder;
 import org.citrusframework.actions.http.HttpReceiveResponseMessageBuilderFactory;
 import org.citrusframework.actions.http.HttpSendRequestMessageBuilderFactory;
+import org.citrusframework.endpoint.Endpoint;
 
 public interface OpenApiClientActionBuilder<T extends TestAction, B extends TestActionBuilder.DelegatingTestActionBuilder<T>>
         extends ReferenceResolverAwareBuilder<T, B> {
+
+    /**
+     * Sets the  Http client.
+     */
+    OpenApiClientActionBuilder<T, B> client(String client);
+
+    /**
+     * Sets the  Http client.
+     */
+    OpenApiClientActionBuilder<T, B> client(Endpoint client);
 
     /**
      * Sends Http requests as client.

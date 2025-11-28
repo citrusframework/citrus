@@ -17,7 +17,9 @@
 package org.citrusframework.http.actions;
 
 import org.citrusframework.TestAction;
+import org.citrusframework.actions.ReceiveActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.SendActionBuilder;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -39,6 +41,12 @@ public class HttpClientActionBuilder extends AbstractReferenceResolverAwareTestA
     /** Target http client instance */
     private Endpoint httpClient;
     private String httpClientUri;
+
+    /**
+     * Default constructor.
+     */
+    public HttpClientActionBuilder() {
+    }
 
     /**
      * Default constructor.
@@ -245,6 +253,23 @@ public class HttpClientActionBuilder extends AbstractReferenceResolverAwareTestA
     @Override
     public TestAction build() {
         ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
+
+        if (delegate instanceof SendActionBuilder<?, ?, ?> messageActionBuilder) {
+            if (httpClient != null) {
+                messageActionBuilder.endpoint(httpClient);
+            } else if (httpClientUri != null) {
+                messageActionBuilder.endpoint(httpClientUri);
+            }
+        }
+
+        if (delegate instanceof ReceiveActionBuilder<?, ?, ?> messageActionBuilder) {
+            if (httpClient != null) {
+                messageActionBuilder.endpoint(httpClient);
+            } else if (httpClientUri != null) {
+                messageActionBuilder.endpoint(httpClientUri);
+            }
+        }
+
         return delegate.build();
     }
 }

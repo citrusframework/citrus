@@ -27,12 +27,22 @@ public interface HttpActionBuilder<T extends TestAction, B extends TestActionBui
     /**
      * Initiate http client action.
      */
+    HttpClientActionBuilder<?, ?> client();
+
+    /**
+     * Initiate http client action.
+     */
     HttpClientActionBuilder<?, ?> client(Endpoint endpoint);
 
     /**
      * Initiate http client action.
      */
     HttpClientActionBuilder<?, ?> client(String endpoint);
+
+    /**
+     * Initiate http server action.
+     */
+    HttpServerActionBuilder<?, ?> server();
 
     /**
      * Initiate http server action.

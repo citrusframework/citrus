@@ -14,7 +14,6 @@ actions:
       receiveResponse: {}
 
   - http:
-      client: "httpClient"
       sendRequest:
         uri: "http://localhost:${port}/test"
         fork: "true"
@@ -28,6 +27,7 @@ actions:
               value: "${id}"
             - name: "type"
               value: "gold"
+      client: "httpClient"
   - sleep:
       milliseconds: "1000"
   - http:

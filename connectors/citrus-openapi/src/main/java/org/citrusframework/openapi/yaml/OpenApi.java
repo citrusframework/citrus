@@ -22,13 +22,16 @@ import java.util.Optional;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.actions.ReceiveActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.ReceiveMessageAction.ReceiveMessageActionBuilder;
+import org.citrusframework.actions.SendActionBuilder;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.openapi.AutoFillType;
+import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiClientActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiClientRequestActionBuilder;
@@ -45,6 +48,7 @@ import org.citrusframework.yaml.actions.Message;
 import org.citrusframework.yaml.actions.Receive;
 import org.citrusframework.yaml.actions.Send;
 
+import static org.citrusframework.openapi.OpenApiSettings.getOpenApiValidationPolicy;
 import static org.citrusframework.openapi.OpenApiSettings.getRequestAutoFillRandomValues;
 import static org.citrusframework.openapi.OpenApiSettings.getResponseAutoFillRandomValues;
 import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
@@ -75,17 +79,42 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
 
     @SchemaProperty(required = true, description = "The OpenAPI specification source. Can be a local file resource or an Http endpoint URI.")
     public void setSpecification(String specification) {
-        builder = new OpenApiActionBuilder().specification(specification);
+        if (builder == null) {
+            builder = new OpenApiActionBuilder().specification(specification);
+        } else {
+            builder.getOpenApiSpecificationSource().setOpenApiSpecification(
+                    OpenApiSpecification.from(specification, getOpenApiValidationPolicy()));
+        }
     }
 
     @SchemaProperty(description = "Sets the Http client used to send requests.")
     public void setClient(String httpClient) {
-        builder = ((OpenApiActionBuilder) builder).client(httpClient);
+        if (builder == null) {
+            builder = new OpenApiActionBuilder().client(httpClient);
+        } else if (builder instanceof OpenApiActionBuilder openApiActionBuilder) {
+            builder = openApiActionBuilder.client(httpClient);
+        } else if (builder instanceof OpenApiClientActionBuilder openApiClientActionBuilder) {
+            openApiClientActionBuilder.client(httpClient);
+        }  else if (builder instanceof SendActionBuilder<?,?,?> messageActionBuilder) {
+            messageActionBuilder.endpoint(httpClient);
+        } else if (builder instanceof ReceiveActionBuilder<?,?,?> messageActionBuilder) {
+            messageActionBuilder.endpoint(httpClient);
+        }
     }
 
     @SchemaProperty(description = "Sets the Http server that provides the Http API.")
     public void setServer(String httpServer) {
-        builder = ((OpenApiActionBuilder) builder).server(httpServer);
+        if (builder == null) {
+            builder = new OpenApiActionBuilder().server(httpServer);
+        } else if (builder instanceof OpenApiActionBuilder openApiActionBuilder) {
+            builder = openApiActionBuilder.server(httpServer);
+        } else if (builder instanceof OpenApiServerActionBuilder openApiServerActionBuilder) {
+            openApiServerActionBuilder.server(httpServer);
+        } else if (builder instanceof SendActionBuilder<?,?,?> messageActionBuilder) {
+            messageActionBuilder.endpoint(httpServer);
+        } else if (builder instanceof ReceiveActionBuilder<?,?,?> messageActionBuilder) {
+            messageActionBuilder.endpoint(httpServer);
+        }
     }
 
     @SchemaProperty(kind = ACTION, group = OPENAPI_GROUP, description = "Send a request as a client.")
@@ -281,6 +310,10 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
      * Converts current builder to client builder.
      */
     private OpenApiClientActionBuilder asClientBuilder() {
+        if (builder == null) {
+            builder = new OpenApiActionBuilder().client();
+        }
+
         if (builder instanceof OpenApiClientActionBuilder clientBuilder) {
             return clientBuilder;
         }
@@ -293,6 +326,9 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
      * Converts current builder to server builder.
      */
     private OpenApiServerActionBuilder asServerBuilder() {
+        if (builder == null) {
+            builder = new OpenApiActionBuilder().server();
+        }
         if (builder instanceof OpenApiServerActionBuilder serverBuilder) {
             return serverBuilder;
         }

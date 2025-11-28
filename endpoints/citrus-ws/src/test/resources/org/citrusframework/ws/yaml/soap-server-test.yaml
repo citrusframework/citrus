@@ -15,7 +15,6 @@ actions:
               content: |
                 This is an attachment!
   - soap:
-      server: "soapServer"
       sendResponse:
         message:
           body:
@@ -25,6 +24,7 @@ actions:
               contentType: "text/plain"
               content: |
                 This is an attachment!
+      server: "soapServer"
 
   - soap:
       server: "soapServer"

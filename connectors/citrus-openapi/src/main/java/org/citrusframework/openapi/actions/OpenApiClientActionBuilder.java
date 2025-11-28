@@ -17,6 +17,8 @@
 package org.citrusframework.openapi.actions;
 
 import org.citrusframework.TestAction;
+import org.citrusframework.actions.ReceiveActionBuilder;
+import org.citrusframework.actions.SendActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
@@ -65,6 +67,20 @@ public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTe
     @Override
     public OpenApiSpecificationSource getOpenApiSpecificationSource() {
         return openApiSpecificationSource;
+    }
+
+    @Override
+    public OpenApiClientActionBuilder client(String httpClient) {
+        this.httpClientUri = httpClient;
+        getOpenApiSpecificationSource().setHttpClient(httpClient);
+        return this;
+    }
+
+    @Override
+    public OpenApiClientActionBuilder client(Endpoint httpClient) {
+        this.httpClient = httpClient;
+        getOpenApiSpecificationSource().setHttpClient(httpClient);
+        return this;
     }
 
     @Override
@@ -135,6 +151,23 @@ public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTe
     @Override
     public TestAction build() {
         ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
+
+        if (delegate instanceof SendActionBuilder<?, ?, ?> messageActionBuilder) {
+            if (httpClient != null) {
+                messageActionBuilder.endpoint(httpClient);
+            } else if (httpClientUri != null) {
+                messageActionBuilder.endpoint(httpClientUri);
+            }
+        }
+
+        if (delegate instanceof ReceiveActionBuilder<?, ?, ?> messageActionBuilder) {
+            if (httpClient != null) {
+                messageActionBuilder.endpoint(httpClient);
+            } else if (httpClientUri != null) {
+                messageActionBuilder.endpoint(httpClientUri);
+            }
+        }
+
         return delegate.build();
     }
 }

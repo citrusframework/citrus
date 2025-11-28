@@ -17,6 +17,8 @@
 package org.citrusframework.openapi.actions;
 
 import org.citrusframework.TestAction;
+import org.citrusframework.actions.ReceiveActionBuilder;
+import org.citrusframework.actions.SendActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
@@ -59,9 +61,25 @@ public class OpenApiServerActionBuilder extends
         this.openApiSpecificationSource = specification;
     }
 
+    public OpenApiServerActionBuilder(OpenApiSpecificationSource openApiSpecificationSource) {
+        this.openApiSpecificationSource = openApiSpecificationSource;
+    }
+
     @Override
     public OpenApiSpecificationSource getOpenApiSpecificationSource() {
         return openApiSpecificationSource;
+    }
+
+    @Override
+    public OpenApiServerActionBuilder server(String httpServer) {
+        this.httpServerUri = httpServer;
+        return this;
+    }
+
+    @Override
+    public OpenApiServerActionBuilder server(Endpoint httpServer) {
+        this.httpServer = httpServer;
+        return this;
     }
 
     @Override
@@ -145,6 +163,23 @@ public class OpenApiServerActionBuilder extends
     @Override
     public TestAction build() {
         ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
+
+        if (delegate instanceof SendActionBuilder<?, ?, ?> messageActionBuilder) {
+            if (httpServer != null) {
+                messageActionBuilder.endpoint(httpServer);
+            } else if (httpServerUri != null) {
+                messageActionBuilder.endpoint(httpServerUri);
+            }
+        }
+
+        if (delegate instanceof ReceiveActionBuilder<?, ?, ?> messageActionBuilder) {
+            if (httpServer != null) {
+                messageActionBuilder.endpoint(httpServer);
+            } else if (httpServerUri != null) {
+                messageActionBuilder.endpoint(httpServerUri);
+            }
+        }
+
         return delegate.build();
     }
 }

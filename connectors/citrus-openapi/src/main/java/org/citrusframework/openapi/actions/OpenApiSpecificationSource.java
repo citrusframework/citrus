@@ -41,6 +41,9 @@ public class OpenApiSpecificationSource {
 
     private String httpClient;
 
+    public OpenApiSpecificationSource() {
+    }
+
     public OpenApiSpecificationSource(OpenApiSpecification openApiSpecification) {
         this.openApiSpecification = openApiSpecification;
     }
@@ -63,12 +66,12 @@ public class OpenApiSpecificationSource {
                         .findFirst()
                         .orElseThrow(() ->
                             new CitrusRuntimeException(
-                                "Unable to resolve OpenApiSpecification from alias '%s'. Known aliases for open api specs are '%s'".formatted(
+                                "Unable to resolve OpenAPI specification from alias '%s'. Known aliases are '%s'".formatted(
                                     openApiAlias, getKnownOpenApiAliases(resolver)))
                         ));
             } else {
                 throw new CitrusRuntimeException(
-                    "Unable to resolve OpenApiSpecification. Neither OpenAPI spec, nor OpenAPI  alias are specified.");
+                    "Unable to resolve OpenApiSpecification. Neither OpenAPI specification, nor OpenAPI alias are specified.");
             }
         }
 
@@ -89,5 +92,13 @@ public class OpenApiSpecificationSource {
                 this.httpClient = client.getEndpointConfiguration().getRequestUrl();
             }
         }
+    }
+
+    public void setOpenApiAlias(String openApiAlias) {
+        this.openApiAlias = openApiAlias;
+    }
+
+    public void setOpenApiSpecification(OpenApiSpecification openApiSpecification) {
+        this.openApiSpecification = openApiSpecification;
     }
 }

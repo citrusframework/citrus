@@ -65,6 +65,11 @@ public interface OpenApiActionBuilder<T extends TestAction, S extends Specificat
     /**
      * Initiate http server action.
      */
+    OpenApiServerActionBuilder<?, ?> server();
+
+    /**
+     * Initiate http server action.
+     */
     OpenApiServerActionBuilder<?, ?> server(Endpoint endpoint);
 
     /**

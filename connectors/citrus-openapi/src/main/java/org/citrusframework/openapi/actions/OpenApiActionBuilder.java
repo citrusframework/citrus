@@ -40,6 +40,7 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
     private OpenApiSpecificationSource openApiSpecificationSource;
 
     public OpenApiActionBuilder() {
+        this.openApiSpecificationSource = new OpenApiSpecificationSource();
     }
 
     public OpenApiActionBuilder(OpenApiSpecification specification) {
@@ -123,6 +124,16 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
                 .withReferenceResolver(referenceResolver);
         this.delegate = clientActionBuilder;
         return clientActionBuilder;
+    }
+
+    @Override
+    public OpenApiServerActionBuilder server() {
+        assertSpecification();
+
+        OpenApiServerActionBuilder serverActionBuilder = new OpenApiServerActionBuilder(openApiSpecificationSource)
+                .withReferenceResolver(referenceResolver);
+        this.delegate = serverActionBuilder;
+        return serverActionBuilder;
     }
 
     @Override
