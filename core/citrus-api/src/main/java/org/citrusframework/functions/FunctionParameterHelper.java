@@ -81,10 +81,6 @@ public final class FunctionParameterHelper {
     }
 
     private static String cutOffSingleQuotes(String param) {
-        if (param.equals("'")) {
-            return "";
-        }
-
         if (param.length() > 1 && param.charAt(0) == '\'' && param.charAt(param.length()-1) == '\'') {
             return param.substring(1, param.length()-1);
         }
