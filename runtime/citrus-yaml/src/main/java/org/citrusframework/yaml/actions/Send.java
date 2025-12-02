@@ -73,7 +73,7 @@ public class Send implements TestActionBuilder<SendMessageAction>, ReferenceReso
         this.actor = value;
     }
 
-    @SchemaProperty(advanced = true, description = "When set the send operation does not block while waiting for the response.")
+    @SchemaProperty(description = "When set the send operation does not block while waiting for the response.")
     public void setFork(Boolean value) {
         builder.fork(value);
     }

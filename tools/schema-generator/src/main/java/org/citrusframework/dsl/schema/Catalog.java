@@ -118,12 +118,12 @@ public class Catalog {
             JsonNode jsonSchema = CitrusSchemaGenerator.generateSchema(builder.getValue().getClass(), Option.INLINE_ALL_SCHEMAS);
             String[] tokens = builder.getKey().split("\\.");
             String group = tokens[0];
-            String name = group + StringUtils.convertFirstCharToUpperCase(tokens[1]);
+            String name = tokens[1];
             catalog.put(builder.getKey().replaceAll("\\.", "-"),
                     new CatalogEntry(SchemaProperty.Kind.ENDPOINT.getCatalogKind(),
-                            name,
+                            "%s-%s".formatted(group, name),
                             group,
-                            StringUtils.convertFirstCharToUpperCase(name),
+                            "%s%s".formatted(StringUtils.convertFirstCharToUpperCase(group), StringUtils.convertFirstCharToUpperCase(name)),
                             null,
                             jsonSchema));
         }

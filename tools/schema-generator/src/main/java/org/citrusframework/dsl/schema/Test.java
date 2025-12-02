@@ -50,7 +50,9 @@ public class Test {
     public void setVariables(List<Variable> variables) {
     }
 
-    @SchemaProperty(description = "List of endpoints for this test.")
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:endpoints" ) },
+            description = "List of endpoints for this test.")
     public void setEndpoints(List<Endpoint> endpoints) {
     }
 

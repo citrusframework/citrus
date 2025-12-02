@@ -35,7 +35,6 @@ public final class SeleniumEndpoints extends AbstractEndpointBuilder<SeleniumBro
 
     /**
      * Static entry method for Selenium endpoints.
-     * @return
      */
     public static SeleniumEndpoints selenium() {
         return new SeleniumEndpoints();
@@ -43,7 +42,6 @@ public final class SeleniumEndpoints extends AbstractEndpointBuilder<SeleniumBro
 
     /**
      * Returns browser builder for further fluent api calls.
-     * @return
      */
     public SeleniumBrowserBuilder browser() {
         return builder;
