@@ -1,1 +1,2 @@
+type=org.citrusframework.selenium.endpoint.SeleniumEndpointBuilder
 browser=org.citrusframework.selenium.endpoint.SeleniumBrowserBuilder

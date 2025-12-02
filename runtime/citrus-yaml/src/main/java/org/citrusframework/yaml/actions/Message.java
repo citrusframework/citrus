@@ -41,10 +41,7 @@ public class Message {
         return headerIgnoreCase;
     }
 
-    @SchemaProperty(
-            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:validation") },
-            description = "When enabled the header case is not verified."
-    )
+    @SchemaProperty(advanced = true, description = "When enabled the header case is not verified.")
     public void setHeaderIgnoreCase(String value) {
         this.headerIgnoreCase = value;
     }
@@ -78,9 +75,7 @@ public class Message {
         return this.expression;
     }
 
-    @SchemaProperty(
-            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:expressions") },
-            description = "List of path expressions to evaluate on the message content before processing the message.")
+    @SchemaProperty(advanced = true, description = "List of path expressions to evaluate on the message content before processing the message.")
     public void setExpression(List<Expression> expression) {
         this.expression = expression;
     }

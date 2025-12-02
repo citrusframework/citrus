@@ -28,12 +28,12 @@ import org.citrusframework.jms.endpoint.JmsEndpointsBuilder;
 import org.citrusframework.kafka.endpoint.builder.KafkaEndpointsBuilder;
 import org.citrusframework.kubernetes.endpoint.builder.KubernetesEndpointBuilder;
 import org.citrusframework.mail.endpoint.builder.MailEndpointBuilder;
-import org.citrusframework.selenium.endpoint.SeleniumBrowserBuilder;
+import org.citrusframework.selenium.endpoint.SeleniumEndpointBuilder;
 import org.citrusframework.vertx.endpoint.builder.VertxEndpointsBuilder;
 import org.citrusframework.websocket.endpoint.builder.WebSocketEndpointBuilder;
 import org.citrusframework.ws.endpoint.builder.SoapWebServiceEndpointBuilder;
-import org.citrusframework.yaml.SchemaType;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
 @SchemaType(oneOf = {
     "http",
@@ -51,7 +51,7 @@ import org.citrusframework.yaml.SchemaProperty;
     "kafka",
     "camel",
     "channel",
-    "seleniumBrowser",
+    "selenium",
 })
 public interface Endpoints {
 
@@ -116,8 +116,8 @@ public interface Endpoints {
     default void setChannel(MessageChannelEndpointsBuilder builder) {
     }
 
-    @SchemaProperty(description = "Selenium browser endpoint.")
-    default void setSeleniumBrowser(SeleniumBrowserBuilder builder) {
+    @SchemaProperty(description = "Selenium endpoint.")
+    default void setSelenium(SeleniumEndpointBuilder builder) {
     }
 
 }

@@ -546,7 +546,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return fork;
         }
 
-        @SchemaProperty(advanced = true, description = "When enabled the send operation does not block while waiting for the response.")
+        @SchemaProperty(description = "When enabled the send operation does not block while waiting for the response.")
         public void setFork(Boolean fork) {
             this.fork = fork;
         }
