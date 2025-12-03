@@ -25,6 +25,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageAwareTestAction;
 import org.citrusframework.message.MessageBuilder;
 import org.citrusframework.message.MessageDirection;
 import org.citrusframework.message.MessageProcessor;
@@ -45,7 +46,7 @@ import static org.citrusframework.util.StringUtils.hasText;
  *
  * @since 2008
  */
-public class SendMessageAction extends AbstractTestAction implements Completable {
+public class SendMessageAction extends AbstractTestAction implements Completable, MessageAwareTestAction {
 
     /** Message endpoint instance */
     private final Endpoint endpoint;
@@ -86,6 +87,9 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /** Finished indicator either called when forked send action is finished or immediately when this action has finished */
     private CompletableFuture<TestContext> finished;
+
+    /** Allows access to the processed message for later reference */
+    private Message processedMessage;
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(SendMessageAction.class);
@@ -135,6 +139,8 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         final Endpoint messageEndpoint = getOrCreateEndpoint(context);
 
+        // save message for later reference
+        this.processedMessage = message;
         if (hasText(message.getName())) {
             context.getMessageStore().storeMessage(message.getName(), message);
         } else {
@@ -180,9 +186,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
                 .forEach(validator -> validator.validate(message, context, this.schemaRepository, this.schema));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isDisabled(TestContext context) {
         Endpoint messageEndpoint = getOrCreateEndpoint(context);
@@ -201,11 +204,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     }
 
     /**
-     * Create message to be sent.
-     *
-     * @param context
-     * @param messageType
-     * @return
+     * Creates the message to be sent.
      */
     protected Message createMessage(TestContext context, String messageType) {
         Message message = messageBuilder.build(context, messageType);
@@ -240,16 +239,21 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     }
 
     /**
+     * Get message sent by this test action. Reads message from message store with saved message id.
+     */
+    public Optional<Message> getMessage() {
+        return Optional.ofNullable(processedMessage);
+    }
+
+    /**
      * Gets the message endpoint.
-     *
-     * @return
      */
     public Endpoint getEndpoint() {
         return endpoint;
     }
 
     /**
-     * Get
+     * Get the schema validation setting.
      *
      * @return true if schema validation is active for this message
      */
@@ -286,8 +290,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /**
      * Obtains the message processors.
-     *
-     * @return
      */
     public List<MessageProcessor> getMessageProcessors() {
         return messageProcessors;
@@ -322,8 +324,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /**
      * Gets the data dictionary.
-     *
-     * @return
      */
     public DataDictionary<?> getDataDictionary() {
         return dataDictionary;
@@ -331,8 +331,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /**
      * Gets the endpoint uri.
-     *
-     * @return
      */
     public String getEndpointUri() {
         return endpointUri;
@@ -346,8 +344,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         /**
          * Fluent API action building entry method used in Java DSL.
-         *
-         * @return
          */
         public static Builder send() {
             return new Builder();
@@ -355,9 +351,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         /**
          * Fluent API action building entry method used in Java DSL.
-         *
-         * @param messageEndpoint
-         * @return
          */
         public static Builder send(Endpoint messageEndpoint) {
             Builder builder = new Builder();
@@ -367,9 +360,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         /**
          * Fluent API action building entry method used in Java DSL.
-         *
-         * @param messageEndpointUri
-         * @return
          */
         public static Builder send(String messageEndpointUri) {
             Builder builder = new Builder();

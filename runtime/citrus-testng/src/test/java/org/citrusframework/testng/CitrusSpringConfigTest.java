@@ -28,20 +28,7 @@ import org.citrusframework.log.DefaultLogModifier;
 import org.citrusframework.log.LogModifier;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageProcessors;
-import org.citrusframework.report.FailureStackTestListener;
-import org.citrusframework.report.HtmlReporter;
-import org.citrusframework.report.JUnitReporter;
-import org.citrusframework.report.LoggingReporter;
-import org.citrusframework.report.MessageListener;
-import org.citrusframework.report.MessageListeners;
-import org.citrusframework.report.TestActionListener;
-import org.citrusframework.report.TestActionListeners;
-import org.citrusframework.report.TestListener;
-import org.citrusframework.report.TestListeners;
-import org.citrusframework.report.TestReporter;
-import org.citrusframework.report.TestReporters;
-import org.citrusframework.report.TestSuiteListener;
-import org.citrusframework.report.TestSuiteListeners;
+import org.citrusframework.report.*;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.SpringBeanTypeConverter;
@@ -115,16 +102,18 @@ public class CitrusSpringConfigTest extends TestNGCitrusSpringSupport {
 
     @Test
     public void verifySpringConfig() {
-        Assert.assertEquals(testReporters.getTestReporters().size(), 4);
+        Assert.assertEquals(testReporters.getTestReporters().size(), 5);
         Assert.assertTrue(testReporters.getTestReporters().stream().anyMatch(CustomConfig.reporter::equals));
         Assert.assertTrue(testReporters.getTestReporters().stream().anyMatch(loggingReporter::equals));
         Assert.assertTrue(testReporters.getTestReporters().stream().anyMatch(HtmlReporter.class::isInstance));
         Assert.assertTrue(testReporters.getTestReporters().stream().anyMatch(JUnitReporter.class::isInstance));
+        Assert.assertTrue(testReporters.getTestReporters().stream().anyMatch(TestFlowReporter.class::isInstance));
 
-        Assert.assertEquals(testListeners.getTestListeners().size(), 5);
+        Assert.assertEquals(testListeners.getTestListeners().size(), 6);
         Assert.assertTrue(testListeners.getTestListeners().stream().anyMatch(CustomConfig.testListener::equals));
         Assert.assertTrue(testListeners.getTestListeners().stream().anyMatch(loggingReporter::equals));
         Assert.assertTrue(testListeners.getTestListeners().stream().anyMatch(HtmlReporter.class::isInstance));
+        Assert.assertTrue(testListeners.getTestListeners().stream().anyMatch(TestFlowReporter.class::isInstance));
         Assert.assertTrue(testListeners.getTestListeners().stream().anyMatch(FailureStackTestListener.class::isInstance));
         Assert.assertTrue(testListeners.getTestListeners().stream().anyMatch(TestReporters.class::isInstance));
 
@@ -133,9 +122,10 @@ public class CitrusSpringConfigTest extends TestNGCitrusSpringSupport {
         Assert.assertTrue(testSuiteListeners.getTestSuiteListeners().stream().anyMatch(loggingReporter::equals));
         Assert.assertTrue(testSuiteListeners.getTestSuiteListeners().stream().anyMatch(TestReporters.class::isInstance));
 
-        Assert.assertEquals(testActionListeners.getTestActionListeners().size(), 2);
+        Assert.assertEquals(testActionListeners.getTestActionListeners().size(), 3);
         Assert.assertTrue(testActionListeners.getTestActionListeners().stream().anyMatch(CustomConfig.testActionListener::equals));
         Assert.assertTrue(testActionListeners.getTestActionListeners().stream().anyMatch(loggingReporter::equals));
+        Assert.assertTrue(testActionListeners.getTestActionListeners().stream().anyMatch(TestFlowReporter.class::isInstance));
 
         Assert.assertEquals(messageListeners.getMessageListener().size(), 2);
         Assert.assertTrue(messageListeners.getMessageListener().stream().anyMatch(CustomConfig.messageListener::equals));

@@ -40,6 +40,12 @@ public class TestActionListeners implements TestActionListenerAware {
         }
     }
 
+    public void onTestActionFailed(TestCase testCase, TestAction testAction, Throwable cause) {
+        for (TestActionListener listener : testActionListeners) {
+            listener.onTestActionFailed(testCase, testAction, cause);
+        }
+    }
+
     public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
         for (TestActionListener listener : testActionListeners) {
             listener.onTestActionSkipped(testCase, testAction);

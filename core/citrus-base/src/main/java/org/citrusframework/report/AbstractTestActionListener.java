@@ -34,6 +34,9 @@ public abstract class AbstractTestActionListener implements TestActionListener {
     public void onTestActionSkipped(TestCase testCase, TestAction testAction) {}
 
     @Override
+    public void onTestActionFailed(TestCase testCase, TestAction testAction, Throwable throwable) {}
+
+    @Override
     public void onTestActionStart(TestCase testCase, TestAction testAction) {}
 
 }

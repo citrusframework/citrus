@@ -16,17 +16,14 @@
 
 package org.citrusframework.message;
 
-import org.citrusframework.TestAction;
-import org.citrusframework.endpoint.Endpoint;
+import java.util.Optional;
 
-/**
- * @since 2.6.2
- */
-public interface MessageStore {
+@FunctionalInterface
+public interface MessageAwareTestAction {
 
-    Message getMessage(String name);
-
-    void storeMessage(String name, Message message);
-
-    String constructMessageName(TestAction action, Endpoint endpoint);
+    /**
+     * Provides sent/received message if test action has been executed already.
+     * Usually implemented by send and receive test actions to provide access to the message that has been processed.
+     */
+    Optional<Message> getMessage();
 }

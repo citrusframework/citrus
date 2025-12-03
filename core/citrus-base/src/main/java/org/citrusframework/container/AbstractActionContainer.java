@@ -140,7 +140,15 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
 
     @Override
     public int getActionIndex(TestAction action) {
-        return executedActions.indexOf(action);
+        if (executedActions.contains(action)) {
+            return executedActions.indexOf(action);
+        }
+
+        if (activeAction != null && activeAction.equals(action)) {
+            return executedActions.size();
+        }
+
+        return -1;
     }
 
     @Override

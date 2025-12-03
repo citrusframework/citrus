@@ -37,7 +37,7 @@ public class SummaryReporter extends AbstractOutputFileReporter {
     private String reportFileName = SummaryReporterSettings.getReportFile();
 
     /** Static resource for the summary test report template */
-    private String reportTemplate = SummaryReporterSettings.getReportTemplate();
+    private final String reportTemplate = SummaryReporterSettings.getReportTemplate();
 
     @Override
     protected String getReportContent(TestResults testResults) {
@@ -58,8 +58,6 @@ public class SummaryReporter extends AbstractOutputFileReporter {
 
     /**
      * Sets the enabled property.
-     *
-     * @param enabled
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -72,8 +70,6 @@ public class SummaryReporter extends AbstractOutputFileReporter {
 
     /**
      * Sets the reportFileName.
-     *
-     * @param reportFileName
      */
     public void setReportFileName(String reportFileName) {
         this.reportFileName = reportFileName;
@@ -81,8 +77,6 @@ public class SummaryReporter extends AbstractOutputFileReporter {
 
     /**
      * Gets the reportFileName.
-     *
-     * @return
      */
     @Override
     public String getReportFileName() {

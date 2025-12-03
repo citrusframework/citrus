@@ -22,6 +22,7 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageAwareTestAction;
 import org.citrusframework.message.MessageBuilder;
 import org.citrusframework.message.MessageDirection;
 import org.citrusframework.message.MessagePayload;
@@ -85,7 +86,7 @@ import static org.citrusframework.validation.CustomValidatorStrategy.EXCLUSIVE;
  *
  * @since 2008
  */
-public class ReceiveMessageAction extends AbstractTestAction {
+public class ReceiveMessageAction extends AbstractTestAction implements MessageAwareTestAction {
 
     /**
      * Build message selector with name value pairs
@@ -151,6 +152,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * This information is needed to find a proper message validator for this message
      */
     private String messageType;
+
+    /** Allows access to the received message for later reference */
+    private Message processedMessage;
 
     private static final Logger logger = LoggerFactory.getLogger(ReceiveMessageAction.class);
 
@@ -249,6 +253,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
             variableExtractor.extractVariables(message, context);
         }
 
+        // save message for later reference
+        this.processedMessage = message;
         Message controlMessage = createControlMessage(context, messageType);
         if (hasText(controlMessage.getName())) {
             context.getMessageStore().storeMessage(controlMessage.getName(), message);
@@ -418,6 +424,13 @@ public class ReceiveMessageAction extends AbstractTestAction {
         } else {
             throw new CitrusRuntimeException("Neither endpoint nor endpoint uri is set properly!");
         }
+    }
+
+    /**
+     * Get message sent by this test action. Reads message from message store with saved message id.
+     */
+    public Optional<Message> getMessage() {
+        return Optional.ofNullable(processedMessage);
     }
 
     public Endpoint getEndpoint() {

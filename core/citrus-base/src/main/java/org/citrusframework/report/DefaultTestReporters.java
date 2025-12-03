@@ -25,6 +25,7 @@ import java.util.List;
 public class DefaultTestReporters extends TestReporters {
 
     public static final List<TestReporter> DEFAULT_REPORTERS = Arrays.asList(
+            new TestFlowReporter(),
             new LoggingReporter(),
             new HtmlReporter(),
             new JUnitReporter()

@@ -27,20 +27,21 @@ import org.citrusframework.TestCase;
 public interface TestActionListener {
     /**
      * Invoked when test gets started
-     * @param testCase
-     * @param testAction
      */
     void onTestActionStart(TestCase testCase, TestAction testAction);
 
     /**
      * Invoked when test gets finished
-     * @param testAction
      */
     void onTestActionFinish(TestCase testCase, TestAction testAction);
 
     /**
+     * Invoked when test has failed
+     */
+    void onTestActionFailed(TestCase testCase, TestAction testAction, Throwable cause);
+
+    /**
      * Invoked when test is skipped
-     * @param testAction
      */
     void onTestActionSkipped(TestCase testCase, TestAction testAction);
 }

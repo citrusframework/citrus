@@ -16,12 +16,14 @@
 
 package org.citrusframework;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import org.citrusframework.json.JsonStringBuilder;
+import org.citrusframework.yaml.YamlStringBuilder;
 
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
@@ -227,27 +229,123 @@ public final class TestResult {
 
     @Override
     public String toString() {
-        var stringBuilder = new StringBuilder()
+        var builder = new StringBuilder()
                 .append(getClass().getSimpleName())
                 .append("[")
                 .append("testName=").append(testName);
 
+        if (className != null) {
+            builder.append(", className=").append(className);
+        }
+
         if (!parameters.isEmpty()) {
-            stringBuilder.append(", parameters=[")
+            builder.append(", parameters=[")
                     .append(parameters.entrySet().stream()
                             .map(entry -> entry.getKey() + "=" + entry.getValue())
                             .collect(joining(", ")))
                     .append("]");
         }
 
-        stringBuilder.append(", result=").append(result);
+        builder.append(", result=").append(result);
 
-        if (nonNull(duration)) {
-            stringBuilder.append(", durationMs=").append(duration.toMillis());
+        if (cause != null) {
+            builder.append(", cause=").append(cause);
         }
 
-        return stringBuilder.append("]")
+        if (errorMessage != null) {
+            builder.append(", errorMessage=").append(errorMessage);
+        }
+
+        if (failureStack != null) {
+            builder.append(", failureStack=").append(failureStack);
+        }
+
+        if (failureType != null) {
+            builder.append(", failureType=").append(failureType);
+        }
+
+        if (nonNull(duration)) {
+            builder.append(", duration=").append(duration.toMillis()).append("ms");
+        }
+
+        return builder.append("]")
                 .toString();
+    }
+
+    public String toJson() {
+        var builder = new JsonStringBuilder()
+                .withObject()
+                .withProperty("name", testName);
+
+        if (className != null) {
+            builder.withProperty("className", className);
+        }
+
+        if (!parameters.isEmpty()) {
+            builder.withProperty("parameters")
+                   .withArray(parameters);
+        }
+
+        builder.withProperty("result", result.name());
+
+        if (cause != null) {
+            builder.withPropertyEscaped("cause", cause.toString());
+        }
+
+        if (errorMessage != null) {
+            builder.withPropertyEscaped("errorMessage", errorMessage);
+        }
+
+        if (failureStack != null) {
+            builder.withProperty("failureStack", failureStack);
+        }
+
+        if (failureType != null) {
+            builder.withProperty("failureType", failureType);
+        }
+
+        if (nonNull(duration)) {
+            builder.withProperty("duration", duration.toMillis());
+        }
+
+        return builder.closeObject().toString();
+    }
+
+    public String toYaml() {
+        var builder = new YamlStringBuilder()
+                .withProperty("name", testName);
+
+        if (className != null) {
+            builder.withProperty("className", className);
+        }
+
+        if (!parameters.isEmpty()) {
+            builder.withObject("parameters").withProperties(parameters).closeObject();
+        }
+
+        builder.withProperty("result", result.name());
+
+        if (cause != null) {
+            builder.withPropertyBlockStyle("cause", cause.toString());
+        }
+
+        if (errorMessage != null) {
+            builder.withPropertyBlockStyle("errorMessage", errorMessage);
+        }
+
+        if (failureStack != null) {
+            builder.withProperty("failureStack", failureStack);
+        }
+
+        if (failureType != null) {
+            builder.withProperty("failureType", failureType);
+        }
+
+        if (nonNull(duration)) {
+            builder.withProperty("duration", duration.toMillis());
+        }
+
+        return builder.toString();
     }
 
     /**

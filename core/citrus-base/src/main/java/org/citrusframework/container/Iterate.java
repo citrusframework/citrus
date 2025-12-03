@@ -45,8 +45,7 @@ public class Iterate extends AbstractIteratingActionContainer {
     public void executeIteration(TestContext context) {
         while (checkCondition(context)) {
             executeActions(context);
-
-            index = index + step ;
+            index = index + step;
         }
     }
 

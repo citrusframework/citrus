@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractTestReporter implements TestReporter {
 
     /** Logger */
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     /** Should ignore errors when creating test report */
     private boolean ignoreErrors = TestReporterSettings.isIgnoreErrors();
