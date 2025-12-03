@@ -139,8 +139,12 @@ public class MessagePayloadUtils {
      * @return
      */
     public static String prettyPrintJson(String payload) {
-        if ("{}".equals(payload) || "[]".equals(payload)) {
-            return payload;
+        if (payload == null) {
+            return "{}";
+        }
+
+        if ("{}".equals(payload.trim()) || "[]".equals(payload.trim())) {
+            return payload.trim();
         }
 
         int indentNum = 2;

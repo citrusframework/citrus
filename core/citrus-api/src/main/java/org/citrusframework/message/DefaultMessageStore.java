@@ -16,24 +16,43 @@
 
 package org.citrusframework.message;
 
-import org.citrusframework.TestAction;
-import org.citrusframework.endpoint.Endpoint;
-
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.citrusframework.TestAction;
+import org.citrusframework.endpoint.Endpoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
+ * Default message store implementation saves messages with its unique id as a key.
+ * The message store also holds a mapping of registered message names resolving to message ids.
+ * Allows users to get messages by its name or id.
  * @since 2.6.2
  */
 public class DefaultMessageStore extends ConcurrentHashMap<String, Message> implements MessageStore {
 
+    private static final Logger logger = LoggerFactory.getLogger(DefaultMessageStore.class);
+
+    private final Map<String, String> registeredNames = new ConcurrentHashMap<>();
+
     @Override
-    public Message getMessage(String id) {
-        return super.get(id);
+    public Message getMessage(String nameOrId) {
+        if (registeredNames.containsKey(nameOrId)) {
+            return super.get(registeredNames.get(nameOrId));
+        }
+
+        return super.get(nameOrId);
     }
 
     @Override
-    public void storeMessage(String id, Message message) {
-        super.put(id, message);
+    public void storeMessage(String name, Message message) {
+        if (registeredNames.containsKey(name)) {
+            logger.warn("Message with name '{}' already exists in message store - will overwrite the name mapping", name);
+        }
+
+        registeredNames.put(name, message.getId());
+        super.put(message.getId(), message);
     }
 
     @Override

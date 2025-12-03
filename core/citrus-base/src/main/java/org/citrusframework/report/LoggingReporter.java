@@ -321,14 +321,28 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     }
 
     @Override
+    public void onTestActionFailed(TestCase testCase, TestAction testAction, Throwable cause) {
+        if (isDebugEnabled()) {
+            newLine();
+
+            var duration = formatDurationString(testCase);
+            if (testCase.isIncremental()) {
+                debug("TEST STEP " + (testCase.getExecutedActions().size() + 1) + " FAILED" + duration + " Nested exception is: " + cause.getMessage());
+            } else {
+                debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " FAILED" + duration + " Nested exception is: " + cause.getMessage());
+            }
+        }
+    }
+
+    @Override
     public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
         if (isDebugEnabled()) {
             newLine();
 
             if (testCase.isIncremental()) {
-                debug("SKIPPING TEST STEP " + (testCase.getExecutedActions().size() + 1));
+                debug("TEST STEP " + (testCase.getExecutedActions().size() + 1) + " SKIPPED");
             } else {
-                debug("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
+                debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SKIPPED");
             }
 
             debug("TEST ACTION " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + " SKIPPED");

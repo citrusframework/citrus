@@ -65,9 +65,6 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(MessageTracingTestListener.class);
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onTestStart(TestCase test) {
         synchronized (lockObject) {
@@ -75,9 +72,6 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onTestExecutionEnd(TestCase test) {
         if (messages.isEmpty()) {

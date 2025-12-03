@@ -16,6 +16,10 @@
 
 package org.citrusframework.container;
 
+import java.time.Duration;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
 import org.citrusframework.AbstractIteratingContainerBuilder;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.context.TestContext;
@@ -24,10 +28,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.util.BooleanExpressionParser;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
-
-import java.time.Duration;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 
 import static java.lang.Thread.currentThread;
 import static java.util.Objects.nonNull;
@@ -60,6 +60,11 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
      * Cache start index for further container executions - e.g. in loop
      */
     protected final int start;
+
+    /**
+     * Track number of iterations executed.
+     */
+    private int iterations = 0;
 
     /**
      * The maximum duration this iteration can take until it reaches a timeout.
@@ -160,10 +165,10 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
 
     /**
      * Executes the nested test actions.
-     *
      * @param context Test context holding variable information.
      */
     protected void executeActions(TestContext context) {
+        iterations++;
         context.setVariable(indexName, String.valueOf(index));
 
         for (TestActionBuilder<?> actionBuilder : actions) {
@@ -201,5 +206,12 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
         }
 
         return BooleanExpressionParser.evaluate(conditionString);
+    }
+
+    /**
+     * Gets the number of executed iterations.
+     */
+    public int getIterations() {
+        return iterations;
     }
 }

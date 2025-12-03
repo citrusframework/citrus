@@ -250,6 +250,18 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
                                 .end(JsonSupport.render(results));
                     }
                 }));
+        router.get("/results/flow")
+                .handler(wrapThrowingHandler(ctx -> {
+                    HttpServerResponse response = ctx.response();
+                    if (ctx.request().headers().contains(HttpHeaders.ACCEPT) &&
+                        ctx.request().headers().get(HttpHeaders.ACCEPT).equals("application/yaml")) {
+                        response.putHeader(HttpHeaders.CONTENT_TYPE, "application/yaml")
+                                .end(agentTestListener.getYamlReport());
+                    } else {
+                        response.putHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString())
+                                .end(agentTestListener.getJsonReport());
+                    }
+                }));
         router.put("/results/clear")
                 .handler(ctx -> {
                     agentTestListener.reset();
@@ -364,6 +376,7 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
         try {
             if (configuration.isReset()) {
                 agentTestListener.clearLogs();
+                agentTestListener.getTestFlowReporter().clear();
             }
 
             runService.run(runConfiguration);

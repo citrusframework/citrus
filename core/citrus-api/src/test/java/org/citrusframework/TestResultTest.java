@@ -1,8 +1,8 @@
 package org.citrusframework;
 
-import org.testng.annotations.Test;
-
 import java.time.Duration;
+
+import org.testng.annotations.Test;
 
 import static org.citrusframework.TestResult.RESULT.FAILURE;
 import static org.citrusframework.TestResult.RESULT.SKIP;
@@ -53,7 +53,7 @@ public class TestResultTest {
     void minimalToString() {
         var fixture = new TestResult(SUCCESS, "minimalToString", getClass().getSimpleName());
 
-        assertEquals(fixture.toString(), "TestResult[testName=minimalToString, result=SUCCESS]");
+        assertEquals(fixture.toString(), "TestResult[testName=minimalToString, className=TestResultTest, result=SUCCESS]");
     }
 
     @Test
@@ -62,7 +62,7 @@ public class TestResultTest {
         fixture.getParameters().put("parameter 1", "value 1");
         fixture.getParameters().put("parameter 2", "value 2");
 
-        assertEquals(fixture.toString(), "TestResult[testName=toStringWithParameters, parameters=[parameter 1=value 1, parameter 2=value 2], result=FAILURE]");
+        assertEquals(fixture.toString(), "TestResult[testName=toStringWithParameters, className=TestResultTest, parameters=[parameter 1=value 1, parameter 2=value 2], result=FAILURE]");
     }
 
     @Test
@@ -70,6 +70,6 @@ public class TestResultTest {
         var fixture = new TestResult(SKIP, "toStringWithDuration", getClass().getSimpleName());
         fixture.withDuration(Duration.ofMillis(1234L));
 
-        assertEquals(fixture.toString(), "TestResult[testName=toStringWithDuration, result=SKIP, durationMs=1234]");
+        assertEquals(fixture.toString(), "TestResult[testName=toStringWithDuration, className=TestResultTest, result=SKIP, duration=1234ms]");
     }
 }

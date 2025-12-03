@@ -18,9 +18,11 @@ package org.citrusframework.agent.listener;
 
 import java.io.StringWriter;
 
+import org.citrusframework.TestAction;
 import org.citrusframework.TestCase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
+import org.citrusframework.report.TestFlowReporter;
 import org.citrusframework.report.OutputStreamReporter;
 import org.citrusframework.report.TestResults;
 
@@ -37,6 +39,8 @@ public class AgentTestListener extends OutputStreamReporter {
 
     private StringWriter logWriter;
 
+    private final TestFlowReporter testFlowReporter = new TestFlowReporter();
+
     public AgentTestListener() {
         this(new StringWriter());
     }
@@ -50,6 +54,8 @@ public class AgentTestListener extends OutputStreamReporter {
     public void generate(TestResults testResults) {
         this.pending.clear();
         this.latest.clear();
+
+        testFlowReporter.generateReport(testResults);
 
         testResults.doWithResults(result ->{
             latest.addResult(result);
@@ -87,20 +93,41 @@ public class AgentTestListener extends OutputStreamReporter {
     }
 
     @Override
+    public void onTestActionFinish(TestCase testCase, TestAction testAction) {
+        testFlowReporter.onTestActionFinish(testCase, testAction);
+        super.onTestActionFinish(testCase, testAction);
+    }
+
+    @Override
+    public void onTestActionFailed(TestCase testCase, TestAction testAction, Throwable cause) {
+        testFlowReporter.onTestActionFailed(testCase, testAction, cause);
+        super.onTestActionFailed(testCase, testAction, cause);
+    }
+
+    @Override
+    public void onTestStart(TestCase test) {
+        testFlowReporter.onTestSuccess(test);
+        super.onTestStart(test);
+    }
+
+    @Override
     public void onTestSuccess(TestCase test) {
         pending.addResult(test.getTestResult());
+        testFlowReporter.onTestSuccess(test);
         super.onTestSuccess(test);
     }
 
     @Override
     public void onTestFailure(TestCase test, Throwable cause) {
         pending.addResult(test.getTestResult());
+        testFlowReporter.onTestFailure(test, cause);
         super.onTestFailure(test, cause);
     }
 
     @Override
     public void onTestSkipped(TestCase test) {
         pending.addResult(test.getTestResult());
+        testFlowReporter.onTestSkipped(test);
         super.onTestSkipped(test);
     }
 
@@ -124,6 +151,7 @@ public class AgentTestListener extends OutputStreamReporter {
         overall.clear();
         latest.clear();
         clearLogs();
+        testFlowReporter.clear();
     }
 
     public String getLogs() {
@@ -133,5 +161,17 @@ public class AgentTestListener extends OutputStreamReporter {
     public void clearLogs() {
         logWriter = new StringWriter();
         setLogWriter(logWriter);
+    }
+
+    public String getJsonReport() {
+        return testFlowReporter.getJsonReport();
+    }
+
+    public String getYamlReport() {
+        return testFlowReporter.getYamlReport();
+    }
+
+    public TestFlowReporter getTestFlowReporter() {
+        return testFlowReporter;
     }
 }

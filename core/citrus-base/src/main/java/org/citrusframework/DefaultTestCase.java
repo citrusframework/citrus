@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.StopWatch;
+import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.container.AbstractActionContainer;
 import org.citrusframework.container.AfterTest;
 import org.citrusframework.container.BeforeTest;
@@ -238,7 +239,6 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
             if (!action.isDisabled(context)) {
                 context.getTestActionListeners().onTestActionStart(this, action);
-
                 action.execute(context);
                 context.getTestActionListeners().onTestActionFinish(this, action);
             } else {
@@ -246,6 +246,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             }
         } catch (final Exception | Error e) {
             testResult = getTestResultInstanceProvider(context).createFailed(this, e);
+            context.getTestActionListeners().onTestActionFailed(this, action, e);
             throw new TestCaseFailedException(e);
         } finally {
             setExecutedAction(action);
@@ -284,6 +285,13 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             executeFinalActions(context);
 
             if (contextException != null) {
+                throw new TestCaseFailedException(contextException);
+            }
+
+            if (context.hasExceptions()) {
+                // finally test actions raised exceptions
+                contextException = context.getExceptions().remove(0);
+                testResult = getTestResultInstanceProvider(context).createFailed(this, contextException);
                 throw new TestCaseFailedException(contextException);
             }
         } catch (final TestCaseFailedException e) {
@@ -342,30 +350,25 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
      * Run final test actions.
      */
     private void executeFinalActions(TestContext context) {
-        if (!finalActions.isEmpty() || !context.getFinalActions().isEmpty()) {
-            try {
-                context.getTestListeners().onFinalActionsStart(this);
-                doExecuteFinalActions(context);
-            } finally {
-                context.getTestListeners().onFinalActionsEnd(this);
-            }
+        if (finalActions.isEmpty() && context.getFinalActions().isEmpty()) {
+            return;
         }
 
-        if (testResult.isSuccess() && context.hasExceptions()) {
-            CitrusRuntimeException contextException = context.getExceptions().remove(0);
-            testResult = getTestResultInstanceProvider(context).createFailed(this, contextException);
-            throw new TestCaseFailedException(contextException);
+        try {
+            context.getTestListeners().onFinalActionsStart(this);
+            doExecuteFinalActions(context);
+        } finally {
+            context.getTestListeners().onFinalActionsEnd(this);
         }
     }
 
     private void doExecuteFinalActions(TestContext context) {
-        if (!finalActions.isEmpty()) {
+        logger.debug("Entering finally block in test case");
 
-            logger.debug("Entering finally block in test case");
-
-            /* walk through the finally-chain and execute the actions in there */
-            for (final TestActionBuilder<?> actionBuilder : finalActions) {
-                TestAction action = actionBuilder.build();
+        /* walk through the finally-chain and execute the actions in there */
+        for (final TestActionBuilder<?> actionBuilder : finalActions) {
+            TestAction action = actionBuilder.build();
+            try {
                 if (!action.isDisabled(context)) {
                     context.getTestActionListeners().onTestActionStart(this, action);
                     action.execute(context);
@@ -373,20 +376,26 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
                 } else {
                     context.getTestActionListeners().onTestActionSkipped(this, action);
                 }
+            } catch (final Exception | Error e) {
+                context.addException(new CitrusRuntimeException("Failed to execute final test actions", e));
+                context.getTestActionListeners().onTestActionFailed(this, action, e);
             }
         }
 
         /* test context may also have some actions to run finally */
         for (final TestActionBuilder<?> actionBuilder : context.getFinalActions()) {
-            context.getTestListeners().onFinalActionsStart(this);
-
             TestAction action = actionBuilder.build();
-            if (!action.isDisabled(context)) {
-                context.getTestActionListeners().onTestActionStart(this, action);
-                action.execute(context);
-                context.getTestActionListeners().onTestActionFinish(this, action);
-            } else {
-                context.getTestActionListeners().onTestActionSkipped(this, action);
+            try {
+                if (!action.isDisabled(context)) {
+                    context.getTestActionListeners().onTestActionStart(this, action);
+                    action.execute(context);
+                    context.getTestActionListeners().onTestActionFinish(this, action);
+                } else {
+                    context.getTestActionListeners().onTestActionSkipped(this, action);
+                }
+            } catch (final Exception | Error e) {
+                context.addException(new CitrusRuntimeException("Failed to execute final test actions", e));
+                context.getTestActionListeners().onTestActionFailed(this, action, e);
             }
         }
     }
@@ -453,6 +462,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             if (endpoint instanceof ReferenceResolverAware resolverAware) {
                 resolverAware.setReferenceResolver(context.getReferenceResolver());
             }
+
             bindToRegistry.add(endpoint);
         }
 
@@ -472,6 +482,10 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             } else {
                 logger.info("Binding endpoint {} to bean registry", endpoint.getName());
                 context.getReferenceResolver().bind(endpoint.getName(), endpoint);
+
+                if (endpoint instanceof InitializingPhase initializingEndpoint) {
+                    initializingEndpoint.initialize();
+                }
             }
         }
     }

@@ -18,6 +18,7 @@ package org.citrusframework.reporter;
 
 import org.citrusframework.report.HtmlReporter;
 import org.citrusframework.report.JUnitReporter;
+import org.citrusframework.report.TestFlowReporter;
 import org.citrusframework.report.LoggingReporter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Condition;
@@ -29,13 +30,21 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 @Configuration
 public class ReporterConfig {
 
+    public static final String CITRUS_TEST_FLOW_REPORTER = "citrusTestFlowReporter";
     public static final String CITRUS_LOGGING_REPORTER = "citrusLoggingReporter";
     public static final String CITRUS_JUNIT_REPORTER = "citrusJunitReporter";
     public static final String CITRUS_HTML_REPORTER = "citrusHtmlReporter";
 
+    public static final String DEFAULT_TEST_FLOW_REPORTER_ENABLED_PROPERTY = "citrus.default.test.flow.reporter.enabled";
     public static final String DEFAULT_LOGGING_REPORTER_ENABLED_PROPERTY = "citrus.default.logging.reporter.enabled";
     public static final String DEFAULT_JUNIT_REPORTER_ENABLED_PROPERTY = "citrus.default.junit.reporter.enabled";
     public static final String DEFAULT_HTML_REPORTER_ENABLED_PROPERTY = "citrus.default.html.reporter.enabled";
+
+    @Bean(name = CITRUS_TEST_FLOW_REPORTER)
+    @Conditional(TestFlowReporterEnablementCondition.class)
+    public TestFlowReporter jsonReporter() {
+        return new TestFlowReporter();
+    }
 
     @Bean(name = CITRUS_LOGGING_REPORTER)
     @Conditional(LoggingReporterEnablementCondition.class)
@@ -58,6 +67,13 @@ public class ReporterConfig {
     @Bean(name = "citrusTestReporters")
     public TestReportersFactory testReporters() {
         return new TestReportersFactory();
+    }
+
+    static class TestFlowReporterEnablementCondition implements Condition {
+        @Override
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+            return "true".equals(context.getEnvironment().getProperty(DEFAULT_TEST_FLOW_REPORTER_ENABLED_PROPERTY, "true"));
+        }
     }
 
     static class LoggingReporterEnablementCondition implements Condition {

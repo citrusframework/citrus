@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.citrusframework.AbstractTestActionBuilder;
+import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointBuilder;
@@ -88,6 +89,10 @@ public class CreateEndpointAction extends AbstractTestAction {
             } else {
                 logger.info("Binding endpoint {} to bean registry", resolvedEndpointName);
                 context.getReferenceResolver().bind(resolvedEndpointName, endpoint);
+
+                if (endpoint instanceof InitializingPhase initializingPhase) {
+                    initializingPhase.initialize();
+                }
             }
         }
     }

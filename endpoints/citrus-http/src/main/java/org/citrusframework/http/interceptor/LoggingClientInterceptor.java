@@ -63,7 +63,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
 
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-        handleRequest(getRequestContent(request, new String(body)));
+        handleRequest(getRequestContent(request, body));
 
         ClientHttpResponse response = execution.execute(request, body);
         CachingClientHttpResponseWrapper bufferedResponse = new CachingClientHttpResponseWrapper(response);
@@ -111,28 +111,27 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
 
     /**
      * Builds request content string from request and body.
-     *
-     * @param request
-     * @param body
-     * @return
      */
-    private String getRequestContent(HttpRequest request, String body) {
+    private String getRequestContent(HttpRequest request, byte[] body) {
         String contentType = request.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
+        String requestBody = null;
         if (contentType != null) {
             String[] contentTypeParts = contentType.split(";");
             for (String contentTypePart : contentTypeParts) {
-                if(contentTypePart.startsWith("charset=") && !contentTypePart.endsWith("charset=")) {
+                if (contentTypePart.startsWith("charset=") && !contentTypePart.endsWith("charset=")) {
                     String charset = contentTypePart.split("=")[1];
                     try {
-                        body = new String(body.getBytes(), charset);
+                        requestBody = new String(body, charset);
                     } catch (UnsupportedEncodingException e) {
-                        body = new String(body.getBytes(), UTF_8);
+                        requestBody = new String(body, UTF_8);
                     }
                 }
                 break;
             }
-        } else {
-            body = new String(body.getBytes(), UTF_8);
+        }
+
+        if (requestBody == null) {
+            requestBody = new String(body, UTF_8);
         }
 
         StringBuilder builder = new StringBuilder();
@@ -145,7 +144,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
         appendHeaders(request.getHeaders(), builder);
 
         builder.append(NEWLINE);
-        builder.append(body);
+        builder.append(requestBody);
 
         return builder.toString();
     }

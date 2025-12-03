@@ -1,14 +1,15 @@
 package org.citrusframework.http.interceptor;
 
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+
 import org.mockito.Mockito;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpRequest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.lang.reflect.Method;
-import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -33,9 +34,9 @@ public class LoggingClientInterceptorTest {
 
         String body = "test body";
 
-        Method method = LoggingClientInterceptor.class.getDeclaredMethod("getRequestContent", HttpRequest.class, String.class);
+        Method method = LoggingClientInterceptor.class.getDeclaredMethod("getRequestContent", HttpRequest.class, byte[].class);
         method.setAccessible(true);
-        String result = (String) method.invoke(loggingClientInterceptor, request, body);
+        String result = (String) method.invoke(loggingClientInterceptor, request, body.getBytes(StandardCharsets.UTF_8));
 
         assertThat(result).isEqualToNormalizingNewlines("""
                 POST http://übelexample.com
@@ -55,9 +56,9 @@ public class LoggingClientInterceptorTest {
 
         String body = "test body";
 
-        Method method = LoggingClientInterceptor.class.getDeclaredMethod("getRequestContent", HttpRequest.class, String.class);
+        Method method = LoggingClientInterceptor.class.getDeclaredMethod("getRequestContent", HttpRequest.class, byte[].class);
         method.setAccessible(true);
-        String result = (String) method.invoke(loggingClientInterceptor, request, body);
+        String result = (String) method.invoke(loggingClientInterceptor, request, body.getBytes(StandardCharsets.UTF_8));
 
         assertThat(result).isEqualToNormalizingNewlines("""
                 GET http://example.com
@@ -77,9 +78,9 @@ public class LoggingClientInterceptorTest {
 
         String body = "test body";
 
-        Method method = LoggingClientInterceptor.class.getDeclaredMethod("getRequestContent", HttpRequest.class, String.class);
+        Method method = LoggingClientInterceptor.class.getDeclaredMethod("getRequestContent", HttpRequest.class, byte[].class);
         method.setAccessible(true);
-        String result = (String) method.invoke(loggingClientInterceptor, request, body);
+        String result = (String) method.invoke(loggingClientInterceptor, request, body.getBytes(StandardCharsets.UTF_8));
 
         assertThat(result).isEqualToNormalizingNewlines("""
                 GET http://example.com
@@ -99,9 +100,9 @@ public class LoggingClientInterceptorTest {
 
         String body = "test body";
 
-        Method method = LoggingClientInterceptor.class.getDeclaredMethod("getRequestContent", HttpRequest.class, String.class);
+        Method method = LoggingClientInterceptor.class.getDeclaredMethod("getRequestContent", HttpRequest.class, byte[].class);
         method.setAccessible(true);
-        String result = (String) method.invoke(loggingClientInterceptor, request, body);
+        String result = (String) method.invoke(loggingClientInterceptor, request, body.getBytes(StandardCharsets.UTF_8));
 
         assertThat(result).isEqualToNormalizingNewlines("""
                 GET http://example.com
