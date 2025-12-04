@@ -300,6 +300,7 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
         variables.put("hello", "citrus:concat('Hello ', ${name}, '!')");
         variables.put("goodbye", "Goodbye ${name}!");
         variables.put("welcome", "Welcome ${name}, today is citrus:currentDate()!");
+        variables.put("singleQuote", "citrus:concat(''', ${name}, ''')");
         fixture.setVariableDefinitions(variables);
 
         fixture.addTestAction(action(context -> {
@@ -310,6 +311,7 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
             assertEquals(context.getVariable("${hello}"), "Hello Citrus!");
             assertEquals(context.getVariable("${goodbye}"), "Goodbye Citrus!");
             assertEquals(context.getVariable("${welcome}"), "Welcome Citrus, today is " + new CurrentDateFunction().execute(new ArrayList<>(), context) + "!");
+            assertEquals(context.getVariable("${singleQuote}"), "'Citrus'");
         }));
 
         fixture.execute(context);
