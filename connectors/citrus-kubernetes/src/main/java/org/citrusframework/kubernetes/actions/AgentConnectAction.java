@@ -256,7 +256,7 @@ public class AgentConnectAction extends ServiceConnectAction {
 
         private String agentName = CitrusAgentSettings.getAgentName();
         private String imageName = CitrusAgentSettings.getImage();
-        private String imageRegistry = "";
+        private String imageRegistry = CitrusAgentSettings.getImageRegistry();
         private String imageTag = CitrusAgentSettings.getVersion();
         private String testJar;
 

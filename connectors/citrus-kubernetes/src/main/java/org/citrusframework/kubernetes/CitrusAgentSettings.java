@@ -29,6 +29,10 @@ public final class CitrusAgentSettings {
     private static final String AGENT_IMAGE_ENV = AGENT_ENV_PREFIX + "IMAGE";
     private static final String AGENT_IMAGE_DEFAULT = "citrusframework/citrus-agent";
 
+    private static final String AGENT_IMAGE_REGISTRY_PROPERTY = AGENT_PROPERTY_PREFIX + "image.registry";
+    private static final String AGENT_IMAGE_REGISTRY_ENV = AGENT_ENV_PREFIX + "IMAGE_REGISTRY";
+    private static final String AGENT_IMAGE_REGISTRY_DEFAULT = "quay.io";
+
     private static final String AGENT_SERVER_PORT_PROPERTY = AGENT_PROPERTY_PREFIX + "server.port";
     private static final String AGENT_SERVER_PORT_ENV = AGENT_ENV_PREFIX + "SERVER_PORT";
     private static final String AGENT_SERVER_PORT_DEFAULT = "4567";
@@ -57,6 +61,15 @@ public final class CitrusAgentSettings {
     public static String getImage() {
         return System.getProperty(AGENT_IMAGE_PROPERTY,
                 System.getenv(AGENT_IMAGE_ENV) != null ? System.getenv(AGENT_IMAGE_ENV) : AGENT_IMAGE_DEFAULT);
+    }
+
+    /**
+     * Citrus agent container image registry.
+     * @return
+     */
+    public static String getImageRegistry() {
+        return System.getProperty(AGENT_IMAGE_REGISTRY_PROPERTY,
+                System.getenv(AGENT_IMAGE_REGISTRY_ENV) != null ? System.getenv(AGENT_IMAGE_REGISTRY_ENV) : AGENT_IMAGE_REGISTRY_DEFAULT);
     }
 
     /**

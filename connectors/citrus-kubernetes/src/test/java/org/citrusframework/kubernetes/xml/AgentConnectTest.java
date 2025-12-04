@@ -78,7 +78,7 @@ public class AgentConnectTest extends AbstractXmlActionTest {
         Assert.assertEquals(deployment.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_MANAGED_BY), "citrus");
         Assert.assertNotNull(deployment.getSpec().getTemplate());
         Assert.assertEquals(deployment.getSpec().getTemplate().getSpec().getContainers().size(), 1L);
-        Assert.assertEquals(deployment.getSpec().getTemplate().getSpec().getContainers().get(0).getImage(), "citrusframework/citrus-agent:latest");
+        Assert.assertEquals(deployment.getSpec().getTemplate().getSpec().getContainers().get(0).getImage(), "quay.io/citrusframework/citrus-agent:latest");
 
         Service service = k8sClient.services().inNamespace(namespace).withName(CitrusAgentSettings.getAgentName()).get();
         Assert.assertNotNull(service);
