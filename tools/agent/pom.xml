@@ -19,7 +19,7 @@
     <jib.disableUpdateChecks>true</jib.disableUpdateChecks>
 
     <jkube.version>1.18.0</jkube.version>
-    <jkube.base.image>registry.access.redhat.com/ubi9/openjdk-17-runtime:1.21</jkube.base.image>
+    <jkube.base.image>registry.access.redhat.com/ubi9/openjdk-17-runtime:1.23</jkube.base.image>
     <jkube.image.push.registry>localhost:5001</jkube.image.push.registry>
     <jkube.image.buildStrategy>docker</jkube.image.buildStrategy>
     <jkube.container-image.nocache>true</jkube.container-image.nocache>
@@ -144,6 +144,8 @@
       <properties>
         <jkube.image.push.registry>quay.io</jkube.image.push.registry>
         <jkube.image.buildStrategy>jib</jkube.image.buildStrategy>
+        <!-- Multi-arch JIB configuration -->
+        <jib.platforms>linux/amd64,linux/arm64</jib.platforms>
       </properties>
     </profile>
     <profile>
@@ -224,10 +226,10 @@
                       <shell>/opt/jboss/container/java/run/run-java.sh</shell>
                     </entryPoint>
                     <!-- Supported only when using the jib build strategy -->
-                    <createImageOptions>
+                    <platforms>
                       <platform>linux/amd64</platform>
                       <platform>linux/arm64</platform>
-                    </createImageOptions>
+                    </platforms>
                   </build>
                 </image>
               </images>
