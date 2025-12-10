@@ -31,7 +31,7 @@ public abstract class AbstractAgentAction extends AbstractTestAction implements 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     public AbstractAgentAction(String name, Builder<?, ?> builder) {
-        super("citrus-agent-" + name, builder);
+        super("agent:" + name, builder);
 
         this.agentName = builder.agentName;
     }

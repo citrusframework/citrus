@@ -183,6 +183,8 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
                         ctx.response()
                                 .putHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString())
                                 .end("{ \"status\": \"UP\" }")));
+        router.head("/health")
+                .handler(wrapThrowingHandler(ctx -> ctx.response().setStatusCode(HttpResponseStatus.OK.code()).end()));
     }
 
     private static void addFilesEndpoint(Router router) {

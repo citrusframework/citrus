@@ -147,6 +147,8 @@ public class AgentRunAction extends AbstractAgentAction {
                     "but was %d %s").formatted(response.getStatusCode().value(), response.getReasonPhrase()));
         }
 
+        logger.info("Verify Citrus agent response:%n%s".formatted(response.getPayload(String.class)));
+
         JsonPathMessageValidator validator = new JsonPathMessageValidator();
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
         validationContext.getJsonPathExpressions().put("$..result", "SUCCESS");

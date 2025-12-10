@@ -40,10 +40,12 @@ public class AgentConnectTest extends AbstractYamlActionTest {
         String namespace = "test";
         Pod pod = new PodBuilder()
                 .withNewMetadata()
-                .withName(CitrusAgentSettings.getAgentName())
-                .addToLabels("app", "citrus")
-                .addToLabels(AgentConnectAction.KUBERNETES_LABEL_NAME, CitrusAgentSettings.getAgentName())
-                .addToLabels(AgentConnectAction.KUBERNETES_LABEL_MANAGED_BY, "citrus")
+                    .withName(CitrusAgentSettings.getAgentName())
+                    .addToLabels("app", "citrus")
+                    .addToLabels(AgentConnectAction.KUBERNETES_LABEL_RUNTIME, "yaks")
+                    .addToLabels(AgentConnectAction.OPENSHIFT_LABEL_RUNTIME, "yaks")
+                    .addToLabels(AgentConnectAction.KUBERNETES_LABEL_NAME, CitrusAgentSettings.getAgentName())
+                    .addToLabels(AgentConnectAction.KUBERNETES_LABEL_MANAGED_BY, "citrus")
                 .endMetadata()
                 .build();
 
@@ -72,8 +74,10 @@ public class AgentConnectTest extends AbstractYamlActionTest {
         Assert.assertEquals(deployments.getItems().size(), 1L);
         Deployment deployment = deployments.getItems().get(0);
         Assert.assertNotNull(deployment);
-        Assert.assertEquals(deployment.getMetadata().getLabels().size(), 3);
+        Assert.assertEquals(deployment.getMetadata().getLabels().size(), 5);
         Assert.assertEquals(deployment.getMetadata().getLabels().get("app"), "citrus");
+        Assert.assertEquals(deployment.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_RUNTIME), "yaks");
+        Assert.assertEquals(deployment.getMetadata().getLabels().get(AgentConnectAction.OPENSHIFT_LABEL_RUNTIME), "yaks");
         Assert.assertEquals(deployment.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_NAME), CitrusAgentSettings.getAgentName());
         Assert.assertEquals(deployment.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_MANAGED_BY), "citrus");
         Assert.assertNotNull(deployment.getSpec().getTemplate());
@@ -82,8 +86,10 @@ public class AgentConnectTest extends AbstractYamlActionTest {
 
         Service service = k8sClient.services().inNamespace(namespace).withName(CitrusAgentSettings.getAgentName()).get();
         Assert.assertNotNull(service);
-        Assert.assertEquals(service.getMetadata().getLabels().size(), 3);
+        Assert.assertEquals(service.getMetadata().getLabels().size(), 5);
         Assert.assertEquals(service.getMetadata().getLabels().get("app"), "citrus");
+        Assert.assertEquals(service.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_RUNTIME), "yaks");
+        Assert.assertEquals(service.getMetadata().getLabels().get(AgentConnectAction.OPENSHIFT_LABEL_RUNTIME), "yaks");
         Assert.assertEquals(service.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_NAME), CitrusAgentSettings.getAgentName());
         Assert.assertEquals(service.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_MANAGED_BY), "citrus");
         Assert.assertEquals(service.getSpec().getPorts().size(), 1);

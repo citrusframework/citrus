@@ -65,6 +65,8 @@ public class AgentConnectAction extends ServiceConnectAction {
 
     public static final String KUBERNETES_LABEL_NAME = "app.kubernetes.io/name";
     public static final String KUBERNETES_LABEL_MANAGED_BY = "app.kubernetes.io/managed-by";
+    public static final String KUBERNETES_LABEL_RUNTIME = "app.kubernetes.io/runtime";
+    public static final String OPENSHIFT_LABEL_RUNTIME = "app.openshift.io/runtime";
 
     private final String agentName;
     private final String imageRegistry;
@@ -163,6 +165,8 @@ public class AgentConnectAction extends ServiceConnectAction {
                 .withNewMetadata()
                     .withName(agentName + "-resources")
                     .addToLabels("app", "citrus")
+                    .addToLabels(KUBERNETES_LABEL_RUNTIME, "yaks")
+                    .addToLabels(OPENSHIFT_LABEL_RUNTIME, "yaks")
                     .addToLabels(KUBERNETES_LABEL_NAME, agentName)
                     .addToLabels(KUBERNETES_LABEL_MANAGED_BY, "citrus")
                 .endMetadata();
@@ -188,6 +192,8 @@ public class AgentConnectAction extends ServiceConnectAction {
                 .withNewMetadata()
                     .withName(agentName)
                     .addToLabels("app", "citrus")
+                    .addToLabels(KUBERNETES_LABEL_RUNTIME, "yaks")
+                    .addToLabels(OPENSHIFT_LABEL_RUNTIME, "yaks")
                     .addToLabels(KUBERNETES_LABEL_NAME, agentName)
                     .addToLabels(KUBERNETES_LABEL_MANAGED_BY, "citrus")
                 .endMetadata()
@@ -195,6 +201,8 @@ public class AgentConnectAction extends ServiceConnectAction {
                     .withNewTemplate()
                         .withNewMetadata()
                             .addToLabels("app", "citrus")
+                            .addToLabels(KUBERNETES_LABEL_RUNTIME, "yaks")
+                            .addToLabels(OPENSHIFT_LABEL_RUNTIME, "yaks")
                             .addToLabels(KUBERNETES_LABEL_NAME, agentName)
                             .addToLabels(KUBERNETES_LABEL_MANAGED_BY, "citrus")
                         .endMetadata()
@@ -243,6 +251,8 @@ public class AgentConnectAction extends ServiceConnectAction {
                 .withNewMetadata()
                 .withName(agentName)
                 .addToLabels("app", "citrus")
+                .addToLabels(KUBERNETES_LABEL_RUNTIME, "yaks")
+                .addToLabels(OPENSHIFT_LABEL_RUNTIME, "yaks")
                 .addToLabels(KUBERNETES_LABEL_NAME, agentName)
                 .addToLabels(KUBERNETES_LABEL_MANAGED_BY, "citrus")
                 .endMetadata()

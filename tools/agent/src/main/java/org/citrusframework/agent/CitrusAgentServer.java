@@ -25,6 +25,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
 import io.vertx.core.Vertx;
+import io.vertx.core.VertxOptions;
 import io.vertx.ext.web.Router;
 import org.citrusframework.agent.util.ConfigurationHelper;
 import org.slf4j.Logger;
@@ -106,7 +107,11 @@ public class CitrusAgentServer {
      */
     public void start() {
         application = new CitrusAgentApplication(configuration, routerCustomizations);
-        Vertx.vertx().deployVerticle(application);
+        Vertx.vertx(new VertxOptions()
+                .setMaxEventLoopExecuteTime(600)
+                .setMaxEventLoopExecuteTimeUnit(TimeUnit.SECONDS)
+        )
+        .deployVerticle(application);
 
         configuration.getDefaultProperties().putIfAbsent("citrus.default.message.type", "JSON");
         configuration.setDefaultProperties();

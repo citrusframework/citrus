@@ -16,10 +16,12 @@
 
 package org.citrusframework.agent.connector.yaml;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.agent.connector.CitrusAgentSettings;
 import org.citrusframework.agent.connector.actions.AbstractAgentAction;
@@ -27,6 +29,7 @@ import org.citrusframework.agent.connector.actions.AgentConnectAction;
 import org.citrusframework.agent.connector.actions.AgentRunAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.TestActions;
 
 import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
 
@@ -112,7 +115,16 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
             this.source = source;
         }
 
-        @SchemaProperty
+        @SchemaProperty(name = "actions", description = "Sequence of test actions to execute.")
+        public void setActions$(List<TestActions> actions) {
+            setActions(actions.stream()
+                    .map(action -> {
+                        TestAction result = action.get().build();
+                        return Collections.singletonMap(result.getName(), (Object) result);
+                    })
+                    .toList());
+        }
+
         public void setActions(List<Map<String, Object>> actions) {
             this.source = new Source();
             Map<String, Object> raw = new LinkedHashMap<>();

@@ -29,6 +29,12 @@
       <artifactId>citrus-validation-json</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.citrusframework</groupId>
+      <artifactId>citrus-yaml</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
     <!-- Test scoped dependencies -->
     <dependency>
@@ -40,12 +46,6 @@
     <dependency>
       <groupId>org.citrusframework</groupId>
       <artifactId>citrus-xml</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-yaml</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
