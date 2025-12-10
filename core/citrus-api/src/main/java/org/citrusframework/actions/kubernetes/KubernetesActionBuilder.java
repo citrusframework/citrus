@@ -27,6 +27,16 @@ public interface KubernetesActionBuilder<T extends TestAction, B extends TestAct
     KubernetesActionBuilder<T, B> client(Object endpoint);
 
     /**
+     * Connects to a Kubernetes cluster.
+     */
+    KubernetesConnectActionBuilder<?, ?> connect();
+
+    /**
+     * Disconnects from the Kubernetes cluster.
+     */
+    KubernetesDisconnectActionBuilder<?, ?> disconnect();
+
+    /**
      * Performs actions on Kubernetes agent.
      */
     KubernetesAgentActionBuilder agent();

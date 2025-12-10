@@ -14,56 +14,53 @@
  * limitations under the License.
  */
 
-package org.citrusframework.kubernetes.yaml;
+package org.citrusframework.kubernetes.xml;
 
 import io.fabric8.kubernetes.client.KubernetesClient;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActor;
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
-import org.citrusframework.kubernetes.actions.KubernetesDisconnectAction;
 import org.citrusframework.kubernetes.actions.ServiceDisconnectAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
 
-public class Disconnect extends AbstractKubernetesAction.Builder<AbstractKubernetesAction, Disconnect>
-        implements ReferenceResolverAware {
+@XmlRootElement(name = "disconnect-service")
+public class DisconnectService extends AbstractKubernetesAction.Builder<ServiceDisconnectAction, DisconnectService> implements ReferenceResolverAware {
 
-    private AbstractKubernetesAction.Builder<? extends AbstractKubernetesAction, ?> delegate = new KubernetesDisconnectAction.Builder();
+    private final ServiceDisconnectAction.Builder delegate = new ServiceDisconnectAction.Builder();
 
-    @SchemaProperty
-    public void setService(Service service) {
-        ServiceDisconnectAction.Builder builder = new ServiceDisconnectAction.Builder();
-        builder.service(service.getName());
-        this.delegate = builder;
+    @XmlAttribute(required = true)
+    public void setName(String name) {
+        this.delegate.service(name);
     }
 
     @Override
-    public Disconnect description(String description) {
+    public DisconnectService description(String description) {
         delegate.description(description);
         return this;
     }
 
     @Override
-    public Disconnect actor(TestActor actor) {
+    public DisconnectService actor(TestActor actor) {
         delegate.actor(actor);
         return this;
     }
 
     @Override
-    public Disconnect client(KubernetesClient client) {
+    public DisconnectService client(KubernetesClient client) {
         delegate.client(client);
         return this;
     }
 
     @Override
-    public Disconnect inNamespace(String namespace) {
+    public DisconnectService inNamespace(String namespace) {
         this.delegate.inNamespace(namespace);
         return this;
     }
 
     @Override
-    public Disconnect autoRemoveResources(boolean enabled) {
+    public DisconnectService autoRemoveResources(boolean enabled) {
         this.delegate.autoRemoveResources(enabled);
         return this;
     }
@@ -74,25 +71,8 @@ public class Disconnect extends AbstractKubernetesAction.Builder<AbstractKuberne
     }
 
     @Override
-    public AbstractKubernetesAction doBuild() {
-        if (delegate == null) {
-            throw new CitrusRuntimeException("Missing Kubernetes disconnect action - please provide proper action details");
-        }
-
+    public ServiceDisconnectAction doBuild() {
         return delegate.build();
     }
 
-    public static class Service {
-
-        protected String name;
-
-        @SchemaProperty
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
 }

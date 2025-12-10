@@ -18,20 +18,7 @@ package org.citrusframework.actions.kubernetes;
 
 import org.citrusframework.TestAction;
 
-public interface KubernetesAgentConnectActionBuilder<T extends TestAction, B extends KubernetesAgentConnectActionBuilder<T, B>>
-        extends KubernetesServiceConnectActionBuilder<T, B> {
+public interface KubernetesDisconnectActionBuilder<T extends TestAction, B extends KubernetesDisconnectActionBuilder<T, B>>
+        extends KubernetesActionBuilderBase<T, B> {
 
-    B agent(String agentName);
-
-    B image(String imageName);
-
-    B image(String imageName, String version);
-
-    B registry(String imageRegistry);
-
-    B testJar(String testJar);
-
-    B waitForRunningState(boolean enabled);
-
-    B timeout(String timeout);
 }

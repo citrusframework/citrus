@@ -24,13 +24,14 @@ import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.kubernetes.KubernetesSettings;
+import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.util.PropertyUtils;
 import org.citrusframework.util.StringUtils;
 
 /**
  * Action connects the test to a Kubernetes service so clients may invoke the service.
  * This is for services that are only accessible from within the cluster (e.g. service type is ClusterIP).
- * The test action connects to the service via port forwarding and exposes a Http client to the Citrus context
+ * The test action connects to the service via port forwarding and exposes an Http client to the Citrus context
  * so other test actions can access the service running in Kubernetes.
  */
 public class ServiceConnectAction extends AbstractKubernetesAction {
@@ -39,6 +40,8 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
     protected final String serviceName;
     protected final String port;
     protected final String localPort;
+
+    private HttpClient serviceClient;
 
     protected ServiceConnectAction(String name, AbstractServiceConnectActionBuilder<?, ?> builder) {
         super(name, builder);
@@ -50,12 +53,12 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
     }
 
     public ServiceConnectAction(Builder builder) {
-        this("service-connect", builder);
+        this("connect-service", builder);
     }
 
     @Override
     public void doExecute(TestContext context) {
-        if (KubernetesSettings.isLocal()) {
+        if (!KubernetesSupport.isConnected(context)) {
             if (context.getReferenceResolver().isResolvable(serviceName, HttpServer.class)) {
                 HttpServer server = context.getReferenceResolver().resolve(serviceName, HttpServer.class);
                 exposeServiceClient(context, server.getPort());
@@ -66,11 +69,13 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
 
         LocalPortForward portForward;
         if (StringUtils.hasText(localPort)) {
+            logger.info("Using local port {} for Kubernetes service {}", localPort, serviceName);
             portForward = getKubernetesClient().services()
                     .inNamespace(namespace(context))
                     .withName(serviceName)
                     .portForward(Integer.parseInt(context.replaceDynamicContentInString(port)), Integer.parseInt(context.replaceDynamicContentInString(localPort)));
         } else {
+            logger.info("Using random local port for Kubernetes service {}", serviceName);
             portForward = getKubernetesClient().services()
                     .inNamespace(namespace(context))
                     .withName(serviceName)
@@ -81,7 +86,7 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
             throw new CitrusRuntimeException("Failed to bind Kubernetes service client '%s' - client already exists".formatted(clientName));
         }
 
-        exposeServiceClient(context, portForward.getLocalPort());
+        serviceClient = exposeServiceClient(context, portForward.getLocalPort());
 
         if (context.getReferenceResolver().isResolvable(serviceName + ":port-forward")) {
             throw new CitrusRuntimeException("Failed to bind Kubernetes service port forward '%s' - already exists".formatted(serviceName + ":port-forward"));
@@ -96,12 +101,13 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
         }
     }
 
-    private void exposeServiceClient(TestContext context, int localPort) {
+    private HttpClient exposeServiceClient(TestContext context, int localPort) {
+        HttpClient serviceClient;
         if (context.getReferenceResolver().isResolvable(clientName, HttpClient.class)) {
-            HttpClient serviceClient = context.getReferenceResolver().resolve(clientName, HttpClient.class);
+            serviceClient = context.getReferenceResolver().resolve(clientName, HttpClient.class);
             serviceClient.getEndpointConfiguration().setRequestUrl("http://localhost:%d".formatted(localPort));
         } else {
-            HttpClient serviceClient = new HttpClientBuilder()
+            serviceClient = new HttpClientBuilder()
                     .requestUrl("http://localhost:%d".formatted(localPort))
                     .referenceResolver(context.getReferenceResolver())
                     .build();
@@ -109,6 +115,12 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
             PropertyUtils.configure(clientName, serviceClient, context.getReferenceResolver());
             context.getReferenceResolver().bind(clientName, serviceClient);
         }
+
+        return serviceClient;
+    }
+
+    protected HttpClient getServiceClient() {
+        return serviceClient;
     }
 
     /**

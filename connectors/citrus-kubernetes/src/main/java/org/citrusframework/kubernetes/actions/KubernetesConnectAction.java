@@ -19,6 +19,7 @@ package org.citrusframework.kubernetes.actions;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.citrusframework.actions.kubernetes.KubernetesConnectActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesVariableNames;
 
@@ -28,7 +29,7 @@ import org.citrusframework.kubernetes.KubernetesVariableNames;
 public class KubernetesConnectAction extends AbstractKubernetesAction implements KubernetesAction {
 
     public KubernetesConnectAction(Builder builder) {
-        super("kubernetes-connect", builder);
+        super("connect", builder);
     }
 
     @Override
@@ -43,32 +44,31 @@ public class KubernetesConnectAction extends AbstractKubernetesAction implements
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKubernetesAction.Builder<KubernetesConnectAction, Builder> {
+    public static class Builder extends AbstractKubernetesAction.Builder<KubernetesConnectAction, Builder>
+        implements KubernetesConnectActionBuilder<KubernetesConnectAction, Builder> {
 
-        private String containerImage;
         private final Map<String, String> annotations = new HashMap<>();
         private final Map<String, String> labels = new HashMap<>();
 
-        public Builder image(String containerImage) {
-            this.containerImage = containerImage;
-            return this;
-        }
-
+        @Override
         public Builder annotations(Map<String, String>annotations) {
             this.annotations.putAll(annotations);
             return this;
         }
 
+        @Override
         public Builder annotation(String annotation, String value) {
             this.annotations.put(annotation, value);
             return this;
         }
 
+        @Override
         public Builder labels(Map<String, String>labels) {
             this.labels.putAll(labels);
             return this;
         }
 
+        @Override
         public Builder label(String label, String value) {
             this.labels.put(label, value);
             return this;

@@ -21,7 +21,7 @@
   <actions>
     <kubernetes client="k8sClient" namespace="test" auto-remove="false">
       <agent>
-        <connect local-port="31234"/>
+        <connect local-port="31234" wait-for-running-state="false"/>
       </agent>
     </kubernetes>
   </actions>

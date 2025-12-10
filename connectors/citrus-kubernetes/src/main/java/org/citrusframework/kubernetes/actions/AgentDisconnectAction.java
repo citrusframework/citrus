@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import io.fabric8.kubernetes.api.model.ConfigMapBuilder;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.ServiceBuilder;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
@@ -27,6 +28,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.actions.kubernetes.KubernetesAgentDisconnectActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSettings;
+import org.citrusframework.kubernetes.KubernetesSupport;
 
 /**
  * Action closes port forward for a Kubernetes agent.
@@ -46,7 +48,7 @@ public class AgentDisconnectAction extends ServiceDisconnectAction {
     public void doExecute(TestContext context) {
         logger.info("Disconnect from Kubernetes agent '{}'", agentName);
 
-        if (!KubernetesSettings.isLocal()) {
+        if (KubernetesSupport.isConnected(context)) {
             getKubernetesClient().resourceList(getAgentManifest())
                     .inNamespace(namespace(context))
                     .delete();
@@ -67,6 +69,12 @@ public class AgentDisconnectAction extends ServiceDisconnectAction {
         resources.add(new ServiceBuilder()
                 .withNewMetadata()
                     .withName(agentName)
+                .endMetadata()
+                .build());
+
+        resources.add(new ConfigMapBuilder()
+                .withNewMetadata()
+                    .withName(agentName + "-resources")
                 .endMetadata()
                 .build());
 

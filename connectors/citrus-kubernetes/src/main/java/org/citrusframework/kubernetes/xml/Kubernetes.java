@@ -85,6 +85,16 @@ public class Kubernetes implements TestActionBuilder<KubernetesAction>, Referenc
         this.builder = builder;
     }
 
+    @XmlElement(name = "connect-service")
+    public void setConnectService(ConnectService builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement(name = "disconnect-service")
+    public void setDisconnectService(DisconnectService builder) {
+        this.builder = builder;
+    }
+
     @XmlElement(name = "create-service")
     public void setCreateService(CreateService builder) {
         this.builder = builder;
@@ -172,17 +182,19 @@ public class Kubernetes implements TestActionBuilder<KubernetesAction>, Referenc
                     .forEach(action -> ((ReferenceResolverAware) action).setReferenceResolver(referenceResolver));
         }
 
-        if (builder instanceof ReferenceResolverAware) {
-            ((ReferenceResolverAware) builder).setReferenceResolver(referenceResolver);
-        }
-
         builder.description(description);
         builder.inNamespace(namespace);
         builder.autoRemoveResources(autoRemoveResources);
 
         if (referenceResolver != null) {
+            builder.setReferenceResolver(referenceResolver);
+
             if (kubernetesClient != null) {
-                builder.client(referenceResolver.resolve(kubernetesClient, KubernetesClient.class));
+                if (referenceResolver.isResolvable(kubernetesClient, KubernetesClient.class)) {
+                    builder.client(referenceResolver.resolve(kubernetesClient, KubernetesClient.class));
+                } else if (referenceResolver.isResolvable(kubernetesClient, org.citrusframework.kubernetes.client.KubernetesClient.class)) {
+                    builder.client(referenceResolver.resolve(kubernetesClient, org.citrusframework.kubernetes.client.KubernetesClient.class).getClient());
+                }
             }
 
             if (actor != null) {

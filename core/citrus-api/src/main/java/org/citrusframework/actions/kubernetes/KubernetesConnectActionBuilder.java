@@ -16,22 +16,18 @@
 
 package org.citrusframework.actions.kubernetes;
 
+import java.util.Map;
+
 import org.citrusframework.TestAction;
 
-public interface KubernetesAgentConnectActionBuilder<T extends TestAction, B extends KubernetesAgentConnectActionBuilder<T, B>>
-        extends KubernetesServiceConnectActionBuilder<T, B> {
+public interface KubernetesConnectActionBuilder<T extends TestAction, B extends KubernetesConnectActionBuilder<T, B>>
+        extends KubernetesActionBuilderBase<T, B> {
 
-    B agent(String agentName);
+    B annotations(Map<String, String> annotations);
 
-    B image(String imageName);
+    B annotation(String annotation, String value);
 
-    B image(String imageName, String version);
+    B labels(Map<String, String> labels);
 
-    B registry(String imageRegistry);
-
-    B testJar(String testJar);
-
-    B waitForRunningState(boolean enabled);
-
-    B timeout(String timeout);
+    B label(String label, String value);
 }

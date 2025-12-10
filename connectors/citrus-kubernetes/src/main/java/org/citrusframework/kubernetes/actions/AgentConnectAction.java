@@ -45,11 +45,14 @@ import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.Updatable;
 import org.citrusframework.actions.kubernetes.KubernetesAgentConnectActionBuilder;
+import org.citrusframework.condition.HttpCondition;
+import org.citrusframework.container.Wait;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.jbang.CitrusJBang;
 import org.citrusframework.kubernetes.CitrusAgentSettings;
-import org.citrusframework.kubernetes.KubernetesSettings;
+import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.StringUtils;
 
@@ -68,6 +71,8 @@ public class AgentConnectAction extends ServiceConnectAction {
     private final String imageName;
     private final String imageTag;
     private final String testJar;
+    private final boolean waitForRunningState;
+    private final String timeout;
 
     public AgentConnectAction(Builder builder) {
         super("agent-connect", builder);
@@ -77,6 +82,8 @@ public class AgentConnectAction extends ServiceConnectAction {
         this.imageName = builder.imageName;
         this.imageTag = builder.imageTag;
         this.testJar = builder.testJar;
+        this.waitForRunningState = builder.waitForRunningState;
+        this.timeout = builder.timeout;
     }
 
     @Override
@@ -89,7 +96,29 @@ public class AgentConnectAction extends ServiceConnectAction {
             testJarPath = Resources.create(testJar).getFile().toPath();
         }
 
-        if (KubernetesSettings.isLocal()) {
+        if (KubernetesSupport.isConnected(context)) {
+            getKubernetesClient().configMaps()
+                    .inNamespace(namespace(context))
+                    .resource(createTestSourceConfig(agent, testJarPath))
+                    .createOr(Updatable::update);
+
+            boolean autoCreate = !serviceExists(getKubernetesClient(), agent, namespace(context));
+            if (autoCreate) {
+                logger.info("Creating Kubernetes agent '{}' in namespace {}", agent, namespace(context));
+                getKubernetesClient().resourceList(createDeploymentManifest(agent, getImage(), port, context))
+                        .inNamespace(namespace(context))
+                        .create();
+            } else {
+                logger.info("Connecting to Kubernetes agent '{}' in namespace {}", agent, namespace(context));
+            }
+
+            if (autoCreate && isAutoRemoveResources()) {
+                context.doFinally(kubernetes()
+                        .agent()
+                        .disconnect(agent)
+                        .inNamespace(getNamespace()));
+            }
+        } else {
             CitrusJBang jbang = new CitrusJBang()
                     .withEnv("CITRUS_AGENT_SERVER_PORT", Optional.ofNullable(localPort)
                             .orElse(CitrusAgentSettings.getServerPort()))
@@ -102,29 +131,21 @@ public class AgentConnectAction extends ServiceConnectAction {
             }
 
             jbang.agent().start();
-        } else {
-            getKubernetesClient().configMaps()
-                    .inNamespace(namespace(context))
-                    .resource(createTestSourceConfig(agent, testJarPath))
-                    .createOr(Updatable::update);
-
-            boolean autoCreate = !serviceExists(getKubernetesClient(), agent, namespace(context));
-            if (autoCreate) {
-                getKubernetesClient().resourceList(createDeploymentManifest(agent, getImage(), port, context))
-                        .inNamespace(namespace(context))
-                        .create();
-            }
-
-            if (autoCreate && isAutoRemoveResources()) {
-                context.doFinally(kubernetes()
-                        .agent()
-                        .disconnect(agent)
-                        .inNamespace(getNamespace()));
-            }
         }
 
-        logger.info("Kubernetes agent '{}' created successfully", agent);
+        logger.info("Citrus agent service '{}' created successfully", agent);
         super.doExecute(context);
+
+        if (waitForRunningState) {
+            HttpClient client = getServiceClient();
+            new Wait.Builder<HttpCondition>()
+                    .milliseconds(context.replaceDynamicContentInString(timeout))
+                    .http()
+                    .method("GET")
+                    .url(client.getEndpointConfiguration().getRequestUrl() + "/health")
+                    .build()
+                    .execute(context);
+        }
     }
 
     /**
@@ -258,6 +279,8 @@ public class AgentConnectAction extends ServiceConnectAction {
         private String imageName = CitrusAgentSettings.getImage();
         private String imageRegistry = CitrusAgentSettings.getImageRegistry();
         private String imageTag = CitrusAgentSettings.getVersion();
+        private boolean waitForRunningState = CitrusAgentSettings.isWaitForRunningState();
+        private String timeout = "60000";
         private String testJar;
 
         @Override
@@ -305,6 +328,18 @@ public class AgentConnectAction extends ServiceConnectAction {
         @Override
         public Builder testJar(String testJar) {
             this.testJar = testJar;
+            return this;
+        }
+
+        @Override
+        public Builder waitForRunningState(boolean enabled) {
+            this.waitForRunningState = enabled;
+            return this;
+        }
+
+        @Override
+        public Builder timeout(String timeout) {
+            this.timeout = timeout;
             return this;
         }
 

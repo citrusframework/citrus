@@ -10,3 +10,4 @@ actions:
       agent:
         connect:
           localPort: 31234
+          waitForRunningState: false

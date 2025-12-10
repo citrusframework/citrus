@@ -50,10 +50,9 @@ public class VerifyPodAction extends AbstractKubernetesAction {
 
     /**
      * Constructor using given builder.
-     * @param builder
      */
     public VerifyPodAction(Builder builder) {
-        super("verify-pod-status", builder);
+        super("verify-pod", builder);
         this.podName = builder.podName;
         this.labelExpression = builder.labelExpression;
         this.phase = builder.phase;
@@ -77,10 +76,6 @@ public class VerifyPodAction extends AbstractKubernetesAction {
 
     /**
      * Wait for pod to log given message.
-     * @param pod
-     * @param nameOrLabel
-     * @param namespace
-     * @param message
      */
     private void verifyPodLogs(Pod pod, String nameOrLabel, String namespace, String message) {
         if (printLogs) {
@@ -121,9 +116,6 @@ public class VerifyPodAction extends AbstractKubernetesAction {
 
     /**
      * Retrieve log messages from given pod.
-     * @param pod
-     * @param namespace
-     * @return
      */
     private String getPodLogs(Pod pod, String namespace) {
         PodResource podRes = getKubernetesClient().pods()
@@ -146,11 +138,6 @@ public class VerifyPodAction extends AbstractKubernetesAction {
 
     /**
      * Wait for given pod to be in given state.
-     * @param name
-     * @param labelExpression         1
-     * @param phase
-     * @param namespace
-     * @return
      */
     private Pod verifyPod(String name, String labelExpression, String phase, String namespace) {
         if (StringUtils.hasText(name)) {
@@ -188,10 +175,6 @@ public class VerifyPodAction extends AbstractKubernetesAction {
 
     /**
      * Retrieve pod given state.
-     * @param name
-     * @param phase
-     * @param namespace
-     * @return
      */
     private Pod getPod(String name, String phase, String namespace) {
         Pod pod = getKubernetesClient().pods()
@@ -210,10 +193,6 @@ public class VerifyPodAction extends AbstractKubernetesAction {
 
     /**
      * Retrieve pod given state selected by label key and value expression.
-     * @param labelExpression
-     * @param phase
-     * @param namespace
-     * @return
      */
     private Pod getPodFromLabel(String labelExpression, String phase, String namespace) {
         if (labelExpression == null || labelExpression.isEmpty()) {
@@ -249,9 +228,6 @@ public class VerifyPodAction extends AbstractKubernetesAction {
 
     /**
      * If name is set return as pod name. Else return given label expression.
-     * @param name
-     * @param labelExpression
-     * @return
      */
     private String getNameOrLabel(String name, String labelExpression) {
         if (name != null && !name.isEmpty()) {

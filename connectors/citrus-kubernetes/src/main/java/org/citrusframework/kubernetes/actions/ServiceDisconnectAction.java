@@ -22,6 +22,7 @@ import io.fabric8.kubernetes.client.LocalPortForward;
 import org.citrusframework.actions.kubernetes.KubernetesServiceDisconnectActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSettings;
+import org.citrusframework.kubernetes.KubernetesSupport;
 
 /**
  * Action closes port forward for a Kubernetes service.
@@ -38,16 +39,16 @@ public class ServiceDisconnectAction extends AbstractKubernetesAction {
     }
 
     public ServiceDisconnectAction(Builder builder) {
-        this("service-disconnect", builder);
+        this("disconnect-service", builder);
     }
 
     @Override
     public void doExecute(TestContext context) {
-        logger.info("Disconnect from Kubernetes service '{}'", serviceName);
-
-        if (KubernetesSettings.isLocal()) {
+        if (!KubernetesSupport.isConnected(context)) {
             return;
         }
+
+        logger.info("Disconnect from Kubernetes service '{}'", serviceName);
 
         if (context.getReferenceResolver().isResolvable(serviceName + ":port-forward", LocalPortForward.class)) {
             LocalPortForward portForward = context.getReferenceResolver().resolve(serviceName + ":port-forward", LocalPortForward.class);

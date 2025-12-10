@@ -41,6 +41,10 @@ public final class CitrusAgentSettings {
     private static final String AGENT_VERSION_ENV = AGENT_ENV_PREFIX + "VERSION";
     private static final String AGENT_VERSION_DEFAULT = "latest";
 
+    private static final String WAIT_FOR_RUNNING_STATE_PROPERTY = AGENT_PROPERTY_PREFIX + "wait.for.running.state";
+    private static final String WAIT_FOR_RUNNING_STATE_ENV = AGENT_ENV_PREFIX + "WAIT_FOR_RUNNING_STATE";
+    private static final String WAIT_FOR_RUNNING_STATE_DEFAULT = "true";
+
     private CitrusAgentSettings() {
         // prevent instantiation of utility class
     }
@@ -88,6 +92,15 @@ public final class CitrusAgentSettings {
     public static String getVersion() {
         return System.getProperty(AGENT_VERSION_PROPERTY,
                 System.getenv(AGENT_VERSION_ENV) != null ? System.getenv(AGENT_VERSION_ENV) : AGENT_VERSION_DEFAULT);
+    }
+
+    /**
+     * When set to true Citrus will automatically wait for the agent service deployed to Kubernetes to be in running state.
+     * @return
+     */
+    public static boolean isWaitForRunningState() {
+        return Boolean.parseBoolean(System.getProperty(WAIT_FOR_RUNNING_STATE_PROPERTY,
+                System.getenv(WAIT_FOR_RUNNING_STATE_ENV) != null ? System.getenv(WAIT_FOR_RUNNING_STATE_ENV) : WAIT_FOR_RUNNING_STATE_DEFAULT));
     }
 
 }

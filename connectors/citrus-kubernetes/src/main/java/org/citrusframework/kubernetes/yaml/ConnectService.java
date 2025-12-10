@@ -18,52 +18,63 @@ package org.citrusframework.kubernetes.yaml;
 
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
-import org.citrusframework.kubernetes.actions.KubernetesDisconnectAction;
-import org.citrusframework.kubernetes.actions.ServiceDisconnectAction;
+import org.citrusframework.kubernetes.actions.ServiceConnectAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.SchemaProperty;
 
-public class Disconnect extends AbstractKubernetesAction.Builder<AbstractKubernetesAction, Disconnect>
+public class ConnectService extends AbstractKubernetesAction.Builder<ServiceConnectAction, ConnectService>
         implements ReferenceResolverAware {
 
-    private AbstractKubernetesAction.Builder<? extends AbstractKubernetesAction, ?> delegate = new KubernetesDisconnectAction.Builder();
+    private final ServiceConnectAction.Builder delegate = new ServiceConnectAction.Builder();
 
     @SchemaProperty
-    public void setService(Service service) {
-        ServiceDisconnectAction.Builder builder = new ServiceDisconnectAction.Builder();
-        builder.service(service.getName());
-        this.delegate = builder;
+    public void setName(String name) {
+        this.delegate.service(name);
+    }
+
+    @SchemaProperty
+    public void setClient(String client) {
+        this.delegate.client(client);
+    }
+
+    @SchemaProperty
+    public void setPort(String port) {
+        this.delegate.port(port);
+    }
+
+    @SchemaProperty
+    public void setLocalPort(String localPort) {
+        this.delegate.localPort(localPort);
     }
 
     @Override
-    public Disconnect description(String description) {
+    public ConnectService description(String description) {
         delegate.description(description);
         return this;
     }
 
     @Override
-    public Disconnect actor(TestActor actor) {
+    public ConnectService actor(TestActor actor) {
         delegate.actor(actor);
         return this;
     }
 
     @Override
-    public Disconnect client(KubernetesClient client) {
+    public ConnectService client(KubernetesClient client) {
         delegate.client(client);
         return this;
     }
 
     @Override
-    public Disconnect inNamespace(String namespace) {
+    public ConnectService inNamespace(String namespace) {
         this.delegate.inNamespace(namespace);
         return this;
     }
 
     @Override
-    public Disconnect autoRemoveResources(boolean enabled) {
+    public ConnectService autoRemoveResources(boolean enabled) {
         this.delegate.autoRemoveResources(enabled);
         return this;
     }
@@ -74,25 +85,7 @@ public class Disconnect extends AbstractKubernetesAction.Builder<AbstractKuberne
     }
 
     @Override
-    public AbstractKubernetesAction doBuild() {
-        if (delegate == null) {
-            throw new CitrusRuntimeException("Missing Kubernetes disconnect action - please provide proper action details");
-        }
-
+    public ServiceConnectAction doBuild() {
         return delegate.build();
-    }
-
-    public static class Service {
-
-        protected String name;
-
-        @SchemaProperty
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
     }
 }

@@ -19,6 +19,7 @@ package org.citrusframework.kubernetes.yaml;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.kubernetes.CitrusAgentSettings;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.AgentConnectAction;
 import org.citrusframework.kubernetes.actions.AgentDisconnectAction;
@@ -55,6 +56,9 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
         if (connect.getLocalPort() != null) {
             builder.localPort(connect.getLocalPort());
         }
+
+        builder.waitForRunningState(connect.isWaitForRunningState());
+        builder.timeout(connect.getTimeout());
 
         this.delegate = builder;
     }
@@ -119,6 +123,8 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
         protected String port;
         protected String testJar;
         protected String localPort;
+        protected boolean waitForRunningState = CitrusAgentSettings.isWaitForRunningState();
+        protected String timeout = "60000";
 
         @SchemaProperty
         public void setName(String name) {
@@ -181,6 +187,24 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
 
         public String getLocalPort() {
             return localPort;
+        }
+
+        @SchemaProperty
+        public void setWaitForRunningState(boolean waitForRunningState) {
+            this.waitForRunningState = waitForRunningState;
+        }
+
+        public boolean isWaitForRunningState() {
+            return waitForRunningState;
+        }
+
+        @SchemaProperty
+        public void setTimeout(String timeout) {
+            this.timeout = timeout;
+        }
+
+        public String getTimeout() {
+            return timeout;
         }
     }
 

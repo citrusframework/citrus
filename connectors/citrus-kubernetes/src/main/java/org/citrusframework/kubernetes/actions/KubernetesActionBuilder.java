@@ -72,6 +72,22 @@ public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTest
     }
 
     @Override
+    public KubernetesConnectAction.Builder connect() {
+        KubernetesConnectAction.Builder builder = new KubernetesConnectAction.Builder()
+                .client(kubernetesClient);
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
+    public KubernetesDisconnectAction.Builder disconnect() {
+        KubernetesDisconnectAction.Builder builder = new KubernetesDisconnectAction.Builder()
+                .client(kubernetesClient);
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
     public AgentActionBuilder agent() {
         return new AgentActionBuilder();
     }

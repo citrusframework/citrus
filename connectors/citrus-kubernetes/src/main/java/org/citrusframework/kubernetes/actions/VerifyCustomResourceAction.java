@@ -63,7 +63,7 @@ public class VerifyCustomResourceAction extends AbstractKubernetesAction {
      * @param builder
      */
     public VerifyCustomResourceAction(Builder builder) {
-        super("verify-custom-resource-status", builder);
+        super("verify-custom-resource", builder);
         this.resourceName = builder.resourceName;
         this.type = builder.type;
         this.resourceType = builder.resourceType;

@@ -25,6 +25,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.TestActor;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.kubernetes.CitrusAgentSettings;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.AgentConnectAction;
 import org.citrusframework.kubernetes.actions.AgentDisconnectAction;
@@ -61,6 +62,9 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
         if (connect.getLocalPort() != null) {
             builder.localPort(connect.getLocalPort());
         }
+
+        builder.waitForRunningState(connect.isWaitForRunningState());
+        builder.timeout(connect.getTimeout());
 
         this.delegate = builder;
     }
@@ -134,6 +138,10 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
         protected String testJar;
         @XmlAttribute(name = "local-port")
         protected String localPort;
+        @XmlAttribute(name = "wait-for-running-state")
+        protected boolean waitForRunningState = CitrusAgentSettings.isWaitForRunningState();
+        @XmlAttribute
+        protected String timeout = "60000";
 
         public void setName(String name) {
             this.name = name;
@@ -189,6 +197,22 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
 
         public String getLocalPort() {
             return localPort;
+        }
+
+        public void setWaitForRunningState(boolean waitForRunningState) {
+            this.waitForRunningState = waitForRunningState;
+        }
+
+        public boolean isWaitForRunningState() {
+            return waitForRunningState;
+        }
+
+        public void setTimeout(String timeout) {
+            this.timeout = timeout;
+        }
+
+        public String getTimeout() {
+            return timeout;
         }
     }
 

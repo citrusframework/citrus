@@ -46,7 +46,7 @@ public abstract class AbstractKubernetesAction extends AbstractTestAction implem
     private final KubernetesActionBuilder kubernetes = new KubernetesActionBuilder();
 
     public AbstractKubernetesAction(String name, Builder<?, ?> builder) {
-        super("k8s:" + name, builder);
+        super("kubernetes:" + name, builder);
 
         this.kubernetesClient = builder.kubernetesClient;
         this.namespace = builder.namespace;

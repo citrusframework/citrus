@@ -27,8 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Tests if a HTTP Endpoint is reachable. The test is successful if the endpoint responds with the expected response
- * code. By default a HTTP 200 response code is expected.
+ * Tests if an HTTP Endpoint is reachable. The test is successful if the endpoint responds with the expected response
+ * code. By default, the HTTP 200 response code is expected.
  *
  * @since 2.4
  */

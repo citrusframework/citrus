@@ -105,8 +105,8 @@ public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetes
         protected String name;
         @XmlAttribute
         protected String client;
-        @XmlAttribute(required = true)
-        protected String port;
+        @XmlAttribute
+        protected String port = "8080";
         @XmlAttribute(name = "local-port")
         protected String localPort;
 

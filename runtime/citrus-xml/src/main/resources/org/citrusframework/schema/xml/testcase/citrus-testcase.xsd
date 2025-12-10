@@ -1911,6 +1911,8 @@
                   <xs:attribute name="port" type="xs:string"/>
                   <xs:attribute name="test-jar" type="xs:string"/>
                   <xs:attribute name="local-port" type="xs:string"/>
+                  <xs:attribute name="wait-for-running-state" type="xs:boolean"/>
+                  <xs:attribute name="timeout" type="xs:string"/>
                 </xs:complexType>
               </xs:element>
               <xs:element name="disconnect">
@@ -1923,26 +1925,38 @@
         </xs:element>
         <xs:element name="connect">
           <xs:complexType>
-            <xs:choice>
-              <xs:element name="service">
+            <xs:sequence>
+              <xs:element name="service" minOccurs="0">
                 <xs:complexType>
                   <xs:attribute name="name" use="required" type="xs:string"/>
                   <xs:attribute name="port" use="required" type="xs:string"/>
                   <xs:attribute name="local-port" type="xs:string"/>
                 </xs:complexType>
               </xs:element>
-            </xs:choice>
+            </xs:sequence>
           </xs:complexType>
         </xs:element>
         <xs:element name="disconnect">
           <xs:complexType>
-            <xs:choice>
-              <xs:element name="service">
+            <xs:sequence>
+              <xs:element name="service" minOccurs="0">
                 <xs:complexType>
                   <xs:attribute name="name" use="required" type="xs:string"/>
                 </xs:complexType>
               </xs:element>
-            </xs:choice>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="connect-service">
+          <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+            <xs:attribute name="port" use="required" type="xs:string"/>
+            <xs:attribute name="local-port" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="disconnect-service">
+          <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:string"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="create-service">

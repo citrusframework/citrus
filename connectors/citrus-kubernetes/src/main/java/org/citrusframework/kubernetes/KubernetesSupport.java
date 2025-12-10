@@ -124,7 +124,7 @@ public final class KubernetesSupport {
             return context.getVariable(KubernetesVariableNames.CONNECTED.value(), Boolean.class);
         }
 
-        return false;
+        return !KubernetesSettings.isLocal();
     }
 
     public static Yaml yaml() {

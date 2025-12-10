@@ -20,14 +20,16 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
+import org.citrusframework.kubernetes.actions.KubernetesConnectAction;
 import org.citrusframework.kubernetes.actions.ServiceConnectAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.SchemaProperty;
 
-public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetesAction, Connect> implements ReferenceResolverAware {
+public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetesAction, Connect>
+        implements ReferenceResolverAware {
 
-    private AbstractKubernetesAction.Builder<? extends AbstractKubernetesAction, ?> delegate;
+    private AbstractKubernetesAction.Builder<? extends AbstractKubernetesAction, ?> delegate = new KubernetesConnectAction.Builder();
 
     @SchemaProperty
     public void setService(Service service) {
