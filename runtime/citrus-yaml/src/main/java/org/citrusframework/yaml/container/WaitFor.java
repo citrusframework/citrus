@@ -27,8 +27,10 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 import org.citrusframework.yaml.TestActions;
 
+@SchemaType(oneOf = { "message", "http", "file", "action" })
 public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware {
 
     private final Wait.Builder<Condition> builder = new Wait.Builder<>();
@@ -56,7 +58,7 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
         builder.description(value);
     }
 
-    @SchemaProperty(description = "Waits for these test actions to complete.")
+    @SchemaProperty(description = "Waits for the test action to complete.")
     public void setAction(TestActions action) {
         this.action = action.get();
     }
@@ -97,7 +99,7 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
         builder.condition(condition);
     }
 
-    @SchemaProperty(description = "Timeout for the wait operation.")
+    @SchemaProperty(description = "Time to wait for the condition to become satisfied.")
     public void setTimeout(String milliseconds) {
         builder.milliseconds(milliseconds);
     }
@@ -138,7 +140,7 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
             return url;
         }
 
-        @SchemaProperty(required = true, description = "Http request URL.")
+        @SchemaProperty(description = "Http request URL.")
         public void setUrl(String value) {
             this.url = value;
         }
@@ -180,7 +182,7 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
             return name;
         }
 
-        @SchemaProperty(required = true, description = "Message name in the message store.")
+        @SchemaProperty(description = "Message name in the message store.")
         public void setName(String value) {
             this.name = value;
         }
