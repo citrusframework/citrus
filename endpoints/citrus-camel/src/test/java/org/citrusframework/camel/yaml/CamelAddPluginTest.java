@@ -62,7 +62,7 @@ public class CamelAddPluginTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 2L);
         Assert.assertEquals(result.getTestAction(0).getClass(), AddCamelPluginAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel-plugin-add");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel:jbang:plugin-add");
 
         verify(camelJBang).addPlugin("my-plugin");
         verify(camelJBang).addPlugin("my-plugin", "--description", "\"MyCamelPlugin\"");

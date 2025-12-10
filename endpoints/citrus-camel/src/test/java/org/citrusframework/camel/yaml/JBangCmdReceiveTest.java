@@ -58,7 +58,7 @@ public class JBangCmdReceiveTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getActionCount(), 5L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CamelRunIntegrationAction.class);
         Assert.assertEquals(result.getTestAction(2).getClass(), CamelCmdReceiveAction.class);
-        Assert.assertEquals(result.getTestAction(2).getName(), "camel-cmd-receive");
+        Assert.assertEquals(result.getTestAction(2).getName(), "camel:jbang:cmd-receive");
     }
 
 }

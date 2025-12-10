@@ -1192,7 +1192,10 @@
                         <xs:sequence>
                           <xs:element name="integration">
                             <xs:complexType>
-                              <xs:attribute type="xs:string" name="file"/>
+                              <xs:sequence>
+                                <xs:element name="source" type="xs:string" minOccurs="0"/>
+                              </xs:sequence>
+                              <xs:attribute name="file" type="xs:string"/>
                             </xs:complexType>
                           </xs:element>
                           <xs:element name="args" minOccurs="0">

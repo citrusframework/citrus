@@ -198,14 +198,26 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 this.name = integrationName;
             }
 
+            public String getName() {
+                return name;
+            }
+
             @SchemaProperty(description = "Camel integration source code loaded from a file resource.")
             public void setFile(String file) {
                 this.file = file;
             }
 
+            public String getFile() {
+                return file;
+            }
+
             @SchemaProperty(description = "Camel integration source code.")
-            public void setSources(String sourceCode) {
+            public void setSource(String sourceCode) {
                 this.sourceCode = sourceCode;
+            }
+
+            public String getSource() {
+                return sourceCode;
             }
 
             public Environment getEnvironment() {
@@ -442,9 +454,17 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 this.name = integrationName;
             }
 
+            public String getName() {
+                return name;
+            }
+
             @SchemaProperty(description = "Camel integration source code loaded from a file resource.")
             public void setFile(String file) {
                 this.file = file;
+            }
+
+            public String getFile() {
+                return file;
             }
 
             public Environment getEnvironment() {
@@ -1023,6 +1043,13 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
         @SchemaProperty(kind = ACTION, group = CAMEL_JBANG_KUBERNETES_GROUP, description = "Runs a Camel integration on Kubernetes.")
         public void setRun(Run run) {
             CamelKubernetesRunIntegrationAction.Builder builder = new CamelKubernetesRunIntegrationAction.Builder();
+
+            if (run.getIntegration().getName() != null) {
+                builder.integrationName(run.getIntegration().getName());
+            }
+            if (run.getIntegration().getSource() != null) {
+                builder.integration(run.getIntegration().getSource());
+            }
             if (run.getIntegration().getFile() != null) {
                 builder.integration(Resources.create(run.getIntegration().getFile()));
             }
@@ -1242,7 +1269,18 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             }
 
             public static class Integration {
+                protected String name;
                 protected String file;
+                protected String source;
+
+                @SchemaProperty(description = "The Camel integration name.")
+                public void setName(String integrationName) {
+                    this.name = integrationName;
+                }
+
+                public String getName() {
+                    return name;
+                }
 
                 @SchemaProperty(description = "The integration source code loaded as a file resource.")
                 public void setFile(String file) {
@@ -1251,6 +1289,15 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
                 public String getFile() {
                     return file;
+                }
+
+                @SchemaProperty(description = "The integration source code.")
+                public void setSource(String source) {
+                    this.source = source;
+                }
+
+                public String getSource() {
+                    return source;
                 }
             }
         }

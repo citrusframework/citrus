@@ -65,7 +65,7 @@ public class ControlBusTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 4L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CamelControlBusAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel-controlbus");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel:controlbus");
 
         int actionIndex = 0;
 

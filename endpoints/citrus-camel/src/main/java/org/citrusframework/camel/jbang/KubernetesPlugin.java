@@ -50,11 +50,12 @@ public class KubernetesPlugin {
     /**
      * Remove given integration from Kubernetes with Camel JBang.
      */
-    public ProcessAndOutput delete(String fileName, String... args) {
+    public ProcessAndOutput delete(String name, String... args) {
         List<String> commandArgs = new ArrayList<>();
 
         commandArgs.add("delete");
-        commandArgs.add(fileName);
+        commandArgs.add("--name");
+        commandArgs.add(name);
         commandArgs.addAll(Arrays.asList(args));
 
         return camelApp.run("kubernetes", commandArgs.toArray(String[]::new));

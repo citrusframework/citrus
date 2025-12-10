@@ -23,6 +23,9 @@ import org.citrusframework.camel.jbang.CamelJBang;
 import org.citrusframework.camel.jbang.CamelJBangTestActor;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.IsJsonPredicate;
+import org.citrusframework.util.IsXmlPredicate;
+import org.citrusframework.util.IsYamlPredicate;
 
 /**
  * Abstract action to access Camel JBang tooling. Action provides common Camel JBang settings such as explicit Camel version.
@@ -35,7 +38,7 @@ public abstract class AbstractCamelJBangAction extends AbstractTestAction {
     private final CamelJBang camelJBang;
 
     protected AbstractCamelJBangAction(String name, Builder<?, ?> builder) {
-        super(name.startsWith("camel") ? name : "camel-" + name, builder);
+        super(name.startsWith("camel:") ? name : "camel:jbang:" + name, builder);
 
         this.camelVersion = builder.camelVersion;
         this.kameletsVersion = builder.kameletsVersion;
@@ -47,6 +50,26 @@ public abstract class AbstractCamelJBangAction extends AbstractTestAction {
 
         if (kameletsVersion != null) {
             camelJBang.withSystemProperty("camel-kamelets.version", camelVersion);
+        }
+    }
+
+    protected static String getFileExt(String sourceCode) {
+        if (IsXmlPredicate.getInstance().test(sourceCode)) {
+            return "xml";
+        } else if (IsJsonPredicate.getInstance().test(sourceCode)) {
+            return "json";
+        } else if (sourceCode.contains("static void main(")) {
+            return "java";
+        } else if (sourceCode.contains("- from:") || sourceCode.contains("- route:") ||
+                sourceCode.contains("- routeConfiguration:") || sourceCode.contains("- rest:") || sourceCode.contains("- beans:")) {
+            return "yaml";
+        } else if (sourceCode.contains("kind: Kamelet") || sourceCode.contains("kind: KameletBinding") ||
+                sourceCode.contains("kind: Pipe") || sourceCode.contains("kind: Integration")) {
+            return "yaml";
+        } else if (IsYamlPredicate.getInstance().test(sourceCode)) {
+            return "yaml";
+        } else {
+            return "groovy";
         }
     }
 

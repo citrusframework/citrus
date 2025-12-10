@@ -58,7 +58,7 @@ public class JBangCmdSendTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getActionCount(), 7L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CamelRunIntegrationAction.class);
         Assert.assertEquals(result.getTestAction(1).getClass(), CamelCmdSendAction.class);
-        Assert.assertEquals(result.getTestAction(1).getName(), "camel-cmd-send");
+        Assert.assertEquals(result.getTestAction(1).getName(), "camel:jbang:cmd-send");
     }
 
 }

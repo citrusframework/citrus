@@ -1464,10 +1464,26 @@ public class JBang {
             }
 
             @XmlAccessorType(XmlAccessType.FIELD)
-            @XmlType(name = "")
+            @XmlType(name = "", propOrder = {
+                    "source"
+            })
             public static class Integration {
                 @XmlAttribute
+                protected String name;
+
+                @XmlAttribute
                 protected String file;
+
+                @XmlElement
+                protected String source;
+
+                public String getName() {
+                    return name;
+                }
+
+                public void setName(String name) {
+                    this.name = name;
+                }
 
                 public String getFile() {
                     return file;
@@ -1475,6 +1491,14 @@ public class JBang {
 
                 public void setFile(String file) {
                     this.file = file;
+                }
+
+                public String getSource() {
+                    return source;
+                }
+
+                public void setSource(String source) {
+                    this.source = source;
                 }
             }
 

@@ -46,7 +46,7 @@ public class CreateRoutesTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 3L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CreateCamelRouteAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel-create-routes");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel:create-routes");
 
         int actionIndex = 0;
 

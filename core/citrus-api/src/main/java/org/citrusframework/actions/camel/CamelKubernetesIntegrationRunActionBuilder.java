@@ -28,6 +28,16 @@ public interface CamelKubernetesIntegrationRunActionBuilder<T extends TestAction
     B integrationName(String name);
 
     /**
+     * Export given Camel integration source.
+     */
+    B integration(String sourceCode);
+
+    /**
+     * Export given Camel integration source with given name.
+     */
+    B integration(String name, String sourceCode);
+
+    /**
      * Export given Camel integration resource.
      */
     B integration(Resource resource);

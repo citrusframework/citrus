@@ -16,7 +16,10 @@
 
 package org.citrusframework.camel.actions;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +30,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
@@ -52,6 +56,9 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
      * Camel integration resource
      */
     private final Resource integrationResource;
+
+    /** Source code to run as a Camel integration */
+    private final String sourceCode;
 
     /**
      * Camel integration project runtime
@@ -105,10 +112,11 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
      * Default constructor.
      */
     public CamelKubernetesRunIntegrationAction(Builder builder) {
-        super("k8s-run-integration", builder);
+        super("kubernetes:run", builder);
 
         this.integrationName = builder.integrationName;
         this.integrationResource = builder.integrationResource;
+        this.sourceCode = builder.sourceCode;
         this.runtime = builder.runtime;
         this.imageBuilder = builder.imageBuilder;
         this.imageRegistry = builder.imageRegistry;
@@ -124,89 +132,112 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
 
     @Override
     public void doExecute(TestContext context) {
-        String name;
-        if (StringUtils.hasText(integrationName)) {
-            name = context.replaceDynamicContentInString(integrationName);
-        } else {
-            name = FileUtils.getBaseName(integrationResource.getFile().getName());
-        }
-
-        logger.info("Running Camel integration %s in Kubernetes ...".formatted(name));
-
-        Path integrationToRun;
-        if (integrationResource != null) {
-            integrationToRun = integrationResource.getFile().toPath();
-        } else {
-            throw new CitrusRuntimeException("Missing Camel integration source code or file");
-        }
-
-        List<String> commandArgs = new ArrayList<>();
-        if (runtime != null) {
-            commandArgs.add("--runtime");
-            commandArgs.add(runtime);
-        }
-        if (imageBuilder != null) {
-            commandArgs.add("--image-builder");
-            commandArgs.add(imageBuilder);
-        }
-        if (imageRegistry != null) {
-            commandArgs.add("--image-registry");
-            commandArgs.add(imageRegistry);
-        }
-        if (clusterType != null) {
-            commandArgs.add("--cluster-type");
-            commandArgs.add(clusterType);
-        }
-
-        if (buildProperties != null) {
-            for (String property : buildProperties) {
-                commandArgs.add("--build-property");
-                commandArgs.add(property);
+        try {
+            String name;
+            if (StringUtils.hasText(integrationName)) {
+                name = context.replaceDynamicContentInString(integrationName);
+            } else if (integrationResource != null) {
+                name = FileUtils.getBaseName(integrationResource.getFile().getName());
+            } else {
+                name = "route";
             }
-        }
 
-        if (properties != null) {
-            for (String property : properties) {
-                commandArgs.add("--property");
-                commandArgs.add(property);
+            Path integrationToRun;
+            if (StringUtils.hasText(sourceCode)) {
+                Path workDir = CamelJBangSettings.getWorkDir();
+                Files.createDirectories(workDir);
+                integrationToRun = workDir.resolve(String.format("%s.%s", name, getFileExt(sourceCode)));
+                Files.writeString(integrationToRun, sourceCode,
+                        StandardOpenOption.WRITE,
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.TRUNCATE_EXISTING);
+            } else if (integrationResource != null) {
+                integrationToRun = integrationResource.getFile().toPath();
+            } else {
+                throw new CitrusRuntimeException("Missing Camel integration source code or file");
             }
-        }
 
-        if (traits != null) {
-            for (String trait : traits) {
-                commandArgs.add("--trait");
-                commandArgs.add(trait);
+            logger.info("Running Camel integration %s in Kubernetes ...".formatted(name));
+
+            List<String> commandArgs = new ArrayList<>();
+            if (runtime != null) {
+                commandArgs.add("--runtime");
+                commandArgs.add(runtime);
             }
-        }
+            if (imageBuilder != null) {
+                commandArgs.add("--image-builder");
+                commandArgs.add(imageBuilder);
+            }
+            if (imageRegistry != null) {
+                commandArgs.add("--image-registry");
+                commandArgs.add(imageRegistry);
+            }
+            if (clusterType != null) {
+                commandArgs.add("--cluster-type");
+                commandArgs.add(clusterType);
+            }
 
-        if (args != null) {
-            commandArgs.addAll(args);
-        }
+            if (buildProperties != null) {
+                for (String property : buildProperties) {
+                    commandArgs.add("--build-property");
+                    commandArgs.add(property);
+                }
+            }
 
-        if (verbose) {
-            commandArgs.add("--verbose=true");
-        }
+            if (properties != null) {
+                for (String property : properties) {
+                    commandArgs.add("--property");
+                    commandArgs.add(property);
+                }
+            }
 
-        camelJBang().workingDir(integrationToRun.toAbsolutePath().getParent());
+            if (traits != null) {
+                for (String trait : traits) {
+                    commandArgs.add("--trait");
+                    commandArgs.add(trait);
+                }
+            }
 
-        ProcessAndOutput pao = camelJBang().kubernetes().run(integrationResource.getFile().getName(), commandArgs.toArray(String[]::new));
-        logger.info(pao.getOutput());
-        int exitValue = pao.getProcess().exitValue();
-        if (exitValue != OK_EXIT_CODE) {
-            throw new CitrusRuntimeException(String.format("Failed to start Camel integration in Kubernetes - exit code %s", exitValue));
-        }
+            if (args != null) {
+                commandArgs.addAll(args);
+            }
 
-        if (autoRemoveResources) {
-            context.doFinally(camel()
+            if (verbose) {
+                commandArgs.add("--verbose=true");
+            }
+
+            camelJBang().workingDir(integrationToRun.toAbsolutePath().getParent());
+
+            ProcessAndOutput pao = camelJBang().kubernetes().run(integrationToRun.getFileName().toString(), commandArgs.toArray(String[]::new));
+            logger.info(pao.getOutput());
+            int exitValue = pao.getProcess().exitValue();
+            if (exitValue != OK_EXIT_CODE) {
+                throw new CitrusRuntimeException(String.format("Failed to start Camel integration in Kubernetes - exit code %s", exitValue));
+            }
+
+            if (autoRemoveResources) {
+                context.doFinally(camel()
+                        .jbang()
+                        .kubernetes()
+                        .delete()
+                        .integration(Resources.create(integrationToRun.toAbsolutePath().toString()))
+                        .withReferenceResolver(context.getReferenceResolver()));
+            }
+
+            if (waitForRunningState) {
+                logger.info("Waiting for Camel integration to start ...");
+                camel()
                     .jbang()
                     .kubernetes()
-                    .delete()
-                    .integration(integrationResource)
-                    .withReferenceResolver(context.getReferenceResolver()));
-        }
-
-        if (waitForRunningState) {
-            //TODO: implement it!
+                    .verify()
+                    .integration(name)
+                    .waitForLogMessage("Started")
+                    .withReferenceResolver(context.getReferenceResolver())
+                    .build()
+                    .execute(context);
+            }
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to create temporary file from Camel integration source", e);
         }
     }
 
@@ -248,6 +279,7 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
     public static final class Builder extends AbstractCamelJBangAction.Builder<CamelKubernetesRunIntegrationAction, Builder>
             implements CamelKubernetesIntegrationRunActionBuilder<CamelKubernetesRunIntegrationAction, Builder> {
 
+        private String sourceCode;
         private String integrationName;
         private Resource integrationResource;
 
@@ -272,8 +304,24 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
         }
 
         @Override
+        public Builder integration(String name, String sourceCode) {
+            this.integrationName = name;
+            this.sourceCode = sourceCode;
+            return this;
+        }
+
+        @Override
+        public Builder integration(String sourceCode) {
+            this.sourceCode = sourceCode;
+            return this;
+        }
+
+        @Override
         public Builder integration(Resource resource) {
             this.integrationResource = resource;
+            if (integrationName == null) {
+                this.integrationName = FileUtils.getBaseName(FileUtils.getFileName(resource.getLocation()));
+            }
             return this;
         }
 

@@ -59,7 +59,7 @@ public class JBangTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 2L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CamelRunIntegrationAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel-run-integration");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel:jbang:run");
 
         int actionIndex = 0;
 

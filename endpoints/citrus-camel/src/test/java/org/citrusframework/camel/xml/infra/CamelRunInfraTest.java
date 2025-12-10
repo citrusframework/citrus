@@ -93,7 +93,7 @@ public class CamelRunInfraTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 2L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CamelRunInfraAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel-run-infra");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel:run-infra");
 
         Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_HOST"), "my-host");
         Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_PORT", Integer.class), 18088);

@@ -76,9 +76,10 @@ public class CamelKubernetesRunIntegrationTest extends AbstractYamlActionTest {
         context.getReferenceResolver().bind("camel-jbang", camelJBang);
 
         when(k8sPlugin.run(eq("route.yaml"), any(String[].class))).thenReturn(pao);
-        when(k8sPlugin.delete(eq("route.yaml"), any(String[].class))).thenReturn(pao);
+        when(k8sPlugin.logs("--name", "route")).thenReturn(pao);
+        when(k8sPlugin.delete(eq("route"), any(String[].class))).thenReturn(pao);
         when(process.exitValue()).thenReturn(0);
-        when(pao.getOutput()).thenReturn("SUCCESS!");
+        when(pao.getOutput()).thenReturn("Started Camel route SUCCESS!");
 
         testLoader.load();
 
@@ -88,7 +89,7 @@ public class CamelKubernetesRunIntegrationTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 2L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesRunIntegrationAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel-k8s-run-integration");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel:jbang:kubernetes:run");
 
         int actionIndex = 0;
 
@@ -110,6 +111,6 @@ public class CamelKubernetesRunIntegrationTest extends AbstractYamlActionTest {
                 "--dev",
                 "--verbose=true");
 
-        verify(k8sPlugin).delete(eq("route.yaml"), eq(new String[] {}));
+        verify(k8sPlugin).delete(eq("route"), eq(new String[] {}));
     }
 }

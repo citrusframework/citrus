@@ -40,7 +40,7 @@ public class CamelStopIntegrationAction extends AbstractCamelJBangAction {
      * Default constructor.
      */
     public CamelStopIntegrationAction(Builder builder) {
-        super("stop-integration", builder);
+        super("stop", builder);
 
         this.integrationName = builder.integrationName;
     }

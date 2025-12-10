@@ -67,7 +67,7 @@ public class RemoveRoutesTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 2L);
         Assert.assertEquals(result.getTestAction(0).getClass(), RemoveCamelRouteAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel-remove-routes");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel:remove-routes");
 
         int actionIndex = 0;
 

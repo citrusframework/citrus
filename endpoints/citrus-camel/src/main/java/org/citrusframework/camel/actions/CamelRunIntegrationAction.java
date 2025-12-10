@@ -34,9 +34,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.IsJsonPredicate;
-import org.citrusframework.util.IsXmlPredicate;
-import org.citrusframework.util.IsYamlPredicate;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +78,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
      * Default constructor.
      */
     public CamelRunIntegrationAction(Builder builder) {
-        super("run-integration", builder);
+        super("run", builder);
 
         this.integrationName = builder.integrationName;
         this.integrationResource = builder.integrationResource;
@@ -97,7 +94,14 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
 
     @Override
     public void doExecute(TestContext context) {
-        String name = context.replaceDynamicContentInString(integrationName);
+        String name;
+        if (StringUtils.hasText(integrationName)) {
+            name = context.replaceDynamicContentInString(integrationName);
+        } else if (integrationResource != null) {
+            name = FileUtils.getBaseName(integrationResource.getFile().getName());
+        } else {
+            name = "route";
+        }
 
         try {
             logger.info("Starting Camel integration '%s' ...".formatted(name));
@@ -106,7 +110,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
             if (StringUtils.hasText(sourceCode)) {
                 Path workDir = CamelJBangSettings.getWorkDir();
                 Files.createDirectories(workDir);
-                integrationToRun = workDir.resolve(String.format("i-%s.%s", name, getFileExt(sourceCode)));
+                integrationToRun = workDir.resolve(String.format("%s.%s", name, getFileExt(sourceCode)));
                 Files.writeString(integrationToRun, sourceCode,
                         StandardOpenOption.WRITE,
                         StandardOpenOption.CREATE,
@@ -151,7 +155,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
                         .execute(context);
             }
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to create temporary file from Camel integration");
+            throw new CitrusRuntimeException("Failed to create temporary file from Camel integration source", e);
         }
     }
 
@@ -161,26 +165,6 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
             logger.info(pao.getOutput());
 
             throw new CitrusRuntimeException(String.format("Failed to start Camel integration - exit code %s", pao.getProcess().exitValue()));
-        }
-    }
-
-    private String getFileExt(String sourceCode) {
-        if (IsXmlPredicate.getInstance().test(sourceCode)) {
-            return "xml";
-        } else if (IsJsonPredicate.getInstance().test(sourceCode)) {
-            return "json";
-        } else if (sourceCode.contains("static void main(")) {
-            return "java";
-        } else if (sourceCode.contains("- from:") || sourceCode.contains("- route:") ||
-                sourceCode.contains("- routeConfiguration:") || sourceCode.contains("- rest:") || sourceCode.contains("- beans:")) {
-            return "yaml";
-        } else if (sourceCode.contains("kind: Kamelet") || sourceCode.contains("kind: KameletBinding") ||
-                sourceCode.contains("kind: Pipe") || sourceCode.contains("kind: Integration")) {
-            return "yaml";
-        } else if (IsYamlPredicate.getInstance().test(sourceCode)) {
-            return "yaml";
-        } else {
-            return "groovy";
         }
     }
 
@@ -195,7 +179,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
             implements CamelIntegrationRunActionBuilder<CamelRunIntegrationAction, Builder> {
 
         private String sourceCode;
-        private String integrationName = "route";
+        private String integrationName;
         private Resource integrationResource;
         private final List<String> resourceFiles = new ArrayList<>();
 

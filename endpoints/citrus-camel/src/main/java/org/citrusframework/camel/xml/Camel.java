@@ -178,8 +178,11 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
     @XmlElement(name = "jbang")
     public void setJBang(JBang jbang) {
         if (jbang.getRun() != null) {
-            CamelRunIntegrationAction.Builder builder = new CamelRunIntegrationAction.Builder()
-                    .integrationName(jbang.getRun().getIntegration().getName());
+            CamelRunIntegrationAction.Builder builder = new CamelRunIntegrationAction.Builder();
+
+            if (jbang.getRun().getIntegration().getName() != null) {
+                builder.integrationName(jbang.getRun().getIntegration().getName());
+            }
 
             if (jbang.getRun().getIntegration().getSource() != null) {
                 builder.integration(jbang.getRun().getIntegration().getSource());
@@ -399,6 +402,12 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
 
                 JBang.Kubernetes.Run run = jbang.getKubernetes().getRun();
 
+                if (run.getIntegration().getName() != null) {
+                    builder.integrationName(run.getIntegration().getName());
+                }
+                if (run.getIntegration().getSource() != null) {
+                    builder.integration(run.getIntegration().getSource());
+                }
                 if (run.getIntegration().getFile() != null) {
                     builder.integration(Resources.create(run.getIntegration().getFile()));
                 }

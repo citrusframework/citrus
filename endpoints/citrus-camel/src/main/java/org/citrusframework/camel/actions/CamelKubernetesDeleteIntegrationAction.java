@@ -24,6 +24,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resource;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +70,7 @@ public class CamelKubernetesDeleteIntegrationAction extends AbstractCamelJBangAc
      * Default constructor.
      */
     public CamelKubernetesDeleteIntegrationAction(Builder builder) {
-        super("k8s-delete-integration", builder);
+        super("kubernetes:delete", builder);
 
         this.integrationResource = builder.integrationResource;
         this.integrationName = builder.integrationName;
@@ -79,12 +81,17 @@ public class CamelKubernetesDeleteIntegrationAction extends AbstractCamelJBangAc
 
     @Override
     public void doExecute(TestContext context) {
-        logger.info("Deleting integration deployed from a Camel Kubernetes project  ...");
-        List<String> commandArgs = new ArrayList<>();
-        if (integrationName != null) {
-            commandArgs.add("--name");
-            commandArgs.add(integrationName);
+        String name;
+        if (StringUtils.hasText(integrationName)) {
+            name = context.replaceDynamicContentInString(integrationName);
+        } else if (integrationResource != null) {
+            name = FileUtils.getBaseName(integrationResource.getFile().getName());
+        } else {
+            name = "route";
         }
+
+        logger.info("Deleting integration {} deployed from a Camel Kubernetes project  ...", name);
+        List<String> commandArgs = new ArrayList<>();
         if (clusterType != null) {
             commandArgs.add("--cluster-type");
             commandArgs.add(clusterType);
@@ -98,9 +105,11 @@ public class CamelKubernetesDeleteIntegrationAction extends AbstractCamelJBangAc
             commandArgs.add(namespace);
         }
 
-        camelJBang().workingDir(integrationResource.getFile().toPath().toAbsolutePath().getParent());
+        if (integrationResource != null) {
+            camelJBang().workingDir(integrationResource.getFile().toPath().toAbsolutePath().getParent());
+        }
 
-        ProcessAndOutput pao = camelJBang().kubernetes().delete(integrationResource.getFile().getName(), commandArgs.toArray(String[]::new));
+        ProcessAndOutput pao = camelJBang().kubernetes().delete(name, commandArgs.toArray(String[]::new));
         logger.info(pao.getOutput());
         int exitValue = pao.getProcess().exitValue();
         if (exitValue != OK_EXIT_CODE) {

@@ -56,7 +56,7 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
      * Default constructor.
      */
     public CamelVerifyIntegrationAction(Builder builder) {
-        super("verify-integration", builder);
+        super("verify", builder);
 
         this.integrationName = builder.integrationName;
         this.phase = builder.phase;

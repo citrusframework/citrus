@@ -28,7 +28,7 @@ public class CamelControlBusActionParserTest extends AbstractActionParserTest<Ca
     @Test
     public void testCreateRouteActionParser() {
         assertActionCount(4);
-        assertActionClassAndName(CamelControlBusAction.class, "camel-controlbus");
+        assertActionClassAndName(CamelControlBusAction.class, "camel:controlbus");
 
         CamelControlBusAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());

@@ -67,7 +67,7 @@ public class CamelStopInfraTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 2L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CamelStopInfraAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel-stop-infra");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel:stop-infra");
 
         Assert.assertTrue(myService.shutdown.get());
         Assert.assertTrue(serviceImpl.shutdown.get());

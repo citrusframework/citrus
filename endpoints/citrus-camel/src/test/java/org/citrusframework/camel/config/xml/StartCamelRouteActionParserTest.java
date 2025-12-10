@@ -28,7 +28,7 @@ public class StartCamelRouteActionParserTest extends AbstractActionParserTest<St
     @Test
     public void testStartRouteActionParser() {
         assertActionCount(2);
-        assertActionClassAndName(StartCamelRouteAction.class, "camel-start-routes");
+        assertActionClassAndName(StartCamelRouteAction.class, "camel:start-routes");
 
         StartCamelRouteAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());

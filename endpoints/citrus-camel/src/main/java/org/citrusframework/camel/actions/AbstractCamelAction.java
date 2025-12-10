@@ -35,7 +35,7 @@ public abstract class AbstractCamelAction extends AbstractTestAction implements 
     protected ReferenceResolver referenceResolver;
 
     protected AbstractCamelAction(String name, Builder<?, ?> builder) {
-        super(name.startsWith("camel") ? name : "camel-" + name, builder);
+        super(name.startsWith("camel:") ? name : "camel:" + name, builder);
 
         this.camelContext = builder.camelContext;
         this.referenceResolver = builder.referenceResolver;
