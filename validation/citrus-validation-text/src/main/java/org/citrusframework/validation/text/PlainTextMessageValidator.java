@@ -16,7 +16,10 @@
 
 package org.citrusframework.validation.text;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,7 +33,9 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DefaultMessageValidator;
 import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
+import org.citrusframework.validation.matcher.core.IsNumberValidationMatcher;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
@@ -67,6 +72,7 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
 
             controlValue = processIgnoreStatements(controlValue, resultValue);
             controlValue = processVariableStatements(controlValue, resultValue, context);
+            controlValue = processValidationMatcher(controlValue, resultValue, context);
 
             if (ValidationMatcherUtils.isValidationMatcherExpression(controlValue)) {
                 ValidationMatcherUtils.resolveValidationMatcher("payload", resultValue, controlValue, context);
@@ -124,8 +130,8 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
     }
 
     /**
-     * Processes nested ignore statements in control value and replaces that ignore placeholder with the actual value at this position.
-     * This way we can ignore words in a plaintext value.
+     * Processes nested variable statements in control value and create the test variable with the actual value at this position.
+     * After that replace the variable placeholder with the actual value so text validation is successful, too.
      */
     private String processVariableStatements(String control, String result, TestContext context) {
         if (control.equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
@@ -146,6 +152,40 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
             control = variableMatcher.replaceFirst(actualValue);
             context.setVariable(variableMatcher.group(1), actualValue);
             variableMatcher = variablePattern.matcher(control);
+        }
+
+        return control;
+    }
+
+    /**
+     * Processes nested validation matcher expressions in control value and evaluate the validation with the actual value at this position.
+     * When validation is successful replace the expression with the actual value so text validation is OK, too.
+     */
+    private String processValidationMatcher(String control, String result, TestContext context) {
+        if (control.equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
+            return control;
+        }
+
+        Pattern whitespacePattern = Pattern.compile("[^a-zA-Z_0-9\\-\\.]");
+        Map<Pattern, ValidationMatcher> supportedMatcher = new HashMap<>();
+        supportedMatcher.put(Pattern.compile("@isNumber\\(?\\)?@"), new IsNumberValidationMatcher());
+
+        for (Map.Entry<Pattern, ValidationMatcher> entry : supportedMatcher.entrySet()) {
+            Pattern pattern = entry.getKey();
+            ValidationMatcher validationMatcher = entry.getValue();
+            Matcher matcher = pattern.matcher(control);
+
+            while (matcher.find()) {
+                String actualValue = result.substring(matcher.start());
+                Matcher whitespaceMatcher = whitespacePattern.matcher(actualValue);
+                if (whitespaceMatcher.find()) {
+                    actualValue = actualValue.substring(0, whitespaceMatcher.start());
+                }
+
+                control = matcher.replaceFirst(actualValue);
+                validationMatcher.validate(pattern.pattern().replaceAll("[@()]", ""), actualValue, Collections.emptyList(), context);
+                matcher = pattern.matcher(control);
+            }
         }
 
         return control;

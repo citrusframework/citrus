@@ -123,6 +123,33 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testPlainTextValidationValidationMatcher() {
+        Message receivedMessage = new DefaultMessage("Hello World, my lucky number is 5!");
+        Message controlMessage = new DefaultMessage("Hello World, my lucky number is @isNumber@!");
+
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+
+        controlMessage = new DefaultMessage("Hello World, my lucky number is @isNumber()@!");
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+
+        receivedMessage = new DefaultMessage("Hello World, my favorite numbers are 2, 4, 6 and 8!");
+
+        controlMessage = new DefaultMessage("Hello World, my favorite numbers are @isNumber()@, @isNumber@, @isNumber@ and @isNumber()@!");
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+
+        controlMessage = new DefaultMessage("Hello World, my favorite numbers are @ignore@, @ignore@, @isNumber@ and @isNumber()@!");
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testPlainTextValidationValidationMatcherFail() {
+        Message receivedMessage = new DefaultMessage("Hello World, my lucky number is five!");
+        Message controlMessage = new DefaultMessage("Hello World, my lucky number is @isNumber@!");
+
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+    }
+
+    @Test
     public void testPlainTextValidationWithIgnoreFail() {
         Message receivedMessage = new DefaultMessage("Hello World!");
         Message controlMessage = new DefaultMessage("Hello @ignore@");
