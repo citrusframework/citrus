@@ -12,7 +12,7 @@ actions:
       jbang:
         kubernetes:
           run:
-            autoRemove: true
+            autoRemove: false
             integration:
               file: "classpath:org/citrusframework/camel/integration/route.yaml"
             runtime: "quarkus"

@@ -1136,7 +1136,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
             protected boolean verbose;
 
-            protected boolean autoRemove;
+            protected boolean autoRemove = CamelJBangSettings.isAutoRemoveResources();
             protected boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
 
             public Integration getIntegration() {

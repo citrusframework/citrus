@@ -33,7 +33,7 @@
     <camel>
       <jbang>
         <kubernetes>
-          <run runtime="quarkus" cluster-type="kind" args="--verbose=true" image-builder="docker" image-registry="localhost:5000" auto-remove="true">
+          <run runtime="quarkus" cluster-type="kind" args="--verbose=true" image-builder="docker" image-registry="localhost:5000" auto-remove="false">
             <integration file="classpath:org/citrusframework/camel/integration/route.yaml"/>
             <args>
               <argument>--dev</argument>

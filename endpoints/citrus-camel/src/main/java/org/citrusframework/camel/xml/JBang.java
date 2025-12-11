@@ -1337,7 +1337,6 @@ public class JBang {
             @XmlElement(name = "build-properties")
             protected Properties buildProperties;
 
-
             @XmlElement
             protected Properties properties;
 
@@ -1351,7 +1350,7 @@ public class JBang {
             protected boolean verbose;
 
             @XmlAttribute(name = "auto-remove")
-            protected boolean autoRemove;
+            protected boolean autoRemove = CamelJBangSettings.isAutoRemoveResources();
 
             @XmlAttribute(name = "args")
             protected String argLine;
