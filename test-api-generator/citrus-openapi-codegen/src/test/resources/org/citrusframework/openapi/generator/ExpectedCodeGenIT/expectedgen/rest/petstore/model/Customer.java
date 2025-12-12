@@ -18,6 +18,7 @@ package org.citrusframework.openapi.generator.rest.petstore.model;
 
 import java.util.Objects;
 import java.util.Arrays;
+import java.util.Locale;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class Customer {
   }
 
   public Customer id(@jakarta.annotation.Nullable Long id) {
-    
+
     this.id = id;
     return this;
   }
@@ -64,7 +65,7 @@ public class Customer {
   }
 
   public Customer username(@jakarta.annotation.Nullable String username) {
-    
+
     this.username = username;
     return this;
   }
@@ -85,7 +86,7 @@ public class Customer {
   }
 
   public Customer address(@jakarta.annotation.Nullable List<Address> address) {
-    
+
     this.address = address;
     return this;
   }

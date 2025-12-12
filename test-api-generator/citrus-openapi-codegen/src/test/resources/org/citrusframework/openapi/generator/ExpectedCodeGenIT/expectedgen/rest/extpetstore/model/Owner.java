@@ -18,6 +18,7 @@ package org.citrusframework.openapi.generator.rest.extpetstore.model;
 
 import java.util.Objects;
 import java.util.Arrays;
+import java.util.Locale;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.citrusframework.openapi.generator.rest.extpetstore.model.Address;
@@ -43,7 +44,7 @@ public class Owner {
   }
 
   public Owner _name(@jakarta.annotation.Nullable String _name) {
-    
+
     this._name = _name;
     return this;
   }
@@ -64,7 +65,7 @@ public class Owner {
   }
 
   public Owner email(@jakarta.annotation.Nullable String email) {
-    
+
     this.email = email;
     return this;
   }
@@ -85,7 +86,7 @@ public class Owner {
   }
 
   public Owner phone(@jakarta.annotation.Nullable String phone) {
-    
+
     this.phone = phone;
     return this;
   }
@@ -106,7 +107,7 @@ public class Owner {
   }
 
   public Owner address(@jakarta.annotation.Nullable Address address) {
-    
+
     this.address = address;
     return this;
   }

@@ -18,6 +18,7 @@ package org.citrusframework.openapi.generator.rest.extpetstore.model;
 
 import java.util.Objects;
 import java.util.Arrays;
+import java.util.Locale;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -36,7 +37,7 @@ public class Category {
   }
 
   public Category id(@jakarta.annotation.Nullable Long id) {
-    
+
     this.id = id;
     return this;
   }
@@ -57,7 +58,7 @@ public class Category {
   }
 
   public Category _name(@jakarta.annotation.Nullable String _name) {
-    
+
     this._name = _name;
     return this;
   }

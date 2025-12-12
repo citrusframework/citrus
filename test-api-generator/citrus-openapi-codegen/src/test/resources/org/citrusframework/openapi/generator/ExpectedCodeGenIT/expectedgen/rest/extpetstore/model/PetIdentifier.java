@@ -18,6 +18,7 @@ package org.citrusframework.openapi.generator.rest.extpetstore.model;
 
 import java.util.Objects;
 import java.util.Arrays;
+import java.util.Locale;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -36,7 +37,7 @@ public class PetIdentifier {
   }
 
   public PetIdentifier _name(@jakarta.annotation.Nullable String _name) {
-    
+
     this._name = _name;
     return this;
   }
@@ -57,7 +58,7 @@ public class PetIdentifier {
   }
 
   public PetIdentifier alias(@jakarta.annotation.Nullable String alias) {
-    
+
     this.alias = alias;
     return this;
   }

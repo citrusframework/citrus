@@ -18,6 +18,7 @@ package org.citrusframework.openapi.generator.rest.petstore.model;
 
 import java.util.Objects;
 import java.util.Arrays;
+import java.util.Locale;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
@@ -44,9 +45,9 @@ public class Order {
    */
   public enum StatusEnum {
     PLACED(String.valueOf("placed")),
-    
+
     APPROVED(String.valueOf("approved")),
-    
+
     DELIVERED(String.valueOf("delivered"));
 
     private String value;
@@ -84,7 +85,7 @@ public class Order {
   }
 
   public Order id(@jakarta.annotation.Nullable Long id) {
-    
+
     this.id = id;
     return this;
   }
@@ -105,7 +106,7 @@ public class Order {
   }
 
   public Order petId(@jakarta.annotation.Nullable Long petId) {
-    
+
     this.petId = petId;
     return this;
   }
@@ -126,7 +127,7 @@ public class Order {
   }
 
   public Order quantity(@jakarta.annotation.Nullable Integer quantity) {
-    
+
     this.quantity = quantity;
     return this;
   }
@@ -147,7 +148,7 @@ public class Order {
   }
 
   public Order shipDate(@jakarta.annotation.Nullable OffsetDateTime shipDate) {
-    
+
     this.shipDate = shipDate;
     return this;
   }
@@ -168,7 +169,7 @@ public class Order {
   }
 
   public Order status(@jakarta.annotation.Nullable StatusEnum status) {
-    
+
     this.status = status;
     return this;
   }
@@ -189,7 +190,7 @@ public class Order {
   }
 
   public Order complete(@jakarta.annotation.Nullable Boolean complete) {
-    
+
     this.complete = complete;
     return this;
   }

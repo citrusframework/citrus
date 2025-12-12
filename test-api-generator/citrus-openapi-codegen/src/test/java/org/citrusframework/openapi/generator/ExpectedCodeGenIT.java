@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.stream.Streams;
@@ -144,6 +145,10 @@ class ExpectedCodeGenIT {
 
         actualContent = actualContent.replaceAll(generatedAnnotationPattern, placeholder);
         expectedContent = expectedContent.replaceAll(generatedAnnotationPattern, placeholder);
+
+        Pattern emptyLines = Pattern.compile("^\\s+$", Pattern.MULTILINE);
+        actualContent = emptyLines.matcher(actualContent).replaceAll("");
+        expectedContent = emptyLines.matcher(expectedContent).replaceAll("");
 
         assertThat(actualContent).isEqualToIgnoringNewLines(expectedContent);
     }

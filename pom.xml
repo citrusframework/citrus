@@ -156,74 +156,74 @@
     <java.version>17</java.version>
 
     <maven.version>3.9.9</maven.version>
-    <maven.compiler.version>3.14.0</maven.compiler.version>
+    <maven.compiler.version>3.14.1</maven.compiler.version>
     <maven.compiler.release>${java.version}</maven.compiler.release>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
 
-    <maven.antrun.plugin.version>3.1.0</maven.antrun.plugin.version>
-    <maven.assembly.plugin.version>3.7.1</maven.assembly.plugin.version>
+    <maven.antrun.plugin.version>3.2.0</maven.antrun.plugin.version>
+    <maven.assembly.plugin.version>3.8.0</maven.assembly.plugin.version>
     <maven.changes.plugin.version>2.12.1</maven.changes.plugin.version>
-    <maven.clean.plugin.version>3.3.1</maven.clean.plugin.version>
-    <maven.dependency.plugin.version>3.8.1</maven.dependency.plugin.version>
+    <maven.clean.plugin.version>3.5.0</maven.clean.plugin.version>
+    <maven.dependency.plugin.version>3.9.0</maven.dependency.plugin.version>
     <maven.deploy.plugin.version>3.1.1</maven.deploy.plugin.version>
     <maven.failsafe.plugin.version>3.5.4</maven.failsafe.plugin.version>
     <maven.gpg.plugin.version>3.2.8</maven.gpg.plugin.version>
     <maven.helper.plugin.version>3.6.1</maven.helper.plugin.version>
-    <maven.install.plugin.version>3.1.1</maven.install.plugin.version>
-    <maven.jar.plugin.version>3.3.0</maven.jar.plugin.version>
-    <maven.javadoc.plugin.version>3.11.3</maven.javadoc.plugin.version>
-    <maven.plugin.plugin.version>3.15.1</maven.plugin.plugin.version>
-    <maven.plugin.annotations.version>3.13.1</maven.plugin.annotations.version>
+    <maven.install.plugin.version>3.1.4</maven.install.plugin.version>
+    <maven.jar.plugin.version>3.5.0</maven.jar.plugin.version>
+    <maven.javadoc.plugin.version>3.12.0</maven.javadoc.plugin.version>
+    <maven.plugin.plugin.version>3.15.2</maven.plugin.plugin.version>
+    <maven.plugin.annotations.version>3.15.2</maven.plugin.annotations.version>
     <maven.plugin.testing.harness.version>3.3.0</maven.plugin.testing.harness.version>
-    <maven.release.plugin.version>3.1.1</maven.release.plugin.version>
-    <maven.resource.plugin.version>3.3.1</maven.resource.plugin.version>
+    <maven.release.plugin.version>3.3.1</maven.release.plugin.version>
+    <maven.resource.plugin.version>3.4.0</maven.resource.plugin.version>
     <maven.scm.plugin.version>1.11.2</maven.scm.plugin.version>
-    <maven.sonatype.central.plugin.version>0.8.0</maven.sonatype.central.plugin.version>
-    <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
+    <maven.sonatype.central.plugin.version>0.9.0</maven.sonatype.central.plugin.version>
+    <maven.source.plugin.version>3.4.0</maven.source.plugin.version>
     <maven.surefire.plugin.version>3.5.4</maven.surefire.plugin.version>
-    <maven.war.plugin.version>3.4.0</maven.war.plugin.version>
+    <maven.war.plugin.version>3.5.1</maven.war.plugin.version>
     <maven.wagon.ssh.external.version>2.7</maven.wagon.ssh.external.version>
-    <apache.rat.plugin.version>0.16.1</apache.rat.plugin.version>
+    <apache.rat.plugin.version>0.17</apache.rat.plugin.version>
 
     <asciidoctor.maven.plugin.version>3.2.0</asciidoctor.maven.plugin.version>
     <exec.maven.plugin.version>3.6.2</exec.maven.plugin.version>
     <jaxb.maven.plugin.version>3.3.0</jaxb.maven.plugin.version>
 
-    <activemq.artemis.version>2.42.0</activemq.artemis.version>
+    <activemq.artemis.version>2.44.0</activemq.artemis.version>
     <angus-activation.version>2.0.3</angus-activation.version>
-    <angus-mail.version>2.0.2</angus-mail.version>
+    <angus-mail.version>2.0.3</angus-mail.version>
     <apache.ant.version>1.10.15</apache.ant.version>
-    <apache.camel.version>4.15.0</apache.camel.version>
+    <apache.camel.version>4.16.0</apache.camel.version>
     <apicurio.data-models.version>1.1.33</apicurio.data-models.version>
     <ascii-table-version>1.8.0</ascii-table-version>
-    <assertj.version>3.27.3</assertj.version>
+    <assertj.version>3.27.6</assertj.version>
     <awaitility.version>4.3.0</awaitility.version>
-    <aws-java-sdk2.version>2.34.2</aws-java-sdk2.version>
-    <bouncycastle.version>1.82</bouncycastle.version>
-    <byte.buddy.version>1.17.7</byte.buddy.version>
+    <aws-java-sdk2.version>2.37.5</aws-java-sdk2.version>
+    <bouncycastle.version>1.83</bouncycastle.version>
+    <byte.buddy.version>1.18.2</byte.buddy.version>
     <commons.dbcp2.version>2.13.0</commons.dbcp2.version>
-    <commons.cli.version>1.10.0</commons.cli.version>
-    <commons.codec.version>1.19.0</commons.codec.version>
-    <commons.io.version>2.20.0</commons.io.version>
-    <commons.lang.version>3.18.0</commons.lang.version>
+    <commons.cli.version>1.11.0</commons.cli.version>
+    <commons.codec.version>1.20.0</commons.codec.version>
+    <commons.io.version>2.21.0</commons.io.version>
+    <commons.lang.version>3.20.0</commons.lang.version>
     <commons.logging.version>1.3.5</commons.logging.version>
     <commons.net.version>3.12.0</commons.net.version>
-    <cucumber.version>7.29.0</cucumber.version>
-    <docker-java.version>3.6.0</docker-java.version>
+    <cucumber.version>7.33.0</cucumber.version>
+    <docker-java.version>3.7.0</docker-java.version>
     <dropwizard.metrics.version>4.2.37</dropwizard.metrics.version>
     <ftpserver.version>1.2.1</ftpserver.version>
     <groovy.version>3.0.25</groovy.version>
-    <greenmail.version>2.1.5</greenmail.version>
+    <greenmail.version>2.1.8</greenmail.version>
     <hamcrest.version>3.0</hamcrest.version>
     <htmlunit.version>4.13.0</htmlunit.version>
-    <httpclient.version>5.5</httpclient.version>
+    <httpclient.version>5.5.1</httpclient.version>
     <hsqldb.version>2.7.4</hsqldb.version>
-    <jackson.version>2.20.0</jackson.version>
+    <jackson.version>2.20.1</jackson.version>
     <jackson.version.short>2.20</jackson.version.short>
-    <jackson-databind-nullable.version>0.2.7</jackson-databind-nullable.version>
+    <jackson-databind-nullable.version>0.2.8</jackson-databind-nullable.version>
     <jakarta-activation.version>2.0.1</jakarta-activation.version>
-    <jakarta-activation-api.version>2.1.3</jakarta-activation-api.version>
+    <jakarta-activation-api.version>2.1.4</jakarta-activation-api.version>
     <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
     <jakarta.jms-api.version>3.1.0</jakarta.jms-api.version>
     <jakarta-mail.version>2.1.5</jakarta-mail.version>
@@ -235,40 +235,40 @@
     <jansi.version>2.4.2</jansi.version>
     <javapoet.version>1.13.0</javapoet.version>
     <jaxb.version>4.0.6</jaxb.version>
-    <jetty.version>12.0.27</jetty.version>
+    <jetty.version>12.0.31</jetty.version>
     <jetty.websocket-api.version>2.0.0</jetty.websocket-api.version>
     <jsch.version>0.1.55</jsch.version>
     <jsonschema-generator.version>4.38.0</jsonschema-generator.version>
-    <json-path.version>2.9.0</json-path.version>
+    <json-path.version>2.10.0</json-path.version>
     <json-patch.version>1.13</json-patch.version>
     <json-schema-validator.version>1.5.9</json-schema-validator.version>
     <json-smart.version>2.6.0</json-smart.version>
     <jtidy.version>r938</jtidy.version>
-    <junit.jupiter.version>5.13.4</junit.jupiter.version>
-    <junit.platform.version>1.13.4</junit.platform.version>
+    <junit.jupiter.version>5.14.1</junit.jupiter.version>
+    <junit.platform.version>1.14.1</junit.platform.version>
     <junit.version>4.13.2</junit.version>
     <junixsocket.version>2.10.1</junixsocket.version>
     <k8s.client.version>7.4.0</k8s.client.version>
     <kafka.version>3.9.1</kafka.version>
     <knative-client.version>7.4.0</knative-client.version>
-    <log4j2.version>2.25.1</log4j2.version>
-    <mockito.version>5.20.0</mockito.version>
+    <log4j2.version>2.25.2</log4j2.version>
+    <mockito.version>5.21.0</mockito.version>
     <mockftpserver.version>3.2.0</mockftpserver.version>
-    <netty.version>4.2.0.Final</netty.version>
-    <okhttp.version>5.1.0</okhttp.version>
-    <org.openapitools.version>7.15.0</org.openapitools.version>
+    <netty.version>4.2.8.Final</netty.version>
+    <okhttp.version>5.3.2</okhttp.version>
+    <org.openapitools.version>7.17.0</org.openapitools.version>
     <picoli-version>4.7.7</picoli-version>
     <postgresql.version>42.7.8</postgresql.version>
-    <quarkus.platform.version>3.28.0</quarkus.platform.version>
+    <quarkus.platform.version>3.30.3</quarkus.platform.version>
     <saaj.version>3.0.4</saaj.version>
-    <selenium.version>4.35.0</selenium.version>
+    <selenium.version>4.39.0</selenium.version>
     <slf4j.version>2.0.17</slf4j.version>
     <snappy.version>1.1.10.8</snappy.version>
     <snakeyaml.version>2.5</snakeyaml.version>
-    <spring.version>6.2.12</spring.version>
-    <spring.boot.version>3.5.5</spring.boot.version>
-    <spring.ws.version>4.1.1</spring.ws.version>
-    <spring.integration.version>6.5.1</spring.integration.version>
+    <spring.version>6.2.15</spring.version>
+    <spring.boot.version>3.5.8</spring.boot.version>
+    <spring.ws.version>4.1.2</spring.ws.version>
+    <spring.integration.version>6.5.4</spring.integration.version>
     <spring.restdocs.version>3.0.5</spring.restdocs.version>
     <sshd.version>2.15.0</sshd.version>
     <swagger.version>2.2.37</swagger.version>
@@ -278,9 +278,9 @@
     <testcontainers.version>1.21.3</testcontainers.version>
     <testng.version>7.11.0</testng.version>
     <!-- bound to https://mvnrepository.com/artifact/io.fabric8/kubernetes-httpclient-vertx/${k8s.client.version} -->
-    <vertx.version>4.5.15</vertx.version>
+    <vertx.version>4.5.22</vertx.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
-    <xbean-spring.version>4.27</xbean-spring.version>
+    <xbean-spring.version>4.28</xbean-spring.version>
     <xmlbeans.version>5.2.1</xmlbeans.version>
     <xmlbeans-xpath.version>2.6.0</xmlbeans-xpath.version>
     <xerces.version>2.12.2</xerces.version>
@@ -1246,6 +1246,21 @@
       </dependency>
       <dependency>
         <groupId>io.netty</groupId>
+        <artifactId>netty-buffer</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-handler-proxy</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-resolver</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
         <artifactId>netty-handler</artifactId>
         <version>${netty.version}</version>
       </dependency>
@@ -1261,13 +1276,39 @@
       </dependency>
       <dependency>
         <groupId>io.netty</groupId>
+        <artifactId>netty-codec-haproxy</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
         <artifactId>netty-codec-http</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-codec-socks</artifactId>
         <version>${netty.version}</version>
       </dependency>
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-transport-native-epoll</artifactId>
         <classifier>linux-x86_64</classifier>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-transport-classes-epoll</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-transport-native-kqueue</artifactId>
+        <classifier>osx-x86_64</classifier>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-transport-classes-kqueue</artifactId>
         <version>${netty.version}</version>
       </dependency>
       <dependency>

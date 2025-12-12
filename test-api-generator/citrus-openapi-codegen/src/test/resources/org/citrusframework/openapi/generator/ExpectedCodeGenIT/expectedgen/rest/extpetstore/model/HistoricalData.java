@@ -18,6 +18,7 @@ package org.citrusframework.openapi.generator.rest.extpetstore.model;
 
 import java.util.Objects;
 import java.util.Arrays;
+import java.util.Locale;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
@@ -37,7 +38,7 @@ public class HistoricalData {
   }
 
   public HistoricalData lastVaccinationDate(@jakarta.annotation.Nullable LocalDate lastVaccinationDate) {
-    
+
     this.lastVaccinationDate = lastVaccinationDate;
     return this;
   }
@@ -58,7 +59,7 @@ public class HistoricalData {
   }
 
   public HistoricalData vaccinationCount(@jakarta.annotation.Nullable Integer vaccinationCount) {
-    
+
     this.vaccinationCount = vaccinationCount;
     return this;
   }

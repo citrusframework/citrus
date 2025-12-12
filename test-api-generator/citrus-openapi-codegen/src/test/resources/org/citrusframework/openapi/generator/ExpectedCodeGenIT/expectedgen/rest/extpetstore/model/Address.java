@@ -18,6 +18,7 @@ package org.citrusframework.openapi.generator.rest.extpetstore.model;
 
 import java.util.Objects;
 import java.util.Arrays;
+import java.util.Locale;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -36,7 +37,7 @@ public class Address {
   }
 
   public Address street(@jakarta.annotation.Nullable String street) {
-    
+
     this.street = street;
     return this;
   }
@@ -57,7 +58,7 @@ public class Address {
   }
 
   public Address town(@jakarta.annotation.Nullable String town) {
-    
+
     this.town = town;
     return this;
   }

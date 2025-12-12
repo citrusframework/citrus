@@ -18,6 +18,7 @@ package org.citrusframework.openapi.generator.rest.extpetstore.model;
 
 import java.util.Objects;
 import java.util.Arrays;
+import java.util.Locale;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -33,7 +34,7 @@ public class VaccinationDocumentResult {
   }
 
   public VaccinationDocumentResult documentId(@jakarta.annotation.Nullable String documentId) {
-    
+
     this.documentId = documentId;
     return this;
   }

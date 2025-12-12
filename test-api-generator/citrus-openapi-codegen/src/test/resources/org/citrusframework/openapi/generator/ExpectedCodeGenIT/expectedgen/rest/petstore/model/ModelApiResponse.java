@@ -18,6 +18,7 @@ package org.citrusframework.openapi.generator.rest.petstore.model;
 
 import java.util.Objects;
 import java.util.Arrays;
+import java.util.Locale;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -39,7 +40,7 @@ public class ModelApiResponse {
   }
 
   public ModelApiResponse code(@jakarta.annotation.Nullable Integer code) {
-    
+
     this.code = code;
     return this;
   }
@@ -60,7 +61,7 @@ public class ModelApiResponse {
   }
 
   public ModelApiResponse type(@jakarta.annotation.Nullable String type) {
-    
+
     this.type = type;
     return this;
   }
@@ -81,7 +82,7 @@ public class ModelApiResponse {
   }
 
   public ModelApiResponse _message(@jakarta.annotation.Nullable String _message) {
-    
+
     this._message = _message;
     return this;
   }

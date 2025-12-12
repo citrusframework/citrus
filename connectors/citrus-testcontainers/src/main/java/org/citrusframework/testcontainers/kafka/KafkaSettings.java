@@ -62,7 +62,7 @@ public class KafkaSettings {
 
     private static final String CONFLUENT_VERSION_PROPERTY = KAFKA_PROPERTY_PREFIX + "confluent.version";
     private static final String CONFLUENT_VERSION_ENV = KAFKA_ENV_PREFIX + "CONFLUENT_VERSION";
-    private static final String CONFLUENT_VERSION_DEFAULT = "7.9.2";
+    private static final String CONFLUENT_VERSION_DEFAULT = "7.9.5";
 
     private static final String IMAGE_NAME_PROPERTY = KAFKA_PROPERTY_PREFIX + "image.name";
     private static final String IMAGE_NAME_ENV = KAFKA_ENV_PREFIX + "IMAGE_NAME";

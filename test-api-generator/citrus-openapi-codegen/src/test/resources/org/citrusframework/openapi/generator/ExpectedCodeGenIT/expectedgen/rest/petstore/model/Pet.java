@@ -18,6 +18,7 @@ package org.citrusframework.openapi.generator.rest.petstore.model;
 
 import java.util.Objects;
 import java.util.Arrays;
+import java.util.Locale;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -51,9 +52,9 @@ public class Pet {
    */
   public enum StatusEnum {
     AVAILABLE(String.valueOf("available")),
-    
+
     PENDING(String.valueOf("pending")),
-    
+
     SOLD(String.valueOf("sold"));
 
     private String value;
@@ -88,7 +89,7 @@ public class Pet {
   }
 
   public Pet id(@jakarta.annotation.Nullable Long id) {
-    
+
     this.id = id;
     return this;
   }
@@ -109,7 +110,7 @@ public class Pet {
   }
 
   public Pet _name(@jakarta.annotation.Nonnull String _name) {
-    
+
     this._name = _name;
     return this;
   }
@@ -130,7 +131,7 @@ public class Pet {
   }
 
   public Pet category(@jakarta.annotation.Nullable Category category) {
-    
+
     this.category = category;
     return this;
   }
@@ -151,7 +152,7 @@ public class Pet {
   }
 
   public Pet photoUrls(@jakarta.annotation.Nonnull List<String> photoUrls) {
-    
+
     this.photoUrls = photoUrls;
     return this;
   }
@@ -180,7 +181,7 @@ public class Pet {
   }
 
   public Pet tags(@jakarta.annotation.Nullable List<Tag> tags) {
-    
+
     this.tags = tags;
     return this;
   }
@@ -209,7 +210,7 @@ public class Pet {
   }
 
   public Pet status(@jakarta.annotation.Nullable StatusEnum status) {
-    
+
     this.status = status;
     return this;
   }
