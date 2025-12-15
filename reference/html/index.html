@@ -573,8 +573,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 4.8.2,</span>
-<span id="revdate">2025-10-28</span>
+<span id="revnumber">version 4.9.0,</span>
+<span id="revdate">2025-12-15</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -1000,10 +1000,11 @@ $(addBlockSwitches);
 <li><a href="#functions-message">39.34. message()</a></li>
 <li><a href="#functions-xpath">39.35. xpath()</a></li>
 <li><a href="#functions-jsonpath">39.36. jsonPath()</a></li>
-<li><a href="#functions-url-encode">39.37. urlEncode()/urlDecode()</a></li>
-<li><a href="#functions-system-properties">39.38. systemProperty()</a></li>
-<li><a href="#functions-env-settings">39.39. env()</a></li>
-<li><a href="#functions-unix-timestamp">39.40. unixTimestamp()</a></li>
+<li><a href="#functions-jsonpatch">39.37. jsonPatch()</a></li>
+<li><a href="#functions-url-encode">39.38. urlEncode()/urlDecode()</a></li>
+<li><a href="#functions-system-properties">39.39. systemProperty()</a></li>
+<li><a href="#functions-env-settings">39.40. env()</a></li>
+<li><a href="#functions-unix-timestamp">39.41. unixTimestamp()</a></li>
 </ul>
 </li>
 <li><a href="#validation-matcher">40. Validation Matchers</a>
@@ -1126,7 +1127,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 4.8.2</strong></p>
+<p><strong>Version: 4.9.0</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -3903,7 +3904,7 @@ actions {
 <div class="listingblock">
 <div class="title">Run my-test.feature</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">jbang --deps org.citrusframework:citrus-cucumber-all:4.8.2 citrus run my-test.feature</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">jbang --deps org.citrusframework:citrus-cucumber-all:4.10.0-SNAPSHOT citrus run my-test.feature</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -3991,7 +3992,7 @@ org.citrusframework:citrus-kafka:${citrus.version}</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-In case you want to run Cucumber BDD Gherkin feature files and use the predefined Citrus steps, you need to add this dependency accordingly: <code>org.citrusframework:citrus-cucumber-all:4.8.2</code>
+In case you want to run Cucumber BDD Gherkin feature files and use the predefined Citrus steps, you need to add this dependency accordingly: <code>org.citrusframework:citrus-cucumber-all:4.10.0-SNAPSHOT</code>
 </td>
 </tr>
 </table>
@@ -12082,14 +12083,13 @@ anyOf(equalTo('text containing a backslash and quote \\\\' and a , (comma)  '), 
 <div class="sect2">
 <h3 id="validation-custom"><a class="anchor" href="#validation-custom"></a><a class="link" href="#validation-custom">7.9. Custom validation</a></h3>
 <div class="paragraph">
-<p>In a previous section you have seen how to customize the global set of available message validators in a Citrus project using
-the <a href="#message-validator-registry">validator registry</a>.</p>
+<p>In a previous section you have seen how to customize the global set of available message validators in a Citrus project using the <a href="#message-validator-registry">validator registry</a>.</p>
 </div>
 <div class="sect3">
 <h4 id="validation-custom-validator"><a class="anchor" href="#validation-custom-validator"></a><a class="link" href="#validation-custom-validator">7.9.1. Custom message validator</a></h4>
 <div class="paragraph">
-<p>You can also explicitly use a custom message validator in a receive test action. This approach skips the automatic message
-validator resolving mechanism, and the receive action uses the defined validator implementation.</p>
+<p>You can also explicitly use a custom message validator in a receive test action.
+This approach skips the automatic message validator resolving mechanism, and the receive action uses the defined validator implementation.</p>
 </div>
 <div class="listingblock primary">
 <div class="title">Java</div>
@@ -12125,28 +12125,28 @@ validator resolving mechanism, and the receive action uses the defined validator
 </div>
 </div>
 <div class="paragraph">
-<p>The receive action defines the message validator to use in this specific use case. You can set a custom message validator
-implementation here.</p>
+<p>The receive action defines the message validator to use in this specific use case.
+You can set a custom message validator implementation here.</p>
 </div>
-<div class="admonitionblock note">
+<div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Be careful when overwriting default message validation behavior. Setting a specific message validator has the effect
-that your receive action may not use the other default validators. The explicit validator definition in a receive action
-is exclusive so no further message validator resolving is performed on this receive action.
+Be careful when overwriting default message validation behavior.
+Setting a specific message validator has the effect that your receive action may not use the other default validators.
+The explicit validator definition in a receive action is exclusive so no further message validator resolving is performed on this receive action.
+If you wish otherwise, take a look at the <a href="#validation-custom-validator-strategy">custom validator strategy</a>
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>You may want to set multiple validators here in order to meet your validation requirements. For instance when setting a
-<code>DomXmlMessageValidator</code> explicitly you may not be able to use the <code>XpathMessageValidator</code> capabilities on that specific
-receive action anymore. Fortunately you can set multiple validators on a receive action that will all perform validation
-tasks on the received message.</p>
+<p>You may want to set multiple validators here in order to meet your validation requirements.
+For instance when setting a <code>DomXmlMessageValidator</code> explicitly you may not be able to use the <code>XpathMessageValidator</code> capabilities on that specific receive action anymore.
+Fortunately you can set multiple validators on a receive action that will all perform validation tasks on the received message.</p>
 </div>
 <div class="listingblock primary">
 <div class="title">Java</div>
@@ -12171,7 +12171,79 @@ tasks on the received message.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="validation-custom-processor"><a class="anchor" href="#validation-custom-processor"></a><a class="link" href="#validation-custom-processor">7.9.2. Validation processor</a></h4>
+<h4 id="validation-custom-validator-strategy"><a class="anchor" href="#validation-custom-validator-strategy"></a><a class="link" href="#validation-custom-validator-strategy">7.9.2. Custom validator strategy (new)</a></h4>
+<div class="paragraph">
+<p>Historically, Citrus executed <strong>only</strong> the custom validators defined on a receive action.
+This meant that <strong>default validation steps were skipped entirely</strong> when a custom validator was present - even if the test also defined body validation, JSON validation, or other built-in mechanisms.</p>
+</div>
+<div class="paragraph">
+<p>This exclusive behavior was intentional:
+Users could provide highly specialized validation logic (e.g., custom JSON comparison), and the default validators would stay out of the way to avoid duplicate or conflicting validation.</p>
+</div>
+<div class="paragraph">
+<p>However, this behavior can be surprising when users expect default validators to <strong>also</strong> run alongside custom logic.
+To address this, Citrus introduces a configurable validator strategy with two modes:</p>
+</div>
+<div class="sect4">
+<h5 id="available-strategies"><a class="anchor" href="#available-strategies"></a><a class="link" href="#available-strategies">Available strategies</a></h5>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>EXCLUSIVE</code> (default)</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Only the custom validator(s) are executed.</p>
+</li>
+<li>
+<p>Default validators and body assertions are not applied.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong><code>COMBINED</code></strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Both custom validators and the default Citrus validators run.</p>
+</li>
+<li>
+<p>Useful when custom validation should extend - not replace - the default behavior.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="configuration"><a class="anchor" href="#configuration"></a><a class="link" href="#configuration">Configuration</a></h5>
+<div class="paragraph">
+<p>The strategy can be globally configured using either a system property or an environment variable:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>System property:
+<code>citrus.custom.validator.strategy</code></p>
+</li>
+<li>
+<p>Environment variable:
+<code>CITRUS_CUSTOM_VALIDATOR_STRATEGY</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Default value: <code>EXCLUSIVE</code>.</p>
+</div>
+<div class="paragraph">
+<p>This allows you to switch the behavior project-wide without changing any test cases.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="validation-custom-processor"><a class="anchor" href="#validation-custom-processor"></a><a class="link" href="#validation-custom-processor">7.9.3. Validation processor</a></h4>
 <div class="paragraph">
 <p>The Java DSL offers some additional validation tricks and possibilities when dealing with messages that are sent and received
 over Citrus. One of them is the validation processor functionality. With this feature you can marshal/unmarshal message payloads
@@ -32620,6 +32692,18 @@ The test action has an <code>autoRemove</code> option that is enabled by default
 </tr>
 </table>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You may choose to add the <code>--stub</code> option to the Camel JBang run command. This allows you to stub endpoints in the Camel integration route. The stubbed endpoint uses a local internal message queue instead of connecting to the real endpoint. This is very useful when an endpoint raises quite complex connection efforts. For instance, you may stub an SQL endpoint or a message broker connection endpoint such as Kafka or JMS when running the Camel integration. You may access the messages processed by the stubbed endpoint in the test with a <code>cmd receive</code> test action that is described later in this guide.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect3">
 <h4 id="stop-camel-integrations"><a class="anchor" href="#stop-camel-integrations"></a><a class="link" href="#stop-camel-integrations">16.8.2. Stop Camel integrations</a></h4>
@@ -32754,7 +32838,7 @@ The action periodically polls the produced log output and searches for the expec
 <div class="sect3">
 <h4 id="send-messages"><a class="anchor" href="#send-messages"></a><a class="link" href="#send-messages">16.8.4. Send messages</a></h4>
 <div class="paragraph">
-<p>The Camel Jbang tooling allows you to send messages to running Camel integrations.
+<p>The Camel JBang tooling allows you to send messages to running Camel integrations.
 You can use the <code>send</code> command to send messages to any running route.</p>
 </div>
 <div class="paragraph">
@@ -33008,6 +33092,196 @@ You can also use the Kamelets sources to send messages with Camel JBang. The Kam
 </div>
 <div class="paragraph">
 <p>Please see the Camel JBang send command help for more configuration options.</p>
+</div>
+<div class="listingblock">
+<div class="title">Camel JBang cmd send options</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">camel cmd send --help</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="receive-messages"><a class="anchor" href="#receive-messages"></a><a class="link" href="#receive-messages">16.8.5. Receive messages</a></h4>
+<div class="paragraph">
+<p>The Camel JBang tooling allows you to access stubbed messages in a running Camel integration.
+You can use the <code>receive</code> command to list messages that an endpoint in Camel has been processing.</p>
+</div>
+<div class="paragraph">
+<p>Give the following Camel integration that is running in Camel JBang:</p>
+</div>
+<div class="listingblock">
+<div class="title">echo.yaml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- from:
+    uri: "direct:echo"
+    steps:
+      - transform:
+          simple: "${body.toUpperCase()}"
+      - to: "kafka:inbox?brokers=localhost:9092"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Camel route listens for messages on the <code>direct:echo</code> endpoint and connects with a Kafka message broker.
+With Camel JBang you can start the route with a stubbed Kafka endpoint like this:</p>
+</div>
+<div class="listingblock">
+<div class="title">Run Camel integration with --stub option</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">camel run my-route.yaml --stub=kafka</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This makes Camel use an internal message queue instead of connecting with the Kafka message broker.
+The messages received by the stubbed Kafka component in Camel can be accessed with the <code>receive</code> command:</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
+
+    @Test
+    @CitrusTest
+    public void shouldSendMessage() {
+        then(camel().jbang().cmd()
+                    .receive()
+                    .integration("my-route")
+                    .tail(1)
+                    .endpoint("kafka:inbox"));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: "CamelJBangTest"
+actions:
+  - camel:
+      jbang:
+        cmd:
+          receive:
+            integration: "my-route"
+            tail: 1
+            endpoint: "kafka:inbox"</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;test name="CamelJBangTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd"&gt;
+  &lt;actions&gt;
+    &lt;camel&gt;
+      &lt;jbang&gt;
+        &lt;cmd&gt;
+          &lt;receive integration="my-route" tail="1" endpoint="kafka:inbox"/&gt;
+        &lt;/cmd&gt;
+      &lt;/jbang&gt;
+    &lt;/camel&gt;
+  &lt;/actions&gt;
+&lt;/test&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"&gt;
+    &lt;!-- NOT SUPPORTED --&gt;
+&lt;/spring:beans&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>receive</code> action connects with the running Camel integration called <code>my-route</code> and receives messages on the stubbed <code>kafka:inbox</code> endpoint.
+The <code>tail</code> setting defines how many messages that have been received before will be included.
+This means a setting of <code>tail=1</code> includes the last message that was processed by the stubbed endpoint.
+By default, the operation will wait only for new messages to arrive (tail=0).</p>
+</div>
+<div class="paragraph">
+<p>The test action monitors the <code>receive</code> command output and waits for messages to arrive.
+You can use the <code>grep</code> option to wait for very specific messages that match the given expression.
+Also, you can specify the <code>since</code> option that allows you to include messages that have arrived in a given time span (e.g. 5s, 2m, 1h)</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
+
+    @Test
+    @CitrusTest
+    public void shouldSendMessage() {
+        then(camel().jbang().cmd()
+                    .receive()
+                    .integration("my-route")
+                    .tail(1)
+                    .since("1h")
+                    .grep("HELLO CAMEL")
+                    .endpoint("kafka:inbox"));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: "CamelJBangTest"
+actions:
+  - camel:
+      jbang:
+        cmd:
+          receive:
+            integration: "my-route"
+            tail: 1
+            since: 1h
+            grep: HELLO CAMEL
+            endpoint: "kafka:inbox"</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;test name="CamelJBangTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd"&gt;
+  &lt;actions&gt;
+    &lt;camel&gt;
+      &lt;jbang&gt;
+        &lt;cmd&gt;
+          &lt;receive integration="my-route"
+                    tail="1"
+                    since="1h"
+                    grep="HELLO CAMEL"
+                    endpoint="kafka:inbox"/&gt;
+        &lt;/cmd&gt;
+      &lt;/jbang&gt;
+    &lt;/camel&gt;
+  &lt;/actions&gt;
+&lt;/test&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"&gt;
+    &lt;!-- NOT SUPPORTED --&gt;
+&lt;/spring:beans&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>grep</code>, <code>tail</code> and <code>since</code> options help you to verify that a specific message has been processed on the stubbed endpoint.
+The test action polls the command output for the message and throws a timeout error in case the message does not arrive in time.
+You can use the <code>maxAttempts</code> and <code>delayBetweeAttempts</code> settings to specify the waiting and polling configuration.</p>
+</div>
+<div class="paragraph">
+<p>Please see the Camel JBang receive command help for more configuration options.</p>
+</div>
+<div class="listingblock">
+<div class="title">Camel JBang cmd receive options</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">camel cmd receive --help</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -52246,11 +52520,13 @@ private RandomEnumValueFunction randomHttpStatusCode() {
 &lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1h')&lt;/message&gt;&lt;/echo&gt;
 &lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1m')&lt;/message&gt;&lt;/echo&gt;
 &lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1s')&lt;/message&gt;&lt;/echo&gt;
-&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '-1y')&lt;/message&gt;&lt;/echo&gt;</code></pre>
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '-1y')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss','0h','UTC')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss','0h','Europe/Berlin')&lt;/message&gt;&lt;/echo&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Note that the currentDate function provides two parameters. First parameter describes the date format string. The second will define a date offset string containing year, month, days, hours, minutes or seconds that will be added or subtracted to or from the actual date value.</p>
+<p>Note that the currentDate function provides three parameters: The first parameter describes the date format string. The second will define a date offset string containing year, month, days, hours, minutes or seconds that will be added or subtracted to or from the actual date value. The third parameter defines a timezone ID. If no timezone is defined, the system default timezone is used.</p>
 </div>
 <div class="paragraph">
 <p>Function output:</p>
@@ -52260,7 +52536,8 @@ private RandomEnumValueFunction randomHttpStatusCode() {
 <pre class="highlightjs highlight"><code class="language-none hljs">01.09.2009
 2009-09-01
 2009-09-01 12:00:00
-2009-09-01T12:00:00</code></pre>
+2009-09-01T12:00:00
+2009-09-01 11:00:00</code></pre>
 </div>
 </div>
 </div>
@@ -53119,7 +53396,86 @@ becomes very easy then.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-url-encode"><a class="anchor" href="#functions-url-encode"></a><a class="link" href="#functions-url-encode">39.37. urlEncode()/urlDecode()</a></h3>
+<h3 id="functions-jsonpatch"><a class="anchor" href="#functions-jsonpatch"></a><a class="link" href="#functions-jsonpatch">39.37. jsonPatch()</a></h3>
+<div class="paragraph">
+<p>The <strong>jsonPatch</strong> function applies RFC 6902 JSON Patch operations to a JSON source and returns the modified JSON as String. It supports JSONPath notation for paths, which is automatically converted to JSON Pointer format.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;echo&gt;
+    &lt;message&gt;&lt;![CDATA[citrus:jsonPatch('{ "message": { "id": 1000, "status": "DRAFT" } }', 'replace', '$.message.status', 'PUBLISHED')]]&gt;&lt;/message&gt;
+&lt;/echo&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first parameter is the JSON source, followed by patch operations in triplets: operation, path, and value. Valid operations are <code>add</code>, <code>remove</code>, <code>replace</code>, <code>move</code>, and <code>copy</code>.</p>
+</div>
+<div class="paragraph">
+<p>The JSON source can be loaded from a test variable:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;echo&gt;
+    &lt;message&gt;&lt;![CDATA[citrus:jsonPatch(${jsonSource}, 'replace', '$.status', 'APPROVED')]]&gt;&lt;/message&gt;
+&lt;/echo&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Multiple patch operations can be chained by adding more triplets:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;echo&gt;
+    &lt;message&gt;&lt;![CDATA[citrus:jsonPatch(${jsonSource}, 'replace', '$.status', 'APPROVED', 'add', '$.metadata.timestamp', '2024-01-15', 'remove', '$.tempField', '')]]&gt;&lt;/message&gt;
+&lt;/echo&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the <code>remove</code> operation, the value parameter is ignored but must still be provided (use an empty string). For <code>move</code> and <code>copy</code> operations, the value parameter specifies the source path:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;echo&gt;
+    &lt;message&gt;&lt;![CDATA[citrus:jsonPatch(${jsonSource}, 'copy', '$.backup.name', '$.name')]]&gt;&lt;/message&gt;
+&lt;/echo&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Paths can be specified in JSONPath notation (e.g., <code>$.items[0].name</code>) or JSON Pointer format (e.g., <code>/items/0/name</code>). To append to an array, use the <code>-</code> index:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;echo&gt;
+    &lt;message&gt;&lt;![CDATA[citrus:jsonPatch('{ "items": [1, 2, 3] }', 'add', '$.items/-', '4')]]&gt;&lt;/message&gt;
+&lt;/echo&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Values can be plain strings or valid JSON structures:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;echo&gt;
+    &lt;message&gt;&lt;![CDATA[citrus:jsonPatch(${jsonSource}, 'add', '$.metadata', '{"created": "2024-01-15", "author": "test"}')]]&gt;&lt;/message&gt;
+&lt;/echo&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Also accessing the local message store is valid here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;echo&gt;
+    &lt;message&gt;&lt;![CDATA[citrus:jsonPatch(citrus:message(myRequest.body()), 'replace', '$.message.status', 'PROCESSED')]]&gt;&lt;/message&gt;
+&lt;/echo&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This combination is quite powerful as all previously exchanged messages in the test are automatically stored to the local message store. Reusing dynamic message values from other messages becomes very easy, enabling dynamic modification of message content for subsequent test steps.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="functions-url-encode"><a class="anchor" href="#functions-url-encode"></a><a class="link" href="#functions-url-encode">39.38. urlEncode()/urlDecode()</a></h3>
 <div class="paragraph">
 <p>The <strong>urlEncode</strong> function takes a String and performs proper URL encoding. The result is a URL encoded String that is using proper character escaping for Http.</p>
 </div>
@@ -53148,7 +53504,7 @@ becomes very easy then.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-system-properties"><a class="anchor" href="#functions-system-properties"></a><a class="link" href="#functions-system-properties">39.38. systemProperty()</a></h3>
+<h3 id="functions-system-properties"><a class="anchor" href="#functions-system-properties"></a><a class="link" href="#functions-system-properties">39.39. systemProperty()</a></h3>
 <div class="paragraph">
 <p>The <strong>systemProperty</strong> function resolves a System property expression at test runtime. The resulting value is returned as function result. In case the System property is not available in the JVM an optional default value is used.
 In case no default value is given the function will fail with errors.</p>
@@ -53162,7 +53518,7 @@ In case no default value is given the function will fail with errors.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-env-settings"><a class="anchor" href="#functions-env-settings"></a><a class="link" href="#functions-env-settings">39.39. env()</a></h3>
+<h3 id="functions-env-settings"><a class="anchor" href="#functions-env-settings"></a><a class="link" href="#functions-env-settings">39.40. env()</a></h3>
 <div class="paragraph">
 <p>The <strong>env</strong> function can be used to access an environment specific property at test runtime. The environment property can be a variable set on the underlying operating system. Also the <code>env()</code> function is able to access
 the Spring environment settings (see <code>org.springframework.core.env.Environment</code>).</p>
@@ -53182,7 +53538,7 @@ the Spring environment settings (see <code>org.springframework.core.env.Environm
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-unix-timestamp"><a class="anchor" href="#functions-unix-timestamp"></a><a class="link" href="#functions-unix-timestamp">39.40. unixTimestamp()</a></h3>
+<h3 id="functions-unix-timestamp"><a class="anchor" href="#functions-unix-timestamp"></a><a class="link" href="#functions-unix-timestamp">39.41. unixTimestamp()</a></h3>
 <div class="paragraph">
 <p><strong>unixTimestamp</strong> is a parameterless function that simply returns the current epoch timestamp as seconds.</p>
 </div>
@@ -63407,8 +63763,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 4.8.2<br>
-Last updated 2025-10-28 08:41:01 +0100
+Version 4.9.0<br>
+Last updated 2025-12-15 15:23:33 +0100
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
