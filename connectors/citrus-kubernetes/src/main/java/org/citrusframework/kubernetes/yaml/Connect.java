@@ -31,7 +31,7 @@ public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetes
 
     private AbstractKubernetesAction.Builder<? extends AbstractKubernetesAction, ?> delegate = new KubernetesConnectAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Connects to this Kubernetes service.")
     public void setService(Service service) {
         ServiceConnectAction.Builder builder = new ServiceConnectAction.Builder();
 
@@ -100,7 +100,7 @@ public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetes
         protected String port;
         protected String localPort;
 
-        @SchemaProperty
+        @SchemaProperty(description = "The Kubernetes service name to connect to")
         public void setName(String name) {
             this.name = name;
         }
@@ -109,7 +109,7 @@ public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetes
             return name;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Creates and exposes a client that connects to this service. The client can be referenced by this name.")
         public void setClient(String client) {
             this.client = client;
         }
@@ -118,7 +118,7 @@ public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetes
             return client;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "The exposed service port used to connect to.")
         public void setPort(String port) {
             this.port = port;
         }
@@ -127,7 +127,7 @@ public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetes
             return port;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Local port on the host machine. Creates a local port forward to the Kubernetes service.")
         public void setLocalPort(String localPort) {
             this.localPort = localPort;
         }

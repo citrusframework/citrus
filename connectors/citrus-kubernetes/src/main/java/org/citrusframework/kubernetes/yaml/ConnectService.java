@@ -29,22 +29,22 @@ public class ConnectService extends AbstractKubernetesAction.Builder<ServiceConn
 
     private final ServiceConnectAction.Builder delegate = new ServiceConnectAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(title="ServiceName", description = "The Kubernetes service name to connect to")
     public void setName(String name) {
         this.delegate.service(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Creates and exposes a client that connects to this service. The client can be referenced by this name.")
     public void setClient(String client) {
         this.delegate.client(client);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "The exposed service port used to connect to.")
     public void setPort(String port) {
         this.delegate.port(port);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Local port on the host machine. Creates a local port forward to the Kubernetes service.")
     public void setLocalPort(String localPort) {
         this.delegate.localPort(localPort);
     }

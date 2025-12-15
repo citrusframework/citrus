@@ -162,7 +162,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
             this.testJar = testJar;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Creates and exposes a client that connects to this agent. The client can be referenced by this name.")
         public void setClient(String client) {
             this.client = client;
         }
@@ -171,7 +171,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
             return client;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "The exposed agent service port used to connect to.")
         public void setPort(String port) {
             this.port = port;
         }
@@ -180,7 +180,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
             return port;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Local port on the host machine. Creates a local port forward to the Kubernetes agent service.")
         public void setLocalPort(String localPort) {
             this.localPort = localPort;
         }
