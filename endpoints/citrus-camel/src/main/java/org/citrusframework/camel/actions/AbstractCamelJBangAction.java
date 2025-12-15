@@ -21,6 +21,7 @@ import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.actions.camel.CamelJBangActionBuilderBase;
 import org.citrusframework.camel.jbang.CamelJBang;
 import org.citrusframework.camel.jbang.CamelJBangTestActor;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.IsJsonPredicate;
@@ -43,14 +44,19 @@ public abstract class AbstractCamelJBangAction extends AbstractTestAction {
         this.camelVersion = builder.camelVersion;
         this.kameletsVersion = builder.kameletsVersion;
         this.camelJBang = builder.camelJBang;
+    }
 
+    @Override
+    public void execute(TestContext context) {
         if (camelVersion != null) {
-            camelJBang.withSystemProperty("camel.jbang.version", camelVersion);
+            camelJBang.withSystemProperty("camel.jbang.version", context.replaceDynamicContentInString(camelVersion));
         }
 
         if (kameletsVersion != null) {
-            camelJBang.withSystemProperty("camel-kamelets.version", camelVersion);
+            camelJBang.withSystemProperty("camel-kamelets.version", context.replaceDynamicContentInString(kameletsVersion));
         }
+
+        super.execute(context);
     }
 
     protected static String getFileExt(String sourceCode) {
