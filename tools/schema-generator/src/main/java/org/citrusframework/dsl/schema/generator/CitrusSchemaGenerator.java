@@ -55,38 +55,51 @@ public class CitrusSchemaGenerator {
             String catalogIndex = FileUtils.readToString(Resources.fromClasspath("templates/catalog-index.json")).replaceAll("@version@", version);
             writeFile(outputDir, "index.json", catalogIndex);
 
-            JsonNode agentConfiguration = generateSchema(CitrusAgentConfiguration.class, Option.INLINE_ALL_SCHEMAS);
-            writeFile(outputDir, "citrus-agent-configuration.json", agentConfiguration.toPrettyString());
-
-            Path workingDir = outputDir.resolve("citrus/" + version);
+            Path workingDir = outputDir.resolve("citrus");
+            Path versionWorkingDir = workingDir.resolve(version);
             if (!workingDir.toFile().exists() && !workingDir.toFile().mkdirs()) {
                 throw new RuntimeException("Failed to create output directory: " + workingDir);
             }
+            if (!versionWorkingDir.toFile().exists() && !versionWorkingDir.toFile().mkdirs()) {
+                throw new RuntimeException("Failed to create output directory: " + versionWorkingDir);
+            }
+
+            JsonNode agentConfiguration = generateSchema(CitrusAgentConfiguration.class, Option.INLINE_ALL_SCHEMAS);
+            writeFile(workingDir, "citrus-agent-configuration.json", agentConfiguration.toPrettyString());
+            writeFile(versionWorkingDir, "citrus-agent-configuration.json", agentConfiguration.toPrettyString());
 
             String index = FileUtils.readToString(Resources.fromClasspath("templates/index.json")).replaceAll("@version@", version);
             writeFile(workingDir, "index.json", index);
+            writeFile(versionWorkingDir, "index.json", index);
 
             Catalog catalog = new Catalog();
             JsonNode jsonSchema = generateSchema(Test.class, catalog, new CitrusModule());
             writeFile(workingDir, "citrus-testcase.json", jsonSchema.toPrettyString() + "\n");
+            writeFile(versionWorkingDir, "citrus-testcase.json", jsonSchema.toPrettyString() + "\n");
 
             String xsdSchema = FileUtils.readToString(Resources.fromClasspath("org/citrusframework/schema/xml/testcase/citrus-testcase.xsd"));
             writeFile(workingDir, "citrus-testcase.xsd", xsdSchema);
+            writeFile(versionWorkingDir, "citrus-testcase.xsd", xsdSchema);
 
             String actionCatalog = MessagePayloadUtils.prettyPrintJson(YamlSupport.json().writeValueAsString(catalog.getTestActionCatalog()));
             writeFile(workingDir, "citrus-catalog-aggregate-test-actions.json", actionCatalog + "\n");
+            writeFile(versionWorkingDir, "citrus-catalog-aggregate-test-actions.json", actionCatalog + "\n");
 
             String containerCatalog = MessagePayloadUtils.prettyPrintJson(YamlSupport.json().writeValueAsString(catalog.getTestContainerCatalog()));
             writeFile(workingDir, "citrus-catalog-aggregate-test-containers.json", containerCatalog + "\n");
+            writeFile(versionWorkingDir, "citrus-catalog-aggregate-test-containers.json", containerCatalog + "\n");
 
             String endpointCatalog = MessagePayloadUtils.prettyPrintJson(YamlSupport.json().writeValueAsString(catalog.getEndpointCatalog()));
             writeFile(workingDir, "citrus-catalog-aggregate-endpoints.json", endpointCatalog + "\n");
+            writeFile(versionWorkingDir, "citrus-catalog-aggregate-endpoints.json", endpointCatalog + "\n");
 
             String functionsCatalog = MessagePayloadUtils.prettyPrintJson(YamlSupport.json().writeValueAsString(catalog.getFunctionsCatalog()));
             writeFile(workingDir, "citrus-catalog-aggregate-functions.json", functionsCatalog + "\n");
+            writeFile(versionWorkingDir, "citrus-catalog-aggregate-functions.json", functionsCatalog + "\n");
 
             String validationMatcherCatalog = MessagePayloadUtils.prettyPrintJson(YamlSupport.json().writeValueAsString(catalog.getValidationMatcherCatalog()));
             writeFile(workingDir, "citrus-catalog-aggregate-validation-matcher.json", validationMatcherCatalog + "\n");
+            writeFile(versionWorkingDir, "citrus-catalog-aggregate-validation-matcher.json", validationMatcherCatalog + "\n");
         } catch (IOException e) {
             throw new RuntimeException("Failed to generate Citrus DSL schema", e);
         }
