@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -229,6 +230,22 @@ public class CamelJBang {
      * Get details for integration previously run via JBang Camel app. Integration is identified by its process id.
      */
     public Map<String, String> get(Long pid) {
+        // Check for process PID (1st column)
+        return get(values -> values.get(0).equals(String.valueOf(pid)));
+    }
+
+    /**
+     * Get details for integration previously run via JBang Camel app. Integration is identified by its process name.
+     */
+    public Map<String, String> get(String name) {
+        // Check for process name (2nd column)
+        return get(values -> values.get(1).equals(name));
+    }
+
+    /**
+     * Get details for integration previously run via JBang Camel app. Integration is identified by given filter predicate on the process details.
+     */
+    private Map<String, String> get(Predicate<List<String>> filter) {
         Map<String, String> properties = new HashMap<>();
 
         String output = ps();
@@ -238,19 +255,20 @@ public class CamelJBang {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(output.getBytes(StandardCharsets.UTF_8))))) {
             String line = reader.readLine();
-            //on Fedora system, the first line contains some timestamps and not property names, in this case, skip it
-            if(line != null && !line.trim().matches("^\\w+(\\s+\\w+)*$")) {
+            //on some operating systems, the first line contains some timestamps and not property names, in this case, skip it
+            while (line != null && !line.trim().startsWith("PID")) {
                 line = reader.readLine();
-                if (line == null) {
-                    return properties;
-                }
+            }
+
+            if (line == null) {
+                return properties;
             }
 
             List<String> names = new ArrayList<>(Arrays.asList(line.trim().split("\\s+")));
 
             while ((line = reader.readLine()) != null) {
                 List<String> values = new ArrayList<>(Arrays.asList(line.trim().split("\\s+")));
-                if (!values.isEmpty() && values.get(0).equals(String.valueOf(pid))) {
+                if (!values.isEmpty() && filter.test(values)) {
                     for (int i=0; i < names.size(); i++) {
                         if (i < values.size()) {
                             properties.put(names.get(i), values.get(i));

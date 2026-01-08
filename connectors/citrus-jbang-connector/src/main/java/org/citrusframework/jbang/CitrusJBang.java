@@ -212,6 +212,14 @@ public class CitrusJBang {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(output.getBytes(StandardCharsets.UTF_8))))) {
             String line = reader.readLine();
+            //on some operating systems, the first line contains some timestamps and not property names, in this case, skip it
+            while (line != null && !line.trim().startsWith("PID")) {
+                line = reader.readLine();
+            }
+
+            if (line == null) {
+                return properties;
+            }
 
             List<String> names = new ArrayList<>(Arrays.asList(line.trim().split("\\s+")));
 

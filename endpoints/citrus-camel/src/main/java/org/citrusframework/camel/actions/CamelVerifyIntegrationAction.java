@@ -171,19 +171,32 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
     }
 
     private boolean findProcessAndVerifyStatus(Long pid, String name, String phase) {
-        Map<String, String> properties = camelJBang().get(pid);
-        if ((phase.equals("Stopped") && properties.isEmpty()) || (!properties.isEmpty() && properties.getOrDefault("STATUS", "").equals(phase))) {
-            logger.info(String.format("Verified Camel integration '%s' state '%s' - All values OK!", name, phase));
+        // 1st try to get Camel integration status identify by the process PID
+        if (verifyStatus(pid, name, phase, camelJBang().get(pid))) {
             return true;
-        } else if (properties.getOrDefault("STATUS", "").equals("Error")) {
-            logger.info(String.format("Camel integration '%s' is in state 'Error'", name));
-            if (stopOnErrorStatus) {
-                throw new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' - is in state 'Error'", name));
-            }
+        }
+
+        // 2nd try to get Camel integration status identify by the process name
+        if (verifyStatus(pid, name, phase, camelJBang().get(name))) {
+            return true;
         }
 
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Camel integration '%s' (pid:%d) not in state '%s'", name, pid, phase));
+        }
+
+        return false;
+    }
+
+    private boolean verifyStatus(Long pid, String name, String phase, Map<String, String> properties) {
+        if ((phase.equals("Stopped") && properties.isEmpty()) || (!properties.isEmpty() && properties.getOrDefault("STATUS", "").equals(phase))) {
+            logger.info(String.format("Verified Camel integration '%s' (pid:%d) state '%s' - All values OK!", name, pid, phase));
+            return true;
+        } else if (properties.getOrDefault("STATUS", "").equals("Error")) {
+            logger.info(String.format("Camel integration '%s' (pid:%d) is in state 'Error'", name, pid));
+            if (stopOnErrorStatus) {
+                throw new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' (pid:%d) - is in state 'Error'", name, pid));
+            }
         }
 
         return false;
