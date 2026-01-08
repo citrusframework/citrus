@@ -23,6 +23,12 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>${project.build.directory}/generated-resources</directory>
+      </resource>
+    </resources>
+
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
