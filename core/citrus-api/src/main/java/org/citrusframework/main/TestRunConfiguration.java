@@ -137,7 +137,9 @@ public class TestRunConfiguration {
     @SchemaProperty(description = "Set the test jar holding tests to execute. " +
             "Jar file is used to perform package scans for test cases to run.")
     public void setTestJar(String testJar) {
-        this.testJar = Resources.create(testJar).getFile();
+        if (testJar != null) {
+            this.testJar = Resources.create(testJar).getFile();
+        }
     }
 
     /**
