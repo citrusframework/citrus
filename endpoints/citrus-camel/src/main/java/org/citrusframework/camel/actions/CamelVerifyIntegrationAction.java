@@ -189,10 +189,10 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
     }
 
     private boolean verifyStatus(Long pid, String name, String phase, Map<String, String> properties) {
-        if ((phase.equals("Stopped") && properties.isEmpty()) || (!properties.isEmpty() && properties.getOrDefault("status", "").equals(phase))) {
+        if ((phase.equalsIgnoreCase("Stopped") && properties.isEmpty()) || (!properties.isEmpty() && properties.getOrDefault("status", "").equals(phase))) {
             logger.info(String.format("Verified Camel integration '%s' (pid:%d) state '%s' - All values OK!", name, pid, phase));
             return true;
-        } else if (properties.getOrDefault("STATUS", "").equals("Error")) {
+        } else if (properties.getOrDefault("status", "").equals("Error")) {
             logger.info(String.format("Camel integration '%s' (pid:%d) is in state 'Error'", name, pid));
             if (stopOnErrorStatus) {
                 throw new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' (pid:%d) - is in state 'Error'", name, pid));

@@ -63,8 +63,8 @@ public class CamelStopIntegrationAction extends AbstractCamelJBangAction {
                 pid = context.getVariable(name + ":pid", Long.class);
             } else {
                 pid = camelJBang().getAll().stream()
-                        .filter(props -> name.equals(props.get("NAME")) && !props.getOrDefault("PID", "").isBlank())
-                        .map(props -> Long.valueOf(props.get("PID"))).findFirst()
+                        .filter(props -> name.equals(props.get("name")) && !props.getOrDefault("pid", "").isBlank())
+                        .map(props -> Long.valueOf(props.get("pid"))).findFirst()
                         .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing process id for Camel integration %s:pid", name)));
             }
 
