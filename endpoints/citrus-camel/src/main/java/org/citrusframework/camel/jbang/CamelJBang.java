@@ -28,17 +28,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.JBangSupport;
 import org.citrusframework.jbang.ProcessAndOutput;
+import org.citrusframework.message.MessagePayloadUtils;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +61,7 @@ public class CamelJBang {
 
     private String version;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * Prevent direct instantiation.
@@ -217,9 +219,16 @@ public class CamelJBang {
      * Get information on running integrations.
      */
     public String ps() {
-        ProcessAndOutput p = app.run("ps", "--json");
-        //cleans lines starting with unprintable characters (happens on Fedora)
-        return p.getOutput().replaceAll("(?m)^\\p{C}.*\\R?","");
+        ProcessAndOutput p = app.run("ps");
+        return p.getOutput();
+    }
+
+    /**
+     * Get information on running integrations.
+     */
+    public String ps(String ... args) {
+        ProcessAndOutput p = app.run("ps", args);
+        return p.getOutput();
     }
 
     /**
@@ -254,29 +263,65 @@ public class CamelJBang {
      * Get details for integration previously run via JBang Camel app. Integration is identified by given filter predicate on the process details.
      */
     private Map<String, String> get(Predicate<Map<String, String>> filter) {
-
-        String output = ps();
-
-        try {
-            List<Map<String, String>> list = objectMapper.readValue(output, new TypeReference<>() {});
-
-            return list.stream().filter(filter).findAny().orElse(Collections.emptyMap());
-
-        } catch (JsonProcessingException e) {
-            throw new CitrusRuntimeException("Failed to get integration details from JBang", e);
-        }
+        return getAll().stream()
+                .filter(filter)
+                .findAny()
+                .orElse(Collections.emptyMap());
     }
 
     /**
      * Get list of integrations previously run via JBang Camel app.
      */
     public List<Map<String, String>> getAll() {
-
         try {
-            String output = ps();
+            String output = ps("--json");
+            // cleans lines starting with unprintable characters (happens on Fedora)
+            output = output.replaceAll("(?m)^\\p{C}.*\\R?","");
 
-            return objectMapper.readValue(output, new TypeReference<>() {});
+            if (!output.isBlank() && MessagePayloadUtils.isJson(output)) {
+                return objectMapper.readValue(output, new TypeReference<>() {});
+            } else {
+                // fallback to extracting integration details from pure plaintext output (used by older Camel versions)
+                return parseAll();
+            }
         } catch (JsonProcessingException e) {
+            throw new CitrusRuntimeException("Failed to list integrations from JBang", e);
+        }
+    }
+
+    /**
+     * Get list of integrations previously run via JBang Camel app.
+     * Parses the integration details from the default plaintext table output returned from the Camel ps command.
+     */
+    private List<Map<String, String>> parseAll() {
+        List<Map<String, String>> integrations = new ArrayList<>();
+
+        String output = ps();
+        if (output.isBlank()) {
+            return integrations;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(output.getBytes(StandardCharsets.UTF_8))))) {
+            String line = reader.readLine();
+
+            List<String> names = new ArrayList<>(Arrays.asList(line.trim().split("\\s+")));
+
+            while ((line = reader.readLine()) != null) {
+                Map<String, String> properties = new HashMap<>();
+                List<String> values = new ArrayList<>(Arrays.asList(line.trim().split("\\s+")));
+                for (int i=0; i < names.size(); i++) {
+                    if (i < values.size()) {
+                        properties.put(names.get(i).toLowerCase(Locale.US), values.get(i));
+                    } else {
+                        properties.put(names.get(i).toLowerCase(Locale.US), "");
+                    }
+                }
+
+                integrations.add(properties);
+            }
+
+            return integrations;
+        } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to list integrations from JBang", e);
         }
     }
