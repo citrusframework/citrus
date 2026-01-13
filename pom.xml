@@ -155,7 +155,7 @@
     <project.docs.version>${project.version}</project.docs.version>
     <java.version>17</java.version>
 
-    <maven.version>3.9.9</maven.version>
+    <maven.version>3.9.11</maven.version>
     <maven.compiler.version>3.14.1</maven.compiler.version>
     <maven.compiler.release>${java.version}</maven.compiler.release>
     <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -192,17 +192,17 @@
 
     <activemq.artemis.version>2.44.0</activemq.artemis.version>
     <angus-activation.version>2.0.3</angus-activation.version>
-    <angus-mail.version>2.0.3</angus-mail.version>
+    <angus-mail.version>2.0.5</angus-mail.version>
     <apache.ant.version>1.10.15</apache.ant.version>
-    <apache.camel.version>4.16.0</apache.camel.version>
+    <apache.camel.version>4.17.0</apache.camel.version>
     <apicurio.data-models.version>1.1.33</apicurio.data-models.version>
     <ascii-table-version>1.8.0</ascii-table-version>
     <assertj.version>3.27.6</assertj.version>
     <awaitility.version>4.3.0</awaitility.version>
-    <aws-java-sdk2.version>2.37.5</aws-java-sdk2.version>
+    <aws-java-sdk2.version>2.41.2</aws-java-sdk2.version>
     <bouncycastle.version>1.83</bouncycastle.version>
-    <byte.buddy.version>1.18.2</byte.buddy.version>
-    <commons.dbcp2.version>2.13.0</commons.dbcp2.version>
+    <byte.buddy.version>1.18.3</byte.buddy.version>
+    <commons.dbcp2.version>2.14.0</commons.dbcp2.version>
     <commons.cli.version>1.11.0</commons.cli.version>
     <commons.codec.version>1.20.0</commons.codec.version>
     <commons.io.version>2.21.0</commons.io.version>
@@ -259,28 +259,28 @@
     <org.openapitools.version>7.17.0</org.openapitools.version>
     <picoli-version>4.7.7</picoli-version>
     <postgresql.version>42.7.8</postgresql.version>
-    <quarkus.platform.version>3.30.3</quarkus.platform.version>
+    <quarkus.platform.version>3.30.4</quarkus.platform.version>
     <saaj.version>3.0.4</saaj.version>
     <selenium.version>4.39.0</selenium.version>
     <slf4j.version>2.0.17</slf4j.version>
     <snappy.version>1.1.10.8</snappy.version>
     <snakeyaml.version>2.5</snakeyaml.version>
     <spring.version>6.2.15</spring.version>
-    <spring.boot.version>3.5.8</spring.boot.version>
+    <spring.boot.version>3.5.9</spring.boot.version>
     <spring.ws.version>4.1.2</spring.ws.version>
     <spring.integration.version>6.5.4</spring.integration.version>
     <spring.restdocs.version>3.0.5</spring.restdocs.version>
-    <sshd.version>2.15.0</sshd.version>
+    <sshd.version>2.16.0</sshd.version>
     <swagger.version>2.2.37</swagger.version>
     <swagger.parser.version>2.1.22</swagger.parser.version>
     <swagger-request-validator.version>2.46.0</swagger-request-validator.version>
     <system-stubs.version>2.1.8</system-stubs.version>
-    <testcontainers.version>1.21.3</testcontainers.version>
+    <testcontainers.version>1.21.4</testcontainers.version>
     <testng.version>7.11.0</testng.version>
     <!-- bound to https://mvnrepository.com/artifact/io.fabric8/kubernetes-httpclient-vertx/${k8s.client.version} -->
     <vertx.version>4.5.22</vertx.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
-    <xbean-spring.version>4.28</xbean-spring.version>
+    <xbean-spring.version>4.29</xbean-spring.version>
     <xmlbeans.version>5.2.1</xmlbeans.version>
     <xmlbeans-xpath.version>2.6.0</xmlbeans-xpath.version>
     <xerces.version>2.12.2</xerces.version>
