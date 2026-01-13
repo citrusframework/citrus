@@ -50,6 +50,6 @@ http\://www.citrusframework.org/schema/websocket/config/citrus-websocket-config-
 http\://www.citrusframework.org/schema/websocket/config/citrus-websocket-config-4.8.0.xsd=org/citrusframework/schema/citrus-websocket-config-4.8.0.xsd
 http\://www.citrusframework.org/schema/websocket/config/citrus-websocket-config-4.8.1.xsd=org/citrusframework/schema/citrus-websocket-config-4.8.1.xsd
 http\://www.citrusframework.org/schema/websocket/config/citrus-websocket-config-4.8.2.xsd=org/citrusframework/schema/citrus-websocket-config-4.8.2.xsd
-http\://www.citrusframework.org/schema/websocket/config/citrus-websocket-config-4.10.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-websocket-config-4.10.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/websocket/config/citrus-websocket-config-4.9.1.xsd=org/citrusframework/schema/citrus-websocket-config-4.9.1.xsd
 http\://www.citrusframework.org/schema/websocket/config/citrus-websocket-config-4.9.0.xsd=org/citrusframework/schema/citrus-websocket-config-4.9.0.xsd
 http\://www.citrusframework.org/schema/websocket/config/citrus-websocket-config.xsd=org/citrusframework/schema/citrus-websocket-config.xsd
