@@ -278,7 +278,7 @@
     <testcontainers.version>1.21.4</testcontainers.version>
     <testng.version>7.11.0</testng.version>
     <!-- bound to https://mvnrepository.com/artifact/io.fabric8/kubernetes-httpclient-vertx/${k8s.client.version} -->
-    <vertx.version>4.5.22</vertx.version>
+    <vertx.version>4.5.24</vertx.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
     <xbean-spring.version>4.29</xbean-spring.version>
     <xmlbeans.version>5.2.1</xmlbeans.version>
