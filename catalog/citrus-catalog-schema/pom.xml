@@ -13,15 +13,6 @@
   <name>Citrus :: Catalog :: Schema</name>
   <description>Citrus catalog schema collection</description>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-schema-generator</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-  </dependencies>
-
   <build>
     <resources>
       <resource>
@@ -43,12 +34,25 @@
           </execution>
         </executions>
         <configuration>
+          <includeProjectDependencies>false</includeProjectDependencies>
+          <includePluginDependencies>true</includePluginDependencies>
+          <executableDependency>
+            <groupId>org.citrusframework</groupId>
+            <artifactId>citrus-schema-generator</artifactId>
+          </executableDependency>
           <mainClass>org.citrusframework.dsl.schema.generator.CitrusSchemaGenerator</mainClass>
           <arguments>
             <argument>${project.build.directory}/generated-resources/org/citrusframework/schema</argument>
             <argument>${project.version}</argument>
           </arguments>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.citrusframework</groupId>
+            <artifactId>citrus-schema-generator</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
