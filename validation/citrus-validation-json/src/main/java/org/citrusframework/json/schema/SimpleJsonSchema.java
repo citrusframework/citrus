@@ -20,9 +20,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Objects;
 
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion;
+import com.networknt.schema.Schema;
+import com.networknt.schema.SchemaRegistry;
+import com.networknt.schema.SpecificationVersion;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
@@ -34,13 +34,14 @@ import org.citrusframework.spi.Resource;
 public class SimpleJsonSchema implements InitializingPhase {
 
     /** Default json schema factory */
-    private final JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V4);
+    private final SchemaRegistry jsonSchemaFactory = SchemaRegistry.withDefaultDialect(
+        SpecificationVersion.DRAFT_4);
 
     /** The Resource of the json schema passed from the bean config */
     private Resource json;
 
     /** The parsed json schema ready for validation */
-    private JsonSchema schema;
+    private Schema schema;
 
     public SimpleJsonSchema(Resource resource) {
         json = resource;
@@ -67,11 +68,11 @@ public class SimpleJsonSchema implements InitializingPhase {
         this.json = json;
     }
 
-    public JsonSchema getSchema() {
+    public Schema getSchema() {
         return schema;
     }
 
-    public void setSchema(JsonSchema schema) {
+    public void setSchema(Schema schema) {
         this.schema = schema;
     }
 

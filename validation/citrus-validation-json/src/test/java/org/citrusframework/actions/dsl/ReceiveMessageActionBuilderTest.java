@@ -16,14 +16,25 @@
 
 package org.citrusframework.actions.dsl;
 
+import static java.util.Collections.emptyList;
+import static org.citrusframework.message.MessageType.JSON;
+import static org.citrusframework.message.MessageType.PLAINTEXT;
+import static org.citrusframework.message.MessageType.XML;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.networknt.schema.JsonSchema;
+import com.networknt.schema.Schema;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
@@ -56,14 +67,6 @@ import org.hamcrest.core.AnyOf;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static org.citrusframework.message.MessageType.JSON;
-import static org.citrusframework.message.MessageType.PLAINTEXT;
-import static org.citrusframework.message.MessageType.XML;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Mockito.*;
 
 public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
@@ -314,7 +317,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
     }
 
     @Test
-    public void testReceiveBuilderWithHeaderResource() throws IOException {
+    public void testReceiveBuilderWithHeaderResource() {
         reset(resource, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
@@ -372,7 +375,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
     }
 
     @Test
-    public void testReceiveBuilderWithMultipleHeaderResource() throws IOException {
+    public void testReceiveBuilderWithMultipleHeaderResource() {
         reset(resource, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
@@ -844,8 +847,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 new DefaultMessage("{}")
                         .setHeader("operation", "sayHello"));
 
-        JsonSchema jsonSchemaMock = mock(JsonSchema.class);
-        when(jsonSchemaMock.validate(any())).thenReturn(Collections.emptySet());
+        Schema jsonSchemaMock = mock(Schema.class);
+        when(jsonSchemaMock.validate(any())).thenReturn(emptyList());
         when(schema.getSchema()).thenReturn(jsonSchemaMock);
 
         context.setReferenceResolver(new SpringBeanReferenceResolver(applicationContext));
@@ -893,8 +896,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 new DefaultMessage("{}")
                         .setHeader("operation", "sayHello"));
 
-        JsonSchema jsonSchemaMock = mock(JsonSchema.class);
-        when(jsonSchemaMock.validate(any())).thenReturn(Collections.emptySet());
+        Schema jsonSchemaMock = mock(Schema.class);
+        when(jsonSchemaMock.validate(any())).thenReturn(emptyList());
         when(schema.getSchema()).thenReturn(jsonSchemaMock);
 
         context.setReferenceResolver(new SpringBeanReferenceResolver(applicationContext));
@@ -942,8 +945,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 new DefaultMessage("{}")
                         .setHeader("operation", "sayHello"));
 
-        JsonSchema jsonSchemaMock = mock(JsonSchema.class);
-        when(jsonSchemaMock.validate(any())).thenReturn(Collections.emptySet());
+        Schema jsonSchemaMock = mock(Schema.class);
+        when(jsonSchemaMock.validate(any())).thenReturn(emptyList());
         when(schema.getSchema()).thenReturn(jsonSchemaMock);
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);

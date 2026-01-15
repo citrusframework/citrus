@@ -16,15 +16,14 @@
 
 package org.citrusframework.validation.json.report;
 
-import com.networknt.schema.ValidationMessage;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
+import com.networknt.schema.Error;
 
 /**
  * This class implements a report that represents a gracious interpretation of a list of JSON schema validation messages
- * (e.g. a {@link List<ValidationMessage>}).
+ * (e.g. a {@link List<Error>}).
  * <p>
  * Its main use-case is this: We cannot sincerely determine the matching JSON schema when validating messages in
  * {@link org.citrusframework.validation.json.schema.JsonSchemaValidation}. Therefore, if at least one schema validates
@@ -34,7 +33,7 @@ import java.util.Set;
 public class GraciousProcessingReport {
 
     private boolean success;
-    private final List<ValidationMessage> validationMessages = new ArrayList<>();
+    private final List<Error> validationMessages = new ArrayList<>();
 
     /**
      * Creates a new {@link GraciousProcessingReport} with the initial success state being {@code false}.
@@ -57,7 +56,7 @@ public class GraciousProcessingReport {
      *
      * @param validationMessages The list of validation messages to merge the existing report
      */
-    public GraciousProcessingReport(Set<ValidationMessage> validationMessages) {
+    public GraciousProcessingReport(List<Error> validationMessages) {
         this(false);
         mergeWith(validationMessages);
     }
@@ -70,7 +69,7 @@ public class GraciousProcessingReport {
         this.success = success;
     }
 
-    public List<ValidationMessage> getValidationMessages() {
+    public List<Error> getValidationMessages() {
         return validationMessages;
     }
 
@@ -79,7 +78,7 @@ public class GraciousProcessingReport {
      *
      * @param validationMessages the new validation messages to consider
      */
-    public void mergeWith(Set<ValidationMessage> validationMessages) {
+    public void mergeWith(List<Error> validationMessages) {
         success = success || validationMessages.isEmpty();
         this.validationMessages.addAll(validationMessages);
     }
