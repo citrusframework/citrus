@@ -16,13 +16,13 @@
 
 package org.citrusframework.message;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 import java.util.Map;
 
 import org.citrusframework.UnitTestSupport;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
 
 public class DefaultMessageTest extends UnitTestSupport {
 
@@ -34,7 +34,7 @@ public class DefaultMessageTest extends UnitTestSupport {
         message.setHeader("password", "foo");
 
         String output = message.print();
-        assertEquals(output, String.format("DEFAULTMESSAGE " +
+        assertThat(output).isEqualToIgnoringNewLines(String.format("DEFAULTMESSAGE " +
                     "[id: %s]%n" +
                     "[headers: {" +
                         "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=foo" +
@@ -51,7 +51,7 @@ public class DefaultMessageTest extends UnitTestSupport {
         message.setHeader("secret", "bar");
 
         String output = message.print(context);
-        assertEquals(output, String.format("DEFAULTMESSAGE " +
+        assertThat(output).isEqualToIgnoringNewLines(String.format("DEFAULTMESSAGE " +
                     "[id: %s]%n" +
                     "[headers: {" +
                         "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****, secret=****" +
@@ -68,7 +68,7 @@ public class DefaultMessageTest extends UnitTestSupport {
         message.setHeader("secret", "bar");
 
         String output = message.print(context);
-        assertEquals(output, String.format("DEFAULTMESSAGE " +
+        assertThat(output).isEqualToIgnoringNewLines(String.format("DEFAULTMESSAGE " +
                     "[id: %s]%n" +
                     "[headers: {" +
                         "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****, secret=****" +
@@ -84,7 +84,7 @@ public class DefaultMessageTest extends UnitTestSupport {
         message.setHeader("password", "foo");
 
         String output = message.print(context);
-        assertEquals(output, String.format("DEFAULTMESSAGE " +
+        assertThat(output).isEqualToIgnoringNewLines(String.format("DEFAULTMESSAGE " +
                     "[id: %s]%n" +
                     "[headers: {" +
                         "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****" +
@@ -101,7 +101,7 @@ public class DefaultMessageTest extends UnitTestSupport {
         message.setHeader("secretKey", "bar");
 
         String output = message.print(context);
-        assertEquals(output, String.format("DEFAULTMESSAGE " +
+        assertThat(output).isEqualToIgnoringNewLines(String.format("DEFAULTMESSAGE " +
                     "[id: %s]%n" +
                     "[headers: {" +
                         "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****, secretKey=****" +
