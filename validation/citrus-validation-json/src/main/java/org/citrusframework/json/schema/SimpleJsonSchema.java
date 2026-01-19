@@ -23,6 +23,7 @@ import java.util.Objects;
 import com.networknt.schema.Schema;
 import com.networknt.schema.SchemaRegistry;
 import com.networknt.schema.SpecificationVersion;
+import com.networknt.schema.resource.IriResourceLoader;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
@@ -35,7 +36,10 @@ public class SimpleJsonSchema implements InitializingPhase {
 
     /** Default json schema factory */
     private final SchemaRegistry jsonSchemaFactory = SchemaRegistry.withDefaultDialect(
-        SpecificationVersion.DRAFT_4);
+        SpecificationVersion.DRAFT_7, builder ->
+            // This opts in loading from Iris
+            builder.resourceLoaders(resourceLoaders -> resourceLoaders.add(new IriResourceLoader()))
+        );
 
     /** The Resource of the json schema passed from the bean config */
     private Resource json;
