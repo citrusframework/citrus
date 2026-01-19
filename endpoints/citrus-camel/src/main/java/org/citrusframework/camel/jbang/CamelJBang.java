@@ -281,11 +281,18 @@ public class CamelJBang {
             if (!output.isBlank() && MessagePayloadUtils.isJson(output)) {
                 return objectMapper.readValue(output, new TypeReference<>() {});
             } else {
-                // fallback to extracting integration details from pure plaintext output (used by older Camel versions)
+                // fallback to extracting integration details from plaintext ascii table output (used by older Camel versions)
                 return parseAll();
             }
         } catch (JsonProcessingException e) {
-            throw new CitrusRuntimeException("Failed to list integrations from JBang", e);
+            logger.warn("Failed to list integrations from Camel JBang");
+
+            if (logger.isDebugEnabled()) {
+                logger.debug("Failed to parse Camel JBang command Json output - caused by {}: {}", e.getClass(), e.getMessage());
+            }
+
+            // fallback to listing integration details from plaintext ascii table output
+            return parseAll();
         }
     }
 
@@ -322,7 +329,7 @@ public class CamelJBang {
 
             return integrations;
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to list integrations from JBang", e);
+            throw new CitrusRuntimeException("Failed to list integrations from Camel JBang", e);
         }
     }
 
