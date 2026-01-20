@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 import com.networknt.schema.Schema;
+import com.networknt.schema.SchemaLocation;
 import com.networknt.schema.SchemaRegistry;
 import com.networknt.schema.SpecificationVersion;
 import com.networknt.schema.resource.IriResourceLoader;
@@ -55,15 +56,32 @@ public class SimpleJsonSchema implements InitializingPhase {
         super();
     }
 
+    /**
+     * Initializes the JSON schema used by this component.
+     *
+     * <p>The schema is loaded via a {@link SchemaLocation} rather than directly from an input stream.
+     * This enables proper resolution of referenced schemas (e.g. via {@code $ref}) and, in
+     * combination with {@code IrisResourceLoader}, also allows loading schemas from HTTP locations.</p>
+     */
     @Override
     public void initialize() {
+        try  {
+            schema = jsonSchemaFactory.getSchema(SchemaLocation.of(json.getURL().toString()));
+        } catch (Exception e) {
+            initializeFromFile();
+        }
+    }
+
+    /**
+     * Ensure backwards compatibility in any case, loading via SchemaLocation fails.
+     */
+    private void initializeFromFile() {
         try (FileInputStream fileInputStream = new FileInputStream(json.getFile())) {
             schema = jsonSchemaFactory.getSchema(fileInputStream);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to load Json schema", e);
         }
     }
-
     public Resource getJson() {
         return json;
     }
