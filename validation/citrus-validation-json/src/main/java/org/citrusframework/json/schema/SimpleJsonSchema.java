@@ -16,8 +16,7 @@
 
 package org.citrusframework.json.schema;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 
 import com.networknt.schema.Schema;
@@ -28,6 +27,7 @@ import com.networknt.schema.resource.IriResourceLoader;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources.ByteArrayResource;
 
 /**
  * Adapter between the resource reference from the bean configuration and the usable {@link SimpleJsonSchema} for
@@ -65,23 +65,31 @@ public class SimpleJsonSchema implements InitializingPhase {
      */
     @Override
     public void initialize() {
-        try  {
-            schema = jsonSchemaFactory.getSchema(SchemaLocation.of(json.getURL().toString()));
-        } catch (Exception e) {
-            initializeFromFile();
+
+        if (json instanceof ByteArrayResource) {
+            initializeFromStream();
+        } else {
+            try  {
+                // All other resources provide a URL, URL allows for loading or dependencies
+                schema = jsonSchemaFactory.getSchema(SchemaLocation.of(json.getURL().toString()));
+            } catch (Exception e) {
+                // If all fails, go for the stream
+                initializeFromStream();
+            }
         }
     }
 
     /**
      * Ensure backwards compatibility in any case, loading via SchemaLocation fails.
      */
-    private void initializeFromFile() {
-        try (FileInputStream fileInputStream = new FileInputStream(json.getFile())) {
-            schema = jsonSchemaFactory.getSchema(fileInputStream);
-        } catch (IOException e) {
+    private void initializeFromStream() {
+        try (InputStream inputStream = json.getInputStream()) {
+            schema = jsonSchemaFactory.getSchema(inputStream);
+        } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to load Json schema", e);
         }
     }
+
     public Resource getJson() {
         return json;
     }
