@@ -35,7 +35,7 @@ import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.zookeeper.actions.ZooExecuteAction;
 import org.citrusframework.zookeeper.client.ZooClient;
 import org.citrusframework.zookeeper.command.ZooCommand;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;

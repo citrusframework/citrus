@@ -16,17 +16,27 @@
 
 package org.citrusframework.docker.actions;
 
-import java.util.Collections;
-import java.util.Optional;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.actions.docker.DockerActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.client.DockerClient;
-import org.citrusframework.docker.command.*;
+import org.citrusframework.docker.command.AbstractDockerCommandBuilder;
+import org.citrusframework.docker.command.ContainerCreate;
+import org.citrusframework.docker.command.ContainerInspect;
+import org.citrusframework.docker.command.ContainerRemove;
+import org.citrusframework.docker.command.ContainerStart;
+import org.citrusframework.docker.command.ContainerStop;
+import org.citrusframework.docker.command.ContainerWait;
+import org.citrusframework.docker.command.DockerCommand;
+import org.citrusframework.docker.command.ImageBuild;
+import org.citrusframework.docker.command.ImageInspect;
+import org.citrusframework.docker.command.ImagePull;
+import org.citrusframework.docker.command.ImageRemove;
+import org.citrusframework.docker.command.Info;
+import org.citrusframework.docker.command.Ping;
+import org.citrusframework.docker.command.StaticDockerCommandBuilder;
+import org.citrusframework.docker.command.Version;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
@@ -36,6 +46,10 @@ import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.databind.ObjectMapper;
+
+import java.util.Collections;
+import java.util.Optional;
 
 /**
  * Executes docker command with given docker client implementation. Possible command result is stored within command object.
@@ -108,14 +122,10 @@ public class DockerExecuteAction extends AbstractTestAction {
                 throw new ValidationException("Missing Docker command result");
             }
 
-            try {
-                String commandResultJson = jsonMapper.writeValueAsString(command.getCommandResult());
-                JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-                getMessageValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(expectedCommandResult), context, Collections.singletonList(validationContext));
-                logger.debug("Docker command result validation successful - all values OK!");
-            } catch (JsonProcessingException e) {
-                throw new CitrusRuntimeException(e);
-            }
+            String commandResultJson = jsonMapper.writeValueAsString(command.getCommandResult());
+            JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
+            getMessageValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(expectedCommandResult), context, Collections.singletonList(validationContext));
+            logger.debug("Docker command result validation successful - all values OK!");
         }
 
         if (command.getResultCallback() != null) {

@@ -12,6 +12,10 @@
   <artifactId>citrus-openapi</artifactId>
   <name>Citrus :: Connectors :: OpenAPI</name>
 
+  <properties>
+    <jackson2.version>2.21.0</jackson2.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.citrusframework</groupId>
@@ -51,6 +55,22 @@
     </dependency>
 
     <!--
+      apicur.io and Swagger Validator still need Jackson 2.0 classes
+    -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson2.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson2.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <!--
         Include mail API (and API only!) so com.atlassian.oai:swagger-request-validator-core builds correctly.
         Note that this is a legacy dependency and should not be managed globally.
     -->
@@ -58,11 +78,6 @@
       <groupId>javax.mail</groupId>
       <artifactId>javax.mail-api</artifactId>
       <version>1.6.2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-jsr310</artifactId>
     </dependency>
 
     <!-- Test scoped dependencies -->

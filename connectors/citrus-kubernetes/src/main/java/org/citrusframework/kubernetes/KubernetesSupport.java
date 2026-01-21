@@ -16,19 +16,7 @@
 
 package org.citrusframework.kubernetes;
 
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.fabric8.kubernetes.api.model.ContainerStatus;
 import io.fabric8.kubernetes.api.model.GenericKubernetesResource;
 import io.fabric8.kubernetes.api.model.GenericKubernetesResourceList;
@@ -47,21 +35,32 @@ import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.nodes.NodeTuple;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+
+import static tools.jackson.core.StreamReadFeature.AUTO_CLOSE_SOURCE;
+import static tools.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+import static tools.jackson.databind.cfg.EnumFeature.READ_ENUMS_USING_TO_STRING;
+import static tools.jackson.databind.cfg.EnumFeature.WRITE_ENUMS_USING_TO_STRING;
 
 public final class KubernetesSupport {
 
-    private static final ObjectMapper OBJECT_MAPPER;
-
-    static {
-        OBJECT_MAPPER = JsonMapper.builder()
-                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
-                .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
-                .disable(JsonParser.Feature.AUTO_CLOSE_SOURCE)
-                .enable(MapperFeature.BLOCK_UNSAFE_POLYMORPHIC_BASE_TYPES)
-                .build()
-                .setDefaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY));
-    }
+    private static final ObjectMapper OBJECT_MAPPER = JsonMapper.builder()
+            .disable(FAIL_ON_UNKNOWN_PROPERTIES)
+            .enable(READ_ENUMS_USING_TO_STRING)
+            .enable(WRITE_ENUMS_USING_TO_STRING)
+            .disable(AUTO_CLOSE_SOURCE)
+            // .enable(MBLOCK_UNSAFE_POLYMORPHIC_BASE_TYPES)
+            .changeDefaultPropertyInclusion((handler) ->
+                    handler.withValueInclusion(JsonInclude.Include.NON_EMPTY)
+            )
+            .build();
 
     private KubernetesSupport() {
         // prevent instantiation of utility class
@@ -70,6 +69,7 @@ public final class KubernetesSupport {
     /**
      * Dump given domain model object as YAML.
      * Uses Json conversion to generic map as intermediate step. This makes sure to properly write Json additional properties.
+     *
      * @param model
      * @return
      */
@@ -80,6 +80,7 @@ public final class KubernetesSupport {
     /**
      * Retrieve current Kubernetes client if set in Citrus context as bean reference.
      * Otherwise, create new default instance.
+     *
      * @param citrus holding the potential bean reference to the client instance.
      * @return
      */
@@ -94,6 +95,7 @@ public final class KubernetesSupport {
     /**
      * Retrieve current Kubernetes client if set in test context as bean reference.
      * Otherwise, create new default instance.
+     *
      * @param context holding the potential client bean reference.
      * @return
      */
@@ -108,6 +110,7 @@ public final class KubernetesSupport {
     /**
      * Retrieve current namespace set as test variable.
      * In case no suitable test variable is available use namespace loaded from Kubernetes settings via environment settings.
+     *
      * @param context potentially holding the namespace variable.
      * @return
      */
@@ -133,7 +136,7 @@ public final class KubernetesSupport {
             protected NodeTuple representJavaBeanProperty(Object javaBean, Property property, Object propertyValue, Tag customTag) {
                 // if value of property is null, ignore it.
                 if (propertyValue == null || (propertyValue instanceof Collection && ((Collection<?>) propertyValue).isEmpty()) ||
-                    (propertyValue instanceof Map && ((Map<?, ?>) propertyValue).isEmpty())) {
+                        (propertyValue instanceof Map && ((Map<?, ?>) propertyValue).isEmpty())) {
                     return null;
                 } else {
                     return super.representJavaBeanProperty(javaBean, property, propertyValue, customTag);
@@ -171,7 +174,7 @@ public final class KubernetesSupport {
     }
 
     public static <T> void createResource(KubernetesClient k8sClient, String namespace,
-                                   ResourceDefinitionContext context, T resource) {
+                                          ResourceDefinitionContext context, T resource) {
         createResource(k8sClient, namespace, context, yaml().dumpAsMap(resource));
     }
 
@@ -199,6 +202,7 @@ public final class KubernetesSupport {
     /**
      * Checks pod status with expected phase. If expected status is "Running" all
      * containers in the pod must be in ready state, too.
+     *
      * @param pod
      * @param status
      * @return
@@ -217,6 +221,7 @@ public final class KubernetesSupport {
      * Try to get the cluster IP address of given service.
      * Resolves service by its name in given namespace and retrieves the cluster IP setting from the service spec.
      * Returns empty Optional in case of errors or no cluster IP setting.
+     *
      * @param citrus
      * @param serviceName
      * @param namespace
@@ -237,6 +242,7 @@ public final class KubernetesSupport {
 
     /**
      * Create K8s conform name using lowercase RFC 1123 rules.
+     *
      * @param name
      * @return
      */

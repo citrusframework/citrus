@@ -19,7 +19,7 @@ package org.citrusframework.kubernetes.message;
 import java.io.IOException;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.Watcher;
@@ -167,28 +167,24 @@ public class KubernetesMessage extends DefaultMessage {
 
     @Override
     public <T> T getPayload(Class<T> type) {
-        try {
-            if (KubernetesRequest.class.isAssignableFrom(type)) {
-                if (getPayload() instanceof KubernetesRequest) {
-                    return (T) getPayload();
-                }
-
-                return (T) mapper.readValue(getPayload(String.class), KubernetesRequest.class);
-            } else if (KubernetesResponse.class.isAssignableFrom(type)) {
-                if (getPayload() instanceof KubernetesResponse) {
-                    return (T) getPayload();
-                }
-
-                return (T) mapper.readValue(getPayload(String.class), KubernetesRequest.class);
-            } else if (String.class.equals(type)) {
-                if (request != null) {
-                    return (T) mapper.writeValueAsString(request);
-                } else if (response != null) {
-                    return (T) mapper.writeValueAsString(response);
-                }
+        if (KubernetesRequest.class.isAssignableFrom(type)) {
+            if (getPayload() instanceof KubernetesRequest) {
+                return (T) getPayload();
             }
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to convert payload to required type: " + type, e);
+
+            return (T) mapper.readValue(getPayload(String.class), KubernetesRequest.class);
+        } else if (KubernetesResponse.class.isAssignableFrom(type)) {
+            if (getPayload() instanceof KubernetesResponse) {
+                return (T) getPayload();
+            }
+
+            return (T) mapper.readValue(getPayload(String.class), KubernetesRequest.class);
+        } else if (String.class.equals(type)) {
+            if (request != null) {
+                return (T) mapper.writeValueAsString(request);
+            } else if (response != null) {
+                return (T) mapper.writeValueAsString(response);
+            }
         }
 
         return super.getPayload(type);
