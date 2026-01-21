@@ -18,7 +18,7 @@ package org.citrusframework.cucumber.steps.kubernetes;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import tools.jackson.annotation.JsonProperty;
 import io.fabric8.kubernetes.api.model.Condition;
 import io.fabric8.kubernetes.api.model.DefaultKubernetesResourceList;
 import io.fabric8.kubernetes.api.model.Namespaced;

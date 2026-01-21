@@ -60,11 +60,6 @@
       <version>1.6.2</version>
     </dependency>
 
-    <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-jsr310</artifactId>
-    </dependency>
-
     <!-- Test scoped dependencies -->
     <dependency>
       <groupId>org.citrusframework</groupId>

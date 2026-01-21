@@ -21,7 +21,7 @@ import java.util.Collections;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.dsl.TestRequest;
 import org.citrusframework.spi.ReferenceResolver;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;

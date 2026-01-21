@@ -16,8 +16,8 @@
 
 package org.citrusframework.kubernetes.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import tools.jackson.annotation.JsonInclude;
+import tools.jackson.annotation.JsonProperty;
 
 /**
  * @since 2.7

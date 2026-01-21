@@ -16,9 +16,9 @@
 
 package org.citrusframework.kubernetes.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import tools.jackson.annotation.JsonInclude;
+import tools.jackson.annotation.JsonProperty;
+import tools.jackson.annotation.JsonPropertyOrder;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import org.citrusframework.kubernetes.KubernetesSettings;

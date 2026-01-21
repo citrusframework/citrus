@@ -16,12 +16,11 @@
 
 package org.citrusframework.message.builder;
 
-import java.util.Map;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+
+import java.util.Map;
 
 public class ObjectMappingHeaderDataBuilder extends DefaultHeaderDataBuilder {
 
@@ -30,6 +29,7 @@ public class ObjectMappingHeaderDataBuilder extends DefaultHeaderDataBuilder {
 
     /**
      * Default constructor using just model object.
+     *
      * @param model
      */
     public ObjectMappingHeaderDataBuilder(Object model) {
@@ -41,6 +41,7 @@ public class ObjectMappingHeaderDataBuilder extends DefaultHeaderDataBuilder {
 
     /**
      * Default constructor using object mapper and model object.
+     *
      * @param model
      * @param mapper
      */
@@ -53,6 +54,7 @@ public class ObjectMappingHeaderDataBuilder extends DefaultHeaderDataBuilder {
 
     /**
      * Default constructor using object mapper name and model object.
+     *
      * @param model
      * @param mapperName
      */
@@ -92,11 +94,6 @@ public class ObjectMappingHeaderDataBuilder extends DefaultHeaderDataBuilder {
     }
 
     private String buildHeaderData(ObjectMapper mapper, Object model, TestContext context) {
-        try {
-            return context.replaceDynamicContentInString(mapper.writer().writeValueAsString(model));
-        } catch (final JsonProcessingException e) {
-            throw new CitrusRuntimeException("Failed to map object graph for message header data", e);
-        }
+        return context.replaceDynamicContentInString(mapper.writer().writeValueAsString(model));
     }
-
 }
