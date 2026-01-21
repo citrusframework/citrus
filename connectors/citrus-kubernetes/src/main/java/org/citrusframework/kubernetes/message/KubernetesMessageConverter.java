@@ -147,13 +147,9 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
         } else if (payload instanceof KubernetesCommand) {
             command = (KubernetesCommand) payload;
         } else {
-            try {
-                KubernetesRequest request = endpointConfiguration.getObjectMapper()
-                        .readValue(message.getPayload(String.class), KubernetesRequest.class);
-                command = createCommandFromRequest(request);
-            } catch (IOException e) {
-                throw new CitrusRuntimeException("Failed to read kubernetes request from payload", e);
-            }
+            KubernetesRequest request = endpointConfiguration.getObjectMapper()
+                    .readValue(message.getPayload(String.class), KubernetesRequest.class);
+            command = createCommandFromRequest(request);
         }
 
         if (command == null) {

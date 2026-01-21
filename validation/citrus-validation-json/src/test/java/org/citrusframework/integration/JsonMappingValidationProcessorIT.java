@@ -16,7 +16,7 @@
 
 package org.citrusframework.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusTest;

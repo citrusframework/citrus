@@ -23,9 +23,9 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JsonParseException;
+import tools.jackson.databind.JsonMappingException;
+import tools.jackson.databind.ObjectMapper;
 import jakarta.xml.bind.JAXBException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.ftp.FtpSettings;

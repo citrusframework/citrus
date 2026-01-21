@@ -16,7 +16,7 @@
 
 package org.citrusframework.dsl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.citrusframework.message.builder.ObjectMappingPayloadBuilder;
 import org.citrusframework.validation.json.JsonMappingValidationProcessor;
 import org.citrusframework.validation.json.JsonMessageValidationContext;

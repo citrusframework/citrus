@@ -16,20 +16,25 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonPatch;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonValue;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.yaml.SchemaProperty;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.datatype.jsonp.JSONPModule;
+
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Applies RFC 6902 JSON Patch operations to JSON content.
@@ -39,7 +44,9 @@ import org.citrusframework.yaml.SchemaProperty;
  */
 public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunction.Parameters> {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final JsonMapper jsonMapper = JsonMapper.builder()
+            .addModule(new JSONPModule())
+            .build();
     private static final List<String> VALID_OPS = List.of("add", "remove", "replace", "move", "copy");
     private static final Pattern ARRAY_INDEX_PATTERN = Pattern.compile("\\[(\\d+)]");
 
@@ -49,7 +56,7 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
 
         JsonNode jsonNode;
         try {
-            jsonNode = objectMapper.readTree(jsonContent);
+            jsonNode = jsonMapper.readTree(jsonContent);
         } catch (Exception e) {
             throw new CitrusRuntimeException("Source does not contain valid JSON: " + e.getMessage(), e);
         }
@@ -63,15 +70,11 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
 
         String patchJson = "[" + String.join(",", patchOperations) + "]";
 
-        try {
-            JsonNode patchNode = objectMapper.readTree(patchJson);
-            JsonPatch patch = JsonPatch.fromJson(patchNode);
-            JsonNode patchedNode = patch.apply(jsonNode);
-
-            return objectMapper.writeValueAsString(patchedNode);
-
-        } catch (JsonPatchException e) {
-            throw new CitrusRuntimeException("Failed to apply JSON Patch: " + e.getMessage(), e);
+        try (JsonReader reader = Json.createReader(new StringReader(patchJson))) {
+            JsonPatch patch = Json.createPatch(reader.readArray());
+            JsonValue source = jsonMapper.convertValue(jsonNode, JsonValue.class);
+            JsonObject patched = patch.apply(source.asJsonObject());
+            return jsonMapper.writeValueAsString(patched);
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to process JSON Patch", e);
         }
@@ -90,17 +93,17 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
         } else if ("move".equals(op.getOperation()) || "copy".equals(op.getOperation())) {
             String fromPointer = convertToJsonPointer(op.getValue());
             return String.format("{\"op\":\"%s\",\"path\":\"%s\",\"from\":\"%s\"}",
-                op.getOperation(), jsonPointer, fromPointer);
+                    op.getOperation(), jsonPointer, fromPointer);
         } else {
             String jsonValue;
             try {
-                objectMapper.readTree(op.getValue());
+                jsonMapper.readTree(op.getValue());
                 jsonValue = op.getValue();
             } catch (Exception e) {
                 jsonValue = "\"" + escapeJsonString(op.getValue()) + "\"";
             }
             return String.format("{\"op\":\"%s\",\"path\":\"%s\",\"value\":%s}",
-                op.getOperation(), jsonPointer, jsonValue);
+                    op.getOperation(), jsonPointer, jsonValue);
         }
     }
 
@@ -136,11 +139,11 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
 
     private String escapeJsonString(String value) {
         return value
-            .replace("\\", "\\\\")
-            .replace("\"", "\\\"")
-            .replace("\n", "\\n")
-            .replace("\r", "\\r")
-            .replace("\t", "\\t");
+                .replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t");
     }
 
     public static class PatchOperation {
@@ -163,8 +166,8 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
         }
 
         @SchemaProperty(
-            required = true,
-            description = "JSON Patch operation type. One of: add, remove, replace, move, copy."
+                required = true,
+                description = "JSON Patch operation type. One of: add, remove, replace, move, copy."
         )
         public void setOperation(String operation) {
             this.operation = operation;
@@ -175,8 +178,8 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
         }
 
         @SchemaProperty(
-            required = true,
-            description = "JSONPath expression to the target element (e.g. '$.items[0].name')."
+                required = true,
+                description = "JSONPath expression to the target element (e.g. '$.items[0].name')."
         )
         public void setPath(String path) {
             this.path = path;
@@ -187,7 +190,7 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
         }
 
         @SchemaProperty(
-            description = "Value for add/replace operations, or source path for move/copy operations."
+                description = "Value for add/replace operations, or source path for move/copy operations."
         )
         public void setValue(String value) {
             this.value = value;
@@ -206,12 +209,12 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
 
             if (parameterList.size() < 4) {
                 throw new InvalidFunctionUsageException(
-                    "Missing parameters - usage: jsonPatch('jsonSource', 'operation', 'path', 'value', ...)");
+                        "Missing parameters - usage: jsonPatch('jsonSource', 'operation', 'path', 'value', ...)");
             }
 
             if ((parameterList.size() - 1) % 3 != 0) {
                 throw new InvalidFunctionUsageException(
-                    "Invalid parameter count - operations must be provided as triplets (operation, path, value)");
+                        "Invalid parameter count - operations must be provided as triplets (operation, path, value)");
             }
 
             setSource(parameterList.get(0));
@@ -229,7 +232,7 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
         private void validateOperation(String operation) {
             if (!VALID_OPS.contains(operation)) {
                 throw new InvalidFunctionUsageException(
-                    "Invalid patch operation '" + operation + "'. Valid operations are: " + String.join(", ", VALID_OPS));
+                        "Invalid patch operation '" + operation + "'. Valid operations are: " + String.join(", ", VALID_OPS));
             }
         }
 
@@ -247,8 +250,8 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
         }
 
         @SchemaProperty(
-            required = true,
-            description = "List of JSON Patch operations (add, remove, replace, move, copy) applied to the source JSON."
+                required = true,
+                description = "List of JSON Patch operations (add, remove, replace, move, copy) applied to the source JSON."
         )
         public void setOperations(List<PatchOperation> operations) {
             this.operations.clear();

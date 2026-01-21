@@ -553,7 +553,7 @@ public class JsonPatchFunctionTest {
         // When / Then
         assertThatThrownBy(() -> execute(params))
             .isInstanceOf(CitrusRuntimeException.class)
-            .hasMessageContaining("Failed to apply JSON Patch");
+            .hasMessageContaining("Failed to process JSON Patch");
     }
 
     @Test
@@ -576,7 +576,7 @@ public class JsonPatchFunctionTest {
         // When / Then
         assertThatThrownBy(() -> execute(params))
             .isInstanceOf(CitrusRuntimeException.class)
-            .hasMessageContaining("Failed to apply JSON Patch");
+            .hasMessageContaining("Failed to process JSON Patch");
     }
 
     @Test
@@ -599,7 +599,7 @@ public class JsonPatchFunctionTest {
         // When / Then
         assertThatThrownBy(() -> execute(params))
             .isInstanceOf(CitrusRuntimeException.class)
-            .hasMessageContaining("Failed to apply JSON Patch");
+            .hasMessageContaining("Failed to process JSON Patch");
     }
 
     @Test

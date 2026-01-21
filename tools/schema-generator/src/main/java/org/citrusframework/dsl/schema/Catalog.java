@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.github.victools.jsonschema.generator.Option;
 import org.citrusframework.dsl.schema.generator.CitrusModule;
 import org.citrusframework.dsl.schema.generator.CitrusSchemaGenerator;

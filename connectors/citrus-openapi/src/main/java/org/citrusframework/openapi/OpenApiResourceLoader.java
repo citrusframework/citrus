@@ -16,6 +16,17 @@
 
 package org.citrusframework.openapi;
 
+import io.apicurio.datamodels.Library;
+import io.apicurio.datamodels.openapi.models.OasDocument;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.TrustAllStrategy;
+import org.apache.hc.core5.ssl.SSLContexts;
+import org.citrusframework.spi.Resource;
+import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -25,19 +36,6 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.apicurio.datamodels.Library;
-import io.apicurio.datamodels.openapi.models.OasDocument;
-import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
-import org.apache.hc.client5.http.ssl.TrustAllStrategy;
-import org.apache.hc.core5.ssl.SSLContexts;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.spi.Resource;
 
 import static javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier;
 import static javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory;
@@ -248,7 +246,7 @@ public final class OpenApiResourceLoader {
      */
     private static class RawResolver implements Resolver<String> {
 
-        private static final ObjectMapper mapper = new ObjectMapper();
+        private static final JsonMapper jsonMapper = JsonMapper.shared();
 
         @Override
         public String resolveFromString(String specification) {
@@ -257,12 +255,7 @@ public final class OpenApiResourceLoader {
 
         @Override
         public String resolveFromNode(JsonNode node) {
-
-            try {
-                return mapper.writeValueAsString(node);
-            } catch (JsonProcessingException e) {
-                throw new CitrusRuntimeException("Unable to write OpenApi specification node to string!", e);
-            }
+            return jsonMapper.writeValueAsString(node);
         }
     }
 }

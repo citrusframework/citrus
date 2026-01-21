@@ -24,7 +24,7 @@ import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 
 public abstract class AbstractDockerCommandBuilder<R, T extends AbstractDockerCommand<R>, S extends AbstractDockerCommandBuilder<R, T, S>>
         implements TestActionBuilder<DockerExecuteAction>, DockerActionBuilderBase<R, DockerExecuteAction, S> {
