@@ -14,6 +14,24 @@
       "description" : "Aggregated Citrus catalog for test action containers",
       "version" : "@version@",
       "file" : "citrus-catalog-aggregate-test-containers.json"
+    },
+    "endpoints" : {
+      "name" : "endpoints",
+      "description" : "Aggregated Citrus catalog for endpoints",
+      "version" : "@version@",
+      "file" : "citrus-catalog-aggregate-endpoints.json"
+    },
+    "functions" : {
+      "name" : "functions",
+      "description" : "Aggregated Citrus catalog for functions",
+      "version" : "@version@",
+      "file" : "citrus-catalog-aggregate-functions.json"
+    },
+    "validation-matcher" : {
+      "name" : "validation-matcher",
+      "description" : "Aggregated Citrus catalog for validation matcher",
+      "version" : "@version@",
+      "file" : "citrus-catalog-aggregate-validation-matcher.json"
     }
   },
   "schemas" : {
