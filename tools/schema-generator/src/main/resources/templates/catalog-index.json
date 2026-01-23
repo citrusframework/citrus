@@ -2,6 +2,11 @@
   "name" : "Citrus catalog",
   "version" : 1,
   "definitions" : [ {
+    "name" : "Citrus Latest",
+    "version" : "latest",
+    "runtime" : "Citrus",
+    "fileName" : "citrus/index.json"
+  }, {
     "name" : "Citrus @version@",
     "version" : "@version@",
     "runtime" : "Citrus",

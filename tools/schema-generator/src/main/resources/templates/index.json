@@ -27,8 +27,8 @@
       "version" : "@version@",
       "file" : "citrus-catalog-aggregate-functions.json"
     },
-    "validation-matcher" : {
-      "name" : "validation-matcher",
+    "validationMatcher" : {
+      "name" : "validationMatcher",
       "description" : "Aggregated Citrus catalog for validation matcher",
       "version" : "@version@",
       "file" : "citrus-catalog-aggregate-validation-matcher.json"
