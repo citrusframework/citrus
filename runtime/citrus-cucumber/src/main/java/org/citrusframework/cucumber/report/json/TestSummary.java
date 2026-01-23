@@ -16,7 +16,7 @@
 
 package org.citrusframework.cucumber.report.json;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import tools.jackson.annotation.JsonProperty;
 
 public class TestSummary {
 

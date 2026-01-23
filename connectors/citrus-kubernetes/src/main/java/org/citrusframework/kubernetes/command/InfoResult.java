@@ -16,7 +16,7 @@
 
 package org.citrusframework.kubernetes.command;
 
-import com.fasterxml.jackson.annotation.*;
+import tools.jackson.annotation.*;
 import io.fabric8.kubernetes.api.model.*;
 
 import jakarta.validation.constraints.NotNull;

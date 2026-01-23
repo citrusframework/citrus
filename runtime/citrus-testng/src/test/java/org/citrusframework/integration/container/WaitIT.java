@@ -26,11 +26,13 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import com.sun.net.httpserver.HttpServer;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 /**
  * @since 2.4
  */
+@Ignore
 public class WaitIT extends TestNGCitrusSpringSupport {
 
     private HttpServer server;

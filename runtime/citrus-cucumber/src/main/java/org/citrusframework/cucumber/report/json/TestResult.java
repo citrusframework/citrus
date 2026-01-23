@@ -18,8 +18,8 @@ package org.citrusframework.cucumber.report.json;
 
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import tools.jackson.annotation.JsonIgnore;
+import tools.jackson.annotation.JsonInclude;
 
 /**
  * Error details holding failure information.
