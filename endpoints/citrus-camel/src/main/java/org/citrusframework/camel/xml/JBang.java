@@ -39,10 +39,10 @@ import org.citrusframework.camel.jbang.CamelJBangSettings;
 })
 public class JBang {
 
-    @XmlAttribute
+    @XmlAttribute(name = "camel-version")
     private String camelVersion;
 
-    @XmlAttribute
+    @XmlAttribute(name = "kamelets-version")
     private String kameletsVersion;
 
     @XmlElement

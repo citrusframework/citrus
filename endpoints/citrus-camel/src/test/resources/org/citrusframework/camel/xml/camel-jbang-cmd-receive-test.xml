@@ -19,9 +19,13 @@
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd
                           http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
   <description>Sample test in XML</description>
+  <variables>
+    <!-- ToDo: Remove pinned version when fixed in Camel (see CAMEL-22922) -->
+    <variable name="camelVersion" value="4.16.0"/>
+  </variables>
   <actions>
     <camel>
-      <jbang>
+      <jbang camel-version="${camelVersion}">
         <run stub="kafka">
           <integration name="echo-events-xml"
                        file="classpath:org/citrusframework/camel/integration/echo-events.yaml">
@@ -47,7 +51,7 @@
     </timer>
 
     <camel>
-      <jbang>
+      <jbang camel-version="${camelVersion}">
         <cmd>
           <receive integration="echo-events-xml" endpoint="kafka:info" tail="1" grep="Hello Camel"/>
         </cmd>
@@ -55,7 +59,7 @@
     </camel>
 
     <camel>
-      <jbang>
+      <jbang camel-version="${camelVersion}">
         <cmd>
           <receive integration="echo-events-xml" endpoint="kafka:info" tail="1" grep="Camel rocks!"/>
         </cmd>
@@ -63,7 +67,7 @@
     </camel>
 
     <camel>
-      <jbang>
+      <jbang camel-version="${camelVersion}">
         <cmd>
           <receive integration="echo-events-xml" endpoint="kafka:info" tail="1" grep="Good Bye Camel!"/>
         </cmd>
@@ -74,7 +78,7 @@
     <stop-timer id="send-events"/>
 
     <camel>
-      <jbang>
+      <jbang camel-version="${camelVersion}">
         <stop integration="echo-events-xml"/>
       </jbang>
     </camel>

@@ -1,9 +1,14 @@
 name: "CamelJBangCmdReceiveTest"
 author: "Christoph"
 status: "FINAL"
+variables:
+  # ToDo: Remove pinned version when fixed in Camel (see CAMEL-22922)
+  - name: camelVersion
+    value: 4.16.0
 actions:
   - camel:
       jbang:
+        camelVersion: ${camelVersion}
         run:
           stub:
             - kafka
@@ -27,6 +32,7 @@ actions:
 
   - camel:
       jbang:
+        camelVersion: ${camelVersion}
         cmd:
           receive:
             integration: "echo-events-yaml"
@@ -36,6 +42,7 @@ actions:
 
   - camel:
       jbang:
+        camelVersion: ${camelVersion}
         cmd:
           receive:
             integration: "echo-events-yaml"
@@ -45,6 +52,7 @@ actions:
 
   - camel:
       jbang:
+        camelVersion: ${camelVersion}
         cmd:
           receive:
             integration: "echo-events-yaml"
@@ -58,5 +66,6 @@ finally:
 
   - camel:
       jbang:
+        camelVersion: ${camelVersion}
         stop:
           integration: "echo-events-yaml"

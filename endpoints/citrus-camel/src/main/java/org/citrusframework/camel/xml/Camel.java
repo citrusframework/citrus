@@ -485,6 +485,16 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                 this.builder = builder;
             }
         }
+
+        if (this.builder instanceof AbstractCamelJBangAction.Builder<?, ?> camelBuilder) {
+            if (jbang.getCamelVersion() != null) {
+                camelBuilder.camelVersion(jbang.getCamelVersion());
+            }
+
+            if (jbang.getKameletsVersion() != null) {
+                camelBuilder.kameletsVersion(jbang.getKameletsVersion());
+            }
+        }
     }
 
     @XmlElement(name = "start-routes")
