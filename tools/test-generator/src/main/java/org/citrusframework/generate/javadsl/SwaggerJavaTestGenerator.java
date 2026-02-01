@@ -141,12 +141,24 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
                 HttpMessage responseMessage = new HttpMessage();
                 if (operation.getValue().getResponses() != null) {
                     Response response = operation.getValue().getResponses().get("200");
+                    HttpStatus httpStatus = HttpStatus.OK;
+
                     if (response == null) {
                         response = operation.getValue().getResponses().get("default");
                     }
 
+                    if (response == null && !operation.getValue().getResponses().isEmpty()) {
+                        Map.Entry<String, Response> firstEntry = operation.getValue().getResponses().entrySet().iterator().next();
+                        response = firstEntry.getValue();
+                        try {
+                            httpStatus = HttpStatus.valueOf(Integer.parseInt(firstEntry.getKey()));
+                        } catch (NumberFormatException e) {
+                            // Ignore, default value is already HttpStatus.OK
+                        }
+                    }
+
                     if (response != null) {
-                        responseMessage.status(HttpStatus.OK);
+                        responseMessage.status(httpStatus);
 
                         if (response.getHeaders() != null) {
                             for (Map.Entry<String, Property> header : response.getHeaders().entrySet()) {
