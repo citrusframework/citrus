@@ -71,6 +71,43 @@ public class SwaggerJavaTestGeneratorTest {
         verifyTest("UserLoginService_getUserByName_IT");
     }
 
+    @Test
+    public void testCreateTestWithErrorOnlyResponsesAsClient() throws IOException {
+        SwaggerJavaTestGenerator generator = new SwaggerJavaTestGenerator();
+
+        generator.withAuthor("phos-web")
+                .withDescription("This is a sample test")
+                .usePackage("org.citrusframework")
+                .withFramework(UnitFramework.TESTNG);
+
+        generator.withNamePrefix("PetApiClient_");
+        generator.withSpec("org/citrusframework/swagger/pet-api.json");
+
+        generator.create();
+
+        verifyTest("PetApiClient_getPetById_IT");
+
+        verifyTestWithStatus("PetApiClient_updatePet_IT", "BAD_REQUEST");
+    }
+
+    @Test
+    public void testCreateTestWithErrorOnlyResponsesAsServer() throws IOException {
+        SwaggerJavaTestGenerator generator = new SwaggerJavaTestGenerator();
+
+        generator.withAuthor("phos-web")
+                .withDescription("This is a sample test")
+                .usePackage("org.citrusframework")
+                .withFramework(UnitFramework.TESTNG);
+
+        generator.withMode(TestGenerator.GeneratorMode.SERVER);
+        generator.withSpec("org/citrusframework/swagger/pet-api.json");
+
+        generator.create();
+
+        verifyTest("PetApiClient_getPetById_IT");
+        verifyTestWithStatus("PetApiClient_updatePet_IT", "BAD_REQUEST");
+    }
+
     private void verifyTest(String name) throws IOException {
         File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/" +
                 name + FileUtils.FILE_EXTENSION_JAVA);
@@ -81,5 +118,23 @@ public class SwaggerJavaTestGeneratorTest {
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package org.citrusframework;"));
         Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
+    }
+
+    private void verifyTestWithStatus(String name, String httpStatusName) throws IOException {
+        verifyTest(name);
+
+        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/" +
+                name + FileUtils.FILE_EXTENSION_JAVA);
+        String javaContent = FileUtils.readToString(javaFile);
+
+        Assert.assertTrue(javaContent.contains(httpStatusName),
+                "Expected generated test to contain HttpStatus." + httpStatusName +
+                        " but it was not found in " + name);
+
+        if (!"OK".equals(httpStatusName)) {
+            Assert.assertFalse(javaContent.contains("HttpStatus.OK"),
+                    "Generated test " + name + " should not contain HttpStatus.OK " +
+                            "when the spec only defines error responses");
+        }
     }
 }
