@@ -16,17 +16,8 @@
 
 package org.citrusframework.openapi;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.regex.Pattern;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.citrusframework.context.TestContext;
 import org.springframework.http.HttpStatus;
@@ -38,6 +29,16 @@ import org.yaml.snakeyaml.nodes.NodeTuple;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import static com.fasterxml.jackson.core.JsonParser.Feature.AUTO_CLOSE_SOURCE;
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+import static com.fasterxml.jackson.databind.DeserializationFeature.READ_ENUMS_USING_TO_STRING;
+import static com.fasterxml.jackson.databind.MapperFeature.BLOCK_UNSAFE_POLYMORPHIC_BASE_TYPES;
+import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_ENUMS_USING_TO_STRING;
 import static java.lang.Integer.parseInt;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -48,11 +49,11 @@ public class OpenApiSupport {
 
     static {
         OBJECT_MAPPER = JsonMapper.builder()
-                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
-                .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
-                .disable(JsonParser.Feature.AUTO_CLOSE_SOURCE)
-                .enable(MapperFeature.BLOCK_UNSAFE_POLYMORPHIC_BASE_TYPES)
+                .disable(FAIL_ON_UNKNOWN_PROPERTIES)
+                .enable(READ_ENUMS_USING_TO_STRING)
+                .enable(WRITE_ENUMS_USING_TO_STRING)
+                .disable(AUTO_CLOSE_SOURCE)
+                .enable(BLOCK_UNSAFE_POLYMORPHIC_BASE_TYPES)
                 .build()
                 .setDefaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY));
     }

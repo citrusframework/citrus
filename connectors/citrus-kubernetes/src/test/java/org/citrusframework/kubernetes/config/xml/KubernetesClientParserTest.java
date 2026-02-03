@@ -16,7 +16,7 @@
 
 package org.citrusframework.kubernetes.config.xml;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.message.MessageConverter;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;

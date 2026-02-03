@@ -16,12 +16,6 @@
 
 package org.citrusframework.report;
 
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.TestResult;
@@ -41,6 +35,13 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
@@ -97,32 +98,32 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getJsonReport(), """
-        [
-          {
-            "name": "fooTest",
-            "result": {
-              "name": "fooTest",
-              "className": "FooTest",
-              "result": "SUCCESS",
-              "duration": 2000
-            },
-            "actions": [
-              {
-                "name": "echo",
-                "path": "actions.0.echo"
-              },
-              {
-                "name": "send",
-                "path": "actions.1.send"
-              },
-              {
-                "name": "receive",
-                "path": "actions.2.receive"
-              }
-            ]
-          }
-        ]""");
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
+                [
+                  {
+                    "name": "fooTest",
+                    "result": {
+                      "name": "fooTest",
+                      "className": "FooTest",
+                      "result": "SUCCESS",
+                      "duration": 2000
+                    },
+                    "actions": [
+                      {
+                        "name": "echo",
+                        "path": "actions.0.echo"
+                      },
+                      {
+                        "name": "send",
+                        "path": "actions.1.send"
+                      },
+                      {
+                        "name": "receive",
+                        "path": "actions.2.receive"
+                      }
+                    ]
+                  }
+                ]""");
     }
 
     @Test
@@ -162,38 +163,38 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getJsonReport(), """
-        [
-          {
-            "name": "fooTest",
-            "result": {
-              "name": "fooTest",
-              "className": "FooTest",
-              "result": "SUCCESS",
-              "duration": 2000
-            },
-            "actions": [
-              {
-                "name": "echo",
-                "path": "actions.0.echo"
-              },
-              {
-                "name": "sequence",
-                "path": "actions.0.sequence",
-                "actions": [
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
+                [
                   {
-                    "name": "send",
-                    "path": "actions.0.sequence.actions.0.send"
-                  },
-                  {
-                    "name": "receive",
-                    "path": "actions.0.sequence.actions.1.receive"
+                    "name": "fooTest",
+                    "result": {
+                      "name": "fooTest",
+                      "className": "FooTest",
+                      "result": "SUCCESS",
+                      "duration": 2000
+                    },
+                    "actions": [
+                      {
+                        "name": "echo",
+                        "path": "actions.0.echo"
+                      },
+                      {
+                        "name": "sequence",
+                        "path": "actions.0.sequence",
+                        "actions": [
+                          {
+                            "name": "send",
+                            "path": "actions.0.sequence.actions.0.send"
+                          },
+                          {
+                            "name": "receive",
+                            "path": "actions.0.sequence.actions.1.receive"
+                          }
+                        ]
+                      }
+                    ]
                   }
-                ]
-              }
-            ]
-          }
-        ]""");
+                ]""");
     }
 
     @Test
@@ -233,43 +234,42 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getJsonReport(), """
-        [
-          {
-            "name": "fooTest",
-            "result": {
-              "name": "fooTest",
-              "className": "FooTest",
-              "result": "FAILURE",
-              "cause": "org.citrusframework.exceptions.CitrusRuntimeException: This went totally wrong!",
-              "errorMessage": "This went totally wrong!",
-              "duration": 2000
-            },
-            "actions": [
-              {
-                "name": "echo",
-                "path": "actions.0.echo"
-              },
-              {
-                "name": "sequence",
-                "path": "actions.0.sequence",
-                "error": "This went totally wrong!",
-                "actions": [
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
+                [
                   {
-                    "name": "send",
-                    "path": "actions.0.sequence.actions.0.send"
-                  },
-                  {
-                    "name": "receive",
-                    "path": "actions.0.sequence.actions.1.receive"
+                    "name": "fooTest",
+                    "result": {
+                      "name": "fooTest",
+                      "className": "FooTest",
+                      "result": "FAILURE",
+                      "cause": "org.citrusframework.exceptions.CitrusRuntimeException: This went totally wrong!",
+                      "errorMessage": "This went totally wrong!",
+                      "duration": 2000
+                    },
+                    "actions": [
+                      {
+                        "name": "echo",
+                        "path": "actions.0.echo"
+                      },
+                      {
+                        "name": "sequence",
+                        "path": "actions.0.sequence",
+                        "error": "This went totally wrong!",
+                        "actions": [
+                          {
+                            "name": "send",
+                            "path": "actions.0.sequence.actions.0.send"
+                          },
+                          {
+                            "name": "receive",
+                            "path": "actions.0.sequence.actions.1.receive"
+                          }
+                        ]
+                      }
+                    ]
                   }
-                ]
-              }
-            ]
-          }
-        ]""");
+                ]""");
     }
-
 
 
     @Test
@@ -310,58 +310,58 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getJsonReport(), """
-        [
-          {
-            "name": "fooTest",
-            "result": {
-              "name": "fooTest",
-              "className": "FooTest",
-              "result": "SUCCESS",
-              "duration": 2000
-            },
-            "actions": [
-              {
-                "name": "echo",
-                "path": "actions.0.echo"
-              },
-              {
-                "name": "iterate",
-                "path": "actions.0.iterate",
-                "iterations": [
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
+                [
                   {
-                    "name": "0",
-                    "path": "actions.0.iterate",
+                    "name": "fooTest",
+                    "result": {
+                      "name": "fooTest",
+                      "className": "FooTest",
+                      "result": "SUCCESS",
+                      "duration": 2000
+                    },
                     "actions": [
                       {
-                        "name": "send",
-                        "path": "actions.0.iterate.actions.0.send"
+                        "name": "echo",
+                        "path": "actions.0.echo"
                       },
                       {
-                        "name": "receive",
-                        "path": "actions.0.iterate.actions.1.receive"
-                      }
-                    ]
-                  },
-                  {
-                    "name": "1",
-                    "path": "actions.0.iterate",
-                    "actions": [
-                      {
-                        "name": "send",
-                        "path": "actions.0.iterate.actions.1.send"
-                      },
-                      {
-                        "name": "receive",
-                        "path": "actions.0.iterate.actions.0.receive"
+                        "name": "iterate",
+                        "path": "actions.0.iterate",
+                        "iterations": [
+                          {
+                            "name": "0",
+                            "path": "actions.0.iterate",
+                            "actions": [
+                              {
+                                "name": "send",
+                                "path": "actions.0.iterate.actions.0.send"
+                              },
+                              {
+                                "name": "receive",
+                                "path": "actions.0.iterate.actions.1.receive"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "1",
+                            "path": "actions.0.iterate",
+                            "actions": [
+                              {
+                                "name": "send",
+                                "path": "actions.0.iterate.actions.1.send"
+                              },
+                              {
+                                "name": "receive",
+                                "path": "actions.0.iterate.actions.0.receive"
+                              }
+                            ]
+                          }
+                        ]
                       }
                     ]
                   }
-                ]
-              }
-            ]
-          }
-        ]""");
+                ]""");
     }
 
     @Test
@@ -394,34 +394,34 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getJsonReport(), """
-        [
-          {
-            "name": "fooTest",
-            "result": {
-              "name": "fooTest",
-              "className": "FooTest",
-              "parameters": [
-                {
-                  "name": "baz",
-                  "value": "baz"
-                },
-                {
-                  "name": "foo",
-                  "value": "bar"
-                }
-              ],
-              "result": "SUCCESS",
-              "duration": 2000
-            },
-            "actions": [
-              {
-                "name": "echo",
-                "path": "actions.0.echo"
-              }
-            ]
-          }
-        ]""");
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
+                [
+                  {
+                    "name": "fooTest",
+                    "result": {
+                      "name": "fooTest",
+                      "className": "FooTest",
+                      "parameters": [
+                        {
+                          "name": "baz",
+                          "value": "baz"
+                        },
+                        {
+                          "name": "foo",
+                          "value": "bar"
+                        }
+                      ],
+                      "result": "SUCCESS",
+                      "duration": 2000
+                    },
+                    "actions": [
+                      {
+                        "name": "echo",
+                        "path": "actions.0.echo"
+                      }
+                    ]
+                  }
+                ]""");
     }
 
     @Test
@@ -458,35 +458,35 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getJsonReport(), """
-        [
-          {
-            "name": "fooTest",
-            "result": {
-              "name": "fooTest",
-              "className": "FooTest",
-              "result": "FAILURE",
-              "cause": "org.citrusframework.exceptions.CitrusRuntimeException: Something went completely wrong",
-              "errorMessage": "Something went completely wrong",
-              "duration": 2000
-            },
-            "actions": [
-              {
-                "name": "echo",
-                "path": "actions.0.echo"
-              },
-              {
-                "name": "send",
-                "path": "actions.1.send"
-              },
-              {
-                "name": "receive",
-                "path": "actions.2.receive",
-                "error": "Something went completely wrong"
-              }
-            ]
-          }
-        ]""");
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
+                [
+                  {
+                    "name": "fooTest",
+                    "result": {
+                      "name": "fooTest",
+                      "className": "FooTest",
+                      "result": "FAILURE",
+                      "cause": "org.citrusframework.exceptions.CitrusRuntimeException: Something went completely wrong",
+                      "errorMessage": "Something went completely wrong",
+                      "duration": 2000
+                    },
+                    "actions": [
+                      {
+                        "name": "echo",
+                        "path": "actions.0.echo"
+                      },
+                      {
+                        "name": "send",
+                        "path": "actions.1.send"
+                      },
+                      {
+                        "name": "receive",
+                        "path": "actions.2.receive",
+                        "error": "Something went completely wrong"
+                      }
+                    ]
+                  }
+                ]""");
     }
 
     @Test
@@ -534,70 +534,70 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getJsonReport(), """
-        [
-          {
-            "name": "fooTest",
-            "result": {
-              "name": "fooTest",
-              "className": "FooTest",
-              "result": "SUCCESS",
-              "duration": 2000
-            },
-            "actions": [
-              {
-                "name": "echo",
-                "path": "actions.0.echo"
-              },
-              {
-                "name": "send",
-                "path": "actions.1.send",
-                "message": {
-                  "headers": [
-                    {
-                      "name": "citrus_message_id",
-                      "value": "%s"
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
+                [
+                  {
+                    "name": "fooTest",
+                    "result": {
+                      "name": "fooTest",
+                      "className": "FooTest",
+                      "result": "SUCCESS",
+                      "duration": 2000
                     },
-                    {
-                      "name": "citrus_message_timestamp",
-                      "value": "%s"
-                    },
-                    {
-                      "name": "foo",
-                      "value": "bar"
-                    }
-                  ],
-                  "headerData": [
-                  ],
-                  "payload": "SGVsbG8gZnJvbSBDaXRydXMh"
-                }
-              },
-              {
-                "name": "receive",
-                "path": "actions.2.receive",
-                "message": {
-                  "headers": [
-                    {
-                      "name": "citrus_message_id",
-                      "value": "%s"
-                    },
-                    {
-                      "name": "citrus_message_timestamp",
-                      "value": "%s"
-                    },
-                    {
-                      "name": "foo",
-                      "value": "baz"
-                    }
-                  ],
-                  "headerData": [
-                  ],
-                  "payload": "Q2l0cnVzIHJvY2tzIQ=="
-                }
-              }
-            ]
-          }
-        ]""".formatted(messageSent.getId(), messageSent.getHeader(MessageHeaders.TIMESTAMP), messageReceived.getId(), messageReceived.getHeader(MessageHeaders.TIMESTAMP)));
+                    "actions": [
+                      {
+                        "name": "echo",
+                        "path": "actions.0.echo"
+                      },
+                      {
+                        "name": "send",
+                        "path": "actions.1.send",
+                        "message": {
+                          "headers": [
+                            {
+                              "name": "citrus_message_id",
+                              "value": "%s"
+                            },
+                            {
+                              "name": "citrus_message_timestamp",
+                              "value": "%s"
+                            },
+                            {
+                              "name": "foo",
+                              "value": "bar"
+                            }
+                          ],
+                          "headerData": [
+                          ],
+                          "payload": "SGVsbG8gZnJvbSBDaXRydXMh"
+                        }
+                      },
+                      {
+                        "name": "receive",
+                        "path": "actions.2.receive",
+                        "message": {
+                          "headers": [
+                            {
+                              "name": "citrus_message_id",
+                              "value": "%s"
+                            },
+                            {
+                              "name": "citrus_message_timestamp",
+                              "value": "%s"
+                            },
+                            {
+                              "name": "foo",
+                              "value": "baz"
+                            }
+                          ],
+                          "headerData": [
+                          ],
+                          "payload": "Q2l0cnVzIHJvY2tzIQ=="
+                        }
+                      }
+                    ]
+                  }
+                ]""".formatted(messageSent.getId(), messageSent.getHeader(MessageHeaders.TIMESTAMP), messageReceived.getId(), messageReceived.getHeader(MessageHeaders.TIMESTAMP)));
     }
 
     @Test
@@ -635,21 +635,22 @@ public class TestFlowReporterTest {
 
         reporter.generate(results);
         Assert.assertEquals(reporter.getYamlReport(), """
-        - name: "fooTest"
-          result:
-            name: "fooTest"
-            className: "FooTest"
-            result: "SUCCESS"
-            duration: 2000
-          actions:
-          - name: "echo"
-            path: "actions.0.echo"
-          - name: "send"
-            path: "actions.1.send"
-          - name: "receive"
-            path: "actions.2.receive"
-        """);
+                - name: "fooTest"
+                  result:
+                    name: "fooTest"
+                    className: "FooTest"
+                    result: "SUCCESS"
+                    duration: 2000
+                  actions:
+                  - name: "echo"
+                    path: "actions.0.echo"
+                  - name: "send"
+                    path: "actions.1.send"
+                  - name: "receive"
+                    path: "actions.2.receive"
+                """);
     }
+
     @Test
     public void shouldGetYamlReportWithContainers() {
         TestFlowReporter reporter = new TestFlowReporter();
@@ -688,23 +689,23 @@ public class TestFlowReporterTest {
 
         reporter.generate(results);
         Assert.assertEquals(reporter.getYamlReport(), """
-        - name: "fooTest"
-          result:
-            name: "fooTest"
-            className: "FooTest"
-            result: "SUCCESS"
-            duration: 2000
-          actions:
-          - name: "echo"
-            path: "actions.0.echo"
-          - name: "sequence"
-            path: "actions.0.sequence"
-            actions:
-            - name: "send"
-              path: "actions.0.sequence.actions.0.send"
-            - name: "receive"
-              path: "actions.0.sequence.actions.1.receive"
-        """);
+                - name: "fooTest"
+                  result:
+                    name: "fooTest"
+                    className: "FooTest"
+                    result: "SUCCESS"
+                    duration: 2000
+                  actions:
+                  - name: "echo"
+                    path: "actions.0.echo"
+                  - name: "sequence"
+                    path: "actions.0.sequence"
+                    actions:
+                    - name: "send"
+                      path: "actions.0.sequence.actions.0.send"
+                    - name: "receive"
+                      path: "actions.0.sequence.actions.1.receive"
+                """);
     }
 
     @Test
@@ -745,31 +746,30 @@ public class TestFlowReporterTest {
 
         reporter.generate(results);
         Assert.assertEquals(reporter.getYamlReport(), """
-        - name: "fooTest"
-          result:
-            name: "fooTest"
-            className: "FooTest"
-            result: "FAILURE"
-            cause: |
-              org.citrusframework.exceptions.CitrusRuntimeException: This went totally wrong!
-            errorMessage: |
-              This went totally wrong!
-            duration: 2000
-          actions:
-          - name: "echo"
-            path: "actions.0.echo"
-          - name: "sequence"
-            path: "actions.0.sequence"
-            error: |
-              This went totally wrong!
-            actions:
-            - name: "send"
-              path: "actions.0.sequence.actions.0.send"
-            - name: "receive"
-              path: "actions.0.sequence.actions.1.receive"
-        """);
+                - name: "fooTest"
+                  result:
+                    name: "fooTest"
+                    className: "FooTest"
+                    result: "FAILURE"
+                    cause: |
+                      org.citrusframework.exceptions.CitrusRuntimeException: This went totally wrong!
+                    errorMessage: |
+                      This went totally wrong!
+                    duration: 2000
+                  actions:
+                  - name: "echo"
+                    path: "actions.0.echo"
+                  - name: "sequence"
+                    path: "actions.0.sequence"
+                    error: |
+                      This went totally wrong!
+                    actions:
+                    - name: "send"
+                      path: "actions.0.sequence.actions.0.send"
+                    - name: "receive"
+                      path: "actions.0.sequence.actions.1.receive"
+                """);
     }
-
 
 
     @Test
@@ -811,33 +811,33 @@ public class TestFlowReporterTest {
 
         reporter.generate(results);
         Assert.assertEquals(reporter.getYamlReport(), """
-        - name: "fooTest"
-          result:
-            name: "fooTest"
-            className: "FooTest"
-            result: "SUCCESS"
-            duration: 2000
-          actions:
-          - name: "echo"
-            path: "actions.0.echo"
-          - name: "iterate"
-            path: "actions.0.iterate"
-            iterations:
-            - name: "0"
-              path: "actions.0.iterate"
-              actions:
-              - name: "send"
-                path: "actions.0.iterate.actions.0.send"
-              - name: "receive"
-                path: "actions.0.iterate.actions.1.receive"
-            - name: "1"
-              path: "actions.0.iterate"
-              actions:
-              - name: "send"
-                path: "actions.0.iterate.actions.1.send"
-              - name: "receive"
-                path: "actions.0.iterate.actions.0.receive"
-        """);
+                - name: "fooTest"
+                  result:
+                    name: "fooTest"
+                    className: "FooTest"
+                    result: "SUCCESS"
+                    duration: 2000
+                  actions:
+                  - name: "echo"
+                    path: "actions.0.echo"
+                  - name: "iterate"
+                    path: "actions.0.iterate"
+                    iterations:
+                    - name: "0"
+                      path: "actions.0.iterate"
+                      actions:
+                      - name: "send"
+                        path: "actions.0.iterate.actions.0.send"
+                      - name: "receive"
+                        path: "actions.0.iterate.actions.1.receive"
+                    - name: "1"
+                      path: "actions.0.iterate"
+                      actions:
+                      - name: "send"
+                        path: "actions.0.iterate.actions.1.send"
+                      - name: "receive"
+                        path: "actions.0.iterate.actions.0.receive"
+                """);
     }
 
     @Test
@@ -871,21 +871,21 @@ public class TestFlowReporterTest {
 
         reporter.generate(results);
         Assert.assertEquals(reporter.getYamlReport(), """
-        - name: "fooTest"
-          result:
-            name: "fooTest"
-            className: "FooTest"
-            parameters:
-              name: "baz"
-              value: "baz"
-              name: "foo"
-              value: "bar"
-            result: "SUCCESS"
-            duration: 2000
-          actions:
-          - name: "echo"
-            path: "actions.0.echo"
-        """);
+                - name: "fooTest"
+                  result:
+                    name: "fooTest"
+                    className: "FooTest"
+                    parameters:
+                      name: "baz"
+                      value: "baz"
+                      name: "foo"
+                      value: "bar"
+                    result: "SUCCESS"
+                    duration: 2000
+                  actions:
+                  - name: "echo"
+                    path: "actions.0.echo"
+                """);
     }
 
     @Test
@@ -923,26 +923,26 @@ public class TestFlowReporterTest {
 
         reporter.generate(results);
         Assert.assertEquals(reporter.getYamlReport(), """
-        - name: "fooTest"
-          result:
-            name: "fooTest"
-            className: "FooTest"
-            result: "FAILURE"
-            cause: |
-              org.citrusframework.exceptions.CitrusRuntimeException: Something went completely wrong
-            errorMessage: |
-              Something went completely wrong
-            duration: 2000
-          actions:
-          - name: "echo"
-            path: "actions.0.echo"
-          - name: "send"
-            path: "actions.1.send"
-          - name: "receive"
-            path: "actions.2.receive"
-            error: |
-              Something went completely wrong
-        """);
+                - name: "fooTest"
+                  result:
+                    name: "fooTest"
+                    className: "FooTest"
+                    result: "FAILURE"
+                    cause: |
+                      org.citrusframework.exceptions.CitrusRuntimeException: Something went completely wrong
+                    errorMessage: |
+                      Something went completely wrong
+                    duration: 2000
+                  actions:
+                  - name: "echo"
+                    path: "actions.0.echo"
+                  - name: "send"
+                    path: "actions.1.send"
+                  - name: "receive"
+                    path: "actions.2.receive"
+                    error: |
+                      Something went completely wrong
+                """);
     }
 
     @Test
@@ -991,42 +991,42 @@ public class TestFlowReporterTest {
 
         reporter.generate(results);
         Assert.assertEquals(reporter.getYamlReport(), """
-        - name: "fooTest"
-          result:
-            name: "fooTest"
-            className: "FooTest"
-            result: "SUCCESS"
-            duration: 2000
-          actions:
-          - name: "echo"
-            path: "actions.0.echo"
-          - name: "send"
-            path: "actions.1.send"
-            message:
-              headers:
-                - name: "citrus_message_id"
-                  value: "%s"
-                - name: "citrus_message_timestamp"
-                  value: "%s"
-                - name: "foo"
-                  value: "bar"
-              headerData: []
-              payload: |
-                Hello from Citrus!
-          - name: "receive"
-            path: "actions.2.receive"
-            message:
-              headers:
-                - name: "citrus_message_id"
-                  value: "%s"
-                - name: "citrus_message_timestamp"
-                  value: "%s"
-                - name: "foo"
-                  value: "baz"
-              headerData: []
-              payload: |
-                Citrus rocks!
-        """.formatted(messageSent.getId(), messageSent.getHeader(MessageHeaders.TIMESTAMP), messageReceived.getId(), messageReceived.getHeader(MessageHeaders.TIMESTAMP)));
+                - name: "fooTest"
+                  result:
+                    name: "fooTest"
+                    className: "FooTest"
+                    result: "SUCCESS"
+                    duration: 2000
+                  actions:
+                  - name: "echo"
+                    path: "actions.0.echo"
+                  - name: "send"
+                    path: "actions.1.send"
+                    message:
+                      headers:
+                        - name: "citrus_message_id"
+                          value: "%s"
+                        - name: "citrus_message_timestamp"
+                          value: "%s"
+                        - name: "foo"
+                          value: "bar"
+                      headerData: []
+                      payload: |
+                        Hello from Citrus!
+                  - name: "receive"
+                    path: "actions.2.receive"
+                    message:
+                      headers:
+                        - name: "citrus_message_id"
+                          value: "%s"
+                        - name: "citrus_message_timestamp"
+                          value: "%s"
+                        - name: "foo"
+                          value: "baz"
+                      headerData: []
+                      payload: |
+                        Citrus rocks!
+                """.formatted(messageSent.getId(), messageSent.getHeader(MessageHeaders.TIMESTAMP), messageReceived.getId(), messageReceived.getHeader(MessageHeaders.TIMESTAMP)));
     }
 
 }

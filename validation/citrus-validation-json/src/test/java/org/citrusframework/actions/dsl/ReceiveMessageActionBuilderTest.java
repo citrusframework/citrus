@@ -33,7 +33,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.networknt.schema.Schema;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionSupport;

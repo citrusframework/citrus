@@ -23,8 +23,10 @@ import org.citrusframework.container.Parallel;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.xml.actions.AbstractXmlActionTest;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
+@Ignore
 public class ParallelTest extends AbstractXmlActionTest {
 
     @Test

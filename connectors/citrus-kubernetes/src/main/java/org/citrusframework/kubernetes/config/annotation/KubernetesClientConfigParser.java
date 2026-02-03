@@ -16,7 +16,7 @@
 
 package org.citrusframework.kubernetes.config.annotation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.client.KubernetesClientBuilder;

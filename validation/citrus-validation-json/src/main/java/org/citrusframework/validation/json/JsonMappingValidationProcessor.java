@@ -16,10 +16,6 @@
 
 package org.citrusframework.validation.json;
 
-import java.io.IOException;
-import java.util.Map;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
@@ -31,19 +27,28 @@ import org.citrusframework.validation.AbstractValidationProcessor;
 import org.citrusframework.validation.GenericValidationProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.databind.ObjectMapper;
+
+import java.util.Map;
 
 /**
  * @since 2.4
  */
 public abstract class JsonMappingValidationProcessor<T> extends AbstractValidationProcessor<T> {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger logger = LoggerFactory.getLogger(JsonMappingValidationProcessor.class);
 
-    /** JSON object mapper */
+    /**
+     * JSON object mapper
+     */
     private ObjectMapper mapper;
 
-    /** The result type */
+    /**
+     * The result type
+     */
     private final Class<T> resultType;
 
     /**
@@ -78,15 +83,12 @@ public abstract class JsonMappingValidationProcessor<T> extends AbstractValidati
             mapper = referenceResolver.resolve(ObjectMapper.class);
         }
 
-        try {
-            return mapper.readValue(message.getPayload(String.class), resultType);
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to unmarshal message payload", e);
-        }
+        return mapper.readValue(message.getPayload(String.class), resultType);
     }
 
     /**
      * Fluent builder.
+     *
      * @param <T>
      */
     public static final class Builder<T> implements
