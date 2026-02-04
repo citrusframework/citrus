@@ -197,7 +197,7 @@
     <apache.camel.version>4.17.0</apache.camel.version>
     <apicurio.data-models.version>1.1.33</apicurio.data-models.version>
     <ascii-table-version>1.8.0</ascii-table-version>
-    <assertj.version>3.27.6</assertj.version>
+    <assertj.version>3.27.7</assertj.version>
     <awaitility.version>4.3.0</awaitility.version>
     <aws-java-sdk2.version>2.41.2</aws-java-sdk2.version>
     <bouncycastle.version>1.83</bouncycastle.version>
