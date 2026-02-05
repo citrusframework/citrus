@@ -1180,6 +1180,8 @@ public class JBang {
             protected String argLine;
             @XmlAttribute(name = "logging-color")
             protected boolean loggingColor;
+            @XmlAttribute(name = "json-output")
+            protected boolean jsonOutput;
             @XmlAttribute(name = "grep")
             protected String grep;
             @XmlAttribute(name = "since")
@@ -1230,6 +1232,14 @@ public class JBang {
 
             public boolean isLoggingColor() {
                 return loggingColor;
+            }
+
+            public void setJsonOutput(boolean jsonOutput) {
+                this.jsonOutput = jsonOutput;
+            }
+
+            public boolean isJsonOutput() {
+                return jsonOutput;
             }
 
             public void setGrep(String grep) {

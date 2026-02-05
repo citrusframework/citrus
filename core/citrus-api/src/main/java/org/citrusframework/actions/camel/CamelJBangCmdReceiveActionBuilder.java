@@ -47,6 +47,8 @@ public interface CamelJBangCmdReceiveActionBuilder<T extends TestAction, B exten
 
     B loggingColor(boolean enabled);
 
+    B jsonOutput(boolean enabled);
+
     B grep(String filter);
 
     B since(String duration);

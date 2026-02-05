@@ -761,6 +761,8 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
             builder.loggingColor(receive.isLoggingColor());
 
+            builder.jsonOutput(receive.isJsonOutput());
+
             if (receive.getSince() != null) {
                 builder.since(receive.getSince());
             }
@@ -905,6 +907,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             protected String uri;
             protected List<String> args;
             protected boolean loggingColor;
+            protected boolean jsonOutput;
 
             protected String grep;
             protected String since;
@@ -962,6 +965,15 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             @SchemaProperty(advanced = true, description = "When enabled the output uses logging color.", defaultValue = "false")
             public void setLoggingColor(boolean loggingColor) {
                 this.loggingColor = loggingColor;
+            }
+
+            public boolean isJsonOutput() {
+                return loggingColor;
+            }
+
+            @SchemaProperty(advanced = true, description = "When enabled action stores messages from json output.", defaultValue = "false")
+            public void setJsonOutput(boolean loggingColor) {
+                this.jsonOutput = jsonOutput;
             }
 
             public String getGrep() {
