@@ -18,10 +18,10 @@
 
 //JAVA 17+
 //REPOS mavencentral
-//DEPS org.citrusframework:citrus-bom:${citrus.jbang.version:4.9.1}@pom
-//DEPS org.citrusframework:citrus-jbang:${citrus.jbang.version:4.9.1}
-//DEPS org.citrusframework:citrus-agent:${citrus.jbang.version:4.9.1}
-//DEPS org.citrusframework:citrus-agent-connector:${citrus.jbang.version:4.9.1}
+//DEPS org.citrusframework:citrus-bom:${citrus.jbang.version:4.10.0-SNAPSHOT}@pom
+//DEPS org.citrusframework:citrus-jbang:${citrus.jbang.version:4.10.0-SNAPSHOT}
+//DEPS org.citrusframework:citrus-agent:${citrus.jbang.version:4.10.0-SNAPSHOT}
+//DEPS org.citrusframework:citrus-agent-connector:${citrus.jbang.version:4.10.0-SNAPSHOT}
 //DEPS org.citrusframework:citrus-jbang-connector
 //DEPS org.citrusframework:citrus-groovy
 //DEPS org.citrusframework:citrus-xml

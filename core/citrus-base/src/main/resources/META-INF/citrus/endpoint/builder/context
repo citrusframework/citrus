@@ -1,0 +1,2 @@
+type=org.citrusframework.endpoint.context.ContextEndpointsBuilder
+messageStore=org.citrusframework.endpoint.context.MessageStoreEndpointBuilder

@@ -35,7 +35,6 @@ public abstract class AbstractEndpoint implements Endpoint {
 
     /**
      * Default constructor using endpoint configuration.
-     * @param endpointConfiguration
      */
     public AbstractEndpoint(EndpointConfiguration endpointConfiguration) {
         this.endpointConfiguration = endpointConfiguration;
@@ -48,7 +47,6 @@ public abstract class AbstractEndpoint implements Endpoint {
 
     /**
      * Gets the endpoints consumer name.
-     * @return
      */
     public String getConsumerName() {
         return name + ":consumer";
@@ -56,7 +54,6 @@ public abstract class AbstractEndpoint implements Endpoint {
 
     /**
      * Gets the endpoints producer name.
-     * @return
      */
     public String getProducerName() {
         return name + ":producer";

@@ -22,6 +22,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.endpoint.direct.DirectEndpointComponent;
+import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -74,9 +75,11 @@ public class SshEndpointComponentTest {
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 2L);
+        Assert.assertEquals(validators.size(), 3L);
         Assert.assertNotNull(validators.get("direct"));
         Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
+        Assert.assertNotNull(validators.get("message-store"));
+        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
         Assert.assertNotNull(validators.get("ssh"));
         Assert.assertEquals(validators.get("ssh").getClass(), SshEndpointComponent.class);
     }

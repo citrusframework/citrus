@@ -19,6 +19,7 @@ package org.citrusframework.dsl.schema;
 import org.citrusframework.camel.endpoint.CamelEndpointsBuilder;
 import org.citrusframework.channel.endpoint.builder.MessageChannelEndpointsBuilder;
 import org.citrusframework.docker.endpoint.builder.DockerEndpointBuilder;
+import org.citrusframework.endpoint.context.ContextEndpointsBuilder;
 import org.citrusframework.endpoint.direct.DirectEndpointsBuilder;
 import org.citrusframework.ftp.endpoint.builder.FtpEndpointBuilder;
 import org.citrusframework.ftp.endpoint.builder.ScpEndpointBuilder;
@@ -39,6 +40,7 @@ import org.citrusframework.yaml.SchemaType;
     "http",
     "soap",
     "webSocket",
+    "context",
     "mail",
     "ftp",
     "sftp",
@@ -102,6 +104,10 @@ public interface Endpoints {
 
     @SchemaProperty(description = "Direct endpoint.")
     default void setDirect(DirectEndpointsBuilder builder) {
+    }
+
+    @SchemaProperty(description = "Context endpoint.")
+    default void setContext(ContextEndpointsBuilder builder) {
     }
 
     @SchemaProperty(description = "Kafka endpoint.")

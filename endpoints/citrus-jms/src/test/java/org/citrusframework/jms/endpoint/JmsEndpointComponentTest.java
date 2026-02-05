@@ -16,17 +16,18 @@
 
 package org.citrusframework.jms.endpoint;
 
-import jakarta.jms.ConnectionFactory;
-import jakarta.jms.Destination;
 import java.util.Collections;
 import java.util.Map;
 
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Destination;
 import org.citrusframework.channel.ChannelEndpointComponent;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.endpoint.direct.DirectEndpointComponent;
+import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.mockito.Mockito;
@@ -186,9 +187,11 @@ public class JmsEndpointComponentTest {
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 3L);
+        Assert.assertEquals(validators.size(), 4L);
         Assert.assertNotNull(validators.get("direct"));
         Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
+        Assert.assertNotNull(validators.get("message-store"));
+        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
         Assert.assertNotNull(validators.get("channel"));
         Assert.assertEquals(validators.get("channel").getClass(), ChannelEndpointComponent.class);
         Assert.assertNotNull(validators.get("jms"));

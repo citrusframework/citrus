@@ -22,6 +22,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.endpoint.direct.DirectEndpointComponent;
+import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.citrusframework.http.client.HttpEndpointComponent;
 import org.citrusframework.http.client.HttpsEndpointComponent;
 import org.testng.Assert;
@@ -79,9 +80,11 @@ public class WebSocketEndpointComponentTest {
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 5L);
+        Assert.assertEquals(validators.size(), 6L);
         Assert.assertNotNull(validators.get("direct"));
         Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
+        Assert.assertNotNull(validators.get("message-store"));
+        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
         Assert.assertNotNull(validators.get("http"));
         Assert.assertEquals(validators.get("http").getClass(), HttpEndpointComponent.class);
         Assert.assertNotNull(validators.get("https"));

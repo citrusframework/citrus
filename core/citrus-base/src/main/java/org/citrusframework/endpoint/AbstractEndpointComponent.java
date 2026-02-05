@@ -108,7 +108,7 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
      * Removes other settings from given parameter map and returns just the endpoint parameters.
      */
     private Map<String, String> getEndpointParameters(Map<String, String> parameters) {
-        Set<String> internalSettings = Set.of(ENDPOINT_NAME, AUTO_CLOSE, AUTO_REMOVE);
+        Set<String> internalSettings = Set.of(ENDPOINT_NAME, ENDPOINT_CACHE, AUTO_CLOSE, AUTO_REMOVE);
         HashMap<String, String> result = new HashMap<>();
 
         for (String key : parameters.keySet()) {

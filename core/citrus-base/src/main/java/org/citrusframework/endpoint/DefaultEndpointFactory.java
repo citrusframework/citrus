@@ -56,60 +56,42 @@ public class DefaultEndpointFactory implements EndpointFactory {
     @Override
     public Endpoint create(String endpointName, Annotation endpointConfig, TestContext context) {
         String qualifier = endpointConfig.annotationType().getAnnotation(CitrusEndpointConfig.class).qualifier();
-        Optional<AnnotationConfigParser> parser = Optional.ofNullable(context.getReferenceResolver().resolveAll(AnnotationConfigParser.class).get(qualifier));
+        AnnotationConfigParser parser = Optional.ofNullable(context.getReferenceResolver().resolveAll(AnnotationConfigParser.class).get(qualifier))
+                .or(() -> AnnotationConfigParser.lookup(qualifier))
+                .orElseThrow(() -> new CitrusRuntimeException(String.format("Unable to create endpoint annotation parser with name '%s'", qualifier)));
 
-        if (!parser.isPresent()) {
-            // try to get parser from default Citrus modules
-            parser = AnnotationConfigParser.lookup(qualifier);
+        Endpoint endpoint = parser.parse(endpointConfig, context.getReferenceResolver());
+        endpoint.setName(endpointName);
+
+        if (endpoint instanceof ReferenceResolverAware referenceResolverAware) {
+            referenceResolverAware.setReferenceResolver(context.getReferenceResolver());
         }
 
-        if (parser.isPresent()) {
-            Endpoint endpoint = parser.get().parse(endpointConfig, context.getReferenceResolver());
-            endpoint.setName(endpointName);
-
-            if (endpoint instanceof ReferenceResolverAware referenceResolverAware) {
-                referenceResolverAware.setReferenceResolver(context.getReferenceResolver());
-            }
-
-            if (endpoint instanceof InitializingPhase initializingBean) {
-                initializingBean.initialize();
-            }
-
-            PropertyUtils.configure(endpointName, endpoint, context.getReferenceResolver());
-            return endpoint;
+        if (endpoint instanceof InitializingPhase initializingBean) {
+            initializingBean.initialize();
         }
 
-        throw new CitrusRuntimeException(String.format("Unable to create endpoint annotation parser with name '%s'", qualifier));
+        PropertyUtils.configure(endpointName, endpoint, context.getReferenceResolver());
+        return endpoint;
     }
 
     @Override
     public Endpoint create(String endpointName, CitrusEndpoint endpointConfig, Class<?> endpointType, TestContext context) {
-        Optional<EndpointBuilder> builder = context.getReferenceResolver().resolveAll(EndpointBuilder.class)
+        EndpointBuilder<?> builder = context.getReferenceResolver().resolveAll(EndpointBuilder.class)
                 .values()
                 .stream()
                 .filter(endpointBuilder -> endpointBuilder.supports(endpointType))
-                .findFirst();
+                .findFirst()
+                .or(() -> EndpointBuilder.lookup()
+                        .values()
+                        .stream()
+                        .filter(endpointBuilder -> endpointBuilder.supports(endpointType))
+                        .findFirst())
+                .orElseThrow(() -> new CitrusRuntimeException(String.format("Unable to create endpoint builder for type '%s'", endpointType.getName())));
 
-        if (builder.isPresent()) {
-            Endpoint endpoint = builder.get().build(endpointConfig, context.getReferenceResolver());
-            endpoint.setName(endpointName);
-            return endpoint;
-        }
-
-        // try to get builder from default Citrus modules
-        Optional<EndpointBuilder<?>> lookup = EndpointBuilder.lookup()
-                .values()
-                .stream()
-                .filter(endpointBuilder -> endpointBuilder.supports(endpointType))
-                .findFirst();
-
-        if (lookup.isPresent()) {
-            Endpoint endpoint = lookup.get().build(endpointConfig, context.getReferenceResolver());
-            endpoint.setName(endpointName);
-            return endpoint;
-        }
-
-        throw new CitrusRuntimeException(String.format("Unable to create endpoint builder for type '%s'", endpointType.getName()));
+        Endpoint endpoint = builder.build(endpointConfig, context.getReferenceResolver());
+        endpoint.setName(endpointName);
+        return endpoint;
     }
 
     @Override
@@ -131,18 +113,11 @@ public class DefaultEndpointFactory implements EndpointFactory {
         }
 
         String componentName = getComponentName(endpointUri);
-        Optional<EndpointComponent> component = Optional.ofNullable(getEndpointComponents(context.getReferenceResolver()).get(componentName));
+        EndpointComponent component = Optional.ofNullable(getEndpointComponents(context.getReferenceResolver()).get(componentName))
+                .or(() -> EndpointComponent.lookup(componentName))
+                .orElseThrow(() -> new CitrusRuntimeException(String.format("Unable to create endpoint component with name '%s'", componentName)));
 
-        if (component.isEmpty()) {
-            // try to get component from default Citrus modules
-            component = EndpointComponent.lookup(componentName);
-        }
-
-        if (component.isEmpty()) {
-            throw new CitrusRuntimeException(String.format("Unable to create endpoint component with name '%s'", componentName));
-        }
-
-        Map<String, String> parameters = component.get().getParameters(endpointUri);
+        Map<String, String> parameters = component.getParameters(endpointUri);
         String cachedEndpointName = parameters.getOrDefault(EndpointComponent.ENDPOINT_NAME, endpointUri);
 
         synchronized (endpointCache) {
@@ -152,23 +127,30 @@ public class DefaultEndpointFactory implements EndpointFactory {
                 }
                 return endpointCache.get(cachedEndpointName);
             } else {
-                Endpoint endpoint = component.get().createEndpoint(endpointUri, context);
-                endpointCache.put(cachedEndpointName, endpoint);
+                Endpoint endpoint = component.createEndpoint(endpointUri, context);
 
-                boolean autoRemove = Optional.ofNullable(parameters.get(EndpointComponent.AUTO_REMOVE))
-                                                    .map(Boolean::parseBoolean)
-                                                    .orElseGet(CitrusSettings::isAutoRemoveDynamicEndpoints);
-                if (autoRemove) {
-                    context.doFinally(() -> ctx -> {
-                        logger.info("Stopping and removing endpoint '{}' due to auto remove setting", endpoint.getName());
-                        if (endpoint instanceof ShutdownPhase destroyable) {
-                            destroyable.destroy();
-                        }
+                boolean endpointCacheEnabled = Optional.ofNullable(parameters.get(EndpointComponent.ENDPOINT_CACHE))
+                        .map(Boolean::parseBoolean)
+                        .orElse(component.supportsEndpointCaching());
 
-                        synchronized (endpointCache) {
-                            endpointCache.remove(cachedEndpointName);
-                        }
-                    });
+                if (endpointCacheEnabled) {
+                    endpointCache.put(cachedEndpointName, endpoint);
+
+                    boolean autoRemove = Optional.ofNullable(parameters.get(EndpointComponent.AUTO_REMOVE))
+                            .map(Boolean::parseBoolean)
+                            .orElseGet(CitrusSettings::isAutoRemoveDynamicEndpoints);
+                    if (autoRemove) {
+                        context.doFinally(() -> ctx -> {
+                            logger.info("Stopping and removing endpoint '{}' due to auto remove setting", endpoint.getName());
+                            if (endpoint instanceof ShutdownPhase destroyable) {
+                                destroyable.destroy();
+                            }
+
+                            synchronized (endpointCache) {
+                                endpointCache.remove(cachedEndpointName);
+                            }
+                        });
+                    }
                 }
                 return endpoint;
             }
