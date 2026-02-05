@@ -383,6 +383,8 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
 
                 builder.loggingColor(jbang.getCmd().getReceive().isLoggingColor());
 
+                builder.jsonOutput(jbang.getCmd().getReceive().isJsonOutput());
+
                 if (jbang.getCmd().getReceive().getSince() != null) {
                     builder.since(jbang.getCmd().getReceive().getSince());
                 }

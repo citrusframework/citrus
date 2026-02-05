@@ -19,6 +19,7 @@ package org.citrusframework.camel.actions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.citrusframework.actions.camel.CamelJBangCmdReceiveActionBuilder;
 import org.citrusframework.camel.CamelSettings;
@@ -26,6 +27,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
+import org.citrusframework.message.DefaultMessage;
+import org.citrusframework.message.Message;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +63,9 @@ public class CamelCmdReceiveAction extends AbstractCamelJBangAction {
     /** The number of messages from the end to show */
     private final String tail;
 
+    /** Should use Json output and verify */
+    private final boolean jsonOutput;
+
     /** Camel JBang command arguments */
     private final List<String> args;
 
@@ -82,6 +88,7 @@ public class CamelCmdReceiveAction extends AbstractCamelJBangAction {
         this.grep = builder.grep;
         this.since = builder.since;
         this.tail = builder.tail;
+        this.jsonOutput = builder.jsonOutput;
         this.maxAttempts = builder.maxAttempts;
         this.delayBetweenAttempts = builder.delayBetweenAttempts;
         this.printLogs = builder.printLogs;
@@ -124,6 +131,12 @@ public class CamelCmdReceiveAction extends AbstractCamelJBangAction {
             commandArgs.add(tail);
         }
 
+        if (jsonOutput) {
+            commandArgs.add("--output=json");
+            commandArgs.add("--compact=false");
+            commandArgs.add("--pretty");
+        }
+
         if (!args.contains("--logging-color") && args.stream().noneMatch(it -> it.startsWith("--logging-color"))) {
             // disable logging colors by default
             commandArgs.add("--logging-color=false");
@@ -155,8 +168,18 @@ public class CamelCmdReceiveAction extends AbstractCamelJBangAction {
                     CAMEL_JBANG_LOG.info(log);
                 }
 
-                if (log.contains("Received Message:")) {
-                    logger.info("Verified Camel received message - All values OK!");
+                boolean verified = false;
+                if (jsonOutput) {
+                    if (log.contains("\"message\": {")) {
+                        verified = true;
+                        storeMessageFromLog(log, context);
+                    }
+                } else if (log.contains("Received Message:")) {
+                    verified = true;
+                }
+
+                if (verified) {
+                    logger.info("Verified Camel receive command - received at least one message matching the criteria - All values OK!");
                     return;
                 }
 
@@ -175,11 +198,32 @@ public class CamelCmdReceiveAction extends AbstractCamelJBangAction {
 
             throw new ActionTimeoutException((maxAttempts * delayBetweenAttempts),
                     new CitrusRuntimeException(String.format("Failed to verify Camel receive command '%s' - " +
-                            "has not received message with matching '%s' after %d attempts", integrationName, grep, maxAttempts)));
+                            "has not received message with matching '%s' after %d attempts", integrationName, Optional.ofNullable(grep).orElse("any message"), maxAttempts)));
         } finally {
             if (pao != null && pao.getProcess().isAlive()) {
                 pao.getProcess().destroy();
             }
+        }
+    }
+
+    private void storeMessageFromLog(String log, TestContext context) {
+        String[] messages = log.trim().split("^\\s+$");
+        if (messages.length > 0) {
+            // Store last message
+            String message = messages[messages.length - 1];
+            if (!message.startsWith("{") && message.contains("{")) {
+                // Remove plain text content - usually something like 'Waiting for messages ...'
+                message = message.substring(message.indexOf("{"));
+            }
+
+            String messageName = integrationName + ".message";
+            logger.info("Storing last message '{}' received from Camel integration '{}'", messageName, integrationName);
+
+            Message msg = new DefaultMessage(message);
+            context.getMessageStore()
+                    .storeMessage(messageName, msg);
+            context.getMessageStore()
+                    .storeMessage(integrationName + "." + Optional.ofNullable(endpoint).orElse(endpointUri), msg);
         }
     }
 
@@ -195,6 +239,7 @@ public class CamelCmdReceiveAction extends AbstractCamelJBangAction {
         private String grep;
         private String since;
         private String tail = "0";
+        private boolean jsonOutput;
         private final List<String> args = new ArrayList<>();
 
         private int maxAttempts = CamelSettings.getMaxAttempts();
@@ -243,6 +288,12 @@ public class CamelCmdReceiveAction extends AbstractCamelJBangAction {
         @Override
         public Builder loggingColor(boolean enabled) {
             this.withArg("--logging-color=%s".formatted(enabled));
+            return this;
+        }
+
+        @Override
+        public Builder jsonOutput(boolean enabled) {
+            this.jsonOutput = enabled;
             return this;
         }
 
