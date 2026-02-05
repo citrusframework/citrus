@@ -116,7 +116,7 @@ public class Catalog {
 
         for (Map.Entry<String, EndpointBuilder<?>> builder : endpointBuilders.entrySet()) {
             JsonNode jsonSchema = CitrusSchemaGenerator.generateSchema(builder.getValue().getClass(), Option.INLINE_ALL_SCHEMAS);
-            String[] tokens = builder.getKey().split("\\.");
+            String[] tokens = builder.getKey().split("\\.", 2);
             String group = tokens[0];
             String name = tokens[1];
             catalog.put(builder.getKey().replaceAll("\\.", "-"),

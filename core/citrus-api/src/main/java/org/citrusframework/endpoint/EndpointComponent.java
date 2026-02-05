@@ -38,6 +38,7 @@ public interface EndpointComponent {
     Logger logger = LoggerFactory.getLogger(EndpointComponent.class);
 
     String ENDPOINT_NAME = "endpointName";
+    String ENDPOINT_CACHE = "endpointCache";
     String AUTO_CLOSE = "autoClose";
     String AUTO_REMOVE = "autoRemove";
 
@@ -49,29 +50,29 @@ public interface EndpointComponent {
 
     /**
      * Creates proper endpoint instance from endpoint uri.
-     * @param endpointUri
-     * @param context
-     * @return
      */
     Endpoint createEndpoint(String endpointUri, TestContext context);
 
     /**
      * Gets the name of this endpoint component.
-     * @return
      */
     String getName();
 
     /**
      * Construct endpoint name from endpoint uri.
-     * @param endpointUri
-     * @return
      */
     Map<String, String> getParameters(String endpointUri);
 
     /**
+     * Returns setting defining whether this endpoint component allows endpoint caching.
+     */
+    default boolean supportsEndpointCaching() {
+        return true;
+    }
+
+    /**
      * Resolves all available endpoint components from resource path lookup. Scans classpath for endpoint component meta information
      * and instantiates those components.
-     * @return
      */
     static Map<String, EndpointComponent> lookup() {
         Map<String, EndpointComponent> components = TYPE_RESOLVER.resolveAll();
@@ -86,8 +87,6 @@ public interface EndpointComponent {
      * Resolves endpoint component from resource path lookup with given resource name. Scans classpath for endpoint component meta information
      * with given name and returns instance of the component. Returns optional instead of throwing exception when no endpoint component
      * could be found.
-     * @param component
-     * @return
      */
     static Optional<EndpointComponent> lookup(String component) {
         try {

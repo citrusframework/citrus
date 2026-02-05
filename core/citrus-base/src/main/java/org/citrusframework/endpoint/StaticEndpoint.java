@@ -17,15 +17,21 @@
 package org.citrusframework.endpoint;
 
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.MessageTimeoutException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.Producer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Special endpoint implementation that produces/consumes static messages.
  */
 public class StaticEndpoint extends AbstractEndpoint {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(StaticEndpoint.class);
 
     private Message message;
 
@@ -65,7 +71,7 @@ public class StaticEndpoint extends AbstractEndpoint {
 
             @Override
             public String getName() {
-                return StaticEndpoint.this.getName() + "-producer";
+                return StaticEndpoint.this.getProducerName();
             }
         };
     }
@@ -75,17 +81,24 @@ public class StaticEndpoint extends AbstractEndpoint {
         return new Consumer() {
             @Override
             public Message receive(TestContext context) {
-                return getMessage();
+                return receive(context, getEndpointConfiguration().getTimeout());
             }
 
             @Override
             public Message receive(TestContext context, long timeout) {
-                return getMessage();
+                Message received = getMessage();
+                if (received == null) {
+                    throw new MessageTimeoutException(timeout, StaticEndpoint.this.getName());
+                }
+
+                logger.info("Received message from static endpoint: '{}'", StaticEndpoint.this.getName());
+
+                return received;
             }
 
             @Override
             public String getName() {
-                return StaticEndpoint.this.getName() + "-consumer";
+                return StaticEndpoint.this.getConsumerName();
             }
         };
     }
@@ -100,6 +113,10 @@ public class StaticEndpoint extends AbstractEndpoint {
     }
 
     public Message getMessage() {
+        if (message == null) {
+            return null;
+        }
+
         if (getEndpointConfiguration().isReuseMessage()) {
             return message;
         } else {

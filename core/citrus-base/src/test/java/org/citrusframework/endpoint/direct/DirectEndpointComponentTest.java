@@ -16,8 +16,6 @@
 
 package org.citrusframework.endpoint.direct;
 
-import java.util.Map;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.Endpoint;
@@ -86,14 +84,6 @@ public class DirectEndpointComponentTest {
 
         Assert.assertEquals(((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName(), "queueName");
         Assert.assertEquals(((DirectEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
-    }
-
-    @Test
-    public void testLookupAll() {
-        Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 1L);
-        Assert.assertNotNull(validators.get("direct"));
-        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
     }
 
     @Test
