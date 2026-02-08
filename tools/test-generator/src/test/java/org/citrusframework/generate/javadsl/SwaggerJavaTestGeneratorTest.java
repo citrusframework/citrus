@@ -72,7 +72,7 @@ public class SwaggerJavaTestGeneratorTest {
     }
 
     @Test
-    public void testCreateTestWithErrorOnlyResponsesAsClient() throws IOException {
+    public void testCreateTestWithErrorOnlyResponsesAndNoResponsesAsClient() throws IOException {
         SwaggerJavaTestGenerator generator = new SwaggerJavaTestGenerator();
 
         generator.withAuthor("phos-web")
@@ -86,12 +86,12 @@ public class SwaggerJavaTestGeneratorTest {
         generator.create();
 
         verifyTest("PetApiClient_getPetById_IT");
-
         verifyTestWithStatus("PetApiClient_updatePet_IT", "BAD_REQUEST");
+        verifyTest("PetApiClient_deletePet_IT");
     }
 
     @Test
-    public void testCreateTestWithErrorOnlyResponsesAsServer() throws IOException {
+    public void testCreateTestWithErrorOnlyResponsesAndNoResponsesAsServer() throws IOException {
         SwaggerJavaTestGenerator generator = new SwaggerJavaTestGenerator();
 
         generator.withAuthor("phos-web")
@@ -106,6 +106,7 @@ public class SwaggerJavaTestGeneratorTest {
 
         verifyTest("PetApiClient_getPetById_IT");
         verifyTestWithStatus("PetApiClient_updatePet_IT", "BAD_REQUEST");
+        verifyTest("PetApiClient_deletePet_IT");
     }
 
     private void verifyTest(String name) throws IOException {

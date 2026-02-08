@@ -61,11 +61,14 @@ import org.springframework.http.HttpStatus;
 
 /**
  * Test generator creates one to many test cases based on operations defined in a XML schema XSD.
+ *
  * @since 2.7.4
  */
 public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<SwaggerJavaTestGenerator> implements SwaggerTestGenerator<SwaggerJavaTestGenerator> {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger logger = LoggerFactory.getLogger(SwaggerJavaTestGenerator.class);
 
     private String swaggerResource;
@@ -139,7 +142,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
                 withRequest(requestMessage);
 
                 HttpMessage responseMessage = new HttpMessage();
-                if (operation.getValue().getResponses() != null) {
+                if (operation.getValue().getResponses() != null && !operation.getValue().getResponses().isEmpty()) {
                     Response response = operation.getValue().getResponses().get("200");
                     HttpStatus httpStatus = HttpStatus.OK;
 
@@ -147,7 +150,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
                         response = operation.getValue().getResponses().get("default");
                     }
 
-                    if (response == null && !operation.getValue().getResponses().isEmpty()) {
+                    if (response == null) {
                         Map.Entry<String, Response> firstEntry = operation.getValue().getResponses().entrySet().iterator().next();
                         response = firstEntry.getValue();
                         try {
@@ -157,21 +160,19 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
                         }
                     }
 
-                    if (response != null) {
-                        responseMessage.status(httpStatus);
+                    responseMessage.status(httpStatus);
 
-                        if (response.getHeaders() != null) {
-                            for (Map.Entry<String, Property> header : response.getHeaders().entrySet()) {
-                                responseMessage.setHeader(header.getKey(), getMode().equals(GeneratorMode.CLIENT) ? createValidationExpression(header.getValue(), swagger.getDefinitions(), false) : createRandomValueExpression(header.getValue(), swagger.getDefinitions(), false));
-                            }
-                        }
-
-                        if (response.getSchema() != null) {
-                            responseMessage.setPayload(getMode().equals(GeneratorMode.CLIENT) ? createInboundPayload(response.getSchema(), swagger.getDefinitions()): createOutboundPayload(response.getSchema(), swagger.getDefinitions()));
+                    if (response.getHeaders() != null) {
+                        for (Map.Entry<String, Property> header : response.getHeaders().entrySet()) {
+                            responseMessage.setHeader(header.getKey(), getMode().equals(GeneratorMode.CLIENT) ? createValidationExpression(header.getValue(), swagger.getDefinitions(), false) : createRandomValueExpression(header.getValue(), swagger.getDefinitions(), false));
                         }
                     }
+
+                    if (response.getSchema() != null) {
+                        responseMessage.setPayload(getMode().equals(GeneratorMode.CLIENT) ? createInboundPayload(response.getSchema(), swagger.getDefinitions()) : createOutboundPayload(response.getSchema(), swagger.getDefinitions()));
+                    }
+                    withResponse(responseMessage);
                 }
-                withResponse(responseMessage);
 
                 super.create();
 
@@ -182,6 +183,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Creates payload from schema for outbound message.
+     *
      * @param model
      * @param definitions
      * @return
@@ -216,6 +218,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Creates payload from property for outbound message.
+     *
      * @param property
      * @param definitions
      * @return
@@ -251,6 +254,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Create payload from schema with random values.
+     *
      * @param property
      * @param definitions
      * @param quotes
@@ -272,7 +276,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
                 payload.append("citrus:currentDate()");
             } else if (property instanceof DateTimeProperty) {
                 payload.append("citrus:currentDate('yyyy-MM-dd'T'hh:mm:ss')");
-            } else if (((StringProperty)property).getEnum() != null && !((StringProperty) property).getEnum().isEmpty()) {
+            } else if (((StringProperty) property).getEnum() != null && !((StringProperty) property).getEnum().isEmpty()) {
                 payload.append("citrus:randomEnumValue(").append(((StringProperty) property).getEnum().stream().map(value -> "'" + value + "'").collect(Collectors.joining(","))).append(")");
             } else if (Optional.ofNullable(property.getFormat()).orElse("").equalsIgnoreCase("uuid")) {
                 payload.append("citrus:randomUUID()");
@@ -302,6 +306,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Creates control payload from property for validation.
+     *
      * @param property
      * @param definitions
      * @return
@@ -337,6 +342,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Creates control payload from schema for validation.
+     *
      * @param model
      * @param definitions
      * @return
@@ -373,6 +379,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Create validation expression using functions according to parameter type and format.
+     *
      * @param property
      * @param definitions
      * @param quotes
@@ -412,7 +419,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
             if (StringUtils.hasText(((StringProperty) property).getPattern())) {
                 payload.append("@matches(").append(((StringProperty) property).getPattern()).append(")@");
-            } else if (((StringProperty)property).getEnum() != null && !((StringProperty) property).getEnum().isEmpty()) {
+            } else if (((StringProperty) property).getEnum() != null && !((StringProperty) property).getEnum().isEmpty()) {
                 payload.append("@matches(").append(((StringProperty) property).getEnum().stream().collect(Collectors.joining("|"))).append(")@");
             } else {
                 payload.append("@notEmpty()@");
@@ -488,6 +495,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Create validation expression using functions according to parameter type and format.
+     *
      * @param parameter
      * @return
      */
@@ -516,6 +524,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Create random value expression using functions according to parameter type and format.
+     *
      * @param parameter
      * @return
      */
@@ -532,7 +541,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
                     return "\"citrus:randomValue(" + parameter.getPattern() + ")\"";
                 } else if (parameter.getEnum() != null && !parameter.getEnum().isEmpty()) {
                     return "\"citrus:randomEnumValue(" + (parameter.getEnum().stream().collect(Collectors.joining(","))) + ")\"";
-                } else if (Optional.ofNullable(parameter.getFormat()).orElse("").equalsIgnoreCase("uuid")){
+                } else if (Optional.ofNullable(parameter.getFormat()).orElse("").equalsIgnoreCase("uuid")) {
                     return "citrus:randomUUID()";
                 } else {
                     return "citrus:randomString(10)";
@@ -546,6 +555,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Set the swagger Open API resource to use.
+     *
      * @param swaggerResource
      * @return
      */
@@ -556,6 +566,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Set the server context path to use.
+     *
      * @param contextPath
      * @return
      */
@@ -566,6 +577,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Set the test name prefix to use.
+     *
      * @param prefix
      * @return
      */
@@ -576,6 +588,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Set the test name suffix to use.
+     *
      * @param suffix
      * @return
      */
@@ -586,6 +599,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Set the swagger operation to use.
+     *
      * @param operation
      * @return
      */
@@ -596,6 +610,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Add inbound JsonPath expression mappings to manipulate inbound message content.
+     *
      * @param mappings
      * @return
      */
@@ -606,6 +621,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Add outbound JsonPath expression mappings to manipulate outbound message content.
+     *
      * @param mappings
      * @return
      */
@@ -616,6 +632,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Add inbound JsonPath expression mappings file to manipulate inbound message content.
+     *
      * @param mappingFile
      * @return
      */
@@ -627,6 +644,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
     /**
      * Add outbound JsonPath expression mappings file to manipulate outbound message content.
+     *
      * @param mappingFile
      * @return
      */
