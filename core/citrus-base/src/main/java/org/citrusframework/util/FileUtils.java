@@ -102,7 +102,9 @@ public abstract class FileUtils {
      * @throws IOException
      */
     public static String readToString(File file) throws IOException {
-         return readToString(new FileInputStream(file), getDefaultCharset());
+        try (InputStream inputStream = new FileInputStream(file)) {
+            return readToString(inputStream, getDefaultCharset());
+        }
     }
 
     /**
@@ -123,7 +125,10 @@ public abstract class FileUtils {
 
         logger.debug("Reading file resource: '{}' (encoding is '{}')", resource.getLocation(), charset.displayName());
 
-        return readToString(resource.getInputStream(), charset);
+        try (InputStream inputStream = resource.getInputStream()) {
+            return readToString(inputStream, charset);
+        }
+
     }
 
     /**

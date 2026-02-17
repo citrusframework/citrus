@@ -17,10 +17,13 @@
 package org.citrusframework.util;
 
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -38,6 +41,29 @@ public class FileUtilsTest extends UnitTestSupport {
 
         assertNotNull(resource);
         assertTrue(resource.exists());
+    }
+
+    @Test
+    void readFileToString_shouldNotLockFile() throws Exception {
+        Path tempFile = Files.createTempFile("citrus-test", ".txt");
+        Files.writeString(tempFile, "hello citrus");
+
+        String content = FileUtils.readToString(tempFile.toFile());
+
+        assertEquals(content, "hello citrus");
+        assertTrue(Files.deleteIfExists(tempFile), "File should be deletable after readToString — indicates InputStream was closed");
+    }
+
+    @Test
+    void readResourceToString_shouldNotLockFile() throws Exception {
+        Path tempFile = Files.createTempFile("citrus-test", ".txt");
+        Files.writeString(tempFile, "hello citrus");
+
+        Resource resource = Resources.create(tempFile.toFile());
+        String content = FileUtils.readToString(resource);
+
+        assertEquals(content, "hello citrus");
+        assertTrue(Files.deleteIfExists(tempFile), "File should be deletable after readToString — indicates InputStream was closed");
     }
 
     @Test
