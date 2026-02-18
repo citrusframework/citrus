@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.testng;
+package org.citrusframework.acceptance;
 
 import org.citrusframework.CitrusSpringSettings;
 import org.citrusframework.context.SpringBeanReferenceResolver;
@@ -48,8 +48,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(classes = CitrusSpringConfigTest.CustomConfig.class)
-public class CitrusSpringConfigTest extends TestNGCitrusSpringSupport {
+@ContextConfiguration(classes = CitrusSpringConfigAT.CustomConfig.class)
+public class CitrusSpringConfigAT extends TestNGCitrusSpringSupport {
 
     static {
         System.setProperty(CitrusSpringSettings.DEFAULT_APPLICATION_CONTEXT_PROPERTY, "classpath:citrus-unit-context.xml");
