@@ -59,6 +59,18 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <executions>
           <execution>
+            <id>acceptance-tests</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>integration-test</goal>
+            </goals>
+            <configuration>
+              <includes>
+                <include>*AT.java</include>
+              </includes>
+            </configuration>
+          </execution>
+          <execution>
             <id>failure-tests</id>
             <phase>integration-test</phase>
             <goals>
