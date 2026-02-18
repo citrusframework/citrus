@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -46,6 +47,7 @@ import java.util.zip.ZipInputStream;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +59,13 @@ public class JBangSupport {
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(JBangSupport.class);
 
-    private static final boolean IS_OS_WINDOWS = System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("windows");
+    private static final boolean IS_OS_CYGWIN = Optional.ofNullable(System.getenv("OSTYPE"))
+            .map(String::toLowerCase)
+            .orElse("")
+            .equals("cygwin");
+    private static final boolean IS_OS_WINDOWS = System.getProperty("os.name")
+            .toLowerCase(Locale.ENGLISH)
+            .contains("win");
 
     public static final int OK_EXIT_CODE = 0;
 
@@ -345,16 +353,20 @@ public class JBangSupport {
      * @return JBang command with given arguments.
      */
     private static List<String> jBang(Map<String, String> systemProperties, List<String> classpathEntries, List<String> args) {
+        String jBangExecutable = getJBangExecutable();
         List<String> command = new ArrayList<>();
-        if (IS_OS_WINDOWS) {
+        if (jBangExecutable.endsWith(".cmd")) {
             command.add("cmd.exe");
             command.add("/c");
+        } else if (jBangExecutable.contains("/cygdrive") || IS_OS_CYGWIN) {
+            command.add("/bin/bash");
+            command.add("-c");
         } else {
             command.add("sh");
             command.add("-c");
         }
 
-        String jBangCommand = getJBangExecutable() + " " + getSystemPropertyArgs(systemProperties) + getClasspathEntries(classpathEntries) + String.join(" ", args);
+        String jBangCommand = jBangExecutable + " " + getSystemPropertyArgs(systemProperties) + getClasspathEntries(classpathEntries) + String.join(" ", args);
         command.add(jBangCommand);
 
         return command;
@@ -362,8 +374,6 @@ public class JBangSupport {
 
     /**
      * Construct command line arguments from given map of system properties.
-     * @param systemProperties
-     * @return
      */
     private static String getSystemPropertyArgs(Map<String, String> systemProperties) {
         if (systemProperties.isEmpty()) {
@@ -489,29 +499,23 @@ public class JBangSupport {
 
     /**
      * Gets the JBang executable name.
-     * @return
      */
     private static String getJBangExecutable() {
-        if (installDir != null) {
-            if (IS_OS_WINDOWS) {
-                return installDir.resolve("bin/jbang.cmd").toString();
-            } else {
-                return installDir.resolve("bin/jbang").toString();
-            }
-        } else {
-            if (IS_OS_WINDOWS) {
-                return "jbang.cmd";
-            } else {
-                return "jbang";
-            }
+        String jBangExecutable = JBangSettings.getJBangExecutable();
+        if (StringUtils.hasText(jBangExecutable)) {
+            return jBangExecutable;
         }
+
+        String jbangScript = IS_OS_CYGWIN || !IS_OS_WINDOWS ? "jbang" : "jbang.cmd";
+        if (installDir != null) {
+            return installDir.resolve("bin/%s".formatted(jbangScript)).toString();
+        }
+
+        return  jbangScript;
     }
 
     /**
      * Extract JBang download.zip to install directory.
-     * @param downloadZip
-     * @param installPath
-     * @throws IOException
      */
     private static void unzip(Path downloadZip, Path installPath) throws IOException {
         ZipInputStream zis = new ZipInputStream(new FileInputStream(downloadZip.toFile()));
@@ -546,10 +550,6 @@ public class JBangSupport {
 
     /**
      * Guards against writing files to the file system outside the target folder also known as Zip slip vulnerability.
-     * @param destinationDir
-     * @param zipEntry
-     * @return
-     * @throws IOException
      */
     private static Path newFile(Path destinationDir, ZipEntry zipEntry) throws IOException {
         Path destFile = destinationDir.resolve(zipEntry.getName());
