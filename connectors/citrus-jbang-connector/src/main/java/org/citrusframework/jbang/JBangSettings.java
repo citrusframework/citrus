@@ -59,6 +59,12 @@ public final class JBangSettings {
     private static final String APP_ENV = JBANG_ENV_PREFIX + "APP";
     private static final String APP_DEFAULT = "citrus@citrusframework/citrus";
 
+    private static final String JBANG_EXECUTABLE_PROPERTY = JBANG_PROPERTY_PREFIX + "executable";
+    private static final String JBANG_EXECUTABLE_ENV = JBANG_ENV_PREFIX + "EXECUTABLE";
+    private static final String JBANG_EXECUTABLE_DEFAULT = "";
+
+    private static final String JBANG_LAUNCH_CMD = "JBANG_LAUNCH_CMD";
+
     private JBangSettings() {
         // prevent instantiation of utility class
     }
@@ -141,4 +147,15 @@ public final class JBangSettings {
                 System.getenv(APP_ENV) != null ? System.getenv(APP_ENV) : APP_DEFAULT);
     }
 
+    /**
+     * Gets the path to the JBang executable if set.
+     * Checks for JBANG_LAUNCH_CMD environment variable first which is automatically set when a JBang script calls another JBang script.
+     * If this is not set method checks for Citrus related JBANG_EXECUTABLE setting.
+     * In case none of the above is set the default value is an empty string indicating that default OS related JBang executable should be used.
+     */
+    public static String getJBangExecutable() {
+        return Optional.ofNullable(System.getenv(JBANG_LAUNCH_CMD))
+                .or(() -> Optional.ofNullable(System.getProperty(JBANG_EXECUTABLE_PROPERTY, System.getenv(JBANG_EXECUTABLE_ENV))))
+                .orElse(JBANG_EXECUTABLE_DEFAULT);
+    }
 }
