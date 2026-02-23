@@ -391,7 +391,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                 responseBuilder.message().faultActor(response.getMessage().faultActor);
             }
 
-            for (SoapFault.SoapFaultDetail faultDetail : response.getMessage().getFaultDetails()) {
+            for (SoapFaultDetail faultDetail : response.getMessage().getFaultDetails()) {
                 if (faultDetail.content != null) {
                     responseBuilder.message().faultDetail(faultDetail.content);
                 }
@@ -436,7 +436,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             assertFault.faultActor(soapFault.faultActor);
         }
 
-        for (SoapFault.SoapFaultDetail faultDetail : soapFault.getFaultDetails()) {
+        for (SoapFaultDetail faultDetail : soapFault.getFaultDetails()) {
             if (faultDetail.content != null) {
                 assertFault.faultDetail(faultDetail.content);
             }
@@ -822,10 +822,56 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
     }
 
-    public static class ClientAssertFault extends SoapFault {
+    public static class ClientAssertFault {
+        protected String faultCode;
+        protected String faultString;
+        protected String faultActor;
+
+        protected List<SoapFaultDetail> faultDetails;
+
         protected String validator;
 
         protected TestActionBuilder<?> action;
+
+        @SchemaProperty(description = "The SOAP fault code.")
+        public void setFaultCode(String faultCode) {
+            this.faultCode = faultCode;
+        }
+
+        public String getFaultCode() {
+            return faultCode;
+        }
+
+        @SchemaProperty(description = "The SOAP fault string.")
+        public void setFaultString(String faultString) {
+            this.faultString = faultString;
+        }
+
+        public String getFaultString() {
+            return faultString;
+        }
+
+        @SchemaProperty(advanced = true, description = "The SOAP fault actor.")
+        public void setFaultActor(String faultActor) {
+            this.faultActor = faultActor;
+        }
+
+        public String getFaultActor() {
+            return faultActor;
+        }
+
+        @SchemaProperty(advanced = true, description = "The SOAP fault details.")
+        public void setFaultDetails(List<SoapFaultDetail> faultDetails) {
+            this.faultDetails = faultDetails;
+        }
+
+        public List<SoapFaultDetail> getFaultDetails() {
+            if (faultDetails == null) {
+                faultDetails = new ArrayList<>();
+            }
+
+            return faultDetails;
+        }
 
         public String getValidator() {
             return validator;
@@ -1099,28 +1145,28 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
             return faultDetails;
         }
+    }
 
-        public static class SoapFaultDetail {
-            protected String content;
-            protected String resource;
+    public static class SoapFaultDetail {
+        protected String content;
+        protected String resource;
 
-            @SchemaProperty(description = "The SOAP fault detail content.")
-            public void setContent(String content) {
-                this.content = content;
-            }
+        @SchemaProperty(description = "The SOAP fault detail content.")
+        public void setContent(String content) {
+            this.content = content;
+        }
 
-            public String getContent() {
-                return content;
-            }
+        public String getContent() {
+            return content;
+        }
 
-            @SchemaProperty(description = "The SOAP fault detail loaded from a file resource.")
-            public void setResource(String resource) {
-                this.resource = resource;
-            }
+        @SchemaProperty(description = "The SOAP fault detail loaded from a file resource.")
+        public void setResource(String resource) {
+            this.resource = resource;
+        }
 
-            public String getResource() {
-                return resource;
-            }
+        public String getResource() {
+            return resource;
         }
     }
 }

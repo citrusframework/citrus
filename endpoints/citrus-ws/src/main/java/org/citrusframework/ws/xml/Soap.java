@@ -384,7 +384,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                 responseBuilder.message().faultActor(response.getMessage().faultActor);
             }
 
-            for (SoapFault.SoapFaultDetail faultDetail : response.getMessage().getFaultDetails()) {
+            for (SoapFaultDetail faultDetail : response.getMessage().getFaultDetails()) {
                 if (faultDetail.content != null) {
                     responseBuilder.message().faultDetail(faultDetail.getContent().trim());
                 }
@@ -431,7 +431,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             assertFault.faultActor(soapFault.faultActor);
         }
 
-        for (SoapFault.SoapFaultDetail faultDetail : soapFault.getFaultDetails()) {
+        for (SoapFaultDetail faultDetail : soapFault.getFaultDetails()) {
             if (faultDetail.content != null) {
                 assertFault.faultDetail(faultDetail.getContent().trim());
             }
@@ -858,13 +858,26 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {})
-    public static class ClientAssertFault extends SoapFault {
+    @XmlType(name = "", propOrder = {
+        "faultDetails",
+         "when",
+    })
+    public static class ClientAssertFault {
+        @XmlAttribute(name = "fault-code")
+        protected String faultCode;
+        @XmlAttribute(name = "fault-string")
+        protected String faultString;
+        @XmlAttribute(name = "fault-actor")
+        protected String faultActor;
+
+        @XmlElement(name = "fault-detail")
+        protected List<SoapFaultDetail> faultDetails;
+
         @XmlAttribute
         protected String validator;
 
         @XmlElement(name = "when")
-        protected TestActions actions;
+        protected TestActions when;
 
         public String getValidator() {
             return validator;
@@ -874,16 +887,52 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             this.validator = validator;
         }
 
+        public void setFaultCode(String faultCode) {
+            this.faultCode = faultCode;
+        }
+
+        public String getFaultCode() {
+            return faultCode;
+        }
+
+        public void setFaultString(String faultString) {
+            this.faultString = faultString;
+        }
+
+        public String getFaultString() {
+            return faultString;
+        }
+
+        public void setFaultActor(String faultActor) {
+            this.faultActor = faultActor;
+        }
+
+        public String getFaultActor() {
+            return faultActor;
+        }
+
+        public void setFaultDetails(List<SoapFaultDetail> faultDetails) {
+            this.faultDetails = faultDetails;
+        }
+
+        public List<SoapFaultDetail> getFaultDetails() {
+            if (faultDetails == null) {
+                faultDetails = new ArrayList<>();
+            }
+
+            return faultDetails;
+        }
+
         public void setWhen(TestActions actions) {
-            this.actions = actions;
+            this.when = actions;
         }
 
         public void setActions(TestActions actions) {
-            this.actions = actions;
+            this.when = actions;
         }
 
         public TestActions getActions() {
-            return actions;
+            return when;
         }
     }
 
@@ -1136,7 +1185,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         protected String faultActor;
 
         @XmlElement(name = "fault-detail")
-        protected List<SoapFault.SoapFaultDetail> faultDetails;
+        protected List<SoapFaultDetail> faultDetails;
 
         public void setFaultCode(String faultCode) {
             this.faultCode = faultCode;
@@ -1162,58 +1211,58 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return faultActor;
         }
 
-        public void setFaultDetails(List<SoapFault.SoapFaultDetail> faultDetails) {
+        public void setFaultDetails(List<SoapFaultDetail> faultDetails) {
             this.faultDetails = faultDetails;
         }
 
-        public List<SoapFault.SoapFaultDetail> getFaultDetails() {
+        public List<SoapFaultDetail> getFaultDetails() {
             if (faultDetails == null) {
                 faultDetails = new ArrayList<>();
             }
 
             return faultDetails;
         }
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+            "content",
+            "resource"
+    })
+    public static class SoapFaultDetail {
+        @XmlElement
+        protected String content;
+        @XmlElement
+        protected Resource resource;
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setResource(Resource resource) {
+            this.resource = resource;
+        }
+
+        public Resource getResource() {
+            return resource;
+        }
 
         @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "", propOrder = {
-                "content",
-                "resource"
-        })
-        public static class SoapFaultDetail {
-            @XmlElement
-            protected String content;
-            @XmlElement
-            protected Resource resource;
+        @XmlType(name = "")
+        public static class Resource {
+            @XmlAttribute(name = "file", required = true)
+            protected String file;
 
-            public void setContent(String content) {
-                this.content = content;
+            public String getFile() {
+                return file;
             }
 
-            public String getContent() {
-                return content;
-            }
-
-            public void setResource(Resource resource) {
-                this.resource = resource;
-            }
-
-            public Resource getResource() {
-                return resource;
-            }
-
-            @XmlAccessorType(XmlAccessType.FIELD)
-            @XmlType(name = "")
-            public static class Resource {
-                @XmlAttribute(name = "file", required = true)
-                protected String file;
-
-                public String getFile() {
-                    return file;
-                }
-
-                public void setFile(String file) {
-                    this.file = file;
-                }
+            public void setFile(String file) {
+                this.file = file;
             }
         }
     }
