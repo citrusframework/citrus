@@ -123,7 +123,8 @@ public class CitrusSchemaGenerator {
                 .with(
                     Option.GETTER_METHODS,
                     Option.MAP_VALUES_AS_ADDITIONAL_PROPERTIES,
-                    Option.PLAIN_DEFINITION_KEYS
+                    Option.PLAIN_DEFINITION_KEYS,
+                    Option.FORBIDDEN_ADDITIONAL_PROPERTIES_BY_DEFAULT
                 );
 
         for (Option option : options) {
