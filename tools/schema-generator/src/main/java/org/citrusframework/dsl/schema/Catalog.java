@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.victools.jsonschema.generator.Option;
+import org.citrusframework.CitrusVersion;
 import org.citrusframework.dsl.schema.generator.CitrusModule;
 import org.citrusframework.dsl.schema.generator.CitrusSchemaGenerator;
 import org.citrusframework.endpoint.EndpointBuilder;
@@ -67,6 +68,7 @@ public class Catalog {
 
                     JsonNode jsonSchema = CitrusSchemaGenerator.generateSchema(item.type, module, Option.INLINE_ALL_SCHEMAS);
                     return new CatalogEntry(item.schema.kind().getCatalogKind(),
+                            CitrusVersion.version(),
                             entry.getKey(),
                             item.schema.group(),
                             Optional.ofNullable(item.schema.title())
@@ -90,6 +92,7 @@ public class Catalog {
                     CatalogItem item = entry.getValue();
                     JsonNode jsonSchema = CitrusSchemaGenerator.generateSchema(item.type, Option.INLINE_ALL_SCHEMAS);
                     return new CatalogEntry(item.schema.kind().getCatalogKind(),
+                            CitrusVersion.version(),
                             entry.getKey(),
                             item.schema.group(),
                             Optional.ofNullable(item.schema.title())
@@ -121,6 +124,7 @@ public class Catalog {
             String name = tokens[1];
             catalog.put(builder.getKey().replaceAll("\\.", "-"),
                     new CatalogEntry(SchemaProperty.Kind.ENDPOINT.getCatalogKind(),
+                            CitrusVersion.version(),
                             "%s-%s".formatted(group, name),
                             group,
                             "%s%s".formatted(StringUtils.convertFirstCharToUpperCase(group), StringUtils.convertFirstCharToUpperCase(name)),
@@ -144,6 +148,7 @@ public class Catalog {
             }
             catalog.put(function.getKey(),
                     new CatalogEntry(SchemaProperty.Kind.FUNCTION.getCatalogKind(),
+                            CitrusVersion.version(),
                             function.getKey(),
                             "citrus",
                             StringUtils.convertFirstCharToUpperCase(function.getKey()),
@@ -167,6 +172,7 @@ public class Catalog {
             }
             catalog.put(matcher.getKey(),
                     new CatalogEntry(SchemaProperty.Kind.VALIDATION_MATCHER.getCatalogKind(),
+                            CitrusVersion.version(),
                             matcher.getKey(),
                             "citrus",
                             StringUtils.convertFirstCharToUpperCase(matcher.getKey()),
@@ -185,6 +191,7 @@ public class Catalog {
 
     public record CatalogEntry (
         String kind,
+        String version,
         String name,
         String group,
         String title,

@@ -225,7 +225,6 @@ public class CitrusModule implements Module {
                 .orElse(null);
     }
 
-
     protected BigDecimal resolveMinimumExclusive(MemberScope<?, ?> member) {
         return this.getSchemaPropertyAnnotation(member)
                 .filter(SchemaProperty::exclusiveMin)
