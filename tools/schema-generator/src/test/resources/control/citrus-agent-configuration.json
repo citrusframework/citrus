@@ -31,7 +31,7 @@
       "type" : "string",
       "title" : "Engine",
       "description" : "The test engine to use when running tests",
-      "default" : "junit-jupiter"
+      "default" : "junit5"
     },
     "includes" : {
       "title" : "Includes",

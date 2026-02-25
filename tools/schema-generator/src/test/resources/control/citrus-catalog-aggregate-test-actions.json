@@ -524,10 +524,8 @@
             "neo4j",
             "ollama",
             "openldap",
-            "pgvector",
             "pinecone",
             "postgres",
-            "postgres-vector",
             "pulsar",
             "qdrant",
             "rabbitmq",
@@ -536,6 +534,7 @@
             "sftp",
             "smb",
             "solr",
+            "torch-serve",
             "weaviate",
             "xmpp",
             "zookeeper"
@@ -1690,18 +1689,6 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "properties": {
-        "autoClose": {
-          "type": "boolean",
-          "title": "AutoClose",
-          "description": "When enabled the dynamic endpoint is closed automatically after the test.",
-          "$comment": "group:generic"
-        },
-        "autoRemove": {
-          "type": "boolean",
-          "title": "AutoRemove",
-          "description": "When enabled the dynamic endpoint is removed automatically after the test.",
-          "$comment": "group:generic"
-        },
         "camel": {
         },
         "channel": {
@@ -1860,6 +1847,10 @@
                                 },
                                 "errorHandlingStrategy": {
                                   "type": "string",
+                                  "enum": [
+                                    "THROWS_EXCEPTION",
+                                    "PROPAGATE"
+                                  ],
                                   "title": "ErrorHandlingStrategy",
                                   "description": "Sets the error handling strategy.",
                                   "$comment": "group:errorHandling"
@@ -2034,6 +2025,7 @@
                                     "SWITCHING_PROTOCOLS",
                                     "PROCESSING",
                                     "EARLY_HINTS",
+                                    "CHECKPOINT",
                                     "OK",
                                     "CREATED",
                                     "ACCEPTED",
@@ -2047,8 +2039,10 @@
                                     "MULTIPLE_CHOICES",
                                     "MOVED_PERMANENTLY",
                                     "FOUND",
+                                    "MOVED_TEMPORARILY",
                                     "SEE_OTHER",
                                     "NOT_MODIFIED",
+                                    "USE_PROXY",
                                     "TEMPORARY_REDIRECT",
                                     "PERMANENT_REDIRECT",
                                     "BAD_REQUEST",
@@ -2064,15 +2058,17 @@
                                     "GONE",
                                     "LENGTH_REQUIRED",
                                     "PRECONDITION_FAILED",
-                                    "CONTENT_TOO_LARGE",
                                     "PAYLOAD_TOO_LARGE",
+                                    "REQUEST_ENTITY_TOO_LARGE",
                                     "URI_TOO_LONG",
+                                    "REQUEST_URI_TOO_LONG",
                                     "UNSUPPORTED_MEDIA_TYPE",
                                     "REQUESTED_RANGE_NOT_SATISFIABLE",
                                     "EXPECTATION_FAILED",
                                     "I_AM_A_TEAPOT",
-                                    "MISDIRECTED_REQUEST",
-                                    "UNPROCESSABLE_CONTENT",
+                                    "INSUFFICIENT_SPACE_ON_RESOURCE",
+                                    "METHOD_FAILURE",
+                                    "DESTINATION_LOCKED",
                                     "UNPROCESSABLE_ENTITY",
                                     "LOCKED",
                                     "FAILED_DEPENDENCY",
@@ -2217,9 +2213,9 @@
                                   "description": "Sets the security handler as a bean reference.",
                                   "$comment": "group:security"
                                 },
-                                "servletHandler": {
+                                "serServletHandler": {
                                   "type": "string",
-                                  "title": "ServletHandler",
+                                  "title": "SerServletHandler",
                                   "description": "Sets a custom servlet handler as a bean reference.",
                                   "$comment": "group:servlet"
                                 },
@@ -2302,6 +2298,10 @@
                                 },
                                 "faultStrategy": {
                                   "type": "string",
+                                  "enum": [
+                                    "THROWS_EXCEPTION",
+                                    "PROPAGATE"
+                                  ],
                                   "title": "FaultStrategy",
                                   "description": "Sets the error handling strategy.",
                                   "$comment": "group:errorHandler"
@@ -2584,12 +2584,6 @@
                                   "description": "Sets the endpoint URI resolver.",
                                   "$comment": "group:advanced"
                                 },
-                                "httpHeaders": {
-                                  "type": "string",
-                                  "title": "HttpHeaders",
-                                  "description": "Sets the Websocket Http headers.",
-                                  "$comment": "group:advanced"
-                                },
                                 "messageConverter": {
                                   "type": "string",
                                   "title": "MessageConverter",
@@ -2697,6 +2691,7 @@
                                     "SWITCHING_PROTOCOLS",
                                     "PROCESSING",
                                     "EARLY_HINTS",
+                                    "CHECKPOINT",
                                     "OK",
                                     "CREATED",
                                     "ACCEPTED",
@@ -2710,8 +2705,10 @@
                                     "MULTIPLE_CHOICES",
                                     "MOVED_PERMANENTLY",
                                     "FOUND",
+                                    "MOVED_TEMPORARILY",
                                     "SEE_OTHER",
                                     "NOT_MODIFIED",
+                                    "USE_PROXY",
                                     "TEMPORARY_REDIRECT",
                                     "PERMANENT_REDIRECT",
                                     "BAD_REQUEST",
@@ -2727,15 +2724,17 @@
                                     "GONE",
                                     "LENGTH_REQUIRED",
                                     "PRECONDITION_FAILED",
-                                    "CONTENT_TOO_LARGE",
                                     "PAYLOAD_TOO_LARGE",
+                                    "REQUEST_ENTITY_TOO_LARGE",
                                     "URI_TOO_LONG",
+                                    "REQUEST_URI_TOO_LONG",
                                     "UNSUPPORTED_MEDIA_TYPE",
                                     "REQUESTED_RANGE_NOT_SATISFIABLE",
                                     "EXPECTATION_FAILED",
                                     "I_AM_A_TEAPOT",
-                                    "MISDIRECTED_REQUEST",
-                                    "UNPROCESSABLE_CONTENT",
+                                    "INSUFFICIENT_SPACE_ON_RESOURCE",
+                                    "METHOD_FAILURE",
+                                    "DESTINATION_LOCKED",
                                     "UNPROCESSABLE_ENTITY",
                                     "LOCKED",
                                     "FAILED_DEPENDENCY",
@@ -2880,9 +2879,9 @@
                                   "description": "Sets the security handler as a bean reference.",
                                   "$comment": "group:security"
                                 },
-                                "servletHandler": {
+                                "serServletHandler": {
                                   "type": "string",
-                                  "title": "ServletHandler",
+                                  "title": "SerServletHandler",
                                   "description": "Sets a custom servlet handler as a bean reference.",
                                   "$comment": "group:servlet"
                                 },
@@ -2947,7 +2946,7 @@
                         "messageName": {
                           "type": "string",
                           "title": "MessageName",
-                          "description": "The message name in the context."
+                          "description": "The message name."
                         },
                         "name": {
                           "type": "string",
@@ -3196,6 +3195,10 @@
                                 },
                                 "errorHandlingStrategy": {
                                   "type": "string",
+                                  "enum": [
+                                    "THROWS_EXCEPTION",
+                                    "PROPAGATE"
+                                  ],
                                   "title": "ErrorHandlingStrategy",
                                   "description": "Sets the error handling strategy.",
                                   "$comment": "group:errorHandler"
@@ -3300,6 +3303,10 @@
                                 },
                                 "errorHandlingStrategy": {
                                   "type": "string",
+                                  "enum": [
+                                    "THROWS_EXCEPTION",
+                                    "PROPAGATE"
+                                  ],
                                   "title": "ErrorHandlingStrategy",
                                   "description": "Sets the error handling strategy.",
                                   "$comment": "group:errorHandler"
@@ -3420,6 +3427,10 @@
                                 },
                                 "errorHandlingStrategy": {
                                   "type": "string",
+                                  "enum": [
+                                    "THROWS_EXCEPTION",
+                                    "PROPAGATE"
+                                  ],
                                   "title": "ErrorHandlingStrategy",
                                   "description": "Sets the error handling strategy.",
                                   "$comment": "group:errorHandler"
@@ -3628,8 +3639,7 @@
                                 "user": {
                                   "type": "string",
                                   "title": "User",
-                                  "description": "Sets the allowed user name.",
-                                  "$comment": "group:security"
+                                  "description": "Sets the allowed user name."
                                 },
                                 "userHomePath": {
                                   "type": "string",
@@ -3685,6 +3695,10 @@
                                 },
                                 "errorHandlingStrategy": {
                                   "type": "string",
+                                  "enum": [
+                                    "THROWS_EXCEPTION",
+                                    "PROPAGATE"
+                                  ],
                                   "title": "ErrorHandlingStrategy",
                                   "description": "Sets the error handling strategy.",
                                   "$comment": "group:errorHandler"
@@ -3878,8 +3892,7 @@
                                 "user": {
                                   "type": "string",
                                   "title": "User",
-                                  "description": "Sets the allowed user name.",
-                                  "$comment": "group:security"
+                                  "description": "Sets the allowed user name."
                                 },
                                 "userHomePath": {
                                   "type": "string",
@@ -3999,12 +4012,6 @@
                           "description": "Sets the reference to the Kubernetes client implementation.",
                           "$comment": "group:advanced"
                         },
-                        "jsonMapper": {
-                          "type": "string",
-                          "title": "JsonMapper",
-                          "description": "Sets the JSON mapper.",
-                          "$comment": "group:advanced"
-                        },
                         "messageConverter": {
                           "type": "string",
                           "title": "MessageConverter",
@@ -4026,6 +4033,12 @@
                           "title": "OAuthToken",
                           "description": "Sets the OAuth token used to connect to the Kubernetes cluster.",
                           "$comment": "group:security"
+                        },
+                        "objectMapper": {
+                          "type": "string",
+                          "title": "ObjectMapper",
+                          "description": "Sets the object mapper.",
+                          "$comment": "group:advanced"
                         },
                         "password": {
                           "type": "string",
@@ -4636,12 +4649,6 @@
                                   "title": "Topic",
                                   "description": "Sets the Kafka topic."
                                 },
-                                "useThreadSafeConsumer": {
-                                  "type": "boolean",
-                                  "title": "UseThreadSafeConsumer",
-                                  "description": "Sets thread safe consumer option for this endpoint.",
-                                  "$comment": "group:consume"
-                                },
                                 "valueDeserializer": {
                                   "type": "string",
                                   "title": "ValueDeserializer",
@@ -4758,12 +4765,6 @@
                                   "type": "string",
                                   "title": "Topic",
                                   "description": "Sets the Kafka topic."
-                                },
-                                "useThreadSafeConsumer": {
-                                  "type": "boolean",
-                                  "title": "UseThreadSafeConsumer",
-                                  "description": "Sets thread safe consumer option for this endpoint.",
-                                  "$comment": "group:consume"
                                 },
                                 "valueDeserializer": {
                                   "type": "string",
@@ -14598,193 +14599,6 @@
             "$comment": "group:xml"
           }
         },
-        "process": {
-          "title": "Process",
-          "description": "Process the message content when received.",
-          "$comment": "group:process",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "binary": {
-                "type": "object",
-                "properties": {
-                  "encoding": {
-                    "type": "string",
-                    "title": "Encoding",
-                    "description": "Sets a custom file encoding.",
-                    "$comment": "group:advanced"
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Binary",
-                "description": "Message processor to create binary message content."
-              },
-              "camel": {
-                "type": "object",
-                "properties": {
-                  "camelContext": {
-                    "type": "string",
-                    "title": "CamelContext",
-                    "description": "Camel context used with this processor."
-                  },
-                  "convertBodyTo": {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "title": "Type",
-                        "description": "Fully qualified class name of the target type."
-                      }
-                    },
-                    "required": [
-                      "type"
-                    ],
-                    "additionalProperties": false,
-                    "title": "ConvertBodyTo",
-                    "description": "Converts message body to given type."
-                  },
-                  "marshal": {
-                    "type": "object",
-                    "title": "Marshal",
-                    "description": "Marshal message content with a Camel data format."
-                  },
-                  "processor": {
-                    "type": "string",
-                    "title": "Processor",
-                    "description": "Camel message processor referenced by its bean name."
-                  },
-                  "transform": {
-                    "type": "object",
-                    "title": "Transform",
-                    "description": "Transform message content with a Camel expression."
-                  },
-                  "unmarshal": {
-                    "type": "object",
-                    "title": "Unmarshal",
-                    "description": "Unmarshal message content with a Camel data format."
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Camel",
-                "description": "Camel message processors using transform capabilities of Apache Camel with supported data formats."
-              },
-              "gzip": {
-                "type": "object",
-                "properties": {
-                  "encoding": {
-                    "type": "string",
-                    "title": "Encoding",
-                    "description": "Sets a custom file encoding.",
-                    "$comment": "group:advanced"
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Gzip",
-                "description": "Gzip message processor transforms content into zipped content."
-              },
-              "json": {
-                "type": "object",
-                "properties": {
-                  "expressions": {
-                    "title": "Expressions",
-                    "description": "List of expressions to evaluate",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "path": {
-                          "type": "string",
-                          "title": "Path",
-                          "description": "The path expression to evaluate."
-                        },
-                        "value": {
-                          "type": "string",
-                          "title": "Value",
-                          "description": "The path expression value."
-                        }
-                      },
-                      "required": [
-                        "value"
-                      ],
-                      "additionalProperties": false,
-                      "title": "Expressions",
-                      "description": "List of expressions to evaluate"
-                    }
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Json",
-                "description": "Json message processors."
-              },
-              "xpath": {
-                "type": "object",
-                "properties": {
-                  "expressions": {
-                    "title": "Expressions",
-                    "description": "List of expressions to evaluate",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "path": {
-                          "type": "string",
-                          "title": "Path",
-                          "description": "The path expression to evaluate."
-                        },
-                        "value": {
-                          "type": "string",
-                          "title": "Value",
-                          "description": "The path expression value."
-                        }
-                      },
-                      "required": [
-                        "value"
-                      ],
-                      "additionalProperties": false,
-                      "title": "Expressions",
-                      "description": "List of expressions to evaluate"
-                    }
-                  },
-                  "namespaces": {
-                    "title": "Namespaces",
-                    "description": "List of namespaces that should be used with the expression evaluation.",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "prefix": {
-                          "type": "string",
-                          "title": "Prefix",
-                          "description": "The namespace prefix."
-                        },
-                        "uri": {
-                          "type": "string",
-                          "title": "Uri",
-                          "description": "The namespace uri."
-                        }
-                      },
-                      "required": [
-                        "prefix",
-                        "uri"
-                      ],
-                      "additionalProperties": false,
-                      "title": "Namespaces",
-                      "description": "List of namespaces that should be used with the expression evaluation."
-                    }
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Xpath",
-                "description": "Xml message processors."
-              }
-            },
-            "additionalProperties": false,
-            "title": "Process",
-            "description": "Process the message content when received.",
-            "$comment": "group:process"
-          }
-        },
         "select": {
           "type": "string",
           "title": "Select",
@@ -14838,193 +14652,6 @@
           "type": "integer",
           "title": "Timeout",
           "description": "Receive timeout."
-        },
-        "transform": {
-          "title": "Transform",
-          "description": "Transforms the message content before the message is validated.",
-          "$comment": "group:transform",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "binary": {
-                "type": "object",
-                "properties": {
-                  "encoding": {
-                    "type": "string",
-                    "title": "Encoding",
-                    "description": "Sets a custom file encoding.",
-                    "$comment": "group:advanced"
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Binary",
-                "description": "Message processor to create binary message content."
-              },
-              "camel": {
-                "type": "object",
-                "properties": {
-                  "camelContext": {
-                    "type": "string",
-                    "title": "CamelContext",
-                    "description": "Camel context used with this processor."
-                  },
-                  "convertBodyTo": {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "title": "Type",
-                        "description": "Fully qualified class name of the target type."
-                      }
-                    },
-                    "required": [
-                      "type"
-                    ],
-                    "additionalProperties": false,
-                    "title": "ConvertBodyTo",
-                    "description": "Converts message body to given type."
-                  },
-                  "marshal": {
-                    "type": "object",
-                    "title": "Marshal",
-                    "description": "Marshal message content with a Camel data format."
-                  },
-                  "processor": {
-                    "type": "string",
-                    "title": "Processor",
-                    "description": "Camel message processor referenced by its bean name."
-                  },
-                  "transform": {
-                    "type": "object",
-                    "title": "Transform",
-                    "description": "Transform message content with a Camel expression."
-                  },
-                  "unmarshal": {
-                    "type": "object",
-                    "title": "Unmarshal",
-                    "description": "Unmarshal message content with a Camel data format."
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Camel",
-                "description": "Camel message processors using transform capabilities of Apache Camel with supported data formats."
-              },
-              "gzip": {
-                "type": "object",
-                "properties": {
-                  "encoding": {
-                    "type": "string",
-                    "title": "Encoding",
-                    "description": "Sets a custom file encoding.",
-                    "$comment": "group:advanced"
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Gzip",
-                "description": "Gzip message processor transforms content into zipped content."
-              },
-              "json": {
-                "type": "object",
-                "properties": {
-                  "expressions": {
-                    "title": "Expressions",
-                    "description": "List of expressions to evaluate",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "path": {
-                          "type": "string",
-                          "title": "Path",
-                          "description": "The path expression to evaluate."
-                        },
-                        "value": {
-                          "type": "string",
-                          "title": "Value",
-                          "description": "The path expression value."
-                        }
-                      },
-                      "required": [
-                        "value"
-                      ],
-                      "additionalProperties": false,
-                      "title": "Expressions",
-                      "description": "List of expressions to evaluate"
-                    }
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Json",
-                "description": "Json message processors."
-              },
-              "xpath": {
-                "type": "object",
-                "properties": {
-                  "expressions": {
-                    "title": "Expressions",
-                    "description": "List of expressions to evaluate",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "path": {
-                          "type": "string",
-                          "title": "Path",
-                          "description": "The path expression to evaluate."
-                        },
-                        "value": {
-                          "type": "string",
-                          "title": "Value",
-                          "description": "The path expression value."
-                        }
-                      },
-                      "required": [
-                        "value"
-                      ],
-                      "additionalProperties": false,
-                      "title": "Expressions",
-                      "description": "List of expressions to evaluate"
-                    }
-                  },
-                  "namespaces": {
-                    "title": "Namespaces",
-                    "description": "List of namespaces that should be used with the expression evaluation.",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "prefix": {
-                          "type": "string",
-                          "title": "Prefix",
-                          "description": "The namespace prefix."
-                        },
-                        "uri": {
-                          "type": "string",
-                          "title": "Uri",
-                          "description": "The namespace uri."
-                        }
-                      },
-                      "required": [
-                        "prefix",
-                        "uri"
-                      ],
-                      "additionalProperties": false,
-                      "title": "Namespaces",
-                      "description": "List of namespaces that should be used with the expression evaluation."
-                    }
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Xpath",
-                "description": "Xml message processors."
-              }
-            },
-            "additionalProperties": false,
-            "title": "Transform",
-            "description": "Transforms the message content before the message is validated.",
-            "$comment": "group:transform"
-          }
         },
         "validate": {
           "title": "Validate",
@@ -16510,380 +16137,6 @@
           "additionalProperties": false,
           "title": "Message",
           "description": "The message to send."
-        },
-        "process": {
-          "title": "Process",
-          "description": "Process the message content when received.",
-          "$comment": "group:process",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "binary": {
-                "type": "object",
-                "properties": {
-                  "encoding": {
-                    "type": "string",
-                    "title": "Encoding",
-                    "description": "Sets a custom file encoding.",
-                    "$comment": "group:advanced"
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Binary",
-                "description": "Message processor to create binary message content."
-              },
-              "camel": {
-                "type": "object",
-                "properties": {
-                  "camelContext": {
-                    "type": "string",
-                    "title": "CamelContext",
-                    "description": "Camel context used with this processor."
-                  },
-                  "convertBodyTo": {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "title": "Type",
-                        "description": "Fully qualified class name of the target type."
-                      }
-                    },
-                    "required": [
-                      "type"
-                    ],
-                    "additionalProperties": false,
-                    "title": "ConvertBodyTo",
-                    "description": "Converts message body to given type."
-                  },
-                  "marshal": {
-                    "type": "object",
-                    "title": "Marshal",
-                    "description": "Marshal message content with a Camel data format."
-                  },
-                  "processor": {
-                    "type": "string",
-                    "title": "Processor",
-                    "description": "Camel message processor referenced by its bean name."
-                  },
-                  "transform": {
-                    "type": "object",
-                    "title": "Transform",
-                    "description": "Transform message content with a Camel expression."
-                  },
-                  "unmarshal": {
-                    "type": "object",
-                    "title": "Unmarshal",
-                    "description": "Unmarshal message content with a Camel data format."
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Camel",
-                "description": "Camel message processors using transform capabilities of Apache Camel with supported data formats."
-              },
-              "gzip": {
-                "type": "object",
-                "properties": {
-                  "encoding": {
-                    "type": "string",
-                    "title": "Encoding",
-                    "description": "Sets a custom file encoding.",
-                    "$comment": "group:advanced"
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Gzip",
-                "description": "Gzip message processor transforms content into zipped content."
-              },
-              "json": {
-                "type": "object",
-                "properties": {
-                  "expressions": {
-                    "title": "Expressions",
-                    "description": "List of expressions to evaluate",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "path": {
-                          "type": "string",
-                          "title": "Path",
-                          "description": "The path expression to evaluate."
-                        },
-                        "value": {
-                          "type": "string",
-                          "title": "Value",
-                          "description": "The path expression value."
-                        }
-                      },
-                      "required": [
-                        "value"
-                      ],
-                      "additionalProperties": false,
-                      "title": "Expressions",
-                      "description": "List of expressions to evaluate"
-                    }
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Json",
-                "description": "Json message processors."
-              },
-              "xpath": {
-                "type": "object",
-                "properties": {
-                  "expressions": {
-                    "title": "Expressions",
-                    "description": "List of expressions to evaluate",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "path": {
-                          "type": "string",
-                          "title": "Path",
-                          "description": "The path expression to evaluate."
-                        },
-                        "value": {
-                          "type": "string",
-                          "title": "Value",
-                          "description": "The path expression value."
-                        }
-                      },
-                      "required": [
-                        "value"
-                      ],
-                      "additionalProperties": false,
-                      "title": "Expressions",
-                      "description": "List of expressions to evaluate"
-                    }
-                  },
-                  "namespaces": {
-                    "title": "Namespaces",
-                    "description": "List of namespaces that should be used with the expression evaluation.",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "prefix": {
-                          "type": "string",
-                          "title": "Prefix",
-                          "description": "The namespace prefix."
-                        },
-                        "uri": {
-                          "type": "string",
-                          "title": "Uri",
-                          "description": "The namespace uri."
-                        }
-                      },
-                      "required": [
-                        "prefix",
-                        "uri"
-                      ],
-                      "additionalProperties": false,
-                      "title": "Namespaces",
-                      "description": "List of namespaces that should be used with the expression evaluation."
-                    }
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Xpath",
-                "description": "Xml message processors."
-              }
-            },
-            "additionalProperties": false,
-            "title": "Process",
-            "description": "Process the message content when received.",
-            "$comment": "group:process"
-          }
-        },
-        "transform": {
-          "title": "Transform",
-          "description": "Transforms the message content before the message is validated.",
-          "$comment": "group:transform",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "binary": {
-                "type": "object",
-                "properties": {
-                  "encoding": {
-                    "type": "string",
-                    "title": "Encoding",
-                    "description": "Sets a custom file encoding.",
-                    "$comment": "group:advanced"
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Binary",
-                "description": "Message processor to create binary message content."
-              },
-              "camel": {
-                "type": "object",
-                "properties": {
-                  "camelContext": {
-                    "type": "string",
-                    "title": "CamelContext",
-                    "description": "Camel context used with this processor."
-                  },
-                  "convertBodyTo": {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "title": "Type",
-                        "description": "Fully qualified class name of the target type."
-                      }
-                    },
-                    "required": [
-                      "type"
-                    ],
-                    "additionalProperties": false,
-                    "title": "ConvertBodyTo",
-                    "description": "Converts message body to given type."
-                  },
-                  "marshal": {
-                    "type": "object",
-                    "title": "Marshal",
-                    "description": "Marshal message content with a Camel data format."
-                  },
-                  "processor": {
-                    "type": "string",
-                    "title": "Processor",
-                    "description": "Camel message processor referenced by its bean name."
-                  },
-                  "transform": {
-                    "type": "object",
-                    "title": "Transform",
-                    "description": "Transform message content with a Camel expression."
-                  },
-                  "unmarshal": {
-                    "type": "object",
-                    "title": "Unmarshal",
-                    "description": "Unmarshal message content with a Camel data format."
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Camel",
-                "description": "Camel message processors using transform capabilities of Apache Camel with supported data formats."
-              },
-              "gzip": {
-                "type": "object",
-                "properties": {
-                  "encoding": {
-                    "type": "string",
-                    "title": "Encoding",
-                    "description": "Sets a custom file encoding.",
-                    "$comment": "group:advanced"
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Gzip",
-                "description": "Gzip message processor transforms content into zipped content."
-              },
-              "json": {
-                "type": "object",
-                "properties": {
-                  "expressions": {
-                    "title": "Expressions",
-                    "description": "List of expressions to evaluate",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "path": {
-                          "type": "string",
-                          "title": "Path",
-                          "description": "The path expression to evaluate."
-                        },
-                        "value": {
-                          "type": "string",
-                          "title": "Value",
-                          "description": "The path expression value."
-                        }
-                      },
-                      "required": [
-                        "value"
-                      ],
-                      "additionalProperties": false,
-                      "title": "Expressions",
-                      "description": "List of expressions to evaluate"
-                    }
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Json",
-                "description": "Json message processors."
-              },
-              "xpath": {
-                "type": "object",
-                "properties": {
-                  "expressions": {
-                    "title": "Expressions",
-                    "description": "List of expressions to evaluate",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "path": {
-                          "type": "string",
-                          "title": "Path",
-                          "description": "The path expression to evaluate."
-                        },
-                        "value": {
-                          "type": "string",
-                          "title": "Value",
-                          "description": "The path expression value."
-                        }
-                      },
-                      "required": [
-                        "value"
-                      ],
-                      "additionalProperties": false,
-                      "title": "Expressions",
-                      "description": "List of expressions to evaluate"
-                    }
-                  },
-                  "namespaces": {
-                    "title": "Namespaces",
-                    "description": "List of namespaces that should be used with the expression evaluation.",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "prefix": {
-                          "type": "string",
-                          "title": "Prefix",
-                          "description": "The namespace prefix."
-                        },
-                        "uri": {
-                          "type": "string",
-                          "title": "Uri",
-                          "description": "The namespace uri."
-                        }
-                      },
-                      "required": [
-                        "prefix",
-                        "uri"
-                      ],
-                      "additionalProperties": false,
-                      "title": "Namespaces",
-                      "description": "List of namespaces that should be used with the expression evaluation."
-                    }
-                  }
-                },
-                "additionalProperties": false,
-                "title": "Xpath",
-                "description": "Xml message processors."
-              }
-            },
-            "additionalProperties": false,
-            "title": "Transform",
-            "description": "Transforms the message content before the message is validated.",
-            "$comment": "group:transform"
-          }
         }
       },
       "required": [
@@ -19861,177 +19114,6 @@
       },
       "additionalProperties": false    }
   },
-  "testcontainers-start-floci": {
-    "kind": "testAction",
-    "version": "${citrus.version}",
-    "name": "testcontainers-start-floci",
-    "group": "testcontainers-start",
-    "title": "Floci",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "accountId": {
-          "type": "string",
-          "title": "AccountId",
-          "description": "AWS account id",
-          "$comment": "group:security"
-        },
-        "autoCreateClients": {
-          "type": "boolean",
-          "title": "AutoCreateClients"
-        },
-        "autoRemove": {
-          "type": "boolean",
-          "title": "AutoRemove"
-        },
-        "availabilityZone": {
-          "type": "string",
-          "title": "AvailabilityZone",
-          "description": "AWS availability zone",
-          "$comment": "group:security"
-        },
-        "command": {
-          "type": "string",
-          "title": "Command"
-        },
-        "env": {
-          "title": "Env",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "title": "Name"
-              },
-              "value": {
-                "type": "string",
-                "title": "Value"
-              }
-            },
-            "additionalProperties": false,
-            "title": "Env"
-          }
-        },
-        "exposedPorts": {
-          "title": "ExposedPorts",
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "title": "ExposedPorts"
-          }
-        },
-        "image": {
-          "type": "string",
-          "title": "Image"
-        },
-        "labels": {
-          "title": "Labels",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "title": "Name"
-              },
-              "value": {
-                "type": "string",
-                "title": "Value"
-              }
-            },
-            "additionalProperties": false,
-            "title": "Labels"
-          }
-        },
-        "name": {
-          "type": "string",
-          "title": "Name"
-        },
-        "options": {
-          "type": "object",
-          "title": "Options",
-          "additionalProperties": {
-            "type": "string",
-            "title": "Options"
-          }
-        },
-        "portBindings": {
-          "title": "PortBindings",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "PortBindings"
-          }
-        },
-        "region": {
-          "type": "string",
-          "title": "Region",
-          "description": "AWS region",
-          "$comment": "group:security"
-        },
-        "serviceName": {
-          "type": "string",
-          "title": "ServiceName"
-        },
-        "services": {
-          "title": "Services",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Services"
-          }
-        },
-        "startUpTimeout": {
-          "type": "integer",
-          "title": "StartUpTimeout"
-        },
-        "version": {
-          "type": "string",
-          "title": "Version"
-        },
-        "volumeMounts": {
-          "title": "VolumeMounts",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "file": {
-                "type": "string",
-                "title": "File"
-              },
-              "mountPath": {
-                "type": "string",
-                "title": "MountPath"
-              }
-            },
-            "additionalProperties": false,
-            "title": "VolumeMounts"
-          }
-        },
-        "waitFor": {
-          "type": "object",
-          "properties": {
-            "disabled": {
-              "type": "boolean",
-              "title": "Disabled"
-            },
-            "logMessage": {
-              "type": "string",
-              "title": "LogMessage"
-            },
-            "url": {
-              "type": "string",
-              "title": "Url"
-            }
-          },
-          "additionalProperties": false,
-          "title": "WaitFor"
-        }
-      },
-      "additionalProperties": false    }
-  },
   "testcontainers-start-kafka": {
     "kind": "testAction",
     "version": "${citrus.version}",
@@ -20128,14 +19210,6 @@
           "type": "integer",
           "title": "StartUpTimeout"
         },
-        "topics": {
-          "title": "Topics",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Topics"
-          }
-        },
         "version": {
           "type": "string",
           "title": "Version"
@@ -20191,18 +19265,6 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "properties": {
-        "accessKey": {
-          "type": "string",
-          "title": "AccessKey",
-          "description": "AWS access key",
-          "$comment": "group:security"
-        },
-        "authToken": {
-          "type": "string",
-          "title": "AuthToken",
-          "description": "Newer versions of Localstack container require an auth token.",
-          "$comment": "group:security"
-        },
         "autoCreateClients": {
           "type": "boolean",
           "title": "AutoCreateClients"
@@ -20284,18 +19346,6 @@
             "type": "string",
             "title": "PortBindings"
           }
-        },
-        "region": {
-          "type": "string",
-          "title": "Region",
-          "description": "AWS region",
-          "$comment": "group:security"
-        },
-        "secretKey": {
-          "type": "string",
-          "title": "SecretKey",
-          "description": "AWS secret key",
-          "$comment": "group:security"
         },
         "serviceName": {
           "type": "string",
@@ -20673,16 +19723,6 @@
           "type": "string",
           "title": "Command"
         },
-        "enableAuthorization": {
-          "type": "boolean",
-          "title": "EnableAuthorization",
-          "description": "Enables authorization for the Redpanda container."
-        },
-        "enableSasl": {
-          "type": "boolean",
-          "title": "EnableSasl",
-          "description": "Enables Sasl for the Redpanda container."
-        },
         "env": {
           "title": "Env",
           "type": "array",
@@ -20745,11 +19785,6 @@
             "title": "PortBindings"
           }
         },
-        "securedSchemaRegistry": {
-          "type": "boolean",
-          "title": "SecuredSchemaRegistry",
-          "description": "Enables a secured schema registry for the Redpanda container. Usually through Http basic auth."
-        },
         "serviceName": {
           "type": "string",
           "title": "ServiceName"
@@ -20757,11 +19792,6 @@
         "startUpTimeout": {
           "type": "integer",
           "title": "StartUpTimeout"
-        },
-        "superuser": {
-          "type": "string",
-          "title": "Superuser",
-          "description": "Sets a super user for the Redpanda container."
         },
         "version": {
           "type": "string",

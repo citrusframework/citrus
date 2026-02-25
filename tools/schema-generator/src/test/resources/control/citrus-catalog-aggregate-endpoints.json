@@ -22,12 +22,6 @@
           "description": "Sets the reference to the Kubernetes client implementation.",
           "$comment": "group:advanced"
         },
-        "jsonMapper": {
-          "type": "string",
-          "title": "JsonMapper",
-          "description": "Sets the JSON mapper.",
-          "$comment": "group:advanced"
-        },
         "messageConverter": {
           "type": "string",
           "title": "MessageConverter",
@@ -49,6 +43,12 @@
           "title": "OAuthToken",
           "description": "Sets the OAuth token used to connect to the Kubernetes cluster.",
           "$comment": "group:security"
+        },
+        "objectMapper": {
+          "type": "string",
+          "title": "ObjectMapper",
+          "description": "Sets the object mapper.",
+          "$comment": "group:advanced"
         },
         "password": {
           "type": "string",
@@ -91,7 +91,7 @@
         "messageName": {
           "type": "string",
           "title": "MessageName",
-          "description": "The message name in the context."
+          "description": "The message name."
         },
         "name": {
           "type": "string",
@@ -209,12 +209,6 @@
           "title": "Topic",
           "description": "Sets the Kafka topic."
         },
-        "useThreadSafeConsumer": {
-          "type": "boolean",
-          "title": "UseThreadSafeConsumer",
-          "description": "Sets thread safe consumer option for this endpoint.",
-          "$comment": "group:consume"
-        },
         "valueDeserializer": {
           "type": "string",
           "title": "ValueDeserializer",
@@ -226,134 +220,6 @@
           "title": "ValueSerializer",
           "description": "Sets the fully qualified value serializer type class name.",
           "$comment": "group:serialize"
-        }
-      },
-      "additionalProperties": false    }
-  },
-  "jmx-server": {
-    "kind": "testEndpoint",
-    "version": "${citrus.version}",
-    "name": "jmx-server",
-    "group": "jmx",
-    "module": "citrus-jmx",
-    "title": "JmxServer",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "autoReconnect": {
-          "type": "boolean",
-          "title": "AutoReconnect",
-          "description": "Sets the auto reconnect property."
-        },
-        "autoStart": {
-          "type": "boolean",
-          "title": "AutoStart",
-          "description": "When enabled the server is automatically started after creation."
-        },
-        "binding": {
-          "type": "string",
-          "title": "Binding",
-          "description": "Sets the binding property."
-        },
-        "correlator": {
-          "type": "string",
-          "title": "Correlator",
-          "description": "Sets the message correlator."
-        },
-        "createRegistry": {
-          "type": "boolean",
-          "title": "CreateRegistry",
-          "description": "Sets the create registry property."
-        },
-        "debugLogging": {
-          "type": "boolean",
-          "title": "DebugLogging",
-          "description": "When enabled the server prints debug logging output.",
-          "$comment": "group:advanced"
-        },
-        "delayOnReconnect": {
-          "type": "integer",
-          "title": "DelayOnReconnect",
-          "description": "Sets the delay on reconnect property."
-        },
-        "endpointAdapter": {
-          "type": "string",
-          "title": "EndpointAdapter",
-          "description": "Sets a custom endpoint adapter to handle requests.",
-          "$comment": "group:advanced"
-        },
-        "environmentProperties": {
-          "type": "object",
-          "title": "EnvironmentProperties",
-          "description": "Sets the environment properties."
-        },
-        "host": {
-          "type": "string",
-          "title": "Host",
-          "description": "Sets the host property.",
-          "default": "localhost"
-        },
-        "marshaller": {
-          "type": "string",
-          "title": "Marshaller"
-        },
-        "mbeans": {
-          "type": "string",
-          "title": "Mbeans",
-          "description": "Sets the Mbean definitions as bean references"
-        },
-        "messageConverter": {
-          "type": "string",
-          "title": "MessageConverter",
-          "description": "Sets the message converter."
-        },
-        "name": {
-          "type": "string",
-          "title": "Name",
-          "description": "The name of the endpoint"
-        },
-        "notificationFilter": {
-          "type": "string",
-          "title": "NotificationFilter",
-          "description": "Sets the notification filter as a bean reference."
-        },
-        "notificationHandback": {
-          "type": "string",
-          "title": "NotificationHandback",
-          "description": "Sets the notification handback."
-        },
-        "password": {
-          "type": "string",
-          "title": "Password",
-          "description": "Sets the user password property."
-        },
-        "port": {
-          "type": "integer",
-          "title": "Port",
-          "description": "Sets the port property."
-        },
-        "protocol": {
-          "type": "string",
-          "title": "Protocol",
-          "description": "Sets the protocol.",
-          "default": "rmi"
-        },
-        "serverUrl": {
-          "type": "string",
-          "title": "ServerUrl",
-          "description": "Sets the serverUrl property."
-        },
-        "timeout": {
-          "type": "integer",
-          "title": "Timeout",
-          "description": "The server timeout.",
-          "default": "5000"
-        },
-        "username": {
-          "type": "string",
-          "title": "Username",
-          "description": "Sets the username property."
         }
       },
       "additionalProperties": false    }
@@ -478,8 +344,7 @@
         "user": {
           "type": "string",
           "title": "User",
-          "description": "Sets the allowed user name.",
-          "$comment": "group:security"
+          "description": "Sets the allowed user name."
         },
         "userHomePath": {
           "type": "string",
@@ -707,12 +572,6 @@
           "title": "Topic",
           "description": "Sets the Kafka topic."
         },
-        "useThreadSafeConsumer": {
-          "type": "boolean",
-          "title": "UseThreadSafeConsumer",
-          "description": "Sets thread safe consumer option for this endpoint.",
-          "$comment": "group:consume"
-        },
         "valueDeserializer": {
           "type": "string",
           "title": "ValueDeserializer",
@@ -724,139 +583,6 @@
           "title": "ValueSerializer",
           "description": "Sets the fully qualified value serializer type class name.",
           "$comment": "group:serialize"
-        }
-      },
-      "additionalProperties": false    }
-  },
-  "jmx-client": {
-    "kind": "testEndpoint",
-    "version": "${citrus.version}",
-    "name": "jmx-client",
-    "group": "jmx",
-    "module": "citrus-jmx",
-    "title": "JmxClient",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "autoReconnect": {
-          "type": "boolean",
-          "title": "AutoReconnect",
-          "description": "Sets the autoReconnect property."
-        },
-        "correlator": {
-          "type": "string",
-          "title": "Correlator",
-          "description": "Sets the message correlator."
-        },
-        "messageConverter": {
-          "type": "string",
-          "title": "MessageConverter",
-          "description": "Sets the message converter."
-        },
-        "name": {
-          "type": "string",
-          "title": "Name",
-          "description": "The name of the endpoint"
-        },
-        "notificationFilter": {
-          "type": "string",
-          "title": "NotificationFilter",
-          "description": "Sets the notification filter."
-        },
-        "password": {
-          "type": "string",
-          "title": "Password",
-          "description": "Sets the password property."
-        },
-        "pollingInterval": {
-          "type": "integer",
-          "title": "PollingInterval",
-          "description": "Sets the polling interval."
-        },
-        "reconnectDelay": {
-          "type": "integer",
-          "title": "ReconnectDelay",
-          "description": "Sets the reconnectDelay property."
-        },
-        "serverUrl": {
-          "type": "string",
-          "title": "ServerUrl",
-          "description": "Sets the serverUrl property."
-        },
-        "timeout": {
-          "type": "integer",
-          "title": "Timeout",
-          "description": "Sets the default timeout."
-        },
-        "username": {
-          "type": "string",
-          "title": "Username",
-          "description": "Sets the username property."
-        }
-      },
-      "additionalProperties": false    }
-  },
-  "rmi-client": {
-    "kind": "testEndpoint",
-    "version": "${citrus.version}",
-    "name": "rmi-client",
-    "group": "rmi",
-    "module": "citrus-rmi",
-    "title": "RmiClient",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "binding": {
-          "type": "string",
-          "title": "Binding",
-          "description": "Sets the binding."
-        },
-        "correlator": {
-          "type": "string",
-          "title": "Correlator",
-          "description": "Sets the message correlator."
-        },
-        "host": {
-          "type": "string",
-          "title": "Host",
-          "description": "Sets the server host."
-        },
-        "messageConverter": {
-          "type": "string",
-          "title": "MessageConverter",
-          "description": "Sets the message converter."
-        },
-        "method": {
-          "type": "string",
-          "title": "Method",
-          "description": "Sets the method."
-        },
-        "name": {
-          "type": "string",
-          "title": "Name",
-          "description": "The name of the endpoint"
-        },
-        "pollingInterval": {
-          "type": "integer",
-          "title": "PollingInterval",
-          "description": "Sets the polling interval."
-        },
-        "port": {
-          "type": "integer",
-          "title": "Port",
-          "description": "Sets the server port."
-        },
-        "serverUrl": {
-          "type": "string",
-          "title": "ServerUrl",
-          "description": "Sets the server url."
-        },
-        "timeout": {
-          "type": "integer",
-          "title": "Timeout",
-          "description": "Sets the default timeout."
         }
       },
       "additionalProperties": false    }
@@ -884,12 +610,6 @@
           "description": "Sets the reference to the Kubernetes client implementation.",
           "$comment": "group:advanced"
         },
-        "jsonMapper": {
-          "type": "string",
-          "title": "JsonMapper",
-          "description": "Sets the JSON mapper.",
-          "$comment": "group:advanced"
-        },
         "messageConverter": {
           "type": "string",
           "title": "MessageConverter",
@@ -911,6 +631,12 @@
           "title": "OAuthToken",
           "description": "Sets the OAuth token used to connect to the Kubernetes cluster.",
           "$comment": "group:security"
+        },
+        "objectMapper": {
+          "type": "string",
+          "title": "ObjectMapper",
+          "description": "Sets the object mapper.",
+          "$comment": "group:advanced"
         },
         "password": {
           "type": "string",
@@ -1081,6 +807,10 @@
         },
         "errorHandlingStrategy": {
           "type": "string",
+          "enum": [
+            "THROWS_EXCEPTION",
+            "PROPAGATE"
+          ],
           "title": "ErrorHandlingStrategy",
           "description": "Sets the error handling strategy.",
           "$comment": "group:errorHandling"
@@ -1190,80 +920,10 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "properties": {
-        "commandTimeout": {
-          "type": "integer",
-          "title": "CommandTimeout",
-          "description": "Sets the command timeout."
-        },
-        "connectionTimeout": {
-          "type": "integer",
-          "title": "ConnectionTimeout",
-          "description": "Sets the connection timeout."
-        },
-        "correlator": {
-          "type": "string",
-          "title": "Correlator",
-          "description": "Sets the message correlator."
-        },
-        "host": {
-          "type": "string",
-          "title": "Host",
-          "description": "Sets the host."
-        },
-        "knownHosts": {
-          "type": "string",
-          "title": "KnownHosts",
-          "description": "Sets the known hosts."
-        },
-        "messageConverter": {
-          "type": "string",
-          "title": "MessageConverter",
-          "description": "Sets the message converter."
-        },
         "name": {
           "type": "string",
           "title": "Name",
           "description": "The name of the endpoint"
-        },
-        "password": {
-          "type": "string",
-          "title": "Password",
-          "description": "Sets the password."
-        },
-        "pollingInterval": {
-          "type": "integer",
-          "title": "PollingInterval",
-          "description": "Sets the polling interval."
-        },
-        "port": {
-          "type": "integer",
-          "title": "Port",
-          "description": "Sets the port."
-        },
-        "privateKeyPassword": {
-          "type": "string",
-          "title": "PrivateKeyPassword",
-          "description": "Sets the private key password."
-        },
-        "privateKeyPath": {
-          "type": "string",
-          "title": "PrivateKeyPath",
-          "description": "Sets the private key path."
-        },
-        "strictHostChecking": {
-          "type": "boolean",
-          "title": "StrictHostChecking",
-          "description": "Sets the strict host checking."
-        },
-        "timeout": {
-          "type": "integer",
-          "title": "Timeout",
-          "description": "Sets the default timeout."
-        },
-        "user": {
-          "type": "string",
-          "title": "User",
-          "description": "Sets the username."
         }
       },
       "additionalProperties": false    }
@@ -1283,12 +943,6 @@
           "type": "string",
           "title": "EndpointResolver",
           "description": "Sets the endpoint URI resolver.",
-          "$comment": "group:advanced"
-        },
-        "httpHeaders": {
-          "type": "string",
-          "title": "HttpHeaders",
-          "description": "Sets the Websocket Http headers.",
           "$comment": "group:advanced"
         },
         "messageConverter": {
@@ -1747,8 +1401,7 @@
         "user": {
           "type": "string",
           "title": "User",
-          "description": "Sets the allowed user name.",
-          "$comment": "group:security"
+          "description": "Sets the allowed user name."
         },
         "userHomePath": {
           "type": "string",
@@ -1814,6 +1467,10 @@
         },
         "errorHandlingStrategy": {
           "type": "string",
+          "enum": [
+            "THROWS_EXCEPTION",
+            "PROPAGATE"
+          ],
           "title": "ErrorHandlingStrategy",
           "description": "Sets the error handling strategy.",
           "$comment": "group:errorHandler"
@@ -2025,6 +1682,10 @@
         },
         "errorHandlingStrategy": {
           "type": "string",
+          "enum": [
+            "THROWS_EXCEPTION",
+            "PROPAGATE"
+          ],
           "title": "ErrorHandlingStrategy",
           "description": "Sets the error handling strategy.",
           "$comment": "group:errorHandler"
@@ -2138,6 +1799,10 @@
         },
         "errorHandlingStrategy": {
           "type": "string",
+          "enum": [
+            "THROWS_EXCEPTION",
+            "PROPAGATE"
+          ],
           "title": "ErrorHandlingStrategy",
           "description": "Sets the error handling strategy.",
           "$comment": "group:errorHandler"
@@ -2208,105 +1873,6 @@
           "title": "Username",
           "description": "Sets the user name.",
           "$comment": "group:security"
-        }
-      },
-      "additionalProperties": false    }
-  },
-  "rmi-server": {
-    "kind": "testEndpoint",
-    "version": "${citrus.version}",
-    "name": "rmi-server",
-    "group": "rmi",
-    "module": "citrus-rmi",
-    "title": "RmiServer",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "autoStart": {
-          "type": "boolean",
-          "title": "AutoStart",
-          "description": "When enabled the server is automatically started after creation."
-        },
-        "binding": {
-          "type": "string",
-          "title": "Binding"
-        },
-        "correlator": {
-          "type": "string",
-          "title": "Correlator",
-          "description": "Sets the message correlator."
-        },
-        "createRegistry": {
-          "type": "boolean",
-          "title": "CreateRegistry"
-        },
-        "debugLogging": {
-          "type": "boolean",
-          "title": "DebugLogging",
-          "description": "When enabled the server prints debug logging output.",
-          "$comment": "group:advanced"
-        },
-        "endpointAdapter": {
-          "type": "string",
-          "title": "EndpointAdapter",
-          "description": "Sets a custom endpoint adapter to handle requests.",
-          "$comment": "group:advanced"
-        },
-        "host": {
-          "type": "string",
-          "title": "Host"
-        },
-        "marshaller": {
-          "type": "string",
-          "title": "Marshaller"
-        },
-        "messageConverter": {
-          "type": "string",
-          "title": "MessageConverter",
-          "description": "Sets the message converter."
-        },
-        "method": {
-          "type": "string",
-          "title": "Method"
-        },
-        "name": {
-          "type": "string",
-          "title": "Name",
-          "description": "The name of the endpoint"
-        },
-        "pollingInterval": {
-          "type": "integer",
-          "title": "PollingInterval",
-          "description": "Sets the polling interval."
-        },
-        "port": {
-          "type": "integer",
-          "title": "Port"
-        },
-        "registry": {
-          "type": "string",
-          "title": "Registry"
-        },
-        "remoteInterfaces": {
-          "title": "RemoteInterfaces",
-          "description": "List of remote interfaces as fully qualified class name.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "RemoteInterfaces",
-            "description": "List of remote interfaces as fully qualified class name."
-          }
-        },
-        "serverUrl": {
-          "type": "string",
-          "title": "ServerUrl"
-        },
-        "timeout": {
-          "type": "integer",
-          "title": "Timeout",
-          "description": "The server timeout.",
-          "default": "5000"
         }
       },
       "additionalProperties": false    }
@@ -2627,6 +2193,10 @@
         },
         "faultStrategy": {
           "type": "string",
+          "enum": [
+            "THROWS_EXCEPTION",
+            "PROPAGATE"
+          ],
           "title": "FaultStrategy",
           "description": "Sets the error handling strategy.",
           "$comment": "group:errorHandler"
@@ -2817,6 +2387,10 @@
         },
         "errorHandlingStrategy": {
           "type": "string",
+          "enum": [
+            "THROWS_EXCEPTION",
+            "PROPAGATE"
+          ],
           "title": "ErrorHandlingStrategy",
           "description": "Sets the error handling strategy.",
           "$comment": "group:errorHandler"
@@ -3058,6 +2632,7 @@
             "SWITCHING_PROTOCOLS",
             "PROCESSING",
             "EARLY_HINTS",
+            "CHECKPOINT",
             "OK",
             "CREATED",
             "ACCEPTED",
@@ -3071,8 +2646,10 @@
             "MULTIPLE_CHOICES",
             "MOVED_PERMANENTLY",
             "FOUND",
+            "MOVED_TEMPORARILY",
             "SEE_OTHER",
             "NOT_MODIFIED",
+            "USE_PROXY",
             "TEMPORARY_REDIRECT",
             "PERMANENT_REDIRECT",
             "BAD_REQUEST",
@@ -3088,15 +2665,17 @@
             "GONE",
             "LENGTH_REQUIRED",
             "PRECONDITION_FAILED",
-            "CONTENT_TOO_LARGE",
             "PAYLOAD_TOO_LARGE",
+            "REQUEST_ENTITY_TOO_LARGE",
             "URI_TOO_LONG",
+            "REQUEST_URI_TOO_LONG",
             "UNSUPPORTED_MEDIA_TYPE",
             "REQUESTED_RANGE_NOT_SATISFIABLE",
             "EXPECTATION_FAILED",
             "I_AM_A_TEAPOT",
-            "MISDIRECTED_REQUEST",
-            "UNPROCESSABLE_CONTENT",
+            "INSUFFICIENT_SPACE_ON_RESOURCE",
+            "METHOD_FAILURE",
+            "DESTINATION_LOCKED",
             "UNPROCESSABLE_ENTITY",
             "LOCKED",
             "FAILED_DEPENDENCY",
@@ -3241,9 +2820,9 @@
           "description": "Sets the security handler as a bean reference.",
           "$comment": "group:security"
         },
-        "servletHandler": {
+        "serServletHandler": {
           "type": "string",
-          "title": "ServletHandler",
+          "title": "SerServletHandler",
           "description": "Sets a custom servlet handler as a bean reference.",
           "$comment": "group:servlet"
         },
@@ -3351,6 +2930,7 @@
             "SWITCHING_PROTOCOLS",
             "PROCESSING",
             "EARLY_HINTS",
+            "CHECKPOINT",
             "OK",
             "CREATED",
             "ACCEPTED",
@@ -3364,8 +2944,10 @@
             "MULTIPLE_CHOICES",
             "MOVED_PERMANENTLY",
             "FOUND",
+            "MOVED_TEMPORARILY",
             "SEE_OTHER",
             "NOT_MODIFIED",
+            "USE_PROXY",
             "TEMPORARY_REDIRECT",
             "PERMANENT_REDIRECT",
             "BAD_REQUEST",
@@ -3381,15 +2963,17 @@
             "GONE",
             "LENGTH_REQUIRED",
             "PRECONDITION_FAILED",
-            "CONTENT_TOO_LARGE",
             "PAYLOAD_TOO_LARGE",
+            "REQUEST_ENTITY_TOO_LARGE",
             "URI_TOO_LONG",
+            "REQUEST_URI_TOO_LONG",
             "UNSUPPORTED_MEDIA_TYPE",
             "REQUESTED_RANGE_NOT_SATISFIABLE",
             "EXPECTATION_FAILED",
             "I_AM_A_TEAPOT",
-            "MISDIRECTED_REQUEST",
-            "UNPROCESSABLE_CONTENT",
+            "INSUFFICIENT_SPACE_ON_RESOURCE",
+            "METHOD_FAILURE",
+            "DESTINATION_LOCKED",
             "UNPROCESSABLE_ENTITY",
             "LOCKED",
             "FAILED_DEPENDENCY",
@@ -3534,9 +3118,9 @@
           "description": "Sets the security handler as a bean reference.",
           "$comment": "group:security"
         },
-        "servletHandler": {
+        "serServletHandler": {
           "type": "string",
-          "title": "ServletHandler",
+          "title": "SerServletHandler",
           "description": "Sets a custom servlet handler as a bean reference.",
           "$comment": "group:servlet"
         },
@@ -3689,11 +3273,6 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "properties": {
-        "allowedKeyPath": {
-          "type": "string",
-          "title": "AllowedKeyPath",
-          "description": "Sets the allowed key path."
-        },
         "autoStart": {
           "type": "boolean",
           "title": "AutoStart",
@@ -3711,56 +3290,16 @@
           "description": "Sets a custom endpoint adapter to handle requests.",
           "$comment": "group:advanced"
         },
-        "hostKeyPath": {
-          "type": "string",
-          "title": "HostKeyPath",
-          "description": "Sets the host key path"
-        },
-        "marshaller": {
-          "type": "string",
-          "title": "Marshaller",
-          "description": "Sets the marshaller as a bean reference."
-        },
-        "messageConverter": {
-          "type": "string",
-          "title": "MessageConverter",
-          "description": "Sets the message converter."
-        },
         "name": {
           "type": "string",
           "title": "Name",
           "description": "The name of the endpoint"
-        },
-        "password": {
-          "type": "string",
-          "title": "Password",
-          "description": "Sets the password."
-        },
-        "pollingInterval": {
-          "type": "integer",
-          "title": "PollingInterval",
-          "description": "Sets the polling interval."
-        },
-        "port": {
-          "type": "integer",
-          "title": "Port",
-          "description": "Sets the port."
         },
         "timeout": {
           "type": "integer",
           "title": "Timeout",
           "description": "The server timeout.",
           "default": "5000"
-        },
-        "user": {
-          "type": "string",
-          "title": "User",
-          "description": "Sets the username."
-        },
-        "userHomePath": {
-          "type": "string",
-          "title": "UserHomePath",
-          "description": "Sets the user home path"
         }
       },
       "additionalProperties": false    }

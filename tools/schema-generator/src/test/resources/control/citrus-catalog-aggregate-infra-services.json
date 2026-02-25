@@ -35,6 +35,15 @@
     "title": "Aws Kinesis",
     "description": "Local AWS Services with LocalStack"
   },
+  "aws.config": {
+    "kind": "testInfraService",
+    "version": "4.18.3",
+    "name": "aws.config",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-aws-v2",
+    "title": "Aws Config",
+    "description": "Local AWS Services with LocalStack"
+  },
   "aws.transcribe": {
     "kind": "testInfraService",
     "version": "${camel.version}",
@@ -53,6 +62,15 @@
     "title": "Aws Cloud-watch",
     "description": "Local AWS Services with LocalStack"
   },
+  "aws.event-bridge": {
+    "kind": "testInfraService",
+    "version": "4.18.3",
+    "name": "aws.event-bridge",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-aws-v2",
+    "title": "Aws Event-bridge",
+    "description": "Local AWS Services with LocalStack"
+  },
   "aws.sqs": {
     "kind": "testInfraService",
     "version": "${camel.version}",
@@ -62,6 +80,15 @@
     "title": "Aws Sqs",
     "description": "Local AWS Services with LocalStack"
   },
+  "aws.secrets-manager": {
+    "kind": "testInfraService",
+    "version": "4.18.3",
+    "name": "aws.secrets-manager",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-aws-v2",
+    "title": "Aws Secrets-manager",
+    "description": "Local AWS Services with LocalStack"
+  },
   "aws.sts": {
     "kind": "testInfraService",
     "version": "${camel.version}",
@@ -69,6 +96,15 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-aws-v2",
     "title": "Aws Sts",
+    "description": "Local AWS Services with LocalStack"
+  },
+  "aws.ec2": {
+    "kind": "testInfraService",
+    "version": "4.18.3",
+    "name": "aws.ec2",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-aws-v2",
+    "title": "Aws Ec2",
     "description": "Local AWS Services with LocalStack"
   },
   "aws.kms": {
@@ -125,51 +161,6 @@
     "title": "Aws Ssm",
     "description": "Local AWS Services with LocalStack"
   },
-  "aws.lambda": {
-    "kind": "testInfraService",
-    "version": "${camel.version}",
-    "name": "aws.lambda",
-    "group": "camel-test-infra",
-    "module": "org.apache.camel:camel-test-infra-aws-v2",
-    "title": "Aws Lambda",
-    "description": "Local AWS Services with LocalStack"
-  },
-  "aws.config": {
-    "kind": "testInfraService",
-    "version": "${camel.version}",
-    "name": "aws.config",
-    "group": "camel-test-infra",
-    "module": "org.apache.camel:camel-test-infra-aws-v2",
-    "title": "Aws Config",
-    "description": "Local AWS Services with LocalStack"
-  },
-  "aws.event-bridge": {
-    "kind": "testInfraService",
-    "version": "${camel.version}",
-    "name": "aws.event-bridge",
-    "group": "camel-test-infra",
-    "module": "org.apache.camel:camel-test-infra-aws-v2",
-    "title": "Aws Event-bridge",
-    "description": "Local AWS Services with LocalStack"
-  },
-  "aws.secrets-manager": {
-    "kind": "testInfraService",
-    "version": "${camel.version}",
-    "name": "aws.secrets-manager",
-    "group": "camel-test-infra",
-    "module": "org.apache.camel:camel-test-infra-aws-v2",
-    "title": "Aws Secrets-manager",
-    "description": "Local AWS Services with LocalStack"
-  },
-  "aws.ec2": {
-    "kind": "testInfraService",
-    "version": "${camel.version}",
-    "name": "aws.ec2",
-    "group": "camel-test-infra",
-    "module": "org.apache.camel:camel-test-infra-aws-v2",
-    "title": "Aws Ec2",
-    "description": "Local AWS Services with LocalStack"
-  },
   "aws.iam": {
     "kind": "testInfraService",
     "version": "${camel.version}",
@@ -177,6 +168,15 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-aws-v2",
     "title": "Aws Iam",
+    "description": "Local AWS Services with LocalStack"
+  },
+  "aws.lambda": {
+    "kind": "testInfraService",
+    "version": "${camel.version}",
+    "name": "aws.lambda",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-aws-v2",
+    "title": "Aws Lambda",
     "description": "Local AWS Services with LocalStack"
   },
   "azure.storage-blob": {
@@ -204,7 +204,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-cassandra",
     "title": "Cassandra",
-    "description": "Apache Cassandra is a distributed NoSQL database"
+    "description": "Apache Cassandra NoSQL Database"
   },
   "chat-script": {
     "kind": "testInfraService",
@@ -213,7 +213,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-chatscript",
     "title": "Chat-script",
-    "description": "ChatScript is an open source chatbot engine"
+    "description": "ChatBot Engine"
   },
   "consul": {
     "kind": "testInfraService",
@@ -231,7 +231,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-couchbase",
     "title": "Couchbase",
-    "description": "Couchbase is a distributed NoSQL cloud database"
+    "description": "NoSQL database Couchbase"
   },
   "couchdb": {
     "kind": "testInfraService",
@@ -240,7 +240,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-couchdb",
     "title": "Couchdb",
-    "description": "Apache CouchDB is an open source NoSQL document database"
+    "description": "SQL Clustered database CouchDB"
   },
   "docling": {
     "kind": "testInfraService",
@@ -249,7 +249,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-docling",
     "title": "Docling",
-    "description": "Docling is a document processing and conversion toolkit"
+    "description": "Document processing and conversion service"
   },
   "elasticsearch": {
     "kind": "testInfraService",
@@ -258,7 +258,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-elasticsearch",
     "title": "Elasticsearch",
-    "description": "Elasticsearch is a distributed search and analytics engine"
+    "description": "NoSQL Database Elasticsearch"
   },
   "fhir": {
     "kind": "testInfraService",
@@ -303,7 +303,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-google-pubsub",
     "title": "Google Pub-sub",
-    "description": "Google Cloud Pub/Sub is a messaging service for event-driven systems"
+    "description": "Google Cloud SDK Tool"
   },
   "hashicorp.vault": {
     "kind": "testInfraService",
@@ -312,7 +312,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-hashicorp-vault",
     "title": "Hashicorp Vault",
-    "description": "HashiCorp Vault is a tool for securely accessing secrets"
+    "description": "Vault is a tool for securely accessing secrets"
   },
   "hazelcast": {
     "kind": "testInfraService",
@@ -321,16 +321,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-hazelcast",
     "title": "Hazelcast",
-    "description": "Hazelcast is a distributed in-memory computing platform"
-  },
-  "hive-mq": {
-    "kind": "testInfraService",
-    "version": "${camel.version}",
-    "name": "hive-mq",
-    "group": "camel-test-infra",
-    "module": "org.apache.camel:camel-test-infra-hivemq",
-    "title": "Hive-mq",
-    "description": "HiveMQ is an MQTT-based messaging platform for IoT"
+    "description": "In Memory Database Hazelcast"
   },
   "hive-mq.sparkplug": {
     "kind": "testInfraService",
@@ -339,7 +330,16 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-hivemq",
     "title": "Hive-mq Sparkplug",
-    "description": "HiveMQ is an MQTT-based messaging platform for IoT"
+    "description": "MQTT Platform HiveMQ"
+  },
+  "hive-mq": {
+    "kind": "testInfraService",
+    "version": "${camel.version}",
+    "name": "hive-mq",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-hivemq",
+    "title": "Hive-mq",
+    "description": "MQTT Platform HiveMQ"
   },
   "ibmmq": {
     "kind": "testInfraService",
@@ -348,7 +348,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-ibmmq",
     "title": "Ibmmq",
-    "description": "IBM MQ is enterprise messaging middleware for reliable communication"
+    "description": "IBM MQ messaging middleware"
   },
   "iggy": {
     "kind": "testInfraService",
@@ -357,7 +357,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-iggy",
     "title": "Iggy",
-    "description": "Iggy is a persistent message streaming platform"
+    "description": "Iggy distributed message streaming platform"
   },
   "ignite": {
     "kind": "testInfraService",
@@ -366,7 +366,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-ignite",
     "title": "Ignite",
-    "description": "Apache Ignite is a distributed database for high-performance computing"
+    "description": "Distributed Database Apache Ignite"
   },
   "infinispan": {
     "kind": "testInfraService",
@@ -375,7 +375,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-infinispan",
     "title": "Infinispan",
-    "description": "Infinispan is a distributed in-memory key/value data store"
+    "description": "Distributed Database For High‑Performance Applications With In‑Memory Speed"
   },
   "kafka.strimzi": {
     "kind": "testInfraService",
@@ -420,7 +420,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-keycloak",
     "title": "Keycloak",
-    "description": "Keycloak is an open source identity and access management solution"
+    "description": "Identity and access management solution"
   },
   "microprofile.lra": {
     "kind": "testInfraService",
@@ -438,7 +438,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-milvus",
     "title": "Milvus",
-    "description": "Milvus is an open source vector database for AI applications"
+    "description": "Milvus Vector Database"
   },
   "minio": {
     "kind": "testInfraService",
@@ -447,7 +447,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-minio",
     "title": "Minio",
-    "description": "MinIO is a high-performance S3 compatible object storage"
+    "description": "MinIO Object Storage, S3 compatible"
   },
   "mongodb": {
     "kind": "testInfraService",
@@ -456,7 +456,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-mongodb",
     "title": "Mongodb",
-    "description": "MongoDB is a document-oriented NoSQL database"
+    "description": "MongoDB NoSql Database"
   },
   "mosquitto": {
     "kind": "testInfraService",
@@ -474,7 +474,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-nats",
     "title": "Nats",
-    "description": "NATS is a high-performance messaging system for cloud native applications"
+    "description": "Messaging Platform NATS"
   },
   "neo4j": {
     "kind": "testInfraService",
@@ -483,7 +483,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-neo4j",
     "title": "Neo4j",
-    "description": "Neo4j is a graph database management system"
+    "description": "Neo4j Database"
   },
   "ollama": {
     "kind": "testInfraService",
@@ -492,7 +492,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-ollama",
     "title": "Ollama",
-    "description": "Ollama is a tool for running large language models locally"
+    "description": "Build and run LLMs with Ollama"
   },
   "openldap": {
     "kind": "testInfraService",
@@ -510,7 +510,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-pinecone",
     "title": "Pinecone",
-    "description": "Pinecone is a vector database for machine learning applications"
+    "description": "Pinecone Vector Database"
   },
   "postgres": {
     "kind": "testInfraService",
@@ -519,25 +519,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-postgres",
     "title": "Postgres",
-    "description": "PostgreSQL is an open source object-relational database"
-  },
-  "postgres-vector": {
-    "kind": "testInfraService",
-    "version": "${camel.version}",
-    "name": "postgres-vector",
-    "group": "camel-test-infra",
-    "module": "org.apache.camel:camel-test-infra-postgres",
-    "title": "Postgres-vector",
-    "description": "PostgreSQL with pgvector extension for vector similarity search"
-  },
-  "pgvector": {
-    "kind": "testInfraService",
-    "version": "${camel.version}",
-    "name": "pgvector",
-    "group": "camel-test-infra",
-    "module": "org.apache.camel:camel-test-infra-postgres",
-    "title": "Pgvector",
-    "description": "PostgreSQL with pgvector extension for vector similarity search"
+    "description": "Postgres SQL Database"
   },
   "pulsar": {
     "kind": "testInfraService",
@@ -546,7 +528,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-pulsar",
     "title": "Pulsar",
-    "description": "Apache Pulsar is a distributed messaging and streaming platform"
+    "description": "Distributed messaging and streaming platform"
   },
   "qdrant": {
     "kind": "testInfraService",
@@ -555,7 +537,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-qdrant",
     "title": "Qdrant",
-    "description": "Qdrant is a vector similarity search engine and database"
+    "description": "Vector Database and Vector Search Engine"
   },
   "rabbitmq": {
     "kind": "testInfraService",
@@ -564,7 +546,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-rabbitmq",
     "title": "Rabbitmq",
-    "description": "RabbitMQ is an open source message and streaming broker"
+    "description": "Messaging and streaming broker"
   },
   "redis": {
     "kind": "testInfraService",
@@ -573,7 +555,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-redis",
     "title": "Redis",
-    "description": "Redis is an open source in-memory data store"
+    "description": "In Memory Database"
   },
   "rocketmq": {
     "kind": "testInfraService",
@@ -591,7 +573,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-smb",
     "title": "Smb",
-    "description": "Samba provides file sharing services using the SMB protocol"
+    "description": "SAMBA File Server"
   },
   "solr": {
     "kind": "testInfraService",
@@ -600,7 +582,16 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-solr",
     "title": "Solr",
-    "description": "Apache Solr is an open source search platform"
+    "description": "Apache Solr is a Search Platform"
+  },
+  "torch-serve": {
+    "kind": "testInfraService",
+    "version": "${camel.version}",
+    "name": "torch-serve",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-torchserve",
+    "title": "Torch-serve",
+    "description": "TorchServe is a flexible tool for serving PyTorch"
   },
   "weaviate": {
     "kind": "testInfraService",
@@ -609,7 +600,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-weaviate",
     "title": "Weaviate",
-    "description": "Weaviate is an open source vector database"
+    "description": "Weaviate Vector Database"
   },
   "xmpp": {
     "kind": "testInfraService",
@@ -618,7 +609,7 @@
     "group": "camel-test-infra",
     "module": "org.apache.camel:camel-test-infra-xmpp",
     "title": "Xmpp",
-    "description": "XMPP is an open communication protocol for messaging"
+    "description": "Test XMPP Server"
   },
   "zookeeper": {
     "kind": "testInfraService",
