@@ -116,7 +116,7 @@ public class HttpClientTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadHttpClientActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/http/xml/http-client-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/http/xml/http-client.citrus.it.xml");
 
         context.setVariable("port", port);
 

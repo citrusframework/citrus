@@ -45,7 +45,7 @@ public class CreateLabelsTest extends AbstractXmlActionTest {
                 .resource(pod)
                 .create();
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/create-labels-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/create-labels.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

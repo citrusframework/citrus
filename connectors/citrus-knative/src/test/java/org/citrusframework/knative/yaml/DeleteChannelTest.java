@@ -42,7 +42,7 @@ public class DeleteChannelTest extends AbstractYamlActionTest {
                 .resource(channel)
                 .create();
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/delete-channel-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/delete-channel.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -58,7 +58,7 @@ public class DeleteResourceTest extends AbstractXmlActionTest {
                 .resource(subscription)
                 .create();
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/delete-resource-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/delete-resource.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

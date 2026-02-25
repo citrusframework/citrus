@@ -35,7 +35,7 @@ public class CreateConfigMapTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadKubernetesActions() throws IOException {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/create-config-map-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/create-config-map.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

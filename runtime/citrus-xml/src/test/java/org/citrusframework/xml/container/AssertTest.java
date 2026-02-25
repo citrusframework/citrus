@@ -29,7 +29,7 @@ public class AssertTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadAssert() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/assert-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/assert.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

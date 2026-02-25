@@ -32,7 +32,7 @@ public class CreateServiceTest extends AbstractYamlActionTest {
     public void shouldLoadKubernetesActions() {
         context.getReferenceResolver().bind("myServer", Mockito.mock(HttpServer.class));
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/create-service-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/create-service.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

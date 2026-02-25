@@ -27,7 +27,7 @@ public class AntRunTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadAntRun() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/antrun-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/antrun.citrus.it.yaml");
 
         context.getReferenceResolver().bind("logger", new DefaultLogger());
 

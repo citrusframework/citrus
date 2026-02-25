@@ -42,7 +42,7 @@ public class DeleteCustomResourceTest extends AbstractXmlActionTest {
                 .resource(foo)
                 .create();
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/delete-custom-resource-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/delete-custom-resource.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

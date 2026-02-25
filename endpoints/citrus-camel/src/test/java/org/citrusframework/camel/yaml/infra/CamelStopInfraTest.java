@@ -34,7 +34,7 @@ public class CamelStopInfraTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadCamelActions() throws Exception {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/yaml/infra/camel-stop-infra-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/yaml/infra/camel-stop-infra.citrus.it.yaml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.start();

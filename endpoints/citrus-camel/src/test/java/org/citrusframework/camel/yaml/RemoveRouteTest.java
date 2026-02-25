@@ -31,7 +31,7 @@ public class RemoveRouteTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadCamelActions() throws Exception {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/yaml/camel-remove-route-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/yaml/camel-remove-route.citrus.it.yaml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.addRoutes(new RouteBuilder(citrusCamelContext) {

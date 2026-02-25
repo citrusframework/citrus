@@ -28,7 +28,7 @@ public class CreateCustomResourceTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadKubernetesActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/create-custom-resource-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/create-custom-resource.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -44,7 +44,7 @@ public class DeleteConfigMapTest extends AbstractYamlActionTest {
                 .resource(configMap)
                 .create();
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/delete-config-map-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/delete-config-map.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

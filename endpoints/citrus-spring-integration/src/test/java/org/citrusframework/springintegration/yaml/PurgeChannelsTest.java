@@ -40,7 +40,7 @@ public class PurgeChannelsTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadActions() throws Exception {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/springintegration/yaml/purge-channels-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/springintegration/yaml/purge-channels.citrus.it.yaml");
 
         context.getReferenceResolver().bind("channelResolver", channelResolver);
         context.getReferenceResolver().bind("testChannel", messageChannel);

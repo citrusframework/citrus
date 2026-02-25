@@ -28,7 +28,7 @@ public class SequentialTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadSequential() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/sequential-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/sequential.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

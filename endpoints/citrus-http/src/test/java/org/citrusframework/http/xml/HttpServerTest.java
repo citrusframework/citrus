@@ -85,7 +85,7 @@ public class HttpServerTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadHttpServerActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/http/xml/http-server-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/http/xml/http-server.citrus.it.xml");
 
         context.getReferenceResolver().bind("httpServer", httpServer);
 

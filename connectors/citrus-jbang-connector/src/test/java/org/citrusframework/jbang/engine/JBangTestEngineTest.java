@@ -46,7 +46,7 @@ public class JBangTestEngineTest {
     public void testRunSource() {
         TestRunConfiguration configuration = new TestRunConfiguration();
         configuration.setTestSources(Collections.singletonList(new TestSource("yaml", "hello",
-                Resources.fromClasspath("org/citrusframework/jbang/sample/hello.it.yaml").getFile().getAbsolutePath())));
+                Resources.fromClasspath("org/citrusframework/jbang/sample/hello.citrus.it.yaml").getFile().getAbsolutePath())));
 
         runTestEngine(configuration);
     }

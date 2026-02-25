@@ -57,9 +57,31 @@ public class Run extends CitrusCommand {
 
     public static final String WORK_DIR = ".citrus-jbang";
 
-    private static final String[] ACCEPTED_FILE_EXT
-            = new String[] { ".feature", "test.groovy", "it.groovy", "test.yaml", "it.yaml",
-            "Test.xml", "IT.xml", "test.xml", "it.xml", "Test.java", "IT.java", "TestCase.java", "ITCase.java" };
+    private static final String[] ACCEPTED_FILE_EXT = new String[] {
+        ".feature",
+        ".citrus.feature",
+        ".citrus.groovy",
+        ".citrus.test.groovy",
+        ".citrus.it.groovy",
+        ".citrus-test.groovy",
+        ".citrus-it.groovy",
+        ".citrus.yaml",
+        ".citrus.test.yaml",
+        ".citrus.it.yaml",
+        ".citrus-test.yaml",
+        ".citrus-it.yaml",
+        ".citrus.xml",
+        ".citrus.test.xml",
+        ".citrus.it.xml",
+        ".citrus-test.xml",
+        ".citrus-it.xml",
+        "Test.xml",
+        "IT.xml",
+        "Test.java",
+        "IT.java",
+        "TestCase.java",
+        "ITCase.java"
+    };
 
     private static final String CLIPBOARD_GENERATED_FILE = WORK_DIR + "/generated-clipboard";
 

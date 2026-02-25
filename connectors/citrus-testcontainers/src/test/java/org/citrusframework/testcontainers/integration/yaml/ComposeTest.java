@@ -27,7 +27,7 @@ public class ComposeTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadTestcontainersActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/yaml/compose-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/yaml/compose.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

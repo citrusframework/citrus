@@ -38,7 +38,7 @@ public class AgentRunActionTest extends UnitTestSupport {
     public void shouldRunYaml() {
         HttpServer agentServer = new HttpServerBuilder()
                 .port(CitrusAgentSettings.getAgentServerPort())
-                .endpointAdapter(runEndpointAdapter("citrus-test", MediaType.APPLICATION_YAML_VALUE))
+                .endpointAdapter(runEndpointAdapter("run.citrus", MediaType.APPLICATION_YAML_VALUE))
                 .build();
 
         try {
@@ -47,7 +47,7 @@ public class AgentRunActionTest extends UnitTestSupport {
             AgentRunAction action = new AgentActionBuilder()
                     .run()
                     .sourceCode("""
-                    name: citrus-test
+                    name: run.citrus
                     actions:
                       - echo:
                           message: Citrus rocks!
@@ -58,7 +58,7 @@ public class AgentRunActionTest extends UnitTestSupport {
 
             action = new AgentActionBuilder()
                     .run()
-                    .sourceFile(Resources.fromClasspath("citrus-test.yaml", AgentRunActionTest.class))
+                    .sourceFile(Resources.fromClasspath("run.citrus.yaml", AgentRunActionTest.class))
                     .build();
 
             action.execute(context);
@@ -71,7 +71,7 @@ public class AgentRunActionTest extends UnitTestSupport {
     public void shouldRunXml() {
         HttpServer agentServer = new HttpServerBuilder()
                 .port(CitrusAgentSettings.getAgentServerPort())
-                .endpointAdapter(runEndpointAdapter("citrus-test", MediaType.APPLICATION_XML_VALUE))
+                .endpointAdapter(runEndpointAdapter("run.citrus", MediaType.APPLICATION_XML_VALUE))
                 .build();
 
         try {
@@ -80,7 +80,7 @@ public class AgentRunActionTest extends UnitTestSupport {
             AgentRunAction action = new AgentActionBuilder()
                     .run()
                     .sourceCode("""
-                    <test name="citrus-test" xmlns="http://citrusframework.org/schema/xml/testcase">
+                    <test name="run.citrus" xmlns="http://citrusframework.org/schema/xml/testcase">
                       <actions>
                         <echo>
                           <message>"Citrus rocks!"</message>
@@ -94,7 +94,7 @@ public class AgentRunActionTest extends UnitTestSupport {
 
             action = new AgentActionBuilder()
                     .run()
-                    .sourceFile(Resources.fromClasspath("citrus-test.xml", AgentRunActionTest.class))
+                    .sourceFile(Resources.fromClasspath("run.citrus.xml", AgentRunActionTest.class))
                     .build();
 
             action.execute(context);
@@ -107,7 +107,7 @@ public class AgentRunActionTest extends UnitTestSupport {
     public void shouldRunGroovy() {
         HttpServer agentServer = new HttpServerBuilder()
                 .port(CitrusAgentSettings.getAgentServerPort())
-                .endpointAdapter(runEndpointAdapter("citrus-test.groovy", MediaType.TEXT_PLAIN_VALUE))
+                .endpointAdapter(runEndpointAdapter("run.citrus.groovy", MediaType.TEXT_PLAIN_VALUE))
                 .build();
 
         try {
@@ -127,7 +127,7 @@ public class AgentRunActionTest extends UnitTestSupport {
 
             action = new AgentActionBuilder()
                     .run()
-                    .sourceFile(Resources.fromClasspath("citrus-test.groovy", AgentRunActionTest.class))
+                    .sourceFile(Resources.fromClasspath("run.citrus.groovy", AgentRunActionTest.class))
                     .build();
 
             action.execute(context);

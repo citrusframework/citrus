@@ -29,7 +29,7 @@ public class DoFinallyTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadDoFinally() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/do-finally-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/do-finally.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

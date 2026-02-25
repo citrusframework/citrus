@@ -27,7 +27,7 @@ public class CreateVariablesTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadCreateVariables() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/create-variables-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/create-variables.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

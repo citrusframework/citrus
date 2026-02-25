@@ -58,7 +58,7 @@ public class DeleteResourceTest extends AbstractYamlActionTest {
                 .resource(subscription)
                 .create();
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/delete-resource-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/delete-resource.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

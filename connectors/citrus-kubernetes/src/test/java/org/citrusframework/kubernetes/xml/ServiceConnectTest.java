@@ -62,7 +62,7 @@ public class ServiceConnectTest extends AbstractXmlActionTest {
                 .resource(service)
                 .create();
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/service-connect-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/service-connect.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

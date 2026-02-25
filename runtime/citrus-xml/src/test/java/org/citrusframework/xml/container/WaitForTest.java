@@ -57,7 +57,7 @@ public class WaitForTest extends AbstractXmlActionTest {
         messageStore.storeMessage("request", new DefaultMessage("Citrus rocks!"));
         context.setMessageStore(messageStore);
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/wait-for-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/wait-for.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

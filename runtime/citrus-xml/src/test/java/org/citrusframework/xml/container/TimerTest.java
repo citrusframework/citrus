@@ -28,7 +28,7 @@ public class TimerTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadTimer() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/timer-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/timer.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

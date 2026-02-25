@@ -46,7 +46,7 @@ public class PlsqlTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadPlsql() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/yaml/plsql-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/yaml/plsql.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -28,7 +28,7 @@ public class CreateSubscriptionTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadKnativeActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/create-subscription-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/create-subscription.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

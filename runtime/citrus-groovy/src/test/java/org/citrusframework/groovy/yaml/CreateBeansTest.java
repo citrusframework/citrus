@@ -28,7 +28,7 @@ public class CreateBeansTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadGroovyActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/yaml/create-beans-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/yaml/create-beans.citrus.it.yaml");
 
         Assert.assertFalse(context.getReferenceResolver().isResolvable(DefaultTextEqualsMessageValidator.class));
 

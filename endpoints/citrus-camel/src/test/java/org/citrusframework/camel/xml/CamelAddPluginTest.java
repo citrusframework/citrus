@@ -44,7 +44,7 @@ public class CamelAddPluginTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadCamelActions() throws Exception {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/camel-jbang-add-plugin-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/camel-jbang-add-plugin.citrus.it.xml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.start();

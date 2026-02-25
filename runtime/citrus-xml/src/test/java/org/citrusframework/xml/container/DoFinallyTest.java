@@ -29,7 +29,7 @@ public class DoFinallyTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadDoFinally() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/do-finally-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/do-finally.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

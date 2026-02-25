@@ -27,7 +27,7 @@ public class CreateEndpointTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadCreateEndpoint() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/create-endpoint-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/create-endpoint.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

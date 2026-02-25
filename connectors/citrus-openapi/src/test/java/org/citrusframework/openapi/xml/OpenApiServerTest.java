@@ -73,7 +73,7 @@ public class OpenApiServerTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadOpenApiServerActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/openapi/xml/openapi-server-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/openapi/xml/openapi-server.citrus.it.xml");
 
         context.getReferenceResolver().bind("httpServer", httpServer);
 

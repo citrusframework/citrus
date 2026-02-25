@@ -117,7 +117,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadOpenApiClientActions() throws IOException {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/openapi/xml/openapi-client-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/openapi/xml/openapi-client.citrus.it.xml");
 
         context.setVariable("port", port);
 

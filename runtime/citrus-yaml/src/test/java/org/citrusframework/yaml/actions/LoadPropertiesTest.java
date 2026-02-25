@@ -27,7 +27,7 @@ public class LoadPropertiesTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadProperties() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/load-properties-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/load-properties.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

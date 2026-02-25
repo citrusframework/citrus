@@ -42,7 +42,7 @@ public class StopTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadStop() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/stop-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/stop.citrus.it.xml");
 
         when(myServer.getName()).thenReturn("myServer");
         when(myServer.isRunning()).thenReturn(true);

@@ -42,7 +42,7 @@ public class DeleteChannelTest extends AbstractXmlActionTest {
                 .resource(channel)
                 .create();
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/delete-channel-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/delete-channel.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

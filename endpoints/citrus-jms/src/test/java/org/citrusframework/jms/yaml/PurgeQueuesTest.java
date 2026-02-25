@@ -57,7 +57,7 @@ public class PurgeQueuesTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadJmsActions() throws Exception {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/jms/yaml/purge-queues-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/jms/yaml/purge-queues.citrus.it.yaml");
 
         context.getReferenceResolver().bind("connectionFactory", connectionFactory);
         context.getReferenceResolver().bind("myConnectionFactory", connectionFactory);

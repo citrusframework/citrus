@@ -58,7 +58,7 @@ public class DeleteSubscriptionTest extends AbstractYamlActionTest {
                 .resource(subscription)
                 .create();
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/delete-subscription-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/delete-subscription.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

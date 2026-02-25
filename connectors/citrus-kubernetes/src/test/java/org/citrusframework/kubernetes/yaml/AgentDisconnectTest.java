@@ -84,7 +84,7 @@ public class AgentDisconnectTest extends AbstractYamlActionTest {
                 .resource(service)
                 .create();
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/agent-disconnect-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/agent-disconnect.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

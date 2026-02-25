@@ -27,7 +27,7 @@ public class TraceVariablesTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadTraceVariables() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/trace-variables-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/trace-variables.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

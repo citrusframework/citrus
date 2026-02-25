@@ -58,7 +58,7 @@ public class VerifyPodTest extends AbstractYamlActionTest {
                 .resource(pod)
                 .create();
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/verify-pod-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/verify-pod.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

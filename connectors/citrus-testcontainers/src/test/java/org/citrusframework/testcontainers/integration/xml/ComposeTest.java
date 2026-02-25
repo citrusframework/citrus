@@ -27,7 +27,7 @@ public class ComposeTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadTestcontainersActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/xml/compose-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/xml/compose.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

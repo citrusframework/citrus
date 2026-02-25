@@ -71,7 +71,7 @@ public class OpenApiServerTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadOpenApiServerActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/openapi/yaml/openapi-server-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/openapi/yaml/openapi-server.citrus.it.yaml");
 
         context.getReferenceResolver().bind("httpServer", httpServer);
 

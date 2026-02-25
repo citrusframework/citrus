@@ -27,7 +27,7 @@ public class StopTimeTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadStopTime() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/stop-time-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/stop-time.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

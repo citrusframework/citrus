@@ -46,7 +46,7 @@ public class PlsqlTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadPlsql() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/xml/plsql-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/xml/plsql.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

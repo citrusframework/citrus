@@ -27,7 +27,7 @@ public class CreateEndpointsTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadGroovyActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/yaml/create-endpoints-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/yaml/create-endpoints.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

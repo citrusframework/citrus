@@ -36,7 +36,7 @@ public class StopContainerTest extends AbstractXmlActionTest {
 
             context.getReferenceResolver().bind("my-container", busyBox);
 
-            XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/xml/stop-container-test.xml");
+            XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/xml/stop-container.citrus.it.xml");
 
             testLoader.load();
             TestCase result = testLoader.getTestCase();

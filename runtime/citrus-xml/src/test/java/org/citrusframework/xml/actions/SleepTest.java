@@ -29,7 +29,7 @@ public class SleepTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadSleep() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/sleep-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/sleep.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

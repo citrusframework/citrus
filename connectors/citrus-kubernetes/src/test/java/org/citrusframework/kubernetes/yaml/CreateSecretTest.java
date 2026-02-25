@@ -35,7 +35,7 @@ public class CreateSecretTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadKubernetesActions() throws IOException {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/create-secret-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/create-secret.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

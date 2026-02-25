@@ -56,7 +56,7 @@ public class SqlTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadSql() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/xml/sql-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/xml/sql.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
@@ -94,7 +94,7 @@ public class SqlTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadSqlQuery() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/xml/sql-query-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/xml/sql-query.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -29,7 +29,7 @@ public class AsyncTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadAsync() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/async-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/async.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

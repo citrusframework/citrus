@@ -28,7 +28,7 @@ public class CreateTriggerTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadKnativeActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/create-trigger-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/create-trigger.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -29,7 +29,7 @@ public class AssertTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadAssert() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/assert-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/assert.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

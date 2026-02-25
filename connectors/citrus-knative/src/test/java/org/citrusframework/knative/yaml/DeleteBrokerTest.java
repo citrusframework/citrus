@@ -42,7 +42,7 @@ public class DeleteBrokerTest extends AbstractYamlActionTest {
                 .resource(broker)
                 .create();
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/delete-broker-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/delete-broker.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

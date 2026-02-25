@@ -16,17 +16,17 @@
 
 package org.citrusframework;
 
-import org.citrusframework.common.TestLoader;
-import org.citrusframework.validation.CustomValidatorStrategy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import org.citrusframework.common.TestLoader;
+import org.citrusframework.validation.CustomValidatorStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -180,21 +180,21 @@ public final class CitrusSettings {
     public static final String GROOVY_TEST_FILE_NAME_PATTERN = getPropertyEnvOrDefault(
             GROOVY_TEST_FILE_NAME_PATTERN_PROPERTY,
             GROOVY_TEST_FILE_NAME_PATTERN_ENV,
-            ".*test\\.groovy,.*it\\.groovy");
+            ".*\\.citrus\\.groovy,.*\\.citrus\\.test\\.groovy,.*\\.citrus\\.it\\.groovy,.*\\.citrus-test\\.groovy,.*\\.citrus-it\\.groovy");
 
     public static final String YAML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.yaml.file.name.pattern";
     public static final String YAML_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_YAML_FILE_NAME_PATTERN";
     public static final String YAML_TEST_FILE_NAME_PATTERN = getPropertyEnvOrDefault(
             YAML_TEST_FILE_NAME_PATTERN_PROPERTY,
             YAML_TEST_FILE_NAME_PATTERN_ENV,
-            ".*test\\.yaml,.*it\\.yaml");
+            ".*\\.citrus\\.yaml,.*\\.citrus\\.test\\.yaml,.*\\.citrus\\.it\\.yaml,.*\\.citrus-test\\.yaml,.*\\.citrus-it\\.yaml");
 
     public static final String XML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.xml.file.name.pattern";
     public static final String XML_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_XML_FILE_NAME_PATTERN";
     public static final String XML_TEST_FILE_NAME_PATTERN = getPropertyEnvOrDefault(
             XML_TEST_FILE_NAME_PATTERN_PROPERTY,
             XML_TEST_FILE_NAME_PATTERN_ENV,
-            ".*Test\\.xml,.*IT\\.xml,.*test\\.xml,.*it\\.xml");
+            ".*Test\\.xml,.*IT\\.xml,.*\\.citrus\\.xml,.*\\.citrus\\.test\\.xml,.*\\.citrus\\.it\\.xml,.*\\.citrus-test\\.xml,.*\\.citrus-it\\.xml");
 
     public static final String JAVA_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.java.file.name.pattern";
     public static final String JAVA_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_JAVA_FILE_NAME_PATTERN";

@@ -32,15 +32,15 @@ public class XmlTestLoaderIT extends TestNGCitrusSupport {
     @BindToRegistry
     DefaultTextEqualsMessageValidator textEqualsMessageValidator = new DefaultTextEqualsMessageValidator();
 
-    @CitrusTestSource(type = TestLoader.XML, name = { "sample-test" })
+    @CitrusTestSource(type = TestLoader.XML, name = { "sample.citrus.it" })
     public void XmlTestLoader_1_IT() {}
 
-    @CitrusTestSource(type = TestLoader.XML, name = { "echo-test", "sleep-test" }, packageName = "org.citrusframework.xml.actions")
+    @CitrusTestSource(type = TestLoader.XML, name = { "echo.citrus.it", "sleep.citrus.it" }, packageName = "org.citrusframework.xml.actions")
     public void XmlTestLoader_2_IT() {}
 
     @CitrusTestSource(type = TestLoader.XML, packageScan = "org.citrusframework.integration")
     public void XmlTestLoader_3_IT() {}
 
-    @CitrusTestSource(type = TestLoader.XML, sources = { "classpath:org/citrusframework/xml/actions/create-variables-test.xml" })
+    @CitrusTestSource(type = TestLoader.XML, sources = { "classpath:org/citrusframework/xml/actions/create-variables.citrus.it.xml" })
     public void XmlTestLoader_4_IT() {}
 }

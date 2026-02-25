@@ -35,7 +35,7 @@ public class CreateSecretTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadKubernetesActions() throws IOException {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/create-secret-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/create-secret.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

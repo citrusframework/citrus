@@ -32,15 +32,15 @@ public class YamlTestLoaderIT extends TestNGCitrusSupport {
     @BindToRegistry
     DefaultTextEqualsMessageValidator textEqualsMessageValidator = new DefaultTextEqualsMessageValidator();
 
-    @CitrusTestSource(type = TestLoader.YAML, name = { "sample-test" })
+    @CitrusTestSource(type = TestLoader.YAML, name = { "sample.citrus.it" })
     public void YamlTestLoader_1_IT() {}
 
-    @CitrusTestSource(type = TestLoader.YAML, name = { "echo-test", "sleep-test" }, packageName = "org.citrusframework.yaml.actions")
+    @CitrusTestSource(type = TestLoader.YAML, name = { "echo.citrus.it", "sleep.citrus.it" }, packageName = "org.citrusframework.yaml.actions")
     public void YamlTestLoader_2_IT() {}
 
     @CitrusTestSource(type = TestLoader.YAML, packageScan = "org.citrusframework.integration")
     public void YamlTestLoader_3_IT() {}
 
-    @CitrusTestSource(type = TestLoader.YAML, sources = { "classpath:org/citrusframework/yaml/actions/create-variables-test.yaml" })
+    @CitrusTestSource(type = TestLoader.YAML, sources = { "classpath:org/citrusframework/yaml/actions/create-variables.citrus.it.yaml" })
     public void YamlTestLoader_4_IT() {}
 }

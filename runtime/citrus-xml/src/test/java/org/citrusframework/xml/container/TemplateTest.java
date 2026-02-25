@@ -28,7 +28,7 @@ public class TemplateTest extends AbstractXmlActionTest {
     public void shouldLoadTemplate() {
         Template template = new XmlTemplateLoader()
                 .withReferenceResolver(context.getReferenceResolver())
-                .load("classpath:org/citrusframework/xml/container/template-test.xml");
+                .load("classpath:org/citrusframework/xml/container/template.citrus.it.xml");
 
         Assert.assertEquals(template.getTemplateName(), "myTemplate");
         Assert.assertEquals(template.getName(), "template:myTemplate");
@@ -38,7 +38,7 @@ public class TemplateTest extends AbstractXmlActionTest {
 
         template = new XmlTemplateLoader()
                 .withReferenceResolver(context.getReferenceResolver())
-                .load("classpath:org/citrusframework/xml/container/template-parameters-test.xml");
+                .load("classpath:org/citrusframework/xml/container/template-parameters.citrus.it.xml");
         Assert.assertEquals(template.getTemplateName(), "myTemplate");
         Assert.assertEquals(template.getName(), "template:myTemplate");
         Assert.assertEquals(template.getParameter().size(), 3);

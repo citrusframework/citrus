@@ -28,7 +28,7 @@ public class CreateChannelTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadKnativeActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/create-channel-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/create-channel.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

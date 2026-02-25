@@ -62,7 +62,7 @@ public class ServiceConnectTest extends AbstractYamlActionTest {
                 .resource(service)
                 .create();
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/service-connect-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/service-connect.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

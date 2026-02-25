@@ -29,7 +29,7 @@ public class RepeatOnErrorTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadRepeatOnError() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/repeat-on-error-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/repeat-on-error.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

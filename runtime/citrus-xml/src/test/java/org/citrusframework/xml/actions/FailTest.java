@@ -28,7 +28,7 @@ public class FailTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadFail() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/fail-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/fail.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

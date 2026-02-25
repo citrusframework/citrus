@@ -28,7 +28,7 @@ public class TemplateTest extends AbstractYamlActionTest {
     public void shouldLoadTemplate() {
         Template template = new YamlTemplateLoader()
                 .withReferenceResolver(context.getReferenceResolver())
-                .load("classpath:org/citrusframework/yaml/container/template-test.yaml");
+                .load("classpath:org/citrusframework/yaml/container/template.citrus.it.yaml");
 
         Assert.assertEquals(template.getTemplateName(), "myTemplate");
         Assert.assertEquals(template.getName(), "template:myTemplate");
@@ -38,7 +38,7 @@ public class TemplateTest extends AbstractYamlActionTest {
 
         template = new YamlTemplateLoader()
                 .withReferenceResolver(context.getReferenceResolver())
-                .load("classpath:org/citrusframework/yaml/container/template-parameters-test.yaml");
+                .load("classpath:org/citrusframework/yaml/container/template-parameters.citrus.it.yaml");
         Assert.assertEquals(template.getTemplateName(), "myTemplate");
         Assert.assertEquals(template.getName(), "template:myTemplate");
         Assert.assertEquals(template.getParameter().size(), 3);

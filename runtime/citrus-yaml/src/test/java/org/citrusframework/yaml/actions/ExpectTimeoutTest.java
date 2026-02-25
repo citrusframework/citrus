@@ -31,7 +31,7 @@ public class ExpectTimeoutTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadExpectTimeout() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/expect-timeout-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/expect-timeout.citrus.it.yaml");
 
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");
         context.getReferenceResolver().bind("helloQueue", helloQueue);

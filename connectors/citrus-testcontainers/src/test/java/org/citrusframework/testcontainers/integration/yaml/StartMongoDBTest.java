@@ -33,7 +33,7 @@ public class StartMongoDBTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadTestcontainersActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/yaml/start-mongodb-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/yaml/start-mongodb.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

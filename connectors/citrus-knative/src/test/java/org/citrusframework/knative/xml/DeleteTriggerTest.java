@@ -42,7 +42,7 @@ public class DeleteTriggerTest extends AbstractXmlActionTest {
                 .resource(trigger)
                 .create();
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/delete-trigger-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/delete-trigger.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

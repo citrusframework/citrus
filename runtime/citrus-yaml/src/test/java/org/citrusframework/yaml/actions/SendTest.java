@@ -54,7 +54,7 @@ public class SendTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadSend() throws IOException {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/send-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/send.citrus.it.yaml");
 
         MessageQueue greetings = new DefaultMessageQueue("greetings");
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");

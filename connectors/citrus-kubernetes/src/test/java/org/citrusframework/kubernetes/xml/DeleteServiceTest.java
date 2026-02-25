@@ -42,7 +42,7 @@ public class DeleteServiceTest extends AbstractXmlActionTest {
                 .resource(service)
                 .create();
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/delete-service-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/delete-service.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

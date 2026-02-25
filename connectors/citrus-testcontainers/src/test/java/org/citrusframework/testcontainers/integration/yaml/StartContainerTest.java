@@ -39,7 +39,7 @@ public class StartContainerTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadTestcontainersActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/yaml/start-container-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/yaml/start-container.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

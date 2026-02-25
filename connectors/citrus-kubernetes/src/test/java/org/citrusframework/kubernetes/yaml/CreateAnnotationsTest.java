@@ -45,7 +45,7 @@ public class CreateAnnotationsTest extends AbstractYamlActionTest {
                 .resource(pod)
                 .create();
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/create-annotations-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/create-annotations.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

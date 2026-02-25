@@ -30,7 +30,7 @@ public class CatchTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadCatch() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/catch-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/catch.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

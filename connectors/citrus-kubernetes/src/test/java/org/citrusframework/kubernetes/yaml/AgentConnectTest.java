@@ -54,7 +54,7 @@ public class AgentConnectTest extends AbstractYamlActionTest {
                 .resource(pod)
                 .create();
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/agent-connect-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/agent-connect.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

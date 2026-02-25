@@ -29,7 +29,7 @@ public class AsyncTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadAsync() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/async-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/async.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

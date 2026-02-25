@@ -27,7 +27,7 @@ public class StopTimeTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadStopTime() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/stop-time-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/stop-time.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

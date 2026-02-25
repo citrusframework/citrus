@@ -203,7 +203,7 @@ All YAML tests are able to reference the message endpoints configured in the con
 
 A sample YAML test may look like this:
 
-.my-test.yaml
+.my.citrus.it.yaml
 [source,yaml]
 ----
 name: my-test

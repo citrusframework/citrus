@@ -29,7 +29,7 @@ public class IterateTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadIterate() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/iterate-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/iterate.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -28,7 +28,7 @@ public class ApplyTemplateTest extends AbstractXmlActionTest implements TestActi
 
     @Test
     public void shouldLoadApplyTemplate() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/apply-template-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/apply-template.citrus.it.xml");
 
         context.getReferenceResolver().bind("myTemplate", new Template.Builder()
                 .actions(echo().message("Hello from Citrus!"))

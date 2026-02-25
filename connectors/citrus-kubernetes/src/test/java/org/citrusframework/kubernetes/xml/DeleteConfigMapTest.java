@@ -44,7 +44,7 @@ public class DeleteConfigMapTest extends AbstractXmlActionTest {
                 .resource(configMap)
                 .create();
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/delete-config-map-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/delete-config-map.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

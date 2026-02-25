@@ -33,7 +33,7 @@ public class StartLocalStackTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadTestcontainersActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/yaml/start-localstack-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/yaml/start-localstack.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

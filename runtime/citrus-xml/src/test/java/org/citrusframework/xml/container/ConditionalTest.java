@@ -30,7 +30,7 @@ public class ConditionalTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadConditional() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/conditional-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/conditional.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

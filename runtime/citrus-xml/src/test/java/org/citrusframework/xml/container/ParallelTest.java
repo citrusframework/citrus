@@ -29,7 +29,7 @@ public class ParallelTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadIterate() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/parallel-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/parallel.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

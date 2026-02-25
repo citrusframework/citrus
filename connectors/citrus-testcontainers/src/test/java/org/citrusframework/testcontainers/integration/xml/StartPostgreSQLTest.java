@@ -33,7 +33,7 @@ public class StartPostgreSQLTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadTestcontainersActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/xml/start-postgresql-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/xml/start-postgresql.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

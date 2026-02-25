@@ -69,7 +69,7 @@ public class SendReceiveEventTest extends AbstractYamlActionTest {
         context.getReferenceResolver().bind("my-broker", knativeClient);
         context.getReferenceResolver().bind("my-service", knativeBroker);
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/send-receive-event-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/send-receive-event.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
