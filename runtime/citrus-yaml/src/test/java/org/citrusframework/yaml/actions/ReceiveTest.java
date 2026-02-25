@@ -73,7 +73,7 @@ public class ReceiveTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadReceive() throws IOException {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/receive-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/receive.citrus.it.yaml");
 
         MessageQueue greetings = new DefaultMessageQueue("greetings");
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");

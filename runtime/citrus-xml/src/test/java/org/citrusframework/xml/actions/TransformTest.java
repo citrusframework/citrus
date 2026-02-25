@@ -28,7 +28,7 @@ public class TransformTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadTransform() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/transform-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/transform.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

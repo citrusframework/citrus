@@ -56,7 +56,7 @@ public class SqlTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadSql() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/yaml/sql-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/yaml/sql.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
@@ -94,7 +94,7 @@ public class SqlTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadSqlQuery() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/yaml/sql-query-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/yaml/sql-query.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -116,7 +116,7 @@ public class HttpClientTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadHttpClientActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/http/yaml/http-client-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/http/yaml/http-client.citrus.it.yaml");
 
         context.setVariable("port", port);
 

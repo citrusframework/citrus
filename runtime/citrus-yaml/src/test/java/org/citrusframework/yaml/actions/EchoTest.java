@@ -27,7 +27,7 @@ public class EchoTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadEcho() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/echo-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/echo.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
@@ -41,7 +41,7 @@ public class EchoTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadPrint() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/print-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/print.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

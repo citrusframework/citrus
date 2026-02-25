@@ -28,7 +28,7 @@ public class CreateResourceTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadKubernetesActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/create-resource-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/create-resource.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

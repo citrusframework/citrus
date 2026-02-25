@@ -85,7 +85,7 @@ public class HttpServerTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadHttpServerActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/http/yaml/http-server-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/http/yaml/http-server.citrus.it.yaml");
 
         context.getReferenceResolver().bind("httpServer", httpServer);
 

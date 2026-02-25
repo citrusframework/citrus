@@ -28,7 +28,7 @@ public class CreateChannelTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadKnativeActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/create-channel-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/create-channel.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

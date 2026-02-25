@@ -30,7 +30,7 @@ public class CreateRoutesTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadCamelActions() throws Exception {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/yaml/camel-create-route-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/yaml/camel-create-route.citrus.it.yaml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.start();

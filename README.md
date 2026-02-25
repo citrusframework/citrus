@@ -79,8 +79,8 @@ jbang app install citrus@citrusframework/citrus
 Now you can just call:
 
 ```shell
-citrus init my-test.yaml
-citrus run my-test.yaml
+citrus init my.citrus.it.yaml
+citrus run my.citrus.it.yaml
 ```
 
 A more complex Citrus integration test typically uses messaging endpoints to send and receive messages with different messaging transports. 

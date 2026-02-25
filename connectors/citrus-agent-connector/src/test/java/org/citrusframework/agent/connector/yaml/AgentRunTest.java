@@ -51,7 +51,7 @@ public class AgentRunTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadAgentRunActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/agent/connector/yaml/agent-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/agent/connector/yaml/agent.citrus.it.yaml");
 
         context.getReferenceResolver().bind("citrus-agent.client", httpClient);
 

@@ -31,7 +31,7 @@ public class PurgeEndpointTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadPurgeEndpoint() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/purge-endpoints-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/purge-endpoints.citrus.it.yaml");
 
         MessageQueue testQueue = new DefaultMessageQueue("testQueue");
         context.getReferenceResolver().bind("testQueue", testQueue);

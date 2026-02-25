@@ -27,7 +27,7 @@ public class CreateEndpointsTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadGroovyActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/xml/create-endpoints-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/xml/create-endpoints.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

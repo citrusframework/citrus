@@ -30,7 +30,7 @@ public class ConditionalTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadConditional() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/conditional-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/conditional.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

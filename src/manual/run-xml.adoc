@@ -19,7 +19,7 @@ import org.testng.annotations.Test;
 public class MyFirstXmlIT extends TestNGCitrusSpringSupport {
 
     @Test
-    @CitrusTestSource(type = "xml", name="my-test.xml")
+    @CitrusTestSource(type = "xml", name="my.citrus.it.xml")
     public void myFirstXmlIT() {
     }
 }
@@ -27,7 +27,7 @@ public class MyFirstXmlIT extends TestNGCitrusSpringSupport {
 
 The test logic itself is defined in the XML file like this:
 
-.my-test.xml
+.my.citrus.it.xml
 [source,xml]
 ----
 <test name="EchoTest" author="Christoph" status="FINAL"
@@ -54,7 +54,7 @@ The XML test is able to create endpoints and other configuration entities as par
 The test leverages the Groovy programming language that provides a comfortable way to define beans in the Citrus registry.
 You can set any of the supported properties on the configuration components.
 
-.my-test.xml
+.my.citrus.it.xml
 [source,xml]
 ----
 <test name="EchoTest" author="Christoph" status="FINAL"

@@ -29,7 +29,7 @@ public class SleepTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadSleep() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/sleep-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/sleep.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
@@ -44,7 +44,7 @@ public class SleepTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadDelay() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/delay-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/delay.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

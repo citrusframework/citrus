@@ -42,7 +42,7 @@ public class DeleteTriggerTest extends AbstractYamlActionTest {
                 .resource(trigger)
                 .create();
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/delete-trigger-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/delete-trigger.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

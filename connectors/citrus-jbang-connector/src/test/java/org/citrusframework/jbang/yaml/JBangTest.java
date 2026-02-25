@@ -38,7 +38,7 @@ public class JBangTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadJBangActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/jbang/yaml/jbang-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/jbang/yaml/jbang.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

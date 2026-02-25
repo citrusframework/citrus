@@ -28,7 +28,7 @@ public class ActionTest extends AbstractYamlActionTest implements TestActionSupp
 
     @Test
     public void shouldLoadAction() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/action-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/action.citrus.it.yaml");
 
         EchoAction action = echo().build();
 

@@ -28,7 +28,7 @@ public class TransformTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadTransform() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/transform-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/transform.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

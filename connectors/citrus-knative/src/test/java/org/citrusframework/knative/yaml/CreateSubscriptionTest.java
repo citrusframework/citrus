@@ -28,7 +28,7 @@ public class CreateSubscriptionTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadKnativeActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/create-subscription-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/create-subscription.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -53,7 +53,7 @@ public class ServiceDisconnectTest extends AbstractYamlActionTest {
 
         when(portForward.isAlive()).thenReturn(true);
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/service-disconnect-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/service-disconnect.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

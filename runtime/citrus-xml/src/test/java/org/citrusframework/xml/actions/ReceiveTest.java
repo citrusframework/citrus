@@ -74,7 +74,7 @@ public class ReceiveTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadReceive() throws IOException {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/receive-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/receive.citrus.it.xml");
 
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");
         context.getMessageValidatorRegistry().addMessageValidator("textEqualsMessageValidator", new DefaultTextEqualsMessageValidator().enableTrim().normalizeLineEndings());

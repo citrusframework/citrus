@@ -38,7 +38,7 @@ public class JBangTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadJBangActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/jbang/xml/jbang-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/jbang/xml/jbang.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -32,7 +32,7 @@ public class CreateServiceTest extends AbstractXmlActionTest {
     public void shouldLoadKubernetesActions() {
         context.getReferenceResolver().bind("myServer", Mockito.mock(HttpServer.class));
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/create-service-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/create-service.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

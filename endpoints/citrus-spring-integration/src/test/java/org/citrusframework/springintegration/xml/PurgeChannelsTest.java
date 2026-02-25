@@ -40,7 +40,7 @@ public class PurgeChannelsTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadActions() throws Exception {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/springintegration/xml/purge-channels-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/springintegration/xml/purge-channels.citrus.it.xml");
 
         context.getReferenceResolver().bind("channelResolver", channelResolver);
         context.getReferenceResolver().bind("testChannel", messageChannel);

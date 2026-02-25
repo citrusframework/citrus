@@ -44,7 +44,7 @@ public class DeleteSecretTest extends AbstractXmlActionTest {
                 .resource(secret)
                 .create();
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/delete-secret-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/delete-secret.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

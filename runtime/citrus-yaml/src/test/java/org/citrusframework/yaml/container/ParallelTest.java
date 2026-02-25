@@ -29,7 +29,7 @@ public class ParallelTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadParallel() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/parallel-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/parallel.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

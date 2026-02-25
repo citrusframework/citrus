@@ -55,7 +55,7 @@ public class SendTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadSend() throws IOException {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/send-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/send.citrus.it.xml");
 
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");
         context.getReferenceResolver().bind("helloQueue", helloQueue);

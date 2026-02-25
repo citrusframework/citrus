@@ -58,7 +58,7 @@ public class DeleteSubscriptionTest extends AbstractXmlActionTest {
                 .resource(subscription)
                 .create();
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/delete-subscription-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/delete-subscription.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -29,7 +29,7 @@ public class RepeatTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadRepeat() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/repeat-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/repeat.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -19,7 +19,7 @@ import org.testng.annotations.Test;
 public class MyFirstYamlIT extends TestNGCitrusSpringSupport {
 
     @Test
-    @CitrusTestSource(type = "yaml", name="my-test.yaml")
+    @CitrusTestSource(type = "yaml", name="my.citrus.it.yaml")
     public void myFirstXmlIT() {
     }
 }
@@ -27,7 +27,7 @@ public class MyFirstYamlIT extends TestNGCitrusSpringSupport {
 
 The test logic itself is defined in the YAML file like this:
 
-.my-test.yaml
+.my.citrus.it.yaml
 [source,yaml]
 ----
 name: EchoTest
@@ -57,7 +57,7 @@ The configuration script supports following methods:
 * endpoints()
 * beans()
 
-.my-test.yaml
+.my.citrus.it.yaml
 [source,yaml]
 ----
 name: EchoTest
@@ -95,7 +95,7 @@ The `send` test action is able to reference the new endpoint by its name to send
 
 You can also create bean instances with a Groovy script:
 
-.my-test.yaml
+.my.citrus.it.yaml
 [source,yaml]
 ----
 actions:

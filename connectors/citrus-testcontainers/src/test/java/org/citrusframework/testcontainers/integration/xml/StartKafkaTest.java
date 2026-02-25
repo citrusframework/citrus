@@ -33,7 +33,7 @@ public class StartKafkaTest extends AbstractXmlActionTest {
 
     @Test(singleThreaded = true)
     public void shouldLoadTestcontainersActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/xml/start-kafka-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/xml/start-kafka.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

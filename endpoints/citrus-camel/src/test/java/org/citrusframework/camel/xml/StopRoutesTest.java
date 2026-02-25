@@ -31,7 +31,7 @@ public class StopRoutesTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadCamelActions() throws Exception {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/camel-stop-routes-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/camel-stop-routes.citrus.it.xml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.addRoutes(new RouteBuilder(citrusCamelContext) {

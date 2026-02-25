@@ -84,7 +84,7 @@ public class AgentDisconnectTest extends AbstractXmlActionTest {
                 .resource(service)
                 .create();
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/agent-disconnect-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/agent-disconnect.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

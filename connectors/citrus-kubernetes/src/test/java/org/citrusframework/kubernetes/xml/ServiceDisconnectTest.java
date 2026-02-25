@@ -53,7 +53,7 @@ public class ServiceDisconnectTest extends AbstractXmlActionTest {
 
         when(portForward.isAlive()).thenReturn(true);
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/service-disconnect-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/service-disconnect.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

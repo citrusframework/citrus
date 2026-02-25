@@ -33,7 +33,7 @@ public class StartRedpandaTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadTestcontainersActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/xml/start-redpanda-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/xml/start-redpanda.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

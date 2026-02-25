@@ -28,7 +28,7 @@ public class SequentialTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadSequential() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/sequential-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/sequential.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -58,7 +58,7 @@ public class VerifyPodTest extends AbstractXmlActionTest {
                 .resource(pod)
                 .create();
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/verify-pod-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/verify-pod.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

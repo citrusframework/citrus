@@ -39,7 +39,7 @@ public class StartContainerTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadTestcontainersActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/xml/start-container-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/xml/start-container.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

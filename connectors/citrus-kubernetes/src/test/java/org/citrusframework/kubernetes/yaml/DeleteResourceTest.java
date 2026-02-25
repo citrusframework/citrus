@@ -56,7 +56,7 @@ public class DeleteResourceTest extends AbstractYamlActionTest {
                 .resource(pod)
                 .create();
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/delete-resource-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/delete-resource.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

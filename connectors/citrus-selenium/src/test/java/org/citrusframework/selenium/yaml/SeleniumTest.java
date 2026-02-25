@@ -112,7 +112,7 @@ public class SeleniumTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadSeleniumActions() throws IOException {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/selenium/yaml/selenium-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/selenium/yaml/selenium.citrus.it.yaml");
 
         context.getReferenceResolver().bind("seleniumBrowser", browser);
         context.getReferenceResolver().bind("userForm", webPage);

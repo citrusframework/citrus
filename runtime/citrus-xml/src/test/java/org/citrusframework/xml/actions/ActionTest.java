@@ -28,7 +28,7 @@ public class ActionTest extends AbstractXmlActionTest implements TestActionSuppo
 
     @Test
     public void shouldLoadAction() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/action-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/action.citrus.it.xml");
 
         EchoAction action = echo().build();
 

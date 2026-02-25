@@ -49,7 +49,7 @@ public class VerifyBrokerTest extends AbstractYamlActionTest {
                 .resource(broker)
                 .create();
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/verify-broker-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/verify-broker.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

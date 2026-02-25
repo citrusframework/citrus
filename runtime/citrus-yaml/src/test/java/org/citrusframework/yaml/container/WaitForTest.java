@@ -56,7 +56,7 @@ public class WaitForTest extends AbstractYamlActionTest {
         messageStore.storeMessage("request", new DefaultMessage("Citrus rocks!"));
         context.setMessageStore(messageStore);
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/wait-for-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/wait-for.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

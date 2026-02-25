@@ -38,7 +38,7 @@ public class TestNGEngineTest {
     @Test
     public void testRunTestSource() {
         TestRunConfiguration configuration = new TestRunConfiguration();
-        configuration.setTestSources(Collections.singletonList(new TestSource(TestLoader.YAML, "echoTest", "org/citrusframework/yaml/actions/echo-test.yaml")));
+        configuration.setTestSources(Collections.singletonList(new TestSource(TestLoader.YAML, "echoTest", "org/citrusframework/yaml/actions/echo.citrus.it.yaml")));
 
         TestNGEngine engine = new TestNGEngine(configuration);
         engine.addTestListener(new ISuiteListener() {
@@ -59,7 +59,7 @@ public class TestNGEngineTest {
     public void testRunTestSourceCode() throws IOException {
         TestRunConfiguration configuration = new TestRunConfiguration();
         configuration.setTestSources(Collections.singletonList(new TestSource(TestLoader.YAML, "echoTest")
-                .sourceCode(FileUtils.readToString(Resources.create("org/citrusframework/yaml/actions/echo-test.yaml")))));
+                .sourceCode(FileUtils.readToString(Resources.create("org/citrusframework/yaml/actions/echo.citrus.it.yaml")))));
 
         TestNGEngine engine = new TestNGEngine(configuration);
         engine.addTestListener(new ISuiteListener() {

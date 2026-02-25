@@ -44,7 +44,7 @@ public class DeleteSecretTest extends AbstractYamlActionTest {
                 .resource(secret)
                 .create();
 
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/delete-secret-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/delete-secret.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

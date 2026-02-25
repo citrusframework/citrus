@@ -65,7 +65,7 @@ public class AgentRunAction extends AbstractAgentAction {
             if (context.getVariables().containsKey(CitrusSettings.TEST_NAME_VARIABLE)) {
                 testName = context.getVariable(CitrusSettings.TEST_NAME_VARIABLE);
             } else {
-                testName = "citrus-test";
+                testName = "run.citrus";
             }
 
             String agent = context.replaceDynamicContentInString(agentName);

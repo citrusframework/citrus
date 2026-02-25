@@ -27,7 +27,7 @@ public class AntRunTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadAntRun() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/antrun-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/antrun.citrus.it.xml");
 
         context.getReferenceResolver().bind("logger", new DefaultLogger());
 

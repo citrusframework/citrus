@@ -31,7 +31,7 @@ public class ExpectTimeoutTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadExpectTimeout() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/expect-timeout-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/expect-timeout.citrus.it.xml");
 
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");
         context.getReferenceResolver().bind("helloQueue", helloQueue);

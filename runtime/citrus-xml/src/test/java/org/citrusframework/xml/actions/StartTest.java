@@ -42,7 +42,7 @@ public class StartTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadStart() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/start-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/start.citrus.it.xml");
 
         when(myServer.getName()).thenReturn("myServer");
         when(myFooServer.getName()).thenReturn("myFooServer");

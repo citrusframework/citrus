@@ -42,7 +42,7 @@ public class DeleteBrokerTest extends AbstractXmlActionTest {
                 .resource(broker)
                 .create();
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/delete-broker-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/delete-broker.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

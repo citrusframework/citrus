@@ -93,7 +93,7 @@ public class SoapClientTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadSoapClientActions() throws IOException {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/xml/soap-client-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/xml/soap-client.citrus.it.xml");
 
         context.setVariable("port", port);
 

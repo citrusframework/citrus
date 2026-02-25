@@ -29,7 +29,7 @@ public class RepeatOnErrorTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadRepeatOnError() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/repeat-on-error-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/repeat-on-error.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

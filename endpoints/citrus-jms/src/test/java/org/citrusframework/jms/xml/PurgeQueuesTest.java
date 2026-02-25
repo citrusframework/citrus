@@ -57,7 +57,7 @@ public class PurgeQueuesTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadJmsActions() throws Exception {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/jms/xml/purge-queues-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/jms/xml/purge-queues.citrus.it.xml");
 
         context.getReferenceResolver().bind("connectionFactory", connectionFactory);
         context.getReferenceResolver().bind("myConnectionFactory", connectionFactory);

@@ -28,7 +28,7 @@ public class CreateTriggerTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadKnativeActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/create-trigger-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/create-trigger.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

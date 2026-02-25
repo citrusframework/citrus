@@ -29,7 +29,7 @@ public class DelayTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadDelay() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/delay-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/delay.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

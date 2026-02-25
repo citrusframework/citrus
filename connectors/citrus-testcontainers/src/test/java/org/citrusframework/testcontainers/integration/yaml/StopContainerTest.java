@@ -36,7 +36,7 @@ public class StopContainerTest extends AbstractYamlActionTest {
 
             context.getReferenceResolver().bind("my-container", busyBox);
 
-            YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/yaml/stop-container-test.yaml");
+            YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/yaml/stop-container.citrus.it.yaml");
 
             testLoader.load();
             TestCase result = testLoader.getTestCase();

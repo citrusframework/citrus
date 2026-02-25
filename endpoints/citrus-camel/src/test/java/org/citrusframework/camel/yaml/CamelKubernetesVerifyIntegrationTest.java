@@ -59,7 +59,7 @@ public class CamelKubernetesVerifyIntegrationTest extends AbstractYamlActionTest
 
     @Test
     public void shouldLoadCamelActions() throws Exception {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/yaml/camel-jbang-kubernetes-verify-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/yaml/camel-jbang-kubernetes-verify.citrus.it.yaml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.start();

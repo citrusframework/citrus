@@ -29,7 +29,7 @@ public class IterateTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadIterate() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/iterate-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/iterate.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

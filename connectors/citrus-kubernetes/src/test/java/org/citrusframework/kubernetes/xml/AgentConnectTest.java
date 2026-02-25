@@ -54,7 +54,7 @@ public class AgentConnectTest extends AbstractXmlActionTest {
                 .resource(pod)
                 .create();
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/agent-connect-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/agent-connect.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -42,7 +42,7 @@ public class StopTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadStop() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/stop-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/stop.citrus.it.yaml");
 
         when(myServer.getName()).thenReturn("myServer");
         when(myServer.isRunning()).thenReturn(true);

@@ -27,7 +27,7 @@ public class TraceVariablesTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadTraceVariables() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/trace-variables-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/trace-variables.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -28,7 +28,7 @@ public class CreateBeansTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadGroovyActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/xml/create-beans-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/xml/create-beans.citrus.it.xml");
 
         Assert.assertFalse(context.getReferenceResolver().isResolvable(DefaultTextEqualsMessageValidator.class));
 

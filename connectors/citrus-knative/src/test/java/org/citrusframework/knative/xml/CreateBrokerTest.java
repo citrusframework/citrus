@@ -28,7 +28,7 @@ public class CreateBrokerTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadKnativeActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/create-broker-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/create-broker.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

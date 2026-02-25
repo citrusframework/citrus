@@ -28,7 +28,7 @@ public class CreateBrokerTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadKnativeActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/create-broker-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/create-broker.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

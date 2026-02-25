@@ -43,7 +43,7 @@ public class JBangTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadCamelActions() throws Exception {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/yaml/camel-jbang-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/yaml/camel-jbang.citrus.it.yaml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.start();

@@ -27,7 +27,7 @@ public class EchoTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadEcho() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/echo-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/echo.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
@@ -41,7 +41,7 @@ public class EchoTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadPrint() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/print-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/print.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

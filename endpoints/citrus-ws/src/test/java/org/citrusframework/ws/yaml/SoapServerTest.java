@@ -75,7 +75,7 @@ public class SoapServerTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadSoapServerActions() throws IOException {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/yaml/soap-server-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/yaml/soap-server.citrus.it.yaml");
 
         context.getReferenceResolver().bind("soapServer", soapServer);
         context.getReferenceResolver().bind("headerValidator", new DefaultMessageHeaderValidator());

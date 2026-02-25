@@ -10,10 +10,10 @@ This means you can run your test case sources directly from your command line.
 
 To initialize a test you can run the script `citrus@citrusframework/citrus` with the `init` command as follows:
 
-.Initialize my-test.yaml
+.Initialize my.citrus.it.yaml
 [source,shell]
 ----
-jbang citrus@citrusframework/citrus init my-test.yaml
+jbang citrus@citrusframework/citrus init my.citrus.it.yaml
 ----
 
 The command above uses the JBang catalog `citrus@citrusframework/citrus` located on the https://github.com/citrusframework/citrus[Citrus GitHub repository].
@@ -21,7 +21,7 @@ JBang will automatically resolve all dependencies and execute the command line s
 This initializes the Citrus test file.
 You will find the created test source file in the current directory.
 
-.my-test.yaml
+.my.citrus.it.yaml
 [source,yaml,indent=0]
 ----
 name: my-test
@@ -40,10 +40,10 @@ The JBang script is able to initialize any supported Citrus test domain specific
 
 You can now run this test source file without any prior project setup using Citrus JBang:
 
-.Run my-test.yaml
+.Run my.citrus.it.yaml
 [source,shell]
 ----
-jbang citrus@citrusframework/citrus run my-test.yaml
+jbang citrus@citrusframework/citrus run my.citrus.it.yaml
 ----
 
 The command output will be like this:
@@ -51,7 +51,7 @@ The command output will be like this:
 .Output
 [source,shell]
 ----
-INFO 53887 --- [           main] citrusframework.testng.TestNGEngine : Running test source my-test.yaml
+INFO 53887 --- [           main] citrusframework.testng.TestNGEngine : Running test source my.citrus.it.yaml
 INFO 53887 --- [           main] org.testng.internal.Utils           : [TestNG] Running:
 INFO 53887 --- [           main] rusframework.report.LoggingReporter :        .__  __
 INFO 53887 --- [           main] rusframework.report.LoggingReporter :   ____ |__|/  |________ __ __  ______
@@ -100,10 +100,10 @@ jbang app install citrus@citrusframework/citrus
 
 Now you can just call `citrus` and create and run tests with Citrus JBang.
 
-.Run my-test.yaml
+.Run my.citrus.it.yaml
 [source,shell]
 ----
-citrus run my-test.yaml
+citrus run my.citrus.it.yaml
 ----
 
 [[runtime-jbang-run]]
@@ -153,13 +153,13 @@ citrus run MyTest.java
 
 ==== XML test sources
 
-.Initialize my-test.xml
+.Initialize my.citrus.it.xml
 [source,shell]
 ----
-citrus init my-test.xml
+citrus init my.citrus.it.xml
 ----
 
-.my-test.xml
+.my.citrus.it.xml
 [source,xml,indent=0]
 ----
 <test name="EchoTest" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
@@ -176,21 +176,21 @@ citrus init my-test.xml
 </test>
 ----
 
-.Run my-test.xml
+.Run my.citrus.it.xml
 [source,shell]
 ----
-citrus run my-test.xml
+citrus run my.citrus.it.xml
 ----
 
 ==== YAML test sources
 
-.Initialize my-test.yaml
+.Initialize my.citrus.it.yaml
 [source,shell]
 ----
-citrus init my-test.yaml
+citrus init my.citrus.it.yaml
 ----
 
-.my-test.yaml
+.my.citrus.it.yaml
 [source,yaml,indent=0]
 ----
 name: EchoTest
@@ -203,21 +203,21 @@ actions:
       message: "${message}"
 ----
 
-.Run my-test.yaml
+.Run my.citrus.it.yaml
 [source,shell]
 ----
-citrus run my-test.yaml
+citrus run my.citrus.it.yaml
 ----
 
 ==== Groovy test sources
 
-.Initialize my-test.groovy
+.Initialize my.citrus.it.groovy
 [source,shell]
 ----
-citrus init my-test.groovy
+citrus init my.citrus.it.groovy
 ----
 
-.my-test.groovy
+.my.citrus.it.groovy
 [source,groovy,indent=0]
 ----
 name "EchoTest"
@@ -232,21 +232,21 @@ actions {
 }
 ----
 
-.Run my-test.groovy
+.Run my.citrus.it.groovy
 [source,shell]
 ----
-citrus run my-test.groovy
+citrus run my.citrus.it.groovy
 ----
 
 ==== Cucumber feature sources
 
-.Initialize my-test.feature
+.Initialize my.citrus.it.feature
 [source,shell]
 ----
-citrus init my-test.feature
+citrus init my.citrus.it.feature
 ----
 
-.my-test.feature
+.my.citrus.it.feature
 [source,gherkin,indent=0]
 ----
 Feature: EchoTest
@@ -259,10 +259,10 @@ Feature: EchoTest
     Then print '${message}'
 ----
 
-.Run my-test.feature
+.Run my.citrus.it.feature
 [source,shell]
 ----
-jbang --deps org.citrusframework:citrus-cucumber-all:4.10.0-SNAPSHOT citrus run my-test.feature
+jbang --deps org.citrusframework:citrus-cucumber-all:4.10.0-SNAPSHOT citrus run my.citrus.it.feature
 ----
 
 NOTE: Many of the predefined Cucumber steps (e.g. `Then print '<message>'`) in Citrus are provided in separate Citrus modules.
@@ -335,5 +335,5 @@ citrus ls
 [source,shell]
 ----
 PID   NAME         STATUS  AGE
-19201 my-test.yaml Running 20s
+19201 my.citrus.it.yaml Running 20s
 ----

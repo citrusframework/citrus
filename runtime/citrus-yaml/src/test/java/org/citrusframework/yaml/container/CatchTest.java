@@ -30,7 +30,7 @@ public class CatchTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadCatch() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/catch-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/catch.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

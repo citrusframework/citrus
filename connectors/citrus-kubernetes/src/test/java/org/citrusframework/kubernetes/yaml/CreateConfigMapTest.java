@@ -35,7 +35,7 @@ public class CreateConfigMapTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadKubernetesActions() throws IOException {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/create-config-map-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/create-config-map.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

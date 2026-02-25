@@ -28,7 +28,7 @@ public class TimerTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadTimer() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/timer-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/timer.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -27,7 +27,7 @@ public class CreateVariablesTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadCreateVariables() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/create-variables-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/create-variables.citrus.it.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

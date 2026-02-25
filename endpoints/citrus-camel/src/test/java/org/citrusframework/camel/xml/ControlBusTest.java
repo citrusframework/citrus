@@ -31,7 +31,7 @@ public class ControlBusTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadCamelActions() throws Exception {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/camel-control-bus-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/camel-control-bus.citrus.it.xml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.addRoutes(new RouteBuilder(citrusCamelContext) {

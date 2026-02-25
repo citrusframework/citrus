@@ -51,7 +51,7 @@ public class AgentRunTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadAgentRunActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/agent/connector/xml/agent-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/agent/connector/xml/agent.citrus.it.xml");
 
         context.getReferenceResolver().bind("citrus-agent.client", httpClient);
 

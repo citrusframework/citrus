@@ -109,7 +109,7 @@ public class OpenApiClientTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadOpenApiClientActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/openapi/yaml/openapi-client-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/openapi/yaml/openapi-client.citrus.it.yaml");
 
         context.setVariable("port", port);
 

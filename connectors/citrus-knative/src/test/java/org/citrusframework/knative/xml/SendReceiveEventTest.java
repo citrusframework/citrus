@@ -69,7 +69,7 @@ public class SendReceiveEventTest extends AbstractXmlActionTest {
         context.getReferenceResolver().bind("my-broker", knativeClient);
         context.getReferenceResolver().bind("my-service", knativeBroker);
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/send-receive-event-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/xml/send-receive-event.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

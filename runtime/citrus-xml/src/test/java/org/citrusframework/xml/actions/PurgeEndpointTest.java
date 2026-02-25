@@ -31,7 +31,7 @@ public class PurgeEndpointTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadPurgeEndpoint() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/purge-endpoints-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/purge-endpoints.citrus.it.xml");
 
         MessageQueue testQueue = new DefaultMessageQueue("testQueue");
         context.getReferenceResolver().bind("testQueue", testQueue);

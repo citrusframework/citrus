@@ -27,7 +27,7 @@ public class LoadPropertiesTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadProperties() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/load-properties-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/load-properties.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

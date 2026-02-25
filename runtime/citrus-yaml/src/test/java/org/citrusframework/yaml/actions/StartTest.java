@@ -42,7 +42,7 @@ public class StartTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadStart() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/start-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/start.citrus.it.yaml");
 
         when(myServer.getName()).thenReturn("myServer");
         when(myFooServer.getName()).thenReturn("myFooServer");

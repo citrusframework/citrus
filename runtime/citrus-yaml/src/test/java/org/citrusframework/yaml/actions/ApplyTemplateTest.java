@@ -28,7 +28,7 @@ public class ApplyTemplateTest extends AbstractYamlActionTest implements TestAct
 
     @Test
     public void shouldLoadApplyTemplate() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/apply-template-test.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/apply-template.citrus.it.yaml");
 
         context.getReferenceResolver().bind("myTemplate", new Template.Builder()
                 .actions(echo().message("Hello from Citrus!"))

@@ -45,7 +45,7 @@ public class CreateAnnotationsTest extends AbstractXmlActionTest {
                 .resource(pod)
                 .create();
 
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/create-annotations-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/create-annotations.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

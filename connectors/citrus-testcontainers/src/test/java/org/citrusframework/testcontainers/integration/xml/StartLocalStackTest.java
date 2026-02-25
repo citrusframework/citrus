@@ -33,7 +33,7 @@ public class StartLocalStackTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadTestcontainersActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/xml/start-localstack-test.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/testcontainers/xml/start-localstack.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
