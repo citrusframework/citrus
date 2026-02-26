@@ -194,7 +194,7 @@
     <angus-activation.version>2.0.3</angus-activation.version>
     <angus-mail.version>2.0.5</angus-mail.version>
     <apache.ant.version>1.10.15</apache.ant.version>
-    <apache.camel.version>4.17.0</apache.camel.version>
+    <apache.camel.version>4.18.0</apache.camel.version>
     <apicurio.data-models.version>1.1.33</apicurio.data-models.version>
     <ascii-table-version>1.8.0</ascii-table-version>
     <assertj.version>3.27.7</assertj.version>
