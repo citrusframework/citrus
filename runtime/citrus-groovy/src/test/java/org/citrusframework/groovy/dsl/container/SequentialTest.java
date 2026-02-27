@@ -28,7 +28,7 @@ public class SequentialTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadSequential() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/sequential.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/sequential.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

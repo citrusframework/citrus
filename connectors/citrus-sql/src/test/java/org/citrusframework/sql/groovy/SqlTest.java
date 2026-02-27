@@ -55,7 +55,7 @@ public class SqlTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadSql() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/groovy/sql.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/groovy/sql.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
@@ -93,7 +93,7 @@ public class SqlTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadSqlQuery() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/groovy/sql-query.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/groovy/sql-query.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

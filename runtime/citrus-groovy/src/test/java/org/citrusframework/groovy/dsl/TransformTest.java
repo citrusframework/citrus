@@ -28,7 +28,7 @@ public class TransformTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadTransform() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/transform.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/transform.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

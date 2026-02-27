@@ -29,7 +29,7 @@ public class IterateTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadIterate() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/iterate.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/iterate.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

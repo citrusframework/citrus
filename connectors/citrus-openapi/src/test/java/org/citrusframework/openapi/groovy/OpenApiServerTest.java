@@ -79,7 +79,7 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadOpenApiServerActions() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/openapi/groovy/openapi-server.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/openapi/groovy/openapi-server.citrus.test.groovy");
 
         context.getReferenceResolver().bind("httpServer", httpServer);
 

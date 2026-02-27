@@ -28,7 +28,7 @@ public class XmlTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadCreateVariables() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/xml.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/xml.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

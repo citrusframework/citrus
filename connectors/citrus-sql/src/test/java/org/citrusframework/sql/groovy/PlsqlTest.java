@@ -46,7 +46,7 @@ public class PlsqlTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadPlsql() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/groovy/plsql.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/groovy/plsql.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

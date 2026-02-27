@@ -29,7 +29,7 @@ public class AsyncTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadAsync() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/async.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/async.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

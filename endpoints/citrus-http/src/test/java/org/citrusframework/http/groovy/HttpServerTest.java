@@ -85,7 +85,7 @@ public class HttpServerTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadHttpServerActions() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/http/groovy/http-server.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/http/groovy/http-server.citrus.test.groovy");
 
         context.getReferenceResolver().bind("httpServer", httpServer);
 

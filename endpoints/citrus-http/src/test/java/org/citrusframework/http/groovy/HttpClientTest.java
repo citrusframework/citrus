@@ -115,7 +115,7 @@ public class HttpClientTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadHttpClientActions() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/http/groovy/http-client.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/http/groovy/http-client.citrus.test.groovy");
 
         context.setVariable("port", port);
 

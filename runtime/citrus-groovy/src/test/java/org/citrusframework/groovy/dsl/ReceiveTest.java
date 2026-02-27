@@ -75,7 +75,7 @@ public class ReceiveTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadReceive() throws IOException {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/receive.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/receive.citrus.test.groovy");
 
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");
         context.getMessageValidatorRegistry().addMessageValidator("textEqualsMessageValidator", new DefaultTextEqualsMessageValidator().enableTrim().normalizeLineEndings());

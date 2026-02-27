@@ -90,7 +90,7 @@ public class SoapClientTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadSoapClientActions() throws IOException {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/groovy/soap-client.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/groovy/soap-client.citrus.test.groovy");
 
         context.setVariable("port", port);
 

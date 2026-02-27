@@ -28,7 +28,7 @@ public class JsonTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadCreateVariables() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/json.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/json.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

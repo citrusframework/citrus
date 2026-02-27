@@ -28,7 +28,7 @@ public class ApplyTemplateTest extends AbstractGroovyActionDslTest implements Te
 
     @Test
     public void shouldLoadApplyTemplate() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/apply-template.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/apply-template.citrus.test.groovy");
 
         context.getReferenceResolver().bind("myTemplate", new Template.Builder()
                 .actions(echo().message("Hello from Citrus!"))

@@ -27,15 +27,15 @@ import org.testng.annotations.Test;
 @Test
 public class GroovyTestLoaderIT extends TestNGCitrusSpringSupport {
 
-    @CitrusTestSource(type = TestLoader.GROOVY, name = { "sample.it" })
+    @CitrusTestSource(type = TestLoader.GROOVY, name = { "sample.citrus.it" })
     public void GroovyTestLoader_1_IT() {}
 
-    @CitrusTestSource(type = TestLoader.GROOVY, name = { "echo.test", "delay.test" }, packageName = "org.citrusframework.integration.actions")
+    @CitrusTestSource(type = TestLoader.GROOVY, name = { "echo.citrus.test", "delay.citrus.test" }, packageName = "org.citrusframework.integration.actions")
     public void GroovyTestLoader_2_IT() {}
 
     @CitrusTestSource(type = TestLoader.GROOVY, packageScan = "org.citrusframework.integration.groovy")
     public void GroovyTestLoader_3_IT() {}
 
-    @CitrusTestSource(type = TestLoader.GROOVY, sources = { "classpath:org/citrusframework/integration/actions/createVariables.test.groovy" })
+    @CitrusTestSource(type = TestLoader.GROOVY, sources = { "classpath:org/citrusframework/integration/actions/createVariables.citrus.test.groovy" })
     public void GroovyTestLoader_4_IT() {}
 }

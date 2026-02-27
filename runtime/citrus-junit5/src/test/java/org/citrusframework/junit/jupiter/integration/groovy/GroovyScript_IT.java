@@ -37,15 +37,15 @@ public class GroovyScript_IT {
     }
 
     @Test
-    @CitrusTestSource(type = TestLoader.GROOVY, name = "sample.it")
+    @CitrusTestSource(type = TestLoader.GROOVY, name = "sample.citrus.it")
     public void GroovyScript_1_IT() {
     }
 
     @CitrusTestFactory
     public Stream<DynamicTest> GroovyScript_2_IT() {
         return Stream.of(
-                CitrusTestFactorySupport.groovy().dynamicTest("org.citrusframework.junit.jupiter.simple", "echo.test.groovy"),
-                CitrusTestFactorySupport.groovy().dynamicTest("org.citrusframework.junit.jupiter.simple", "delay.test.groovy")
+                CitrusTestFactorySupport.groovy().dynamicTest("org.citrusframework.junit.jupiter.simple", "echo.citrus.test.groovy"),
+                CitrusTestFactorySupport.groovy().dynamicTest("org.citrusframework.junit.jupiter.simple", "delay.citrus.test.groovy")
         );
     }
 
@@ -55,7 +55,7 @@ public class GroovyScript_IT {
     }
 
     @Test
-    @CitrusTestSource(type = TestLoader.GROOVY, sources = "classpath:org/citrusframework/junit/jupiter/integration/groovy/sample.it.groovy")
+    @CitrusTestSource(type = TestLoader.GROOVY, sources = "classpath:org/citrusframework/junit/jupiter/integration/groovy/sample.citrus.it.groovy")
     public void GroovyScript_4_IT() {
     }
 }

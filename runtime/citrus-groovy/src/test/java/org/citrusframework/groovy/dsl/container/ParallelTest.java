@@ -29,7 +29,7 @@ public class ParallelTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadParallel() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/parallel.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/parallel.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

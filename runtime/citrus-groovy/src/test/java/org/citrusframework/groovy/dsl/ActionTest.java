@@ -28,7 +28,7 @@ public class ActionTest extends AbstractGroovyActionDslTest implements TestActio
 
     @Test
     public void shouldLoadAction() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/action.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/action.citrus.test.groovy");
 
         EchoAction action = echo().build();
 

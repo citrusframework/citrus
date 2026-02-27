@@ -27,7 +27,7 @@ public class LoadPropertiesTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadProperties() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/load-properties.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/load-properties.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

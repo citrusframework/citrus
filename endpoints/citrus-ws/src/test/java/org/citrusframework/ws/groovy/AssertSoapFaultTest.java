@@ -88,7 +88,7 @@ public class AssertSoapFaultTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadSoapClientActions() throws IOException {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/groovy/assert-soap-fault.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/groovy/assert-soap-fault.citrus.test.groovy");
 
         context.setVariable("port", port);
 

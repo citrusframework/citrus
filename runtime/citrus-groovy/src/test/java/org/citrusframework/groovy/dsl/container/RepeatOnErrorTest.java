@@ -29,7 +29,7 @@ public class RepeatOnErrorTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadRepeatOnError() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/repeat-on-error.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/repeat-on-error.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -41,11 +41,11 @@ public class GroovyTestLoaderTest extends UnitTestSupport {
 
     @Test
     public void shouldLoadGroovyTest() {
-        TestLoader testLoader = getTestLoader("sample.test");
+        TestLoader testLoader = getTestLoader("sample.citrus.test");
         testLoader.load();
         TestCase test = testLoader.getTestCase();
 
-        Assert.assertEquals(test.getName(), "sample.test");
+        Assert.assertEquals(test.getName(), "sample.citrus.test");
         Assert.assertEquals(test.getPackageName(), this.getClass().getPackageName() + ".dsl");
         Assert.assertEquals(test.getTestClass(), getClass());
         Assert.assertEquals(test.getActionCount(), 6L);
@@ -54,11 +54,11 @@ public class GroovyTestLoaderTest extends UnitTestSupport {
 
     @Test
     public void shouldSupportJsonBuilderTest() {
-        TestLoader testLoader = getTestLoader("json.test");
+        TestLoader testLoader = getTestLoader("json.citrus.test");
         testLoader.load();
         TestCase test = testLoader.getTestCase();
 
-        Assert.assertEquals(test.getName(), "json.test");
+        Assert.assertEquals(test.getName(), "json.citrus.test");
         Assert.assertEquals(test.getPackageName(), this.getClass().getPackageName() + ".dsl");
         Assert.assertEquals(test.getTestClass(), getClass());
         Assert.assertEquals(test.getActionCount(), 3L);
@@ -66,11 +66,11 @@ public class GroovyTestLoaderTest extends UnitTestSupport {
 
     @Test
     public void shouldSupportXmlMarkupBuilderTest() {
-        TestLoader testLoader = getTestLoader("xml.test");
+        TestLoader testLoader = getTestLoader("xml.citrus.test");
         testLoader.load();
         TestCase test = testLoader.getTestCase();
 
-        Assert.assertEquals(test.getName(), "xml.test");
+        Assert.assertEquals(test.getName(), "xml.citrus.test");
         Assert.assertEquals(test.getPackageName(), this.getClass().getPackageName() + ".dsl");
         Assert.assertEquals(test.getTestClass(), getClass());
         Assert.assertEquals(test.getActionCount(), 3L);

@@ -31,7 +31,7 @@ public class ExpectTimeoutTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void testReceiveTimeoutBuilder() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/expect-timeout.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/expect-timeout.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

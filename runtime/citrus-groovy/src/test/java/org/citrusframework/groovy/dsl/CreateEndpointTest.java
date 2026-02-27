@@ -27,7 +27,7 @@ public class CreateEndpointTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadCreateVariables() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/create-endpoint.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/create-endpoint.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

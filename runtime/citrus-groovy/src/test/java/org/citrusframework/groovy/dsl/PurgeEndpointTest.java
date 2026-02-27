@@ -32,7 +32,7 @@ public class PurgeEndpointTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadPurgeEndpoint() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/purge-endpoints.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/purge-endpoints.citrus.test.groovy");
 
         MessageQueue testQueue = new DefaultMessageQueue("testQueue");
         context.getReferenceResolver().bind("testQueue", testQueue);
