@@ -43,7 +43,7 @@ public class StopTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadStop() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/stop.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/stop.citrus.test.groovy");
 
         when(myServer.getName()).thenReturn("myServer");
         when(myServer.isRunning()).thenReturn(true);

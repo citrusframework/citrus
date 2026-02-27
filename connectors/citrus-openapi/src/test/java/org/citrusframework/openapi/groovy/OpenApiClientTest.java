@@ -116,7 +116,7 @@ public class OpenApiClientTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadOpenApiClientActions() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/openapi/groovy/openapi-client.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/openapi/groovy/openapi-client.citrus.test.groovy");
 
         context.setVariable("port", port);
 

@@ -111,7 +111,7 @@ public class SeleniumTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadSeleniumActions() throws IOException {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/selenium/groovy/selenium.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/selenium/groovy/selenium.citrus.test.groovy");
 
         context.getReferenceResolver().bind("seleniumBrowser", browser);
         context.getReferenceResolver().bind("userForm", webPage);

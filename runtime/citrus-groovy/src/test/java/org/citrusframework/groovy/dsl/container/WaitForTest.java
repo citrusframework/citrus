@@ -57,7 +57,7 @@ public class WaitForTest extends AbstractGroovyActionDslTest {
         messageStore.storeMessage("request", new DefaultMessage("Citrus rocks!"));
         context.setMessageStore(messageStore);
 
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/wait-for.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/wait-for.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

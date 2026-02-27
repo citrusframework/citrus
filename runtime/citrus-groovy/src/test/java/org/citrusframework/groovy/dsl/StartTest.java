@@ -43,7 +43,7 @@ public class StartTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadStart() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/start.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/start.citrus.test.groovy");
 
         when(myServer.getName()).thenReturn("myServer");
         when(myFooServer.getName()).thenReturn("myFooServer");

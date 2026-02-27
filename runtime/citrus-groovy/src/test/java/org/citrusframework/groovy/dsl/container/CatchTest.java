@@ -30,7 +30,7 @@ public class CatchTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadCatch() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/catch.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/catch.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

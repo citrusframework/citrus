@@ -30,7 +30,7 @@ public class ConditionalTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadConditional() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/conditional.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/conditional.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

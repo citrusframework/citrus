@@ -75,7 +75,7 @@ public class SoapServerTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadSoapServerActions() throws IOException {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/groovy/soap-server.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/groovy/soap-server.citrus.test.groovy");
 
         context.getReferenceResolver().bind("soapServer", soapServer);
         context.getReferenceResolver().bind("headerValidator", new DefaultMessageHeaderValidator());

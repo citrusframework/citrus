@@ -28,7 +28,7 @@ public class TimerTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadTimer() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/timer.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/timer.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

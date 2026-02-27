@@ -29,7 +29,7 @@ public class SleepTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadSleep() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/sleep.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/sleep.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
@@ -44,7 +44,7 @@ public class SleepTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadDelay() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/delay.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/delay.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

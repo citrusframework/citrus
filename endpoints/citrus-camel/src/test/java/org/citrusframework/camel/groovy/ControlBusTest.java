@@ -31,7 +31,7 @@ public class ControlBusTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadCamelActions() throws Exception {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/groovy/camel-control-bus.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/groovy/camel-control-bus.citrus.test.groovy");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.addRoutes(new RouteBuilder(citrusCamelContext) {

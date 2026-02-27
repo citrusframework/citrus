@@ -29,7 +29,7 @@ public class AssertTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadAssert() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/assert.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/assert.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

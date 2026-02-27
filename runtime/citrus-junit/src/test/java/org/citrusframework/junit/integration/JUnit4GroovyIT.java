@@ -31,12 +31,12 @@ import org.junit.experimental.categories.Category;
 public class JUnit4GroovyIT extends JUnit4CitrusSupport {
 
     @Test
-    @CitrusTestSource(type = TestLoader.GROOVY, name = "sample.it")
+    @CitrusTestSource(type = TestLoader.GROOVY, name = "sample.citrus.it")
     public void JUnit4Groovy_1_IT() {
     }
 
     @Test
-    @CitrusTestSource(type = TestLoader.GROOVY, name = { "echo.test", "delay.test", "createVariables.test" }, packageName = "org.citrusframework.junit.integration.actions")
+    @CitrusTestSource(type = TestLoader.GROOVY, name = { "echo.citrus.test", "delay.citrus.test", "createVariables.citrus.test" }, packageName = "org.citrusframework.junit.integration.actions")
     public void JUnit4Groovy_2_IT() {
     }
 
@@ -46,13 +46,13 @@ public class JUnit4GroovyIT extends JUnit4CitrusSupport {
     }
 
     @Test
-    @CitrusTestSource(type = TestLoader.GROOVY, sources = "classpath:org/citrusframework/junit/integration/actions/createVariables.test.groovy")
+    @CitrusTestSource(type = TestLoader.GROOVY, sources = "classpath:org/citrusframework/junit/integration/actions/createVariables.citrus.test.groovy")
     public void JUnit4Groovy_4_IT() {
     }
 
     @Test(expected = TestCaseFailedException.class)
     @Category( ShouldFailGroup.class )
-    @CitrusTestSource(type = TestLoader.GROOVY, name = "fail.it")
+    @CitrusTestSource(type = TestLoader.GROOVY, name = "fail.citrus.it")
     public void JUnit4Groovy_5_IT() {
     }
 }

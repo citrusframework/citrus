@@ -54,7 +54,7 @@ public class SendTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadSend() throws IOException {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/send.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/send.citrus.test.groovy");
 
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");
         context.getReferenceResolver().bind("helloQueue", helloQueue);

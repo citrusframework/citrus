@@ -27,7 +27,7 @@ public class TraceVariablesTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadTraceVariables() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/trace-variables.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/trace-variables.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

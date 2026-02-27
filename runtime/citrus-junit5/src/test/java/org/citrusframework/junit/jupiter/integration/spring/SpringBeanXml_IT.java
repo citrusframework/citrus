@@ -40,7 +40,7 @@ class SpringBeanXml_IT {
     }
 
     @Test
-    @CitrusTestSource(type = TestLoader.GROOVY, name = "echo.test", packageName = "org.citrusframework.junit.jupiter.simple")
+    @CitrusTestSource(type = TestLoader.GROOVY, name = "echo.citrus.test", packageName = "org.citrusframework.junit.jupiter.simple")
     void SpringGroovy_IT() {
     }
 

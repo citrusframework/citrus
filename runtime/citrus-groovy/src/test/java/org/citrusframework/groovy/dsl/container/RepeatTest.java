@@ -29,7 +29,7 @@ public class RepeatTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadRepeat() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/repeat.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/repeat.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

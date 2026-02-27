@@ -56,7 +56,7 @@ public class PurgeQueuesTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadJmsActions() throws Exception {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/jms/groovy/purge-queues.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/jms/groovy/purge-queues.citrus.test.groovy");
 
         context.getReferenceResolver().bind("connectionFactory", connectionFactory);
         context.getReferenceResolver().bind("myConnectionFactory", connectionFactory);

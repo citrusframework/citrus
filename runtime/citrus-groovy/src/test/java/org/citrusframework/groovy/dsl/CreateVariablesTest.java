@@ -27,7 +27,7 @@ public class CreateVariablesTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadCreateVariables() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/create-variables.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/create-variables.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

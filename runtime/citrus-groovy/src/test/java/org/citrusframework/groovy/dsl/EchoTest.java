@@ -27,7 +27,7 @@ public class EchoTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadEcho() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/echo.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/echo.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
@@ -41,7 +41,7 @@ public class EchoTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadPrint() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/print.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/print.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

@@ -28,7 +28,7 @@ public class FailTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadFail() {
-        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/fail.test.groovy");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/fail.citrus.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
