@@ -63,10 +63,7 @@ public class CamelJBang {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    /**
-     * Prevent direct instantiation.
-     */
-    private CamelJBang() {
+    public CamelJBang() {
         if (!"latest".equals(CamelJBangSettings.getCamelVersion())) {
             app.withSystemProperty("camel.jbang.version", CamelJBangSettings.getCamelVersion());
         }
@@ -276,14 +273,20 @@ public class CamelJBang {
         try {
             String output = ps("--json");
             // cleans lines starting with unprintable characters (happens on Fedora)
-            output = output.replaceAll("(?m)^\\p{C}.*\\R?","");
+            output = output.replaceAll("(?m)^\\p{C}.*\\R?","").trim();
 
-            if (!output.isBlank() && MessagePayloadUtils.isJson(output)) {
-                return objectMapper.readValue(output, new TypeReference<>() {});
-            } else {
+            if (!output.startsWith("[{") && output.contains("[{")) {
+                // obviously some unexpected log output before the Json object - remove it
+                output = output.substring(output.indexOf("[{"));
+            }
+
+            if (output.isBlank() || !MessagePayloadUtils.isJson(output)) {
+                // no proper Json output
                 // fallback to extracting integration details from plaintext ascii table output (used by older Camel versions)
                 return parseAll();
             }
+
+            return objectMapper.readValue(output, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
             logger.warn("Failed to list integrations from Camel JBang");
 
@@ -309,10 +312,23 @@ public class CamelJBang {
         }
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(output.getBytes(StandardCharsets.UTF_8))))) {
-            String line = reader.readLine();
+            final List<String> names = new ArrayList<>();
+            String line;
 
-            List<String> names = new ArrayList<>(Arrays.asList(line.trim().split("\\s+")));
+            // Parse Ascii table headers 1st
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().startsWith("PID")) {
+                    names.addAll(Arrays.asList(line.trim().split("\\s+")));
+                    break;
+                }
+            }
 
+            if (names.isEmpty()) {
+               logger.warn("Failed to list integrations from Camel JBang - no proper Ascii table command output");
+               return integrations;
+            }
+
+            // Parse table rows and values
             while ((line = reader.readLine()) != null) {
                 Map<String, String> properties = new HashMap<>();
                 List<String> values = new ArrayList<>(Arrays.asList(line.trim().split("\\s+")));
