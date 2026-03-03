@@ -26,7 +26,9 @@ import java.util.stream.Stream;
 import com.fasterxml.classmate.AnnotationConfiguration;
 import com.fasterxml.classmate.ResolvedType;
 import com.fasterxml.classmate.members.ResolvedMethod;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.BooleanNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.victools.jsonschema.generator.CustomDefinition;
 import com.github.victools.jsonschema.generator.MemberScope;
@@ -43,10 +45,11 @@ import com.github.victools.jsonschema.generator.TypeScope;
 import com.github.victools.jsonschema.generator.impl.module.InlineSchemaModule;
 import com.github.victools.jsonschema.generator.naming.CleanSchemaDefinitionNamingStrategy;
 import com.github.victools.jsonschema.generator.naming.DefaultSchemaDefinitionNamingStrategy;
+import org.citrusframework.TestActionBuilder;
 import org.citrusframework.dsl.schema.Catalog;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.yaml.SchemaType;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * Custom Json schema generator module that produces the schema based on annotated setter methods.
@@ -71,6 +74,7 @@ public class CitrusModule implements Module {
 
     private void applyToConfigPart(SchemaGeneratorGeneralConfigPart configPart) {
         configPart
+                .withAdditionalPropertiesResolver(this::resolveAdditionalProperties)
                 .withTypeAttributeOverride(this::resolveTypeAttribute)
                 .withDefinitionNamingStrategy(new CleanSchemaDefinitionNamingStrategy(new DefaultSchemaDefinitionNamingStrategy(), it -> it))
                 .withCustomDefinitionProvider(this::resolveCustomDefinition);
@@ -101,6 +105,25 @@ public class CitrusModule implements Module {
                 }
             }
         }
+    }
+
+    private JsonNode resolveAdditionalProperties(TypeScope scope, SchemaGenerationContext schemaGenerationContext) {
+        if (scope.getType().toString().startsWith("java.util.Map")) {
+            return BooleanNode.TRUE;
+        }
+
+        if (scope instanceof MethodScopeWrapper methodScopeWrapper) {
+            if (methodScopeWrapper.getName().equals("actions") ||
+                    methodScopeWrapper.getName().equals("when")) {
+                return BooleanNode.TRUE;
+            }
+        }
+
+        if (scope.getType().getErasedType().equals(TestActionBuilder.class)) {
+            return BooleanNode.TRUE;
+        }
+
+        return null;
     }
 
     private CustomDefinition resolveCustomDefinition(ResolvedType resolvedType, SchemaGenerationContext schemaGenerationContext) {
