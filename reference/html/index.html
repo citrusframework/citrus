@@ -573,8 +573,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 4.9.3,</span>
-<span id="revdate">2026-02-26</span>
+<span id="revnumber">version 4.9.4,</span>
+<span id="revdate">2026-03-04</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -1127,7 +1127,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 4.9.3</strong></p>
+<p><strong>Version: 4.9.4</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -2685,7 +2685,7 @@ All YAML tests are able to reference the message endpoints configured in the con
 <p>A sample YAML test may look like this:</p>
 </div>
 <div class="listingblock">
-<div class="title">my-test.yaml</div>
+<div class="title">my.citrus.it.yaml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: my-test
 actions:
@@ -3643,9 +3643,9 @@ This means you can run your test case sources directly from your command line.</
 <p>To initialize a test you can run the script <code>citrus@citrusframework/citrus</code> with the <code>init</code> command as follows:</p>
 </div>
 <div class="listingblock">
-<div class="title">Initialize my-test.yaml</div>
+<div class="title">Initialize my.citrus.it.yaml</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">jbang citrus@citrusframework/citrus init my-test.yaml</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">jbang citrus@citrusframework/citrus init my.citrus.it.yaml</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3655,7 +3655,7 @@ This initializes the Citrus test file.
 You will find the created test source file in the current directory.</p>
 </div>
 <div class="listingblock">
-<div class="title">my-test.yaml</div>
+<div class="title">my.citrus.it.yaml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: my-test
 author: Citrus
@@ -3676,9 +3676,9 @@ actions:
 <p>You can now run this test source file without any prior project setup using Citrus JBang:</p>
 </div>
 <div class="listingblock">
-<div class="title">Run my-test.yaml</div>
+<div class="title">Run my.citrus.it.yaml</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">jbang citrus@citrusframework/citrus run my-test.yaml</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">jbang citrus@citrusframework/citrus run my.citrus.it.yaml</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3687,7 +3687,7 @@ actions:
 <div class="listingblock">
 <div class="title">Output</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">INFO 53887 --- [           main] citrusframework.testng.TestNGEngine : Running test source my-test.yaml
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">INFO 53887 --- [           main] citrusframework.testng.TestNGEngine : Running test source my.citrus.it.yaml
 INFO 53887 --- [           main] org.testng.internal.Utils           : [TestNG] Running:
 INFO 53887 --- [           main] rusframework.report.LoggingReporter :        .__  __
 INFO 53887 --- [           main] rusframework.report.LoggingReporter :   ____ |__|/  |________ __ __  ______
@@ -3738,9 +3738,9 @@ jbang app install citrus@citrusframework/citrus</code></pre>
 <p>Now you can just call <code>citrus</code> and create and run tests with Citrus JBang.</p>
 </div>
 <div class="listingblock">
-<div class="title">Run my-test.yaml</div>
+<div class="title">Run my.citrus.it.yaml</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus run my-test.yaml</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus run my.citrus.it.yaml</code></pre>
 </div>
 </div>
 </div>
@@ -3793,13 +3793,13 @@ public class MyTest implements Runnable, TestActionSupport {
 <div class="sect4">
 <h5 id="xml-test-sources"><a class="anchor" href="#xml-test-sources"></a><a class="link" href="#xml-test-sources">XML test sources</a></h5>
 <div class="listingblock">
-<div class="title">Initialize my-test.xml</div>
+<div class="title">Initialize my.citrus.it.xml</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus init my-test.xml</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus init my.citrus.it.xml</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">my-test.xml</div>
+<div class="title">my.citrus.it.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;test name="EchoTest" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -3816,22 +3816,22 @@ public class MyTest implements Runnable, TestActionSupport {
 </div>
 </div>
 <div class="listingblock">
-<div class="title">Run my-test.xml</div>
+<div class="title">Run my.citrus.it.xml</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus run my-test.xml</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus run my.citrus.it.xml</code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
 <h5 id="yaml-test-sources"><a class="anchor" href="#yaml-test-sources"></a><a class="link" href="#yaml-test-sources">YAML test sources</a></h5>
 <div class="listingblock">
-<div class="title">Initialize my-test.yaml</div>
+<div class="title">Initialize my.citrus.it.yaml</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus init my-test.yaml</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus init my.citrus.it.yaml</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">my-test.yaml</div>
+<div class="title">my.citrus.it.yaml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: EchoTest
 description: "Sample test in YAML"
@@ -3844,22 +3844,22 @@ actions:
 </div>
 </div>
 <div class="listingblock">
-<div class="title">Run my-test.yaml</div>
+<div class="title">Run my.citrus.it.yaml</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus run my-test.yaml</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus run my.citrus.it.yaml</code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
 <h5 id="groovy-test-sources"><a class="anchor" href="#groovy-test-sources"></a><a class="link" href="#groovy-test-sources">Groovy test sources</a></h5>
 <div class="listingblock">
-<div class="title">Initialize my-test.groovy</div>
+<div class="title">Initialize my.citrus.it.groovy</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus init my-test.groovy</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus init my.citrus.it.groovy</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">my-test.groovy</div>
+<div class="title">my.citrus.it.groovy</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">name "EchoTest"
 description "Sample test in Groovy"
@@ -3874,22 +3874,22 @@ actions {
 </div>
 </div>
 <div class="listingblock">
-<div class="title">Run my-test.groovy</div>
+<div class="title">Run my.citrus.it.groovy</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus run my-test.groovy</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus run my.citrus.it.groovy</code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
 <h5 id="cucumber-feature-sources"><a class="anchor" href="#cucumber-feature-sources"></a><a class="link" href="#cucumber-feature-sources">Cucumber feature sources</a></h5>
 <div class="listingblock">
-<div class="title">Initialize my-test.feature</div>
+<div class="title">Initialize my.citrus.it.feature</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus init my-test.feature</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">citrus init my.citrus.it.feature</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">my-test.feature</div>
+<div class="title">my.citrus.it.feature</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-gherkin hljs" data-lang="gherkin">Feature: EchoTest
 
@@ -3902,9 +3902,9 @@ actions {
 </div>
 </div>
 <div class="listingblock">
-<div class="title">Run my-test.feature</div>
+<div class="title">Run my.citrus.it.feature</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">jbang --deps org.citrusframework:citrus-cucumber-all:4.10.0-SNAPSHOT citrus run my-test.feature</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">jbang --deps org.citrusframework:citrus-cucumber-all:4.10.0-SNAPSHOT citrus run my.citrus.it.feature</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -4027,7 +4027,7 @@ These tests may be started</p>
 <div class="title">Command output</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">PID   NAME         STATUS  AGE
-19201 my-test.yaml Running 20s</code></pre>
+19201 my.citrus.it.yaml Running 20s</code></pre>
 </div>
 </div>
 </div>
@@ -5916,7 +5916,7 @@ import org.testng.annotations.Test;
 public class MyFirstXmlIT extends TestNGCitrusSpringSupport {
 
     @Test
-    @CitrusTestSource(type = "xml", name="my-test.xml")
+    @CitrusTestSource(type = "xml", name="my.citrus.it.xml")
     public void myFirstXmlIT() {
     }
 }</code></pre>
@@ -5926,7 +5926,7 @@ public class MyFirstXmlIT extends TestNGCitrusSpringSupport {
 <p>The test logic itself is defined in the XML file like this:</p>
 </div>
 <div class="listingblock">
-<div class="title">my-test.xml</div>
+<div class="title">my.citrus.it.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;test name="EchoTest" author="Christoph" status="FINAL"
       xmlns="http://citrusframework.org/schema/xml/testcase"
@@ -5953,7 +5953,7 @@ The test leverages the Groovy programming language that provides a comfortable w
 You can set any of the supported properties on the configuration components.</p>
 </div>
 <div class="listingblock">
-<div class="title">my-test.xml</div>
+<div class="title">my.citrus.it.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;test name="EchoTest" author="Christoph" status="FINAL"
       xmlns="http://citrusframework.org/schema/xml/testcase"
@@ -6341,7 +6341,7 @@ import org.testng.annotations.Test;
 public class MyFirstYamlIT extends TestNGCitrusSpringSupport {
 
     @Test
-    @CitrusTestSource(type = "yaml", name="my-test.yaml")
+    @CitrusTestSource(type = "yaml", name="my.citrus.it.yaml")
     public void myFirstXmlIT() {
     }
 }</code></pre>
@@ -6351,7 +6351,7 @@ public class MyFirstYamlIT extends TestNGCitrusSpringSupport {
 <p>The test logic itself is defined in the YAML file like this:</p>
 </div>
 <div class="listingblock">
-<div class="title">my-test.yaml</div>
+<div class="title">my.citrus.it.yaml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: EchoTest
 author: Christoph
@@ -6392,7 +6392,7 @@ The configuration script supports following methods:</p>
 </ul>
 </div>
 <div class="listingblock">
-<div class="title">my-test.yaml</div>
+<div class="title">my.citrus.it.yaml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: EchoTest
 author: Christoph
@@ -6433,7 +6433,7 @@ actions:
 <p>You can also create bean instances with a Groovy script:</p>
 </div>
 <div class="listingblock">
-<div class="title">my-test.yaml</div>
+<div class="title">my.citrus.it.yaml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">actions:
   - groovy:
@@ -63763,8 +63763,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 4.9.3<br>
-Last updated 2026-02-26 14:28:00 +0100
+Version 4.9.4<br>
+Last updated 2026-03-04 10:24:03 +0100
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
