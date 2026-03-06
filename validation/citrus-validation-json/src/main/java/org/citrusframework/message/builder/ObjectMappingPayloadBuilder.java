@@ -16,14 +16,13 @@
 
 package org.citrusframework.message.builder;
 
-import java.util.Map;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.citrusframework.message.MessageType;
 import org.citrusframework.message.MessagePayload;
+import org.citrusframework.message.MessageType;
+import tools.jackson.databind.ObjectMapper;
+
+import java.util.Map;
 
 @MessagePayload(MessageType.JSON)
 public class ObjectMappingPayloadBuilder extends DefaultPayloadBuilder {
@@ -33,6 +32,7 @@ public class ObjectMappingPayloadBuilder extends DefaultPayloadBuilder {
 
     /**
      * Default constructor using just model object.
+     *
      * @param model
      */
     public ObjectMappingPayloadBuilder(Object model) {
@@ -44,6 +44,7 @@ public class ObjectMappingPayloadBuilder extends DefaultPayloadBuilder {
 
     /**
      * Default constructor using object mapper and model object.
+     *
      * @param model
      * @param mapper
      */
@@ -56,6 +57,7 @@ public class ObjectMappingPayloadBuilder extends DefaultPayloadBuilder {
 
     /**
      * Default constructor using object mapper name and model object.
+     *
      * @param model
      * @param mapperName
      */
@@ -95,11 +97,6 @@ public class ObjectMappingPayloadBuilder extends DefaultPayloadBuilder {
     }
 
     private Object buildPayload(ObjectMapper mapper, Object model, TestContext context) {
-        try {
-            return context.replaceDynamicContentInString(mapper.writer().writeValueAsString(model));
-        } catch (final JsonProcessingException e) {
-            throw new CitrusRuntimeException("Failed to map object graph for message payload", e);
-        }
+        return context.replaceDynamicContentInString(mapper.writer().writeValueAsString(model));
     }
-
 }

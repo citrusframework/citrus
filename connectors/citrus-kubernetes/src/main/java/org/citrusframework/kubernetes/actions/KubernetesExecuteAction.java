@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.fabric8.kubernetes.api.model.Endpoints;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.Namespace;
@@ -134,23 +133,19 @@ public class KubernetesExecuteAction extends AbstractTestAction {
                 throw new ValidationException("Missing Kubernetes command result");
             }
 
-            try {
-                String commandResultJson = kubernetesClient.getEndpointConfiguration()
-                        .getObjectMapper().writeValueAsString(result);
-                if (StringUtils.hasText(commandResult)) {
-                    getMessageValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, Collections.singletonList(new JsonMessageValidationContext()));
-                    logger.debug("Kubernetes command result validation successful - all values OK!");
-                }
+            String commandResultJson = kubernetesClient.getEndpointConfiguration()
+                    .getObjectMapper().writeValueAsString(result);
+            if (StringUtils.hasText(commandResult)) {
+                getMessageValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, Collections.singletonList(new JsonMessageValidationContext()));
+                logger.debug("Kubernetes command result validation successful - all values OK!");
+            }
 
-                if (!commandResultExpressions.isEmpty()) {
-                    JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext.Builder()
-                            .expressions(commandResultExpressions)
-                            .build();
-                    getPathValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, Collections.singletonList(validationContext));
-                    logger.debug("Kubernetes command result path validation successful - all values OK!");
-                }
-            } catch (JsonProcessingException e) {
-                throw new CitrusRuntimeException(e);
+            if (!commandResultExpressions.isEmpty()) {
+                JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext.Builder()
+                        .expressions(commandResultExpressions)
+                        .build();
+                getPathValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, Collections.singletonList(validationContext));
+                logger.debug("Kubernetes command result path validation successful - all values OK!");
             }
         }
 

@@ -20,7 +20,7 @@ import org.citrusframework.endpoint.AbstractPollableEndpointConfiguration;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.MessageCorrelator;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.client.*;
 
 /**

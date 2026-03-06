@@ -29,9 +29,9 @@ import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import tools.jackson.core.JsonProcessingException;
+import tools.jackson.dataformat.yaml.YAMLGenerator.Feature;
+import tools.jackson.dataformat.yaml.YAMLMapper;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static com.fasterxml.jackson.databind.MapperFeature.SORT_PROPERTIES_ALPHABETICALLY;
+import static tools.jackson.databind.MapperFeature.SORT_PROPERTIES_ALPHABETICALLY;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 
