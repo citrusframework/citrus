@@ -32,6 +32,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.citrusframework.CitrusInstanceManager;
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestClass;
 import org.citrusframework.TestSource;
 import org.citrusframework.common.TestSourceHelper;
@@ -92,6 +93,10 @@ public class TestNGEngine extends AbstractTestEngine {
         } else {
             addTestClasses(suite, getConfiguration());
             addTestSources(suite, getConfiguration().getTestSources());
+        }
+
+        if (StringUtils.hasText(getConfiguration().getWorkDir())) {
+            CitrusSettings.setWorkDir(getConfiguration().getWorkDir());
         }
 
         testng.run();
