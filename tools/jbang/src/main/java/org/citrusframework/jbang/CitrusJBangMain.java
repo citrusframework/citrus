@@ -18,7 +18,9 @@ package org.citrusframework.jbang;
 
 import java.util.Optional;
 import java.util.concurrent.Callable;
+import java.util.regex.Pattern;
 
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.jbang.commands.Agent;
 import org.citrusframework.jbang.commands.AgentStart;
 import org.citrusframework.jbang.commands.AgentStop;
@@ -87,6 +89,24 @@ public class CitrusJBangMain implements Callable<Integer> {
                 "Test.xml", "IT.xml"
         };
 
+        private static final String WORK_DIR_PROPERTY = JBANG_PROPERTY_PREFIX + "work.dir";
+        private static final String WORK_DIR_ENV = JBANG_ENV_PREFIX + "WORK_DIR";
+        private static final String WORK_DIR_DEFAULT = ".citrus-jbang"; // must be in sync with JBangSettings in citrus-jbang-connector module
+
+        private static final String CLIPBOARD_GENERATED_FILE_PROPERTY = JBANG_PROPERTY_PREFIX + "clipboard.generated.file";
+        private static final String CLIPBOARD_GENERATED_FILE_ENV = JBANG_ENV_PREFIX + "CLIPBOARD_GENERATED_FILE";
+        private static final String CLIPBOARD_GENERATED_FILE_DEFAULT = getWorkDir() + "/generated-clipboard";
+
+        private static final String REPORT_DIRECTORY_PROPERTY = JBANG_PROPERTY_PREFIX + "report.directory";
+        private static final String REPORT_DIRECTORY_ENV = JBANG_ENV_PREFIX + "REPORT_DIRECTORY";
+        private static final String REPORT_DIRECTORY_DEFAULT = getWorkDir() + "/citrus-reports";
+
+        private static final Pattern PACKAGE_PATTERN = Pattern.compile(
+                "^\\s*package\\s+([a-zA-Z][\\.\\w]*)\\s*;.*$", Pattern.MULTILINE);
+
+        private static final Pattern CLASS_PATTERN = Pattern.compile(
+                "^\\s*public class\\s+([a-zA-Z0-9]*)[\\s+|;].*$", Pattern.MULTILINE);
+
         private Settings() {
             // prevent instantiation of utility class
         }
@@ -99,6 +119,36 @@ public class CitrusJBangMain implements Callable<Integer> {
             return Optional.ofNullable(System.getProperty(JBANG_TEST_SOURCE_FILE_EXT_PROPERTY, System.getenv(JBANG_TEST_SOURCE_FILE_EXT_ENV)))
                     .map(value -> value.replaceAll("\\s", "").split(","))
                     .orElse(JBANG_TEST_SOURCE_FILE_EXT_DEFAULT);
+        }
+
+        /**
+         * Gets the current working directory for the JBang command.
+         * File resources are read from this directory.
+         */
+        public static String getWorkDir() {
+            return CitrusSettings.getPropertyEnvOrDefault(WORK_DIR_PROPERTY, WORK_DIR_ENV, WORK_DIR_DEFAULT);
+        }
+
+        /**
+         * Test sources generated from clipboard are stored temporarily to this directory.
+         */
+        public static String getClipboardGeneratedFile() {
+            return CitrusSettings.getPropertyEnvOrDefault(CLIPBOARD_GENERATED_FILE_PROPERTY, CLIPBOARD_GENERATED_FILE_ENV, CLIPBOARD_GENERATED_FILE_DEFAULT);
+        }
+
+        /**
+         * The directory where Citrus generates test reports for the Citrus JBang test execution.
+         */
+        public static String getReportDirectory() {
+            return CitrusSettings.getPropertyEnvOrDefault(REPORT_DIRECTORY_PROPERTY, REPORT_DIRECTORY_ENV, REPORT_DIRECTORY_DEFAULT);
+        }
+
+        public static Pattern getClassPattern() {
+            return CLASS_PATTERN;
+        }
+
+        public static Pattern getPackagePattern() {
+            return PACKAGE_PATTERN;
         }
     }
 }
