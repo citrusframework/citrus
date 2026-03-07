@@ -27,7 +27,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -56,32 +55,6 @@ import picocli.CommandLine.Parameters;
 public class Run extends CitrusCommand {
 
     public static final String WORK_DIR = ".citrus-jbang";
-
-    private static final String[] ACCEPTED_FILE_EXT = new String[] {
-        ".feature",
-        ".citrus.feature",
-        ".citrus.groovy",
-        ".citrus.test.groovy",
-        ".citrus.it.groovy",
-        ".citrus-test.groovy",
-        ".citrus-it.groovy",
-        ".citrus.yaml",
-        ".citrus.test.yaml",
-        ".citrus.it.yaml",
-        ".citrus-test.yaml",
-        ".citrus-it.yaml",
-        ".citrus.xml",
-        ".citrus.test.xml",
-        ".citrus.it.xml",
-        ".citrus-test.xml",
-        ".citrus-it.xml",
-        "Test.xml",
-        "IT.xml",
-        "Test.java",
-        "IT.java",
-        "TestCase.java",
-        "ITCase.java"
-    };
 
     private static final String CLIPBOARD_GENERATED_FILE = WORK_DIR + "/generated-clipboard";
 
@@ -134,7 +107,7 @@ public class Run extends CitrusCommand {
         return run();
     }
 
-    private int run() throws Exception {
+    private int run() {
         File work = new File(WORK_DIR);
         TestReporterSettings.setReportDirectory(WORK_DIR + "/citrus-reports");
         removeDir(work);
@@ -151,7 +124,7 @@ public class Run extends CitrusCommand {
                     return true;
                 }
 
-                return Arrays.stream(ACCEPTED_FILE_EXT).anyMatch(name::endsWith);
+                return Arrays.stream(CitrusJBangMain.Settings.getTestSourceFileExt()).anyMatch(name::endsWith);
             });
         }
 
@@ -174,6 +147,11 @@ public class Run extends CitrusCommand {
         if (tests.isEmpty()) {
             printer().printErr("No tests to run in current directory");
             return 1;
+        }
+
+        String basePath = FileUtils.getBasePath(tests.get(0));
+        if (StringUtils.hasText(basePath) && !StringUtils.hasText(workDir)) {
+            workDir = basePath;
         }
 
         final TestRunConfiguration configuration = getRunConfiguration(tests);
@@ -210,12 +188,12 @@ public class Run extends CitrusCommand {
                 continue;
             }
 
-            // check if file exist
             File inputFile = FileUtils.getFileResource(file).getFile();
             if (!inputFile.isFile()) {
                 continue;
             }
 
+            // check if file exist
             if (!inputFile.exists()) {
                 printer().printErr("File does not exist: " + file);
                 throw new CitrusRuntimeException("File does not exist: " + file);
@@ -300,12 +278,19 @@ public class Run extends CitrusCommand {
         if (name.startsWith(".")) {
             return true;
         }
+
+        if (Arrays.stream(CitrusJBangMain.Settings.getTestSourceFileExt()).noneMatch(name::endsWith)) {
+            return true;
+        }
+
         if ("pom.xml".equalsIgnoreCase(name)) {
             return true;
         }
+
         if ("build.gradle".equalsIgnoreCase(name)) {
             return true;
         }
+
         if ("jbang.properties".equalsIgnoreCase(name)) {
             return true;
         }
@@ -316,9 +301,7 @@ public class Run extends CitrusCommand {
             return true;
         }
 
-        String on = FileUtils.getBaseName(name);
-        on = on.toLowerCase(Locale.ROOT);
-        return on.endsWith("readme");
+        return FileUtils.getBaseName(name).equalsIgnoreCase("readme");
     }
 
     private static void removeDir(File d) {

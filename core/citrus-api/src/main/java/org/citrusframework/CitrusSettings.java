@@ -294,6 +294,13 @@ public final class CitrusSettings {
     public static final String FILE_PATH_CHARSET_PARAMETER_DEFAULT = "; charset=";
 
     /**
+     * File path charset parameter
+     */
+    public static final String RESOURCES_WORKDIR_PROPERTY = "citrus.resources.workdir";
+    public static final String RESOURCES_WORKDIR_ENV = "CITRUS_RESOURCES_WORKDIR";
+    public static final String RESOURCES_WORKDIR_DEFAULT = "";
+
+    /**
      * List of static imports for Groovy test action scripts.
      */
     public static final String GROOVY_STATIC_IMPORTS_PROPERTY = "citrus.groovy.static.imports";
@@ -555,6 +562,29 @@ public final class CitrusSettings {
                         PRINT_BANNER_ENV,
                         PRINT_BANNER_DEFAULT
                 )
+        );
+    }
+
+    /**
+     * Sets the work directory for resources.
+     * Citrus will load file resources from this directory.
+     * Only set if not set already.
+     */
+    public static void setWorkDir(String workDir) {
+        if (getWorkDir().isEmpty()) {
+            System.setProperty(RESOURCES_WORKDIR_PROPERTY, workDir);
+        }
+    }
+
+    /**
+     * Gets the work directory for resources.
+     * When set Citrus loads file resources from this directory.
+     */
+    public static String getWorkDir() {
+        return getPropertyEnvOrDefault(
+                RESOURCES_WORKDIR_PROPERTY,
+                RESOURCES_WORKDIR_ENV,
+                RESOURCES_WORKDIR_DEFAULT
         );
     }
 }

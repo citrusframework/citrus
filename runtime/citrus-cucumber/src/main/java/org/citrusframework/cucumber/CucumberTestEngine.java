@@ -39,6 +39,7 @@ import io.cucumber.core.options.RuntimeOptions;
 import io.cucumber.core.resource.ClasspathSupport;
 import io.cucumber.core.runtime.Runtime;
 import io.cucumber.core.snippets.SnippetType;
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestSource;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -107,6 +108,10 @@ public class CucumberTestEngine extends AbstractTestEngine {
 
             args.add("--glue");
             args.add(packagesToRun.get(0));
+        }
+
+        if (StringUtils.hasText(getConfiguration().getWorkDir())) {
+            CitrusSettings.setWorkDir(getConfiguration().getWorkDir());
         }
 
         CommandlineOptionsParser commandlineOptionsParser = new CommandlineOptionsParser(System.out);

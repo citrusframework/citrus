@@ -33,6 +33,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestClass;
 import org.citrusframework.TestSource;
 import org.citrusframework.common.TestSourceHelper;
@@ -99,6 +100,10 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
 
             if (getConfiguration().isVerbose()) {
                 launcher.registerTestExecutionListeners(listener);
+            }
+
+            if (StringUtils.hasText(getConfiguration().getWorkDir())) {
+                CitrusSettings.setWorkDir(getConfiguration().getWorkDir());
             }
 
             launcher.execute(request);

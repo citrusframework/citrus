@@ -16,6 +16,7 @@
 
 package org.citrusframework.jbang;
 
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import org.citrusframework.jbang.commands.Agent;
@@ -69,5 +70,35 @@ public class CitrusJBangMain implements Callable<Integer> {
 
     public Printer getOut() {
         return out;
+    }
+
+    public static class Settings {
+        private static final String JBANG_PROPERTY_PREFIX = "citrus.jbang.";
+        private static final String JBANG_ENV_PREFIX = "CITRUS_JBANG_";
+
+        private static final String JBANG_TEST_SOURCE_FILE_EXT_PROPERTY = JBANG_PROPERTY_PREFIX + "test.source.file.ext";
+        private static final String JBANG_TEST_SOURCE_FILE_EXT_ENV = JBANG_ENV_PREFIX + "TEST_SOURCE_FILE_EXT";
+        private static final String[] JBANG_TEST_SOURCE_FILE_EXT_DEFAULT = new String[] {
+                ".citrus.groovy", ".citrus.test.groovy", ".citrus.it.groovy", ".citrus-test.groovy", ".citrus-it.groovy",
+                ".citrus.yaml", ".citrus.test.yaml", ".citrus.it.yaml", ".citrus-test.yaml", ".citrus-it.yaml",
+                ".citrus.xml", ".citrus.test.xml", ".citrus.it.xml", ".citrus-test.xml", ".citrus-it.xml",
+                ".feature", ".citrus.feature",
+                "Test.java", "IT.java", "TestCase.java", "ITCase.java",
+                "Test.xml", "IT.xml"
+        };
+
+        private Settings() {
+            // prevent instantiation of utility class
+        }
+
+        /**
+         * Gets the list of accepted file extensions for Citrus test source files.
+         * Values may be set as a comma-delimited String of supported file name patterns.
+         */
+        public static String[] getTestSourceFileExt() {
+            return Optional.ofNullable(System.getProperty(JBANG_TEST_SOURCE_FILE_EXT_PROPERTY, System.getenv(JBANG_TEST_SOURCE_FILE_EXT_ENV)))
+                    .map(value -> value.replaceAll("\\s", "").split(","))
+                    .orElse(JBANG_TEST_SOURCE_FILE_EXT_DEFAULT);
+        }
     }
 }

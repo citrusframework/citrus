@@ -371,8 +371,6 @@ public abstract class FileUtils {
 
     /**
      * Gets the base path of given file path removing any file name if present.
-     * @param filePath
-     * @return
      */
     public static String getBasePath(String filePath) {
         if (filePath == null) {
@@ -392,7 +390,7 @@ public abstract class FileUtils {
             return filePath.substring(0, filePath.lastIndexOf(fileSeparator));
         }
 
-        return filePath;
+        return "";
     }
 
     public static byte[] copyToByteArray(File file) {

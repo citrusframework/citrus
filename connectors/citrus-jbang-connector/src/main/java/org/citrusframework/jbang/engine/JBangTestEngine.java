@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestSource;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.CitrusJBang;
@@ -62,6 +63,10 @@ public class JBangTestEngine extends AbstractTestEngine {
 
         if (outputListener != null) {
             citrus.withOutputListener(outputListener);
+        }
+
+        if (StringUtils.hasText(getConfiguration().getWorkDir())) {
+            CitrusSettings.setWorkDir(getConfiguration().getWorkDir());
         }
 
         if (getConfiguration().getTestSources().isEmpty()) {

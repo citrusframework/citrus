@@ -29,6 +29,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.ReflectionHelper;
 
@@ -67,7 +68,18 @@ public class Resources {
             return file;
         }
 
-        return fromClasspath(filePath);
+        if (!CitrusSettings.getWorkDir().isEmpty()) {
+            file = fromFileSystem(CitrusSettings.getWorkDir() + File.separator + filePath);
+            if (file.exists()) {
+                return file;
+            }
+        }
+
+        try {
+            return fromClasspath(filePath);
+        } catch (CitrusRuntimeException e) {
+            throw new CitrusRuntimeException("Failed to resolve file resource from file path: %s".formatted(filePath), e);
+        }
     }
 
     public static Resource create(String filePath, Class<?> contextClass) {
