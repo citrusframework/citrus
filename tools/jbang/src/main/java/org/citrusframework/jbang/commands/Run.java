@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -53,16 +52,6 @@ import picocli.CommandLine.Parameters;
 
 @Command(name = "run", description = "Run as local Citrus test")
 public class Run extends CitrusCommand {
-
-    public static final String WORK_DIR = ".citrus-jbang";
-
-    private static final String CLIPBOARD_GENERATED_FILE = WORK_DIR + "/generated-clipboard";
-
-    private static final Pattern PACKAGE_PATTERN = Pattern.compile(
-            "^\\s*package\\s+([a-zA-Z][\\.\\w]*)\\s*;.*$", Pattern.MULTILINE);
-
-    private static final Pattern CLASS_PATTERN = Pattern.compile(
-            "^\\s*public class\\s+([a-zA-Z0-9]*)[\\s+|;].*$", Pattern.MULTILINE);
 
     @Option(names = { "--engine" }, description = "Name of the test engine that is used to run tests. One of junit, junit5, testng, cucumber")
     private String engine;
@@ -108,11 +97,11 @@ public class Run extends CitrusCommand {
     }
 
     private int run() {
-        File work = new File(WORK_DIR);
-        TestReporterSettings.setReportDirectory(WORK_DIR + "/citrus-reports");
+        File work = new File(CitrusJBangMain.Settings.getWorkDir());
+        TestReporterSettings.setReportDirectory(CitrusJBangMain.Settings.getReportDirectory());
         removeDir(work);
         if (!work.mkdirs()) {
-            printer().printErr("Failed to create working directory " + WORK_DIR);
+            printer().printErr("Failed to create working directory " + CitrusJBangMain.Settings.getWorkDir());
             return 1;
         }
 
@@ -259,7 +248,7 @@ public class Run extends CitrusCommand {
         Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
         Object t = c.getData(DataFlavor.stringFlavor);
         if (t != null) {
-            String fn = CLIPBOARD_GENERATED_FILE + "." + ext;
+            String fn = CitrusJBangMain.Settings.getClipboardGeneratedFile() + "." + ext;
             if ("java".equals(ext)) {
                 String fqn = determineClassName(t.toString());
                 if (fqn == null) {
@@ -334,10 +323,10 @@ public class Run extends CitrusCommand {
     }
 
     private static String determineClassName(String content) {
-        Matcher matcher = PACKAGE_PATTERN.matcher(content);
+        Matcher matcher = CitrusJBangMain.Settings.getPackagePattern().matcher(content);
         String pn = matcher.find() ? matcher.group(1) : null;
 
-        matcher = CLASS_PATTERN.matcher(content);
+        matcher = CitrusJBangMain.Settings.getClassPattern().matcher(content);
         String cn = matcher.find() ? matcher.group(1) : null;
 
         String fqn;

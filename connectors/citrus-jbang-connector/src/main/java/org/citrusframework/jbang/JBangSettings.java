@@ -49,7 +49,7 @@ public final class JBangSettings {
 
     private static final String WORK_DIR_PROPERTY = JBANG_PROPERTY_PREFIX + "work.dir";
     private static final String WORK_DIR_ENV = JBANG_ENV_PREFIX + "WORK_DIR";
-    private static final String WORK_DIR_DEFAULT = ".citrus-jbang";
+    private static final String WORK_DIR_DEFAULT = ".citrus-jbang"; // must be in sync with CitrusJBangMain.Settings in citrus-jbang module
 
     private static final String DUMP_PROCESS_OUTPUT_PROPERTY = JBANG_PROPERTY_PREFIX + "dump.process.output";
     private static final String DUMP_PROCESS_OUTPUT_ENV = JBANG_ENV_PREFIX + "DUMP_PROCESS_OUTPUT";
