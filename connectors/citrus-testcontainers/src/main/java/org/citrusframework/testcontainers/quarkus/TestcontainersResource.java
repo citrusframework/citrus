@@ -25,6 +25,7 @@ import java.util.Set;
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.testcontainers.containers.GenericContainer;
 
 public class TestcontainersResource<T extends GenericContainer<?>> implements QuarkusTestResourceLifecycleManager {
@@ -44,7 +45,7 @@ public class TestcontainersResource<T extends GenericContainer<?>> implements Qu
         String[] qualifiedClassNames = initArgs.getOrDefault(ContainerLifecycleListener.INIT_ARG, "").split(",");
         for (String qualifiedClassName : qualifiedClassNames) {
             try {
-                Class<?> cls = Class.forName(qualifiedClassName, true, Thread.currentThread().getContextClassLoader());
+                Class<?> cls = Class.forName(qualifiedClassName, true, ClassLoaderHelper.getContextClassLoader());
                 Object instance = cls.getDeclaredConstructor().newInstance();
                 if (instance instanceof ContainerLifecycleListener<?> containerLifecycleListener) {
                     registerContainerLifecycleListener((ContainerLifecycleListener<T>) containerLifecycleListener);

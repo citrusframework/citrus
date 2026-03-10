@@ -46,6 +46,7 @@ import org.citrusframework.spi.ReferenceRegistry;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.SimpleReferenceResolver;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.PropertyUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.TypeConverter;
@@ -130,7 +131,7 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
 
         if (StringUtils.hasText(CitrusSettings.DEFAULT_CONFIG_CLASS)) {
             try {
-                Class<?> configClass = Class.forName(CitrusSettings.DEFAULT_CONFIG_CLASS);
+                Class<?> configClass = Class.forName(CitrusSettings.DEFAULT_CONFIG_CLASS, true, ClassLoaderHelper.getClassLoader(CitrusContext.class));
                 context.parseConfiguration(configClass);
             } catch (ClassNotFoundException e) {
                 throw new CitrusRuntimeException("Failed to instantiate custom configuration class", e);

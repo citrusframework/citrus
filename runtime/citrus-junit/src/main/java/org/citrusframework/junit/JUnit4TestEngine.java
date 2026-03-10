@@ -32,6 +32,7 @@ import org.citrusframework.main.AbstractTestEngine;
 import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.main.scan.ClassPathTestScanner;
 import org.citrusframework.main.scan.JarFileTestScanner;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
@@ -125,9 +126,9 @@ public class JUnit4TestEngine extends AbstractTestEngine {
                         Class<?> clazz;
                         if (getConfiguration().getTestJar() != null) {
                             clazz = Class.forName(source.getName(), false,
-                                    new URLClassLoader(new URL[]{ getConfiguration().getTestJar().toURI().toURL() }, getClass().getClassLoader()));
+                                    new URLClassLoader(new URL[]{ getConfiguration().getTestJar().toURI().toURL() }, ClassLoaderHelper.getClassLoader(JUnit4TestEngine.class)));
                         } else {
-                            clazz = Class.forName(source.getName());
+                            clazz = Class.forName(source.getName(), false, ClassLoaderHelper.getClassLoader(JUnit4TestEngine.class));
                         }
                         logger.debug("Found test candidate: " + source.getName());
                         return clazz;

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.citrusframework.util.ClassLoaderHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,7 @@ public final class CitrusVersion {
 
     /* Load Citrus version */
     static {
-        try (final InputStream in = CitrusVersion.class.getClassLoader().getResourceAsStream("META-INF/citrus.version")) {
+        try (final InputStream in = ClassLoaderHelper.getClassLoader(CitrusVersion.class).getResourceAsStream("META-INF/citrus.version")) {
             Properties versionProperties = new Properties();
             versionProperties.load(in);
             version = versionProperties.get("citrus.version").toString();

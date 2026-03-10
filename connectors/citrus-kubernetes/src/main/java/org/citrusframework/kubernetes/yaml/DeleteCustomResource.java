@@ -20,6 +20,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.DeleteCustomResourceAction;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.yaml.SchemaProperty;
 
 public class DeleteCustomResource extends AbstractKubernetesAction.Builder<DeleteCustomResourceAction, DeleteCustomResource> {
@@ -34,7 +35,7 @@ public class DeleteCustomResource extends AbstractKubernetesAction.Builder<Delet
     @SchemaProperty
     public void setType(String resourceType) {
         try {
-            delegate.resourceType(Class.forName(resourceType));
+            delegate.resourceType(Class.forName(resourceType, true, ClassLoaderHelper.getClassLoader(DeleteCustomResource.class)));
         } catch(ClassNotFoundException | ClassCastException e) {
             delegate.type(resourceType);
         }

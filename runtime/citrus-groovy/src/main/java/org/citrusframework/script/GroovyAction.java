@@ -29,6 +29,7 @@ import org.citrusframework.actions.groovy.GroovyRunActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
@@ -131,7 +132,7 @@ public class GroovyAction extends AbstractTestAction {
     private GroovyClassLoader getPrivilegedGroovyLoader() {
         return AccessController.doPrivileged(new PrivilegedAction<>() {
             public GroovyClassLoader run() {
-                ClassLoader parent = getClass().getClassLoader();
+                ClassLoader parent = ClassLoaderHelper.getClassLoader(getClass());
                 return new GroovyClassLoader(parent);
             }
         });

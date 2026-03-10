@@ -16,13 +16,14 @@
 
 package org.citrusframework.spi;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ClassLoaderHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class PropertiesLoader {
 
@@ -45,7 +46,8 @@ public final class PropertiesLoader {
 
     public static Properties loadProperties(String path) {
         Properties properties = new Properties();
-        try (InputStream in = ResourcePathTypeResolver.class.getClassLoader().getResourceAsStream(path)) {
+        ClassLoader classLoader = ClassLoaderHelper.getClassLoader(ResourcePathTypeResolver.class);
+        try (InputStream in = classLoader.getResourceAsStream(path)) {
             if (in == null) {
                 throw new CitrusRuntimeException(String.format("Failed to locate resource path '%s'!", path));
             }

@@ -31,6 +31,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.TypeConverter;
 
@@ -113,7 +114,7 @@ public class RmiServiceResult {
         }
 
         try {
-            Class<?> argType = Class.forName(object.getType());
+            Class<?> argType = Class.forName(object.getType(), true, ClassLoaderHelper.getClassLoader(RmiServiceResult.class));
             java.lang.Object value = null;
 
             if (object.getValue() != null) {

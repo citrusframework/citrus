@@ -101,6 +101,12 @@ public class CitrusJBangMain implements Callable<Integer> {
         private static final String REPORT_DIRECTORY_ENV = JBANG_ENV_PREFIX + "REPORT_DIRECTORY";
         private static final String REPORT_DIRECTORY_DEFAULT = getWorkDir() + "/citrus-reports";
 
+        private static final String MODULES_PROPERTY = JBANG_PROPERTY_PREFIX + "modules";
+        private static final String MODULES_ENV = JBANG_ENV_PREFIX + "MODULES";
+
+        private static final String DEPENDENCIES_PROPERTY = JBANG_PROPERTY_PREFIX + "dependencies";
+        private static final String DEPENDENCIES_ENV = JBANG_ENV_PREFIX + "DEPENDENCIES";
+
         private static final Pattern PACKAGE_PATTERN = Pattern.compile(
                 "^\\s*package\\s+([a-zA-Z][\\.\\w]*)\\s*;.*$", Pattern.MULTILINE);
 
@@ -141,6 +147,20 @@ public class CitrusJBangMain implements Callable<Integer> {
          */
         public static String getReportDirectory() {
             return CitrusSettings.getPropertyEnvOrDefault(REPORT_DIRECTORY_PROPERTY, REPORT_DIRECTORY_ENV, REPORT_DIRECTORY_DEFAULT);
+        }
+
+        /**
+         * Gets Citrus modules that should be loaded as additional dependencies and added to the classpath.
+         */
+        public static String[] getModules() {
+            return CitrusSettings.getPropertyEnvOrDefault(MODULES_PROPERTY, MODULES_ENV, "").split(",");
+        }
+
+        /**
+         * Gets additional dependencies in the form of Maven GAVs that should be added to the classpath.
+         */
+        public static String[] getDependencies() {
+            return CitrusSettings.getPropertyEnvOrDefault(DEPENDENCIES_PROPERTY, DEPENDENCIES_ENV, "").split(",");
         }
 
         public static Pattern getClassPattern() {

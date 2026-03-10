@@ -28,6 +28,7 @@ import org.citrusframework.groovy.dsl.configuration.beans.BeansConfiguration;
 import org.citrusframework.groovy.dsl.configuration.beans.QueueConfiguration;
 import org.citrusframework.groovy.dsl.configuration.endpoints.EndpointsConfiguration;
 import org.citrusframework.spi.Resource;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
@@ -59,7 +60,7 @@ public class ContextConfiguration {
 
                 GroovyShellUtils.run(new ImportCustomizer(), this, FileUtils.readToString(file), citrus, context);
             } else {
-                citrus.getCitrusContext().parseConfiguration(Class.forName(pathOrType));
+                citrus.getCitrusContext().parseConfiguration(Class.forName(pathOrType, true, ClassLoaderHelper.getClassLoader(ContextConfiguration.class)));
             }
         } catch (IOException | ClassNotFoundException e) {
             throw new CitrusRuntimeException(String.format("Failed to load configuration from file '%s'", pathOrType), e);

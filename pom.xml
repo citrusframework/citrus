@@ -962,6 +962,11 @@
         <artifactId>camel-endpointdsl</artifactId>
         <version>${apache.camel.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-tooling-maven</artifactId>
+        <version>${apache.camel.version}</version>
+      </dependency>
 
       <!-- Citrus ftp dependencies -->
       <dependency>

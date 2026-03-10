@@ -33,6 +33,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.TypeConverter;
 
@@ -102,7 +103,7 @@ public class RmiServiceInvocation {
         if (args != null) {
             for (MethodArg arg : args.getArgs()) {
                 try {
-                    types.add(Class.forName(arg.getType()));
+                    types.add(Class.forName(arg.getType(), true, ClassLoaderHelper.getClassLoader(RmiServiceInvocation.class)));
                 } catch (ClassNotFoundException e) {
                     throw new CitrusRuntimeException("Failed to access method argument type", e);
                 }
@@ -122,7 +123,7 @@ public class RmiServiceInvocation {
         try {
             if (args != null) {
                 for (MethodArg methodArg : args.getArgs()) {
-                    Class argType = Class.forName(methodArg.getType());
+                    Class argType = Class.forName(methodArg.getType(), true,  ClassLoaderHelper.getClassLoader(RmiServiceInvocation.class));
                     Object value = null;
 
                     if (methodArg.getValueObject() != null) {

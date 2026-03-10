@@ -24,6 +24,7 @@ import java.util.Map;
 
 import jakarta.jms.ConnectionFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.ObjectHelper;
 
 /**
@@ -38,7 +39,7 @@ public class DefaultConnectionFactoryCreator implements ConnectionFactoryCreator
         ObjectHelper.assertNotNull(className, "Missing connection factory type information");
 
         try {
-            Class<?> type = Class.forName(className);
+            Class<?> type = Class.forName(className, true, ClassLoaderHelper.getClassLoader(DefaultConnectionFactoryCreator.class));
 
             if (!(ConnectionFactory.class.isAssignableFrom(type))) {
                 throw new IllegalStateException(String.format("Unsupported type information %s - must be of type %s", type.getName(), ConnectionFactory.class.getName()));

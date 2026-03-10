@@ -48,6 +48,7 @@ import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.spi.ClasspathResourceResolver;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
@@ -78,7 +79,7 @@ public class CucumberTestEngine extends AbstractTestEngine {
             try {
                 annotationOptions = new CucumberOptionsAnnotationParser()
                         .withOptionsProvider(GenericCucumberOptions::new)
-                        .parse(Class.forName(javaClass.get().getName()))
+                        .parse(Class.forName(javaClass.get().getName(), true, ClassLoaderHelper.getClassLoader(CucumberTestEngine.class)))
                         .setUuidGeneratorClass(RandomUuidGenerator.class)
                         .addDefaultGlueIfAbsent()
                         .build(propertiesFileOptions);

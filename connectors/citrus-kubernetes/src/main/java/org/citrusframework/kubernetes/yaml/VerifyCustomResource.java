@@ -20,6 +20,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.VerifyCustomResourceAction;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.yaml.SchemaProperty;
 
 public class VerifyCustomResource extends AbstractKubernetesAction.Builder<VerifyCustomResourceAction, VerifyCustomResource> {
@@ -34,7 +35,7 @@ public class VerifyCustomResource extends AbstractKubernetesAction.Builder<Verif
     @SchemaProperty
     public void setType(String resourceType) {
         try {
-            delegate.resourceType(Class.forName(resourceType));
+            delegate.resourceType(Class.forName(resourceType, true, ClassLoaderHelper.getClassLoader(VerifyCustomResource.class)));
         } catch(ClassNotFoundException | ClassCastException e) {
             delegate.type(resourceType);
         }

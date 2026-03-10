@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.citrusframework.common.TestLoader;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.validation.CustomValidatorStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,9 +58,10 @@ public final class CitrusSettings {
      */
     private static final String APPLICATION_PROPERTY_FILE_PROPERTY = "citrus.application.properties";
     private static final String APPLICATION_PROPERTY_FILE_ENV = "CITRUS_APPLICATION_PROPERTIES";
-    private static final String APPLICATION_PROPERTY_FILE = getProperty(
+    private static final String APPLICATION_PROPERTY_FILE = getPropertyEnvOrDefault(
             APPLICATION_PROPERTY_FILE_PROPERTY,
-            getenv(APPLICATION_PROPERTY_FILE_ENV) != null ? getenv(APPLICATION_PROPERTY_FILE_ENV) : "citrus-application.properties");
+            APPLICATION_PROPERTY_FILE_ENV,
+            "citrus-application.properties");
 
     public static final String OUTBOUND_SCHEMA_VALIDATION_ENABLED_PROPERTY = "citrus.validation.outbound.schema.enabled";
     public static final String OUTBOUND_SCHEMA_VALIDATION_ENABLED_ENV = "CITRUS_VALIDATION_OUTBOUND_SCHEMA_ENABLED";
@@ -77,7 +79,7 @@ public final class CitrusSettings {
             applicationPropertiesFile = applicationPropertiesFile.substring("classpath:".length());
         }
 
-        try (final InputStream in = CitrusSettings.class.getClassLoader().getResourceAsStream(applicationPropertiesFile)) {
+        try (final InputStream in = ClassLoaderHelper.getClassLoader(CitrusSettings.class).getResourceAsStream(applicationPropertiesFile)) {
             Properties applicationProperties = new Properties();
             applicationProperties.load(in);
 
@@ -97,7 +99,7 @@ public final class CitrusSettings {
             }
         }
 
-        try (InputStream is = CitrusSettings.class.getClassLoader().getResourceAsStream("logging.properties")) {
+        try (InputStream is = ClassLoaderHelper.getClassLoader(CitrusSettings.class).getResourceAsStream("logging.properties")) {
             if (is != null) {
                 getLogManager().readConfiguration(is);
             }

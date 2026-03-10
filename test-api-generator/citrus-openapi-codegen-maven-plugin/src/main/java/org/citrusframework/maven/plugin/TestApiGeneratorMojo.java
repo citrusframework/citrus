@@ -44,6 +44,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.citrusframework.openapi.generator.WsdlToOpenApiTransformer;
 import org.citrusframework.openapi.generator.exception.WsdlToOpenApiTransformationException;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
 import org.openapitools.codegen.plugin.CodeGenMojo;
 import org.sonatype.plexus.build.incremental.BuildContext;
@@ -330,7 +331,7 @@ public class TestApiGeneratorMojo extends AbstractMojo {
                     "File not found at the provided absolute path: " + source);
             }
         } else {
-            URL resourceUrl = getClass().getClassLoader().getResource(source);
+            URL resourceUrl = ClassLoaderHelper.getClassLoader(getClass()).getResource(source);
             if (resourceUrl == null) {
                 throw new MojoExecutionException("Resource not found in classpath: " + source);
             }

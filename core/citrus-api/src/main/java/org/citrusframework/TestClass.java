@@ -17,6 +17,7 @@
 package org.citrusframework;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ClassLoaderHelper;
 
 /**
  * @since 2.7
@@ -71,10 +72,10 @@ public class TestClass extends TestSource {
             }
 
             if (methodName != null && !methodName.isBlank()) {
-                return new TestClass(Class.forName(className), methodName);
+                return new TestClass(Class.forName(className, false, ClassLoaderHelper.getClassLoader(TestClass.class)), methodName);
             }
 
-            return new TestClass(Class.forName(className));
+            return new TestClass(Class.forName(className, false, ClassLoaderHelper.getClassLoader(TestClass.class)));
         } catch (ClassNotFoundException e) {
             throw new CitrusRuntimeException("Failed to create test class", e);
         }
@@ -89,7 +90,7 @@ public class TestClass extends TestSource {
                 className = testClass;
             }
 
-            Class.forName(className);
+            Class.forName(className, false, ClassLoaderHelper.getClassLoader(TestClass.class));
             return true;
         } catch (ClassNotFoundException e) {
             return false;

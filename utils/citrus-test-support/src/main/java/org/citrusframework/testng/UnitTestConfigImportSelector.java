@@ -16,6 +16,7 @@
 
 package org.citrusframework.testng;
 
+import org.citrusframework.util.ClassLoaderHelper;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DeferredImportSelector;
 import org.springframework.context.annotation.ImportResource;
@@ -25,7 +26,7 @@ import org.springframework.util.ClassUtils;
 public class UnitTestConfigImportSelector implements DeferredImportSelector {
     @Override
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {
-        if (ClassUtils.isPresent("org.citrusframework.config.ComponentLifecycleProcessor", getClass().getClassLoader())) {
+        if (ClassUtils.isPresent("org.citrusframework.config.ComponentLifecycleProcessor", ClassLoaderHelper.getClassLoader(getClass()))) {
             return new String[]{
                     DefaultUnitTestConfig.class.getName(),
                     ComponentLifecycleConfig.class.getName()

@@ -26,6 +26,7 @@ import org.citrusframework.actions.selenium.WebPage;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.util.StringUtils;
 import org.openqa.selenium.support.PageFactory;
@@ -71,8 +72,8 @@ public class PageAction extends AbstractSeleniumAction {
 
         if (StringUtils.hasText(type)) {
             try {
-                pageToUse = (WebPage) Class.forName(context.replaceDynamicContentInString(type)).newInstance();
-            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                pageToUse = (WebPage) ClassLoaderHelper.instantiateType(context.replaceDynamicContentInString(type), PageAction.class);
+            } catch (CitrusRuntimeException e) {
                 throw new CitrusRuntimeException(String.format("Failed to access page type '%s'", context.replaceDynamicContentInString(type)), e);
             }
         } else {

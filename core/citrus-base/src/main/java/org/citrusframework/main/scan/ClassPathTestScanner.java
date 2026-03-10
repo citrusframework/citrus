@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import org.citrusframework.TestClass;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ClasspathResourceResolver;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.ReflectionHelper;
 import org.slf4j.Logger;
@@ -84,7 +85,7 @@ public class ClassPathTestScanner extends AbstractTestScanner {
         }
 
         try {
-            Class<?> clazz = Class.forName(className);
+            Class<?> clazz = Class.forName(className, true, ClassLoaderHelper.getClassLoader(ClassPathTestScanner.class));
             if (clazz.isAnnotationPresent(annotationType)) {
                 return true;
             }

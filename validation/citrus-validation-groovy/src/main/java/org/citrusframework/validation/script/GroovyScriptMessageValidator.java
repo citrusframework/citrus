@@ -16,6 +16,11 @@
 
 package org.citrusframework.validation.script;
 
+import java.io.IOException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.List;
+
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import org.citrusframework.context.TestContext;
@@ -26,17 +31,13 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.List;
 
 /**
  * Groovy script message validator passing the message to a validation script.
@@ -103,7 +104,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
     }
 
     private static GroovyClassLoader getPrivilegedGroovyLoader() {
-        return AccessController.doPrivileged((PrivilegedAction<GroovyClassLoader>) () -> new GroovyClassLoader(GroovyScriptMessageValidator.class.getClassLoader()));
+        return AccessController.doPrivileged((PrivilegedAction<GroovyClassLoader>) () -> new GroovyClassLoader(ClassLoaderHelper.getClassLoader(GroovyScriptMessageValidator.class)));
     }
 
     @Override

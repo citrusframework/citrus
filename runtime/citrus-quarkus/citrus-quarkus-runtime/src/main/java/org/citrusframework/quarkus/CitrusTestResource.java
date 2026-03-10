@@ -34,6 +34,7 @@ import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ClassLoaderHelper;
 
 /**
  * Quarkus test resource that takes care of injecting Citrus resources
@@ -66,7 +67,7 @@ public class CitrusTestResource implements QuarkusTestResourceConfigurableLifecy
         String[] qualifiedClassNames = initArgs.getOrDefault(ApplicationPropertiesSupplier.INIT_ARG, "").split(",");
         for (String qualifiedClassName : qualifiedClassNames) {
             try {
-                Class<?> cls = Class.forName(qualifiedClassName, true, Thread.currentThread().getContextClassLoader());
+                Class<?> cls = Class.forName(qualifiedClassName, true, ClassLoaderHelper.getContextClassLoader());
                 Object instance = cls.getDeclaredConstructor().newInstance();
                 if (instance instanceof ApplicationPropertiesSupplier supplier) {
                     applicationPropertiesSupplier.add(supplier);
