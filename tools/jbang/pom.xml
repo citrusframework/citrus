@@ -46,6 +46,12 @@
       <artifactId>ascii-table</artifactId>
     </dependency>
 
+    <!-- Maven dependency resolver -->
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-tooling-maven</artifactId>
+    </dependency>
+
     <!-- Logging -->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>

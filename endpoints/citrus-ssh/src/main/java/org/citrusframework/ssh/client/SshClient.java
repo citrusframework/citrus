@@ -41,6 +41,7 @@ import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.ssh.model.SshRequest;
 import org.citrusframework.ssh.model.SshResponse;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 
@@ -279,8 +280,8 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
             return null;
         } else if (getEndpointConfiguration().getPrivateKeyPath().startsWith(Resources.CLASSPATH_RESOURCE_PREFIX)) {
             File priv = File.createTempFile("citrus-ssh","priv");
-            try (InputStream is = getClass().getClassLoader().getResourceAsStream(getEndpointConfiguration().getPrivateKeyPath().substring(Resources.CLASSPATH_RESOURCE_PREFIX.length()));
-                    FileOutputStream fos = new FileOutputStream(priv)) {
+            try (InputStream is = ClassLoaderHelper.getClassLoader(getClass()).getResourceAsStream(getEndpointConfiguration().getPrivateKeyPath().substring(Resources.CLASSPATH_RESOURCE_PREFIX.length()));
+                 FileOutputStream fos = new FileOutputStream(priv)) {
                 if (is == null) {
                     throw new CitrusRuntimeException("No private key found at " + getEndpointConfiguration().getPrivateKeyPath());
                 }

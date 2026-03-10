@@ -33,6 +33,7 @@ import org.citrusframework.TestSource;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.util.StringUtils;
@@ -60,7 +61,7 @@ public class JavaTestLoader extends DefaultTestLoader implements TestSourceAware
             String qualifiedClassName = StringUtils.hasText(packageName) ? packageName + "." + getClassName() : getClassName();
 
             // Load and instantiate compiled class.
-            URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { getClassLoaderBaseURL(packageName, javaSource) });
+            URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { getClassLoaderBaseURL(packageName, javaSource) }, ClassLoaderHelper.getClassLoader(JavaTestLoader.class));
             Class<?> cls = Class.forName(qualifiedClassName, true, classLoader);
             Object instance = cls.getDeclaredConstructor().newInstance();
 

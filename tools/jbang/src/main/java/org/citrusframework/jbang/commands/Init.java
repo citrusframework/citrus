@@ -24,6 +24,7 @@ import java.util.Stack;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.CitrusJBangMain;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -34,7 +35,7 @@ import static java.nio.file.Files.writeString;
 @Command(name = "init", description = "Creates a new Citrus test")
 public class Init extends CitrusCommand {
 
-    @Parameters(description = "Name of integration file (or a github link)", arity = "1",
+    @Parameters(description = "Name of test file (or a github link)", arity = "1",
                 paramLabel = "<file>", parameterConsumer = FileConsumer.class)
     private Path filePath; // Defined only for file path completion; the field never used
 
@@ -54,7 +55,7 @@ public class Init extends CitrusCommand {
         String ext = FileUtils.getFileExtension(file);
         String name = FileUtils.getBaseName(file);
         String content;
-        try (InputStream is = Init.class.getClassLoader().getResourceAsStream("templates/" + ext + ".tmpl")) {
+        try (InputStream is = ClassLoaderHelper.getClassLoader(Init.class).getResourceAsStream("templates/" + ext + ".tmpl")) {
             if (is == null) {
                 printer().println("Error: Unsupported file type: " + ext);
                 return 1;

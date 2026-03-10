@@ -35,6 +35,7 @@ import org.citrusframework.camel.actions.AbstractCamelAction;
 import org.citrusframework.camel.jbang.CamelJBangSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
@@ -87,8 +88,9 @@ public class CamelRunInfraAction extends AbstractCamelAction {
 
             logger.info("Starting Camel infra service '{}' ...", fullServiceName);
 
-            Class<?> serviceType = Class.forName(infraService.get().service());
-            Object instance = Class.forName(infraService.get().implementation()).getDeclaredConstructor().newInstance();
+            ClassLoader classLoader = ClassLoaderHelper.getClassLoader(CamelRunInfraAction.class);
+            Class<?> serviceType = Class.forName(infraService.get().service(), true, classLoader);
+            Object instance = Class.forName(infraService.get().implementation(), true, classLoader).getDeclaredConstructor().newInstance();
 
             if (isNotInfrastructureService(instance)) {
                 throw new CitrusRuntimeException("Camel infra service '%s' is not an infrastructure service".formatted(instance.getClass().getName()));
@@ -98,11 +100,11 @@ public class CamelRunInfraAction extends AbstractCamelAction {
                 if (Arrays.stream(instance.getClass().getInterfaces()).anyMatch(c -> c.getName().contains("ContainerService"))) {
                     Path workDir = CamelJBangSettings.getWorkDir();
                     Path logFile = workDir.resolve(String.format("camel-infra-%s-output.txt", fullServiceName));
-                    Object containerLogConsumer = Class.forName("org.apache.camel.test.infra.common.CamelLogConsumer")
+                    Object containerLogConsumer = Class.forName("org.apache.camel.test.infra.common.CamelLogConsumer", true, classLoader)
                             .getConstructor(Path.class, boolean.class).newInstance(logFile, true);
 
                     instance.getClass()
-                            .getMethod("followLog", Class.forName("org.testcontainers.containers.output.BaseConsumer"))
+                            .getMethod("followLog", Class.forName("org.testcontainers.containers.output.BaseConsumer", true, classLoader))
                             .invoke(instance, containerLogConsumer);
                 }
             }

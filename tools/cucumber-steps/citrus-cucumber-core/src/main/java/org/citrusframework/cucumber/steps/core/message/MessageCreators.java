@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.ReflectionHelper;
 
 public class MessageCreators {
@@ -83,17 +84,15 @@ public class MessageCreators {
      */
     public void addType(String type) {
         try {
-            Object messageCreator = Class.forName(type).newInstance();
+            Object messageCreator = ClassLoaderHelper.instantiateType(type, MessageCreator.class);
 
             if (messageCreator instanceof MessageCreator) {
                 messageCreators.put(messageCreator.getClass().getSimpleName(), (MessageCreator) messageCreator);
             }
 
             pojoCreators.add(messageCreator);
-        } catch (ClassNotFoundException | IllegalAccessException e) {
+        } catch (CitrusRuntimeException e) {
             throw new CitrusRuntimeException("Unable to access message creator type: " + type, e);
-        } catch (InstantiationException e) {
-            throw new CitrusRuntimeException("Unable to create  message creator instance of type: " + type, e);
         }
     }
 }

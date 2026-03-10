@@ -23,6 +23,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.CreateCustomResourceAction;
+import org.citrusframework.util.ClassLoaderHelper;
 
 @XmlRootElement(name = "create-custom-resource")
 public class CreateCustomResource extends AbstractKubernetesAction.Builder<CreateCustomResourceAction, CreateCustomResource> {
@@ -37,7 +38,7 @@ public class CreateCustomResource extends AbstractKubernetesAction.Builder<Creat
     @XmlAttribute
     public void setType(String resourceType) {
         try {
-            delegate.resourceType(Class.forName(resourceType));
+            delegate.resourceType(Class.forName(resourceType, true, ClassLoaderHelper.getClassLoader(CreateCustomResource.class)));
         } catch(ClassNotFoundException | ClassCastException e) {
             delegate.type(resourceType);
         }

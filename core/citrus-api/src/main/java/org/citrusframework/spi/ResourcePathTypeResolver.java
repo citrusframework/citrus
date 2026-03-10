@@ -18,22 +18,17 @@ package org.citrusframework.spi;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
@@ -41,11 +36,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import jakarta.annotation.Nullable;
-import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static java.lang.String.format;
 import static java.nio.file.FileSystems.newFileSystem;
 import static java.util.Collections.singletonMap;
 import static java.util.Collections.synchronizedList;
@@ -85,11 +79,6 @@ public class ResourcePathTypeResolver implements TypeResolver {
      * Logger
      */
     private static final Logger logger = LoggerFactory.getLogger(ResourcePathTypeResolver.class);
-
-    /**
-     * Supported static instance field in target - used as a fallback to the default constructor
-     */
-    private static final String INSTANCE = "INSTANCE";
 
     /**
      * Base path for resources
@@ -164,7 +153,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
             key -> singletonMap(key, resolveProperty(resourcePath, property))
         );
 
-        return (T) instantiateType(map.get(cacheKey), initargs);
+        return (T) ClassLoaderHelper.instantiateType(map.get(cacheKey), initargs);
     }
 
     @Override
@@ -175,7 +164,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
         );
 
         Map<String, T> resources = new HashMap<>();
-        typeLookup.forEach((p, type) -> resources.put(p, (T) instantiateType(type)));
+        typeLookup.forEach((p, type) -> resources.put(p, (T) ClassLoaderHelper.instantiateType(type)));
 
         return resources;
     }
@@ -231,7 +220,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
     }
 
     private Stream<Path> resolveAllFromJar(String path) {
-        ClassLoader classLoader = assertNotNull(ResourcePathTypeResolver.class.getClassLoader());
+        ClassLoader classLoader = assertNotNull(ClassLoaderHelper.getContextClassLoader());
 
         if (rootIsNotCitrusApiJar() && nonNull(rootFs)) {
             return getZipEntries().stream()
@@ -279,50 +268,6 @@ public class ResourcePathTypeResolver implements TypeResolver {
     }
 
     /**
-     * Gets the constructor best matching the given parameter types.
-     */
-    private Constructor<?> getConstructor(Class<?> type, Object[] initargs) {
-        final Class<?>[] parameterTypes = getParameterTypes(initargs);
-
-        Optional<Constructor<?>> exactMatch = Arrays.stream(type.getDeclaredConstructors())
-            .filter(
-                constructor -> Arrays.equals(replacePrimitiveTypes(constructor), parameterTypes))
-            .findFirst();
-
-        if (exactMatch.isPresent()) {
-            return exactMatch.get();
-        }
-
-        Optional<Constructor<?>> match = Arrays.stream(type.getDeclaredConstructors())
-            .filter(constructor -> {
-                if (constructor.getParameterCount() != parameterTypes.length) {
-                    return false;
-                }
-
-                for (int i = 0; i < parameterTypes.length; i++) {
-                    if (!constructor.getParameterTypes()[i].isAssignableFrom(parameterTypes[i])) {
-                        return false;
-                    }
-                }
-
-                return true;
-            })
-            .findFirst();
-
-        if (match.isPresent()) {
-            return match.get();
-        }
-
-        throw new IllegalArgumentException(
-            format(
-                "No matching constructor found for type %s and parameters %s",
-                type.getName(),
-                Arrays.toString(parameterTypes)
-            )
-        );
-    }
-
-    /**
      * Read resource from classpath and load content as properties. The properties found on the
      * classpath will be cached.
      */
@@ -344,77 +289,5 @@ public class ResourcePathTypeResolver implements TypeResolver {
         } else {
             return resourcePath;
         }
-    }
-
-    /**
-     * Get types of init arguments.
-     */
-    private Class<?>[] getParameterTypes(Object... initargs) {
-        return Arrays.stream(initargs)
-            .map(Object::getClass)
-            .toArray(Class[]::new);
-    }
-
-    /**
-     * Instantiate a type by its name.
-     */
-    public <T> T instantiateType(String type, Object... initargs) {
-        try {
-            if (initargs.length == 0) {
-                return (T) Class.forName(type).getDeclaredConstructor().newInstance();
-            } else {
-                return (T) getConstructor(Class.forName(type), initargs).newInstance(initargs);
-            }
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
-                 NoSuchMethodException | InvocationTargetException e) {
-            try {
-                if (
-                    Arrays.stream(Class.forName(type).getFields())
-                        .anyMatch(field -> field.getName().equals(INSTANCE)
-                            && Modifier.isStatic(field.getModifiers()))
-                ) {
-                    return (T) Class.forName(type).getField(INSTANCE).get(null);
-                }
-            } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException e1) {
-                throw new CitrusRuntimeException(
-                    format("Failed to resolve classpath resource of type '%s' - caused by: %s",
-                            type, Optional.ofNullable(e1.getMessage()).orElse(e1.getClass().getName())), e1);
-            }
-
-            logger.warn(
-                "Neither static instance nor accessible default constructor ({}) is given on type '{}'",
-                Arrays.toString(getParameterTypes(initargs)),
-                type
-            );
-
-            throw new CitrusRuntimeException(
-                format("Failed to resolve classpath resource of type '%s' - caused by: %s",
-                        type, Optional.ofNullable(e.getMessage()).orElse(e.getClass().getName())), e);
-        }
-    }
-
-    /**
-     * Get the types of a constructor. Primitive types are converted to their respective object
-     * type.
-     */
-    private static Class<?>[] replacePrimitiveTypes(Constructor<?> constructor) {
-        Class<?>[] constructorParameters = constructor.getParameterTypes();
-        for (int i = 0; i < constructorParameters.length; i++) {
-            if (constructorParameters[i] == int.class) {
-                constructorParameters[i] = Integer.class;
-            } else if (constructorParameters[i] == short.class) {
-                constructorParameters[i] = Short.class;
-            } else if (constructorParameters[i] == double.class) {
-                constructorParameters[i] = Double.class;
-            } else if (constructorParameters[i] == float.class) {
-                constructorParameters[i] = Float.class;
-            } else if (constructorParameters[i] == char.class) {
-                constructorParameters[i] = Character.class;
-            } else if (constructorParameters[i] == boolean.class) {
-                constructorParameters[i] = Boolean.class;
-            }
-        }
-
-        return constructorParameters;
     }
 }

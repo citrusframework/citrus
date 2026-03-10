@@ -28,6 +28,7 @@ import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.correlation.CorrelationManager;
 import org.citrusframework.message.correlation.PollingCorrelationManager;
 import org.citrusframework.messaging.ReplyProducer;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,7 +143,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
             }
 
             try {
-                Class<?> exception = Class.forName(exceptionClass);
+                Class<?> exception = Class.forName(exceptionClass, true, ClassLoaderHelper.getClassLoader(CamelSyncConsumer.class));
                 if (exceptionMsg != null) {
                     exchange.setException((Throwable) exception.getConstructor(String.class).newInstance(exceptionMsg));
                 } else {

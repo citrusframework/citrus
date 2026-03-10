@@ -16,6 +16,8 @@
 
 package org.citrusframework.message.builder.script;
 
+import java.io.IOException;
+
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import org.citrusframework.context.TestContext;
@@ -23,10 +25,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.ScriptPayloadBuilder;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
 import org.codehaus.groovy.control.CompilationFailedException;
-
-import java.io.IOException;
 
 public class GroovyScriptPayloadBuilder implements ScriptPayloadBuilder {
 
@@ -75,7 +76,7 @@ public class GroovyScriptPayloadBuilder implements ScriptPayloadBuilder {
      * @return
      */
     protected String buildMarkupBuilderScript(String scriptData) {
-        ClassLoader parent = GroovyScriptPayloadBuilder.class.getClassLoader();
+        ClassLoader parent = ClassLoaderHelper.getClassLoader(GroovyScriptPayloadBuilder.class);
         try (GroovyClassLoader loader = new GroovyClassLoader(parent))  {
             Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
                     .withCode(scriptData)

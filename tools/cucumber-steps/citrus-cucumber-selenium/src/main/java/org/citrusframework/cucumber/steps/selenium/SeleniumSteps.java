@@ -37,6 +37,7 @@ import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumBrowserBuilder;
 import org.citrusframework.selenium.model.PageValidator;
 import org.citrusframework.selenium.model.WebPage;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.variable.VariableUtils;
 
 import static org.citrusframework.selenium.actions.SeleniumActionBuilder.selenium;
@@ -227,13 +228,13 @@ public class SeleniumSteps {
     @Given("^(?:Browser|browser) page \"([^\"]+)\" of type ([^\\s]+)$")
     public void pageByType(String id, String type) {
         try {
-            Object page = Class.forName(type).newInstance();
+            Object page = ClassLoaderHelper.instantiateType(type, SeleniumSteps.class);
             pages.put(id, (WebPage) page);
 
             if (page instanceof PageValidator) {
                 validators.put(id, (PageValidator<?>) page);
             }
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+        } catch (CitrusRuntimeException e) {
             throw new CitrusRuntimeException("Failed to load page object", e);
         }
     }
@@ -292,8 +293,8 @@ public class SeleniumSteps {
     @Given("^(?:Browser|browser) page validator ([^\\s]+) of type ([^\\s]+)$")
     public void pageValidatorByType(String id, String type) {
         try {
-            validators.put(id, (PageValidator<?>) Class.forName(type).newInstance());
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            validators.put(id, (PageValidator<?>) ClassLoaderHelper.instantiateType(type, SeleniumSteps.class));
+        } catch (CitrusRuntimeException e) {
             throw new CitrusRuntimeException("Failed to load page object", e);
         }
     }

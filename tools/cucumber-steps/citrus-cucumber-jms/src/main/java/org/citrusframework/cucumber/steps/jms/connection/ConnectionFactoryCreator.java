@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.ServiceLoader;
 
 import jakarta.jms.ConnectionFactory;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.ObjectHelper;
 
 public interface ConnectionFactoryCreator {
@@ -41,7 +42,7 @@ public interface ConnectionFactoryCreator {
      */
     static ConnectionFactoryCreator lookup(String type) throws ClassNotFoundException {
         ObjectHelper.assertNotNull(type, "Missing connection factory type information");
-        Class<?> connectionFactoryType = Class.forName(type);
+        Class<?> connectionFactoryType = Class.forName(type, true, ClassLoaderHelper.getClassLoader(ConnectionFactoryCreator.class));
 
         for (ConnectionFactoryCreator connectionFactoryCreator : SERVICE_LOADER) {
             if (connectionFactoryCreator.supports(connectionFactoryType)) {

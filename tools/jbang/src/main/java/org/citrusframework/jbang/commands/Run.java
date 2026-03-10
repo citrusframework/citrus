@@ -21,6 +21,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,23 +30,28 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.camel.tooling.maven.MavenArtifact;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.agent.CitrusAgentConfiguration;
 import org.citrusframework.agent.util.ConfigurationHelper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.CitrusJBangMain;
 import org.citrusframework.jbang.LoggingSupport;
+import org.citrusframework.jbang.maven.MavenDependencyResolver;
 import org.citrusframework.main.TestEngine;
 import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.report.TestReporter;
 import org.citrusframework.report.TestReporterSettings;
 import org.citrusframework.report.TestResults;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -67,6 +73,18 @@ public class Run extends CitrusCommand {
 
     @Option(names = { "--work-directory" }, description = "The working directory used by the file based test engines to load file resources from.")
     private String workDir;
+
+    @Option(names = { "--repository" }, arity = "0..*", description = "Set of Maven repositories that should be used to resolve dependencies.")
+    private String[] repositories;
+
+    @Option(names = { "--modules" }, description = "Comma delimited list of additional Citrus modules that must be loaded to run the test.")
+    private String modules;
+
+    @Option(names = { "--dep" }, arity = "0..*", description = "Set of additional Maven dependencies that must be loaded to run the test.")
+    private String[] dependencies;
+
+    @Option(names = { "--offline" }, defaultValue = "false", description = "When enabled there will be no attempts to resolve Maven artifacts via internet connection.")
+    private boolean offline;
 
     @Option(names = { "--property" }, arity = "0..*", description = "Default System property to set before the test run.")
     private String[] properties;
@@ -154,8 +172,83 @@ public class Run extends CitrusCommand {
             LoggingSupport.configureLog("off", false, configuration.getEngine());
         }
 
+        if (!offline) {
+            handleAdditionalDependencies();
+        }
+
         engine.run();
         return exitStatus.exitStatus();
+    }
+
+    private void handleAdditionalDependencies() {
+        MavenDependencyResolver resolver = getMavenDependencyResolver();
+        List<MavenArtifact> additionalArtifacts = new ArrayList<>();
+
+        // Handle Citrus modules from envVar settings
+        Arrays.stream(CitrusJBangMain.Settings.getModules())
+                .map(String::trim)
+                .filter(StringUtils::hasText)
+                .forEach(module -> additionalArtifacts.addAll(resolver.resolveModule(module.trim())));
+
+        // Handle Citrus modules from command line options
+        if (StringUtils.hasText(modules)) {
+            for (String module : modules.split(",")) {
+                additionalArtifacts.addAll(resolver.resolveModule(module.trim()));
+            }
+        }
+
+        Predicate<String> isSnapshotArtifact = it -> it.contains("-SNAPSHOT");
+        // Handle Citrus dependencies from envVar settings
+        Arrays.stream(CitrusJBangMain.Settings.getDependencies())
+                .map(String::trim)
+                .filter(StringUtils::hasText)
+                .forEach(dependency ->
+                    additionalArtifacts.addAll(resolver.resolve(dependency.trim(), isSnapshotArtifact.test(dependency), true)));
+
+        // Handle Citrus dependencies from command line options
+        if (dependencies != null) {
+            for (String dependency : dependencies) {
+                additionalArtifacts.addAll(
+                        resolver.resolve(dependency.trim(), isSnapshotArtifact.test(dependency), true));
+            }
+        }
+
+        if (!additionalArtifacts.isEmpty()) {
+            additionalArtifacts.forEach(mavenArtifact -> {
+                try {
+                    ClassLoaderHelper.addArtifact(mavenArtifact.toString(), mavenArtifact.getFile().toURI().toURL());
+                } catch (MalformedURLException e) {
+                    printer().printErr(String.format("Error resolving artifact %s due to '%s'", mavenArtifact, e.getMessage()));
+                }
+            });
+
+            try {
+                // Adapt and set class loader in main thread
+                Thread.currentThread().setContextClassLoader(ClassLoaderHelper.getContextClassLoader());
+            } catch (Throwable e) {
+                printer().printErr("Failed to set context class loader with additional dependencies due to '%s'".formatted(e.getMessage()));
+            }
+        }
+    }
+
+    private @NotNull MavenDependencyResolver getMavenDependencyResolver() {
+        MavenDependencyResolver resolver = new MavenDependencyResolver();
+        if (repositories != null) {
+            for (String repository : repositories) {
+                String name;
+                String url;
+                if (repository.contains(":")) {
+                    String[] parts = repository.split(":");
+                    name = parts[0];
+                    url = parts[1];
+                } else {
+                    name = "custom";
+                    url = repository;
+                }
+                resolver.withRepository(name, url);
+            }
+        }
+        return resolver;
     }
 
     private void resolveTests(String[] files, List<String> tests) throws Exception {

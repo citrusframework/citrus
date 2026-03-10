@@ -33,6 +33,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.TypeConverter;
 
@@ -83,7 +84,7 @@ public class ManagedBeanInvocation {
         }
 
         try {
-            Class argType = Class.forName(attribute.getType());
+            Class argType = Class.forName(attribute.getType(), true, ClassLoaderHelper.getClassLoader(ManagedBeanInvocation.class));
             java.lang.Object value = null;
 
             if (attribute.getValue() != null) {
@@ -432,7 +433,7 @@ public class ManagedBeanInvocation {
             try {
                 if (parameter != null) {
                     for (OperationParam operationParam : parameter.getParameter()) {
-                        Class argType = Class.forName(operationParam.getType());
+                        Class argType = Class.forName(operationParam.getType(), true, ClassLoaderHelper.getClassLoader(ManagedBeanInvocation.class));
                         Object value = null;
 
                         if (operationParam.getValueObject() != null) {

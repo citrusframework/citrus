@@ -25,6 +25,7 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -169,7 +170,7 @@ public class Assert extends AbstractActionContainer {
         @Override
         public Builder exception(String type) {
             try {
-                this.exception = (Class<? extends Throwable>) Class.forName(type);
+                this.exception = (Class<? extends Throwable>) Class.forName(type, false, ClassLoaderHelper.getClassLoader(Assert.class));
             } catch (ClassNotFoundException e) {
                 throw new CitrusRuntimeException(format("Failed to instantiate exception class of type '%s'", type), e);
             }

@@ -50,6 +50,7 @@ import org.citrusframework.ftp.model.GetCommand;
 import org.citrusframework.ftp.model.ListCommand;
 import org.citrusframework.ftp.model.PutCommand;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
@@ -309,8 +310,8 @@ public class SftpClient extends FtpClient {
             return null;
         } else if (getEndpointConfiguration().getPrivateKeyPath().startsWith(Resources.CLASSPATH_RESOURCE_PREFIX)) {
             File priv = File.createTempFile("citrus-sftp","priv");
-            try (InputStream is = getClass().getClassLoader().getResourceAsStream(getEndpointConfiguration().getPrivateKeyPath().substring(Resources.CLASSPATH_RESOURCE_PREFIX.length()));
-                    FileOutputStream fos = new FileOutputStream(priv)) {
+            try (InputStream is = ClassLoaderHelper.getClassLoader(getClass()).getResourceAsStream(getEndpointConfiguration().getPrivateKeyPath().substring(Resources.CLASSPATH_RESOURCE_PREFIX.length()));
+                 FileOutputStream fos = new FileOutputStream(priv)) {
                 if (is == null) {
                     throw new CitrusRuntimeException("No private key found at " + getEndpointConfiguration().getPrivateKeyPath());
                 }

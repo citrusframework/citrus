@@ -49,8 +49,6 @@ public class StringPrinter implements Printer {
 
     /**
      * Provides access to the cached output.
-     *
-     * @return
      */
     public String getOutput() {
         return writer.toString().trim();
@@ -58,9 +56,6 @@ public class StringPrinter implements Printer {
 
     /**
      * Provides access to all lines of the cached output.
-     *
-     * @return
-     * @throws IOException
      */
     public List<String> getLines() throws IOException {
         BufferedReader buf = new BufferedReader(new StringReader(getOutput()));

@@ -22,6 +22,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.VerifyCustomResourceAction;
+import org.citrusframework.util.ClassLoaderHelper;
 
 @XmlRootElement(name = "verify-custom-resource")
 public class VerifyCustomResource extends AbstractKubernetesAction.Builder<VerifyCustomResourceAction, VerifyCustomResource> {
@@ -36,7 +37,7 @@ public class VerifyCustomResource extends AbstractKubernetesAction.Builder<Verif
     @XmlAttribute
     public void setType(String resourceType) {
         try {
-            delegate.resourceType(Class.forName(resourceType));
+            delegate.resourceType(Class.forName(resourceType, true, ClassLoaderHelper.getClassLoader(VerifyCustomResource.class)));
         } catch(ClassNotFoundException | ClassCastException e) {
             delegate.type(resourceType);
         }

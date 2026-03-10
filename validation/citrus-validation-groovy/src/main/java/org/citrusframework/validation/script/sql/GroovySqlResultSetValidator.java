@@ -16,6 +16,11 @@
 
 package org.citrusframework.validation.script.sql;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
+
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import org.citrusframework.context.TestContext;
@@ -24,6 +29,7 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.script.GroovyScriptMessageValidator;
 import org.citrusframework.validation.script.ScriptValidationContext;
@@ -31,11 +37,6 @@ import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Groovy script validator capable of validating SQL result sets.
@@ -77,7 +78,7 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
                 if (StringUtils.hasText(validationScript)) {
                     logger.debug("Start groovy SQL result set validation");
 
-                    try (var loader = new GroovyClassLoader(GroovyScriptMessageValidator.class.getClassLoader())) {
+                    try (var loader = new GroovyClassLoader(ClassLoaderHelper.getClassLoader(GroovyScriptMessageValidator.class))) {
                         Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
                                 .withCode(validationScript)
                                 .build());

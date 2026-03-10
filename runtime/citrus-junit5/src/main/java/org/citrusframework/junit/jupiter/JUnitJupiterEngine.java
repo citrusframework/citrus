@@ -46,6 +46,7 @@ import org.citrusframework.main.scan.JarFileTestScanner;
 import org.citrusframework.spi.ClasspathResourceResolver;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.DiscoverySelector;
@@ -212,9 +213,9 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
                             Class<?> clazz;
                             if (configuration.getTestJar() != null) {
                                 clazz = Class.forName(testClass.getName(), false,
-                                        new URLClassLoader(new URL[]{configuration.getTestJar().toURI().toURL()}, getClass().getClassLoader()));
+                                        new URLClassLoader(new URL[]{configuration.getTestJar().toURI().toURL()}, ClassLoaderHelper.getClassLoader(JUnitJupiterEngine.class)));
                             } else {
-                                clazz = Class.forName(testClass.getName());
+                                clazz = Class.forName(testClass.getName(), false, ClassLoaderHelper.getClassLoader(JUnitJupiterEngine.class));
                             }
                             return clazz;
                         } catch (ClassNotFoundException | MalformedURLException e) {
@@ -251,9 +252,9 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
                 Class<?> clazz;
                 if (configuration.getTestJar() != null) {
                     clazz = Class.forName(testClass.getName(), false,
-                            new URLClassLoader(new URL[]{configuration.getTestJar().toURI().toURL()}, getClass().getClassLoader()));
+                            new URLClassLoader(new URL[]{configuration.getTestJar().toURI().toURL()}, ClassLoaderHelper.getClassLoader(JUnitJupiterEngine.class)));
                 } else {
-                    clazz = Class.forName(testClass.getName());
+                    clazz = Class.forName(testClass.getName(), false, ClassLoaderHelper.getClassLoader(JUnitJupiterEngine.class));
                 }
 
                 if (StringUtils.hasText(testClass.getMethod())) {

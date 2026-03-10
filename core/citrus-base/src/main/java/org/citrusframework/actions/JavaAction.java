@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
@@ -154,7 +155,7 @@ public class JavaAction extends AbstractTestAction {
 
         logger.info("Instantiating class for name '{}'", className);
 
-        Class<?> classToRun = Class.forName(className);
+        Class<?> classToRun = Class.forName(className, true, ClassLoaderHelper.getClassLoader(JavaAction.class));
 
         Class<?>[] constructorTypes = new Class<?>[constructorArgs.size()];
         Object[] constructorObjects = new Object[constructorArgs.size()];

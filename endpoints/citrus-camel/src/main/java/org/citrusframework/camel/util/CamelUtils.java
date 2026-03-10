@@ -31,6 +31,7 @@ import org.citrusframework.camel.endpoint.CamelEndpointConfiguration;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,7 @@ public class CamelUtils {
                 context = JAXBContext.newInstance("org.apache.camel:org.apache.camel.model:org.apache.camel.model.cloud:" +
                         "org.apache.camel.model.config:org.apache.camel.model.dataformat:org.apache.camel.model.language:" +
                         "org.apache.camel.model.loadbalancer:org.apache.camel.model.rest:org.apache.camel.model.transformer:" +
-                        "org.apache.camel.model.validator:org.apache.camel.core.xml:org.apache.camel.spring.xml:org.apache.camel.model", CamelUtils.class.getClassLoader());
+                        "org.apache.camel.model.validator:org.apache.camel.core.xml:org.apache.camel.spring.xml:org.apache.camel.model", ClassLoaderHelper.getClassLoader(CamelUtils.class));
             }
         }
 

@@ -37,6 +37,7 @@ import java.util.jar.JarInputStream;
 import java.util.stream.Collectors;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -276,7 +277,7 @@ public class ClasspathResourceResolver {
     private Set<ClassLoader> getClassLoaders() {
         Set<ClassLoader> classLoaders = new LinkedHashSet<>();
         try {
-            ClassLoader ccl = Thread.currentThread().getContextClassLoader();
+            ClassLoader ccl = ClassLoaderHelper.getContextClassLoader();
             if (ccl != null) {
                 classLoaders.add(ccl);
             }
@@ -286,7 +287,7 @@ public class ClasspathResourceResolver {
                 e.getMessage());
         }
 
-        classLoaders.add(ClasspathResourceResolver.class.getClassLoader());
+        classLoaders.add(ClassLoaderHelper.getClassLoader(ClasspathResourceResolver.class));
         return classLoaders;
     }
 }
