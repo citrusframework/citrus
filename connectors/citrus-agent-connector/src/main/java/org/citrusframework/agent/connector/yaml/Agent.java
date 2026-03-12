@@ -44,7 +44,7 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
         this.agentName = name;
     }
 
-    @SchemaProperty(kind = ACTION, group = "agent")
+    @SchemaProperty(kind = ACTION, group = "agent", module = "citrus-agent-connector")
     public void setConnect(Connect connect) {
         AgentConnectAction.Builder builder = new AgentConnectAction.Builder();
 
@@ -54,7 +54,7 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "agent")
+    @SchemaProperty(kind = ACTION, group = "agent", module = "citrus-agent-connector")
     public void setRun(Run run) {
         AgentRunAction.Builder builder = new AgentRunAction.Builder();
         if (run.getSource() != null) {

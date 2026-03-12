@@ -34,6 +34,9 @@ import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
 
 public class Knative implements TestActionBuilder<KnativeAction>, ReferenceResolverAware {
 
+    private static final String KNATIVE_GROUP = "knative";
+    private static final String KNATIVE_MODULE = "citrus-knative";
+
     private AbstractKnativeAction.Builder<?, ?> builder;
 
     private String description;
@@ -83,62 +86,62 @@ public class Knative implements TestActionBuilder<KnativeAction>, ReferenceResol
         this.knativeClient = client;
     }
 
-    @SchemaProperty(kind = ACTION, group = "knative")
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
     public void setCreateBroker(CreateBroker builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "knative")
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
     public void setDeleteBroker(DeleteBroker builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "knative")
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
     public void setVerifyBroker(VerifyBroker builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "knative")
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
     public void setCreateTrigger(CreateTrigger builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "knative")
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
     public void setDeleteTrigger(DeleteTrigger builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "knative")
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
     public void setCreateChannel(CreateChannel builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "knative")
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
     public void setDeleteChannel(DeleteChannel builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "knative")
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
     public void setCreateSubscription(CreateSubscription builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "knative")
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
     public void setDeleteSubscription(DeleteSubscription builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "knative")
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
     public void setSendEvent(SendEvent builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "knative")
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
     public void setReceiveEvent(ReceiveEvent builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "knative")
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
     public void setDeleteResource(DeleteResource builder) {
         this.builder = builder;
     }

@@ -1,0 +1,35 @@
+# modules: citrus-camel,citrus-testcontainers
+# deps: org.apache.camel:camel-aws2-s3:4.18.0
+name: my-test
+variables:
+  - name: foo
+    value: bar
+  - name: id
+    value: citrus:randomNumber(4)
+endpoints:
+  - jms:
+      asynchronous:
+        queueName: my-queue
+actions:
+  - print:
+      message: Citrus rocks!
+  - send:
+      endpoint: http://localhost:8080/test
+      message:
+        body:
+          data: Howdy
+  - send:
+      endpoint: kafka:my-topic
+      message:
+        body:
+          data: Hello ${id}
+  - receive:
+      endpoint: kafka:my-topic
+      message:
+        body:
+          data: @ignore@ @isNumber()@
+  - iterate:
+      condition: i < 10
+      actions:
+        - print:
+            message: ${i}

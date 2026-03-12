@@ -35,6 +35,7 @@ import org.citrusframework.validation.matcher.DefaultValidationMatcherLibrary;
 import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
 import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
 import static org.citrusframework.yaml.SchemaProperty.Kind.CONTAINER;
@@ -71,6 +72,7 @@ public class Catalog {
                             CitrusVersion.version(),
                             entry.getKey(),
                             item.schema.group(),
+                            item.schema.module(),
                             Optional.ofNullable(item.schema.title())
                                     .filter(title -> !title.isEmpty())
                                     .orElse(StringUtils.convertFirstCharToUpperCase(item.name)),
@@ -95,6 +97,7 @@ public class Catalog {
                             CitrusVersion.version(),
                             entry.getKey(),
                             item.schema.group(),
+                            item.schema.module(),
                             Optional.ofNullable(item.schema.title())
                                     .filter(title -> !title.isEmpty())
                                     .orElse(StringUtils.convertFirstCharToUpperCase(item.name)),
@@ -122,11 +125,16 @@ public class Catalog {
             String[] tokens = builder.getKey().split("\\.", 2);
             String group = tokens[0];
             String name = tokens[1];
+
+            SchemaType schemaType = builder.getValue().getClass().getAnnotation(SchemaType.class);
+            String module = Optional.ofNullable(schemaType).map(SchemaType::module).orElse("citrus-base");
+
             catalog.put(builder.getKey().replaceAll("\\.", "-"),
                     new CatalogEntry(SchemaProperty.Kind.ENDPOINT.getCatalogKind(),
                             CitrusVersion.version(),
                             "%s-%s".formatted(group, name),
                             group,
+                            module,
                             "%s%s".formatted(StringUtils.convertFirstCharToUpperCase(group), StringUtils.convertFirstCharToUpperCase(name)),
                             null,
                             jsonSchema));
@@ -146,11 +154,16 @@ public class Catalog {
             } else {
                 jsonSchema = CitrusSchemaGenerator.generateSchema(function.getValue().getClass(), Option.INLINE_ALL_SCHEMAS);
             }
+
+            SchemaType schemaType = function.getValue().getClass().getAnnotation(SchemaType.class);
+            String module = Optional.ofNullable(schemaType).map(SchemaType::module).orElse("citrus-base");
+
             catalog.put(function.getKey(),
                     new CatalogEntry(SchemaProperty.Kind.FUNCTION.getCatalogKind(),
                             CitrusVersion.version(),
                             function.getKey(),
                             "citrus",
+                            module,
                             StringUtils.convertFirstCharToUpperCase(function.getKey()),
                             null,
                             jsonSchema));
@@ -170,11 +183,16 @@ public class Catalog {
             } else {
                 jsonSchema = CitrusSchemaGenerator.generateSchema(matcher.getValue().getClass(), Option.INLINE_ALL_SCHEMAS);
             }
+
+            SchemaType schemaType = matcher.getValue().getClass().getAnnotation(SchemaType.class);
+            String module = Optional.ofNullable(schemaType).map(SchemaType::module).orElse("citrus-base");
+
             catalog.put(matcher.getKey(),
                     new CatalogEntry(SchemaProperty.Kind.VALIDATION_MATCHER.getCatalogKind(),
                             CitrusVersion.version(),
                             matcher.getKey(),
                             "citrus",
+                            module,
                             StringUtils.convertFirstCharToUpperCase(matcher.getKey()),
                             null,
                             jsonSchema));
@@ -194,6 +212,7 @@ public class Catalog {
         String version,
         String name,
         String group,
+        String module,
         String title,
         String description,
         JsonNode propertiesSchema

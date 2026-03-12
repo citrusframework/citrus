@@ -56,6 +56,7 @@ import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
 public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
     private static final String OPENAPI_GROUP = "openapi";
+    private static final String OPENAPI_MODULE = "citrus-openapi";
 
     private OpenApiSpecificationSourceAwareBuilder<?> builder;
 
@@ -117,7 +118,8 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         }
     }
 
-    @SchemaProperty(kind = ACTION, group = OPENAPI_GROUP, description = "Send a request as a client.")
+    @SchemaProperty(kind = ACTION, group = OPENAPI_GROUP, module=OPENAPI_MODULE,
+            description = "Send a request as a client.")
     public void setSendRequest(ClientRequest request) {
         OpenApiClientRequestActionBuilder requestBuilder =
             asClientBuilder().send(request.getOperation());
@@ -156,7 +158,8 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         builder = requestBuilder;
     }
 
-    @SchemaProperty(kind = ACTION, group = OPENAPI_GROUP, description = "Receives a response as a client.")
+    @SchemaProperty(kind = ACTION, group = OPENAPI_GROUP, module=OPENAPI_MODULE,
+            description = "Receives a response as a client.")
     public void setReceiveResponse(ClientResponse response) {
         OpenApiClientResponseActionBuilder responseBuilder =
                 asClientBuilder().receive(response.getOperation(), response.getStatus());
@@ -201,7 +204,8 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         builder = responseBuilder;
     }
 
-    @SchemaProperty(kind = ACTION, group = OPENAPI_GROUP, description = "Receives a client request as a server.")
+    @SchemaProperty(kind = ACTION, group = OPENAPI_GROUP, module=OPENAPI_MODULE,
+            description = "Receives a client request as a server.")
     public void setReceiveRequest(ServerRequest request) {
         OpenApiServerRequestActionBuilder requestBuilder =
                 asServerBuilder().receive(request.getOperation());
@@ -244,7 +248,8 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         builder = requestBuilder;
     }
 
-    @SchemaProperty(kind = ACTION, group = OPENAPI_GROUP, description = "Sends a response as a server.")
+    @SchemaProperty(kind = ACTION, group = OPENAPI_GROUP, module=OPENAPI_MODULE,
+            description = "Sends a response as a server.")
     public void setSendResponse(ServerResponse response) {
         OpenApiServerResponseActionBuilder responseBuilder =
                 asServerBuilder().send(response.getOperation(), response.getStatus());

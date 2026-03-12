@@ -25,7 +25,7 @@ import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
 
-@SchemaType(oneOf = { "asynchronous", "synchronous" })
+@SchemaType(oneOf = { "asynchronous", "synchronous" }, module = "citrus-camel")
 public class CamelEndpointsBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;

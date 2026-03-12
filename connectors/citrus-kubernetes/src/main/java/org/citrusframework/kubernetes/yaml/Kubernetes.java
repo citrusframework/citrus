@@ -32,6 +32,9 @@ import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
 
 public class Kubernetes implements TestActionBuilder<KubernetesAction>, ReferenceResolverAware {
 
+    private static final String KUBERNETES_GROUP = "kubernetes";
+    private static final String KUBERNETES_MODULE = "citrus-kubernetes";
+
     private AbstractKubernetesAction.Builder<?, ?> builder;
 
     private String description;
@@ -69,102 +72,102 @@ public class Kubernetes implements TestActionBuilder<KubernetesAction>, Referenc
         this.kubernetesClient = client;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setAgent(Agent builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setConnect(Connect builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setDisconnect(Disconnect builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setConnectService(ConnectService builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setDisconnectService(DisconnectService builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setCreateService(CreateService builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setCreateSecret(CreateSecret builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setCreateConfigMap(CreateConfigMap builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setCreateResource(CreateResource builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setCreateCustomResource(CreateCustomResource builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setCreateLabels(CreateLabels builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setCreateAnnotations(CreateAnnotations builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setDeleteService(DeleteService builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setDeleteSecret(DeleteSecret builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setDeleteConfigMap(DeleteConfigMap builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setDeleteResource(DeleteResource builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setDeleteCustomResource(DeleteCustomResource builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setVerifyPod(VerifyPod builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setVerifyCustomResource(VerifyCustomResource builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "kubernetes")
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
     public void setWatchPodLogs(WatchPodLogs builder) {
         this.builder = builder;
     }

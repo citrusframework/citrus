@@ -25,7 +25,7 @@ import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
 
-@SchemaType(oneOf = { "asynchronous", "synchronous" })
+@SchemaType(oneOf = { "asynchronous", "synchronous" }, module = "citrus-jms")
 public class JmsEndpointsBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;

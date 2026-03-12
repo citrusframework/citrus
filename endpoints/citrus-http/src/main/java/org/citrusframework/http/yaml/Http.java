@@ -49,6 +49,7 @@ import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
 public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
     private static final String HTTP_GROUP = "http";
+    private static final String HTTP_MODULE = "citrus-http";
 
     private TestActionBuilder<?> builder;
 
@@ -92,7 +93,8 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
     }
 
-    @SchemaProperty(kind = ACTION, group = HTTP_GROUP, description = "Send a Http request as a client.")
+    @SchemaProperty(kind = ACTION, group = HTTP_GROUP, module=HTTP_MODULE,
+            description = "Send a Http request as a client.")
     public void setSendRequest(ClientRequest request) {
         HttpClientRequestActionBuilder requestBuilder;
         HttpRequest requestMessage;
@@ -172,7 +174,8 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = requestBuilder;
     }
 
-    @SchemaProperty(kind = ACTION, group = HTTP_GROUP, description = "Receive an Http response as a client.")
+    @SchemaProperty(kind = ACTION, group = HTTP_GROUP, module=HTTP_MODULE,
+            description = "Receive an Http response as a client.")
     public void setReceiveResponse(ClientResponse response) {
         HttpClientResponseActionBuilder responseBuilder = asClientBuilder().receive().response().name("http:receive-response");
 
@@ -229,7 +232,8 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = responseBuilder;
     }
 
-    @SchemaProperty(kind = ACTION, group = HTTP_GROUP, description = "Receive an Http request as a server.")
+    @SchemaProperty(kind = ACTION, group = HTTP_GROUP, module=HTTP_MODULE,
+            description = "Receive an Http request as a server.")
     public void setReceiveRequest(ServerRequest request) {
         HttpServerRequestActionBuilder requestBuilder;
         HttpRequest requestMessage;
@@ -317,7 +321,8 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = requestBuilder;
     }
 
-    @SchemaProperty(kind = ACTION, group = HTTP_GROUP, description = "Send an Http response as a server.")
+    @SchemaProperty(kind = ACTION, group = HTTP_GROUP, module=HTTP_MODULE,
+            description = "Send an Http response as a server.")
     public void setSendResponse(ServerResponse response) {
         HttpServerResponseActionBuilder responseBuilder = asServerBuilder().send().response().name("http:send-response");
 

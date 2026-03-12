@@ -27,7 +27,7 @@ import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
 
-@SchemaType(oneOf = { "asynchronous", "synchronous" })
+@SchemaType(oneOf = { "asynchronous", "synchronous" }, module = "citrus-spring-integration")
 public class MessageChannelEndpointsBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;

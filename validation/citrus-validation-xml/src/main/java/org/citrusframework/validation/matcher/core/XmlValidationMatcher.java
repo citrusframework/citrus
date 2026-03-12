@@ -27,6 +27,7 @@ import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.matcher.StringValidationMatcher;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.yaml.SchemaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,7 @@ import org.slf4j.LoggerFactory;
  * Validation matcher receives XML data and validates it against expected XML with full
  * XML validation support (e.g. ignoring elements, namespace support, ...).
  */
+@SchemaType(module = "citrus-validation-xml")
 public class XmlValidationMatcher implements StringValidationMatcher {
 
     /** CDATA section starting and ending in XML */
