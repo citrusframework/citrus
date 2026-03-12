@@ -57,48 +57,47 @@ import org.citrusframework.yaml.SchemaType;
 })
 public interface Endpoints {
 
-    @SchemaProperty(description = "Http client and server endpoints")
+    @SchemaProperty(description = "Http client and server endpoints", module = "citrus-http")
     default void setHttp(HttpEndpointBuilder builder) {
     }
 
-    @SchemaProperty(description = "SOAP WebService client and server endpoints")
+    @SchemaProperty(description = "SOAP WebService client and server endpoints", module = "citrus-ws")
     default void setSoap(SoapWebServiceEndpointBuilder builder) {
     }
 
-    @SchemaProperty(description = "WebSocket client and server endpoints")
+    @SchemaProperty(description = "WebSocket client and server endpoints", module = "citrus-websocket")
     default void setWebSocket(WebSocketEndpointBuilder builder) {
     }
 
-    @SchemaProperty(description = "Mail client and server endpoints")
+    @SchemaProperty(description = "Mail client and server endpoints", module = "citrus-mail")
     default void setMail(MailEndpointBuilder builder) {
     }
 
-    @SchemaProperty(description = "Ftp client and server endpoints")
+    @SchemaProperty(description = "Ftp client and server endpoints", module = "citrus-ftp")
     default void setFtp(FtpEndpointBuilder builder) {
     }
 
-    @SchemaProperty(description = "Sftp client and server endpoints")
+    @SchemaProperty(description = "Sftp client and server endpoints", module = "citrus-ftp")
     default void setSftp(SftpEndpointBuilder builder) {
     }
 
-    @SchemaProperty(description = "Scp client and server endpoint")
+    @SchemaProperty(description = "Scp client and server endpoint", module = "citrus-ftp")
     default void setScp(ScpEndpointBuilder builder) {
     }
 
-    @SchemaProperty(
-            description = "Docker client")
+    @SchemaProperty(description = "Docker client", module = "citrus-docker")
     default void setDocker(DockerEndpointBuilder builder) {
     }
 
-    @SchemaProperty(description = "Kubernetes client")
+    @SchemaProperty(description = "Kubernetes client", module = "citrus-kubernetes")
     default void setKubernetes(KubernetesEndpointBuilder builder) {
     }
 
-    @SchemaProperty(title = "JMS", description = "JMS endpoint.")
+    @SchemaProperty(title = "JMS", description = "JMS endpoint", module = "citrus-jms")
     default void setJms(JmsEndpointsBuilder builder) {
     }
 
-    @SchemaProperty(title = "Vert.x", description = "Vert.x endpoint.")
+    @SchemaProperty(title = "Vert.x", description = "Vert.x endpoint.", module = "citrus-vertx")
     default void setVertx(VertxEndpointsBuilder builder) {
     }
 
@@ -110,19 +109,19 @@ public interface Endpoints {
     default void setContext(ContextEndpointsBuilder builder) {
     }
 
-    @SchemaProperty(description = "Kafka endpoint.")
+    @SchemaProperty(description = "Kafka endpoint.", module = "citrus-kafka")
     default void setKafka(KafkaEndpointsBuilder builder) {
     }
 
-    @SchemaProperty(description = "Camel endpoint.")
+    @SchemaProperty(description = "Camel endpoint.", module = "citrus-camel")
     default void setCamel(CamelEndpointsBuilder builder) {
     }
 
-    @SchemaProperty(title = "Spring channel", description = "Spring channel endpoint.")
+    @SchemaProperty(title = "Spring channel", description = "Spring channel endpoint.", module = "citrus-spring-integration")
     default void setChannel(MessageChannelEndpointsBuilder builder) {
     }
 
-    @SchemaProperty(description = "Selenium endpoint.")
+    @SchemaProperty(description = "Selenium endpoint.", module = "citrus-selenium")
     default void setSelenium(SeleniumEndpointBuilder builder) {
     }
 

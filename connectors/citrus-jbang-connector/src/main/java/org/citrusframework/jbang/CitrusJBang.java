@@ -61,7 +61,6 @@ public class CitrusJBang {
 
     /**
      * Static entrance method to retrieve instance of Citrus JBang.
-     * @return
      */
     public static CitrusJBang citrus() {
         return new CitrusJBang();
@@ -196,6 +195,21 @@ public class CitrusJBang {
     public String ls() {
         ProcessAndOutput p = app.run("ls");
         return p.getOutput();
+    }
+
+    /**
+     * Inspect the given test source file and return detailed information.
+     */
+    public String inspect(String fileNameOrDir) {
+        ProcessAndOutput p = app.run("inspect", fileNameOrDir);
+
+        // expects a Json output, remove anything printed before the actual Json
+        String json = p.getOutput();
+        if (json.contains("{")) {
+            json = json.substring(json.indexOf("{")).trim();
+        }
+
+        return json;
     }
 
     /**

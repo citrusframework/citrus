@@ -140,29 +140,4 @@
       <version>${project.version}</version>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>generate-schema</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>java</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <mainClass>org.citrusframework.dsl.schema.generator.CitrusSchemaGenerator</mainClass>
-          <arguments>
-            <argument>${project.build.directory}/generated-resources/citrus-catalog</argument>
-            <argument>${project.version}</argument>
-          </arguments>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>

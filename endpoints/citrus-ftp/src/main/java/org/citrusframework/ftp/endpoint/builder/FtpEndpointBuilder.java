@@ -27,7 +27,7 @@ import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
 
-@SchemaType(oneOf = { "client", "server" })
+@SchemaType(oneOf = { "client", "server" }, module = "citrus-ftp")
 public class FtpEndpointBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;

@@ -27,7 +27,7 @@ import org.citrusframework.websocket.server.WebSocketServerBuilder;
 import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
 
-@SchemaType(oneOf = { "client", "server" })
+@SchemaType(oneOf = { "client", "server" }, module = "citrus-websocket")
 public class WebSocketEndpointBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;

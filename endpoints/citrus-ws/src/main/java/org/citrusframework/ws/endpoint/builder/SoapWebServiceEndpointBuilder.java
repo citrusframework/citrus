@@ -27,7 +27,7 @@ import org.citrusframework.ws.server.WebServiceServerBuilder;
 import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
 
-@SchemaType(oneOf = { "client", "server" })
+@SchemaType(oneOf = { "client", "server" }, module = "citrus-ws")
 public class SoapWebServiceEndpointBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;

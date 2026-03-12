@@ -19,6 +19,7 @@ package org.citrusframework.functions.core;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.functions.parameter.StringParameter;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * Adds XML CDATA section tags to parameter value. This is extremely useful when having
@@ -26,6 +27,7 @@ import org.citrusframework.functions.parameter.StringParameter;
  * nested CDATA sections are not allowed. This function adds the CDATA section tags
  * at runtime.
  */
+@SchemaType(module = "citrus-validation-xml")
 public class CreateCDataSectionFunction implements ParameterizedFunction<StringParameter> {
 
     /** CDATA section tags */

@@ -42,6 +42,7 @@ import org.citrusframework.validation.matcher.DefaultControlExpressionParser;
 import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
 import org.citrusframework.variable.VariableUtils;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
@@ -51,6 +52,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @since 2.5
  */
 @SuppressWarnings("unchecked")
+@SchemaType(module = "citrus-validation-hamcrest")
 public class HamcrestValidationMatcher implements ParameterizedValidationMatcher<HamcrestValidationMatcher.Parameters>, ControlExpressionParser {
 
     private final List<String> matchers = Arrays.asList( "equalTo", "equalToIgnoringCase", "equalToIgnoringWhiteSpace", "is", "not", "containsString", "startsWith", "endsWith", "matchesPattern" );

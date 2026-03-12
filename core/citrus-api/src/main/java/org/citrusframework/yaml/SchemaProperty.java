@@ -39,6 +39,11 @@ public @interface SchemaProperty {
     String group() default "";
 
     /**
+     * Citrus module information.
+     */
+    String module() default "";
+
+    /**
      * Name of the property
      */
     String name() default "";

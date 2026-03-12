@@ -27,10 +27,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.Stack;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -43,6 +44,8 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.CitrusJBangMain;
 import org.citrusframework.jbang.LoggingSupport;
 import org.citrusframework.jbang.maven.MavenDependencyResolver;
+import org.citrusframework.jbang.util.CodeAnalyzer;
+import org.citrusframework.jbang.util.DelegatingCodeAnalyzer;
 import org.citrusframework.main.TestEngine;
 import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.report.TestReporter;
@@ -85,6 +88,9 @@ public class Run extends CitrusCommand {
 
     @Option(names = { "--offline" }, defaultValue = "false", description = "When enabled there will be no attempts to resolve Maven artifacts via internet connection.")
     private boolean offline;
+
+    @Option(names = { "--inspect-code" }, defaultValue = "true", description = "When enabled the source code gets analyzed for required modules and dependencies that are added to the classpath.")
+    private boolean inspectCode = true;
 
     @Option(names = { "--property" }, arity = "0..*", description = "Default System property to set before the test run.")
     private String[] properties;
@@ -173,45 +179,76 @@ public class Run extends CitrusCommand {
         }
 
         if (!offline) {
-            handleAdditionalDependencies();
+            handleAdditionalDependencies(tests);
         }
 
         engine.run();
         return exitStatus.exitStatus();
     }
 
-    private void handleAdditionalDependencies() {
+    private void handleAdditionalDependencies(List<String> tests) {
         MavenDependencyResolver resolver = getMavenDependencyResolver();
+        Set<String> allModules = new HashSet<>();
+        Set<String> allDependencies = new HashSet<>();
+
         List<MavenArtifact> additionalArtifacts = new ArrayList<>();
 
         // Handle Citrus modules from envVar settings
         Arrays.stream(CitrusJBangMain.Settings.getModules())
                 .map(String::trim)
                 .filter(StringUtils::hasText)
-                .forEach(module -> additionalArtifacts.addAll(resolver.resolveModule(module.trim())));
+                .forEach(allModules::add);
 
         // Handle Citrus modules from command line options
         if (StringUtils.hasText(modules)) {
-            for (String module : modules.split(",")) {
-                additionalArtifacts.addAll(resolver.resolveModule(module.trim()));
-            }
+            Arrays.stream(modules.split(","))
+                    .map(String::trim)
+                    .filter(StringUtils::hasText)
+                    .forEach(allModules::add);
         }
 
-        Predicate<String> isSnapshotArtifact = it -> it.contains("-SNAPSHOT");
         // Handle Citrus dependencies from envVar settings
         Arrays.stream(CitrusJBangMain.Settings.getDependencies())
                 .map(String::trim)
                 .filter(StringUtils::hasText)
-                .forEach(dependency ->
-                    additionalArtifacts.addAll(resolver.resolve(dependency.trim(), isSnapshotArtifact.test(dependency), true)));
+                .forEach(allDependencies::add);
 
         // Handle Citrus dependencies from command line options
         if (dependencies != null) {
-            for (String dependency : dependencies) {
-                additionalArtifacts.addAll(
-                        resolver.resolve(dependency.trim(), isSnapshotArtifact.test(dependency), true));
+            Arrays.stream(dependencies)
+                    .map(String::trim)
+                    .filter(StringUtils::hasText)
+                    .forEach(allDependencies::add);
+        }
+
+        if (inspectCode) {
+            // Analyze code for additional modules and dependencies
+            CodeAnalyzer analyzer = new DelegatingCodeAnalyzer();
+            for (String test : tests) {
+                try {
+                    CodeAnalyzer.ScanResult scanResult = analyzer.scan(FileUtils.getFileResource(test));
+                    allModules.addAll(Arrays.asList(scanResult.modules()));
+                    allDependencies.addAll(Arrays.asList(scanResult.dependencies()));
+                } catch (Exception e) {
+                    printer().printErr(String.format("Failed to analyze test file %s due to '%s'", test, e.getMessage()));
+                }
             }
         }
+
+        String systemClasspath = System.getProperty("java.class.path");
+        allModules.stream()
+                .map(module -> {
+                    if (module.startsWith("citrus-")) {
+                        return module;
+                    } else {
+                        return "citrus-" + module;
+                    }
+                })
+                .filter(module -> !systemClasspath.contains(module))
+                .forEach(module -> additionalArtifacts.addAll(resolver.resolveModule(module)));
+
+        allDependencies.forEach(dependency -> additionalArtifacts.addAll(
+                resolver.resolve(dependency.trim(), dependency.contains("-SNAPSHOT"), true)));
 
         if (!additionalArtifacts.isEmpty()) {
             additionalArtifacts.forEach(mavenArtifact -> {

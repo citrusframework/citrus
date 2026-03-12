@@ -27,7 +27,7 @@ import org.citrusframework.vertx.endpoint.VertxSyncEndpointBuilder;
 import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
 
-@SchemaType(oneOf = { "asynchronous", "synchronous" })
+@SchemaType(oneOf = { "asynchronous", "synchronous" }, module = "citrus-vertx")
 public class VertxEndpointsBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;

@@ -48,17 +48,17 @@ public class Testcontainers implements TestActionBuilder<TestcontainersAction>, 
         this.actor = actor;
     }
 
-    @SchemaProperty(kind = GROUP, group = "testcontainers")
+    @SchemaProperty(kind = GROUP, group = "testcontainers", module = "citrus-testcontainers")
     public void setCompose(Compose builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = GROUP, group = "testcontainers")
+    @SchemaProperty(kind = GROUP, group = "testcontainers", module = "citrus-testcontainers")
     public void setStart(Start builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers")
+    @SchemaProperty(kind = ACTION, group = "testcontainers", module = "citrus-testcontainers")
     public void setStop(Stop builder) {
         this.builder = builder;
     }

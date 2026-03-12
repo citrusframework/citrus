@@ -52,6 +52,7 @@ import static org.citrusframework.yaml.SchemaProperty.Kind.CONTAINER;
 public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
     private static final String SOAP_GROUP = "soap";
+    private static final String SOAP_MODULE = "citrus-ws";
 
     private TestActionBuilder<?> builder;
 
@@ -97,7 +98,8 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
     }
 
-    @SchemaProperty(kind = ACTION, group = SOAP_GROUP, description = "Sends a SOAP request as a client.")
+    @SchemaProperty(kind = ACTION, group = SOAP_GROUP, module = SOAP_MODULE,
+            description = "Sends a SOAP request as a client.")
     public void setSendRequest(ClientRequest request) {
         SendSoapMessageAction.Builder requestBuilder = asClientBuilder().send();
         requestBuilder.name("soap:send-request");
@@ -158,7 +160,8 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = requestBuilder;
     }
 
-    @SchemaProperty(kind = ACTION, group = SOAP_GROUP, description = "Receives a SOAP response as a client.")
+    @SchemaProperty(kind = ACTION, group = SOAP_GROUP, module = SOAP_MODULE,
+            description = "Receives a SOAP response as a client.")
     public void setReceiveResponse(ClientResponse response) {
         ReceiveSoapMessageAction.Builder responseBuilder = asClientBuilder().receive();
 
@@ -230,7 +233,8 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = responseBuilder;
     }
 
-    @SchemaProperty(kind = ACTION, group = SOAP_GROUP, description = "Receives a SOAP request as a server.")
+    @SchemaProperty(kind = ACTION, group = SOAP_GROUP, module = SOAP_MODULE,
+            description = "Receives a SOAP request as a server.")
     public void setReceiveRequest(ServerRequest request) {
         ReceiveSoapMessageAction.Builder requestBuilder = asServerBuilder().receive();
 
@@ -300,7 +304,8 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = requestBuilder;
     }
 
-    @SchemaProperty(kind = ACTION, group = SOAP_GROUP, description = "Sends a SOAP response as a server.")
+    @SchemaProperty(kind = ACTION, group = SOAP_GROUP, module = SOAP_MODULE,
+            description = "Sends a SOAP response as a server.")
     public void setSendResponse(ServerResponse response) {
         SendSoapMessageAction.Builder responseBuilder = asServerBuilder().send();
 
@@ -350,7 +355,8 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = responseBuilder;
     }
 
-    @SchemaProperty(kind = ACTION, group = SOAP_GROUP, description = "Sends a SOAP fault response as a server")
+    @SchemaProperty(kind = ACTION, group = SOAP_GROUP, module = SOAP_MODULE,
+            description = "Sends a SOAP fault response as a server")
     public void setSendFault(ServerFaultResponse response) {
         SendSoapFaultAction.Builder responseBuilder = asServerBuilder().sendFault();
         responseBuilder.name("soap:send-fault");
@@ -417,7 +423,8 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = responseBuilder;
     }
 
-    @SchemaProperty(kind = CONTAINER, group = SOAP_GROUP, description = "Expects a SOAP fault response as a client.")
+    @SchemaProperty(kind = CONTAINER, group = SOAP_GROUP, module = SOAP_MODULE,
+            description = "Expects a SOAP fault response as a client.")
     public void setAssertFault(ClientAssertFault soapFault) {
         AssertSoapFault.Builder assertFault = asClientBuilder().assertFault();
 

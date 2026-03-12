@@ -30,7 +30,7 @@ import org.citrusframework.yaml.SchemaType;
 /**
  * Endpoint builder delegates to either client od server endpoint builder.
  */
-@SchemaType(oneOf = { "client", "server" })
+@SchemaType(oneOf = { "client", "server" }, module = "citrus-http")
 public class HttpEndpointBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;

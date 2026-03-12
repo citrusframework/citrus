@@ -28,5 +28,13 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface SchemaType {
 
+    /**
+     * Citrus module information.
+     */
+    String module() default "";
+
+    /**
+     * Declare one of association of multiple properties.
+     */
     String[] oneOf() default {};
 }

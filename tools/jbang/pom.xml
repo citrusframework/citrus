@@ -84,6 +84,53 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>${project.build.directory}/generated-resources</directory>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-schema</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <includeProjectDependencies>false</includeProjectDependencies>
+          <includePluginDependencies>true</includePluginDependencies>
+          <executableDependency>
+            <groupId>org.citrusframework</groupId>
+            <artifactId>citrus-schema-generator</artifactId>
+          </executableDependency>
+          <mainClass>org.citrusframework.dsl.schema.generator.CitrusSchemaGenerator</mainClass>
+          <arguments>
+            <argument>${project.build.directory}/generated-resources/citrus-catalog</argument>
+            <argument>${project.version}</argument>
+          </arguments>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.citrusframework</groupId>
+            <artifactId>citrus-schema-generator</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+
   <profiles>
     <profile>
       <id>release-central</id>

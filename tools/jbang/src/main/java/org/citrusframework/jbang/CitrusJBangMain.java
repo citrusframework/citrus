@@ -26,6 +26,7 @@ import org.citrusframework.jbang.commands.AgentStart;
 import org.citrusframework.jbang.commands.AgentStop;
 import org.citrusframework.jbang.commands.Complete;
 import org.citrusframework.jbang.commands.Init;
+import org.citrusframework.jbang.commands.Inspect;
 import org.citrusframework.jbang.commands.ListTests;
 import org.citrusframework.jbang.commands.Run;
 import picocli.CommandLine;
@@ -41,6 +42,7 @@ public class CitrusJBangMain implements Callable<Integer> {
         CitrusJBangMain main = new CitrusJBangMain();
         commandLine = new CommandLine(main)
                 .addSubcommand("init", new CommandLine(new Init(main)))
+                .addSubcommand("inspect", new CommandLine(new Inspect(main)))
                 .addSubcommand("run", new CommandLine(new Run(main)))
                 .addSubcommand("ls", new CommandLine(new ListTests(main)))
                 .addSubcommand("agent", new CommandLine(new Agent(main))

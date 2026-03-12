@@ -25,10 +25,12 @@ import org.citrusframework.util.XMLUtils;
 import org.citrusframework.xml.namespace.DefaultNamespaceContext;
 import org.citrusframework.xml.xpath.XPathUtils;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.6.2
  */
+@SchemaType(module = "citrus-validation-xml")
 public class XpathFunction implements ParameterizedFunction<XpathFunction.Parameters> {
 
     @Override

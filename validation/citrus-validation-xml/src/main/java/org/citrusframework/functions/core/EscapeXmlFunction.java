@@ -19,12 +19,14 @@ package org.citrusframework.functions.core;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.functions.parameter.StringParameter;
+import org.citrusframework.yaml.SchemaType;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeXml;
 
 /**
  * Escapes XML fragment with escaped characters for '<', '>'.
  */
+@SchemaType(module = "citrus-validation-xml")
 public class EscapeXmlFunction implements ParameterizedFunction<StringParameter> {
 
     @Override

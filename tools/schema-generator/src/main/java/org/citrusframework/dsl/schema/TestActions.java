@@ -183,59 +183,59 @@ public class TestActions {
     public void setAsync(Async builder) {
     }
 
-    @SchemaProperty(kind = ACTION, description = "Groovy test action.")
+    @SchemaProperty(kind = ACTION, description = "Groovy test action.", module = "citrus-groovy")
     public void setGroovy(Groovy builder) {
     }
 
-    @SchemaProperty(kind = GROUP, description = "Test actions related to Apache Camel.")
+    @SchemaProperty(kind = GROUP, description = "Test actions related to Apache Camel.", module = "citrus-camel")
     public void setCamel(Camel builder) {
     }
 
-    @SchemaProperty(kind = GROUP, description = "Http related test actions.")
+    @SchemaProperty(kind = GROUP, description = "Http related test actions.", module = "citrus-http")
     public void setHttp(Http builder) {
     }
 
-    @SchemaProperty(kind = GROUP, description = "OpenAPI related test actions.")
+    @SchemaProperty(kind = GROUP, description = "OpenAPI related test actions.", module = "citrus-openapi")
     public void setOpenapi(OpenApi builder) {
     }
 
-    @SchemaProperty(kind = GROUP, description = "SOAP Web Services related test actions.")
+    @SchemaProperty(kind = GROUP, description = "SOAP Web Services related test actions.", module = "citrus-ws")
     public void setSoap(Soap builder) {
     }
 
-    @SchemaProperty(kind = GROUP, description = "Agent service test actions.")
+    @SchemaProperty(kind = GROUP, description = "Agent service test actions.", module = "citrus-agent-connector")
     public void setAgent(Agent builder) {
     }
 
-    @SchemaProperty(kind = GROUP, description = "Kubernetes test actions.")
+    @SchemaProperty(kind = GROUP, description = "Kubernetes test actions.", module = "citrus-kubernetes")
     public void setKubernetes(Kubernetes builder) {
     }
 
-    @SchemaProperty(kind = GROUP, description = "Knative test actions.")
+    @SchemaProperty(kind = GROUP, description = "Knative test actions.", module = "citrus-knative")
     public void setKnative(Knative builder) {
     }
 
-    @SchemaProperty(kind = GROUP, description = "Selenium test actions.")
+    @SchemaProperty(kind = GROUP, description = "Selenium test actions.", module = "citrus-selenium")
     public void setSelenium(Selenium builder) {
     }
 
-    @SchemaProperty(kind = GROUP, description = "Testcontainers test actions.")
+    @SchemaProperty(kind = GROUP, description = "Testcontainers test actions.", module = "citrus-testcontainers")
     public void setTestcontainers(Testcontainers builder) {
     }
 
-    @SchemaProperty(kind = ACTION, description = "SQL test actions.")
+    @SchemaProperty(kind = ACTION, description = "SQL test actions.", module = "citrus-sql")
     public void setSql(Sql builder) {
     }
 
-    @SchemaProperty(kind = ACTION, description = "PLSQL test actions.")
+    @SchemaProperty(kind = ACTION, description = "PLSQL test actions.", module = "citrus-sql")
     public void setPlsql(Plsql builder) {
     }
 
-    @SchemaProperty(kind = ACTION, description = "JBang test actions.")
+    @SchemaProperty(kind = ACTION, description = "JBang test actions.", module = "citrus-jbang-connector")
     public void setJbang(JBang builder) {
     }
 
-    @SchemaProperty(kind = ACTION, description = "Purge JMS queue test action.")
+    @SchemaProperty(kind = ACTION, description = "Purge JMS queue test action.", module = "citrus-jms")
     public void setPurgeQueues(PurgeQueues builder) {
     }
 
