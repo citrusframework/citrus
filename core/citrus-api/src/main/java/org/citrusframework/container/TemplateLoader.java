@@ -16,13 +16,10 @@
 
 package org.citrusframework.container;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.functions.Function;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
@@ -36,8 +33,6 @@ public interface TemplateLoader<T extends TestAction> extends ReferenceResolverA
 
     /** Function resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/template/loader";
-
-    Map<String, Function> loaders = new HashMap<>();
 
     /** Type resolver to find custom message validators on classpath via resource path lookup */
     TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
@@ -66,4 +61,11 @@ public interface TemplateLoader<T extends TestAction> extends ReferenceResolverA
      * @return
      */
     T load(String filePath);
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
+    }
 }

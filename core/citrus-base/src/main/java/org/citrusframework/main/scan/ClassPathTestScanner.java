@@ -85,7 +85,7 @@ public class ClassPathTestScanner extends AbstractTestScanner {
         }
 
         try {
-            Class<?> clazz = Class.forName(className, true, ClassLoaderHelper.getClassLoader(ClassPathTestScanner.class));
+            Class<?> clazz = Class.forName(className, true, ClassLoaderHelper.getClassLoader());
             if (clazz.isAnnotationPresent(annotationType)) {
                 return true;
             }

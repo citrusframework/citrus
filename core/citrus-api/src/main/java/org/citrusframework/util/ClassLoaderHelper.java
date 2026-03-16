@@ -22,11 +22,32 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.citrusframework.TestActionBuilder;
+import org.citrusframework.common.TestLoader;
+import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.container.TemplateLoader;
+import org.citrusframework.context.resolver.TypeAliasResolver;
+import org.citrusframework.endpoint.EndpointBuilder;
+import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.main.TestEngine;
+import org.citrusframework.message.MessageProcessor;
+import org.citrusframework.message.MessageSelector;
+import org.citrusframework.message.ScriptPayloadBuilder;
+import org.citrusframework.validation.HeaderValidator;
+import org.citrusframework.validation.MessageValidator;
+import org.citrusframework.validation.SchemaValidator;
+import org.citrusframework.validation.ValueMatcher;
+import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
+import org.citrusframework.variable.SegmentVariableExtractorRegistry;
+import org.citrusframework.variable.VariableExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +70,16 @@ public final class ClassLoaderHelper {
      */
     private static final String INSTANCE = "INSTANCE";
 
-    private static final Map<String, URL> additionalArtifacts = new ConcurrentHashMap<>();
+    /**
+     * Map of additional artifacts that should be loaded permanently to the classpath for each class loader.
+     */
+    private static final Map<String, URL> artifacts = new ConcurrentHashMap<>();
+
+    /**
+     * Map of additional artifacts that should be loaded temporarily to the classpath for each class loader.
+     * When reset these artifacts are cleared.
+     */
+    private static final Map<String, URL> temporaryArtifacts = new ConcurrentHashMap<>();
 
     /**
      * Reference to the plain original context class loader. Used to restore class loader to its initial state.
@@ -121,17 +151,24 @@ public final class ClassLoaderHelper {
             return null;
         }
 
-        if (additionalArtifacts.isEmpty() || cl instanceof OpenURLClassLoader) {
+        if (artifacts.isEmpty() && temporaryArtifacts.isEmpty()) {
             return cl;
         }
 
-        OpenURLClassLoader openURLClassLoader = new OpenURLClassLoader(cl);
-        additionalArtifacts.values().forEach(openURLClassLoader::addURL);
+        OpenURLClassLoader openURLClassLoader;
+        if (cl instanceof OpenURLClassLoader existing) {
+            openURLClassLoader = existing;
+        } else {
+            openURLClassLoader = new OpenURLClassLoader(cl);
+        }
+
+        artifacts.forEach(openURLClassLoader::addArtifact);
+        temporaryArtifacts.forEach(openURLClassLoader::addArtifact);
         return openURLClassLoader;
     }
 
     public static synchronized ClassLoader getContextClassLoader() {
-        if (additionalArtifacts.isEmpty()) {
+        if (artifacts.isEmpty() && temporaryArtifacts.isEmpty()) {
             return Thread.currentThread().getContextClassLoader();
         }
 
@@ -144,7 +181,12 @@ public final class ClassLoaderHelper {
     }
 
     public static ClassLoader getClassLoader() {
-        return adapt(ClassLoaderHelper.class.getClassLoader());
+        ClassLoader classLoader = getContextClassLoader();
+        if (classLoader != null) {
+            return classLoader;
+        }
+
+        return getClassLoader(ClassLoaderHelper.class);
     }
 
     public static ClassLoader getClassLoader(Class<?> type) {
@@ -230,24 +272,32 @@ public final class ClassLoaderHelper {
     }
 
     /**
-     * Adds a dynamic class loader entry in the form of a URL.
+     * Adds a permanent dynamic class loader entry in the form of a URL.
      * When this helper resolves class loaders the dynamic entry will be part of the class loader.
      */
     public static synchronized void addArtifact(String gav, URL url) {
-        if (ccl != null) {
-            throw new IllegalStateException("Not allowed to add additional artifacts, " +
-                    "because the context class loader has been adapted already!");
-        }
+        addArtifact(gav, url, true);
+    }
 
-        additionalArtifacts.putIfAbsent(gav, url);
+    /**
+     * Adds a dynamic class loader entry in the form of a URL.
+     * When this helper resolves class loaders the dynamic entry will be part of the class loader.
+     */
+    public static synchronized void addArtifact(String gav, URL url, boolean permanent) {
+        if (permanent) {
+            artifacts.putIfAbsent(gav, url);
+        } else {
+            temporaryArtifacts.putIfAbsent(gav, url);
+        }
     }
 
     /**
      * Clears additional artifacts and restores context class loader to its initial state before adapting.
      */
     public static synchronized void restore() {
-        if (!additionalArtifacts.isEmpty()) {
-            additionalArtifacts.clear();
+        if (!artifacts.isEmpty() || !temporaryArtifacts.isEmpty()) {
+            reset();
+
             try {
                 if (ccl != null) {
                     Thread.currentThread().setContextClassLoader(ccl);
@@ -260,9 +310,70 @@ public final class ClassLoaderHelper {
     }
 
     /**
+     * Reset temporary artifacts only.
+     */
+    public static synchronized void reset() {
+        temporaryArtifacts.clear();
+    }
+
+    /**
+     * Set context class loader for current thread with adapted instance.
+     */
+    public static synchronized boolean updateContextClassloader() {
+        return updateContextClassloader(false);
+    }
+
+    /**
+     * Set context class loader for current thread with adapted instance.
+     */
+    public static synchronized boolean updateContextClassloader(boolean clearCache) {
+        try {
+            // Adapt and set context class loader for current thread
+            Thread.currentThread().setContextClassLoader(ClassLoaderHelper.getContextClassLoader());
+        } catch (Throwable e) {
+            logger.warn("Failed to update context class loader due to '%s'".formatted(e.getMessage()));
+            return false;
+        }
+
+        if (clearCache) {
+            clearCache();
+        }
+
+        return true;
+    }
+
+    /**
+     * Clear cache for resource path lookup. Required after the classpath has been adapted with additional artifacts.
+     */
+    public static void clearCache() {
+        TestActionBuilder.clearCache();
+        TestLoader.clearCache();
+        TypeAliasResolver.clearCache();
+        HeaderValidator.clearCache();
+        MessageValidator.clearCache();
+        SchemaValidator.clearCache();
+        EndpointBuilder.clearCache();
+        EndpointComponent.clearCache();
+        MessageSelector.clearCache();
+        ScriptPayloadBuilder.clearCache();
+        ValueMatcher.clearCache();
+        AnnotationConfigParser.clearCache();
+        ValidationContext.clearCache();
+        SqlResultSetScriptValidator.clearCache();
+        SegmentVariableExtractorRegistry.clearCache();
+
+        TestEngine.clearCache();
+        TemplateLoader.clearCache();
+        MessageProcessor.clearCache();
+        VariableExtractor.clearCache();
+    }
+
+    /**
      * Special URL class loader allows to add new file URLs.
      */
     public static class OpenURLClassLoader extends URLClassLoader {
+
+        private final Set<String> addedArtifacts =  new HashSet<>();
 
         OpenURLClassLoader() {
             super(new URL[0]);
@@ -272,9 +383,13 @@ public final class ClassLoaderHelper {
             super(new URL[0], parent);
         }
 
-        @Override
-        protected void addURL(URL url) {
-            super.addURL(url);
+        /**
+         * Adds the given URL if artifact has not been added before.
+         */
+        protected void addArtifact(String gav, URL url) {
+            if (addedArtifacts.add(gav)) {
+                addURL(url);
+            }
         }
     }
 }

@@ -16,17 +16,59 @@
 
 package org.citrusframework.agent;
 
+import java.net.MalformedURLException;
+import java.util.List;
+
+import org.apache.camel.tooling.maven.MavenArtifact;
+import org.citrusframework.agent.util.ConfigurationHelper;
 import org.citrusframework.main.TestEngine;
 import org.citrusframework.main.TestRunConfiguration;
+import org.citrusframework.util.ClassLoaderHelper;
+import org.citrusframework.xml.actions.XmlTestActionBuilder;
+import org.citrusframework.yaml.actions.YamlTestActionBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RunService {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(RunService.class);
 
     /**
      * Run Citrus application with given configuration and cached Citrus instance.
      */
     public void run(TestRunConfiguration configuration) {
-        TestEngine engine = TestEngine.lookup(configuration);
-        engine.run();
+        try {
+            resolveArtifacts(configuration);
+
+            TestEngine engine = TestEngine.lookup(configuration);
+            engine.run();
+        } finally {
+            if (!configuration.getModules().isEmpty() || !configuration.getDependencies().isEmpty()) {
+                ClassLoaderHelper.reset();
+            }
+        }
+    }
+
+    private void resolveArtifacts(TestRunConfiguration runConfiguration) {
+        if (!runConfiguration.getModules().isEmpty() || !runConfiguration.getDependencies().isEmpty()) {
+            // Resolve with new modules and artifacts
+            List<MavenArtifact> artifacts = ConfigurationHelper.resolveArtifacts(
+                    runConfiguration.getModules(), runConfiguration.getDependencies());
+            for (MavenArtifact artifact : artifacts) {
+                try {
+                    ClassLoaderHelper.addArtifact(artifact.toString(), artifact.getFile().toURI().toURL(), false);
+                } catch (MalformedURLException e) {
+                    logger.warn(String.format("Error resolving artifact %s due to '%s'", artifact, e.getMessage()));
+                }
+            }
+
+            // Update context class loader and clear cache for resource path lookup
+            if (ClassLoaderHelper.updateContextClassloader(true)) {
+                XmlTestActionBuilder.clearCache();
+                YamlTestActionBuilder.clearCache();
+            }
+        }
     }
 
 }

@@ -32,7 +32,6 @@ import java.net.URLConnection;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.ClassLoaderHelper;
-import org.citrusframework.util.ReflectionHelper;
 
 import static java.lang.String.format;
 
@@ -161,8 +160,7 @@ public class Resources {
 
         @Override
         public InputStream getInputStream() {
-            return ClassLoaderHelper.getClassLoader(ReflectionHelper.class)
-                .getResourceAsStream(location);
+            return ClassLoaderHelper.getClassLoader().getResourceAsStream(location);
         }
 
         @Override
@@ -184,7 +182,7 @@ public class Resources {
 
         @Override
         public URI getURI() {
-            URL url = ClassLoaderHelper.getClassLoader(ReflectionHelper.class).getResource(location);
+            URL url = ClassLoaderHelper.getClassLoader().getResource(location);
             try {
                 return url != null ? url.toURI() : null;
             } catch (URISyntaxException e) {

@@ -131,7 +131,7 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
 
         if (StringUtils.hasText(CitrusSettings.DEFAULT_CONFIG_CLASS)) {
             try {
-                Class<?> configClass = Class.forName(CitrusSettings.DEFAULT_CONFIG_CLASS, true, ClassLoaderHelper.getClassLoader(CitrusContext.class));
+                Class<?> configClass = Class.forName(CitrusSettings.DEFAULT_CONFIG_CLASS, true, ClassLoaderHelper.getClassLoader());
                 context.parseConfiguration(configClass);
             } catch (ClassNotFoundException e) {
                 throw new CitrusRuntimeException("Failed to instantiate custom configuration class", e);

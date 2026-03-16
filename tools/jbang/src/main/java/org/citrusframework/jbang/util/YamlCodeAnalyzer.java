@@ -24,12 +24,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.citrusframework.jbang.CitrusJBangMain;
 import org.citrusframework.util.StringUtils;
 
 public class YamlCodeAnalyzer implements CodeAnalyzer {
 
     private static final Pattern DEPS_MODELINE_PATTERN = Pattern.compile("^# deps:\\s+(.+)$", Pattern.MULTILINE);
     private static final Pattern MODULES_MODELINE_PATTERN = Pattern.compile("^# modules:\\s+(.+)$", Pattern.MULTILINE);
+
+    private static final Pattern CAMEL_ENDPOINT_PATTERN = Pattern.compile("^\\s+endpoint:\\s+camel:([^\\s:?]+).*$", Pattern.MULTILINE);
 
     public static final String MODULE_PREFIX = "citrus-";
 
@@ -66,6 +69,13 @@ public class YamlCodeAnalyzer implements CodeAnalyzer {
             } else {
                 items.add(dependencies.trim());
             }
+        }
+
+        // Special handling of Camel endpoint URIs
+        matcher = CAMEL_ENDPOINT_PATTERN.matcher(code.replaceAll("endpoint:\\s*[|>]\\s*\n", "endpoint: "));
+        while (matcher.find()) {
+            String componentName = matcher.group(1);
+            items.add("org.apache.camel:camel-%s:%s".formatted(componentName, CitrusJBangMain.Settings.getCamelVersion()));
         }
 
         return items;

@@ -209,9 +209,9 @@ public class TestNGEngine extends AbstractTestEngine {
                             Class<?> clazz;
                             if (configuration.getTestJar() != null) {
                                 clazz = Class.forName(testClass.getName(), false,
-                                        new URLClassLoader(new URL[]{configuration.getTestJar().toURI().toURL()}, ClassLoaderHelper.getClassLoader(TestNGEngine.class)));
+                                        new URLClassLoader(new URL[]{configuration.getTestJar().toURI().toURL()}, ClassLoaderHelper.getClassLoader()));
                             } else {
-                                clazz = Class.forName(testClass.getName(), false, ClassLoaderHelper.getClassLoader(TestNGEngine.class));
+                                clazz = Class.forName(testClass.getName(), false, ClassLoaderHelper.getClassLoader());
                             }
                             return clazz;
                         } catch (ClassNotFoundException | MalformedURLException e) {
@@ -247,9 +247,9 @@ public class TestNGEngine extends AbstractTestEngine {
                 Class<?> clazz;
                 if (configuration.getTestJar() != null) {
                     clazz = Class.forName(testClass.getName(), false,
-                            new URLClassLoader(new URL[]{configuration.getTestJar().toURI().toURL()}, ClassLoaderHelper.getClassLoader(TestNGEngine.class)));
+                            new URLClassLoader(new URL[]{configuration.getTestJar().toURI().toURL()}, ClassLoaderHelper.getClassLoader()));
                 } else {
-                    clazz = Class.forName(testClass.getName(), false, ClassLoaderHelper.getClassLoader(TestNGEngine.class));
+                    clazz = Class.forName(testClass.getName(), false, ClassLoaderHelper.getClassLoader());
                 }
 
                 XmlClass xmlClass = new XmlClass(clazz);

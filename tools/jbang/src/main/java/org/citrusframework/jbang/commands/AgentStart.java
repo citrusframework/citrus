@@ -15,16 +15,18 @@
  */
 package org.citrusframework.jbang.commands;
 
+import java.net.MalformedURLException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.citrusframework.agent.CitrusAgentConfiguration;
-import org.citrusframework.agent.CitrusAgentServer;
-import org.citrusframework.agent.util.ConfigurationHelper;
+import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.jbang.CitrusJBangMain;
+import org.citrusframework.jbang.maven.MavenDependencyResolver;
+import org.citrusframework.server.Server;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -65,6 +67,18 @@ public class AgentStart extends CitrusCommand {
     @Option(names = { "--includes" }, arity = "0..*", description = "Includes test name pattern.")
     private String[] includes;
 
+    @Option(names = { "--modules" }, description = "Comma delimited list of additional Citrus modules that should be loaded with the agent.")
+    private String modules;
+
+    @Option(names = { "--dep" }, arity = "0..*", description = "Set of additional Maven dependencies that should be loaded with the agent.")
+    private String[] dependencies;
+
+    @Option(names = { "--offline" }, description = "When enabled there will be no attempts to resolve Maven artifacts via internet connection.")
+    private String offline;
+
+    @Option(names = { "--inspect-code" }, defaultValue = "true", description = "When enabled the source code gets analyzed for required modules and dependencies that are added to the classpath.")
+    private String inspectCode;
+
     @Option(names = { "--property" }, arity = "0..*", description = "Default System property to set before the test run.")
     private String[] properties;
 
@@ -81,13 +95,36 @@ public class AgentStart extends CitrusCommand {
     }
 
     private int start() {
-        CitrusAgentConfiguration configuration = fromCliOptions(ConfigurationHelper.fromEnvVars());
-        CitrusAgentServer server = new CitrusAgentServer(configuration, Collections.emptyList());
+        resolveArtifacts();
+
+        CitrusAgentConfiguration config = fromCliOptions(CitrusAgentConfiguration.fromEnvVars(TestSourceHelper::create));
+        Server server = ClassLoaderHelper.instantiateType("org.citrusframework.agent.CitrusAgentServer", config);
+        server.run();
+
+        return 0;
+    }
+
+    /**
+     * Resolve citrus-agent Maven artifact and its transitive dependencies and add it to the classpath.
+     */
+    private void resolveArtifacts() {
         try {
-            server.start();
-            return server.waitForCompletion() ? 0 : 1;
-        } finally {
-            server.stop();
+            MavenDependencyResolver resolver = new MavenDependencyResolver();
+            resolver.resolveModule("citrus-agent")
+                    .stream()
+                    .filter(mavenArtifact -> !mavenArtifact.getGav().getArtifactId().equals("citrus-jbang")) // avoid adding citrus-jbang multiple times
+                    .forEach(mavenArtifact -> {
+                        try {
+                            ClassLoaderHelper.addArtifact(mavenArtifact.toString(), mavenArtifact.getFile().toURI().toURL());
+                        } catch (MalformedURLException e) {
+                            printer().printErr(String.format("Error resolving artifact %s due to '%s'", mavenArtifact, e.getMessage()));
+                        }
+                    });
+
+            // Adapt and set class loader in main thread
+            ClassLoaderHelper.updateContextClassloader();
+        } catch (Throwable e) {
+            printer().printErr("Failed to set context class loader with additional dependencies due to '%s'".formatted(e.getMessage()));
         }
     }
 
@@ -145,6 +182,28 @@ public class AgentStart extends CitrusCommand {
                     .filter(p -> p.contains("="))
                     .map(p -> p.split("=", 2))
                     .collect(Collectors.toMap(p -> p[0], p -> p[1])));
+        }
+
+        if (StringUtils.hasText(modules)) {
+            configuration.setModules(Arrays.stream(modules.split(","))
+                    .map(String::trim)
+                    .filter(StringUtils::hasText)
+                    .collect(Collectors.toSet()));
+        }
+
+        if (dependencies != null) {
+            configuration.setDependencies(Arrays.stream(dependencies)
+                    .map(String::trim)
+                    .filter(StringUtils::hasText)
+                    .collect(Collectors.toSet()));
+        }
+
+        if (StringUtils.hasText(offline)) {
+            configuration.setOffline(Boolean.parseBoolean(offline));
+        }
+
+        if (StringUtils.hasText(inspectCode)) {
+            configuration.setInspectCode(Boolean.parseBoolean(inspectCode));
         }
 
         return configuration;

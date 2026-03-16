@@ -45,7 +45,7 @@ public class TestcontainersResource<T extends GenericContainer<?>> implements Qu
         String[] qualifiedClassNames = initArgs.getOrDefault(ContainerLifecycleListener.INIT_ARG, "").split(",");
         for (String qualifiedClassName : qualifiedClassNames) {
             try {
-                Class<?> cls = Class.forName(qualifiedClassName, true, ClassLoaderHelper.getContextClassLoader());
+                Class<?> cls = Class.forName(qualifiedClassName, true, ClassLoaderHelper.getClassLoader());
                 Object instance = cls.getDeclaredConstructor().newInstance();
                 if (instance instanceof ContainerLifecycleListener<?> containerLifecycleListener) {
                     registerContainerLifecycleListener((ContainerLifecycleListener<T>) containerLifecycleListener);

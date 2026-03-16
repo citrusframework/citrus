@@ -126,9 +126,9 @@ public class JUnit4TestEngine extends AbstractTestEngine {
                         Class<?> clazz;
                         if (getConfiguration().getTestJar() != null) {
                             clazz = Class.forName(source.getName(), false,
-                                    new URLClassLoader(new URL[]{ getConfiguration().getTestJar().toURI().toURL() }, ClassLoaderHelper.getClassLoader(JUnit4TestEngine.class)));
+                                    new URLClassLoader(new URL[]{ getConfiguration().getTestJar().toURI().toURL() }, ClassLoaderHelper.getClassLoader()));
                         } else {
-                            clazz = Class.forName(source.getName(), false, ClassLoaderHelper.getClassLoader(JUnit4TestEngine.class));
+                            clazz = Class.forName(source.getName(), false, ClassLoaderHelper.getClassLoader());
                         }
                         logger.debug("Found test candidate: " + source.getName());
                         return clazz;

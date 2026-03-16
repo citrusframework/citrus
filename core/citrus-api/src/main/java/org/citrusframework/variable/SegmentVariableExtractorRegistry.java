@@ -223,4 +223,11 @@ public class SegmentVariableExtractorRegistry {
             return object instanceof Map;
         }
     }
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    public static void clearCache() {
+        TYPE_RESOLVER.clearCache();
+    }
 }

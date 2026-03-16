@@ -35,7 +35,7 @@ public class CreateCustomResource extends AbstractKubernetesAction.Builder<Creat
     @SchemaProperty
     public void setType(String resourceType) {
         try {
-            delegate.resourceType(Class.forName(resourceType, true, ClassLoaderHelper.getClassLoader(CreateCustomResource.class)));
+            delegate.resourceType(Class.forName(resourceType, true, ClassLoaderHelper.getClassLoader()));
         } catch(ClassNotFoundException | ClassCastException e) {
             delegate.type(resourceType);
         }

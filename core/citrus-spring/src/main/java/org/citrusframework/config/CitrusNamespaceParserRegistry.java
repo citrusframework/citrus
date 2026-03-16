@@ -17,11 +17,12 @@
 package org.citrusframework.config;
 
 import java.util.Map;
-
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.citrusframework.config.handler.CitrusTestCaseNamespaceHandler;
 import org.citrusframework.config.xml.*;
 import org.citrusframework.spi.ResourcePathTypeResolver;
+import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -40,7 +41,7 @@ public final class CitrusNamespaceParserRegistry {
     private static final String RESOURCE_PATH = "META-INF/citrus/action/parser";
 
     /** Type resolver for dynamic parser lookup via resource path */
-    private static final ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /** Parser registry as map */
     private static final Map<String, BeanDefinitionParser> BEAN_PARSER = new ConcurrentHashMap<>();
@@ -134,5 +135,12 @@ public final class CitrusNamespaceParserRegistry {
      */
     public static Map<String, BeanDefinitionParser> lookupBeanParser() {
         return TYPE_RESOLVER.resolveAll();
+    }
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
     }
 }

@@ -87,4 +87,11 @@ public interface VariableExtractor extends MessageProcessor {
          */
         T build();
     }
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
+    }
 }

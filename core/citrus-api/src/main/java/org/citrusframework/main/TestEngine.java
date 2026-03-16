@@ -18,6 +18,7 @@ package org.citrusframework.main;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
+import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,7 @@ public interface TestEngine {
     String RESOURCE_PATH = "META-INF/citrus/engine";
 
     /** Default Citrus engine from classpath resource properties */
-    ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /**
      * Runs all tests with the given engine.
@@ -59,5 +60,12 @@ public interface TestEngine {
 
         logger.debug("Using Citrus engine '{}' as {}", configuration.getEngine(), testEngine);
         return testEngine;
+    }
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
     }
 }

@@ -76,7 +76,7 @@ public class GroovyScriptPayloadBuilder implements ScriptPayloadBuilder {
      * @return
      */
     protected String buildMarkupBuilderScript(String scriptData) {
-        ClassLoader parent = ClassLoaderHelper.getClassLoader(GroovyScriptPayloadBuilder.class);
+        ClassLoader parent = ClassLoaderHelper.getClassLoader();
         try (GroovyClassLoader loader = new GroovyClassLoader(parent))  {
             Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
                     .withCode(scriptData)

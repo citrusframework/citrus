@@ -20,7 +20,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.citrusframework.CitrusSettings;
 
 public final class CitrusAgentSettings {
 
@@ -86,6 +89,20 @@ public final class CitrusAgentSettings {
     private static final String CORS_ALLOWED_ORIGIN_ENV = AGENT_ENV_PREFIX + "CORS_ALLOWED_ORIGIN";
     private static final String CORS_ALLOWED_ORIGIN_DEFAULT = "https?://localhost:\\d+";
 
+    private static final String MODULES_PROPERTY = AGENT_PROPERTY_PREFIX + "modules";
+    private static final String MODULES_ENV = AGENT_ENV_PREFIX + "MODULES";
+
+    private static final String DEPENDENCIES_PROPERTY = AGENT_PROPERTY_PREFIX + "dependencies";
+    private static final String DEPENDENCIES_ENV = AGENT_ENV_PREFIX + "DEPENDENCIES";
+
+    private static final String OFFLINE_PROPERTY = AGENT_PROPERTY_PREFIX + "offline";
+    private static final String OFFLINE_ENV = AGENT_ENV_PREFIX + "OFFLINE";
+    private static final String OFFLINE_DEFAULT = "false";
+
+    private static final String INSPECT_CODE_PROPERTY = AGENT_PROPERTY_PREFIX + "inspect.code";
+    private static final String INSPECT_CODE_ENV = AGENT_ENV_PREFIX + "INSPECT_CODE";
+    private static final String INSPECT_CODE_DEFAULT = "true";
+
     private CitrusAgentSettings() {
         // prevent instantiation of utility class
     }
@@ -94,13 +111,11 @@ public final class CitrusAgentSettings {
      * Citrus agent name.
      */
     public static String getAgentName() {
-        return System.getProperty(AGENT_NAME_PROPERTY,
-                System.getenv(AGENT_NAME_ENV) != null ? System.getenv(AGENT_NAME_ENV) : AGENT_NAME_DEFAULT);
+        return CitrusSettings.getPropertyEnvOrDefault(AGENT_NAME_PROPERTY, AGENT_NAME_ENV, AGENT_NAME_DEFAULT);
     }
 
     public static String getTestEngine() {
-        return Optional.ofNullable(System.getProperty(TEST_ENGINE_PROPERTY, System.getenv(TEST_ENGINE_ENV)))
-                .orElse(TEST_ENGINE_DEFAULT);
+        return CitrusSettings.getPropertyEnvOrDefault(TEST_ENGINE_PROPERTY, TEST_ENGINE_ENV, TEST_ENGINE_DEFAULT);
     }
 
     public static String getWorkDir() {
@@ -108,33 +123,27 @@ public final class CitrusAgentSettings {
     }
 
     public static int getServerPort() {
-        return Integer.parseInt(Optional.ofNullable(System.getProperty(SERVER_PORT_PROPERTY, System.getenv(SERVER_PORT_ENV)))
-                .orElse(SERVER_PORT_DEFAULT));
+        return Integer.parseInt(CitrusSettings.getPropertyEnvOrDefault(SERVER_PORT_PROPERTY, SERVER_PORT_ENV, SERVER_PORT_DEFAULT));
     }
 
     public static int getTimeToLive() {
-        return Integer.parseInt(Optional.ofNullable(System.getProperty(TIME_TO_LIVE_PROPERTY, System.getenv(TIME_TO_LIVE_ENV)))
-                .orElse(TIME_TO_LIVE_DEFAULT));
+        return Integer.parseInt(CitrusSettings.getPropertyEnvOrDefault(TIME_TO_LIVE_PROPERTY, TIME_TO_LIVE_ENV, TIME_TO_LIVE_DEFAULT));
     }
 
     public static boolean isSystemExit() {
-        return Boolean.parseBoolean(Optional.ofNullable(System.getProperty(SYSTEM_EXIT_PROPERTY, System.getenv(SYSTEM_EXIT_ENV)))
-                .orElse(SYSTEM_EXIT_DEFAULT));
+        return Boolean.parseBoolean(CitrusSettings.getPropertyEnvOrDefault(SYSTEM_EXIT_PROPERTY, SYSTEM_EXIT_ENV, SYSTEM_EXIT_DEFAULT));
     }
 
     public static boolean isSkipTests() {
-        return Boolean.parseBoolean(Optional.ofNullable(System.getProperty(SKIP_TESTS_PROPERTY, System.getenv(SKIP_TESTS_ENV)))
-                .orElse(SKIP_TESTS_DEFAULT));
+        return Boolean.parseBoolean(CitrusSettings.getPropertyEnvOrDefault(SKIP_TESTS_PROPERTY, SKIP_TESTS_ENV, SKIP_TESTS_DEFAULT));
     }
 
     public static boolean isVerbose() {
-        return Boolean.parseBoolean(Optional.ofNullable(System.getProperty(VERBOSE_PROPERTY, System.getenv(VERBOSE_ENV)))
-                .orElse(VERBOSE_DEFAULT));
+        return Boolean.parseBoolean(CitrusSettings.getPropertyEnvOrDefault(VERBOSE_PROPERTY, VERBOSE_ENV, VERBOSE_DEFAULT));
     }
 
     public static boolean isReset() {
-        return Boolean.parseBoolean(Optional.ofNullable(System.getProperty(RESET_PROPERTY, System.getenv(RESET_ENV)))
-                .orElse(RESET_DEFAULT));
+        return Boolean.parseBoolean(CitrusSettings.getPropertyEnvOrDefault(RESET_PROPERTY, RESET_ENV, RESET_DEFAULT));
     }
 
     public static String[] getPackages() {
@@ -174,12 +183,42 @@ public final class CitrusAgentSettings {
     }
 
     public static String getTestJar() {
-        return Optional.ofNullable(System.getProperty(TEST_JAR_PROPERTY, System.getenv(TEST_JAR_ENV)))
-                .orElse(TEST_JAR_DEFAULT);
+        return CitrusSettings.getPropertyEnvOrDefault(TEST_JAR_PROPERTY, TEST_JAR_ENV, TEST_JAR_DEFAULT);
     }
 
     public static String getCorsAllowedOrigin() {
-        return Optional.ofNullable(System.getProperty(CORS_ALLOWED_ORIGIN_PROPERTY, System.getenv(CORS_ALLOWED_ORIGIN_ENV)))
-                .orElse(CORS_ALLOWED_ORIGIN_DEFAULT);
+        return CitrusSettings.getPropertyEnvOrDefault(CORS_ALLOWED_ORIGIN_PROPERTY, CORS_ALLOWED_ORIGIN_ENV, CORS_ALLOWED_ORIGIN_DEFAULT);
     }
+
+    /**
+     * Gets Citrus modules that should be loaded as additional dependencies and added to the classpath.
+     */
+    public static Set<String> getModules() {
+        return Arrays.stream(CitrusSettings.getPropertyEnvOrDefault(MODULES_PROPERTY, MODULES_ENV, "")
+                .split(","))
+                .map(String::trim)
+                .filter(it -> !it.isEmpty())
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Gets additional dependencies in the form of Maven GAVs that should be added to the classpath.
+     */
+    public static Set<String> getDependencies() {
+        return Arrays.stream(CitrusSettings.getPropertyEnvOrDefault(DEPENDENCIES_PROPERTY, DEPENDENCIES_ENV, "")
+                .split(","))
+                .map(String::trim)
+                .filter(it -> !it.isEmpty())
+                .collect(Collectors.toSet());
+    }
+
+    public static boolean isOffline() {
+        return Boolean.parseBoolean(CitrusSettings.getPropertyEnvOrDefault(OFFLINE_PROPERTY, OFFLINE_ENV, OFFLINE_DEFAULT));
+    }
+
+    public static boolean isInspectCode() {
+        return Boolean.parseBoolean(CitrusSettings.getPropertyEnvOrDefault(INSPECT_CODE_PROPERTY, INSPECT_CODE_ENV, INSPECT_CODE_DEFAULT));
+    }
+
+
 }

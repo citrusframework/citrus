@@ -49,7 +49,7 @@ public interface EndpointBuilder<T extends Endpoint> {
     String RESOURCE_PATH = "META-INF/citrus/endpoint/builder";
 
     /** Default Citrus endpoint builders from classpath resource properties */
-    ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /**
      * Evaluate if this builder supports the given type.
@@ -146,5 +146,12 @@ public interface EndpointBuilder<T extends Endpoint> {
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
     }
 }

@@ -61,7 +61,7 @@ public class JavaTestLoader extends DefaultTestLoader implements TestSourceAware
             String qualifiedClassName = StringUtils.hasText(packageName) ? packageName + "." + getClassName() : getClassName();
 
             // Load and instantiate compiled class.
-            URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { getClassLoaderBaseURL(packageName, javaSource) }, ClassLoaderHelper.getClassLoader(JavaTestLoader.class));
+            URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { getClassLoaderBaseURL(packageName, javaSource) }, ClassLoaderHelper.getClassLoader());
             Class<?> cls = Class.forName(qualifiedClassName, true, classLoader);
             Object instance = cls.getDeclaredConstructor().newInstance();
 

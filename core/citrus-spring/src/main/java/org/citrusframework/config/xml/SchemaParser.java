@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.citrusframework.spi.ResourcePathTypeResolver;
+import org.citrusframework.spi.TypeResolver;
 import org.citrusframework.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,7 @@ public class SchemaParser implements BeanDefinitionParser {
     private static final String RESOURCE_PATH = "META-INF/citrus/schema/parser";
 
     /** Type resolver for dynamic schema parser lookup via resource path */
-    private static final ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /** Local cache to hold already looked up parsers */
     private static final Map<String, BeanDefinitionParser> SCHEMA_PARSER = new HashMap<>();
@@ -71,5 +72,12 @@ public class SchemaParser implements BeanDefinitionParser {
         logger.info("Found schema bean definition parser {} from resource {}", parser.getClass(), RESOURCE_PATH + "/" + fileExtension);
         SCHEMA_PARSER.put(fileExtension, parser);
         return parser;
+    }
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
     }
 }

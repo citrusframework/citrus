@@ -104,4 +104,11 @@ public interface MessageValidator<T extends ValidationContext> {
      * @return true if this message validator is capable of validating the message type.
      */
     boolean supportsMessageType(String messageType, Message message);
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
+    }
 }

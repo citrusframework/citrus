@@ -1,5 +1,3 @@
-///usr/bin/env jbang "$0" "$@" ; exit $?
-
 /*
  * Copyright the original author or authors.
  *
@@ -16,20 +14,12 @@
  * limitations under the License.
  */
 
-//JAVA 17+
-//REPOS mavencentral
-//DEPS org.citrusframework:citrus-bom:${citrus.jbang.version:4.10.0-SNAPSHOT}@pom
-//DEPS org.citrusframework:citrus-jbang:${citrus.jbang.version:4.10.0-SNAPSHOT}
-package main;
+package org.citrusframework.server;
 
-import org.citrusframework.jbang.CitrusJBangMain;
+import org.citrusframework.endpoint.Endpoint;
 
 /**
- * Main to run CitrusJBang
+ * Server endpoint interface represents a server that provides producer and consumer implementation.
  */
-public class CitrusJBang {
-
-    public static void main(String... args) {
-        CitrusJBangMain.run(args);
-    }
+public interface ServerEndpoint extends Server, Endpoint {
 }

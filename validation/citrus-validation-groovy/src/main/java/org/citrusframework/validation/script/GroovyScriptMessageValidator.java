@@ -104,7 +104,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
     }
 
     private static GroovyClassLoader getPrivilegedGroovyLoader() {
-        return AccessController.doPrivileged((PrivilegedAction<GroovyClassLoader>) () -> new GroovyClassLoader(ClassLoaderHelper.getClassLoader(GroovyScriptMessageValidator.class)));
+        return AccessController.doPrivileged((PrivilegedAction<GroovyClassLoader>) () -> new GroovyClassLoader(ClassLoaderHelper.getClassLoader()));
     }
 
     @Override

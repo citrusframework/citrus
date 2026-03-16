@@ -55,7 +55,7 @@ public class Init extends CitrusCommand {
         String ext = FileUtils.getFileExtension(file);
         String name = FileUtils.getBaseName(file);
         String content;
-        try (InputStream is = ClassLoaderHelper.getClassLoader(Init.class).getResourceAsStream("templates/" + ext + ".tmpl")) {
+        try (InputStream is = ClassLoaderHelper.getClassLoader().getResourceAsStream("templates/" + ext + ".tmpl")) {
             if (is == null) {
                 printer().println("Error: Unsupported file type: " + ext);
                 return 1;

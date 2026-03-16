@@ -1,5 +1,3 @@
-///usr/bin/env jbang "$0" "$@" ; exit $?
-
 /*
  * Copyright the original author or authors.
  *
@@ -16,20 +14,21 @@
  * limitations under the License.
  */
 
-//JAVA 17+
-//REPOS mavencentral
-//DEPS org.citrusframework:citrus-bom:${citrus.jbang.version:4.10.0-SNAPSHOT}@pom
-//DEPS org.citrusframework:citrus-jbang:${citrus.jbang.version:4.10.0-SNAPSHOT}
-package main;
+package org.citrusframework;
 
-import org.citrusframework.jbang.CitrusJBangMain;
+import java.util.function.Function;
 
 /**
- * Main to run CitrusJBang
+ * Provider able to construct a proper test source from given file path.
  */
-public class CitrusJBang {
+@FunctionalInterface
+public interface TestSourceProvider extends Function<String, TestSource> {
 
-    public static void main(String... args) {
-        CitrusJBangMain.run(args);
+    TestSource create(String filePath);
+
+    @Override
+    default TestSource apply(String filePath) {
+        return create(filePath);
     }
+
 }

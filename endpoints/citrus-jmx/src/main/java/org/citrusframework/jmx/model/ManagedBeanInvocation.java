@@ -84,7 +84,7 @@ public class ManagedBeanInvocation {
         }
 
         try {
-            Class argType = Class.forName(attribute.getType(), true, ClassLoaderHelper.getClassLoader(ManagedBeanInvocation.class));
+            Class argType = Class.forName(attribute.getType(), true, ClassLoaderHelper.getClassLoader());
             java.lang.Object value = null;
 
             if (attribute.getValue() != null) {
@@ -433,7 +433,7 @@ public class ManagedBeanInvocation {
             try {
                 if (parameter != null) {
                     for (OperationParam operationParam : parameter.getParameter()) {
-                        Class argType = Class.forName(operationParam.getType(), true, ClassLoaderHelper.getClassLoader(ManagedBeanInvocation.class));
+                        Class argType = Class.forName(operationParam.getType(), true, ClassLoaderHelper.getClassLoader());
                         Object value = null;
 
                         if (operationParam.getValueObject() != null) {

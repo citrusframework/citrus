@@ -28,15 +28,19 @@ import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.ext.web.Router;
 import org.citrusframework.agent.util.ConfigurationHelper;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.server.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static java.lang.Thread.currentThread;
 
-public class CitrusAgentServer {
+public class CitrusAgentServer implements Server {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CitrusAgentServer.class);
+
+    private String name = "citrus-agent-server";
 
     /** Endpoint configuration */
     private final CitrusAgentConfiguration configuration;
@@ -50,21 +54,36 @@ public class CitrusAgentServer {
     protected final CompletableFuture<Boolean> completed = new CompletableFuture<>();
 
     /**
-     * Default constructor using controller and configuration.
-     * @param configuration
+     * Default constructor uses configuration from envVars only.
+     */
+    public CitrusAgentServer() {
+        this(ConfigurationHelper.fromEnvVars());
+    }
+
+    /**
+     * Constructor uses given configuration and no router customizations.
+     */
+    public CitrusAgentServer(CitrusAgentConfiguration configuration) {
+        this(configuration, Collections.emptyList());
+    }
+
+    /**
+     * Constructor uses the configuration and the given router customizations.
      */
     public CitrusAgentServer(CitrusAgentConfiguration configuration, List<Consumer<Router>> routerCustomizations) {
         this.configuration = configuration;
         this.routerCustomizations = routerCustomizations;
     }
 
+    /**
+     * Constructor uses command line arguments and envVars.
+     */
     public CitrusAgentServer(String[] args, List<Consumer<Router>> routerCustomizations) {
         this(new CitrusAgentOptions().apply(ConfigurationHelper.fromEnvVars(), args), routerCustomizations);
     }
 
     /**
      * Main method
-     * @param args
      */
     public static void main(String[] args) {
         entrypoint(args, Collections.emptyList());
@@ -72,8 +91,6 @@ public class CitrusAgentServer {
 
     /**
      * Entrypoint method
-     * @param args
-     * @param routerCustomizations
      */
     public static void entrypoint(String[] args, List<Consumer<Router>> routerCustomizations) {
         CitrusAgentServer server = new CitrusAgentServer(args, routerCustomizations);
@@ -105,13 +122,17 @@ public class CitrusAgentServer {
     /**
      * Start server instance and listen for incoming requests.
      */
+    @Override
     public void start() {
+        // Load additional artifacts from agent configuration
+        ConfigurationHelper.resolveArtifacts(configuration);
+
         application = new CitrusAgentApplication(configuration, routerCustomizations);
         Vertx.vertx(new VertxOptions()
-                .setMaxEventLoopExecuteTime(600)
-                .setMaxEventLoopExecuteTimeUnit(TimeUnit.SECONDS)
-        )
-        .deployVerticle(application);
+                        .setMaxEventLoopExecuteTime(600)
+                        .setMaxEventLoopExecuteTimeUnit(TimeUnit.SECONDS)
+                )
+                .deployVerticle(application);
 
         configuration.getDefaultProperties().putIfAbsent("citrus.default.message.type", "JSON");
         configuration.setDefaultProperties();
@@ -136,12 +157,37 @@ public class CitrusAgentServer {
         }
     }
 
+    @Override
+    public void run() {
+        try {
+            start();
+            boolean healthyShutdown = waitForCompletion();
+
+            if (!healthyShutdown) {
+                logger.error("Citrus agent server has been shutdown");
+            }
+        } catch (Exception e) {
+            throw new CitrusRuntimeException("Failed to start Citrus agent application", e);
+        } finally {
+            stop();
+        }
+    }
+
     /**
      * Stops the server instance.
      */
+    @Override
     public void stop() {
-        application.stop();
+        if (application != null) {
+            application.stop();
+        }
+
         complete();
+    }
+
+    @Override
+    public boolean isRunning() {
+        return !completed.isDone();
     }
 
     /**
@@ -153,7 +199,6 @@ public class CitrusAgentServer {
 
     /**
      * Waits for completed state of application.
-     * @return
      */
     public boolean waitForCompletion() {
         try {
@@ -164,5 +209,15 @@ public class CitrusAgentServer {
         }
 
         return false;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

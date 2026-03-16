@@ -103,6 +103,10 @@ public class CitrusJBangMain implements Callable<Integer> {
         private static final String REPORT_DIRECTORY_ENV = JBANG_ENV_PREFIX + "REPORT_DIRECTORY";
         private static final String REPORT_DIRECTORY_DEFAULT = getWorkDir() + "/citrus-reports";
 
+        private static final String CAMEL_VERSION_PROPERTY = "citrus.camel.jbang.version";
+        private static final String CAMEL_VERSION_ENV = "CITRUS_CAMEL_JBANG_VERSION";
+        private static final String CAMEL_VERSION_DEFAULT = "4.18.0";
+
         private static final String MODULES_PROPERTY = JBANG_PROPERTY_PREFIX + "modules";
         private static final String MODULES_ENV = JBANG_ENV_PREFIX + "MODULES";
 
@@ -171,6 +175,11 @@ public class CitrusJBangMain implements Callable<Integer> {
 
         public static Pattern getPackagePattern() {
             return PACKAGE_PATTERN;
+        }
+
+        public static String getCamelVersion() {
+            return CitrusSettings.getPropertyEnvOrDefault(CAMEL_VERSION_PROPERTY, CAMEL_VERSION_ENV,
+                    CitrusSettings.getPropertyEnvOrDefault("camel.jbang.version", "CAMEL_JBANG_VERSION", CAMEL_VERSION_DEFAULT));
         }
     }
 }

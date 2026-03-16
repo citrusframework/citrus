@@ -39,6 +39,12 @@
       <artifactId>vertx-web-templ-thymeleaf</artifactId>
     </dependency>
 
+    <!-- Http client -->
+    <dependency>
+      <groupId>org.apache.httpcomponents.client5</groupId>
+      <artifactId>httpclient5</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
@@ -91,52 +97,17 @@
     </dependency>
     <dependency>
       <groupId>org.citrusframework</groupId>
+      <artifactId>citrus-jbang</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-xml</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.citrusframework</groupId>
       <artifactId>citrus-yaml</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-http</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-camel</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-testcontainers</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-openapi</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-ws</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-selenium</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-kafka</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-jms</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

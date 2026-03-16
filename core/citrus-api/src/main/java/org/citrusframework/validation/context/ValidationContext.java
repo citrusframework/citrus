@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
+import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,7 @@ public interface ValidationContext {
     String RESOURCE_PATH = "META-INF/citrus/validation/builder";
 
     /** Default Citrus validation context builders from classpath resource properties */
-    ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /**
      * Indicates whether this validation context requires a validator.
@@ -106,5 +107,12 @@ public interface ValidationContext {
          * @return the built context.
          */
         T build();
+    }
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
     }
 }

@@ -35,7 +35,7 @@ public interface CitrusContextProvider {
     String RESOURCE_PATH = "META-INF/citrus/context/provider";
 
     /** Default Citrus context provider from classpath resource properties */
-    ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     String SPRING = "spring";
 
@@ -89,5 +89,12 @@ public interface CitrusContextProvider {
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
     }
 }

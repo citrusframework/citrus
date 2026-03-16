@@ -65,4 +65,11 @@ public interface SqlResultSetScriptValidator {
      */
     void validateSqlResultSet(List<Map<String, Object>> resultSet,
             ScriptValidationContext validationContext, TestContext context) throws ValidationException;
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
+    }
 }
