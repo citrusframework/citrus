@@ -143,7 +143,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
             }
 
             try {
-                Class<?> exception = Class.forName(exceptionClass, true, ClassLoaderHelper.getClassLoader(CamelSyncConsumer.class));
+                Class<?> exception = Class.forName(exceptionClass, true, ClassLoaderHelper.getClassLoader());
                 if (exceptionMsg != null) {
                     exchange.setException((Throwable) exception.getConstructor(String.class).newInstance(exceptionMsg));
                 } else {

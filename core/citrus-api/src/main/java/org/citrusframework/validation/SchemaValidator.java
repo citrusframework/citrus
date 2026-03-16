@@ -100,4 +100,11 @@ public interface SchemaValidator<T extends SchemaValidationContext> {
      * Validate the message against the given schemaRepository and schema.
      */
     void validate(Message message, TestContext context, String schemaRepository, String schema);
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
+    }
 }

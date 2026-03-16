@@ -58,4 +58,11 @@ public interface ScriptPayloadBuilder extends MessagePayloadBuilder {
     void setFile(String file);
 
     void setFile(String file, String charset);
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
+    }
 }

@@ -213,9 +213,9 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
                             Class<?> clazz;
                             if (configuration.getTestJar() != null) {
                                 clazz = Class.forName(testClass.getName(), false,
-                                        new URLClassLoader(new URL[]{configuration.getTestJar().toURI().toURL()}, ClassLoaderHelper.getClassLoader(JUnitJupiterEngine.class)));
+                                        new URLClassLoader(new URL[]{configuration.getTestJar().toURI().toURL()}, ClassLoaderHelper.getClassLoader()));
                             } else {
-                                clazz = Class.forName(testClass.getName(), false, ClassLoaderHelper.getClassLoader(JUnitJupiterEngine.class));
+                                clazz = Class.forName(testClass.getName(), false, ClassLoaderHelper.getClassLoader());
                             }
                             return clazz;
                         } catch (ClassNotFoundException | MalformedURLException e) {
@@ -252,9 +252,9 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
                 Class<?> clazz;
                 if (configuration.getTestJar() != null) {
                     clazz = Class.forName(testClass.getName(), false,
-                            new URLClassLoader(new URL[]{configuration.getTestJar().toURI().toURL()}, ClassLoaderHelper.getClassLoader(JUnitJupiterEngine.class)));
+                            new URLClassLoader(new URL[]{configuration.getTestJar().toURI().toURL()}, ClassLoaderHelper.getClassLoader()));
                 } else {
-                    clazz = Class.forName(testClass.getName(), false, ClassLoaderHelper.getClassLoader(JUnitJupiterEngine.class));
+                    clazz = Class.forName(testClass.getName(), false, ClassLoaderHelper.getClassLoader());
                 }
 
                 if (StringUtils.hasText(testClass.getMethod())) {

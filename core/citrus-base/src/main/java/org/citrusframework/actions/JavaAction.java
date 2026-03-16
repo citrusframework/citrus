@@ -155,7 +155,7 @@ public class JavaAction extends AbstractTestAction {
 
         logger.info("Instantiating class for name '{}'", className);
 
-        Class<?> classToRun = Class.forName(className, true, ClassLoaderHelper.getClassLoader(JavaAction.class));
+        Class<?> classToRun = Class.forName(className, true, ClassLoaderHelper.getClassLoader());
 
         Class<?>[] constructorTypes = new Class<?>[constructorArgs.size()];
         Object[] constructorObjects = new Object[constructorArgs.size()];

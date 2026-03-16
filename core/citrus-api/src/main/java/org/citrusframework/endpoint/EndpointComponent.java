@@ -22,6 +22,7 @@ import java.util.Optional;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
+import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +47,7 @@ public interface EndpointComponent {
     String RESOURCE_PATH = "META-INF/citrus/endpoint/component";
 
     /** Default Citrus endpoint components from classpath resource properties */
-    ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /**
      * Creates proper endpoint instance from endpoint uri.
@@ -97,5 +98,12 @@ public interface EndpointComponent {
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
     }
 }

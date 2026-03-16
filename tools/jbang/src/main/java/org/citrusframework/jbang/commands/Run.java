@@ -39,7 +39,7 @@ import java.util.stream.Stream;
 import org.apache.camel.tooling.maven.MavenArtifact;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.agent.CitrusAgentConfiguration;
-import org.citrusframework.agent.util.ConfigurationHelper;
+import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.CitrusJBangMain;
 import org.citrusframework.jbang.LoggingSupport;
@@ -54,7 +54,6 @@ import org.citrusframework.report.TestResults;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -179,14 +178,14 @@ public class Run extends CitrusCommand {
         }
 
         if (!offline) {
-            handleAdditionalDependencies(tests);
+            resolveArtifacts(tests);
         }
 
         engine.run();
         return exitStatus.exitStatus();
     }
 
-    private void handleAdditionalDependencies(List<String> tests) {
+    private void resolveArtifacts(List<String> tests) {
         MavenDependencyResolver resolver = getMavenDependencyResolver();
         Set<String> allModules = new HashSet<>();
         Set<String> allDependencies = new HashSet<>();
@@ -259,16 +258,12 @@ public class Run extends CitrusCommand {
                 }
             });
 
-            try {
-                // Adapt and set class loader in main thread
-                Thread.currentThread().setContextClassLoader(ClassLoaderHelper.getContextClassLoader());
-            } catch (Throwable e) {
-                printer().printErr("Failed to set context class loader with additional dependencies due to '%s'".formatted(e.getMessage()));
-            }
+            // Adapt and set class loader in main thread
+            ClassLoaderHelper.updateContextClassloader();
         }
     }
 
-    private @NotNull MavenDependencyResolver getMavenDependencyResolver() {
+    private MavenDependencyResolver getMavenDependencyResolver() {
         MavenDependencyResolver resolver = new MavenDependencyResolver();
         if (repositories != null) {
             for (String repository : repositories) {
@@ -323,7 +318,7 @@ public class Run extends CitrusCommand {
     }
 
     protected TestRunConfiguration getRunConfiguration(List<String> files) {
-        CitrusAgentConfiguration configuration = fromCliOptions(ConfigurationHelper.fromEnvVars());
+        CitrusAgentConfiguration configuration = fromCliOptions(CitrusAgentConfiguration.fromEnvVars(TestSourceHelper::create));
 
         String ext = FileUtils.getFileExtension(files.get(0));
         if (ext.equals("feature")) {
@@ -331,7 +326,7 @@ public class Run extends CitrusCommand {
         }
 
         configuration.setTestSources(files.stream()
-                .map(FileUtils::getTestSource)
+                .map(TestSourceHelper::create)
                 .collect(Collectors.toList()));
 
         return configuration;

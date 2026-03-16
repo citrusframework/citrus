@@ -79,7 +79,7 @@ public class CucumberTestEngine extends AbstractTestEngine {
             try {
                 annotationOptions = new CucumberOptionsAnnotationParser()
                         .withOptionsProvider(GenericCucumberOptions::new)
-                        .parse(Class.forName(javaClass.get().getName(), true, ClassLoaderHelper.getClassLoader(CucumberTestEngine.class)))
+                        .parse(Class.forName(javaClass.get().getName(), true, ClassLoaderHelper.getClassLoader()))
                         .setUuidGeneratorClass(RandomUuidGenerator.class)
                         .addDefaultGlueIfAbsent()
                         .build(propertiesFileOptions);

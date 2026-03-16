@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
+import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,7 @@ public interface TestActionBuilder<T extends TestAction> {
     String RESOURCE_PATH = "META-INF/citrus/action/builder";
 
     /** Default Citrus test action builders from classpath resource properties */
-    ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /**
      * Builds new test action instance.
@@ -86,5 +87,12 @@ public interface TestActionBuilder<T extends TestAction> {
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
     }
 }

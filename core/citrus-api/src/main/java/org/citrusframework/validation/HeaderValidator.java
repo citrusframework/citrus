@@ -95,4 +95,11 @@ public interface HeaderValidator {
      * @param validationContext
      */
     void validateHeader(String name, Object received, Object control, TestContext context, HeaderValidationContext validationContext);
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
+    }
 }

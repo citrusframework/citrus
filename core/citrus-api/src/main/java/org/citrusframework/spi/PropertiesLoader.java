@@ -46,7 +46,7 @@ public final class PropertiesLoader {
 
     public static Properties loadProperties(String path) {
         Properties properties = new Properties();
-        ClassLoader classLoader = ClassLoaderHelper.getClassLoader(ResourcePathTypeResolver.class);
+        ClassLoader classLoader = ClassLoaderHelper.getClassLoader();
         try (InputStream in = classLoader.getResourceAsStream(path)) {
             if (in == null) {
                 throw new CitrusRuntimeException(String.format("Failed to locate resource path '%s'!", path));

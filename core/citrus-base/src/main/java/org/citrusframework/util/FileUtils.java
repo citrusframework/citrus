@@ -33,7 +33,6 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.TestSource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
@@ -432,22 +431,5 @@ public abstract class FileUtils {
      */
     public static String constructContentType(String contentType, Charset charset) {
         return contentType + FILE_PATH_CHARSET_PARAMETER + charset;
-    }
-
-    /**
-     * Read String representation and construct proper test source instance.
-     * Extract source type from give file extension and try to set proper test source name from given file name.
-     *
-     * @param sourceFile
-     * @return
-     */
-    public static TestSource getTestSource(String sourceFile) {
-        String ext = getFileExtension(sourceFile);
-        String name = getFileName(sourceFile);
-        if (StringUtils.hasText(ext)) {
-            return new TestSource(ext, name, sourceFile);
-        } else {
-            return new TestSource("directory", name, sourceFile);
-        }
     }
 }

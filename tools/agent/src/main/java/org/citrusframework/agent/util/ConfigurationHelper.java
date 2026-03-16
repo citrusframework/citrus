@@ -17,24 +17,31 @@
 package org.citrusframework.agent.util;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.vertx.core.MultiMap;
 import io.vertx.ext.web.RequestBody;
 import io.vertx.ext.web.RoutingContext;
+import org.apache.camel.tooling.maven.MavenArtifact;
 import org.citrusframework.TestClass;
 import org.citrusframework.TestSource;
 import org.citrusframework.agent.CitrusAgentConfiguration;
-import org.citrusframework.agent.CitrusAgentSettings;
 import org.citrusframework.common.TestLoader;
+import org.citrusframework.common.TestSourceHelper;
+import org.citrusframework.jbang.maven.MavenDependencyResolver;
+import org.citrusframework.jbang.util.CodeAnalyzer;
+import org.citrusframework.jbang.util.DelegatingCodeAnalyzer;
 import org.citrusframework.main.CitrusAppConfiguration;
 import org.citrusframework.main.TestRunConfiguration;
-import org.citrusframework.spi.Resource;
-import org.citrusframework.spi.Resources;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.IsXmlPredicate;
 import org.citrusframework.util.StringUtils;
@@ -64,6 +71,16 @@ public final class ConfigurationHelper {
                     .split(","));
         }
 
+        if (queryParams.contains("modules")) {
+            options.setModules(Arrays.stream(URLDecoder.decode(queryParams.get("modules"), StandardCharsets.UTF_8)
+                    .split(",")).collect(Collectors.toSet()));
+        }
+
+        if (queryParams.contains("dependencies")) {
+            options.setDependencies(Arrays.stream(URLDecoder.decode(queryParams.get("dependencies"), StandardCharsets.UTF_8)
+                    .split(",")).collect(Collectors.toSet()));
+        }
+
         if (queryParams.contains("workDir")) {
             options.setWorkDir(URLDecoder.decode(queryParams.get("workDir"), StandardCharsets.UTF_8));
         }
@@ -76,7 +93,7 @@ public final class ConfigurationHelper {
                     TestClass.fromString(URLDecoder.decode(queryParams.get("class"), StandardCharsets.UTF_8))));
         } else if (queryParams.contains("source")) {
             options.setTestSources(Collections.singletonList(
-                    FileUtils.getTestSource(URLDecoder.decode(queryParams.get("source"), StandardCharsets.UTF_8))));
+                    TestSourceHelper.create(URLDecoder.decode(queryParams.get("source"), StandardCharsets.UTF_8))));
         } else {
             options.setPackages(parent.getPackages());
             options.setTestSources(parent.getTestSources());
@@ -116,37 +133,7 @@ public final class ConfigurationHelper {
     }
 
     public static CitrusAgentConfiguration fromEnvVars() {
-        CitrusAgentConfiguration configuration = new CitrusAgentConfiguration();
-
-        configuration.setPort(CitrusAgentSettings.getServerPort());
-
-        configuration.setEngine(CitrusAgentSettings.getTestEngine());
-        configuration.setIncludes(CitrusAgentSettings.getIncludes());
-        configuration.setWorkDir(CitrusAgentSettings.getWorkDir());
-        configuration.setSystemExit(CitrusAgentSettings.isSystemExit());
-        configuration.setSkipTests(CitrusAgentSettings.isSkipTests());
-        configuration.setConfigClass(CitrusAgentSettings.getConfigClass());
-
-        configuration.setPackages(Arrays.asList(CitrusAgentSettings.getPackages()));
-        configuration.setTestSources(Arrays.stream(CitrusAgentSettings.getTestSources())
-                .map(FileUtils::getTestSource)
-                .collect(Collectors.toList()));
-
-        configuration.setVerbose(CitrusAgentSettings.isVerbose());
-        configuration.setReset(CitrusAgentSettings.isReset());
-        configuration.addDefaultProperties(CitrusAgentSettings.getDefaultProperties());
-
-        String testJarPath = CitrusAgentSettings.getTestJar();
-        Resource testJar = Resources.create(testJarPath);
-        if (testJar.exists()) {
-            configuration.setTestJar(testJar.getFile());
-        } else {
-            logger.debug("Ignore test jar artifact {} - not found", testJarPath);
-        }
-
-        configuration.setTimeToLive(CitrusAgentSettings.getTimeToLive());
-
-        return configuration;
+        return CitrusAgentConfiguration.fromEnvVars(TestSourceHelper::create);
     }
 
     /**
@@ -181,9 +168,69 @@ public final class ConfigurationHelper {
             }
         }
 
+        if (configuration.isInspectCode()) {
+            try {
+                CodeAnalyzer analyzer = new DelegatingCodeAnalyzer();
+                CodeAnalyzer.ScanResult scanResult = analyzer.scan(fileName, sourceCode);
+
+                options.getModules().addAll(Arrays.asList(scanResult.modules()));
+                options.getDependencies().addAll(Arrays.asList(scanResult.dependencies()));
+            } catch (Exception e) {
+                logger.warn(String.format("Failed to analyze test source %s due to '%s'", fileName, e.getMessage()), e);
+            }
+        }
+
         options.getTestSources().add(
                 new TestSource(type, FileUtils.getBaseName(fileName)).sourceCode(sourceCode));
 
         return options;
+    }
+
+    /**
+     * Reads additional artifacts from given configuration and adds those to the classpath.
+     */
+    public static void resolveArtifacts(CitrusAgentConfiguration configuration) {
+        if (!configuration.isOffline()) {
+            List<MavenArtifact> resolved = resolveArtifacts(configuration.getModules(), configuration.getDependencies());
+
+            if (!resolved.isEmpty()) {
+                resolved.forEach(mavenArtifact -> {
+                    try {
+                        ClassLoaderHelper.addArtifact(mavenArtifact.toString(), mavenArtifact.getFile().toURI().toURL());
+                    } catch (MalformedURLException e) {
+                        logger.warn(String.format("Error resolving artifact %s due to '%s'", mavenArtifact, e.getMessage()));
+                    }
+                });
+
+                // Adapt and set class loader in current thread
+                ClassLoaderHelper.updateContextClassloader();
+            }
+        }
+    }
+
+    public static List<MavenArtifact> resolveArtifacts(Set<String> modules, Set<String> dependencies) {
+        if (modules.isEmpty() && dependencies.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<MavenArtifact> additionalArtifacts = new ArrayList<>();
+        MavenDependencyResolver resolver = new MavenDependencyResolver();
+
+        String systemClasspath = System.getProperty("java.class.path");
+        modules.stream()
+                .map(module -> {
+                    if (module.startsWith("citrus-")) {
+                        return module;
+                    } else {
+                        return "citrus-" + module;
+                    }
+                })
+                .filter(module -> !systemClasspath.contains(module))
+                .forEach(module -> additionalArtifacts.addAll(resolver.resolveModule(module)));
+
+        dependencies.forEach(dependency ->
+                additionalArtifacts.addAll(resolver.resolve(dependency.trim(), dependency.contains("-SNAPSHOT"), true)));
+
+        return additionalArtifacts;
     }
 }

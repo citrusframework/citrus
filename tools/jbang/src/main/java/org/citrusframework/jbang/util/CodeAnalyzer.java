@@ -153,7 +153,7 @@ public interface CodeAnalyzer {
     default Map<String, ComponentDefinition> getComponentDefinitions(String kind) {
         try {
             Map<String, ComponentDefinition> components = new HashMap<>();
-            JsonNode raw = JsonSupport.json().readTree(ClassLoaderHelper.getContextClassLoader().getResourceAsStream("citrus-catalog/citrus/citrus-catalog-aggregate-%s.json".formatted(kind)));
+            JsonNode raw = JsonSupport.json().readTree(ClassLoaderHelper.getClassLoader().getResourceAsStream("citrus-catalog/citrus/citrus-catalog-aggregate-%s.json".formatted(kind)));
             raw.fieldNames().forEachRemaining(name -> {
                 components.put(name, JsonSupport.json().convertValue(raw.get(name), ComponentDefinition.class));
             });

@@ -100,4 +100,9 @@ public interface TypeResolver {
      * @return
      */
     <T> Map<String, T> resolveAll(String resourcePath, String property, String keyProperty);
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    void clearCache();
 }

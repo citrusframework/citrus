@@ -67,7 +67,7 @@ public class CitrusTestResource implements QuarkusTestResourceConfigurableLifecy
         String[] qualifiedClassNames = initArgs.getOrDefault(ApplicationPropertiesSupplier.INIT_ARG, "").split(",");
         for (String qualifiedClassName : qualifiedClassNames) {
             try {
-                Class<?> cls = Class.forName(qualifiedClassName, true, ClassLoaderHelper.getContextClassLoader());
+                Class<?> cls = Class.forName(qualifiedClassName, true, ClassLoaderHelper.getClassLoader());
                 Object instance = cls.getDeclaredConstructor().newInstance();
                 if (instance instanceof ApplicationPropertiesSupplier supplier) {
                     applicationPropertiesSupplier.add(supplier);

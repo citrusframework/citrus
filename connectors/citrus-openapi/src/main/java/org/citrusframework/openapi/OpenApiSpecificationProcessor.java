@@ -61,4 +61,11 @@ public interface OpenApiSpecificationProcessor {
     }
 
     void process(OpenApiSpecification openApiSpecification);
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
+    }
 }

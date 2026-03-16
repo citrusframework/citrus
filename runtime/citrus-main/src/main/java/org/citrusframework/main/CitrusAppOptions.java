@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 import org.citrusframework.TestClass;
 import org.citrusframework.TestSource;
+import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
@@ -74,7 +75,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
                     try {
-                        Class.forName(value, false, ClassLoaderHelper.getClassLoader(CitrusAppOptions.class));
+                        Class.forName(value, false, ClassLoaderHelper.getClassLoader());
                     } catch (ClassNotFoundException e) {
                         throw new CitrusRuntimeException("Unable to access config class type: " + value, e);
                     }
@@ -181,7 +182,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
                         // no file extension assume it is a Java class name
                         source = TestClass.fromString(value);
                     } else {
-                        source = FileUtils.getTestSource(value);
+                        source = TestSourceHelper.create(value);
                     }
 
                     configuration.getTestSources().add(source);

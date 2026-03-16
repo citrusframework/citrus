@@ -78,7 +78,7 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
                 if (StringUtils.hasText(validationScript)) {
                     logger.debug("Start groovy SQL result set validation");
 
-                    try (var loader = new GroovyClassLoader(ClassLoaderHelper.getClassLoader(GroovyScriptMessageValidator.class))) {
+                    try (var loader = new GroovyClassLoader(ClassLoaderHelper.getClassLoader())) {
                         Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
                                 .withCode(validationScript)
                                 .build());

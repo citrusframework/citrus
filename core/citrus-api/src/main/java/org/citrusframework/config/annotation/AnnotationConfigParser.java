@@ -41,7 +41,7 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
     String RESOURCE_PATH = "META-INF/citrus/endpoint/parser";
 
     /** Default Citrus annotation config parsers from classpath resource properties */
-    ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     Map<String, AnnotationConfigParser> parsers = new HashMap<>();
 
@@ -94,5 +94,12 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
     }
 }

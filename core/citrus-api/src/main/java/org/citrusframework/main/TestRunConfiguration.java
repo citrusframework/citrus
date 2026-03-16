@@ -18,9 +18,11 @@ package org.citrusframework.main;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.citrusframework.TestSource;
 import org.citrusframework.spi.Resources;
@@ -57,6 +59,12 @@ public class TestRunConfiguration {
 
     /** Should test engine reset the suite state and reporters */
     private boolean reset = true;
+
+    /** Additional Citrus modules required to run the tests */
+    private final Set<String> modules = new HashSet<>();
+
+    /** Additional Maven dependencies required to run the tests */
+    private final Set<String> dependencies = new HashSet<>();
 
     /**
      * Gets the engine.
@@ -194,5 +202,23 @@ public class TestRunConfiguration {
 
     public String getWorkDir() {
         return workDir;
+    }
+
+    public Set<String> getModules() {
+        return modules;
+    }
+
+    @SchemaProperty(description = "Set of additional Citrus modules that should be loaded with the agent.")
+    public void setModules(Set<String> modules) {
+        this.modules.addAll(modules);
+    }
+
+    public Set<String> getDependencies() {
+        return dependencies;
+    }
+
+    @SchemaProperty(description = "Set of additional Maven dependencies that should be loaded with the agent.")
+    public void setDependencies(Set<String> dependencies) {
+        this.dependencies.addAll(dependencies);
     }
 }

@@ -35,7 +35,7 @@ public class VerifyCustomResource extends AbstractKubernetesAction.Builder<Verif
     @SchemaProperty
     public void setType(String resourceType) {
         try {
-            delegate.resourceType(Class.forName(resourceType, true, ClassLoaderHelper.getClassLoader(VerifyCustomResource.class)));
+            delegate.resourceType(Class.forName(resourceType, true, ClassLoaderHelper.getClassLoader()));
         } catch(ClassNotFoundException | ClassCastException e) {
             delegate.type(resourceType);
         }

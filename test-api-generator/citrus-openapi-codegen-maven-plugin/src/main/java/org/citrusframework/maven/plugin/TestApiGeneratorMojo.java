@@ -331,7 +331,7 @@ public class TestApiGeneratorMojo extends AbstractMojo {
                     "File not found at the provided absolute path: " + source);
             }
         } else {
-            URL resourceUrl = ClassLoaderHelper.getClassLoader(getClass()).getResource(source);
+            URL resourceUrl = ClassLoaderHelper.getClassLoader().getResource(source);
             if (resourceUrl == null) {
                 throw new MojoExecutionException("Resource not found in classpath: " + source);
             }

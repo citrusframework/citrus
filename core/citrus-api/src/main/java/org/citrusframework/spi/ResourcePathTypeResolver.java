@@ -220,7 +220,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
     }
 
     private Stream<Path> resolveAllFromJar(String path) {
-        ClassLoader classLoader = assertNotNull(ClassLoaderHelper.getContextClassLoader());
+        ClassLoader classLoader = assertNotNull(ClassLoaderHelper.getClassLoader());
 
         if (rootIsNotCitrusApiJar() && nonNull(rootFs)) {
             return getZipEntries().stream()
@@ -289,5 +289,10 @@ public class ResourcePathTypeResolver implements TypeResolver {
         } else {
             return resourcePath;
         }
+    }
+
+    @Override
+    public void clearCache() {
+        typeCache.clear();
     }
 }

@@ -90,7 +90,7 @@ public class TestClass extends TestSource {
                 className = testClass;
             }
 
-            Class.forName(className, false, ClassLoaderHelper.getClassLoader(TestClass.class));
+            Class.forName(className, false, ClassLoaderHelper.getClassLoader());
             return true;
         } catch (ClassNotFoundException e) {
             return false;

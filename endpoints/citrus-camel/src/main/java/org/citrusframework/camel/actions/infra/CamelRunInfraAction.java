@@ -88,7 +88,7 @@ public class CamelRunInfraAction extends AbstractCamelAction {
 
             logger.info("Starting Camel infra service '{}' ...", fullServiceName);
 
-            ClassLoader classLoader = ClassLoaderHelper.getClassLoader(CamelRunInfraAction.class);
+            ClassLoader classLoader = ClassLoaderHelper.getClassLoader();
             Class<?> serviceType = Class.forName(infraService.get().service(), true, classLoader);
             Object instance = Class.forName(infraService.get().implementation(), true, classLoader).getDeclaredConstructor().newInstance();
 

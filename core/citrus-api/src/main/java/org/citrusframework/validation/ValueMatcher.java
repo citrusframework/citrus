@@ -88,4 +88,11 @@ public interface ValueMatcher {
      * @param context
      */
     boolean validate(Object received, Object control, TestContext context);
+
+    /**
+     * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
+     */
+    static void clearCache() {
+        TYPE_RESOLVER.clearCache();
+    }
 }

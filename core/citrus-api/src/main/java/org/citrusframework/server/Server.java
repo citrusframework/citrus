@@ -16,16 +16,15 @@
 
 package org.citrusframework.server;
 
-import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.common.Named;
 
 /**
  * Server representation in Citrus is a runnable instance accepting client
  * connections.
  *
  * @since 2007
- *
  */
-public interface Server extends Endpoint, Runnable {
+public interface Server extends Named, Runnable {
 
     /**
      * Start the server
@@ -39,7 +38,11 @@ public interface Server extends Endpoint, Runnable {
 
     /**
      * Is server running.
-     * @return
      */
     boolean isRunning();
+
+    /**
+     * Gets the endpoint name usually the Spring bean name.
+     */
+    String getName();
 }

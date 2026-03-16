@@ -60,7 +60,7 @@ public class ContextConfiguration {
 
                 GroovyShellUtils.run(new ImportCustomizer(), this, FileUtils.readToString(file), citrus, context);
             } else {
-                citrus.getCitrusContext().parseConfiguration(Class.forName(pathOrType, true, ClassLoaderHelper.getClassLoader(ContextConfiguration.class)));
+                citrus.getCitrusContext().parseConfiguration(Class.forName(pathOrType, true, ClassLoaderHelper.getClassLoader()));
             }
         } catch (IOException | ClassNotFoundException e) {
             throw new CitrusRuntimeException(String.format("Failed to load configuration from file '%s'", pathOrType), e);

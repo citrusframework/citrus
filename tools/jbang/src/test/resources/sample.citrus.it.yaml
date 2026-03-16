@@ -9,7 +9,7 @@ variables:
 endpoints:
   - jms:
       asynchronous:
-        queueName: my-queue
+        destination: my-queue
 actions:
   - print:
       message: Citrus rocks!

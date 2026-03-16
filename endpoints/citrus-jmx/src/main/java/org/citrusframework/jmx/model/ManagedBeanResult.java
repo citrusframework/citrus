@@ -86,7 +86,7 @@ public class ManagedBeanResult {
         }
 
         try {
-            Class<?> argType = Class.forName(object.getType(), true, ClassLoaderHelper.getClassLoader(ManagedBeanResult.class));
+            Class<?> argType = Class.forName(object.getType(), true, ClassLoaderHelper.getClassLoader());
             java.lang.Object value = null;
 
             if (object.getValue() != null) {

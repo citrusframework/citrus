@@ -114,7 +114,7 @@ public class RmiServiceResult {
         }
 
         try {
-            Class<?> argType = Class.forName(object.getType(), true, ClassLoaderHelper.getClassLoader(RmiServiceResult.class));
+            Class<?> argType = Class.forName(object.getType(), true, ClassLoaderHelper.getClassLoader());
             java.lang.Object value = null;
 
             if (object.getValue() != null) {

@@ -103,7 +103,7 @@ public class RmiServiceInvocation {
         if (args != null) {
             for (MethodArg arg : args.getArgs()) {
                 try {
-                    types.add(Class.forName(arg.getType(), true, ClassLoaderHelper.getClassLoader(RmiServiceInvocation.class)));
+                    types.add(Class.forName(arg.getType(), true, ClassLoaderHelper.getClassLoader()));
                 } catch (ClassNotFoundException e) {
                     throw new CitrusRuntimeException("Failed to access method argument type", e);
                 }
@@ -123,7 +123,7 @@ public class RmiServiceInvocation {
         try {
             if (args != null) {
                 for (MethodArg methodArg : args.getArgs()) {
-                    Class argType = Class.forName(methodArg.getType(), true,  ClassLoaderHelper.getClassLoader(RmiServiceInvocation.class));
+                    Class argType = Class.forName(methodArg.getType(), true,  ClassLoaderHelper.getClassLoader());
                     Object value = null;
 
                     if (methodArg.getValueObject() != null) {

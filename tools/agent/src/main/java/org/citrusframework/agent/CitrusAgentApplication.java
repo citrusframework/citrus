@@ -36,6 +36,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
@@ -420,12 +421,13 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
 
     @Override
     public void stop() {
-        Optional<Citrus> citrus = CitrusInstanceManager.get();
-        if (citrus.isPresent()) {
+        CitrusInstanceManager.get().ifPresent(citrus -> {
             logger.info("Closing Citrus and its application context");
-            citrus.get().close();
-        }
-        getVertx().close();
+            citrus.close();
+        });
+
+        Optional.ofNullable(getVertx())
+                .ifPresent(Vertx::close);
     }
 
     private static String createReport(TestResults results) {

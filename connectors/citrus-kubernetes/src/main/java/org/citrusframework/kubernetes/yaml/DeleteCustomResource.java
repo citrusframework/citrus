@@ -35,7 +35,7 @@ public class DeleteCustomResource extends AbstractKubernetesAction.Builder<Delet
     @SchemaProperty
     public void setType(String resourceType) {
         try {
-            delegate.resourceType(Class.forName(resourceType, true, ClassLoaderHelper.getClassLoader(DeleteCustomResource.class)));
+            delegate.resourceType(Class.forName(resourceType, true, ClassLoaderHelper.getClassLoader()));
         } catch(ClassNotFoundException | ClassCastException e) {
             delegate.type(resourceType);
         }
