@@ -19,10 +19,12 @@ package org.citrusframework.rmi.client;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.rmi.message.RmiMessageConverter;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-rmi")
 public class RmiClientBuilder extends AbstractEndpointBuilder<RmiClient> {
 
     /** Endpoint target */

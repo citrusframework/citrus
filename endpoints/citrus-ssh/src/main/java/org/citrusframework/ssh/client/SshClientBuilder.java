@@ -19,10 +19,12 @@ package org.citrusframework.ssh.client;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.ssh.message.SshMessageConverter;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-ssh")
 public class SshClientBuilder extends AbstractEndpointBuilder<SshClient> {
 
     /** Endpoint target */

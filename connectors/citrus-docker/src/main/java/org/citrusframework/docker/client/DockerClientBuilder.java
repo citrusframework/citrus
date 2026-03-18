@@ -19,10 +19,12 @@ package org.citrusframework.docker.client;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-docker")
 public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
 
     /** Endpoint target */

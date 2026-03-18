@@ -16,15 +16,17 @@
 
 package org.citrusframework.jmx.client;
 
+import javax.management.NotificationFilter;
+
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.jmx.message.JmxMessageConverter;
 import org.citrusframework.message.MessageCorrelator;
-
-import javax.management.NotificationFilter;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-jmx")
 public class JmxClientBuilder extends AbstractEndpointBuilder<JmxClient> {
 
     /** Endpoint target */

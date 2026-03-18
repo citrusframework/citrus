@@ -22,10 +22,12 @@ import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.7
  */
+@SchemaType(module = "citrus-kubernetes")
 public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesClient> {
 
     /** Endpoint target */

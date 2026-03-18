@@ -26,10 +26,12 @@ import org.citrusframework.rmi.endpoint.RmiEndpointUtils;
 import org.citrusframework.rmi.message.RmiMessageConverter;
 import org.citrusframework.rmi.model.RmiMarshaller;
 import org.citrusframework.server.AbstractServerBuilder;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-rmi")
 public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServerBuilder> {
 
     /** Endpoint target */
