@@ -27,10 +27,12 @@ import org.citrusframework.kafka.message.KafkaMessageHeaderMapper;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.8
  */
+@SchemaType(module = "citrus-kafka")
 public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint> {
 
     /** Endpoint target */

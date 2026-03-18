@@ -16,9 +16,12 @@
 
 package org.citrusframework.http.server;
 
+import org.citrusframework.yaml.SchemaType;
+
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-http")
 public class HttpServerBuilder extends AbstractHttpServerBuilder<HttpServer, HttpServerBuilder> {
 
     public HttpServerBuilder() {

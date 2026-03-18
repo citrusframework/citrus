@@ -21,10 +21,12 @@ import org.citrusframework.message.ErrorHandlingStrategy;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-ftp")
 public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
 
     /** Endpoint target */

@@ -21,10 +21,12 @@ import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.websocket.message.WebSocketMessageConverter;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-websocket")
 public class WebSocketClientBuilder extends AbstractEndpointBuilder<WebSocketClient> {
 
     /** Endpoint target */

@@ -22,6 +22,7 @@ import java.util.List;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.support.events.WebDriverListener;
@@ -29,6 +30,7 @@ import org.openqa.selenium.support.events.WebDriverListener;
 /**
  * @since 2.7
  */
+@SchemaType(module = "citrus-selenium")
 public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrowser> {
 
     /** Endpoint target */

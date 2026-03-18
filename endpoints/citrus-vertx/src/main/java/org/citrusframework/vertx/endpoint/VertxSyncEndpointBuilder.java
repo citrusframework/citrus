@@ -22,10 +22,12 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.vertx.factory.VertxInstanceFactory;
 import org.citrusframework.vertx.message.VertxMessageConverter;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-vertx")
 public class VertxSyncEndpointBuilder extends AbstractEndpointBuilder<VertxSyncEndpoint> {
 
     /** Endpoint target */

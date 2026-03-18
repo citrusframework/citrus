@@ -22,10 +22,12 @@ import java.util.List;
 import org.citrusframework.http.server.AbstractHttpServerBuilder;
 import org.citrusframework.websocket.endpoint.WebSocketEndpoint;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-websocket")
 public class WebSocketServerBuilder extends AbstractHttpServerBuilder<WebSocketServer, WebSocketServerBuilder> {
 
     private final List<String> webSockets = new ArrayList<>();

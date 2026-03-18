@@ -24,12 +24,14 @@ import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.jms.message.JmsMessageConverter;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.destination.DestinationResolver;
 
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-jms")
 public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
 
     /** Endpoint target */

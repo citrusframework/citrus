@@ -24,10 +24,12 @@ import org.citrusframework.mail.message.MailMessageConverter;
 import org.citrusframework.mail.model.MailMarshaller;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-mail")
 public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
 
     /** Endpoint target */

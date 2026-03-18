@@ -20,6 +20,7 @@ import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
@@ -27,6 +28,7 @@ import org.springframework.messaging.core.DestinationResolver;
 /**
  * @since 2.7.6
  */
+@SchemaType(module = "citrus-spring-integration")
 public class ChannelSyncEndpointBuilder extends AbstractEndpointBuilder<ChannelSyncEndpoint> {
 
     /** Endpoint target */

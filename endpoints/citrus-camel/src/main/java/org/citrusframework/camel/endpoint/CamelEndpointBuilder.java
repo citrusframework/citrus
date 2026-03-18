@@ -23,7 +23,9 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
+@SchemaType(module = "citrus-camel")
 public class CamelEndpointBuilder extends AbstractEndpointBuilder<CamelEndpoint> {
 
     /** Endpoint target */

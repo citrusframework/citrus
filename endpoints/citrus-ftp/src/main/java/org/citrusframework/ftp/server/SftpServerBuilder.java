@@ -21,10 +21,12 @@ import java.util.Map;
 import org.citrusframework.ftp.client.SftpEndpointConfiguration;
 import org.citrusframework.server.AbstractServerBuilder;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-ftp")
 public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpServerBuilder> {
 
     /** Endpoint target */

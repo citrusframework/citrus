@@ -26,10 +26,12 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-ftp")
 public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServerBuilder> {
 
     /** Endpoint target */

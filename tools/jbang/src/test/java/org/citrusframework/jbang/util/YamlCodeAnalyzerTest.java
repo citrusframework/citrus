@@ -32,11 +32,14 @@ public class YamlCodeAnalyzerTest {
 
         Assert.assertEquals(scanResult.name(), "sample.citrus.it.yaml");
 
-        Assert.assertEquals(scanResult.modules().length, 3L);
+        Assert.assertEquals(scanResult.modules().length, 6L);
         String[] foundModules = Arrays.stream(scanResult.modules()).sorted().toArray(String[]::new);
         Assert.assertEquals(foundModules[0], "citrus-base");
         Assert.assertEquals(foundModules[1], "citrus-camel");
-        Assert.assertEquals(foundModules[2], "citrus-testcontainers");
+        Assert.assertEquals(foundModules[2], "citrus-http");
+        Assert.assertEquals(foundModules[3], "citrus-jms");
+        Assert.assertEquals(foundModules[4], "citrus-kafka");
+        Assert.assertEquals(foundModules[5], "citrus-testcontainers");
 
         Assert.assertEquals(scanResult.dependencies().length, 1L);
         String[] foundDeps = Arrays.stream(scanResult.dependencies()).sorted().toArray(String[]::new);

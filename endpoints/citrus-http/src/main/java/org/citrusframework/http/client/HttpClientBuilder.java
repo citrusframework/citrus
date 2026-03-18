@@ -28,6 +28,7 @@ import org.citrusframework.message.ErrorHandlingStrategy;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -40,6 +41,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-http")
 public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
 
     /** Endpoint target */

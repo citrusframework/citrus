@@ -25,6 +25,7 @@ import org.citrusframework.server.AbstractServerBuilder;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.message.converter.WebServiceMessageConverter;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 import org.eclipse.jetty.ee10.servlet.ServletHandler;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
@@ -33,6 +34,7 @@ import org.springframework.ws.server.EndpointInterceptor;
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-ws")
 public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceServer, WebServiceServerBuilder> {
 
     /**

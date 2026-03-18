@@ -26,6 +26,7 @@ import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.message.converter.WebServiceMessageConverter;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -34,6 +35,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-ws")
 public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceClient> {
 
     /** Endpoint target */

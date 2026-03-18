@@ -16,21 +16,23 @@
 
 package org.citrusframework.jmx.server;
 
-import javax.management.NotificationFilter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import javax.management.NotificationFilter;
 
 import org.citrusframework.jmx.message.JmxMessageConverter;
 import org.citrusframework.jmx.model.JmxMarshaller;
 import org.citrusframework.jmx.model.ManagedBeanDefinition;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.server.AbstractServerBuilder;
+import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.5
  */
+@SchemaType(module = "citrus-jmx")
 public class JmxServerBuilder extends AbstractServerBuilder<JmxServer, JmxServerBuilder> {
 
     /** Endpoint target */
