@@ -43,8 +43,6 @@ public interface TestcontainersComposeUpActionBuilder<C extends AutoCloseable, T
 
     B autoRemove(boolean enabled);
 
-    B useComposeBinary(boolean enabled);
-
     B withExposedService(String serviceName, int port);
 
     B withExposedService(String serviceName, int port, Object waitStrategy);

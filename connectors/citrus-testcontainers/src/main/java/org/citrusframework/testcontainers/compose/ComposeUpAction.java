@@ -139,8 +139,6 @@ public class ComposeUpAction extends AbstractTestcontainersAction {
 
         private final Map<String, WaitStrategy> waitStrategies = new HashMap<>();
 
-        private boolean useComposeBinary = ComposeContainerSettings.isUseComposeBinary();
-
         public Builder() {
             withStartupTimeout(ComposeContainerSettings.getStartupTimeout());
         }
@@ -191,12 +189,6 @@ public class ComposeUpAction extends AbstractTestcontainersAction {
         @Override
         public Builder autoRemove(boolean enabled) {
             this.autoRemoveResources = enabled;
-            return self;
-        }
-
-        @Override
-        public Builder useComposeBinary(boolean enabled) {
-            this.useComposeBinary = enabled;
             return self;
         }
 
@@ -274,10 +266,6 @@ public class ComposeUpAction extends AbstractTestcontainersAction {
 
             if (container == null) {
                 throw new CitrusRuntimeException("Missing proper ComposeContainer specification - either provide a container name or compose file resource");
-            }
-
-            if (useComposeBinary) {
-                container.withLocalCompose(true);
             }
 
             for (Map.Entry<String, Integer> service : exposedServices.entrySet()) {

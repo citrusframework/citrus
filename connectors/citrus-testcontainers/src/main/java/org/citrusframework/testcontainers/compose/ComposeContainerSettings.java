@@ -28,10 +28,6 @@ public class ComposeContainerSettings {
     private static final String CONTAINER_NAME_PROPERTY = COMPOSE_PROPERTY_PREFIX + "container.name";
     private static final String CONTAINER_NAME_ENV = COMPOSE_ENV_PREFIX + "CONTAINER_NAME";
 
-    private static final String USE_COMPOSE_BINARY_PROPERTY = COMPOSE_PROPERTY_PREFIX + "use.compose.binary";
-    private static final String USE_COMPOSE_BINARY_ENV = COMPOSE_ENV_PREFIX + "USE_COMPOSE_BINARY";
-    public static final String USE_COMPOSE_BINARY_DEFAULT = "true";
-
     private static final String STARTUP_TIMEOUT_PROPERTY = COMPOSE_PROPERTY_PREFIX + "startup.timeout";
     private static final String STARTUP_TIMEOUT_ENV = COMPOSE_ENV_PREFIX + "STARTUP_TIMEOUT";
 
@@ -56,15 +52,5 @@ public class ComposeContainerSettings {
         return Optional.ofNullable(System.getProperty(STARTUP_TIMEOUT_PROPERTY, System.getenv(STARTUP_TIMEOUT_ENV)))
                 .map(Integer::parseInt)
                 .orElseGet(TestContainersSettings::getStartupTimeout);
-    }
-
-    /**
-     * Uses local Docker compose binary when set to true.
-     * If enabled the experience is closest to using the Docker compose commands (e.g. docker compose up).
-     * @return
-     */
-    public static boolean isUseComposeBinary() {
-        return Boolean.parseBoolean(System.getProperty(USE_COMPOSE_BINARY_PROPERTY,
-                System.getenv(USE_COMPOSE_BINARY_ENV) != null ? System.getenv(USE_COMPOSE_BINARY_ENV) : USE_COMPOSE_BINARY_DEFAULT));
     }
 }

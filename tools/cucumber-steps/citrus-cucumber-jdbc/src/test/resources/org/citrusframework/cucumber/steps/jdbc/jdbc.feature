@@ -7,6 +7,9 @@ Feature: JDBC steps
       | username  | ${database.user} |
       | password  | ${database.password} |
 
+  Scenario: Start database
+    Given Start database
+
   Scenario: SQL update
     Given variables
       | todoId  | citrus:randomNumber(4) |
@@ -37,3 +40,6 @@ Feature: JDBC steps
       assert rows.size() == 1
       assert rows[0].TASK == 'Learn some Camel K!'
       """
+
+  Scenario: Stop database
+    Given Stop database

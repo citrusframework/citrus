@@ -29,13 +29,13 @@ import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.PropertyUtils;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.ext.ScriptUtils;
 import org.testcontainers.jdbc.JdbcDatabaseDelegate;
 import org.testcontainers.utility.DockerImageName;
 
-public class StartPostgreSQLAction extends StartTestcontainersAction<PostgreSQLContainer<?>> {
+public class StartPostgreSQLAction extends StartTestcontainersAction<PostgreSQLContainer> {
 
     private final String dataSourceName;
     private final String initScript;
@@ -74,7 +74,7 @@ public class StartPostgreSQLAction extends StartTestcontainersAction<PostgreSQLC
     }
 
     @Override
-    protected void exposeConnectionSettings(PostgreSQLContainer<?> container, TestContext context) {
+    protected void exposeConnectionSettings(PostgreSQLContainer container, TestContext context) {
         PostgreSQLSettings.exposeConnectionSettings(container, serviceName, context);
 
         BasicDataSource postgreSQLDataSource = new BasicDataSource();
@@ -90,8 +90,8 @@ public class StartPostgreSQLAction extends StartTestcontainersAction<PostgreSQLC
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractBuilder<PostgreSQLContainer<?>, StartPostgreSQLAction, Builder>
-            implements TestcontainersPostgreSQLStartActionBuilder<PostgreSQLContainer<?>, StartPostgreSQLAction, Builder> {
+    public static class Builder extends AbstractBuilder<PostgreSQLContainer, StartPostgreSQLAction, Builder>
+            implements TestcontainersPostgreSQLStartActionBuilder<PostgreSQLContainer, StartPostgreSQLAction, Builder> {
 
         private String postgreSQLVersion = PostgreSQLSettings.getPostgreSQLVersion();
 
@@ -177,7 +177,7 @@ public class StartPostgreSQLAction extends StartTestcontainersAction<PostgreSQLC
             withLabel("app.kubernetes.io/part-of", TestContainersSettings.getTestName());
             withLabel("app.openshift.io/connects-to", TestContainersSettings.getTestId());
 
-            PostgreSQLContainer<?> postgreSQLContainer;
+            PostgreSQLContainer postgreSQLContainer;
             if (referenceResolver != null && referenceResolver.isResolvable(containerName, PostgreSQLContainer.class)) {
                 postgreSQLContainer = referenceResolver.resolve(containerName, PostgreSQLContainer.class);
             } else {
@@ -191,7 +191,7 @@ public class StartPostgreSQLAction extends StartTestcontainersAction<PostgreSQLC
                         DockerImageName.parse(image).withTag(postgreSQLVersion);
                 }
 
-                postgreSQLContainer = new PostgreSQLContainer<>(imageName)
+                postgreSQLContainer = new PostgreSQLContainer(imageName)
                         .withUsername(username)
                         .withPassword(password)
                         .withDatabaseName(databaseName)

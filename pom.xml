@@ -222,7 +222,7 @@
     <jackson.version>2.21.1</jackson.version>
     <jackson.version.short>2.21</jackson.version.short>
     <jackson-databind-nullable.version>0.2.9</jackson-databind-nullable.version>
-    <jakarta-activation.version>2.0.1</jakarta-activation.version>
+    <jakarta-activation.version>2.1.4</jakarta-activation.version>
     <jakarta-activation-api.version>2.1.4</jakarta-activation-api.version>
     <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
     <jakarta.jms-api.version>3.1.0</jakarta.jms-api.version>
@@ -235,7 +235,7 @@
     <jansi.version>2.4.2</jansi.version>
     <javapoet.version>1.13.0</javapoet.version>
     <jaxb.version>4.0.6</jaxb.version>
-    <jetty.version>12.0.32</jetty.version>
+    <jetty.version>12.0.33</jetty.version>
     <jetty.websocket-api.version>2.0.0</jetty.websocket-api.version>
     <jsch.version>0.1.55</jsch.version>
     <jsonschema-generator.version>4.38.0</jsonschema-generator.version>
@@ -275,10 +275,10 @@
     <swagger.parser.version>2.1.22</swagger.parser.version>
     <swagger-request-validator.version>2.46.0</swagger-request-validator.version>
     <system-stubs.version>2.1.8</system-stubs.version>
-    <testcontainers.version>1.21.4</testcontainers.version>
+    <testcontainers.version>2.0.3</testcontainers.version>
     <testng.version>7.12.0</testng.version>
     <!-- bound to https://mvnrepository.com/artifact/io.fabric8/kubernetes-httpclient-vertx/${k8s.client.version} -->
-    <vertx.version>4.5.24</vertx.version>
+    <vertx.version>4.5.25</vertx.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
     <xbean-spring.version>4.30</xbean-spring.version>
     <xmlbeans.version>5.2.1</xmlbeans.version>
@@ -605,22 +605,22 @@
       </dependency>
       <dependency>
         <groupId>org.testcontainers</groupId>
-        <artifactId>mongodb</artifactId>
+        <artifactId>testcontainers-mongodb</artifactId>
         <version>${testcontainers.version}</version>
       </dependency>
       <dependency>
         <groupId>org.testcontainers</groupId>
-        <artifactId>postgresql</artifactId>
+        <artifactId>testcontainers-postgresql</artifactId>
         <version>${testcontainers.version}</version>
       </dependency>
       <dependency>
         <groupId>org.testcontainers</groupId>
-        <artifactId>redpanda</artifactId>
+        <artifactId>testcontainers-redpanda</artifactId>
         <version>${testcontainers.version}</version>
       </dependency>
       <dependency>
         <groupId>org.testcontainers</groupId>
-        <artifactId>kafka</artifactId>
+        <artifactId>testcontainers-kafka</artifactId>
         <version>${testcontainers.version}</version>
       </dependency>
 

@@ -19,7 +19,7 @@ package org.citrusframework.testcontainers.postgresql;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.testcontainers.TestContainersSettings;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
 
@@ -142,7 +142,7 @@ public class PostgreSQLSettings {
      * @param serviceName the service name of the container.
      * @param context the test context to receive the test variables.
      */
-    public static void exposeConnectionSettings(PostgreSQLContainer<?> container, String serviceName, TestContext context) {
+    public static void exposeConnectionSettings(PostgreSQLContainer container, String serviceName, TestContext context) {
         if (container.getContainerId() != null) {
             String dockerContainerId = container.getContainerId().substring(0, 12);
             String dockerContainerName = container.getContainerName();

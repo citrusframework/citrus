@@ -16,14 +16,9 @@
 
 package org.citrusframework.cucumber.steps.jdbc;
 
-import com.github.dockerjava.api.model.ExposedPort;
-import com.github.dockerjava.api.model.PortBinding;
-import com.github.dockerjava.api.model.Ports;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
-import org.junit.ClassRule;
 import org.junit.runner.RunWith;
-import org.testcontainers.containers.PostgreSQLContainer;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
@@ -32,13 +27,4 @@ import org.testcontainers.containers.PostgreSQLContainer;
 )
 public class JdbcFeature_IT {
 
-    @ClassRule
-    public static PostgreSQLContainer<?> testdbContainer = new PostgreSQLContainer<>()
-            .withDatabaseName("testdb")
-            .withUsername("test")
-            .withPassword("secret")
-            .withInitScript("test-db-init.sql")
-            .withCreateContainerCmdModifier(modifier -> modifier.withPortBindings(
-                    new PortBinding(Ports.Binding.bindPort(PostgreSQLContainer.POSTGRESQL_PORT),
-                    new ExposedPort(PostgreSQLContainer.POSTGRESQL_PORT))));
 }

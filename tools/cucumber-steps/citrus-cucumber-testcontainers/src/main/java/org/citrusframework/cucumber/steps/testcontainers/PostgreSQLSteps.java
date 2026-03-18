@@ -32,7 +32,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.cucumber.steps.util.ResourceUtils;
 import org.citrusframework.testcontainers.postgresql.PostgreSQLSettings;
 import org.citrusframework.util.FileUtils;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import static org.citrusframework.testcontainers.actions.TestcontainersActionBuilder.testcontainers;
 
@@ -64,7 +64,7 @@ public class PostgreSQLSteps {
     @Before
     public void before(Scenario scenario) {
         if (citrus.getCitrusContext().getReferenceResolver().isResolvable(PostgreSQLSettings.getContainerName(), PostgreSQLContainer.class)) {
-            PostgreSQLContainer<?> postgreSQLContainer = citrus.getCitrusContext().getReferenceResolver().resolve(PostgreSQLSettings.getContainerName(), PostgreSQLContainer.class);
+            PostgreSQLContainer postgreSQLContainer = citrus.getCitrusContext().getReferenceResolver().resolve(PostgreSQLSettings.getContainerName(), PostgreSQLContainer.class);
             PostgreSQLSettings.exposeConnectionSettings(postgreSQLContainer, serviceName, context);
         }
     }
