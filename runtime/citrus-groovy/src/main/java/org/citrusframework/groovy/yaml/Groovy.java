@@ -48,7 +48,7 @@ public class Groovy implements TestActionBuilder<TestAction>, ReferenceResolverA
         this.actor = actor;
     }
 
-    @SchemaProperty(required = true, description = "The Groovy script to execute.")
+    @SchemaProperty(description = "The Groovy script to execute.")
     public void setScript(Script script) {
         GroovyAction.Builder builder = new GroovyAction.Builder();
 
