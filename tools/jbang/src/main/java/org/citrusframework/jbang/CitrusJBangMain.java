@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.jbang.commands.Agent;
+import org.citrusframework.jbang.commands.AgentRun;
 import org.citrusframework.jbang.commands.AgentStart;
 import org.citrusframework.jbang.commands.AgentStop;
 import org.citrusframework.jbang.commands.Complete;
@@ -47,6 +48,7 @@ public class CitrusJBangMain implements Callable<Integer> {
                 .addSubcommand("ls", new CommandLine(new ListTests(main)))
                 .addSubcommand("agent", new CommandLine(new Agent(main))
                         .addSubcommand("start", new CommandLine(new AgentStart(main)))
+                        .addSubcommand("run", new CommandLine(new AgentRun(main)))
                         .addSubcommand("stop", new CommandLine(new AgentStop(main))))
                 .addSubcommand("completion", new CommandLine(new Complete(main)));
 
