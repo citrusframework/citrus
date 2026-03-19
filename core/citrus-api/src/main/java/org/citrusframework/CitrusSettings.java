@@ -589,4 +589,11 @@ public final class CitrusSettings {
                 RESOURCES_WORKDIR_DEFAULT
         );
     }
+
+    /**
+     * Gets the application properties file that is automatically read by Citrus on startup.
+     */
+    public static String getApplicationPropertiesFile() {
+        return APPLICATION_PROPERTY_FILE;
+    }
 }
