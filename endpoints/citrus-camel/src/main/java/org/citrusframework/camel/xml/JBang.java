@@ -1013,6 +1013,8 @@ public class JBang {
             protected String timeout = "20000";
             @XmlAttribute
             protected String endpoint;
+            @XmlAttribute
+            protected String infra;
             @XmlAttribute(name = "uri")
             protected String uri;
             @XmlAttribute(name = "args")
@@ -1039,6 +1041,14 @@ public class JBang {
 
             public void setIntegration(String integration) {
                 this.integration = integration;
+            }
+
+            public String getInfra() {
+                return infra;
+            }
+
+            public void setInfra(String infra) {
+                this.infra = infra;
             }
 
             public String getEndpoint() {

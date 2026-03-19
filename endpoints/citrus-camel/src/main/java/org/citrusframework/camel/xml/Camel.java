@@ -346,6 +346,10 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                     }
                 }
 
+                if (jbang.getCmd().getSend().getInfra() != null) {
+                    builder.endpoint(jbang.getCmd().getSend().getInfra());
+                }
+
                 if (jbang.getCmd().getSend().getEndpoint() != null) {
                     builder.endpoint(jbang.getCmd().getSend().getEndpoint());
                 }

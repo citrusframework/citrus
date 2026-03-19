@@ -720,6 +720,10 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 }
             }
 
+            if (send.getInfra() != null) {
+                builder.endpoint(send.getInfra());
+            }
+
             if (send.getEndpoint() != null) {
                 builder.endpoint(send.getEndpoint());
             }
@@ -789,6 +793,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
             protected String timeout = "20000";
             protected String integration;
+            protected String infra;
             protected String endpoint;
             protected String uri;
             protected List<String> args;
@@ -824,6 +829,15 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             @SchemaProperty(description = "The Camel integration to send the message to.")
             public void setIntegration(String integration) {
                 this.integration = integration;
+            }
+
+            public String getInfra() {
+                return infra;
+            }
+
+            @SchemaProperty(advanced = true, description = "Optional Camel infrastructure service to connect to.")
+            public void setInfra(String infra) {
+                this.infra = infra;
             }
 
             public String getEndpoint() {

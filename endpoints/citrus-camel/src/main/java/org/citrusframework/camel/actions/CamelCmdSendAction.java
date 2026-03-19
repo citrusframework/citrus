@@ -52,6 +52,9 @@ public class CamelCmdSendAction extends AbstractCamelJBangAction {
     /** Body content as file resource */
     private final Resource bodyResource;
 
+    /** Infrastructure service to connect to */
+    private final String infra;
+
     /** Endpoint to invoke */
     private final String endpoint;
 
@@ -74,6 +77,7 @@ public class CamelCmdSendAction extends AbstractCamelJBangAction {
         this.headers = builder.headers;
         this.body = builder.body;
         this.bodyResource = builder.bodyResource;
+        this.infra = builder.infra;
         this.endpoint = builder.endpoint;
         this.endpointUri = builder.endpointUri;
         this.args = builder.args;
@@ -105,6 +109,11 @@ public class CamelCmdSendAction extends AbstractCamelJBangAction {
         } else if (bodyResource != null) {
             commandArgs.add("--body");
             commandArgs.add("file:" + bodyResource.getLocation());
+        }
+
+        if (StringUtils.hasText(infra)) {
+            commandArgs.add("--infra");
+            commandArgs.add(infra);
         }
 
         if (StringUtils.hasText(endpoint)) {
@@ -145,6 +154,7 @@ public class CamelCmdSendAction extends AbstractCamelJBangAction {
         private final List<String> headers = new ArrayList<>();
         private String body;
         private Resource bodyResource;
+        private String infra;
         private String endpoint;
         private String endpointUri;
         private final List<String> args = new ArrayList<>();
@@ -189,6 +199,12 @@ public class CamelCmdSendAction extends AbstractCamelJBangAction {
         @Override
         public Builder body(Resource body) {
             this.bodyResource = body;
+            return this;
+        }
+
+        @Override
+        public Builder infra(String service) {
+            this.infra = service;
             return this;
         }
 

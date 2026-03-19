@@ -41,6 +41,8 @@ public interface CamelJBangCmdSendActionBuilder<T extends TestAction, B extends 
 
     B body(Resource body);
 
+    B infra(String service);
+
     B endpoint(String endpoint);
 
     B endpointUri(String uri);
