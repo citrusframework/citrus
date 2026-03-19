@@ -22,16 +22,22 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.citrusframework.TestSource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.yaml.SchemaProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @since 2.7.4
  */
 public class TestRunConfiguration {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(TestRunConfiguration.class);
 
     /** Test engine */
     private String engine = "junit5";
@@ -220,5 +226,15 @@ public class TestRunConfiguration {
     @SchemaProperty(description = "Set of additional Maven dependencies that should be loaded with the agent.")
     public void setDependencies(Set<String> dependencies) {
         this.dependencies.addAll(dependencies);
+    }
+
+    /**
+     * Reads default properties in configuration and sets them as system properties.
+     */
+    public void setDefaultProperties() {
+        for (Map.Entry<String, String> entry : defaultProperties.entrySet()) {
+            logger.info(String.format("Setting application property %s=%s", entry.getKey(), entry.getValue()));
+            System.setProperty(entry.getKey(), Optional.ofNullable(entry.getValue()).orElse(""));
+        }
     }
 }

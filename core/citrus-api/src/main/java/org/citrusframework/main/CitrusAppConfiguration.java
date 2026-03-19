@@ -16,21 +16,13 @@
 
 package org.citrusframework.main;
 
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.yaml.SchemaProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @since 2.7.4
  */
 public class CitrusAppConfiguration extends TestRunConfiguration {
-
-    /** Logger */
-    private static final Logger logger = LoggerFactory.getLogger(CitrusAppConfiguration.class);
 
     /** Server time to live in milliseconds */
     private long timeToLive = 0;
@@ -105,14 +97,9 @@ public class CitrusAppConfiguration extends TestRunConfiguration {
         this.systemExit = systemExit;
     }
 
-    /**
-     * Reads default properties in configuration and sets them as system properties.
-     */
+    @Override
     public void setDefaultProperties() {
-        for (Map.Entry<String, String> entry : getDefaultProperties().entrySet()) {
-            logger.debug(String.format("Setting application property %s=%s", entry.getKey(), entry.getValue()));
-            System.setProperty(entry.getKey(), Optional.ofNullable(entry.getValue()).orElse(""));
-        }
+        super.setDefaultProperties();
 
         if (getConfigClass() != null) {
             System.setProperty(CitrusSettings.DEFAULT_CONFIG_CLASS_PROPERTY, getConfigClass());

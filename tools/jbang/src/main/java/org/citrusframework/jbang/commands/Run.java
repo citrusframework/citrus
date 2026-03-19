@@ -19,8 +19,10 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,6 +32,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -38,6 +41,7 @@ import java.util.stream.Stream;
 
 import org.apache.camel.tooling.maven.MavenArtifact;
 import org.citrusframework.CitrusInstanceManager;
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.agent.CitrusAgentConfiguration;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -167,6 +171,10 @@ public class Run extends CitrusCommand {
         }
 
         final TestRunConfiguration configuration = getRunConfiguration(tests);
+
+        // Set properties as System properties
+        configuration.setDefaultProperties();
+
         final TestEngine engine = TestEngine.lookup(configuration);
         final ExitStatusTestReporter exitStatus = new ExitStatusTestReporter();
         CitrusInstanceManager.addInstanceProcessor(instance -> instance.addTestReporter(exitStatus));
@@ -329,6 +337,30 @@ public class Run extends CitrusCommand {
                 .map(TestSourceHelper::create)
                 .collect(Collectors.toList()));
 
+        Path workingDir;
+        if (StringUtils.hasText(configuration.getWorkDir())) {
+            workingDir = new File(configuration.getWorkDir()).toPath();
+        } else {
+            workingDir = new File(".").toPath();
+        }
+
+        // Read default Citrus application properties file if present
+        if (workingDir.resolve(CitrusSettings.getApplicationPropertiesFile()).toFile().exists()) {
+            printer().println("Reading Citrus application properties file: " + workingDir.resolve(CitrusSettings.getApplicationPropertiesFile()));
+
+            Path citrusApplicationProperties = workingDir.resolve(CitrusSettings.getApplicationPropertiesFile());
+            try (InputStream is = new ByteArrayInputStream(Files.readAllBytes(citrusApplicationProperties))) {
+                Properties properties = new Properties();
+                properties.load(is);
+
+                configuration.addDefaultProperties(properties.entrySet()
+                        .stream()
+                        .filter(entry -> entry.getValue() != null)
+                        .collect(Collectors.toMap(entry -> entry.getKey().toString(), entry -> entry.getValue().toString())));
+            } catch (Exception e) {
+                printer().println("Failed to read Citrus application properties file '%s'".formatted(citrusApplicationProperties));
+            }
+        }
         return configuration;
     }
 
