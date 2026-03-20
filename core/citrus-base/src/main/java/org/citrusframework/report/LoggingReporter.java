@@ -289,7 +289,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         if (isDebugEnabled()) {
             newLine();
             if (testCase.isIncremental()) {
-                debug("TEST STEP " + (testCase.getExecutedActions().size() + 1) + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
+                debug("TEST STEP " + (testCase.getNumberOfExecutedActions() + 1) + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
             } else {
                 debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
             }
@@ -313,7 +313,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
             var duration = formatDurationString(testCase);
             if (testCase.isIncremental()) {
-                debug("TEST STEP " + (testCase.getExecutedActions().size() + 1) + " SUCCESS" + duration);
+                debug("TEST STEP " + (testCase.getNumberOfExecutedActions() + 1) + " SUCCESS" + duration);
             } else {
                 debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SUCCESS" + duration);
             }
@@ -327,7 +327,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
             var duration = formatDurationString(testCase);
             if (testCase.isIncremental()) {
-                debug("TEST STEP " + (testCase.getExecutedActions().size() + 1) + " FAILED" + duration + " Nested exception is: " + cause.getMessage());
+                debug("TEST STEP " + (testCase.getNumberOfExecutedActions() + 1) + " FAILED" + duration + " Nested exception is: " + cause.getMessage());
             } else {
                 debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " FAILED" + duration + " Nested exception is: " + cause.getMessage());
             }
@@ -340,7 +340,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
             newLine();
 
             if (testCase.isIncremental()) {
-                debug("TEST STEP " + (testCase.getExecutedActions().size() + 1) + " SKIPPED");
+                debug("TEST STEP " + (testCase.getNumberOfExecutedActions() + 1) + " SKIPPED");
             } else {
                 debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SKIPPED");
             }

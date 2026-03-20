@@ -18,6 +18,7 @@ package org.citrusframework.container;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,7 +46,7 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     protected List<TestActionBuilder<?>> actions;
 
     /** List of all executed actions during container run  */
-    private final List<TestAction> executedActions = new ArrayList<>();
+    private final List<TestAction> executedActions = Collections.synchronizedList(new ArrayList<>());
 
     /** Last executed action for error reporting reasons */
     private TestAction activeAction;
@@ -100,15 +101,21 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
             return true;
         }
 
-        if (activeAction != null  && !executedActions.contains(activeAction)) {
+        if (activeAction != null && !executedActions.contains(activeAction)) {
             logger.debug("{} not completed yet", Optional.ofNullable(activeAction.getName()).filter(name -> !name.trim().isEmpty())
                     .orElseGet(() -> activeAction.getClass().getName()));
             return false;
         }
 
-        for (TestAction action : new ArrayList<>(executedActions)) {
-            if (action instanceof Completable && !((Completable) action).isDone(context)) {
-                logger.debug("{} not completed yet", Optional.ofNullable(action.getName()).filter(name -> !name.trim().isEmpty())
+        synchronized (executedActions) {
+            Optional<TestAction> pending = executedActions.stream()
+                    .filter(action -> action instanceof Completable)
+                    .filter(action -> !((Completable)action).isDone(context))
+                    .findAny();
+
+            if (pending.isPresent()) {
+                TestAction action = pending.get();
+                logger.info("{} not completed yet", Optional.ofNullable(action.getName()).filter(name -> !name.trim().isEmpty())
                         .orElseGet(() -> action.getClass().getName()));
                 return false;
             }
@@ -168,7 +175,14 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
 
     @Override
     public List<TestAction> getExecutedActions() {
-        return executedActions;
+        synchronized (executedActions) {
+            return new ArrayList<>(executedActions);
+        }
+    }
+
+    @Override
+    public int getNumberOfExecutedActions() {
+        return executedActions.size();
     }
 
     @Override
