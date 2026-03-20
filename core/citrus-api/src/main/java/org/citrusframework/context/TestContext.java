@@ -1019,6 +1019,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         }
 
         @Override
+        public int getNumberOfExecutedActions() {
+            return 0;
+        }
+
+        @Override
         public TestAction getTestAction(int index) {
             return null;
         }

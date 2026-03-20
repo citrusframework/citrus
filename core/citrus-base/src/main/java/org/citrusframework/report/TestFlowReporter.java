@@ -142,9 +142,10 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
             for (int iteration = 0; iteration < iterations; iteration++) {
                 TestActionResult iterationResult = new TestActionResult(String.valueOf(iteration), actionPath);
 
-                for (int i = iteration * actionsSize; i < container.getExecutedActions().size()
+                List<TestAction> executed = container.getExecutedActions();
+                for (int i = iteration * actionsSize; i < executed.size()
                         && i < ((iteration + 1) * actionsSize); i++) {
-                    TestAction action = container.getExecutedActions().get(i);
+                    TestAction action = executed.get(i);
                     String nestedActionPath;
                     if (iteration == 0) {
                         nestedActionPath = actionPath + "." + getActionPath(container, action);
@@ -165,8 +166,8 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
                 tar.addIteration(iterationResult);
             }
         } else {
-            for (int i = 0; i < container.getExecutedActions().size(); i++) {
-                TestAction action = container.getExecutedActions().get(i);
+            List<TestAction> executed = container.getExecutedActions();
+            for (TestAction action : executed) {
                 TestActionResult nested = new TestActionResult(action.getName(), actionPath + "." + getActionPath(container, action));
                 if (action instanceof MessageAwareTestAction messageAware) {
                     messageAware.getMessage().ifPresent(nested::setMessage);
