@@ -24,6 +24,9 @@ help:
 open-manual:
 	./scripts/citrus manual
 
+update:
+	./scripts/citrus update --next-version $(VERSION)
+
 generate-docs:
 	./scripts/citrus docs --release-version $(VERSION) --local --html-only
 

@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# ---------------------------------------------------------------------------
+# Copyright the original author or authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ---------------------------------------------------------------------------
+
+update::description() {
+    echo "Update version in code base"
+}
+
+update::usage() {
+    cat - <<EOT
+    --next-version <ver>      Version to set as new version (e.g. "1.2.1"). One version arg is mandatory
+    --snapshot-version <ver>  Current snapshot version to be replaced with the new version.
+EOT
+}
+
+# Perform the version update
+update::run() {
+    source "$(basedir)/commands/util/version_funcs"
+
+    # Main application directory
+    local working_dir=$(appdir)
+
+    local snapshot_version=$(get_snapshot_version "$working_dir")
+    check_error $snapshot_version
+
+    local next_version=$(get_next_snapshot_version "$working_dir")
+    check_error $next_version
+
+    set_version "$working_dir" "$next_version" "$snapshot_version"
+}
