@@ -24,13 +24,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.JsonSupport;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
 
 public interface CodeAnalyzer {
 
@@ -154,12 +155,10 @@ public interface CodeAnalyzer {
         try {
             Map<String, ComponentDefinition> components = new HashMap<>();
             JsonNode raw = JsonSupport.json().readTree(ClassLoaderHelper.getClassLoader().getResourceAsStream("citrus-catalog/citrus/citrus-catalog-aggregate-%s.json".formatted(kind)));
-            raw.fieldNames().forEachRemaining(name -> {
-                components.put(name, JsonSupport.json().convertValue(raw.get(name), ComponentDefinition.class));
-            });
-
+            raw.propertyNames().forEach(
+                    name -> components.put(name, JsonSupport.json().convertValue(raw.get(name), ComponentDefinition.class)));
             return components;
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             throw new CitrusRuntimeException("Failed to read component aggregate schema definitions of kind '%s'".formatted(kind), e);
         }
     }

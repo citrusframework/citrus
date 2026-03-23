@@ -16,10 +16,8 @@
 
 package org.citrusframework.validation.json;
 
-import java.io.IOException;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
@@ -31,6 +29,8 @@ import org.citrusframework.validation.AbstractValidationProcessor;
 import org.citrusframework.validation.GenericValidationProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * @since 2.4
@@ -80,7 +80,7 @@ public abstract class JsonMappingValidationProcessor<T> extends AbstractValidati
 
         try {
             return mapper.readValue(message.getPayload(String.class), resultType);
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             throw new CitrusRuntimeException("Failed to unmarshal message payload", e);
         }
     }

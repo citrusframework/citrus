@@ -20,15 +20,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.MessageType;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.StringUtils;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.cfg.EnumFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 public final class CloudEventSupport {
+
+    private static final ObjectMapper mapper = JsonMapper.builder()
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .enable(EnumFeature.READ_ENUMS_USING_TO_STRING)
+            .enable(EnumFeature.WRITE_ENUMS_USING_TO_STRING)
+            .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
+            .changeDefaultPropertyInclusion(incl -> incl.withContentInclusion(JsonInclude.Include.NON_NULL))
+            .build();
 
     /**
      * Prevent instantiation
@@ -76,16 +88,16 @@ public final class CloudEventSupport {
     public static Map<String, Object> attributesFromJson(String json) {
         Map<String, Object> attributes = new HashMap<>();
         try {
-            JsonNode event = new ObjectMapper().reader().readTree(json);
+            JsonNode event = mapper.reader().readTree(json);
             for (CloudEvent.Attribute attribute : CloudEvent.v1_0().attributes()) {
                 Optional.ofNullable(event.findValue(attribute.json()))
-                        .ifPresent(e -> attributes.put(attribute.json(), e.textValue()));
+                        .ifPresent(e -> attributes.put(attribute.json(), e.stringValue()));
             }
 
             if (event.findValue("data") != null) {
-                attributes.put("data", event.get("data").textValue());
+                attributes.put("data", event.get("data").stringValue());
             }
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new CitrusRuntimeException("Failed to read cloud event json", e);
         }
 

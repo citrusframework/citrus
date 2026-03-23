@@ -19,8 +19,8 @@ package org.citrusframework.docker.actions;
 import java.util.Collections;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.actions.docker.DockerActionBuilder;
@@ -113,7 +113,7 @@ public class DockerExecuteAction extends AbstractTestAction {
                 JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
                 getMessageValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(expectedCommandResult), context, Collections.singletonList(validationContext));
                 logger.debug("Docker command result validation successful - all values OK!");
-            } catch (JsonProcessingException e) {
+            } catch (JacksonException e) {
                 throw new CitrusRuntimeException(e);
             }
         }

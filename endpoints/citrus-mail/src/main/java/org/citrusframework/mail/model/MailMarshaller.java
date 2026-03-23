@@ -16,15 +16,12 @@
 
 package org.citrusframework.mail.model;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.xml.bind.JAXBException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.mail.MailSettings;
@@ -36,6 +33,10 @@ import org.citrusframework.xml.StringResult;
 import org.citrusframework.xml.Unmarshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * @since 2.1
@@ -51,13 +52,22 @@ public class MailMarshaller implements Marshaller, Unmarshaller {
     private final ObjectMapper mapper;
     private final Jaxb2Marshaller marshaller;
 
-    private final Class<?>[] classesToBeBound = new Class[] {AcceptRequest.class, AcceptResponse.class, MailRequest.class, MailResponse.class};
+    private final Class<?>[] classesToBeBound = new Class[] {
+            AcceptRequest.class,
+            AcceptResponse.class,
+            MailRequest.class,
+            MailResponse.class
+    };
 
     /**
      * Default constructor
      */
     public MailMarshaller() {
-        this.mapper = new ObjectMapper();
+        this.mapper = JsonMapper.builder()
+                .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
+                .changeDefaultPropertyInclusion(incl -> incl.withContentInclusion(JsonInclude.Include.NON_NULL))
+                .build();
         this.marshaller = new Jaxb2Marshaller(Resources.fromClasspath("org/citrusframework/schema/citrus-mail-message.xsd"), classesToBeBound);
     }
 
@@ -70,11 +80,8 @@ public class MailMarshaller implements Marshaller, Unmarshaller {
                     for (Class<?> type : classesToBeBound) {
                         try {
                             return mapper.readValue(((StreamSource) source).getReader(), type);
-                        } catch (JsonParseException | JsonMappingException e2) {
-                            // do nothing - ignore
-                        } catch (IOException io) {
-                            logger.warn("Unable to read mail JSON object from source", io);
-                            throw new CitrusRuntimeException("Failed to unmarshal source", io);
+                        } catch (JacksonException je) {
+                            // ignore, do nothing
                         }
                     }
                 }
@@ -85,12 +92,17 @@ public class MailMarshaller implements Marshaller, Unmarshaller {
             for (Class<?> type : classesToBeBound) {
                 try {
                     return mapper.readValue(((StreamSource) source).getReader(), type);
-                } catch (JsonParseException | JsonMappingException e2) {
-                    // do nothing - ignore
-                } catch (IOException io) {
-                    throw new CitrusRuntimeException("Unable to read mail JSON object from source", io);
+                } catch (JacksonException je) {
+                    // ignore, do nothing
                 }
             }
+
+            try {
+                return marshaller.unmarshal(source);
+            } catch (JAXBException me) {
+                logger.warn("Failed to read ftp XML object from source: " + me.getMessage());
+            }
+
             throw new CitrusRuntimeException("Failed to read mail JSON object from source:" + source);
         } else {
             throw new CitrusRuntimeException("Unsupported mail marshaller type: " + type);
@@ -104,7 +116,7 @@ public class MailMarshaller implements Marshaller, Unmarshaller {
                 ((StringResult) result).setWriter(writer);
                 try {
                     mapper.writer().writeValue(writer, graph);
-                } catch (IOException e) {
+                } catch (JacksonException e) {
                     throw new CitrusRuntimeException("Failed to write mail object graph to result", e);
                 }
             }

@@ -16,52 +16,53 @@
 
 package org.citrusframework.agent.util;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.module.SimpleSerializers;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.citrusframework.TestSource;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.StreamReadFeature;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.cfg.EnumFeature;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.module.SimpleSerializers;
+import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.ser.std.StdSerializer;
 
 public final class JsonSupport {
 
     private static final ObjectMapper OBJECT_MAPPER;
 
     static {
-        OBJECT_MAPPER = JsonMapper.builder()
+        JsonMapper.Builder builder = JsonMapper.builder()
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
-                .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
-                .disable(JsonParser.Feature.AUTO_CLOSE_SOURCE)
-                .enable(MapperFeature.BLOCK_UNSAFE_POLYMORPHIC_BASE_TYPES)
+                .enable(EnumFeature.READ_ENUMS_USING_TO_STRING)
+                .enable(EnumFeature.WRITE_ENUMS_USING_TO_STRING)
                 .enable(SerializationFeature.INDENT_OUTPUT)
+                .disable(StreamReadFeature.AUTO_CLOSE_SOURCE)
                 .addModule(new AgentModule())
-                .build()
-                .setDefaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY));
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_EMPTY))
+                .changeDefaultPropertyInclusion(incl -> incl.withContentInclusion(JsonInclude.Include.NON_EMPTY));
 
-        OBJECT_MAPPER.setSerializerFactory(OBJECT_MAPPER.getSerializerFactory()
-                .withAdditionalSerializers(new SimpleSerializers(List.of(new DurationSerializer(), new ThrowableSerializer()))));
+        builder.serializerFactory()
+                .withAdditionalSerializers(new SimpleSerializers(List.of(new DurationSerializer(), new ThrowableSerializer())));
+
+        OBJECT_MAPPER = builder.build();
     }
 
     private JsonSupport() {
@@ -75,7 +76,7 @@ public final class JsonSupport {
     public static <T> T read(String body, Class<T> bodyType) {
         try {
             return json().readValue(body, bodyType);
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             throw new CitrusRuntimeException("Failed to read json body", e);
         }
     }
@@ -83,7 +84,7 @@ public final class JsonSupport {
     public static String render(Object model) {
         try {
             return json().writeValueAsString(model);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new CitrusRuntimeException("Failed to write json test results", e);
         }
     }
@@ -95,7 +96,7 @@ public final class JsonSupport {
         }
 
         @Override
-        public void serialize(Duration duration, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        public void serialize(Duration duration, JsonGenerator jsonGenerator, SerializationContext serializationContext) {
             long milliseconds = duration.toMillis();
             jsonGenerator.writeNumber(milliseconds);
         }
@@ -108,7 +109,7 @@ public final class JsonSupport {
         }
 
         @Override
-        public void serialize(Throwable throwable, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        public void serialize(Throwable throwable, JsonGenerator jsonGenerator, SerializationContext serializationContext) {
             jsonGenerator.writeString("%s - %s".formatted(throwable.getClass().getName(), throwable.getMessage()));
         }
     }
@@ -116,18 +117,18 @@ public final class JsonSupport {
     private static class AgentModule extends SimpleModule {
 
         public AgentModule() {
-            addDeserializer(TestSource.class, new JsonDeserializer<>() {
+            addDeserializer(TestSource.class, new ValueDeserializer<>() {
                 @Override
-                public TestSource deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-                    ObjectNode node = p.readValueAsTree();
+                public TestSource deserialize(JsonParser parser, DeserializationContext deserializationContext) {
+                    ObjectNode node = parser.readValueAsTree();
                     String filePath = Optional.ofNullable(node.get("filePath"))
-                            .map(JsonNode::textValue)
+                            .map(JsonNode::stringValue)
                             .orElseThrow(() -> new CitrusRuntimeException("Missing test source file path"));
                     String type = Optional.ofNullable(node.get("type"))
-                            .map(JsonNode::textValue)
+                            .map(JsonNode::stringValue)
                             .orElseGet(() -> FileUtils.getFileExtension(filePath));
                     String name = Optional.ofNullable(node.get("name"))
-                            .map(JsonNode::textValue)
+                            .map(JsonNode::stringValue)
                             .orElseGet(() -> FileUtils.getBaseName(FileUtils.getFileName(filePath)));
 
                     TestSource source = new TestSource(type, name, filePath);

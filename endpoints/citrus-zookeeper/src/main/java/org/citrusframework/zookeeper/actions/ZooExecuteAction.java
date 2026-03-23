@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.context.TestContext;
@@ -230,7 +230,7 @@ public class ZooExecuteAction extends AbstractTestAction {
             Object commandResult = command.getCommandResult();
             String commandResultJson = jsonMapper.writeValueAsString(commandResult);
             return new DefaultMessage(commandResultJson);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new CitrusRuntimeException(e);
         }
     }

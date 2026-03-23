@@ -25,19 +25,18 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nullable;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import static java.lang.String.format;
 import static java.net.URLDecoder.decode;
@@ -57,7 +56,7 @@ import static org.citrusframework.openapi.testapi.ParameterStyle.X_ENCODE_AS_JSO
 
 class OpenApiParameterFormatter {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = JsonMapper.builder().build();
     public static final String PARAMETER_NAME_TOKEN = "%PARAMETER_NAME_TOKEN%";
 
     private static final Map<ParameterStyle, StyleEncoder> ENCODER_LOOKUP = Map.of(
@@ -133,7 +132,7 @@ class OpenApiParameterFormatter {
         JsonNode rootNode;
         try {
             rootNode = objectMapper.readTree(jsonString);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new IllegalArgumentException("Unable to convert jsonString to Json object.", e);
         }
 
@@ -147,17 +146,15 @@ class OpenApiParameterFormatter {
     private static Map<String, Object> convertNodeToMap(JsonNode objectNode) {
         Map<String, Object> resultMap = new TreeMap<>();
 
-        Iterator<Entry<String, JsonNode>> fields = objectNode.fields();
-        while (fields.hasNext()) {
-            Map.Entry<String, JsonNode> field = fields.next();
+        objectNode.properties().forEach(field -> {
             JsonNode valueNode = field.getValue();
 
             if (valueNode.isObject() || valueNode.isArray()) {
                 resultMap.put(field.getKey(), convertNodeToMap(valueNode));
             } else {
-                resultMap.put(field.getKey(), valueNode.asText());
+                resultMap.put(field.getKey(), valueNode.stringValue());
             }
-        }
+        });
 
         return resultMap;
     }
@@ -399,7 +396,7 @@ class OpenApiParameterFormatter {
 
                 // There is no other way to pass this into a query parameter, then URL encoding it.
                 return parameterName + "=" + URLEncoder.encode(compactJson, StandardCharsets.UTF_8);
-            } catch (JsonProcessingException e) {
+            } catch (JacksonException e) {
                 throw new IllegalArgumentException("Unable to serialize object to JSON string.", e);
             }
         }
@@ -410,7 +407,7 @@ class OpenApiParameterFormatter {
         private @Nullable JsonNode tryParseJson(String input) {
             try {
                 return objectMapper.readTree(input);
-            } catch (JsonProcessingException e) {
+            } catch (JacksonException e) {
                 return null;
             }
         }

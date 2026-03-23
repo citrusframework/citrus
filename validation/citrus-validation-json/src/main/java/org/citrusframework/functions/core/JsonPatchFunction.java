@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
@@ -54,26 +54,156 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
             throw new CitrusRuntimeException("Source does not contain valid JSON: " + e.getMessage(), e);
         }
 
-        List<String> patchOperations = new ArrayList<>();
-        List<PatchOperation> operations = params.getOperations();
+        try {
+            JsonNode result = jsonNode.deepCopy();
+            for (PatchOperation op : params.getOperations()) {
+                result = applyOperation(result, op);
+            }
+            return objectMapper.writeValueAsString(result);
+        } catch (Exception e) {
+            throw new CitrusRuntimeException("Failed to apply JSON Patch: " + e.getMessage(), e);
+        }
+    }
 
-        for (PatchOperation op : operations) {
-            patchOperations.add(convertToPatchOpJson(op));
+    private JsonNode applyOperation(JsonNode root, PatchOperation op) {
+        String jsonPointer = convertToJsonPointer(op.getPath());
+
+        switch (op.getOperation()) {
+            case "add":
+                return add(root, jsonPointer, op.getValue());
+            case "remove":
+                return remove(root, jsonPointer);
+            case "replace":
+                return replace(root, jsonPointer, op.getValue());
+            case "move":
+                return move(root, jsonPointer, convertToJsonPointer(op.getValue()));
+            case "copy":
+                return copy(root, jsonPointer, convertToJsonPointer(op.getValue()));
+            default:
+                throw new CitrusRuntimeException("Unsupported operation: " + op.getOperation());
+        }
+    }
+
+    private JsonNode add(JsonNode root, String path, String value) {
+        if (path.equals("") || path.equals("/")) {
+            return parseValue(value);
         }
 
-        String patchJson = "[" + String.join(",", patchOperations) + "]";
+        String[] parts = path.substring(1).split("/");
+        JsonNode current = root;
 
+        for (int i = 0; i < parts.length - 1; i++) {
+            current = navigateToNode(current, parts[i]);
+        }
+
+        String lastPart = parts[parts.length - 1];
+        JsonNode valueNode = parseValue(value);
+
+        if (current.isArray()) {
+            ArrayNode array = (ArrayNode) current;
+            if ("-".equals(lastPart)) {
+                array.add(valueNode);
+            } else {
+                int index = Integer.parseInt(lastPart);
+                array.insert(index, valueNode);
+            }
+        } else if (current.isObject()) {
+            ((ObjectNode) current).set(lastPart, valueNode);
+        }
+
+        return root;
+    }
+
+    private JsonNode remove(JsonNode root, String path) {
+        if (path.equals("") || path.equals("/")) {
+            throw new CitrusRuntimeException("Cannot remove root");
+        }
+
+        String[] parts = path.substring(1).split("/");
+        JsonNode current = root;
+
+        for (int i = 0; i < parts.length - 1; i++) {
+            current = navigateToNode(current, parts[i]);
+        }
+
+        String lastPart = parts[parts.length - 1];
+
+        if (current.isArray()) {
+            int index = Integer.parseInt(lastPart);
+            if (index >= current.size()) {
+                throw new CitrusRuntimeException("Array index out of bounds: " + index);
+            }
+            ((ArrayNode) current).remove(index);
+        } else if (current.isObject()) {
+            if (!current.has(lastPart)) {
+                throw new CitrusRuntimeException("Path not found: " + path);
+            }
+            ((ObjectNode) current).remove(lastPart);
+        }
+
+        return root;
+    }
+
+    private JsonNode replace(JsonNode root, String path, String value) {
+        remove(root, path);
+        return add(root, path, value);
+    }
+
+    private JsonNode move(JsonNode root, String toPath, String fromPath) {
+        JsonNode value = getNodeAtPath(root, fromPath);
+        root = remove(root, fromPath);
+        return add(root, toPath, value.toString());
+    }
+
+    private JsonNode copy(JsonNode root, String toPath, String fromPath) {
+        JsonNode value = getNodeAtPath(root, fromPath);
+        return add(root, toPath, value.toString());
+    }
+
+    private JsonNode getNodeAtPath(JsonNode root, String path) {
+        if (path.equals("") || path.equals("/")) {
+            return root;
+        }
+
+        String[] parts = path.substring(1).split("/");
+        JsonNode current = root;
+
+        for (String part : parts) {
+            current = navigateToNode(current, part);
+        }
+
+        return current;
+    }
+
+    private JsonNode navigateToNode(JsonNode node, String part) {
+        if (node == null) {
+            throw new CitrusRuntimeException("Cannot navigate through null node");
+        }
+
+        JsonNode result;
+        if (node.isArray()) {
+            int index = Integer.parseInt(part);
+            if (index >= node.size()) {
+                throw new CitrusRuntimeException("Array index out of bounds: " + index);
+            }
+            result = node.get(index);
+        } else if (node.isObject()) {
+            result = node.get(part);
+            if (result == null) {
+                throw new CitrusRuntimeException("Path not found: " + part);
+            }
+        } else {
+            throw new CitrusRuntimeException("Cannot navigate to: " + part);
+        }
+
+        return result;
+    }
+
+    private JsonNode parseValue(String value) {
         try {
-            JsonNode patchNode = objectMapper.readTree(patchJson);
-            JsonPatch patch = JsonPatch.fromJson(patchNode);
-            JsonNode patchedNode = patch.apply(jsonNode);
-
-            return objectMapper.writeValueAsString(patchedNode);
-
-        } catch (JsonPatchException e) {
-            throw new CitrusRuntimeException("Failed to apply JSON Patch: " + e.getMessage(), e);
+            return objectMapper.readTree(value);
         } catch (Exception e) {
-            throw new CitrusRuntimeException("Failed to process JSON Patch", e);
+            return objectMapper.getNodeFactory().textNode(value);
         }
     }
 
