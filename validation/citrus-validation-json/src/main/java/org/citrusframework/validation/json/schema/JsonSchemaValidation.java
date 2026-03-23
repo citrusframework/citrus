@@ -16,13 +16,9 @@
 
 package org.citrusframework.validation.json.schema;
 
-import static java.util.Collections.emptyList;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.Error;
 import com.networknt.schema.InputFormat;
 import org.citrusframework.CitrusSettings;
@@ -40,6 +36,11 @@ import org.citrusframework.validation.json.JsonMessageValidationContext.Builder;
 import org.citrusframework.validation.json.report.GraciousProcessingReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+
+import static java.util.Collections.emptyList;
 
 /**
  * This class is responsible for the validation of json messages against json schemas / json schema
@@ -159,7 +160,7 @@ public class JsonSchemaValidation implements SchemaValidator<MessageValidationCo
                 return simpleJsonSchema.getSchema().validate(
                     message.getPayload(String.class), InputFormat.JSON);
             }
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             throw new CitrusRuntimeException("Failed to validate Json schema", e);
         }
     }

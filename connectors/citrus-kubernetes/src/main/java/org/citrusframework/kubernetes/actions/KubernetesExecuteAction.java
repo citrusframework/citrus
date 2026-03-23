@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import tools.jackson.core.JacksonException;
 import io.fabric8.kubernetes.api.model.Endpoints;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.Namespace;
@@ -149,7 +149,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
                     getPathValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, Collections.singletonList(validationContext));
                     logger.debug("Kubernetes command result path validation successful - all values OK!");
                 }
-            } catch (JsonProcessingException e) {
+            } catch (JacksonException e) {
                 throw new CitrusRuntimeException(e);
             }
         }

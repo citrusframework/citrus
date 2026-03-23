@@ -219,9 +219,10 @@
     <htmlunit.version>4.13.0</htmlunit.version>
     <httpclient.version>5.5.1</httpclient.version>
     <hsqldb.version>2.7.4</hsqldb.version>
-    <jackson.version>2.21.1</jackson.version>
-    <jackson.version.short>2.21</jackson.version.short>
+    <jackson.version>3.1.0</jackson.version>
+    <jackson.annotations.version>2.21</jackson.annotations.version>
     <jackson-databind-nullable.version>0.2.9</jackson-databind-nullable.version>
+    <jackson2.version>2.21.1</jackson2.version>
     <jakarta-activation.version>2.1.4</jakarta-activation.version>
     <jakarta-activation-api.version>2.1.4</jakarta-activation-api.version>
     <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
@@ -1060,36 +1061,46 @@
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-annotations</artifactId>
-        <version>${jackson.version.short}</version>
+        <version>${jackson2.version}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
+        <version>${jackson2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${jackson.annotations.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>tools.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
         <version>${jackson.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.fasterxml.jackson.dataformat</groupId>
+        <groupId>tools.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>tools.jackson.dataformat</groupId>
         <artifactId>jackson-dataformat-yaml</artifactId>
         <version>${jackson.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.fasterxml.jackson.module</groupId>
+        <groupId>tools.jackson.module</groupId>
         <artifactId>jackson-module-jaxb-annotations</artifactId>
         <version>${jackson.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.fasterxml.jackson.jaxrs</groupId>
+        <groupId>tools.jackson.jaxrs</groupId>
         <artifactId>jackson-jaxrs-json-provider</artifactId>
         <version>${jackson.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.fasterxml.jackson.datatype</groupId>
-        <artifactId>jackson-datatype-jsr310</artifactId>
+        <groupId>tools.jackson.datatype</groupId>
+        <artifactId>jackson-datatype-jakarta-jsonp</artifactId>
         <version>${jackson.version}</version>
       </dependency>
 

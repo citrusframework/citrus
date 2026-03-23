@@ -43,11 +43,11 @@ public class FtpMarshallerTest {
 
         Assert.assertEquals(FtpMessage.put("some/local/path/file.txt").getPayload(String.class, marshaller),
                 "{" +
-                            "\"signal\":\"STOR\"," +
                             "\"file\":{" +
                                 "\"path\":\"some/local/path/file.txt\"," +
                                 "\"type\":\"ASCII\"" +
                             "}," +
+                            "\"signal\":\"STOR\"," +
                             "\"target\":{" +
                                 "\"path\":\"file.txt\"" +
                             "}" +

@@ -29,7 +29,7 @@
     </bean>
 
     <bean id="objectMapper" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg><value type="java.lang.Class">com.fasterxml.jackson.databind.ObjectMapper</value></constructor-arg>
+        <constructor-arg><value type="java.lang.Class">tools.jackson.databind.ObjectMapper</value></constructor-arg>
         <constructor-arg value="objectMapper"/>
     </bean>
 

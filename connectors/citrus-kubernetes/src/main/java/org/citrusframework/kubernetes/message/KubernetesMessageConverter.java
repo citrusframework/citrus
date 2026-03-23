@@ -16,7 +16,6 @@
 
 package org.citrusframework.kubernetes.message;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +29,7 @@ import org.citrusframework.kubernetes.model.KubernetesResponse;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageConverter;
 import org.citrusframework.util.StringUtils;
+import tools.jackson.core.JacksonException;
 
 /**
  * @since 2.7
@@ -151,7 +151,7 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
                 KubernetesRequest request = endpointConfiguration.getObjectMapper()
                         .readValue(message.getPayload(String.class), KubernetesRequest.class);
                 command = createCommandFromRequest(request);
-            } catch (IOException e) {
+            } catch (JacksonException e) {
                 throw new CitrusRuntimeException("Failed to read kubernetes request from payload", e);
             }
         }

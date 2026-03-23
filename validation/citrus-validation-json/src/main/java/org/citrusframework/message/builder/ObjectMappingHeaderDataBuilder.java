@@ -20,8 +20,8 @@ import java.util.Map;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 public class ObjectMappingHeaderDataBuilder extends DefaultHeaderDataBuilder {
 
@@ -94,7 +94,7 @@ public class ObjectMappingHeaderDataBuilder extends DefaultHeaderDataBuilder {
     private String buildHeaderData(ObjectMapper mapper, Object model, TestContext context) {
         try {
             return context.replaceDynamicContentInString(mapper.writer().writeValueAsString(model));
-        } catch (final JsonProcessingException e) {
+        } catch (final JacksonException e) {
             throw new CitrusRuntimeException("Failed to map object graph for message header data", e);
         }
     }

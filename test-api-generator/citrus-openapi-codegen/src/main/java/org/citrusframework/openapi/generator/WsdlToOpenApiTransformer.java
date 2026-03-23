@@ -29,9 +29,7 @@ import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -44,11 +42,14 @@ import org.citrusframework.openapi.generator.exception.WsdlToOpenApiTransformati
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
+import tools.jackson.core.JacksonException;
+import tools.jackson.dataformat.yaml.YAMLFactory;
+import tools.jackson.dataformat.yaml.YAMLMapper;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static com.fasterxml.jackson.databind.MapperFeature.SORT_PROPERTIES_ALPHABETICALLY;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
+import static tools.jackson.databind.MapperFeature.SORT_PROPERTIES_ALPHABETICALLY;
+import static tools.jackson.dataformat.yaml.YAMLWriteFeature.MINIMIZE_QUOTES;
 
 /**
  * Transforms a WSDL specification into a simple OpenAPI specification for usage with the OpenApiGenerator.
@@ -102,12 +103,14 @@ public class WsdlToOpenApiTransformer {
 
     private static final Logger logger = LoggerFactory.getLogger(WsdlToOpenApiTransformer.class);
 
-    private static final YAMLMapper yamlMapper = (YAMLMapper) YAMLMapper.builder()
+    private static final YAMLMapper yamlMapper = YAMLMapper.builder(YAMLFactory.builder()
+                    .enable(MINIMIZE_QUOTES)
+                    //.disable(YAMLWriteFeature.SPLIT_LINES)
+                    .build())
             .enable(SORT_PROPERTIES_ALPHABETICALLY)
-            .enable(Feature.MINIMIZE_QUOTES)
-            //.disable(YAMLGenerator.Feature.SPLIT_LINES)
-            .build()
-            .setSerializationInclusion(NON_NULL);
+            .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
+            .changeDefaultPropertyInclusion(incl -> incl.withContentInclusion(JsonInclude.Include.NON_NULL))
+            .build();
 
     private final URI wsdlUri;
 
@@ -273,7 +276,7 @@ public class WsdlToOpenApiTransformer {
         return soapAction;
     }
 
-    private String convertToYaml(OpenAPI openAPI) throws JsonProcessingException {
+    private String convertToYaml(OpenAPI openAPI) throws JacksonException {
         return yamlMapper.writeValueAsString(openAPI);
     }
 }

@@ -16,7 +16,7 @@
 
 package org.citrusframework.kubernetes.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.client.ConfigBuilder;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;

@@ -16,25 +16,23 @@
 
 package org.citrusframework.kubernetes.message;
 
-import java.io.IOException;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.Watcher;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.kubernetes.command.KubernetesCommand;
 import org.citrusframework.kubernetes.model.KubernetesRequest;
 import org.citrusframework.kubernetes.model.KubernetesResponse;
 import org.citrusframework.message.DefaultMessage;
+import tools.jackson.core.JacksonException;
 
 /**
  * @since 2.7
  */
 public class KubernetesMessage extends DefaultMessage {
-
-    private final ObjectMapper mapper = new ObjectMapper();
 
     private KubernetesRequest request;
     private KubernetesResponse response;
@@ -173,21 +171,21 @@ public class KubernetesMessage extends DefaultMessage {
                     return (T) getPayload();
                 }
 
-                return (T) mapper.readValue(getPayload(String.class), KubernetesRequest.class);
+                return (T) KubernetesSupport.json().readValue(getPayload(String.class), KubernetesRequest.class);
             } else if (KubernetesResponse.class.isAssignableFrom(type)) {
                 if (getPayload() instanceof KubernetesResponse) {
                     return (T) getPayload();
                 }
 
-                return (T) mapper.readValue(getPayload(String.class), KubernetesRequest.class);
+                return (T) KubernetesSupport.json().readValue(getPayload(String.class), KubernetesRequest.class);
             } else if (String.class.equals(type)) {
                 if (request != null) {
-                    return (T) mapper.writeValueAsString(request);
+                    return (T) KubernetesSupport.json().writeValueAsString(request);
                 } else if (response != null) {
-                    return (T) mapper.writeValueAsString(response);
+                    return (T) KubernetesSupport.json().writeValueAsString(response);
                 }
             }
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             throw new CitrusRuntimeException("Failed to convert payload to required type: " + type, e);
         }
 

@@ -16,8 +16,9 @@
 
 package org.citrusframework.http.actions;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.citrusframework.TestAction;
 import org.citrusframework.actions.ReceiveActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
@@ -34,7 +35,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 
-import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
+import static tools.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 
 /**
  * Action executes http server operations such as receiving requests and sending response messages.
@@ -44,7 +45,9 @@ import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
         implements org.citrusframework.actions.http.HttpServerActionBuilder<TestAction, HttpServerActionBuilder> {
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().enable(INDENT_OUTPUT);
+    private static final ObjectMapper OBJECT_MAPPER = JsonMapper.builder()
+            .enable(INDENT_OUTPUT)
+            .build();
 
     /** Target http client instance */
     private Endpoint httpServer;
@@ -109,7 +112,7 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
     public HttpServerResponseActionBuilder.HttpMessageBuilderSupport respondOkJson(Object json) {
         try {
             return respondOkJson(OBJECT_MAPPER.writeValueAsString(json));
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new CitrusRuntimeException("Failed to write JSON body as string!", e);
         }
     }
