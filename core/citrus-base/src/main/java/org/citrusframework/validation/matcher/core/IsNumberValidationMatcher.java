@@ -16,11 +16,13 @@
 
 package org.citrusframework.validation.matcher.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ValidationMatcher;
+
+import java.util.List;
+
+import static java.lang.Double.parseDouble;
 
 /**
  * ValidationMatcher based on Double > Double.
@@ -30,7 +32,7 @@ public class IsNumberValidationMatcher implements ValidationMatcher {
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
     	Double dValue;
     	try {
-    		dValue = Double.parseDouble(value);
+    		dValue = parseDouble(value);
     	} catch (Exception e) {
     		throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName
@@ -38,7 +40,7 @@ public class IsNumberValidationMatcher implements ValidationMatcher {
                     + "' and is not a number", e);
 		}
 
-    	if (dValue.isNaN() || dValue.isInfinite()) {
+    	if (Double.isNaN(dValue) || dValue.isInfinite()) {
     		throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName
                     + "'. Received value is '" + value

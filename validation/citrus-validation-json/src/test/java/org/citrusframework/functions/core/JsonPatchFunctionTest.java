@@ -475,7 +475,7 @@ public class JsonPatchFunctionTest {
     @Test
     public void shouldThrowExceptionWhenTooFewParameters() {
         // Given
-        List<String> params = asList("${jsonSource}");
+        List<String> params = List.of("${jsonSource}");
 
         // When / Then
         assertThatThrownBy(() -> execute(params))
