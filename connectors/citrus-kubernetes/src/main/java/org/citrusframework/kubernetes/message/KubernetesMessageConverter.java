@@ -148,7 +148,7 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
             command = (KubernetesCommand) payload;
         } else {
             try {
-                KubernetesRequest request = endpointConfiguration.getObjectMapper()
+                KubernetesRequest request = endpointConfiguration.getJsonMapper()
                         .readValue(message.getPayload(String.class), KubernetesRequest.class);
                 command = createCommandFromRequest(request);
             } catch (JacksonException e) {

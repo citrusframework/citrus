@@ -16,12 +16,6 @@
 
 package org.citrusframework.zookeeper.config.xml;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.util.ValidateMessageParserUtil;
 import org.citrusframework.config.util.VariableExtractorParserUtil;
@@ -35,7 +29,6 @@ import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.zookeeper.actions.ZooExecuteAction;
 import org.citrusframework.zookeeper.client.ZooClient;
 import org.citrusframework.zookeeper.command.ZooCommand;
-import tools.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -45,6 +38,13 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import tools.jackson.databind.json.JsonMapper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Bean definition parser for zookeeper client action in test case.
@@ -142,7 +142,7 @@ public class ZooExecuteActionParser implements BeanDefinitionParser {
 
         @Autowired(required = false)
         @Qualifier("zookeeperCommandResultMapper")
-        private ObjectMapper jsonMapper;
+        private JsonMapper jsonMapper;
 
         @Autowired(required = false)
         @Qualifier("defaultJsonMessageValidator")
@@ -185,7 +185,7 @@ public class ZooExecuteActionParser implements BeanDefinitionParser {
          *
          * @param jsonMapper
          */
-        public void setJsonMapper(ObjectMapper jsonMapper) {
+        public void setJsonMapper(JsonMapper jsonMapper) {
             builder.mapper(jsonMapper);
         }
 

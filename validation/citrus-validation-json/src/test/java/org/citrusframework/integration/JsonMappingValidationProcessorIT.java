@@ -16,7 +16,6 @@
 
 package org.citrusframework.integration;
 
-import tools.jackson.databind.ObjectMapper;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusTest;
@@ -31,6 +30,7 @@ import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * @since 3.3.1
@@ -48,7 +48,7 @@ public class JsonMappingValidationProcessorIT extends TestNGCitrusSpringSupport 
 
     private static final String JSON_BODY = "{\"name\":\"christoph\", \"age\": 32}";
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final JsonMapper mapper = JsonMapper.shared();
 
     @Test
     @CitrusTest

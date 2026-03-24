@@ -16,13 +16,6 @@
 
 package org.citrusframework.zookeeper.actions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import tools.jackson.core.JacksonException;
-import tools.jackson.databind.ObjectMapper;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.context.TestContext;
@@ -53,6 +46,14 @@ import org.citrusframework.zookeeper.command.ZooCommand;
 import org.citrusframework.zookeeper.command.ZooResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Executes zookeeper command with given zookeeper client implementation. Possible command result is stored within command object.
@@ -283,7 +284,7 @@ public class ZooExecuteAction extends AbstractTestAction {
         private ZooClient zookeeperClient = new ZooClient();
         private ZooCommand<?> command;
         private String expectedCommandResult;
-        private ObjectMapper jsonMapper = new ObjectMapper();
+        private JsonMapper jsonMapper = JsonMapper.shared();
         private MessageValidator<? extends ValidationContext> jsonMessageValidator;
         private MessageValidator<? extends ValidationContext> jsonPathMessageValidator;
         private JsonPathMessageValidationContext jsonPathMessageValidationContext;
@@ -436,7 +437,7 @@ public class ZooExecuteAction extends AbstractTestAction {
             return this;
         }
 
-        public Builder mapper(ObjectMapper jsonMapper) {
+        public Builder mapper(JsonMapper jsonMapper) {
             this.jsonMapper = jsonMapper;
             return this;
         }
@@ -497,7 +498,7 @@ public class ZooExecuteAction extends AbstractTestAction {
             }
 
             if (referenceResolver.isResolvable("zookeeperCommandResultMapper")) {
-                this.jsonMapper = referenceResolver.resolve("zookeeperCommandResultMapper", ObjectMapper.class);
+                this.jsonMapper = referenceResolver.resolve("zookeeperCommandResultMapper", JsonMapper.class);
             }
 
             return this;

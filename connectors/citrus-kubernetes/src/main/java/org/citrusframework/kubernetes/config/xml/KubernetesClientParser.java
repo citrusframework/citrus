@@ -64,7 +64,7 @@ public class KubernetesClientParser extends AbstractEndpointParser {
         endpointConfiguration.addPropertyReference("kubernetesClientConfig", clientConfigId);
 
         setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
-        setPropertyReference(endpointConfiguration, element.getAttribute("object-mapper"), "objectMapper");
+        setPropertyReference(endpointConfiguration, element.getAttribute("json-mapper"), "jsonMapper");
     }
 
     @Override

@@ -80,9 +80,8 @@ public @interface KubernetesClientConfig {
     String messageConverter() default  "";
 
     /**
-     * Object mapper.
-     * @return
+     * JSON mapper.
      */
-    String objectMapper() default  "";
+    String jsonMapper() default  "";
 
 }

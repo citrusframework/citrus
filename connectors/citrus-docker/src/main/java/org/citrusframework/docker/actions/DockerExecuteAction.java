@@ -47,7 +47,7 @@ import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tools.jackson.core.JacksonException;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -74,10 +74,8 @@ public class DockerExecuteAction extends AbstractTestAction {
      */
     private final String expectedCommandResult;
 
-    /**
-     * JSON data binding
-     */
-    private final ObjectMapper jsonMapper;
+    /** JSON data binding */
+    private final JsonMapper jsonMapper;
 
     /**
      * Validator used to validate expected json results
@@ -203,7 +201,7 @@ public class DockerExecuteAction extends AbstractTestAction {
         private DockerClient dockerClient = new DockerClient();
         private AbstractDockerCommandBuilder<?, ?, ?> commandBuilder;
         private String expectedCommandResult;
-        private ObjectMapper jsonMapper = new ObjectMapper();
+        private JsonMapper jsonMapper = JsonMapper.shared();
         private MessageValidator<? extends ValidationContext> validator;
 
         /**
@@ -230,15 +228,15 @@ public class DockerExecuteAction extends AbstractTestAction {
 
         @Override
         public Builder mapper(Object mapper) {
-            if (mapper instanceof ObjectMapper objectMapper) {
-                return mapper(objectMapper);
+            if (mapper instanceof JsonMapper jsonMapperBuilder) {
+                return mapper(jsonMapperBuilder);
             } else {
-                throw new CitrusRuntimeException(("Invalid object mapper type, expected ObjectMapper, " +
+                throw new CitrusRuntimeException(("Invalid object mapper type, expected JsonMapper, " +
                         "but got: %s").formatted(mapper.getClass().getName()));
             }
         }
 
-        public Builder mapper(ObjectMapper jsonMapper) {
+        public Builder mapper(JsonMapper jsonMapper) {
             this.jsonMapper = jsonMapper;
             return this;
         }

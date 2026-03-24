@@ -21,15 +21,15 @@ import org.citrusframework.message.Message;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
-import tools.jackson.databind.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.citrusframework.validation.json.JsonMappingValidationProcessor.Builder.validate;
 
 public class JsonMappingValidationProcessorTest extends AbstractTestNGUnitTest {
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final JsonMapper mapper = JsonMapper.shared();
     private final Message message = new DefaultMessage("{\"name\": \"John\", \"age\": 23}");
 
     @Test

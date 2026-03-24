@@ -16,17 +16,11 @@
 
 package org.citrusframework.openapi;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 import com.atlassian.oai.validator.report.ValidationReport;
 import com.atlassian.oai.validator.report.ValidationReport.Message;
 import com.atlassian.oai.validator.schema.SchemaValidator;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import io.swagger.v3.oas.models.media.Schema;
@@ -38,6 +32,12 @@ import org.citrusframework.spi.Resources;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static org.citrusframework.openapi.OpenApiConstants.FORMAT_DOUBLE;
 import static org.citrusframework.openapi.OpenApiConstants.FORMAT_FLOAT;
@@ -297,7 +297,7 @@ public class OpenApiTestDataGeneratorTest {
 
             String finalJsonAsText = testContext.replaceDynamicContentInString(randomValue);
 
-            JsonNode valueNode = new ObjectMapper().readTree(
+            JsonNode valueNode = new JsonMapper().readTree(
                     testContext.replaceDynamicContentInString(finalJsonAsText));
             ValidationReport validationReport = schemaValidator.validate(() -> valueNode,
                     swaggerValidationSchema, null);

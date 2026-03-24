@@ -16,23 +16,21 @@
 
 package org.citrusframework.cucumber.report.json;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import tools.jackson.core.JacksonException;
-import tools.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Local store for collected test results.
  */
 public class TestResults {
-    /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(TestResults.class);
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final Logger LOG = LoggerFactory.getLogger(TestResults.class);
 
     private String suiteName = "citrus-test-suite";
 
@@ -64,7 +62,7 @@ public class TestResults {
     @JsonIgnore
     public String toJson() {
         try {
-            return OBJECT_MAPPER.writeValueAsString(this);
+            return JsonMapper.shared().writeValueAsString(this);
         } catch (JacksonException e) {
             LOG.warn("Failed to create test result Json report", e);
         }

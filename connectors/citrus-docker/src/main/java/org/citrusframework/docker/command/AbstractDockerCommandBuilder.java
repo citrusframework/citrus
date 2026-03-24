@@ -24,7 +24,7 @@ import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 public abstract class AbstractDockerCommandBuilder<R, T extends AbstractDockerCommand<R>, S extends AbstractDockerCommandBuilder<R, T, S>>
         implements TestActionBuilder<DockerExecuteAction>, DockerActionBuilderBase<R, DockerExecuteAction, S> {
@@ -57,15 +57,15 @@ public abstract class AbstractDockerCommandBuilder<R, T extends AbstractDockerCo
 
     @Override
     public S mapper(Object mapper) {
-        if (mapper instanceof ObjectMapper objectMapper) {
-            return mapper(objectMapper);
+        if (mapper instanceof JsonMapper jsonMapperBuilder) {
+            return mapper(jsonMapperBuilder);
         } else {
-            throw new CitrusRuntimeException(("Invalid object mapper type, expected ObjectMapper, " +
+            throw new CitrusRuntimeException(("Invalid object mapper type, expected JsonMapper, " +
                     "but got: %s").formatted(mapper.getClass().getName()));
         }
     }
 
-    public S mapper(ObjectMapper jsonMapper) {
+    public S mapper(JsonMapper jsonMapper) {
         delegate.mapper(jsonMapper);
         return self;
     }

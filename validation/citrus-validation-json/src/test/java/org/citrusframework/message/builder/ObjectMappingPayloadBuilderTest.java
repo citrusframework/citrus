@@ -16,21 +16,22 @@
 
 package org.citrusframework.message.builder;
 
-import java.util.Collections;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.dsl.TestRequest;
 import org.citrusframework.spi.ReferenceResolver;
-import tools.jackson.databind.ObjectMapper;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+
+import java.util.Collections;
 
 import static org.mockito.Mockito.when;
 
 public class ObjectMappingPayloadBuilderTest extends UnitTestSupport {
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final JsonMapper mapper = JsonMapper.shared();
     private final TestRequest request = new TestRequest("Hello Citrus!");
 
     private final ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);

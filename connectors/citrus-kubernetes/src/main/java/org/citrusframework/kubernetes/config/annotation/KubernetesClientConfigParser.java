@@ -16,12 +16,12 @@
 
 package org.citrusframework.kubernetes.config.annotation;
 
-import tools.jackson.databind.ObjectMapper;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.client.KubernetesClientBuilder;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 import org.citrusframework.spi.ReferenceResolver;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.citrusframework.kubernetes.config.CredentialValidator.isValid;
 import static org.citrusframework.util.StringUtils.hasText;
@@ -71,8 +71,8 @@ public class KubernetesClientConfigParser implements AnnotationConfigParser<Kube
             builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), KubernetesMessageConverter.class));
         }
 
-        if (hasText(annotation.objectMapper())) {
-            builder.objectMapper(referenceResolver.resolve(annotation.objectMapper(), ObjectMapper.class));
+        if (hasText(annotation.jsonMapper())) {
+            builder.jsonMapper(referenceResolver.resolve(annotation.jsonMapper(), JsonMapper.class));
         }
 
         return builder.build();

@@ -16,7 +16,6 @@
 
 package org.citrusframework.kubernetes.config.annotation;
 
-import tools.jackson.databind.ObjectMapper;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
@@ -27,6 +26,7 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.citrusframework.annotations.CitrusAnnotations.injectEndpoints;
 import static org.mockito.Mockito.when;
@@ -42,19 +42,19 @@ public class KubernetesBadClientConfigParserTest extends AbstractTestNGUnitTest 
             username = "user",
             namespace = "user_namespace",
             messageConverter = "messageConverter",
-            objectMapper = "objectMapper")
+            jsonMapper = "jsonMapper")
     private KubernetesClient client1;
 
     // Badly configured with oauthToken and username
     @CitrusEndpoint
     @KubernetesClientConfig(url = "http://localhost:8443",
-            version="v1",
-            username="user",
-            password="s!cr!t",
+            version = "v1",
+            username = "user",
+            password = "s!cr!t",
             oauthToken = "xx508xx63817x752xx74004x30705xx92x58349x5x78f5xx34xxxxx51",
-            namespace="user_namespace",
-            messageConverter="messageConverter",
-            objectMapper="objectMapper")
+            namespace = "user_namespace",
+            messageConverter = "messageConverter",
+            jsonMapper = "jsonMapper")
     private KubernetesClient client2;
 
     @Mock
@@ -62,14 +62,14 @@ public class KubernetesBadClientConfigParserTest extends AbstractTestNGUnitTest 
     @Mock
     private KubernetesMessageConverter messageConverter;
     @Mock
-    private ObjectMapper objectMapper;
+    private JsonMapper jsonMapper;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("messageConverter", KubernetesMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("objectMapper", ObjectMapper.class)).thenReturn(objectMapper);
+        when(referenceResolver.resolve("jsonMapper", JsonMapper.class)).thenReturn(jsonMapper);
     }
 
     @BeforeMethod

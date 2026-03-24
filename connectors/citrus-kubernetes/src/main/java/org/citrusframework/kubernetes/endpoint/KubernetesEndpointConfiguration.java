@@ -16,35 +16,48 @@
 
 package org.citrusframework.kubernetes.endpoint;
 
+import io.fabric8.kubernetes.client.Config;
+import io.fabric8.kubernetes.client.ConfigBuilder;
+import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import org.citrusframework.endpoint.AbstractPollableEndpointConfiguration;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.MessageCorrelator;
-import tools.jackson.databind.ObjectMapper;
-import io.fabric8.kubernetes.client.*;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * @since 2.7
  */
 public class KubernetesEndpointConfiguration extends AbstractPollableEndpointConfiguration {
 
-    /** Kubernetes client configuration */
+    /**
+     * Kubernetes client configuration
+     */
     private Config kubernetesClientConfig;
 
-    /** Java kubernetes client */
+    /**
+     * Java kubernetes client
+     */
     private io.fabric8.kubernetes.client.KubernetesClient kubernetesClient;
 
-    /** Reply message correlator */
+    /**
+     * Reply message correlator
+     */
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
 
-    /** JSON data binding for command result */
-    private ObjectMapper objectMapper = new ObjectMapper();
+    /**
+     * JSON data binding for command result
+     */
+    private JsonMapper jsonMapper = JsonMapper.shared();
 
-    /** Kubernetes message converter */
+    /**
+     * Kubernetes message converter
+     */
     private KubernetesMessageConverter messageConverter = new KubernetesMessageConverter();
 
     /**
      * Creates new Kubernetes client instance with configuration.
+     *
      * @return
      */
     private io.fabric8.kubernetes.client.KubernetesClient createKubernetesClient() {
@@ -53,6 +66,7 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
 
     /**
      * Constructs or gets the kubernetes client implementation.
+     *
      * @return
      */
     public io.fabric8.kubernetes.client.KubernetesClient getKubernetesClient() {
@@ -74,6 +88,7 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
 
     /**
      * Gets the kubernetes client configuration.
+     *
      * @return
      */
     public Config getKubernetesClientConfig() {
@@ -86,6 +101,7 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
 
     /**
      * Sets the kubernetes client configuration.
+     *
      * @param kubernetesClientConfig
      */
     public void setKubernetesClientConfig(Config kubernetesClientConfig) {
@@ -94,6 +110,7 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
 
     /**
      * Set the reply message correlator.
+     *
      * @param correlator the correlator to set
      */
     public void setCorrelator(MessageCorrelator correlator) {
@@ -102,6 +119,7 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
 
     /**
      * Gets the correlator.
+     *
      * @return the correlator
      */
     public MessageCorrelator getCorrelator() {
@@ -110,6 +128,7 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
 
     /**
      * Gets the kubernetes message converter.
+     *
      * @return
      */
     public KubernetesMessageConverter getMessageConverter() {
@@ -118,6 +137,7 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
 
     /**
      * Sets the kubernetes message converter.
+     *
      * @param messageConverter
      */
     public void setMessageConverter(KubernetesMessageConverter messageConverter) {
@@ -126,17 +146,15 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
 
     /**
      * Gets the command object mapper.
-     * @return
      */
-    public ObjectMapper getObjectMapper() {
-        return objectMapper;
+    public JsonMapper getJsonMapper() {
+        return jsonMapper;
     }
 
     /**
      * Sets the command object mapper.
-     * @param objectMapper
      */
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+    public void setJsonMapper(JsonMapper jsonMapper) {
+        this.jsonMapper = jsonMapper;
     }
 }

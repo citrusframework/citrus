@@ -16,24 +16,6 @@
 
 package org.citrusframework.actions.dsl;
 
-import static java.util.Collections.emptyList;
-import static org.citrusframework.message.MessageType.JSON;
-import static org.citrusframework.message.MessageType.PLAINTEXT;
-import static org.citrusframework.message.MessageType.XML;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
-import java.io.ByteArrayInputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import tools.jackson.databind.ObjectMapper;
 import com.networknt.schema.Schema;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -67,6 +49,26 @@ import org.hamcrest.core.AnyOf;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+
+import java.io.ByteArrayInputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.util.Collections.emptyList;
+import static org.citrusframework.message.MessageType.JSON;
+import static org.citrusframework.message.MessageType.PLAINTEXT;
+import static org.citrusframework.message.MessageType.XML;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
@@ -76,7 +78,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
     private final Resource resource = Mockito.mock(Resource.class);
     private final ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final JsonMapper mapper = JsonMapper.shared();
 
     @Test
     public void testReceiveBuilderWithPayloadModel() {
