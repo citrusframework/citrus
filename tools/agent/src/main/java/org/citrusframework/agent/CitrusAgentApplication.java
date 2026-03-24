@@ -16,22 +16,6 @@
 
 package org.citrusframework.agent;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
-
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -68,9 +52,24 @@ import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+
 public class CitrusAgentApplication extends AbstractVerticle implements CitrusInstanceProcessor {
 
-    /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CitrusAgentApplication.class);
 
     private final AgentTestListener agentTestListener = new AgentTestListener();
@@ -79,10 +78,14 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
 
     private final CitrusAgentConfiguration configuration;
 
-    /** Single thread job scheduler */
+    /**
+     * Single thread job scheduler
+     */
     private Future<TestResults> remoteResultFuture;
 
-    /** Router customizations */
+    /**
+     * Router customizations
+     */
     private final List<Consumer<Router>> routerCustomizations;
 
     private final ExecutorService executorService = Executors.newCachedThreadPool();
@@ -90,9 +93,9 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
     private TemplateEngine templateEngine;
 
     static {
-      System.setOut(IoBuilder
-          .forLogger(LogManager.getLogger("system.out"))
-          .buildPrintStream());
+        System.setOut(IoBuilder
+                .forLogger(LogManager.getLogger("system.out"))
+                .buildPrintStream());
     }
 
     /**
@@ -130,9 +133,7 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
         addConfigEndpoints(router);
 
         router.get("/logs")
-            .handler(wrapThrowingHandler(ctx -> {
-                ctx.response().end(agentTestListener.getLogs());
-            }));
+                .handler(wrapThrowingHandler(ctx -> ctx.response().end(agentTestListener.getLogs())));
 
         routerCustomizations.forEach(customization -> customization.accept(router));
 
@@ -257,7 +258,7 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
                 .handler(wrapThrowingHandler(ctx -> {
                     HttpServerResponse response = ctx.response();
                     if (ctx.request().headers().contains(HttpHeaders.ACCEPT) &&
-                        ctx.request().headers().get(HttpHeaders.ACCEPT).equals("application/yaml")) {
+                            ctx.request().headers().get(HttpHeaders.ACCEPT).equals("application/yaml")) {
                         response.putHeader(HttpHeaders.CONTENT_TYPE, "application/yaml")
                                 .end(agentTestListener.getYamlReport());
                     } else {
@@ -351,9 +352,7 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
 
     private void addExecuteEndpoints(Router router) {
         router.post("/execute/:name")
-                .handler(wrapThrowingHandler(ctx -> {
-                            runTests(ConfigurationHelper.fromExecutionRequest(ctx, configuration), ctx.response());
-                        }));
+                .handler(wrapThrowingHandler(ctx -> runTests(ConfigurationHelper.fromExecutionRequest(ctx, configuration), ctx.response())));
         router.put("/execute/:name")
                 .handler(wrapThrowingHandler(ctx -> {
                     remoteResultFuture = startTestsAsync(ConfigurationHelper.fromExecutionRequest(ctx, configuration));
@@ -390,8 +389,8 @@ public class CitrusAgentApplication extends AbstractVerticle implements CitrusIn
             error.printStackTrace(new PrintWriter(stackTrace));
             logger.error(stackTrace.toString());
             response
-                .setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code())
-                .end(error.getMessage());
+                    .setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code())
+                    .end(error.getMessage());
         }
     }
 
