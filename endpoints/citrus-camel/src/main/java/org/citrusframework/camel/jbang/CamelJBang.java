@@ -18,7 +18,7 @@ package org.citrusframework.camel.jbang;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.JBangSupport;
 import org.citrusframework.jbang.ProcessAndOutput;
@@ -60,8 +60,6 @@ public class CamelJBang {
     private boolean dumpIntegrationOutput = CamelJBangSettings.isDumpIntegrationOutput();
 
     private String version;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public CamelJBang() {
         if (!"latest".equals(CamelJBangSettings.getCamelVersion())) {
@@ -286,7 +284,7 @@ public class CamelJBang {
                 return parseAll();
             }
 
-            return objectMapper.readValue(output, new TypeReference<>() {});
+            return new JsonMapper().readValue(output, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
             logger.warn("Failed to list integrations from Camel JBang");
 

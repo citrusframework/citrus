@@ -16,9 +16,6 @@
 
 package org.citrusframework.validation.json.schema;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.networknt.schema.Error;
 import com.networknt.schema.InputFormat;
 import org.citrusframework.CitrusSettings;
@@ -38,7 +35,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Collections.emptyList;
 
@@ -51,8 +51,6 @@ import static java.util.Collections.emptyList;
 public class JsonSchemaValidation implements SchemaValidator<MessageValidationContext> {
 
     private static final Logger logger = LoggerFactory.getLogger(JsonSchemaValidation.class);
-
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private final JsonSchemaFilter jsonSchemaFilter;
 
@@ -153,7 +151,7 @@ public class JsonSchemaValidation implements SchemaValidator<MessageValidationCo
      */
     private List<Error> validate(Message message, SimpleJsonSchema simpleJsonSchema) {
         try {
-            JsonNode receivedJson = OBJECT_MAPPER.readTree(message.getPayload(String.class));
+            JsonNode receivedJson = JsonMapper.shared().readTree(message.getPayload(String.class));
             if (receivedJson.isEmpty()) {
                 return emptyList();
             } else {

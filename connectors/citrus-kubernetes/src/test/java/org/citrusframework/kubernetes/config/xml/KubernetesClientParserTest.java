@@ -16,11 +16,11 @@
 
 package org.citrusframework.kubernetes.config.xml;
 
-import tools.jackson.databind.ObjectMapper;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.message.MessageConverter;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
 import org.testng.annotations.Test;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Map;
 
@@ -48,7 +48,7 @@ public class KubernetesClientParserTest extends AbstractBeanDefinitionParserTest
         assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getPassword(), "s!cr!t");
         assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
         assertEquals(client.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter", MessageConverter.class));
-        assertEquals(client.getEndpointConfiguration().getObjectMapper(), beanDefinitionContext.getBean("objectMapper", ObjectMapper.class));
+        assertEquals(client.getEndpointConfiguration().getJsonMapper(), beanDefinitionContext.getBean("jsonMapper", JsonMapper.class));
 
         // 3rd client
         client = clients.get("k8sClient3");
@@ -58,7 +58,7 @@ public class KubernetesClientParserTest extends AbstractBeanDefinitionParserTest
         assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getOauthToken(), "xx508xx63817x752xx74004x30705xx92x58349x5x78f5xx34xxxxx51");
         assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
         assertEquals(client.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter", MessageConverter.class));
-        assertEquals(client.getEndpointConfiguration().getObjectMapper(), beanDefinitionContext.getBean("objectMapper", ObjectMapper.class));
+        assertEquals(client.getEndpointConfiguration().getJsonMapper(), beanDefinitionContext.getBean("jsonMapper", JsonMapper.class));
 
     }
 }

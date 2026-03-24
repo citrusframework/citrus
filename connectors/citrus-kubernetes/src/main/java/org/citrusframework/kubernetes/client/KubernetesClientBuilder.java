@@ -16,13 +16,13 @@
 
 package org.citrusframework.kubernetes.client;
 
-import tools.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.client.ConfigBuilder;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * @since 2.7
@@ -36,7 +36,7 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
 
     private String client;
     private String messageConverter;
-    private String objectMapper;
+    private String jsonMapper;
 
     @Override
     public KubernetesClient build() {
@@ -49,8 +49,8 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
                 messageConverter(referenceResolver.resolve(messageConverter, KubernetesMessageConverter.class));
             }
 
-            if (StringUtils.hasText(objectMapper)) {
-                objectMapper(referenceResolver.resolve(objectMapper, ObjectMapper.class));
+            if (StringUtils.hasText(jsonMapper)) {
+                jsonMapper(referenceResolver.resolve(jsonMapper, JsonMapper.class));
             }
         }
 
@@ -195,13 +195,13 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
     /**
      * Sets the object mapper.
      */
-    public KubernetesClientBuilder objectMapper(ObjectMapper objectMapper) {
-        endpoint.getEndpointConfiguration().setObjectMapper(objectMapper);
+    public KubernetesClientBuilder jsonMapper(JsonMapper jsonMapper) {
+        endpoint.getEndpointConfiguration().setJsonMapper(jsonMapper);
         return this;
     }
 
-    @SchemaProperty(advanced = true, description = "Sets the object mapper.")
-    public void setObjectMapper(String objectMapper) {
-        this.objectMapper = objectMapper;
+    @SchemaProperty(advanced = true, description = "Sets the JSON mapper.")
+    public void setJsonMapper(String jsonMapper) {
+        this.jsonMapper = jsonMapper;
     }
 }

@@ -16,11 +16,6 @@
 
 package org.citrusframework.actions.dsl;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import tools.jackson.databind.ObjectMapper;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
@@ -45,6 +40,12 @@ import org.citrusframework.variable.dictionary.json.JsonMappingDataDictionary;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -57,7 +58,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
     private final Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
     private final Producer messageProducer = Mockito.mock(Producer.class);
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final JsonMapper mapper = JsonMapper.shared();
 
     @Test
     public void testSendBuilderWithPayloadModel() {

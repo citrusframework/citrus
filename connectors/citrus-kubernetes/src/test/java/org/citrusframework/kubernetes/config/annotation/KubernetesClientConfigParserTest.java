@@ -16,7 +16,6 @@
 
 package org.citrusframework.kubernetes.config.annotation;
 
-import tools.jackson.databind.ObjectMapper;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfigParser;
@@ -31,6 +30,7 @@ import org.mockito.Mock;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Map;
 
@@ -50,21 +50,21 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @CitrusEndpoint
     @KubernetesClientConfig(url = "http://localhost:8443",
-            version="v1",
-            username="user",
-            password="s!cr!t",
-            namespace="user_namespace",
-            messageConverter="messageConverter",
-            objectMapper="objectMapper")
+            version = "v1",
+            username = "user",
+            password = "s!cr!t",
+            namespace = "user_namespace",
+            messageConverter = "messageConverter",
+            jsonMapper = "jsonMapper")
     private KubernetesClient client2;
 
     @CitrusEndpoint
     @KubernetesClientConfig(url = "http://localhost:8443",
-            version="v1",
+            version = "v1",
             oauthToken = "xx508xx63817x752xx74004x30705xx92x58349x5x78f5xx34xxxxx51",
-            namespace="user_namespace",
-            messageConverter="messageConverter",
-            objectMapper="objectMapper")
+            namespace = "user_namespace",
+            messageConverter = "messageConverter",
+            jsonMapper = "jsonMapper")
     private KubernetesClient client3;
 
     @Mock
@@ -72,14 +72,14 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private KubernetesMessageConverter messageConverter;
     @Mock
-    private ObjectMapper objectMapper;
+    private JsonMapper jsonMapper;
 
     @BeforeClass
     public void setup() {
         openMocks(this);
 
         when(referenceResolver.resolve("messageConverter", KubernetesMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("objectMapper", ObjectMapper.class)).thenReturn(objectMapper);
+        when(referenceResolver.resolve("jsonMapper", JsonMapper.class)).thenReturn(jsonMapper);
     }
 
     @BeforeMethod
@@ -102,7 +102,7 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
         assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getPassword(), "s!cr!t");
         assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
         assertEquals(client2.getEndpointConfiguration().getMessageConverter(), messageConverter);
-        assertEquals(client2.getEndpointConfiguration().getObjectMapper(), objectMapper);
+        assertEquals(client2.getEndpointConfiguration().getJsonMapper(), jsonMapper);
 
         // 3rd client
         assertNotNull(client3.getClient());
@@ -111,7 +111,7 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
         assertEquals(client3.getEndpointConfiguration().getKubernetesClientConfig().getOauthToken(), "xx508xx63817x752xx74004x30705xx92x58349x5x78f5xx34xxxxx51");
         assertEquals(client3.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
         assertEquals(client3.getEndpointConfiguration().getMessageConverter(), messageConverter);
-        assertEquals(client3.getEndpointConfiguration().getObjectMapper(), objectMapper);
+        assertEquals(client3.getEndpointConfiguration().getJsonMapper(), jsonMapper);
     }
 
     @Test

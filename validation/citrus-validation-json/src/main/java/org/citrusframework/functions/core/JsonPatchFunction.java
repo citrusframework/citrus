@@ -16,20 +16,20 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.node.ArrayNode;
-import tools.jackson.databind.node.ObjectNode;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.yaml.SchemaProperty;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Applies RFC 6902 JSON Patch operations to JSON content.
@@ -39,7 +39,7 @@ import org.citrusframework.yaml.SchemaProperty;
  */
 public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunction.Parameters> {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final JsonMapper jsonMapper = JsonMapper.shared();
     private static final List<String> VALID_OPS = List.of("add", "remove", "replace", "move", "copy");
     private static final Pattern ARRAY_INDEX_PATTERN = Pattern.compile("\\[(\\d+)]");
 
@@ -49,7 +49,7 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
 
         JsonNode jsonNode;
         try {
-            jsonNode = objectMapper.readTree(jsonContent);
+            jsonNode = jsonMapper.readTree(jsonContent);
         } catch (Exception e) {
             throw new CitrusRuntimeException("Source does not contain valid JSON: " + e.getMessage(), e);
         }
@@ -59,7 +59,7 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
             for (PatchOperation op : params.getOperations()) {
                 result = applyOperation(result, op);
             }
-            return objectMapper.writeValueAsString(result);
+            return jsonMapper.writeValueAsString(result);
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to apply JSON Patch: " + e.getMessage(), e);
         }
@@ -201,9 +201,9 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
 
     private JsonNode parseValue(String value) {
         try {
-            return objectMapper.readTree(value);
+            return jsonMapper.readTree(value);
         } catch (Exception e) {
-            return objectMapper.getNodeFactory().textNode(value);
+            return jsonMapper.getNodeFactory().textNode(value);
         }
     }
 
@@ -224,7 +224,7 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
         } else {
             String jsonValue;
             try {
-                objectMapper.readTree(op.getValue());
+                jsonMapper.readTree(op.getValue());
                 jsonValue = op.getValue();
             } catch (Exception e) {
                 jsonValue = "\"" + escapeJsonString(op.getValue()) + "\"";
