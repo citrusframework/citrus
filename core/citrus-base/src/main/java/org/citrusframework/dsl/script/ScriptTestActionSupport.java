@@ -16,7 +16,6 @@
 
 package org.citrusframework.dsl.script;
 
-import org.citrusframework.actions.groovy.GroovyActionBuilder;
 import org.citrusframework.actions.script.ScriptActionBuilder;
 import org.citrusframework.actions.script.ScriptTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
@@ -25,11 +24,6 @@ public interface ScriptTestActionSupport extends ScriptTestActions, TestActionLo
 
     @Override
     default ScriptActionBuilder script() {
-        return new ScriptActionBuilder() {
-            @Override
-            public GroovyActionBuilder<?, ?> groovy() {
-                return lookup("groovy");
-            }
-        };
+        return () -> lookup("groovy");
     }
 }

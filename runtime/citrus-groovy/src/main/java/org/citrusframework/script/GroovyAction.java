@@ -16,11 +16,6 @@
 
 package org.citrusframework.script;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import org.citrusframework.AbstractTestActionBuilder;
@@ -36,6 +31,11 @@ import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 /**
  * Action executes groovy scripts either specified inline or from external file resource.
  *
@@ -43,27 +43,38 @@ import org.slf4j.LoggerFactory;
  */
 public class GroovyAction extends AbstractTestAction {
 
-    /** Inline groovy script */
+    /**
+     * Inline groovy script
+     */
     private final String script;
 
-    /** External script file resource path */
+    /**
+     * External script file resource path
+     */
     private final String scriptResourcePath;
 
-    /** Script template code */
+    /**
+     * Script template code
+     */
     private final String scriptTemplate;
 
-    /** Static code snippet for basic groovy action implementation */
+    /**
+     * Static code snippet for basic groovy action implementation
+     */
     private final String scriptTemplatePath;
 
-    /** Manage automatic groovy template usage */
+    /**
+     * Manage automatic groovy template usage
+     */
     private final boolean useScriptTemplate;
 
-    /** Executes a script using the TestContext */
+    /**
+     * Executes a script using the TestContext
+     */
     public interface ScriptExecutor {
         void execute(TestContext context);
     }
 
-    /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(GroovyAction.class);
 
     /**
@@ -118,7 +129,7 @@ public class GroovyAction extends AbstractTestAction {
             if (groovyObject instanceof ScriptExecutor) {
                 ((ScriptExecutor) groovyObject).execute(context);
             } else {
-                groovyObject.invokeMethod("run", new Object[] {});
+                groovyObject.invokeMethod("run", new Object[]{});
             }
 
             logger.info("Groovy script execution successful");
@@ -130,23 +141,22 @@ public class GroovyAction extends AbstractTestAction {
     }
 
     private GroovyClassLoader getPrivilegedGroovyLoader() {
-        return AccessController.doPrivileged(new PrivilegedAction<>() {
-            public GroovyClassLoader run() {
-                ClassLoader parent = ClassLoaderHelper.getClassLoader();
-                return new GroovyClassLoader(parent);
-            }
+        return AccessController.doPrivileged((PrivilegedAction<GroovyClassLoader>) () -> {
+            ClassLoader parent = ClassLoaderHelper.getClassLoader();
+            return new GroovyClassLoader(parent);
         });
     }
 
     private void assertScriptProvided() {
         if (!StringUtils.hasText(script) && scriptResourcePath == null) {
             throw new CitrusRuntimeException("Neither inline script nor " +
-                "external script resource is defined. Unable to execute groovy script.");
+                    "external script resource is defined. Unable to execute groovy script.");
         }
     }
 
     /**
      * Get the groovy script.
+     *
      * @return the script
      */
     public String getScript() {
@@ -155,6 +165,7 @@ public class GroovyAction extends AbstractTestAction {
 
     /**
      * Get the file resource.
+     *
      * @return the fileResource
      */
     public String getScriptResourcePath() {
@@ -163,6 +174,7 @@ public class GroovyAction extends AbstractTestAction {
 
     /**
      * Gets the useScriptTemplate.
+     *
      * @return the useScriptTemplate
      */
     public boolean isUseScriptTemplate() {
@@ -171,6 +183,7 @@ public class GroovyAction extends AbstractTestAction {
 
     /**
      * Gets the scriptTemplatePath.
+     *
      * @return the scriptTemplatePath
      */
     public String getScriptTemplatePath() {
@@ -179,7 +192,6 @@ public class GroovyAction extends AbstractTestAction {
 
     /**
      * Gets the script template.
-     * @return
      */
     public String getScriptTemplate() {
         return scriptTemplate;
