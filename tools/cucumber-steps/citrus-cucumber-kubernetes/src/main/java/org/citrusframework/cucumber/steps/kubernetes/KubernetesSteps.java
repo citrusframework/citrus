@@ -412,8 +412,8 @@ public class KubernetesSteps {
 
         String kind = configuration.get("kind");
         String apiVersion = configuration.getOrDefault("apiVersion", "");
-        String group = configuration.getOrDefault("group", apiVersion.length() > 0 ? apiVersion.substring(0, apiVersion.indexOf("/")) : "");
-        String version = configuration.getOrDefault("version", apiVersion.length() > 0 ? apiVersion.substring(apiVersion.indexOf("/") + 1) : "");
+        String group = configuration.getOrDefault("group", !apiVersion.isEmpty() ? apiVersion.substring(0, apiVersion.indexOf("/")) : "");
+        String version = configuration.getOrDefault("version", !apiVersion.isEmpty() ? apiVersion.substring(apiVersion.indexOf("/") + 1) : "");
         String resourceType = configuration.getOrDefault("type", String.format("%ss.%s/%s", kind.toLowerCase(Locale.ENGLISH), group, version));
 
         if (configuration.containsKey("name")) {

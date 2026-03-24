@@ -37,7 +37,7 @@ public class SoapFormattingMessageProcessor extends XmlFormattingMessageProcesso
                 faultDetailsFormat.add(XMLUtils.prettyPrint(faultDetail));
             }
 
-            if (faultDetailsFormat.size() > 0) {
+            if (!faultDetailsFormat.isEmpty()) {
                 ((SoapFault) message).faultDetails(faultDetailsFormat);
             }
         }

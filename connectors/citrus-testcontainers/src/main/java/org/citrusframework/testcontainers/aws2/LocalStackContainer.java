@@ -97,7 +97,7 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
         if (getEnvMap().containsKey(HOSTNAME_EXTERNAL_ENV)) {
             // do nothing
             hostnameExternalReason = "explicitly as environment variable";
-        } else if (getNetwork() != null && getNetworkAliases().size() >= 1) {
+        } else if (getNetwork() != null && !getNetworkAliases().isEmpty()) {
             withEnv(HOSTNAME_EXTERNAL_ENV, getNetworkAliases().get(getNetworkAliases().size() - 1)); // use the last network alias set
             hostnameExternalReason = "to match last network alias on container with non-default network";
         } else {

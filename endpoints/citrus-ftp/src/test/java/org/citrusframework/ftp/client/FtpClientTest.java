@@ -197,7 +197,7 @@ public class FtpClientTest extends AbstractFtpClientTest {
         FtpMessage ftpMessage = ftpClient.deleteFile(deleteCommand(DELETE_FOLDER), context);
         verifyMessage(ftpMessage, DeleteCommandResult.class, FILE_ACTION_OK, "250 \"/delete/second_folder\" removed.");
         assertTrue(fakeFtpServer.getFileSystem().exists(DELETE_FOLDER));
-        assertTrue(fakeFtpServer.getFileSystem().listFiles(DELETE_FOLDER).size() == 0);
+        assertTrue(fakeFtpServer.getFileSystem().listFiles(DELETE_FOLDER).isEmpty());
     }
 
     @Test
@@ -206,7 +206,7 @@ public class FtpClientTest extends AbstractFtpClientTest {
         FtpMessage ftpMessage = ftpClient.deleteFile(deleteCommand(EMPTY_FOLDER), context);
         verifyMessage(ftpMessage, DeleteCommandResult.class, FILE_ACTION_OK, "250 No files to delete.");
         assertTrue(fakeFtpServer.getFileSystem().exists(EMPTY_FOLDER));
-        assertTrue(fakeFtpServer.getFileSystem().listFiles(EMPTY_FOLDER).size() == 0);
+        assertTrue(fakeFtpServer.getFileSystem().listFiles(EMPTY_FOLDER).isEmpty());
     }
 
     @Test
