@@ -123,7 +123,7 @@ public class SftpClientTest extends AbstractFtpClientTest {
         ftpMessage = sftpClient.retrieveFile(getCommand(remoteFilePath, localDownloadFilePath.toString()), context);
         verifyMessage(ftpMessage, GetCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
         Assert.assertEquals(inputFileAsString,
-                new String(Files.readAllBytes(localDownloadFilePath), "UTF-8"));
+                new String(Files.readAllBytes(localDownloadFilePath), StandardCharsets.UTF_8));
     }
 
     @Test
@@ -137,7 +137,7 @@ public class SftpClientTest extends AbstractFtpClientTest {
         ftpMessage = sftpClient.retrieveFile(getCommand(remoteFilePath, localDownloadFilePath.toString()), context);
         verifyMessage(ftpMessage, GetCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
         Assert.assertEquals(inputFileAsString,
-                new String(Files.readAllBytes(localDownloadFilePath), "UTF-8"));
+                new String(Files.readAllBytes(localDownloadFilePath), StandardCharsets.UTF_8));
     }
 
     @Test
@@ -249,7 +249,7 @@ public class SftpClientTest extends AbstractFtpClientTest {
     }
 
     private void writeToFile(String fileContent, Path dir) throws IOException {
-        try (BufferedWriter writer = Files.newBufferedWriter(dir, Charset.forName("UTF-8"))) {
+        try (BufferedWriter writer = Files.newBufferedWriter(dir, StandardCharsets.UTF_8)) {
             writer.write(fileContent, 0, fileContent.length());
         }
     }

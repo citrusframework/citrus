@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,7 +99,7 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
                                     attachment.getEncodingType(), cid, SoapAttachment.ENCODING_BASE64_BINARY, SoapAttachment.ENCODING_HEX_BINARY));
                         }
                     } else {
-                        messagePayload = messagePayload.replaceAll(cid, String.format("<xop:Include xmlns:xop=\"http://www.w3.org/2004/08/xop/include\" href=\"%s\"/>", CID_MARKER + URLEncoder.encode(attachment.getContentId(), "UTF-8")));
+                        messagePayload = messagePayload.replaceAll(cid, String.format("<xop:Include xmlns:xop=\"http://www.w3.org/2004/08/xop/include\" href=\"%s\"/>", CID_MARKER + URLEncoder.encode(attachment.getContentId(), StandardCharsets.UTF_8)));
                         soapMessage.addAttachment(attachment);
                     }
 
