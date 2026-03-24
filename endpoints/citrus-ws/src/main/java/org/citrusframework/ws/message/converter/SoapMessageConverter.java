@@ -102,7 +102,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         copySoapHeaders(endpointConfiguration, soapRequest, soapMessage);
         copySoapHeaderData(soapRequest, soapMessage, transformerFactory);
 
-        if (soapMessage.isMtomEnabled() && soapMessage.getAttachments().size() > 0) {
+        if (soapMessage.isMtomEnabled() && !soapMessage.getAttachments().isEmpty()) {
             logger.debug("Converting SOAP request to XOP package");
             soapRequest.convertToXopPackage();
         }

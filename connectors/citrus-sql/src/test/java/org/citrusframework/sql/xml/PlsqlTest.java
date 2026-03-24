@@ -74,7 +74,7 @@ public class PlsqlTest extends AbstractXmlActionTest {
         Assert.assertNotNull(action.getDataSource());
         Assert.assertEquals(action.getDataSource(), dataSource);
         Assert.assertNull(action.getSqlResourcePath());
-        Assert.assertTrue(action.getScript().length() > 0);
+        Assert.assertTrue(!action.getScript().isEmpty());
         Assert.assertTrue(action.isIgnoreErrors());
         Assert.assertEquals(action.getTransactionManager(), mockTransactionManager);
         Assert.assertEquals(action.getTransactionTimeout(), "5000");
