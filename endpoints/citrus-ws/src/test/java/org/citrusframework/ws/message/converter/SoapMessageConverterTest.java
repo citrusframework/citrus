@@ -434,7 +434,7 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
     public void testInboundSoapAttachment() throws IOException {
         final SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId("attContentId");
-        attachment.setContent("This is a SOAP attachment" + System.getProperty("line.separator") + "with multi-line");
+        attachment.setContent("This is a SOAP attachment" + System.lineSeparator() + "with multi-line");
         attachment.setContentType("plain/text");
 
         final StringSource soapBodySource = new StringSource(payload);
