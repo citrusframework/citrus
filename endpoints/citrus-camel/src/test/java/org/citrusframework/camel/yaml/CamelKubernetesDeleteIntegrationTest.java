@@ -89,7 +89,7 @@ public class CamelKubernetesDeleteIntegrationTest extends AbstractYamlActionTest
         Assert.assertEquals(result.getTestAction(0).getName(), "camel:jbang:kubernetes:delete");
 
         verify(camelJBang).workingDir(Paths.get(Resources.create("classpath:org/citrusframework/camel/integration/route.yaml")
-                .getFile().getParentFile().toPath().toAbsolutePath().toString()));
+                .file().getParentFile().toPath().toAbsolutePath().toString()));
         verify(k8sPlugin).delete(eq("route"), eq(new String[] {}));
     }
 }

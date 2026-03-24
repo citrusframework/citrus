@@ -172,7 +172,7 @@ public class CamelSteps {
     public void loadComponent(String filePath) throws IOException {
         Resource scriptFile = ResourceUtils.resolve(filePath + ".groovy", context);
         String script = FileUtils.readToString(scriptFile);
-        final String fileName = FileUtils.getFileName(scriptFile.getLocation());
+        final String fileName = FileUtils.getFileName(scriptFile.location());
         final String baseName = Optional.ofNullable(fileName)
                 .map(f -> f.lastIndexOf("."))
                 .filter(index -> index >= 0)

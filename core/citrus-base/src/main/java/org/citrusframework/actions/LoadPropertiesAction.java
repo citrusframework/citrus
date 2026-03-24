@@ -55,7 +55,7 @@ public class LoadPropertiesAction extends AbstractTestAction {
     public void doExecute(TestContext context) {
         Resource resource = FileUtils.getFileResource(filePath, context);
 
-        logger.debug("Reading property file {}", FileUtils.getFileName(resource.getLocation()));
+        logger.debug("Reading property file {}", FileUtils.getFileName(resource.location()));
 
         Properties props = FileUtils.loadAsProperties(resource);
 
@@ -78,7 +78,7 @@ public class LoadPropertiesAction extends AbstractTestAction {
 
         context.resolveDynamicValuesInMap(unresolved).forEach(context::setVariable);
 
-        logger.info("Loaded property file {}", FileUtils.getFileName(resource.getLocation()));
+        logger.info("Loaded property file {}", FileUtils.getFileName(resource.location()));
     }
 
     /**

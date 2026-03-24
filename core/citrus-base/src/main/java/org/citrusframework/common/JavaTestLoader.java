@@ -52,9 +52,9 @@ public class JavaTestLoader extends DefaultTestLoader implements TestSourceAware
             Resource javaSource = getSource().getSourceFile();
             // Compile source file.
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            int success = compiler.run(null, null, null, javaSource.getFile().getAbsolutePath());
+            int success = compiler.run(null, null, null, javaSource.file().getAbsolutePath());
             if (success != 0) {
-                throw new CitrusRuntimeException("Failed to compile Java source file: %s".formatted(javaSource.getFile().getAbsolutePath()));
+                throw new CitrusRuntimeException("Failed to compile Java source file: %s".formatted(javaSource.file().getAbsolutePath()));
             }
 
             String packageName = extractPackageName(javaSource);
@@ -107,7 +107,7 @@ public class JavaTestLoader extends DefaultTestLoader implements TestSourceAware
             if (StringUtils.hasText(source.getFilePath())) {
                 filePath = source.getFilePath();
             } else {
-                filePath = source.getSourceFile().getLocation();
+                filePath = source.getSourceFile().location();
             }
 
             if (filePath.contains(":")) {

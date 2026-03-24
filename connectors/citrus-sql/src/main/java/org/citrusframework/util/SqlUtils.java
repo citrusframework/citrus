@@ -78,7 +78,7 @@ public abstract class SqlUtils {
 
         try {
             if (logger.isDebugEnabled()) {
-                logger.debug("Create statements from SQL file: {}", sqlResource.getFile().getAbsolutePath());
+                logger.debug("Create statements from SQL file: {}", sqlResource.file().getAbsolutePath());
             }
 
             reader = new BufferedReader(new InputStreamReader(sqlResource.getInputStream()));

@@ -149,7 +149,7 @@ public class CamelKubernetesVerifyIntegrationAction extends AbstractCamelJBangAc
 
         @Override
         public Builder integration(Resource resource) {
-            this.integrationName = resource.getFile().getName();
+            this.integrationName = resource.file().getName();
             return this;
         }
 

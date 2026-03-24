@@ -103,26 +103,22 @@ public class OpenApiValidationContext {
         this.requestValidationEnabled = requestValidationEnabled;
     }
 
-    private static class IgnoreByKeyWhitelistRule implements WhitelistRule {
+    private record IgnoreByKeyWhitelistRule(String name, String key) implements WhitelistRule {
 
-        private final String name;
+            private IgnoreByKeyWhitelistRule(@Nonnull String name, @Nonnull String key) {
+                this.name = name;
+                this.key = key;
+            }
 
-        private final String key;
+            @Override
+            public boolean matches(Message message, @Nullable ApiOperation operation,
+                                   @Nullable Request request, @Nullable Response response) {
+                return key.equals(message.getKey());
+            }
 
-        private IgnoreByKeyWhitelistRule(@Nonnull String name, @Nonnull String key) {
-            this.name = name;
-            this.key = key;
+            public static IgnoreByKeyWhitelistRule ignoreByKey(String name, String key) {
+                return new IgnoreByKeyWhitelistRule(name, key);
+            }
         }
-
-        @Override
-        public boolean matches(Message message, @Nullable ApiOperation operation,
-            @Nullable Request request, @Nullable Response response) {
-            return key.equals(message.getKey());
-        }
-
-        public static IgnoreByKeyWhitelistRule ignoreByKey(String name, String key) {
-            return new IgnoreByKeyWhitelistRule(name, key);
-        }
-    }
 
 }

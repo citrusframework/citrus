@@ -152,7 +152,7 @@ public class TestRunConfiguration {
             "Jar file is used to perform package scans for test cases to run.")
     public void setTestJar(String testJar) {
         if (testJar != null) {
-            this.testJar = Resources.create(testJar).getFile();
+            this.testJar = Resources.create(testJar).file();
         }
     }
 

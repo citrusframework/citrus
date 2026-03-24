@@ -360,11 +360,11 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
         @Override
         public B withVolumeMount(Resource mountableFile, String mountPath) {
             if (mountableFile instanceof Resources.ClasspathResource) {
-                this.volumeMounts.put(MountableFile.forClasspathResource(mountableFile.getLocation()), mountPath);
+                this.volumeMounts.put(MountableFile.forClasspathResource(mountableFile.location()), mountPath);
             } else if (mountableFile instanceof Resources.FileSystemResource) {
-                this.volumeMounts.put(MountableFile.forHostPath(mountableFile.getFile().getAbsolutePath()), mountPath);
+                this.volumeMounts.put(MountableFile.forHostPath(mountableFile.file().getAbsolutePath()), mountPath);
             } else {
-                this.volumeMounts.put(MountableFile.forHostPath(mountableFile.getLocation()), mountPath);
+                this.volumeMounts.put(MountableFile.forHostPath(mountableFile.location()), mountPath);
             }
             return self;
         }

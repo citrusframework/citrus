@@ -274,23 +274,14 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
         }
     }
 
-    private static class AfterSuiteCallback implements ExtensionContext.Store.CloseableResource, AutoCloseable {
-
-        private final ExtensionContext extensionContext;
-        private final String suiteName;
-        private final String[] tags;
-
-        public AfterSuiteCallback(ExtensionContext extensionContext, String suiteName, String... tags) {
-            this.extensionContext = extensionContext;
-            this.suiteName = suiteName;
-            this.tags = tags;
-        }
+    private record AfterSuiteCallback(ExtensionContext extensionContext, String suiteName,
+                                      String... tags) implements ExtensionContext.Store.CloseableResource, AutoCloseable {
 
         @Override
-        public void close() {
-            if (afterSuite.getAndSet(false)) {
-                getCitrus(extensionContext).afterSuite(suiteName, tags);
+            public void close() {
+                if (afterSuite.getAndSet(false)) {
+                    getCitrus(extensionContext).afterSuite(suiteName, tags);
+                }
             }
         }
-    }
 }

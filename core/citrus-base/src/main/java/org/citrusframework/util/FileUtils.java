@@ -115,14 +115,14 @@ public abstract class FileUtils {
      */
     public static String readToString(Resource resource, Charset charset) throws IOException {
         if (simulationMode) {
-            resource.getLocation();
+            resource.location();
         }
 
         if (!resource.exists()) {
-            throw new CitrusRuntimeException("Failed to read resource %s - does not exist".formatted(resource.getLocation()));
+            throw new CitrusRuntimeException("Failed to read resource %s - does not exist".formatted(resource.location()));
         }
 
-        logger.debug("Reading file resource: '{}' (encoding is '{}')", resource.getLocation(), charset.displayName());
+        logger.debug("Reading file resource: '{}' (encoding is '{}')", resource.location(), charset.displayName());
 
         try (InputStream inputStream = resource.getInputStream()) {
             return readToString(inputStream, charset);
@@ -324,7 +324,7 @@ public abstract class FileUtils {
     public static Properties loadAsProperties(Resource resource) {
         Properties properties = new Properties();
         try (InputStream is = resource.getInputStream()) {
-            String filename = getFileName(resource.getLocation());
+            String filename = getFileName(resource.location());
             if (filename != null && filename.endsWith(FILE_EXTENSION_XML)) {
                 properties.loadFromXML(is);
             } else {
@@ -407,7 +407,7 @@ public abstract class FileUtils {
     public static byte[] copyToByteArray(Resource resource) {
         try (InputStream in = resource.getInputStream()) {
             if (in == null) {
-                throw new CitrusRuntimeException(String.format("Unable to access input stream of resource %s", resource.getLocation()));
+                throw new CitrusRuntimeException(String.format("Unable to access input stream of resource %s", resource.location()));
             }
             return in.readAllBytes();
         } catch (IOException e) {

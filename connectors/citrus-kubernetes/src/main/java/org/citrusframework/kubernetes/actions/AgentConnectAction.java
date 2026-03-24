@@ -95,7 +95,7 @@ public class AgentConnectAction extends ServiceConnectAction {
 
         Path testJarPath = null;
         if (testJar != null) {
-            testJarPath = Resources.create(testJar).getFile().toPath();
+            testJarPath = Resources.create(testJar).file().toPath();
         }
 
         if (KubernetesSupport.isConnected(context)) {

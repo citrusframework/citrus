@@ -98,7 +98,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
         if (StringUtils.hasText(integrationName)) {
             name = context.replaceDynamicContentInString(integrationName);
         } else if (integrationResource != null) {
-            name = FileUtils.getBaseName(integrationResource.getFile().getName());
+            name = FileUtils.getBaseName(integrationResource.file().getName());
         } else {
             name = "route";
         }
@@ -116,7 +116,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
                         StandardOpenOption.CREATE,
                         StandardOpenOption.TRUNCATE_EXISTING);
             } else if (integrationResource != null) {
-                integrationToRun = integrationResource.getFile().toPath();
+                integrationToRun = integrationResource.file().toPath();
             } else {
                 throw new CitrusRuntimeException("Missing Camel integration source code or file");
             }
@@ -205,14 +205,14 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
         public Builder integration(Resource resource) {
             this.integrationResource = resource;
             if (integrationName == null) {
-                this.integrationName = FileUtils.getBaseName(FileUtils.getFileName(resource.getLocation()));
+                this.integrationName = FileUtils.getBaseName(FileUtils.getFileName(resource.location()));
             }
             return this;
         }
 
         @Override
         public Builder addResource(Resource resource) {
-            this.resourceFiles.add(resource.getFile().getAbsolutePath());
+            this.resourceFiles.add(resource.file().getAbsolutePath());
             return this;
         }
 

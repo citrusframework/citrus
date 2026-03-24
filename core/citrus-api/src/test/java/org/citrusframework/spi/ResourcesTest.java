@@ -56,8 +56,8 @@ public class ResourcesTest {
     @BeforeClass
     public static void beforeClass() throws URISyntaxException {
         Resource resource = Resources.create("/ResourcesTest");
-        baseUri = resource.getFile().getParentFile().toURI();
-        baseFolderUri = resource.getFile().toURI();
+        baseUri = resource.file().getParentFile().toURI();
+        baseFolderUri = resource.file().toURI();
 
         fileWithContentUri = new URI(baseFolderUri + "FileWithContent.json");
         fileWithoutContentUri = new URI(baseFolderUri + "FileWithoutContent.txt");
@@ -87,16 +87,16 @@ public class ResourcesTest {
     @Test
     public void byteArrayResourceTest() {
         Resource byteArrayResource = new ByteArrayResource(new byte[100]);
-        assertEquals(byteArrayResource.getLocation(), "");
+        assertEquals(byteArrayResource.location(), "");
         assertTrue(byteArrayResource.exists());
         assertTrue(byteArrayResource.getInputStream() instanceof ByteArrayInputStream);
-        assertThrows(UnsupportedOperationException.class, byteArrayResource::getFile);
+        assertThrows(UnsupportedOperationException.class, byteArrayResource::file);
     }
 
     @Test
     public void defaultFileSystemResourceTest() {
         Resource resource = Resources.create("/ResourcesTest");
-        File resourceFolder = resource.getFile();
+        File resourceFolder = resource.file();
 
         assertTrue(resourceFolder.exists());
         assertTrue(resourceFolder.isDirectory());
@@ -117,7 +117,7 @@ public class ResourcesTest {
     @Test
     public void fileSystemResourceTest() throws IOException {
         Resource resource = Resources.create("/ResourcesTest");
-        File file = resource.getFile();
+        File file = resource.file();
 
         assertTrue(file.exists());
         assertTrue(file.isDirectory());
@@ -126,7 +126,7 @@ public class ResourcesTest {
         assertTrue(withContentResource instanceof FileSystemResource);
         assertTrue(withContentResource.exists());
         assertEquals(fileWithContentUri, withContentResource.getURI());
-        assertEquals(new File(fileWithContentUri).getPath(), withContentResource.getLocation());
+        assertEquals(new File(fileWithContentUri).getPath(), withContentResource.location());
         try (InputStream inputStream = withContentResource.getInputStream()) {
             assertNotNull(inputStream);
         }
@@ -154,18 +154,18 @@ public class ResourcesTest {
         URL withContentUrlMock = spy(fileWithContentUri.toURL());
         UrlResource withContentResource = new UrlResource(withContentUrlMock);
         assertTrue(withContentResource.exists());
-        assertEquals(new File(fileWithContentUri), withContentResource.getFile());
-        assertEquals(fileWithContentUri.toURL().toString(), withContentResource.getLocation());
+        assertEquals(new File(fileWithContentUri), withContentResource.file());
+        assertEquals(fileWithContentUri.toURL().toString(), withContentResource.location());
 
         URL withoutContentUrlMock = spy(fileWithoutContentUri.toURL());
         UrlResource withoutContentResource = new UrlResource(withoutContentUrlMock);
         assertTrue(withoutContentResource.exists());
-        assertEquals(new File(fileWithoutContentUri), withoutContentResource.getFile());
+        assertEquals(new File(fileWithoutContentUri), withoutContentResource.file());
 
         URL nonExistingUrlMock = spy(nonExistingFileUri.toURL());
         UrlResource nonExistingResource = new UrlResource(nonExistingUrlMock);
         assertFalse(nonExistingResource.exists());
-        assertEquals(new File(nonExistingFileUri), nonExistingResource.getFile());
+        assertEquals(new File(nonExistingFileUri), nonExistingResource.file());
     }
 
     @Test

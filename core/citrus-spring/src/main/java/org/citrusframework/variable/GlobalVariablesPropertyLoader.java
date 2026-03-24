@@ -67,9 +67,9 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                     Resource propertyFile = Resources.create(propertyFilePath.trim());
                     if (!propertyFile.exists()) {
                         throw new CitrusRuntimeException(String.format("Error while loading property file %s - does not exist",
-                                propertyFile.getLocation()));
+                                propertyFile.location()));
                     }
-                    logger.debug("Reading property file {}", propertyFile.getLocation());
+                    logger.debug("Reading property file {}", propertyFile.location());
 
                     // Use input stream as this also allows to read from resources in a JAR file
                     reader = new BufferedReader(new InputStreamReader(propertyFile.getInputStream()));
@@ -109,7 +109,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                         context.setVariable(key, globalVariables.getVariables().get(key));
                     }
 
-                    logger.info("Loaded property file {}", propertyFile.getLocation());
+                    logger.info("Loaded property file {}", propertyFile.location());
                 }
             }
         } catch (IOException e) {

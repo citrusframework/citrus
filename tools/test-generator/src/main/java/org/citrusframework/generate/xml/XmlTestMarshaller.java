@@ -118,7 +118,7 @@ public class XmlTestMarshaller {
 
     private Schema loadSchema(Resource resource) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Using marshaller validation schema '{}'", resource.getLocation());
+            logger.debug("Using marshaller validation schema '{}'", resource.location());
         }
 
         try {

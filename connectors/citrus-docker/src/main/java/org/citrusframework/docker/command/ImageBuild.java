@@ -54,14 +54,14 @@ public class ImageBuild extends AbstractDockerCommand<BuildResponseItem> {
         }
 
         if (hasParameter("basedir")) {
-            command.withBaseDirectory(FileUtils.getFileResource(getParameter("basedir", testContext), testContext).getFile());
+            command.withBaseDirectory(FileUtils.getFileResource(getParameter("basedir", testContext), testContext).file());
         }
 
         if (hasParameter("dockerfile")) {
             if (getParameters().get("dockerfile") instanceof Resource) {
-                command.withDockerfile(((Resource)getParameters().get("dockerfile")).getFile());
+                command.withDockerfile(((Resource)getParameters().get("dockerfile")).file());
             } else {
-                command.withDockerfile(FileUtils.getFileResource(getParameter("dockerfile", testContext), testContext).getFile());
+                command.withDockerfile(FileUtils.getFileResource(getParameter("dockerfile", testContext), testContext).file());
             }
         }
 

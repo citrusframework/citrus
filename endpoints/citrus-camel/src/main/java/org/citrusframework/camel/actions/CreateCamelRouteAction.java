@@ -247,7 +247,7 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
             }
 
             if (routeId == null) {
-                this.routeId = FileUtils.getBaseName(FileUtils.getFileName(routeResource.getLocation()));
+                this.routeId = FileUtils.getBaseName(FileUtils.getFileName(routeResource.location()));
             }
 
             return this;

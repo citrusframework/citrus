@@ -45,21 +45,15 @@ public class ApplyTestBehaviorIT extends JUnit4CitrusSpringSupport implements Te
                 ));
     }
 
-    private static class SayHelloBehavior implements TestBehavior, TestActionSupport {
-        private final String greeting;
-
-        public SayHelloBehavior() {
-            this("Hello");
-        }
-
-        public SayHelloBehavior(String greeting) {
-            this.greeting = greeting;
-        }
+    private record SayHelloBehavior(String greeting) implements TestBehavior, TestActionSupport {
+            public SayHelloBehavior() {
+                this("Hello");
+            }
 
         @Override
-        public void apply(TestActionRunner runner) {
-            runner.run(echo(String.format("%s Citrus!", greeting)));
+            public void apply(TestActionRunner runner) {
+                runner.run(echo(String.format("%s Citrus!", greeting)));
+            }
         }
-    }
 }
 

@@ -71,7 +71,7 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor
     @Override
     public void initialize() {
         if (mappingFile != null) {
-            logger.debug("Reading data dictionary mapping: {}", mappingFile.getLocation());
+            logger.debug("Reading data dictionary mapping: {}", mappingFile.location());
 
             Properties properties = loadProperties(mappingFile);
             for (Map.Entry<Object, Object> entry : properties.entrySet()) {
@@ -86,7 +86,7 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor
                 mappings.put(key, properties.getProperty(key));
             }
 
-            logger.info("Loaded data dictionary mapping: {}", mappingFile.getLocation());
+            logger.info("Loaded data dictionary mapping: {}", mappingFile.location());
         }
     }
 

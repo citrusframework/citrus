@@ -39,7 +39,7 @@ public class CitrusResourceWrapperTest {
 
         CitrusResourceWrapper fixture = new CitrusResourceWrapper(classPathResource);
 
-        assertTrue(fixture.getLocation().endsWith(resource), "Fixture location should resolve URI from classpath resource!");
+        assertTrue(fixture.location().endsWith(resource), "Fixture location should resolve URI from classpath resource!");
         verify(classPathResource).getURI();
     }
 
@@ -51,7 +51,7 @@ public class CitrusResourceWrapperTest {
 
         CitrusResourceWrapper fixture = new CitrusResourceWrapper(classPathResource);
 
-        assertTrue(fixture.getLocation().endsWith(resource), "Fixture location should resolve URI from classpath resource!");
+        assertTrue(fixture.location().endsWith(resource), "Fixture location should resolve URI from classpath resource!");
         verify(classPathResource).getFile();
     }
 }

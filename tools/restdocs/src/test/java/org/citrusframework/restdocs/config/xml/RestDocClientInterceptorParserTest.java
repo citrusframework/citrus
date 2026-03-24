@@ -36,13 +36,13 @@ public class RestDocClientInterceptorParserTest extends AbstractBeanDefinitionPa
 
         // 1st interceptor
         RestDocClientInterceptor interceptor = interceptors.get("interceptor1");
-        Assert.assertNotNull(interceptor.getDocumentationGenerator());
+        Assert.assertNotNull(interceptor.documentationGenerator());
 
         Map<String, RestDocSoapClientInterceptor> soapInterceptors = beanDefinitionContext.getBeansOfType(RestDocSoapClientInterceptor.class);
         Assert.assertEquals(soapInterceptors.size(), 1);
 
         // 2nd interceptor
         RestDocSoapClientInterceptor soapInterceptor = soapInterceptors.get("interceptor2");
-        Assert.assertNotNull(soapInterceptor.getDocumentationGenerator());
+        Assert.assertNotNull(soapInterceptor.documentationGenerator());
     }
 }

@@ -50,7 +50,7 @@ public class MakeScreenshotActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecute() {
-        when(webDriver.getScreenshotAs(OutputType.FILE)).thenReturn(Resources.fromClasspath("screenshot.png").getFile());
+        when(webDriver.getScreenshotAs(OutputType.FILE)).thenReturn(Resources.fromClasspath("screenshot.png").file());
 
         MakeScreenshotAction action =  new MakeScreenshotAction.Builder()
                 .browser(seleniumBrowser)
@@ -64,7 +64,7 @@ public class MakeScreenshotActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecuteOutputDir() {
-        when(webDriver.getScreenshotAs(OutputType.FILE)).thenReturn(Resources.fromClasspath("screenshot.png").getFile());
+        when(webDriver.getScreenshotAs(OutputType.FILE)).thenReturn(Resources.fromClasspath("screenshot.png").file());
 
         context.setVariable(CitrusSettings.TEST_NAME_VARIABLE, "MyTest");
 

@@ -271,7 +271,7 @@ public final class CitrusExtensionHelper {
             source = sources[0];
 
             Resource file = FileUtils.getFileResource(source);
-            testName = FileUtils.getBaseName(FileUtils.getFileName(file.getLocation()));
+            testName = FileUtils.getBaseName(FileUtils.getFileName(file.location()));
 
             packageName = source;
             if (packageName.startsWith(Resources.CLASSPATH_RESOURCE_PREFIX)) {

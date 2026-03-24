@@ -100,7 +100,7 @@ public class VariableExpressionIterator implements Iterator<VariableSegment> {
 
         // Look ahead next segment
         if (matcher.nextMatch()) {
-            nextSegment = createSegmentValue(currentSegment.getSegmentValue());
+            nextSegment = createSegmentValue(currentSegment.segmentValue());
         } else {
             nextSegment = null;
         }
@@ -130,42 +130,15 @@ public class VariableExpressionIterator implements Iterator<VariableSegment> {
             segment = iterator.next();
         }
 
-        return segment != null ? segment.getSegmentValue() : null;
+        return segment != null ? segment.segmentValue() : null;
     }
 
-    public static class VariableSegment {
+    /**
+     * @param name         The name of the variableExpression segment
+     * @param index        An optional index if the VariableSegment represents an array. A value of -1 indicates "no index".
+     * @param segmentValue The evaluated value for this segment
+     */
+    public record VariableSegment(String name, int index, Object segmentValue) {
 
-        /**
-         * The name of the variableExpression segment
-         */
-        private final String name;
-
-        /**
-         * An optional index if the VariableSegment represents an array. A value of -1 indicates "no index".
-         */
-        private final int index;
-
-        /**
-         * The evaluated value for this segment
-         */
-        private final Object segmentValue;
-
-        public VariableSegment(String name, int index, Object segmentValue) {
-            this.name = name;
-            this.index = index;
-            this.segmentValue = segmentValue;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getIndex() {
-            return index;
-        }
-
-        public Object getSegmentValue() {
-            return segmentValue;
-        }
     }
 }

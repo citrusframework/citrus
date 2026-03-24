@@ -390,7 +390,7 @@ public class AgentRun extends CitrusCommand {
         }
 
         if (StringUtils.hasText(testJar)) {
-            configuration.setTestJar(Resources.create(testJar).getFile());
+            configuration.setTestJar(Resources.create(testJar).file());
         }
 
         if (includes != null) {

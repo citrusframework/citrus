@@ -169,11 +169,11 @@ public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTe
     private XmlObject compileWsdl(String wsdl) {
         Resource wsdlFile = Resources.create(wsdl);
         if (!wsdlFile.exists()) {
-            throw new CitrusRuntimeException("Unable to read WSDL - does not exist in " + wsdlFile.getLocation());
+            throw new CitrusRuntimeException("Unable to read WSDL - does not exist in " + wsdlFile.location());
         }
 
         try {
-            return XmlObject.Factory.parse(wsdlFile.getFile(), (new XmlOptions()).setLoadLineNumbers().setLoadMessageDigest().setCompileDownloadUrls());
+            return XmlObject.Factory.parse(wsdlFile.file(), (new XmlOptions()).setLoadLineNumbers().setLoadMessageDigest().setCompileDownloadUrls());
         } catch (XmlException e) {
             for (Object error : e.getErrors()) {
                 logger.error("{}{}", ((XmlError) error).getLine(), error.toString());

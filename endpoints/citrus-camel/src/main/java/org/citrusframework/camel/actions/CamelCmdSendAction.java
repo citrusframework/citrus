@@ -108,7 +108,7 @@ public class CamelCmdSendAction extends AbstractCamelJBangAction {
             commandArgs.add(StringUtils.quote(context.replaceDynamicContentInString(body), true));
         } else if (bodyResource != null) {
             commandArgs.add("--body");
-            commandArgs.add("file:" + bodyResource.getLocation());
+            commandArgs.add("file:" + bodyResource.location());
         }
 
         if (StringUtils.hasText(infra)) {

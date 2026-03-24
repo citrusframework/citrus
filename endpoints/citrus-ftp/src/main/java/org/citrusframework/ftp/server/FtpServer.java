@@ -76,7 +76,7 @@ public class FtpServer extends AbstractServer {
                     serverFactory.setUserManager(userManager);
                 } else if (userManagerProperties != null) {
                     PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
-                    userManagerFactory.setFile(userManagerProperties.getFile());
+                    userManagerFactory.setFile(userManagerProperties.file());
                     serverFactory.setUserManager(userManagerFactory.createUserManager());
                 }
 

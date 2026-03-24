@@ -196,7 +196,7 @@ public class CamelCustomizedRunIntegrationAction extends AbstractCamelJBangActio
 
         @Override
         public Builder addResource(Resource resource) {
-            this.resourceFiles.add(resource.getFile().getAbsolutePath());
+            this.resourceFiles.add(resource.file().getAbsolutePath());
             return this;
         }
 

@@ -52,7 +52,7 @@ public class FileCondition extends AbstractCondition {
             return file.exists() && file.isFile();
         } else {
             try {
-                return FileUtils.getFileResource(context.replaceDynamicContentInString(filePath), context).getFile().isFile();
+                return FileUtils.getFileResource(context.replaceDynamicContentInString(filePath), context).file().isFile();
             } catch (Exception e) {
                 logger.warn("Failed to access file resource '{}'", e.getMessage());
                 return false;

@@ -144,16 +144,16 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
                 if (sourceDir instanceof Resources.ClasspathResource) {
                     try {
                         addTestSources(requestBuilder, new ClasspathResourceResolver()
-                                .getResources(sourceDir.getLocation())
+                                .getResources(sourceDir.location())
                                 .stream()
                                 .map(Path::toString)
                                 .map(TestSourceHelper::create)
                                 .collect(Collectors.toList()));
                     } catch (IOException e) {
-                        throw new CitrusRuntimeException("Failed to resolve files from resource directory '%s'".formatted(sourceDir.getLocation()), e);
+                        throw new CitrusRuntimeException("Failed to resolve files from resource directory '%s'".formatted(sourceDir.location()), e);
                     }
                 } else {
-                    addTestSources(requestBuilder, Optional.ofNullable(sourceDir.getFile().list())
+                    addTestSources(requestBuilder, Optional.ofNullable(sourceDir.file().list())
                             .stream()
                             .flatMap(Arrays::stream)
                             .map(file -> directory.getFilePath() + File.separator + file)

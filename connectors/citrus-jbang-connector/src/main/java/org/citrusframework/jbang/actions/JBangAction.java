@@ -165,13 +165,13 @@ public class JBangAction extends AbstractTestAction {
 
         @Override
         public Builder file(String path) {
-            this.scriptOrFile = Resources.create(path).getFile().getAbsolutePath();
+            this.scriptOrFile = Resources.create(path).file().getAbsolutePath();
             return this;
         }
 
         @Override
         public Builder file(Resource resource) {
-            this.scriptOrFile = resource.getFile().getAbsolutePath();
+            this.scriptOrFile = resource.file().getAbsolutePath();
             return this;
         }
 

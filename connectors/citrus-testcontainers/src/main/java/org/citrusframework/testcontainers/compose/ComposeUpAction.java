@@ -249,9 +249,9 @@ public class ComposeUpAction extends AbstractTestcontainersAction {
             String identifier = StringUtils.hasText(containerName) ? containerName.toLowerCase() : Base58.randomString(6).toLowerCase();
 
             if (fileResource != null) {
-                container = new ComposeContainer(identifier, fileResource.getFile());
+                container = new ComposeContainer(identifier, fileResource.file());
             } else if (StringUtils.hasText(filePath)) {
-                container = new ComposeContainer(identifier, Resources.create(filePath).getFile());
+                container = new ComposeContainer(identifier, Resources.create(filePath).file());
             } else if (referenceResolver != null) {
                 if (StringUtils.hasText(containerName) && referenceResolver.isResolvable(containerName, ComposeContainer.class)) {
                     container = referenceResolver.resolve(containerName, ComposeContainer.class);
@@ -261,7 +261,7 @@ public class ComposeUpAction extends AbstractTestcontainersAction {
             }
 
             if (container == null && Resources.create("compose.yaml").exists()) {
-                container = new ComposeContainer(identifier, Resources.create("compose.yaml").getFile());
+                container = new ComposeContainer(identifier, Resources.create("compose.yaml").file());
             }
 
             if (container == null) {

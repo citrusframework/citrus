@@ -37,9 +37,9 @@ public final class PropertiesLoader {
         Properties properties = new Properties();
         try (InputStream inputStream = resource.getInputStream()) {
             logger.debug("Loading properties resource: {}", resource);
-            loadProperties(resource.getLocation(), properties, inputStream);
+            loadProperties(resource.location(), properties, inputStream);
         } catch (IOException e) {
-            throwPropertiesLoadingFailedException(resource.getLocation(), e);
+            throwPropertiesLoadingFailedException(resource.location(), e);
         }
         return properties;
     }

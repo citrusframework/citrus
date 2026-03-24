@@ -22,7 +22,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import javax.wsdl.WSDLException;
 import javax.wsdl.extensions.schema.Schema;
 import javax.wsdl.extensions.schema.SchemaImport;
 import javax.wsdl.extensions.schema.SchemaReference;
@@ -78,9 +77,9 @@ public abstract class AbstractSchemaCollection extends SimpleXsdSchema implement
 
     public static org.springframework.core.io.Resource toSpringResource(Resource resource) {
         if (resource instanceof Resources.ClasspathResource) {
-            return new ClassPathResource(resource.getLocation());
+            return new ClassPathResource(resource.location());
         } else if (resource instanceof Resources.FileSystemResource) {
-            return new FileSystemResource(resource.getLocation());
+            return new FileSystemResource(resource.location());
         }
 
         return new ByteArrayResource(FileUtils.copyToByteArray(resource));

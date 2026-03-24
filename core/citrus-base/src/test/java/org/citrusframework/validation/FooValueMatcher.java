@@ -29,11 +29,6 @@ public class FooValueMatcher implements ValueMatcher {
         return ((FooValue) received).value.equals(((FooValue) control).value);
     }
 
-    static class FooValue {
-        public final String value;
-
-        FooValue(String value) {
-            this.value = value;
-        }
+    record FooValue(String value) {
     }
 }

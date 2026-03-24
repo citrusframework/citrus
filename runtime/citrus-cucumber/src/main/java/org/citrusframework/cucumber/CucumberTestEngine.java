@@ -56,7 +56,6 @@ import java.util.stream.Collectors;
 
 public class CucumberTestEngine extends AbstractTestEngine {
 
-    /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CucumberTestEngine.class);
 
     public CucumberTestEngine(TestRunConfiguration configuration) {
@@ -141,16 +140,16 @@ public class CucumberTestEngine extends AbstractTestEngine {
                 if (sourceDir instanceof Resources.ClasspathResource) {
                     try {
                         addToFeatures(features, new ClasspathResourceResolver()
-                                .getResources(sourceDir.getLocation())
+                                .getResources(sourceDir.location())
                                 .stream()
                                 .map(Path::toString)
                                 .map(TestSourceHelper::create)
                                 .collect(Collectors.toList()));
                     } catch (IOException e) {
-                        throw new CitrusRuntimeException("Failed to resolve files from resource directory '%s'".formatted(sourceDir.getLocation()), e);
+                        throw new CitrusRuntimeException("Failed to resolve files from resource directory '%s'".formatted(sourceDir.location()), e);
                     }
                 } else {
-                    addToFeatures(features, Optional.ofNullable(sourceDir.getFile().list())
+                    addToFeatures(features, Optional.ofNullable(sourceDir.file().list())
                             .stream()
                             .flatMap(Arrays::stream)
                             .map(file -> directory.getFilePath() + File.separator + file)
@@ -174,14 +173,16 @@ public class CucumberTestEngine extends AbstractTestEngine {
     /**
      * Cucumber options reading values from annotation in a generic way using method invocation via reflection.
      */
-    private static class GenericCucumberOptions implements CucumberOptionsAnnotationParser.CucumberOptions {
-        private final Annotation options;
+    private record GenericCucumberOptions(
+            Annotation options) implements CucumberOptionsAnnotationParser.CucumberOptions {
 
-        public GenericCucumberOptions(Class<?> clazz) {
-            options = Arrays.stream(clazz.getAnnotations())
-                    .filter(annotation -> annotation.annotationType().getSimpleName().equals("CucumberOptions"))
-                    .findFirst()
-                    .orElseThrow(() -> new CitrusRuntimeException("Missing CucumberOptions annotation on test class: " + clazz.getName()));
+        private GenericCucumberOptions(Class<?> options) {
+            this(
+                    Arrays.stream(options.getAnnotations())
+                            .filter(annotation -> annotation.annotationType().getSimpleName().equals("CucumberOptions"))
+                            .findFirst()
+                            .orElseThrow(() -> new CitrusRuntimeException("Missing CucumberOptions annotation on test class: " + options.getName()))
+            );
         }
 
         <T> T getOptionValue(String optionName) {

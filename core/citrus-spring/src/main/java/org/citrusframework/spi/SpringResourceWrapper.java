@@ -56,22 +56,22 @@ public class SpringResourceWrapper implements org.springframework.core.io.Resour
 
     @Override
     public File getFile() {
-        return delegate.getFile();
+        return delegate.file();
     }
 
     @Override
     public long contentLength() throws IOException {
         try {
-            return delegate.getFile().length();
+            return delegate.file().length();
         } catch (Exception e) {
-            return Files.size(new File(delegate.getLocation()).toPath());
+            return Files.size(new File(delegate.location()).toPath());
         }
     }
 
     @Override
     public long lastModified() {
         try {
-            return delegate.getFile().lastModified();
+            return delegate.file().lastModified();
         } catch (Exception e) {
             return 0;
         }
@@ -84,7 +84,7 @@ public class SpringResourceWrapper implements org.springframework.core.io.Resour
 
     @Override
     public String getFilename() {
-        return FileUtils.getFileName(delegate.getLocation());
+        return FileUtils.getFileName(delegate.location());
     }
 
     @Override

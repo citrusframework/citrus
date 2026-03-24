@@ -162,12 +162,12 @@ public class XsdJavaTestGenerator extends MessagingJavaTestGenerator<XsdJavaTest
     private SchemaTypeSystem compileXsd(String xsd) {
         Resource xsdFile = Resources.create(xsd);
         if (!xsdFile.exists()) {
-            throw new CitrusRuntimeException("Unable to read XSD - does not exist in " + xsdFile.getLocation());
+            throw new CitrusRuntimeException("Unable to read XSD - does not exist in " + xsdFile.location());
         }
 
         XmlObject xsdObject;
         try {
-            xsdObject = XmlObject.Factory.parse(xsdFile.getFile(), (new XmlOptions()).setLoadLineNumbers().setLoadMessageDigest().setCompileDownloadUrls());
+            xsdObject = XmlObject.Factory.parse(xsdFile.file(), (new XmlOptions()).setLoadLineNumbers().setLoadMessageDigest().setCompileDownloadUrls());
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to parse XSD schema", e);
         }

@@ -33,16 +33,15 @@ import java.util.Map;
  *
  * @since 2.6
  */
-public class RestDocClientInterceptor implements ClientHttpRequestInterceptor {
-
-    private final RestDocumentationGenerator<CachedBodyHttpRequest, ClientHttpResponse> documentationGenerator;
+public record RestDocClientInterceptor(
+        RestDocumentationGenerator<CachedBodyHttpRequest, ClientHttpResponse> documentationGenerator) implements ClientHttpRequestInterceptor {
 
     /**
      * Default constructor with documentation generator.
+     *
      * @param documentationGenerator
      */
-    public RestDocClientInterceptor(RestDocumentationGenerator<CachedBodyHttpRequest, ClientHttpResponse> documentationGenerator) {
-        this.documentationGenerator = documentationGenerator;
+    public RestDocClientInterceptor {
     }
 
     @Override
@@ -79,7 +78,8 @@ public class RestDocClientInterceptor implements ClientHttpRequestInterceptor {
      *
      * @return the documentationGenerator
      */
-    public RestDocumentationGenerator<CachedBodyHttpRequest, ClientHttpResponse> getDocumentationGenerator() {
+    @Override
+    public RestDocumentationGenerator<CachedBodyHttpRequest, ClientHttpResponse> documentationGenerator() {
         return documentationGenerator;
     }
 }
